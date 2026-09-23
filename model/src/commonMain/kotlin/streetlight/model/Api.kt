@@ -176,6 +176,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadCity: GetByIdEndpoint<Slug, City>(this)
         object ReadCityPosts: GetByIdEndpoint<Slug, List<Entity>>(this)
         object ReadContent: GetByIdEndpoint<Slug, CityContent>(this)
+        object UpdateCity: PostEndpoint<CityEdit, City>(this)
 
         object ReadFeed: GetEndpoint<EntityFeed>(this), CursorEndpoint {
             val cityId = tableIdParamOf("cityId") { CityId(it) }

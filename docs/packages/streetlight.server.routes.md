@@ -55,6 +55,10 @@ Endpoints sit inside an `authGate` block rather than carrying a per-endpoint che
 
 A serve function opens a separate `authGate` block for each of these when it holds endpoints of both kinds. Grouping by gate rather than by endpoint keeps the authentication requirement visible at the block, where it cannot be missed by a reader skimming for it.
 
+## Edit Permission
+
+A record with no owner, such as a city, or a location or event with no host, is editable by any signed-in user. Its update endpoint sits in `authGate { }` and checks nothing further about the caller.
+
 ## Content Endpoints
 
 Every route that has a shell has a content endpoint returning the result of `readFooContent`, so the endpoint and `renderFoo` read the same content. The endpoint of a route whose content belongs to an `Api` node, such as `Api.Galaxies.ReadContent` or `Api.Cities.ReadContent`, is served with that node. `serveContent.kt` implements `Api.Content`, which holds the rest.

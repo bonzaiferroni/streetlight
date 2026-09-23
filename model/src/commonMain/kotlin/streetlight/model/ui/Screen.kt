@@ -82,6 +82,7 @@ enum class Screen(
 
     // city
     City(SlugParse { CityRoute(it) }),
+    CityConfig(SlugParse { CityConfigRoute(it) }),
     CityList(StaticParse { CityListRoute }, "cities", true),
 
     // media

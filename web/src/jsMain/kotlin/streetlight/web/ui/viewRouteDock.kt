@@ -9,6 +9,7 @@ import koala.modifier.*
 import koala.modifier.Height
 import kampfire.model.tapOf
 import kotlinx.css.pct
+import streetlight.model.ui.CityConfigRoute
 import streetlight.model.ui.EarthRoute
 import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.model.ui.HomeRoute
@@ -72,6 +73,6 @@ fun ViewScope.viewRouteDock() {
 private fun iconOf(route: AppRoute) = when(route) {
     is EarthRoute -> SvgFile.Earth
     is HomeRoute -> SvgFile.Home
-    is GalaxyConfigRoute, is LocationConfigRoute, is ProfileConfigRoute, is StarConfigRoute -> SvgFile.GearSmall
+    is CityConfigRoute, is GalaxyConfigRoute, is LocationConfigRoute, is ProfileConfigRoute, is StarConfigRoute -> SvgFile.GearSmall
     else -> error("no dock icon for route: $route")
 }

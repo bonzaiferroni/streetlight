@@ -11,6 +11,7 @@ interface CityClient {
     suspend fun readTopCities(): Outcome<List<City>>
     suspend fun readCityPosts(slug: Slug): Outcome<List<Entity>>
     suspend fun readCityContent(slug: Slug): Outcome<CityContent>
+    suspend fun updateCity(edit: CityEdit): Outcome<City>
     suspend fun readCityFeed(cityId: CityId, cursor: EntityCursor?): Outcome<EntityFeed>
     suspend fun searchCity(query: String, country: String): Outcome<List<City>>
 }
@@ -20,6 +21,7 @@ class BrowserCityClient(private val client: FetchClient): CityClient {
     override suspend fun readTopCities() = client.getApi(Api.Cities.ReadTopCities)
     override suspend fun readCityPosts(slug: Slug) = client.getApi(Api.Cities.ReadCityPosts, slug)
     override suspend fun readCityContent(slug: Slug) = client.getApi(Api.Cities.ReadContent, slug)
+    override suspend fun updateCity(edit: CityEdit) = client.postApi(Api.Cities.UpdateCity, edit)
     override suspend fun readCityFeed(cityId: CityId, cursor: EntityCursor?) =
         client.getApi(Api.Cities.ReadFeed) {
             writeParam(it.cityId, cityId)

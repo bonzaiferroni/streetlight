@@ -100,6 +100,26 @@ A shell view is wired through these parts.
 
 A shell view with a map uses `shellBoxWithMap` and sets the marker points from the content.
 
+## Forms
+
+A form is built from the components in `Form.kt`, each a `ViewScope` extension.
+
+| Component | Holds |
+|---|---|
+| `formColumn` | The form's cards, stacked |
+| `formCard(name)` | A titled card of related sections |
+| `formSection(name)` | One labeled part of a card |
+| `formRow` | Sections side by side |
+| `formTextField(field, label)` | A text field bound to a `MutableTap<String>` |
+| `imageFormSection(instructions, imageEditor)` | An image drop bound to an `ImageEditor` |
+| `formSubmit(label, onClick, messenger, back)` | The submit button, its `messageBox`, and an optional back action |
+
+A field that must be filled calls `flowValid(key, validityTap, contentScope)` on its component, keyed by the edit DTO's `FooProperty` constant, so the field is marked while its key is in the DTO's `validity`.
+
+The form functions for a record live in `FooForm.kt`, one per card, each taking the record's editor. The view composes them in `formColumn` and ends with `formSubmit`.
+
+An editor uploads a pending image with `imageEditor.finalizeImage(messenger)` before it sends the edit.
+
 ## Entity Header
 
 `entityHeader` renders the header of an `Entity`, reading its content from the extensions in `streetlight.web.layouts`. A header for content that is not an `Entity` calls `pageHeader` with each value.
