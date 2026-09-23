@@ -60,11 +60,11 @@ Startup recreates the dropped triggers.
 
 ```kotlin
 init {
-    id.withDefinition("DEFAULT gen_random_uuid()")
+    id.defaultExpression(CustomFunction("gen_random_uuid", id.columnType))
 }
 ```
 
-`withDefinition` is an extension on `Column`, which is required here because `UuidTable` declares `id` as a final `override val`. Exposed inserts send their own UUID, so the default applies only to rows entered by hand.
+`defaultExpression` is used because `UuidTable` declares `id` as a final `override val`. It replaces the client-side default, so `createFoo` writes the id. A default set with `withDefinition` is not visible to `generateMigration`, which then offers to drop it in every migration.
 
 To apply the default to an existing table:
 
