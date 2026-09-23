@@ -38,7 +38,7 @@ fun FlowContent.feedSection(
             }
         }
 
-        layoutFeed {
+        layoutFeed(FeedMode.Grid) {
             // td: message when empty
             feed.entities.forEach { entity ->
                 val curator = feed.curatorOf(entity)
@@ -56,9 +56,11 @@ fun FlowContent.feedSection(
 }
 
 fun FlowContent.layoutFeed(
+    mode: FeedMode = FeedMode.Row,
     block: FlowContent.() -> Unit
 ) {
     column(FeedSection.MountId, FeedSection.FeedColumnMod) {
+        setAttribute(FeedRow.Mode.to(mode))
         block()
     }
 }

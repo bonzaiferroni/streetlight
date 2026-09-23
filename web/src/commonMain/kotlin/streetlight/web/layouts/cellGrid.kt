@@ -108,7 +108,7 @@ fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFo
 fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
 
 fun FlowContent.moreButton() {
-    icon(SvgFile.Info, CellGrid.ButtonIconMod) {
+    icon(SvgFile.Info, modify(CellGrid.ButtonIconMod, FeedRow.MoreButton)) {
         onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
     }
 }

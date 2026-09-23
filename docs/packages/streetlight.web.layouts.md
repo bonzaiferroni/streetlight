@@ -27,6 +27,22 @@ An entity supplies its content as data, such as an `EntityCell`. The component t
 
 The more button toggles the expanded content of a `feedRow`. Only a component with collapsed content shows it.
 
+### Feed Modes
+
+A feed is laid out by `FeedMode`, set on its mount as `FeedRow.Mode` by `layoutFeed(mode)`. Every mode renders the same markup, and the mode selector in `FeedProtoCss` alone places it.
+
+The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A modifier that differs by mode lives in the CSS, not on the element.
+
+| Mode | Feed | Entry |
+|---|---|---|
+| `Row` | One column | Thumbnail, centered text and badge in a row, cells below; one row from 960px with the cells as its right half |
+| `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2 with `object-fit: cover` and no padding, left-aligned text and badge below, then cells. The expanded content and more button are hidden |
+| `Minimal` | Not yet styled | |
+
+`feedSection` lays out in `Grid`. `layoutFeed` defaults to `Row`. In `Grid`, a child of the mount that is not an entry, such as the more button, spans the full width.
+
+An entry passes the `Image` itself, not a size of it, so the image carries its source set.
+
 `entityBody` renders an entity's description and links. `feedRow` shows it as its expanded content, capped with `limit`, and `entityHeader` shows it in full with the edit route. The links are a grid of equal-width buttons, capped at `--unit-32`: in columns that wrap on a narrow container, and in one column beside the description from 960px.
 
 ## Cells

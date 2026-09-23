@@ -1,7 +1,6 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
-import koala.SiteImage
 import koala.Svg
 import koala.modifier.*
 import kotlinx.css.px
@@ -36,9 +35,9 @@ fun DIV.configureFeedRow(
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
 ) {
-    addModifiers(modify(FeedRow.Base, modify(Padding(1), ZenBg)))
+    addModifiers(modify(FeedRow.Base, ZenBg))
 
-    val imageUrl = entity.image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
+    val featureImage = entity.image // td: make placeholder depend on post type
     val colorScheme = entity.toThemeColor()
     val flair = entity.toFlair()
     val postRoute = entity.toRoute()
@@ -54,29 +53,25 @@ fun DIV.configureFeedRow(
         setAttribute(CuratorMenu.CuratorJson.to(it))
     }
 
+    // each child takes a grid area, placed by FeedMode
     div(FeedRow.Content) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
-        row(Height(10)) {
-            navigationIfNotNull(postRoute, modify(Width(10), OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
-                image(imageUrl, modify(Size100P, ObjectFitCover))
+        navigationIfNotNull(postRoute, modify(FeedRow.Image, OverflowClip, MoonShadow)) {
+            image(featureImage, modify(Size100P, ObjectFitCover))
+        }
+        column(modify(FeedRow.Text, Gap(0), JustifyContentCenter, TextShadow)) {
+            navigationIfNotNull(postRoute) {
+                heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
             }
-            column(modify(Flex1, Gap(0), JustifyContentCenter, AlignItemsCenter, TextShadow)) {
-                navigationIfNotNull(postRoute) {
-                    heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
-                }
-                postLine(entity, isUniverse)
-            }
-
+            postLine(entity, isUniverse)
+        }
+        div(FeedRow.Badge) {
             when (curator) {
                 null -> flairBadge(flair.small)
                 else -> curatorBadge(curator)
             }
         }
-        // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
-
-        box(AlignItemsCenter) {
-            cellGrid(cells, buttons, modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline))
-        }
+        cellGrid(cells, buttons, modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline))
     }
 
     entityBody(description, links, limit = 1000)
@@ -116,7 +111,7 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
     val galaxy = entity.post?.galaxy?.takeIf { isUniverse }
 
-    column(modify(MarginTop(2.px), TextSmall, AlignItemsCenter, Gap(0), OpacityHigh)) {
+    column(modify(MarginTop(2.px), TextSmall, Gap(0), OpacityHigh)) {
         textBlock {
             +"posted by "
             when (username) {
@@ -145,9 +140,17 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     }
 }
 
+enum class FeedMode { Minimal, Row, Grid }
+
 object FeedRow {
+    val Mode = enumAttributeOf<FeedMode>("feed-mode")
+
     val Base = Class("feed-row")
     val Content = Base.withBemElement("content")
+    val Image = Base.withBemElement("image")
+    val Text = Base.withBemElement("text")
+    val Badge = Base.withBemElement("badge")
+    val MoreButton = Base.withBemElement("more-button")
     val ExpandedContent = Base.withBemElement("expanded-content")
     val ExpandedLinks = Base.withBemElement("expanded-links")
     val ExpandedBody = Base.withBemElement("expanded-body")
@@ -164,6 +167,7 @@ $Base {
     gap: 0;
     grid-template-rows: auto 1fr;
     container-type: inline-size;
+    padding: var(--unit);
     
     &:not($ToggleExpand) {
         $ExpandedContent {
@@ -173,18 +177,65 @@ $Base {
 }
 
 $Content {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+        "image text badge"
+        "cells cells cells";
+    align-items: center;
     gap: var(--unit);
     align-self: start;
     
     @container (min-width: 960px) {
-        flex-direction: row;
-        
-        > * {
-            flex: 1;
-        }
+        grid-template-columns: auto 1fr auto calc(50% - var(--unit) / 2);
+        grid-template-areas: "image text badge cells";
     }
+}
+
+$Image {
+    grid-area: image;
+    width: calc(var(--unit) * 10);
+    height: calc(var(--unit) * 10);
+    border: var(--outline-low);
+    border-radius: var(--unit);
+}
+
+$Text {
+    grid-area: text;
+    text-align: center;
+}
+
+$Badge { grid-area: badge; }
+
+$Cells { grid-area: cells; }
+
+${Mode.selector(FeedMode.Grid)} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+    > :not($Base) { grid-column: 1 / -1; }
+
+    $Base { padding: 0 0 var(--unit); }
+
+    $Content {
+        grid-template-columns: 0 1fr auto 0;
+        grid-template-areas:
+            "image image image image"
+            ". text badge ."
+            ". cells cells .";
+    }
+
+    $Image {
+        width: auto;
+        height: auto;
+        aspect-ratio: 3 / 2;
+        border: none;
+        border-radius: 0;
+    }
+
+    $Text { text-align: start; }
+
+    $ExpandedContent, $MoreButton { display: none; }
 }
 
 $ExpandedContent {
