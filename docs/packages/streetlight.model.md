@@ -24,6 +24,10 @@ The package follows several key structural patterns to maintain a clean domain m
 
 `Entity` is a sealed interface for content shown in a feed, a header, or anywhere else an entity appears. Its members name general content: `label`, `sublabel`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val body get() = description`, and leaves a member it does not hold at its default.
 
+### Feeds
+
+An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; a city feed takes it from the location or event.
+
 ### Workflows
 
 (This section is initially empty as no specific workflows have been defined yet for this package.)

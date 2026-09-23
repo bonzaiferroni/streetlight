@@ -51,6 +51,8 @@ Every shell ends its body container with `appFooter`. The body container is a `s
 
 A `FeedEntity` is rendered with `feedRow` from `streetlight.web.layouts`, as described in `streetlight.web.layouts.md`. A feed of content that is not specific to a galaxy passes `isUniverse = true`.
 
+`feedSection` takes the `GalaxyId` or `CityId` the feed belongs to and marks its section with it. The more button pages through `Api.Cities.ReadFeed` when the section is marked with a city, and through `Api.Posts.ReadFeed` otherwise.
+
 ## Universe
 
 Content that is not specific to a galaxy is universe content.

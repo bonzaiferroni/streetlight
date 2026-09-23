@@ -13,10 +13,14 @@ import streetlight.web.ui.AppAttribute
 fun FlowContent.feedSection(
     feed: EntityFeed,
     galaxyId: GalaxyId? = null,
+    cityId: CityId? = null,
 ) {
     section {
         galaxyId?.let {
             setAttribute(AppAttribute.GalaxyId.to(it))
+        }
+        cityId?.let {
+            setAttribute(AppAttribute.CityId.to(it))
         }
 
         filigree {
@@ -64,7 +68,7 @@ object FeedSection {
 
     val Attribute = slugAttributeOf("feed-slug")
     val FeedColumnMod = modify(Gap2Px, MoonShadow)
-    val NextCursor = jsonAttributeOf<PostCursor>("next-post-cursor")
+    val NextCursor = jsonAttributeOf<EntityCursor>("next-post-cursor")
 
     val SortByMark = JsSignature("sortByMark")
     val MorePosts = JsSignature("morePosts")

@@ -15,7 +15,7 @@ import koala.interop.ThisElement
 import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
 import streetlight.model.data.EntityFeed
-import streetlight.model.data.PostCursor
+import streetlight.model.data.EntityCursor
 import streetlight.web.layouts.FeedSection
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.RouteView
@@ -32,7 +32,7 @@ fun sortByMark(element: HTMLElement) {
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         mount.modify(OpacityHigh)
-        val feed = api.post.readPosts(galaxyId, PostCursor.Mark(markId)).toDataOr(toaster) {
+        val feed = api.post.readPosts(galaxyId, EntityCursor.Mark(markId)).toDataOr(toaster) {
             mount.unmodify(OpacityHigh)
             return@launchEffect
         }
@@ -47,10 +47,15 @@ fun sortByMark(element: HTMLElement) {
 fun morePosts(element: HTMLElement) {
     val nextCursor = element.requireAttribute(FeedSection.NextCursor)
     val galaxyId = element.getClosestAttribute(AppAttribute.GalaxyId)
+    val cityId = element.getClosestAttribute(AppAttribute.CityId)
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
-        val feed = api.post.readPosts(galaxyId, nextCursor).toDataOr(toaster) {
+        val outcome = when (cityId) {
+            null -> api.post.readPosts(galaxyId, nextCursor)
+            else -> api.city.readCityFeed(cityId, nextCursor)
+        }
+        val feed = outcome.toDataOr(toaster) {
             element.unmodify(OpacityHigh)
             return@launchEffect
         }

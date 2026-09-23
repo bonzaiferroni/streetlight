@@ -10,7 +10,7 @@ interface PostClient {
     suspend fun createPost(post: PostEdit): Outcome<Post>
     suspend fun editPost(post: PostEdit): Outcome<Post>
     suspend fun readPosts(galaxyIds: List<GalaxyId>): Outcome<List<Entity>>
-    suspend fun readPosts(galaxyId: GalaxyId?, cursor: PostCursor? = null): Outcome<EntityFeed>
+    suspend fun readPosts(galaxyId: GalaxyId?, cursor: EntityCursor? = null): Outcome<EntityFeed>
     suspend fun readPost(postId: PostId): Outcome<Entity>
     suspend fun readMapPosts(query: MapQuery): Outcome<EntityFeed>
     suspend fun removePost(postId: PostId): Outcome<Boolean>
@@ -22,7 +22,7 @@ class BrowserPostClient(private val client: FetchClient): PostClient {
     override suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
     override suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.UpdatePost, post)
     override suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
-    override suspend fun readPosts(galaxyId: GalaxyId?, cursor: PostCursor?) =
+    override suspend fun readPosts(galaxyId: GalaxyId?, cursor: EntityCursor?) =
         client.getApi(Api.Posts.ReadFeed) {
             writeParam(it.galaxyId, galaxyId)
             writeCursor(Api.Posts.ReadFeed, cursor)

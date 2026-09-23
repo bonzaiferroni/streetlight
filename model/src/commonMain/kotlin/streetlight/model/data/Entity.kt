@@ -44,7 +44,7 @@ data class EntityFeed(
     val entities: List<Entity>,
     val marks: Map<GalaxyId, List<GalaxyMark>>? = null,
     val tallies: Map<PostId, List<MarkTally>>? = null,
-    val nextCursor: PostCursor? = null,
+    val nextCursor: EntityCursor? = null,
 ) {
     val isCompleted get() = nextCursor == null
 

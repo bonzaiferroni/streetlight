@@ -7,15 +7,15 @@ import streetlight.model.Api
 data class MapQuery(
     val view: GeoRect,
     val seen: List<GeoRect>?,
-    val cursor: PostCursor.Lean
+    val cursor: EntityCursor.Lean
 )
 
 fun PathBuilder.writeMapQuery(query: MapQuery) {
     val it = Api.Posts.ReadMapQuery
     writeParam(it.view, query.view)
     writeParam(it.seen, query.seen)
-    if (query.cursor != PostCursor.Lean.Default) {
-        writeParam(it.postId, query.cursor.postId?.value)
+    if (query.cursor != EntityCursor.Lean.Default) {
+        writeParam(it.postId, query.cursor.recordId)
         writeParam(it.postLean, query.cursor.postLean)
     }
 }

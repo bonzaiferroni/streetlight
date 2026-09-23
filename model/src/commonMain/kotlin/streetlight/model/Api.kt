@@ -137,7 +137,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
         object ReadFeed: GetEndpoint<EntityFeed>(this), CursorEndpoint {
             val galaxyId = tableIdParamOf("galaxyId") { GalaxyId(it) }
-            override val postId = uuidParamOf("postId")
+            override val recordId = uuidParamOf("recordId")
             override val markId = uuidParamOf("markId")
             override val count = intParamOf("count")
             override val direction = enumParamOf<SortDirection>("direction")
@@ -175,6 +175,17 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadTopCities: GetEndpoint<List<City>>(this)
         object ReadCity: GetByIdEndpoint<Slug, City>(this)
         object ReadCityPosts: GetByIdEndpoint<Slug, List<Entity>>(this)
+        object ReadContent: GetByIdEndpoint<Slug, CityContent>(this)
+
+        object ReadFeed: GetEndpoint<EntityFeed>(this), CursorEndpoint {
+            val cityId = tableIdParamOf("cityId") { CityId(it) }
+            override val recordId = uuidParamOf("recordId")
+            override val markId = uuidParamOf("markId")
+            override val count = intParamOf("count")
+            override val direction = enumParamOf<SortDirection>("direction")
+            override val lean = intParamOf("lean")
+            override val recordAt = instantParamOf("recordAt")
+        }
 
         object Search: GetEndpoint<List<City>>(this) {
             val query = stringParamOf("name")

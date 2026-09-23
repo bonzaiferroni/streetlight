@@ -8,23 +8,23 @@ import kotlin.uuid.Uuid
 enum class SortDirection { Ascending, Descending }
 
 @Serializable
-sealed interface PostCursor {
-    val postId: PostId?
+sealed interface EntityCursor {
+    val recordId: Uuid?
     val direction: SortDirection
 
     @Serializable
     data class Time(
         override val direction: SortDirection,
-        override val postId: PostId? = null,
+        override val recordId: Uuid? = null,
         val recordAt: Instant? = null,
-    ) : PostCursor
+    ) : EntityCursor
 
     @Serializable
     data class Lean(
         override val direction: SortDirection,
-        override val postId: PostId? = null,
+        override val recordId: Uuid? = null,
         val postLean: Int? = null,
-    ) : PostCursor {
+    ) : EntityCursor {
         companion object  {
             val Default get() = Lean(SortDirection.Descending)
         }
@@ -33,9 +33,9 @@ sealed interface PostCursor {
     @Serializable
     data class Mark(
         val markId: MarkId,
-        override val postId: PostId? = null,
+        override val recordId: Uuid? = null,
         val count: Int? = null,
-    ) : PostCursor {
+    ) : EntityCursor {
         override val direction get() = SortDirection.Descending
     }
 

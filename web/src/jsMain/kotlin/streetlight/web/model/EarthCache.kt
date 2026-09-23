@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import streetlight.model.data.MapQuery
-import streetlight.model.data.PostCursor
+import streetlight.model.data.EntityCursor
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -47,7 +47,7 @@ class EarthCache(
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
             val feed = api.post.readMapPosts(query).toDataOr(toaster) { return@launch }
-            queries[queriedView] = MapCursor(feed.nextCursor as? PostCursor.Lean, feed.isCompleted)
+            queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Lean, feed.isCompleted)
             markerMap.addPoints(feed.entities)
         }
     }
@@ -62,13 +62,13 @@ class EarthCache(
             .take(MAX_VIEWED)
 
         val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.postLean })
-            ?: PostCursor.Lean.Default
+            ?: EntityCursor.Lean.Default
         return MapQuery(view, seen, query)
     }
 }
 
 data class MapCursor(
-    val cursor: PostCursor.Lean?,
+    val cursor: EntityCursor.Lean?,
     val isComplete: Boolean
 )
 

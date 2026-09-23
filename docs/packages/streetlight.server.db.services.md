@@ -37,6 +37,10 @@ A read bounded by time takes the arguments that define the window rather than th
 
 A dao may read a second table when that table exists only to serve the first. `SiteStatusTableDao.readEvents` reads `SiteEventTable` because site events have no use outside the status charts. A table with its own routes and lifecycle gets its own dao.
 
+## City Entities
+
+A city feed holds each location and each event as its own entity: a `Location`, and an `EventLocation` per event. `cityEntityQuery` reads them with one query per kind. With an `EntityCursor.Time`, each query is paged on `createdAt` and id, and the two are merged and cut to `EntityCursor.DefaultLimit`.
+
 ## Logging
 
 A file-private logger at the bottom of the file:

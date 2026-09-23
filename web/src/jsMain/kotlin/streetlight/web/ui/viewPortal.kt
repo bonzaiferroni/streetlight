@@ -72,6 +72,7 @@ fun ViewScope.viewPortal() {
 
                 // city
                 Screen.CityList -> viewCityListRoute()
+                Screen.City -> viewCityRoute()
 
                 // media
                 Screen.MediaForge -> viewContentPosterRoute()

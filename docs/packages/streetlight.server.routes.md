@@ -57,7 +57,7 @@ A serve function opens a separate `authGate` block for each of these when it hol
 
 ## Content Endpoints
 
-`serveContent.kt` implements the endpoints under `Api.Content`, one per route that has a shell. Each returns the result of `readFooContent`, so the endpoint and `renderFoo` read the same content.
+Every route that has a shell has a content endpoint returning the result of `readFooContent`, so the endpoint and `renderFoo` read the same content. The endpoint of a route whose content belongs to an `Api` node, such as `Api.Galaxies.ReadContent` or `Api.Cities.ReadContent`, is served with that node. `serveContent.kt` implements `Api.Content`, which holds the rest.
 
 ## Page Routes
 
