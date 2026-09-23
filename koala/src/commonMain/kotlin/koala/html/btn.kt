@@ -95,7 +95,8 @@ fun domainOf(url: String): String? =
 private const val video = "📼"
 
 private val domainPrefixMap = mapOf(
-    "youtube.com" to video
+    "youtube.com" to video,
+    "en.wikipedia.org" to "📖",
 )
 
 private val labelPrefixMap = mapOf(
