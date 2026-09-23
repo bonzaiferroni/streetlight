@@ -99,6 +99,23 @@ Modifiers are imported with `koala.modifier.*`, not by name.
 
 A property with few variations in use is defined in `CssUtility.kt` as a fixed `InlineStyle`, such as `Flex1` and `BorderRadius1`. A property whose values are kept consistent across the app is also a fixed `InlineStyle`, such as `Gap2Px`.
 
+## App Layers
+
+`AppLayer` names the layers of the page and carries the `z-index` each one sets.
+
+| Layer | Sets | Holds |
+|---|---|---|
+| `Backdrop` | `-1` | The glow behind the page, painted by `body::before` |
+| `Body` | Nothing | Route content, at the default |
+| `Overlay` | `2` | The fixed overlay above the content |
+| `AboveOverlay` | `3` | Content that must cover the overlay |
+
+An element takes a layer through `AppLayer.Foo.mod`. A stylesheet rule with no element to modify interpolates `AppLayer.Foo.zIndex`, so the value is written once.
+
+`z-index` orders siblings within one stacking context, so a layer holds only where the element resolves against the root. An ancestor with a `filter`, such as `Blur`, forms its own context and traps every layer inside it.
+
+Ordering within a layer is document order, and a `z-index` set for that, such as one child of a component over another, is a local value and not an `AppLayer`.
+
 ## Other Files
 
 | File | Holds |

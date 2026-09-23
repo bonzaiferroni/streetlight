@@ -170,7 +170,7 @@ body::before {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: -1;
+    z-index: ${AppLayer.Backdrop.zIndex};
     background:
     radial-gradient(circle calc(hypot(100vw, 100vh) * var(--rho-radius) / 100) at var(--rho-x) var(--rho-y),
         var(--rho-color) var(--rho-focus),
