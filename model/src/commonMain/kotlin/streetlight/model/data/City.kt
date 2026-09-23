@@ -17,7 +17,7 @@ data class City(
     val mapRank: Float?,
     override val geoPoint: GeoPoint,
     val geoRect: GeoRect,
-): FeedEntity {
+): Entity {
     override val label get() = name
     override val markerId get() = slug.value
 }

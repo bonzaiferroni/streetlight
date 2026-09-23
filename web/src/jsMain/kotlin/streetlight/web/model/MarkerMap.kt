@@ -18,7 +18,7 @@ import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
-import streetlight.model.data.FeedEntity
+import streetlight.model.data.Entity
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
@@ -56,11 +56,11 @@ class MarkerMap(
         }
     }
 
-    fun setPoints(entities: List<FeedEntity>) {
+    fun setPoints(entities: List<Entity>) {
         createAndSetMarkers(entities, emptyList())
     }
 
-    fun addPoints(entities: List<FeedEntity>) {
+    fun addPoints(entities: List<Entity>) {
         createAndSetMarkers(entities, stateNow.markers ?: emptyList())
     }
 
@@ -75,7 +75,7 @@ class MarkerMap(
         state.set { copy(markers = markers, focus = focus.takeIf { f -> markers.any { it.markerId == f?.markerId } }) }
     }
 
-    private fun createAndSetMarkers(entities: List<FeedEntity>, markers: List<EntityMarker> = emptyList()) {
+    private fun createAndSetMarkers(entities: List<Entity>, markers: List<EntityMarker> = emptyList()) {
         val markers = markers.toMutableList()
         entities.forEach { entity ->
             if (markers.any { it.markerId == entity.markerId }) return@forEach
@@ -111,7 +111,7 @@ data class PartitionedMarkers(
     val unbounded: List<EntityMarker>,
 )
 
-private fun createMarker(post: FeedEntity): EntityMarker? = when (post) {
+private fun createMarker(post: Entity): EntityMarker? = when (post) {
     is EventLocation -> EventMarker(post)
     is EventPost -> EventMarker(post.event)
     is Event -> null
@@ -125,4 +125,4 @@ private fun createMarker(post: FeedEntity): EntityMarker? = when (post) {
     is Star -> null
 }
 
-private fun createMap(posts: List<FeedEntity>): List<EntityMarker> = posts.mapNotNull { createMarker(it) }
+private fun createMap(posts: List<Entity>): List<EntityMarker> = posts.mapNotNull { createMarker(it) }

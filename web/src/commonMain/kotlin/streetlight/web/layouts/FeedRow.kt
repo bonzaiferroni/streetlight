@@ -9,7 +9,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus
-import streetlight.model.data.FeedEntity
+import streetlight.model.data.Entity
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.CuratorMenu
@@ -18,7 +18,7 @@ import streetlight.web.ui.curatorBadge
 import kotlin.time.Clock
 
 fun FlowContent.feedRow(
-    entity: FeedEntity,
+    entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
     cells: List<EntityCell> = entity.cells,
@@ -29,7 +29,7 @@ fun FlowContent.feedRow(
 }
 
 fun DIV.configureFeedRow(
-    entity: FeedEntity,
+    entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
     cells: List<EntityCell> = entity.cells,
@@ -95,7 +95,7 @@ fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(Width(10), ColorSchemeFg, OpacityLow))
 }
 
-fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
+fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     val username = entity.post?.username ?: entity.username ?: return
     val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
     val galaxy = entity.post?.galaxy?.takeIf { isUniverse }

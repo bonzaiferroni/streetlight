@@ -43,7 +43,7 @@ data class Location(
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     override val createdAt: Instant,
-): FeedEntity, LocationEntity, Labeled, RouteContent {
+): Entity, LocationEntity, Labeled, RouteContent {
 
     val addressLine by lazy {
         addressLineOf(address, city)

@@ -1,36 +1,17 @@
 package streetlight.web.io
 
-import kampfire.api.EmailAddress
-import kampfire.api.Slug
-import kampfire.api.UserApi
-import kampfire.api.Username
-import kampfire.model.AccountUpgradeRequest
-import kampfire.model.EmailChange
-import kampfire.model.GeoPoint
-import kampfire.model.GeoRect
-import kampfire.model.LoginRequest
 import kampfire.model.Outcome
-import kampfire.model.PasswordChange
-import kampfire.model.PasswordVerification
-import kampfire.model.SignUpRequest
-import kampfire.model.Url
-import koala.Image
-import koala.model.DocId
-import koala.model.DocTableItem
-import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
 import streetlight.model.writeCursor
 import web.sockets.WebSocket
-import web.sse.EventSource
-import kotlin.uuid.Uuid
 
 interface PostClient {
     suspend fun createPost(post: PostEdit): Outcome<Post>
     suspend fun editPost(post: PostEdit): Outcome<Post>
-    suspend fun readPosts(galaxyIds: List<GalaxyId>): Outcome<List<FeedEntity>>
+    suspend fun readPosts(galaxyIds: List<GalaxyId>): Outcome<List<Entity>>
     suspend fun readPosts(galaxyId: GalaxyId?, cursor: PostCursor? = null): Outcome<EntityFeed>
-    suspend fun readPost(postId: PostId): Outcome<FeedEntity>
+    suspend fun readPost(postId: PostId): Outcome<Entity>
     suspend fun readMapPosts(query: MapQuery): Outcome<EntityFeed>
     suspend fun removePost(postId: PostId): Outcome<Boolean>
     suspend fun updateMark(update: MarkUpdate): Outcome<Unit>

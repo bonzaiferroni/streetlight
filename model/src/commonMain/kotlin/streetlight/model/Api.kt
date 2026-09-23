@@ -158,8 +158,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadConfig: GetByIdEndpoint<Slug, GalaxyConfig>(this)
         object CreatePost: PostEndpoint<PostEdit, Post>(this)
         object UpdatePost: PostEndpoint<PostEdit, Post>(this)
-        object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<FeedEntity>>(this)
-        object ReadPostId: GetByIdEndpoint<PostId, FeedEntity>(this)
+        object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<Entity>>(this)
+        object ReadPostId: GetByIdEndpoint<PostId, Entity>(this)
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)
         object RemovePost: PostEndpoint<PostId, Boolean>(this)
         object UpdateMark: PostEndpoint<MarkUpdate, Unit>(this)
@@ -174,7 +174,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Cities: ApiNode(this) {
         object ReadTopCities: GetEndpoint<List<City>>(this)
         object ReadCity: GetByIdEndpoint<Slug, City>(this)
-        object ReadCityPosts: GetByIdEndpoint<Slug, List<FeedEntity>>(this)
+        object ReadCityPosts: GetByIdEndpoint<Slug, List<Entity>>(this)
 
         object Search: GetEndpoint<List<City>>(this) {
             val query = stringParamOf("name")

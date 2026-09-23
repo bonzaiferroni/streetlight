@@ -8,7 +8,7 @@ import streetlight.web.layouts.feedRow
 fun ViewScope.viewGalaxyList() {
 
     column(mod = BodyStyle.MainColumn) {
-        featureHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
+        pageHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
 
         lazyTabs(Id("galaxy-list-tabs")) {
             tab("My Galaxies") {

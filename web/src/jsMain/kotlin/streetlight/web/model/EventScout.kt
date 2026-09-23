@@ -12,7 +12,7 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventLocation
-import streetlight.model.data.FeedEntity
+import streetlight.model.data.Entity
 import streetlight.model.data.Galaxy
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostId
@@ -97,7 +97,7 @@ class EventScout(
 }
 
 data class EventScoutState(
-    val post: FeedEntity? = null,
+    val post: Entity? = null,
     val stage: EventScoutStage = EventScoutStage.LocationSearch,
     val query: String = "",
     val event: EventLocation? = null,

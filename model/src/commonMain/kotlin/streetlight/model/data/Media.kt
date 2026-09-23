@@ -28,7 +28,7 @@ data class Media(
     override val design: PageDesign?,
     val updatedAt: Instant,
     override val createdAt: Instant,
-): FeedEntity, RouteContent, DesignContent {
+): Entity, RouteContent, DesignContent {
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
     override val body get() = text

@@ -10,14 +10,14 @@ import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
-import streetlight.web.ui.featureHeader
+import streetlight.web.ui.pageHeader
 
 fun FlowContent.siteDocShell(content: DocContent) {
     val doc = content.node.doc
     val table = content.table
     val node = content.node
     column(BodyStyle.MainColumn) {
-        featureHeader(doc.title, "a Streetlight doc", doc.image)
+        pageHeader(doc.title, "a Streetlight doc", doc.image)
 
         row(AlignItemsStart) {
             card(modify(Width(32), ZenBg, Gap0, PositionSticky, Css.Top(8))) {

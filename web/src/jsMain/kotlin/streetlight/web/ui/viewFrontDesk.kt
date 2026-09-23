@@ -2,11 +2,10 @@ package streetlight.web.ui
 
 import koala.SiteImage
 import koala.dom.*
-import streetlight.web.model.FeedbackHub
 
 fun ViewScope.viewFrontDesk() {
     column(BodyStyle.MainColumn) {
-        featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
+        pageHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
 
         lazyTabs {
             tab("Help") {

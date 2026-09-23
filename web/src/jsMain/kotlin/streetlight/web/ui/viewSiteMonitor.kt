@@ -13,7 +13,7 @@ fun RouteScope.viewSiteMonitor() {
     column(BodyStyle.ShellColumn) {
         appHeader()
         column(BodyStyle.MainColumn) {
-            featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom)
+            pageHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom)
 
             lazyScript(
                 "https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js",

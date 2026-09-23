@@ -32,19 +32,19 @@ enum class PostOrder(label: String? = null): Labeled {
 data class LocationPost(
     val location: Location,
     override val post: Post,
-): FeedEntity by location {
+): Entity by location {
 }
 
 @Serializable
 data class EventPost(
     val event: EventLocation,
     override val post: Post,
-): FeedEntity by event {
+): Entity by event {
 }
 
 @Serializable
 data class MediaPost(
     val media: Media,
     override val post: Post,
-): FeedEntity by media {
+): Entity by media {
 }

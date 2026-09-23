@@ -14,7 +14,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
-import streetlight.model.data.FeedEntity
+import streetlight.model.data.Entity
 import streetlight.model.data.Star
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.EventRoute
@@ -34,7 +34,7 @@ val Doc.route get() = SiteDocRoute(docId)
 val Media.route get() = MediaRoute(slug)
 val Galaxy.route get() = GalaxyRoute(slug)
 
-val FeedEntity.contentRoute get(): AppRoute? = when (this) {
+val Entity.contentRoute get(): AppRoute? = when (this) {
     is City -> CityRoute(slug)
     is EventLocation -> eventRoute
     is EventPost -> event.eventRoute
@@ -48,7 +48,7 @@ val FeedEntity.contentRoute get(): AppRoute? = when (this) {
     is Star -> StarRoute(username)
 }
 
-val FeedEntity.themeColor get(): ThemeColor = when (this) {
+val Entity.themeColor get(): ThemeColor = when (this) {
     is City -> ThemeColor.City
     is EventLocation -> ThemeColor.Event
     is EventPost -> ThemeColor.Event
@@ -62,14 +62,14 @@ val FeedEntity.themeColor get(): ThemeColor = when (this) {
     is Star -> ThemeColor.Primary
 }
 
-val FeedEntity.flair get(): FlairIcon = when (this) {
+val Entity.flair get(): FlairIcon = when (this) {
     is EventLocation,is EventPost, is Event -> FlairIcon.Event
     is LocationPost, is Location -> FlairIcon.Location
     is MediaPost, is Media -> FlairIcon.Media
     else -> FlairIcon.Default
 }
 
-val FeedEntity.cells get(): List<EntityCell> = when (this) {
+val Entity.cells get(): List<EntityCell> = when (this) {
     is City -> emptyList()
     is EventLocation -> listOfNotNull(
         startsAt?.let { dateCell(it) },
@@ -97,7 +97,7 @@ val FeedEntity.cells get(): List<EntityCell> = when (this) {
     is Star -> emptyList()
 }
 
-fun entityButtonsOf(entity: FeedEntity, showMore: Boolean): List<EntityButton> = when (entity) {
+fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton> = when (entity) {
     is City -> emptyList()
     is EventLocation -> buildList {
         add(EntityButton { starToggle(entity) })
@@ -126,14 +126,14 @@ fun entityButtonsOf(entity: FeedEntity, showMore: Boolean): List<EntityButton> =
     is Star -> emptyList()
 }
 
-val FeedEntity.subRoute get(): AppRoute? = when (this) {
+val Entity.subRoute get(): AppRoute? = when (this) {
     is MediaPost -> null
     is EventPost -> event.locationRoute
     is LocationPost -> null
     else -> null
 }
 
-val FeedEntity.subtitle get(): String? = when (this) {
+val Entity.subtitle get(): String? = when (this) {
     is MediaPost -> media.subtitle
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine

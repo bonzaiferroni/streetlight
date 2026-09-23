@@ -24,7 +24,7 @@ data class Star(
     val design: PageDesign?,
     val accountType: AccountType,
     override val createdAt: Instant,
-): FeedEntity {
+): Entity {
     val isAdmin get() = roles.contains(UserRole.Admin)
 
     override val label get() = username.value

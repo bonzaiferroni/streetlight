@@ -8,10 +8,9 @@ import koala.html.AppRoute
 import koala.model.MarkerId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 @Serializable
-sealed interface FeedEntity {
+sealed interface Entity {
     val label: String
     val geoPoint: GeoPoint?
     val markerId: MarkerId?
@@ -38,18 +37,18 @@ data class CustomEntity(
     val route: AppRoute? = null,
     override val links: List<ExtraLink>? = null,
     override val createdAt: Instant? = null,
-): FeedEntity
+): Entity
 
 @Serializable
 data class EntityFeed(
-    val entities: List<FeedEntity>,
+    val entities: List<Entity>,
     val marks: Map<GalaxyId, List<GalaxyMark>>? = null,
     val tallies: Map<PostId, List<MarkTally>>? = null,
     val nextCursor: PostCursor? = null,
 ) {
     val isCompleted get() = nextCursor == null
 
-    fun curatorOf(entity: FeedEntity): CuratorStatus? {
+    fun curatorOf(entity: Entity): CuratorStatus? {
         val postId = entity.post?.postId ?: return null
         val galaxyId = entity.post?.galaxy?.galaxyId ?: return null
         val galaxyMarks = marks?.get(galaxyId) ?: return null

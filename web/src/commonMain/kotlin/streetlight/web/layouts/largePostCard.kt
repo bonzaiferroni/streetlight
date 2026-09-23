@@ -3,10 +3,10 @@ package streetlight.web.layouts
 import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.model.data.FeedEntity
+import streetlight.model.data.Entity
 
 fun FlowContent.largePostCard(
-    entity: FeedEntity,
+    entity: Entity,
     mod: Modifier? = null,
 ) {
     val title = entity.label

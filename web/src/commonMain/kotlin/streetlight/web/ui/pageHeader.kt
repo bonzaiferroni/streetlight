@@ -10,7 +10,6 @@ import koala.html.card
 import koala.html.column
 import koala.html.filigree
 import koala.html.heading2
-import koala.html.heading4
 import koala.html.markdown
 import koala.html.metaImage
 import koala.html.row
@@ -23,7 +22,7 @@ import streetlight.web.layouts.EntityCell
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.cellGrid
 
-fun FlowContent.featureHeader(
+fun FlowContent.pageHeader(
     title: String,
     descriptor: String,
     image: Image?,
