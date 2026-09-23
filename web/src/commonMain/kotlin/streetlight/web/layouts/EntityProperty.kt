@@ -34,7 +34,7 @@ val Doc.route get() = SiteDocRoute(docId)
 val Media.route get() = MediaRoute(slug)
 val Galaxy.route get() = GalaxyRoute(slug)
 
-val Entity.contentRoute get(): AppRoute? = when (this) {
+fun Entity.toRoute(): AppRoute? = when (this) {
     is City -> CityRoute(slug)
     is EventLocation -> eventRoute
     is EventPost -> event.eventRoute
@@ -48,7 +48,7 @@ val Entity.contentRoute get(): AppRoute? = when (this) {
     is Star -> StarRoute(username)
 }
 
-val Entity.themeColor get(): ThemeColor = when (this) {
+fun Entity.toThemeColor(): ThemeColor = when (this) {
     is City -> ThemeColor.City
     is EventLocation -> ThemeColor.Event
     is EventPost -> ThemeColor.Event
@@ -62,35 +62,40 @@ val Entity.themeColor get(): ThemeColor = when (this) {
     is Star -> ThemeColor.Primary
 }
 
-val Entity.flair get(): FlairIcon = when (this) {
+fun Entity.toFlair(): FlairIcon = when (this) {
     is EventLocation,is EventPost, is Event -> FlairIcon.Event
     is LocationPost, is Location -> FlairIcon.Location
     is MediaPost, is Media -> FlairIcon.Media
     else -> FlairIcon.Default
 }
 
-val Entity.cells get(): List<EntityCell>? = when (this) {
-    is City -> null
+fun Entity.toCells(): List<EntityCell>? = when (this) {
+    is City -> listOf(
+        EntityCell(SvgFile.MapPin, locationCount.toMetricString(), null, "locations"),
+        EntityCell(SvgFile.Calendar, eventCount.toMetricString(), null, "events"),
+    )
     is EventLocation -> listOfNotNull(
         startsAt?.let { dateCell(it) },
         startsAtCell(startsAt),
         cost?.let { costCell(it, url) },
         locationName?.let { EntityCell(SvgFile.MapPin, it, null) },
     )
-    is EventPost -> event.cells
+    is EventPost -> event.toCells()
     is Event -> listOfNotNull(
         startsAt?.let { dateCell(it) },
         startsAtCell(startsAt),
         cost?.let { costCell(it, website) },
     )
     is Galaxy -> listOf(
-        EntityCell(SvgFile.Calendar, eventCount.toMetricString(), null),
+        EntityCell(SvgFile.MapPin, locationCount.toMetricString(), null, "locations"),
+        EntityCell(SvgFile.Calendar, eventCount.toMetricString(), null, "events"),
     )
-    is LocationPost -> location.cells
+    is LocationPost -> location.toCells()
     is MediaPost -> null
     is Location -> listOfNotNull(
         EntityCell(SvgFile.MapPin, mapType ?: "Location", null),
         city?.let { EntityCell(SvgFile.City, it, null) },
+        EntityCell(SvgFile.Calendar, eventCount.toMetricString(), null, "events"),
     )
     is Media -> null
     is CustomEntity -> null
@@ -126,14 +131,14 @@ fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton>? = wh
     is Star -> null
 }
 
-val Entity.subRoute get(): AppRoute? = when (this) {
+fun Entity.toSubRoute(): AppRoute? = when (this) {
     is MediaPost -> null
     is EventPost -> event.locationRoute
     is LocationPost -> null
     else -> null
 }
 
-val Entity.subtitle get(): String? = when (this) {
+fun Entity.toSubtitle(): String? = when (this) {
     is MediaPost -> media.subtitle
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine

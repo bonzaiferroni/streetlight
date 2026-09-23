@@ -6,14 +6,14 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Entity
 import streetlight.web.layouts.EntityCell
-import streetlight.web.layouts.cells
+import streetlight.web.layouts.toCells
 import streetlight.web.layouts.entityButtonsOf
-import streetlight.web.layouts.themeColor
+import streetlight.web.layouts.toThemeColor
 
 fun FlowContent.entityHeader(
     entity: Entity,
     descriptor: String,
-    cells: List<EntityCell>? = entity.cells,
+    cells: List<EntityCell>? = entity.toCells(),
     editRoute: AppRoute? = null,
     mod: Modifier? = null,
     block: DIV.() -> Unit = { },
@@ -22,7 +22,7 @@ fun FlowContent.entityHeader(
     descriptor = descriptor,
     image = entity.image,
     subtitle = entity.sublabel,
-    colorScheme = entity.themeColor,
+    colorScheme = entity.toThemeColor(),
     description = entity.body,
     cells = cells,
     buttons = entityButtonsOf(entity, false),

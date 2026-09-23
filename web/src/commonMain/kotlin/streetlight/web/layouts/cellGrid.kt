@@ -16,6 +16,7 @@ import koala.interop.ThisElement
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
+import kotlinx.html.span
 import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
 
@@ -28,14 +29,8 @@ fun FlowContent.cellGrid(
     div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, mod)) {
         cells?.forEach { cell ->
             when (val url = cell.url) {
-                null -> row(CellGrid.CellMod) {
-                    icon(cell.icon, CellGrid.IconMod)
-                    textBlock(cell.text, CellGrid.TextMod)
-                }
-                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) {
-                    icon(cell.icon, CellGrid.IconMod)
-                    textBlock(cell.text, CellGrid.TextMod)
-                }
+                null -> row(CellGrid.CellMod) { cellContent(cell) }
+                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) { cellContent(cell) }
             }
         }
         if (!buttons.isNullOrEmpty()) {
@@ -46,15 +41,16 @@ fun FlowContent.cellGrid(
     }
 }
 
-fun FlowContent.cell(
-    svg: Svg? = null,
-    text: String? = null,
-    block: DIV.() -> Unit = {}
-) {
-    row(CellGrid.CellMod) {
-        svg?.let { icon(it, CellGrid.IconMod) }
-        text?.let { textBlock(it, CellGrid.TextMod) }
-        block()
+private fun FlowContent.cellContent(cell: EntityCell) {
+    icon(cell.icon, CellGrid.IconMod)
+    textBlock(mod = CellGrid.TextMod) {
+        +cell.text
+        cell.label?.let { label ->
+            span {
+                addModifiers(CellGrid.LabelMod)
+                +" $label"
+            }
+        }
     }
 }
 
@@ -64,6 +60,7 @@ object CellGrid {
     val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
     val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
+    val LabelMod = modify(OpacityHigh)
 }
 
 //language="CSS"
@@ -106,12 +103,6 @@ fun costCell(cost: Float, purchaseUrl: Url?): EntityCell {
 
 fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.value ?: "Guest", null)
 
-fun FlowContent.textPropertyCell(property: String, value: String) {
-    cell {
-        textBlock(value, modify(CellGrid.TextMod, MarginLeft(1)))
-    }
-}
-
 fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFormat(), null)
 
 fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
@@ -126,6 +117,7 @@ data class EntityCell(
     val icon: Svg,
     val text: String,
     val url: Url?,
+    val label: String? = null,
 )
 
 data class EntityButton(

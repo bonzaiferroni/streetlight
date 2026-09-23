@@ -4,11 +4,11 @@ Server-renderable components that lay out content. They are declared in `commonM
 
 ## Entity Properties
 
-A property that depends on the entity type is an `Entity` extension in `EntityProperty.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
+A property that depends on the entity type is an `Entity` extension function in `EntityProperty.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
 
 | Form | Used when | Example |
 |---|---|---|
-| Extension property | The entity alone decides the value | `Entity.cells` |
+| `toFoo()` extension function | The entity alone decides the value | `Entity.toCells()` |
 | `fooOf(entity, …)` function | The value also depends on where it is shown | `entityButtonsOf(entity, showMore)` |
 
 A property returns `null` for content the entity does not have, and a parameter that receives it is nullable.
@@ -33,7 +33,9 @@ The more button toggles the expanded content of a `feedRow`. Only a component wi
 
 | Type | Holds |
 |---|---|
-| `EntityCell` | An icon, a text value and an optional `Url`. A cell with a `Url` is a link |
+| `EntityCell` | An icon, a text value, an optional `Url` and an optional label. A cell with a `Url` is a link |
 | `EntityButton` | A block that builds its own element |
 
 A cell for a single property, such as `costCell`, is a function in `cellGrid.kt` returning an `EntityCell`.
+
+A label follows the text, at `OpacityHigh`. A cell whose text does not name what it shows, such as a count, carries a label.

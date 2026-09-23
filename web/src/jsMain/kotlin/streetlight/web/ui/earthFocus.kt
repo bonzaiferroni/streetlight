@@ -21,7 +21,7 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.cellGrid
-import streetlight.web.layouts.cells
+import streetlight.web.layouts.toCells
 import streetlight.web.layouts.entityButtonsOf
 import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
@@ -73,7 +73,7 @@ private fun ViewScope.focusPanel(
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(Gap0) {
             featureImage(post.image, Flex1)
-            cellGrid(post.cells, entityButtonsOf(post, false))
+            cellGrid(post.toCells(), entityButtonsOf(post, false))
         }
         column(Padding(1)) {
             column(modify(Gap0, TextAlignCenter)) {

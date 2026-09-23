@@ -21,7 +21,7 @@ fun FlowContent.feedRow(
     entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell>? = entity.cells,
+    cells: List<EntityCell>? = entity.toCells(),
 ) {
     div() {
         configureFeedRow(entity, isUniverse, curator, cells)
@@ -32,14 +32,14 @@ fun DIV.configureFeedRow(
     entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell>? = entity.cells,
+    cells: List<EntityCell>? = entity.toCells(),
 ) {
     addModifiers(modify(FeedRow.Base, modify(Padding(1), ZenBg)))
 
     val imageUrl = entity.image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
-    val colorScheme = entity.themeColor
-    val flair = entity.flair
-    val postRoute = entity.contentRoute
+    val colorScheme = entity.toThemeColor()
+    val flair = entity.toFlair()
+    val postRoute = entity.toRoute()
     val heading = entity.label
     val buttons = entityButtonsOf(entity, true)
     val description = entity.body

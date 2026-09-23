@@ -10,12 +10,12 @@ fun FlowContent.largePostCard(
     mod: Modifier? = null,
 ) {
     val title = entity.label
-    val subtitle = entity.subtitle
+    val subtitle = entity.toSubtitle()
     val description = entity.body
     val links = entity.links
     val image = entity.image
-    val postRoute = entity.contentRoute
-    val subRoute = entity.subRoute
+    val postRoute = entity.toRoute()
+    val subRoute = entity.toSubRoute()
 
     card(modify(mod, ContainerTypeInlineSize, Padding(0), OverflowHidden, MoonShadow)) {
         column(modify(ContainerTypeInlineSize, ContainerLgRow, Gap0)) {
@@ -54,7 +54,7 @@ fun FlowContent.largePostCard(
             }
 
             // grid content
-            cellGrid(entity.cells, entityButtonsOf(entity, false), modify(Flex1, ContainerLgColumn, MinHeight(8)))
+            cellGrid(entity.toCells(), entityButtonsOf(entity, false), modify(Flex1, ContainerLgColumn, MinHeight(8)))
         }
     }
 }
