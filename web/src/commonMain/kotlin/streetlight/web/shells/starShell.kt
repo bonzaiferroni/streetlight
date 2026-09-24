@@ -1,24 +1,15 @@
 package streetlight.web.shells
 
 import koala.html.Id
-import koala.html.column
 import koala.html.dataIsland
-import koala.html.section
 import kotlinx.html.FlowContent
 import streetlight.model.data.StarContent
 import streetlight.web.layouts.renderLayout
-import streetlight.web.pages.appFooter
-import streetlight.web.pages.appHeader
-import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.mainBody
 
 fun FlowContent.starShell(content: StarContent) {
-    column(BodyStyle.ShellColumn) {
-        appHeader()
-
-        section(BodyStyle.MainColumn) {
-            renderLayout(content)
-            appFooter()
-        }
+    mainBody("starShell.kt") {
+        renderLayout(content)
     }
 
     dataIsland(StarShell.islandId, content)

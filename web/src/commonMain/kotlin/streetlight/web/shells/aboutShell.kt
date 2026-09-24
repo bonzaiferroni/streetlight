@@ -3,17 +3,18 @@ package streetlight.web.shells
 import kampfire.api.toMarkdown
 import koala.modifier.*
 import koala.html.card
-import koala.html.column
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.markdown
 import koala.html.section
+import koala.html.setId
 import koala.html.tabs
 import kotlinx.html.FlowContent
-import streetlight.web.pages.appFooter
+import streetlight.web.ui.mainBody
 
 fun FlowContent.aboutShell() {
-    column(PrivacyPolicyKey.id) {
+    mainBody("aboutShell.kt") {
+        setId(PrivacyPolicyKey.id)
         section {
             filigree {
                 heading1("About Streetlight", Shrinkable)
@@ -40,8 +41,6 @@ fun FlowContent.aboutShell() {
                 }
             }
         }
-
-        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/aboutShell.kt")
     }
 }
 

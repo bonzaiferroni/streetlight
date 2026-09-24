@@ -2,17 +2,18 @@ package streetlight.web.ui
 
 import koala.dom.AppendScope
 import koala.dom.column
+import koala.html.section
 import koala.modifier.*
-import kotlinx.html.DIV
+import kotlinx.html.SECTION
 import streetlight.web.pages.appHeader
 
-fun AppendScope.shellBody(
+fun AppendScope.mainBody(
     sourceFile: String,
     mod: Modifier? = null,
-    content: DIV.() -> Unit
+    content: SECTION.() -> Unit
 ) = column(modify(BodyStyle.ShellColumn, mod)) {
     appHeader()
-    column(BodyStyle.MainColumn) {
+    section(BodyStyle.MainColumn) {
         content()
         appFooter(sourcePathJsUi(sourceFile))
     }

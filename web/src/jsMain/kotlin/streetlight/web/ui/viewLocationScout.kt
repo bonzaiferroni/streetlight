@@ -19,7 +19,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy, username: Username) {
     val routeFlow = model.stateFlow.dedupNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
-    column {
+    mainBody("viewLocationScout.kt") {
         introSection("Location Scout", lottie = LottieFile.StrollingMan) {
             textBlock("Let's post a location.")
         }
@@ -53,8 +53,6 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy, username: Username) {
                 }
             }
         }
-
-        appFooter(sourcePathJsUi("viewLocationScout.kt"))
     }
 }
 

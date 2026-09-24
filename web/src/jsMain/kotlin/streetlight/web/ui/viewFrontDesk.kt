@@ -4,7 +4,7 @@ import koala.SiteImage
 import koala.dom.*
 
 fun ViewScope.viewFrontDesk() {
-    column(BodyStyle.MainColumn) {
+    mainBody("viewFrontDesk.kt") {
         pageHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
 
         lazyTabs {

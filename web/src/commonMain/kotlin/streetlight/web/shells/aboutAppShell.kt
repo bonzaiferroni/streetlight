@@ -10,70 +10,71 @@ import koala.html.column
 import koala.html.heading1
 import koala.html.lottie
 import kotlinx.css.pct
-import streetlight.web.pages.appFooter
+import streetlight.web.ui.mainBody
 
 fun FlowContent.aboutAppShell() {
-    column(AlignItemsCenter) {
-        heading1("About Streetlight")
-        column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.CupShuffle, modify(Flex1, MaxWidth(50.pct)))
-            val introText = "Streetlight is your front page for community events. " +
-                    "It is cross-platform, open-source, and 100% Kotlin. "
-            textBlock(introText, modify(Flex3, TextLarge))
-        }
-        column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth(50.pct)))
-            column(Flex3) {
-                column(Gap0) {
-                    textBlock("Do you have a talent to share with passersby?")
-                    textBlock("Do you have a business, venue, or message you would like to promote?")
-                    textBlock("Are you walking down the street somewhere and looking for something to experience?")
+    mainBody("aboutAppShell.kt") {
+        column(AlignItemsCenter) {
+            heading1("About Streetlight")
+            column(modify(MediaMdRow, AlignItemsCenter)) {
+                lottie(LottieFile.CupShuffle, modify(Flex1, MaxWidth(50.pct)))
+                val introText = "Streetlight is your front page for community events. " +
+                        "It is cross-platform, open-source, and 100% Kotlin. "
+                textBlock(introText, modify(Flex3, TextLarge))
+            }
+            column(modify(MediaMdRow, AlignItemsCenter)) {
+                lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth(50.pct)))
+                column(Flex3) {
+                    column(Gap0) {
+                        textBlock("Do you have a talent to share with passersby?")
+                        textBlock("Do you have a business, venue, or message you would like to promote?")
+                        textBlock("Are you walking down the street somewhere and looking for something to experience?")
+                    }
+                    textBlock("Consider downloading Streetlight to see what it can offer.", Bold)
                 }
-                textBlock("Consider downloading Streetlight to see what it can offer.", Bold)
+            }
+            column(modify(MediaMdRow, AlignItemsCenter)) {
+                lottie(LottieFile.Cat, modify(Flex1, MaxWidth(50.pct)))
+                column(Flex3) {
+                    textBlock {
+                        externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
+                        +" is 100% free and open-source. Free as in speech, free as in beer. "
+                    }
+                    textBlock(
+                        "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
+                                "As a software development community, we welcome people at any stage in their career. "
+                        // pending resources to follow through
+    //                            "Are you interested in working on open-source software full time? " +
+    //                            "We are based in Aurora, CO, and we have support opportunities. "
+                    )
+    //                paragraph("Work on Streetlight or your own open-source idea.", Large)
+                    textBlock {
+                        +"For better or for worse, apps are evermore present in our lives. "
+                        +"As software engineers, we hold influence. "
+                        +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
+                        +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
+                    }
+                    textBlock("It's giants all the way down.", TextLarge)
+                }
+            }
+            column(modify(Gap0, AlignItemsStretch, Width(100.pct), MarginTop(4))) {
+                heading5("Our Giants", TextAlignCenter)
+                githubLink("web", "kotlinx.html", "Kotlin")
+                githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
+                githubLink("app database", "SQLite", "sqlite")
+                githubLink("app ORM", "Room", "androidx-releases")
+                githubLink("server", "Ktor", "jetbrains")
+                githubLink("server database", "Postgres", "postgres")
+                githubLink("server ORM", "Exposed", "jetbrains")
+                githubLink("animation", "Lottie", "airbnb")
+                githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
+                githubLink("map", "MapLibre", "maplibre-gl-js")
+                githubLink("map data", "OpenFreeMap", "hyper-knot")
+                githubLink("icons", "Tabler", "tabler")
+                githubLink("image encoding", "scrimage", "sksamuel")
+                githubLink("HTML parsing", "ksoup", "fleeksoft")
             }
         }
-        column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.Cat, modify(Flex1, MaxWidth(50.pct)))
-            column(Flex3) {
-                textBlock {
-                    externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
-                    +" is 100% free and open-source. Free as in speech, free as in beer. "
-                }
-                textBlock(
-                    "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
-                            "As a software development community, we welcome people at any stage in their career. "
-                    // pending resources to follow through
-//                            "Are you interested in working on open-source software full time? " +
-//                            "We are based in Aurora, CO, and we have support opportunities. "
-                )
-//                paragraph("Work on Streetlight or your own open-source idea.", Large)
-                textBlock {
-                    +"For better or for worse, apps are evermore present in our lives. "
-                    +"As software engineers, we hold influence. "
-                    +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
-                    +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
-                }
-                textBlock("It's giants all the way down.", TextLarge)
-            }
-        }
-        column(modify(Gap0, AlignItemsStretch, Width(100.pct), MarginTop(4))) {
-            heading5("Our Giants", TextAlignCenter)
-            githubLink("web", "kotlinx.html", "Kotlin")
-            githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
-            githubLink("app database", "SQLite", "sqlite")
-            githubLink("app ORM", "Room", "androidx-releases")
-            githubLink("server", "Ktor", "jetbrains")
-            githubLink("server database", "Postgres", "postgres")
-            githubLink("server ORM", "Exposed", "jetbrains")
-            githubLink("animation", "Lottie", "airbnb")
-            githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
-            githubLink("map", "MapLibre", "maplibre-gl-js")
-            githubLink("map data", "OpenFreeMap", "hyper-knot")
-            githubLink("icons", "Tabler", "tabler")
-            githubLink("image encoding", "scrimage", "sksamuel")
-            githubLink("HTML parsing", "ksoup", "fleeksoft")
-        }
-        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/aboutAppShell.kt")
     }
 }
 

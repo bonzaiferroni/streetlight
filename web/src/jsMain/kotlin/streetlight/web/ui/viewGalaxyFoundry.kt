@@ -8,7 +8,7 @@ import streetlight.model.data.GalaxyEdit
 fun ViewScope.viewGalaxyFoundry() {
     val model = app.getGalaxyEditor(GalaxyEdit(marks = emptyList()), contentScope)
 
-    column(BodyStyle.MainColumn) {
+    mainBody("viewGalaxyFoundry.kt") {
         introSection("Galaxy Foundry", lottie = LottieFile.AstronautReading) {
             textBlock(introText1)
             textBlock(introText2)
@@ -33,8 +33,6 @@ fun ViewScope.viewGalaxyFoundry() {
             button("back", { portal.goBack() })
             button("Found Galaxy", model::submit, Accent)
         }
-
-        appFooter(sourcePathJsUi("viewGalaxyFoundry.kt"))
     }
 }
 

@@ -18,7 +18,7 @@ import streetlight.web.model.SessionClient
 import streetlight.model.ui.toRoute
 
 fun ViewScope.viewStarDash(star: Star) {
-    column(mod = BodyStyle.MainColumn) {
+    mainBody("viewStarDash.kt") {
         lazyTabs {
             tab("activity") {
                 activityContent(star)
@@ -27,11 +27,9 @@ fun ViewScope.viewStarDash(star: Star) {
                 sandboxContent(star)
             }
         }
-
-        appFooter(sourcePathJsUi("viewStarDash.kt"))
-
-        dock.mergeState(StarDashRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
+
+    dock.mergeState(StarDashRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
 }
 
 fun RouteScope.viewStarDashRoute() {

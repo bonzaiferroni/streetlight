@@ -8,16 +8,15 @@ import koala.model.DocTable
 import kotlinx.html.FlowContent
 import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
-import streetlight.web.pages.appFooter
-import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.pageHeader
+import streetlight.web.ui.mainBody
 
 /** A site doc beside the table of all site docs. */
 fun FlowContent.siteDocShell(content: DocContent) {
     val doc = content.node.doc
     val table = content.table
     val node = content.node
-    column(BodyStyle.MainColumn) {
+    mainBody("siteDocShell.kt") {
         pageHeader(doc.title, "a Streetlight doc", doc.image)
 
         row(AlignItemsStart) {
@@ -106,8 +105,6 @@ fun FlowContent.siteDocContent(node: DocNode) {
                 }
             }
         }
-
-        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/siteDocShell.kt")
     }
 }
 

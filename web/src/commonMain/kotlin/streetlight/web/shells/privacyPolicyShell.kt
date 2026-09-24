@@ -6,40 +6,40 @@ import kampfire.api.toMarkdown
 import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.web.pages.appFooter
+import streetlight.web.ui.mainBody
 
 fun FlowContent.privacyPolicyShell() {
-    column(PrivacyPolicyKey.id, Gap(8)) {
-        section {
-            filigree {
-                heading1("Privacy on Streetlight", Shrinkable)
+    mainBody("privacyPolicyShell.kt") {
+        column(PrivacyPolicyKey.id, Gap(8)) {
+            section {
+                filigree {
+                    heading1("Privacy on Streetlight", Shrinkable)
+                }
+                card(modify(ZenBg, Padding(4))) {
+                    markdown(PrivacyIntro)
+                }
             }
-            card(modify(ZenBg, Padding(4))) {
-                markdown(PrivacyIntro)
+
+            // td: table of contents
+
+            section {
+                filigree {
+                    heading2("Information shared on Streetlight")
+                }
+                card(modify(ZenBg, Padding(4))) {
+                    markdown(InformationSharedContent)
+                }
+            }
+
+            section {
+                filigree {
+                    heading2("Upcoming sections")
+                }
+                card(modify(ZenBg, Padding(4))) {
+                    markdown(UpcomingSectionsContent)
+                }
             }
         }
-
-        // td: table of contents
-
-        section {
-            filigree {
-                heading2("Information shared on Streetlight")
-            }
-            card(modify(ZenBg, Padding(4))) {
-                markdown(InformationSharedContent)
-            }
-        }
-
-        section {
-            filigree {
-                heading2("Upcoming sections")
-            }
-            card(modify(ZenBg, Padding(4))) {
-                markdown(UpcomingSectionsContent)
-            }
-        }
-
-        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/privacyPolicyShell.kt")
     }
 }
 

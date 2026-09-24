@@ -4,10 +4,9 @@ import koala.SiteImage
 import koala.dom.*
 import koala.html.Id
 import streetlight.web.layouts.feedRow
-import streetlight.web.pages.appHeader
 
 fun ViewScope.viewGalaxyList() {
-    shellBody("viewGalaxyList.kt") {
+    mainBody("viewGalaxyList.kt") {
         pageHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
 
         lazyTabs(Id("galaxy-list-tabs")) {

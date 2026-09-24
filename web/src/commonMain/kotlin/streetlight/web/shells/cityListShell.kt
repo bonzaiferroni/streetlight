@@ -5,21 +5,14 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.CityListContent
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.feedRow
-import streetlight.web.pages.appFooter
-import streetlight.web.pages.appHeader
-import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.mainBody
 
 fun FlowContent.cityListShell(content: CityListContent) {
-    column(BodyStyle.ShellColumn) {
-        appHeader()
-
-        section(BodyStyle.MainColumn) {
-            column(FeedSection.FeedColumnMod) {
-                content.cities.forEach { city ->
-                    feedRow(city, true)
-                }
+    mainBody("cityListShell.kt") {
+        column(FeedSection.FeedColumnMod) {
+            content.cities.forEach { city ->
+                feedRow(city, true)
             }
-            appFooter()
         }
     }
 

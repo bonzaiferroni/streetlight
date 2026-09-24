@@ -4,17 +4,11 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyContent
 import streetlight.web.layouts.renderLayout
-import streetlight.web.pages.appFooter
-import streetlight.web.pages.appHeader
-import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.mainBody
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
-    column(BodyStyle.ShellColumn) {
-        appHeader()
-        section(BodyStyle.MainColumn) {
-            renderLayout(content)
-            appFooter()
-        }
+    mainBody("galaxyShell.kt") {
+        renderLayout(content)
     }
 
     dataIsland(GalaxyShell.islandId, content)

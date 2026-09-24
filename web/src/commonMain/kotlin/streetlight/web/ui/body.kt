@@ -1,22 +1,23 @@
 package streetlight.web.ui
 
 import koala.html.column
+import koala.html.section
 import koala.modifier.*
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.SECTION
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 
-fun FlowContent.shellBody(
+fun FlowContent.mainBody(
     sourceFile: String,
     mod: Modifier? = null,
-    content: DIV.() -> Unit
+    content: SECTION.() -> Unit
 ) {
     column(modify(BodyStyle.ShellColumn, mod)) {
         appHeader()
-        column(BodyStyle.MainColumn) {
+        section(BodyStyle.MainColumn) {
             content()
-            appFooter(sourcePathCommonUi(sourceFile))
+            appFooter(sourcePathShells(sourceFile))
         }
     }
 }
@@ -45,3 +46,4 @@ $FormRow {
 
 fun sourcePathJsUi(filename: String) = "web/src/jsMain/kotlin/streetlight/web/ui/${filename}"
 fun sourcePathCommonUi(filename: String) = "web/src/commonMain/kotlin/streetlight/web/ui/${filename}"
+fun sourcePathShells(filename: String) = "web/src/commonMain/kotlin/streetlight/web/shells/${filename}"

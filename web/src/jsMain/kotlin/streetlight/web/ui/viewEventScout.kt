@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import koala.LottieFile
 import koala.dom.*
-import koala.html.topLogo
 import koala.model.dedupNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
@@ -25,9 +24,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
         else -> false
     }
 
-    section(BodyStyle.MainColumn) {
-        topLogo()
-
+    mainBody("viewEventScout.kt") {
         introSection("Event Scout", lottie = LottieFile.StrollingMan) {
             textBlock("Let's post an event to ${galaxy.name}.")
         }
@@ -55,8 +52,6 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
                 }
             }
         }
-
-        appFooter(sourcePathJsUi("viewEventScout.kt"))
     }
 }
 

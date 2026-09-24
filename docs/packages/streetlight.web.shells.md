@@ -9,7 +9,7 @@ The server-rendered content of a route. A shell is declared in `commonMain` so t
 | Package | Provides |
 |---|---|
 | `streetlight.web.layouts` | Components that lay out content |
-| `streetlight.web.pages` | `appHeader` and `appFooter` |
+| `streetlight.web.ui` | `shellBody` |
 | `koala.html` | Components and `dataIsland` |
 | `streetlight.model` | Route content types |
 
@@ -29,13 +29,8 @@ A shell declares no state. State the browser needs is carried in attributes and 
 
 ```kotlin
 fun FlowContent.fooShell(content: FooContent) {
-    column(BodyStyle.ShellColumn) {
-        appHeader()
-
-        section(BodyStyle.MainColumn) {
-            // body
-            appFooter()
-        }
+    shellBody("fooShell.kt") {
+        // body
     }
 
     dataIsland(FooShell.IslandId, content)
@@ -46,17 +41,16 @@ object FooShell {
 }
 ```
 
+`shellBody` from `streetlight.web.ui` builds the header, the body column and the footer. It takes the shell's file name, which the footer links as the source. The body lambda runs inside the body column.
+
 | Part | Holds |
 |---|---|
-| Outer column | `BodyStyle.ShellColumn`, `appHeader`, and the body container |
-| Body container | `BodyStyle.MainColumn`, the route's content, and `appFooter` |
-| `dataIsland` | The content, after the outer column |
+| `shellBody` | The route's content |
+| `dataIsland` | The content, after `shellBody` |
 
 ## Data Island
 
 `FooShell.IslandId` names the island. The route's view reads it with `routeBlock<FooRoute, FooContent>(FooShell.IslandId)` when the route is the initial one, and fetches the content from the API otherwise.
-
-Every shell ends its body container with `appFooter`. The body container is a `section`.
 
 ## Feeds
 

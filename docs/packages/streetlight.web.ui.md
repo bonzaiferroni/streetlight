@@ -114,6 +114,21 @@ A shell view is wired through these parts.
 
 A shell view with a map uses `shellBoxWithMap` and sets the marker points from the content.
 
+## Page Body
+
+A routed view without a shell builds its page with `shellBody`, passing its file name, the same way a shell does in `streetlight.web.shells.md`.
+
+```kotlin
+fun ViewScope.viewFoo() {
+    shellBody("viewFoo.kt") {
+        pageHeader("Foo", "a subtitle", SiteImage.Foo)
+        // body
+    }
+}
+```
+
+`viewFooConfig` and `viewFooUpdater` views, and screens outside the base layout such as the sandbox, inbox and earth, do not use it.
+
 ## Forms
 
 A form is built from the components in `Form.kt`, each a `ViewScope` extension.

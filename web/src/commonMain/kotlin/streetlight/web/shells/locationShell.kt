@@ -7,24 +7,16 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationRoute
 import streetlight.web.layouts.renderLayout
-import streetlight.web.pages.appFooter
-import streetlight.web.pages.appHeader
-import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.mainBody
 
 fun FlowContent.locationShell(
     content: LocationContent,
 ) {
     val location = content.location
     val routeNow = LocationRoute(location.slug)
-    column(BodyStyle.ShellColumn) {
-        appHeader()
-
-        column(BodyStyle.MainColumn) {
-            setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
-            renderLayout(content)
-
-            appFooter()
-        }
+    mainBody("locationShell.kt") {
+        setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
+        renderLayout(content)
     }
 
     dataIsland(LocationShell.islandId, content)
