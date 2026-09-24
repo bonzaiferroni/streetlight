@@ -4,7 +4,6 @@ import kampfire.model.toDataOrNull
 import koala.modifier.*
 import koala.dom.*
 import koala.html.Id
-import koala.html.heading1
 import kampfire.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
@@ -35,9 +34,7 @@ fun ViewScope.viewLocationConfig(
 
     configBody("Location", "Config", "viewLocationConfig.kt") {
         flowBlock(locationState) { location ->
-            navigation(location.route) {
-                heading1(location.name, TextAlignCenter)
-            }
+            configHeading(location.name ?: "Location", location.route)
         }
 
         lazyTabs(Id("location-config-tabs")) {

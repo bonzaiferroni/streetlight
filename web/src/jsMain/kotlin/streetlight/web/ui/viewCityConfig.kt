@@ -5,6 +5,7 @@ import koala.dom.MenuAction
 import streetlight.model.data.City
 import streetlight.model.data.toEdit
 import streetlight.model.ui.CityConfigRoute
+import streetlight.model.ui.CityRoute
 import streetlight.web.model.CityEditor
 
 fun ViewScope.viewCityConfig(city: City) {
@@ -12,6 +13,8 @@ fun ViewScope.viewCityConfig(city: City) {
     val messenger = MessageStore()
 
     configBody("City", "Config", "viewCityConfig.kt") {
+        configHeading(city.name, CityRoute(city.slug))
+
         cityDetailsForm(model)
         cityLinksForm(model)
         formSubmit(

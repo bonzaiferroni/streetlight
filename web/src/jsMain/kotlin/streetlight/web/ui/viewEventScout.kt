@@ -2,9 +2,7 @@ package streetlight.web.ui
 
 import koala.LottieFile
 import koala.dom.*
-import koala.html.heading1
 import koala.model.dedupNotNull
-import koala.modifier.TextAlignCenter
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
@@ -28,9 +26,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
     }
 
     configBody("Event", "Scout", "viewEventScout.kt") {
-        navigation(galaxy.route) {
-            heading1(galaxy.name, TextAlignCenter)
-        }
+        configHeading(galaxy.name, galaxy.route)
 
         stageBlock(model.stage, isHeadingStage = ::isHeadingStage) { stage ->
             when (stage) {

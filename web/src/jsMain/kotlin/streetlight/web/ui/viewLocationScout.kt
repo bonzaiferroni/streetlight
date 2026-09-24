@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import kampfire.api.Username
-import koala.LottieFile
 import koala.dom.*
 import koala.dom.MenuAction
 import koala.model.dedupNotNull
@@ -10,6 +9,7 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.layouts.postRow
+import streetlight.web.layouts.route
 import streetlight.web.model.LocationScoutStage
 
 fun ViewScope.viewLocationScout(galaxy: Galaxy, username: Username) {
@@ -20,9 +20,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy, username: Username) {
     goOnRoute(routeFlow)
 
     configBody("Location", "Scout", "viewLocationScout.kt") {
-        introSection("Location Scout", lottie = LottieFile.StrollingMan) {
-            textBlock("Let's post a location.")
-        }
+        configHeading(galaxy.name, galaxy.route)
 
         stageBlock(model.stageField) { stage ->
             when (stage) {

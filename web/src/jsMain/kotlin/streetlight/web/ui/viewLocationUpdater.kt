@@ -14,10 +14,11 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
     configBody("Location", "Config", "viewLocationUpdater.kt") {
+        configHeading(content.location.name ?: "Location", LocationRoute(content.location.slug))
+
         lazyTabs {
             tab("edit") {
                 column {
-                    updaterGreeting(star, model.stateNow.edit.name ?: "this location")
                     locationEditFormBody(model)
                     formSubmitLegacy(
                         label = "Save",

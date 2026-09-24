@@ -131,9 +131,12 @@ A view that configures or creates a record, named `viewFooConfig` or `viewFooSco
 
 ```kotlin
 configBody("Foo", "Config", "viewFooConfig.kt") {
+    configHeading(foo.name, foo.route)
     // body
 }
 ```
+
+The body opens with `configHeading`, naming the record the view configures and linking to its page. A scout names the galaxy it posts to. A view with no record, such as the site config, has no heading.
 
 The two title parts render as one word, `titleFirst` in `AccentFg` and `titleSecond` in `PrimaryFg`.
 

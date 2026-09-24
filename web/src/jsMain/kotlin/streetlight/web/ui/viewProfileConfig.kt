@@ -15,6 +15,8 @@ import streetlight.model.ui.ProfileConfigRoute
 fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
     val model = app.getProfileEditor(star.toEdit(config.design), contentScope)
     configBody("Profile", "Config", "viewProfileConfig.kt") {
+        configHeading(star.username.value, StarRoute(star.username))
+
         lazyTabs {
             tab("Content") {
                 starProfileForm(model)

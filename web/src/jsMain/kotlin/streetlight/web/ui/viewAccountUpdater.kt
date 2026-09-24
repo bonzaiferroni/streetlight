@@ -3,7 +3,6 @@ package streetlight.web.ui
 import streetlight.model.ui.StarRoute
 import streetlight.web.model.RouteDockState
 import kampfire.model.AccountType
-import koala.LottieFile
 import koala.modifier.*
 import koala.dom.MessageStore
 import koala.dom.RouteScope
@@ -23,9 +22,7 @@ import streetlight.web.model.AccountEditor
 
 fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
     configBody("Star", "Config", "viewAccountUpdater.kt") {
-        introSection("Account", lottie = LottieFile.ServerSync) {
-            textBlock("Here you can make changes to your account.")
-        }
+        configHeading(star.username.value, StarRoute(star.username))
 
         if (star.accountType == AccountType.Guest) {
             registerAccountForm(model)

@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.html.heading1
 import koala.html.spacer
 import streetlight.model.data.GalaxyConfig
 import streetlight.model.data.toEdit
@@ -15,9 +14,7 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
     val initialGalaxy = config.galaxy
 
     configBody("Galaxy", "Config", "viewGalaxyConfig.kt") {
-        navigation(initialGalaxy.route) {
-            heading1(initialGalaxy.name, TextAlignCenter)
-        }
+        configHeading(initialGalaxy.name, initialGalaxy.route)
 
         lazyTabs {
             tab("settings") {

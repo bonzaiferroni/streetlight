@@ -18,10 +18,11 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
     configBody("Event", "Config", "viewEventUpdater.kt") {
+        configHeading(content.event.title, EventRoute(content.event.slug))
+
         lazyTabs {
             tab("edit") {
                 column {
-                    updaterGreeting(star, model.stateNow.edit.title ?: "this event")
                     eventEditFormBody(model)
                     formSubmitLegacy(
                         label = "Save",
