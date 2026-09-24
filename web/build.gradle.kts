@@ -131,3 +131,13 @@ listOf("Development", "Production").forEach { mode ->
         }
     }
 }
+
+// the package documents appear on the package pages of the API reference
+dokka {
+    dokkaSourceSets.configureEach {
+        includes.from(fileTree(rootDir.resolve("docs/packages")) {
+            include("streetlight.web.*.md")
+            exclude("streetlight.web.integration.md")
+        })
+    }
+}

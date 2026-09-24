@@ -1,4 +1,4 @@
-# streetlight.server.db.tables
+# Package streetlight.server.db.tables
 
 ## Introduction
 

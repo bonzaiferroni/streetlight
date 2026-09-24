@@ -1,4 +1,4 @@
-# koala.dom
+# Package koala.dom
 
 ## Introduction
 

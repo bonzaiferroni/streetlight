@@ -1,4 +1,4 @@
-# koala.interop
+# Package koala.interop
 
 ## Introduction
 

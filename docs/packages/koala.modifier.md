@@ -1,4 +1,4 @@
-# koala.modifier
+# Package koala.modifier
 
 ## Introduction
 

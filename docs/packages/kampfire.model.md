@@ -1,4 +1,4 @@
-# kampfire.model
+# Package kampfire.model
 
 ## Introduction
 

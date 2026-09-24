@@ -1,4 +1,4 @@
-# streetlight.web.pages
+# Package streetlight.web.pages
 
 ## Introduction
 

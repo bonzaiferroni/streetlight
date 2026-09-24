@@ -1,4 +1,4 @@
-# streetlight.web.shells
+# Package streetlight.web.shells
 
 ## Introduction
 

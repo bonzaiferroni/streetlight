@@ -20,6 +20,8 @@ A specific structure is described only when no general specification can carry i
 
 Dokka generates the API reference from the signatures of `kampfire`, `koala`, `model`, `web` and `server`, and `.github/workflows/kdoc.yml` publishes it to GitHub Pages on every push to `main`. `./gradlew :dokkaGenerate` writes it to `docs/kdoc` locally, which is ignored by git and served for preview with a static server. A module is added to the reference by applying the `dokka` plugin in its build and listing it under `dokka(...)` in the root build.
 
+A module's build includes its package documents in the reference with `includes.from(...)`, so each document is the description on its package page. A new package document for a documented module is picked up by the module's include pattern.
+
 ## Reading Documents
 
 Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.

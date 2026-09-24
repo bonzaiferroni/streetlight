@@ -45,7 +45,7 @@ A document that runs past a page or two has started describing types.
 
 ## Sections
 
-A package document opens with these sections, in this order.
+A package document is titled `# Package <name>`, or `# Module <name>` when it describes a whole Gradle module, so Dokka reads it as the description of that package or module. It then opens with these sections, in this order.
 
 | Section | Holds |
 |---|---|

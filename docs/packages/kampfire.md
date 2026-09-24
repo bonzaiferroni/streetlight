@@ -1,4 +1,4 @@
-# kampfire
+# Module kampfire
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-# streetlight.server.model
+# Package streetlight.server.model
 
 ## Introduction
 

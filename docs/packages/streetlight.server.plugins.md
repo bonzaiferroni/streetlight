@@ -1,4 +1,4 @@
-# streetlight.server.plugins
+# Package streetlight.server.plugins
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-# streetlight.server.api
+# Package streetlight.server.api
 
 ## Introduction
 

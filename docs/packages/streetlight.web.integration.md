@@ -1,4 +1,4 @@
-# streetlight.web.integration
+# Package streetlight.web.integration
 
 ## Introduction
 

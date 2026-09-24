@@ -1,4 +1,4 @@
-# streetlight.model
+# Module model
 
 ## Introduction
 

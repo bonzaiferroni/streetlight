@@ -1,4 +1,4 @@
-# streetlight.server.integration
+# Package streetlight.server.integration
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-# streetlight.web.ui
+# Package streetlight.web.ui
 
 ## Introduction
 

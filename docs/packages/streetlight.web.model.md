@@ -1,4 +1,4 @@
-# streetlight.web.model
+# Package streetlight.web.model
 
 ## Introduction
 

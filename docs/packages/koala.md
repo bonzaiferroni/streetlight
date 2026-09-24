@@ -1,4 +1,4 @@
-# koala
+# Module koala
 
 ## Introduction
 

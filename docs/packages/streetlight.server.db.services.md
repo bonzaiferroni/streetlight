@@ -1,4 +1,4 @@
-# streetlight.server.db.services
+# Package streetlight.server.db.services
 
 ## Introduction
 

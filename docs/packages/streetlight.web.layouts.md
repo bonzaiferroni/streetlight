@@ -1,4 +1,4 @@
-# streetlight.web.layouts
+# Package streetlight.web.layouts
 
 ## Introduction
 

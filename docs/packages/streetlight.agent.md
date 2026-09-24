@@ -1,4 +1,4 @@
-# streetlight.agent
+# Package streetlight.agent
 
 ## Introduction
 

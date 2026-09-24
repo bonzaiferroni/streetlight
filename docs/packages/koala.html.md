@@ -1,4 +1,4 @@
-# koala.html
+# Package koala.html
 
 ## Introduction
 

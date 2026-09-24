@@ -1,4 +1,4 @@
-# streetlight.server.e2e
+# Package streetlight.server.e2e
 
 ## Introduction
 
