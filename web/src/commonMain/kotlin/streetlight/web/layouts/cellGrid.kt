@@ -1,6 +1,7 @@
 package streetlight.web.layouts
 
 import kabinet.utils.format
+import kabinet.utils.toMetricString
 import kabinet.utils.toAgoFormat
 import kabinet.utils.toFutureFormat
 import kabinet.utils.toTimeFormat
@@ -112,6 +113,10 @@ fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.v
 fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFormat(), null)
 
 fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
+
+fun locationCountCell(count: Int) = EntityCell(SvgFile.MapPin, count.toMetricString(), null, "locations")
+
+fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar, count.toMetricString(), null, "events")
 
 /** Expands and collapses the body of the feed row around it. */
 fun FlowContent.moreButton() {

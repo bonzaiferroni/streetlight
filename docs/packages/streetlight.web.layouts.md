@@ -15,7 +15,7 @@ Server-renderable components that lay out content. They are declared in `commonM
 
 ## Entity Properties
 
-A property that depends on the entity type is an `Entity` extension function in `EntityProperty.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
+A property that depends on the entity type is an `Entity` extension function in `EntityUtility.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
 
 | Form | Used when | Example |
 |---|---|---|

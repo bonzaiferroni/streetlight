@@ -1,6 +1,5 @@
 package streetlight.web.layouts
 
-import kabinet.utils.toMetricString
 import koala.SvgFile
 import koala.html.AppRoute
 import koala.model.Doc
@@ -72,33 +71,31 @@ fun Entity.toFlair(): FlairIcon = when (this) {
 
 /** The facts shown in this entity's [cellGrid], or `null` when it has none. */
 fun Entity.toCells(): List<EntityCell>? = when (this) {
-    is City -> listOfNotNull(
-        locationCount.takeIf { it > 0 }?.let { EntityCell(SvgFile.MapPin, it.toMetricString(), null, "locations") },
-        eventCount.takeIf { it > 0 }?.let { EntityCell(SvgFile.Calendar, it.toMetricString(), null, "events") },
-    )
-    is EventLocation -> listOfNotNull(
-        startsAt?.let { dateCell(it) },
-        startsAt?.let { startsAtCell(it) },
-        cost?.let { costCell(it, url) },
-        locationName?.let { EntityCell(SvgFile.MapPin, it, null) },
-    )
+    is City -> buildList {
+        if (locationCount > 0) add(locationCountCell(locationCount))
+        if (eventCount > 0) add(eventCountCell(eventCount))
+    }
+    is EventLocation -> buildList {
+        startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
+        cost?.let { add(costCell(it, url)) }
+        locationName?.let { add(EntityCell(SvgFile.MapPin, it, null)) }
+    }
     is EventPost -> event.toCells()
-    is Event -> listOfNotNull(
-        startsAt?.let { dateCell(it) },
-        startsAt?.let { startsAtCell(it) },
-        cost?.let { costCell(it, website) },
-    )
-    is Galaxy -> listOfNotNull(
-        locationCount.takeIf { it > 0 }?.let { EntityCell(SvgFile.MapPin, it.toMetricString(), null, "locations") },
-        eventCount.takeIf { it > 0 }?.let { EntityCell(SvgFile.Calendar, it.toMetricString(), null, "events") },
-    )
+    is Event -> buildList {
+        startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
+        cost?.let { add(costCell(it, website)) }
+    }
+    is Galaxy -> buildList {
+        if (locationCount > 0) add(locationCountCell(locationCount))
+        if (eventCount > 0) add(eventCountCell(eventCount))
+    }
     is LocationPost -> location.toCells()
     is MediaPost -> null
-    is Location -> listOfNotNull(
-        EntityCell(SvgFile.MapPin, mapType ?: "Location", null),
-        city?.let { EntityCell(SvgFile.City, it, null) },
-        eventCount.takeIf { it > 0 }?.let { EntityCell(SvgFile.Calendar, it.toMetricString(), null, "events") },
-    )
+    is Location -> buildList {
+        add(EntityCell(SvgFile.MapPin, mapType ?: "Location", null))
+        city?.let { add(EntityCell(SvgFile.City, it, null)) }
+        if (eventCount > 0) add(eventCountCell(eventCount))
+    }
     is Media -> null
     is CustomEntity -> null
     is Star -> null
