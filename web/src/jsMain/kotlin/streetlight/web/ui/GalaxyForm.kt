@@ -122,7 +122,7 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
                     textBlock("city", modify(OpacityLow, Italic))
                     textBlock("galaxies", modify(OpacityLow, Italic))
                 }
-                selectionBlock(model.citiesField, model.cityField) { city ->
+                selectorBlock(model.citiesField, model.cityField) { city ->
                     card(BorderRadius1) {
                         row(JustifyContentSpaceBetween) {
                             textBlock("${city.name}, ${city.state}", Flex1)

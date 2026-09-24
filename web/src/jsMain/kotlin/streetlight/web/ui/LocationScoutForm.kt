@@ -3,6 +3,7 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
+import kampfire.model.tapOf
 import koala.html.spacer
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.model.LocationScout
@@ -16,16 +17,19 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
                 textField(model.queryField, "search", Flex1)
                 textField(model.cityField, "city", Width(24))
             }
-            centeredText("Don't see the location in the list? Try a power search with OpenStreetMap.", MarginTop(1))
-            formSubmit("Search OSM", model::queryOSM, model.queryMessage, Primary)
-        }
-        formSection("locations") {
-            selectionBlock(
-                items = model.locationsState, selection = model.selectionState,
-                mod = modify(Height(32), OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding(1), TextSmall),
-                emptyText = "Start typing in the search box to see locations",
-            ) { location ->
-                searchItem(location.name, location.address, location.city)
+            selectorContainer {
+                selectorBlock(items = model.locationsState, selection = model.selectionState) { location ->
+                    searchItem(location.name, location.address, location.city)
+                }
+                flowBlock(model.queryField.tapOf { it.isEmpty() }) { isQueryEmpty ->
+                    when (isQueryEmpty) {
+                        true -> centeredText("Start typing in the search box to see locations")
+                        false -> column(AlignItemsCenter) {
+                            centeredText("Don't see the location in the list? Try a power search with OpenStreetMap.")
+                            formSubmit("Search OSM", model::queryOSM, model.queryMessage, Primary)
+                        }
+                    }
+                }
             }
         }
     }

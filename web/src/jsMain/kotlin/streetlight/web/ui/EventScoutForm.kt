@@ -15,7 +15,7 @@ fun ViewScope.eventSearchForm(model: EventScout) = formSectionLegacy("Add an eve
                 button("create", model::create)
             }
 
-            selectionBlock(model.queryEventsFlow, model.event) { event ->
+            selectorBlock(model.queryEventsFlow, model.event) { event ->
                 textBlock(event.title)
             }
         }

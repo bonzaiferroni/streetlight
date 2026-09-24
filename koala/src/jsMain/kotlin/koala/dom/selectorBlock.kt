@@ -11,14 +11,11 @@ import web.html.HTMLElement
 /**
  * A column of [items], each built by [block], where a click selects an item into [selection] and a second click
  * clears it.
- *
- * Shows [emptyText] while there are no items.
  */
-fun <Item> ViewScope.selectionBlock(
+fun <Item> ViewScope.selectorBlock(
     items: Tap<List<Item>>,
     selection: MutableTap<Item?>,
     mod: Modifier? = null,
-    emptyText: String? = null,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> HTMLElement
 ): HTMLDivElement {
@@ -50,22 +47,14 @@ fun <Item> ViewScope.selectionBlock(
 
     val element = flowBlock(items, mod, config = config) { items ->
         elementMap.clear()
-        when (items.isNotEmpty()) {
-            true -> column {
-                items.forEach { item ->
-                    val element = block(item).onClick {
-                        selectElement(item)
-                    }
-                    elementMap[item] = element
+        column {
+            items.forEach { item ->
+                val element = block(item).onClick {
+                    selectElement(item)
                 }
-            }
-            else -> box {
-                emptyText?.let {
-                    textBlock(it, modify(TextSmall, PlaceSelfCenter, OpacityHigh))
-                }
+                elementMap[item] = element
             }
         }
-
     }
 
     contentScope.launch {
@@ -76,3 +65,8 @@ fun <Item> ViewScope.selectionBlock(
 
     return element
 }
+/** The scrolling container of a [selectorBlock], holding the block and any content that follows its items. */
+fun AppendScope.selectorContainer(
+    mod: Modifier? = null,
+    content: DIV.() -> Unit,
+) = column(modify(Height(32), OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding(1), TextSmall, mod), content)

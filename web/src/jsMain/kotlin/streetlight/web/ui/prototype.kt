@@ -27,7 +27,7 @@ package streetlight.web.ui
 
 //fun RenderContext.postListPanel(model: EarthMap, posts: List<GalaxyPost>) {
 //    row(modify(Height100P, Gap0, BorderRadiusTop1, OverflowClip)) {
-//        selectionBlock(model.postsFlow, model::setPost, model.postFlow, modify(Padding(1), CardBg)) { post ->
+//        selectorBlock(model.postsFlow, model::setPost, model.postFlow, modify(Padding(1), CardBg)) { post ->
 //            image(post.images.thumb, modify(BorderRadius1, Height8))
 //        }
 //        flowBlock(model.postFlow, modify(Flex1)) { post ->

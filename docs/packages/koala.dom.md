@@ -25,3 +25,7 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 `routeBlock` builds a view from the content of its route. It reads the island the shell carried when the route is the initial one, and otherwise takes the content from `RouteInflator`.
 
 `RouteInflator` fetches the content of each new route through a `ContentFetcher`, which maps a route to its endpoint and is implemented by the application. A route on a screen with `hasShell` skips the fetch when it is the initial route. The island is read whenever the route is the initial one, whether or not `hasShell` is set, so a shell screen without the flag works and fetches content it does not use.
+
+## Selector Blocks
+
+`selectorBlock` draws no container and shows nothing when it has no items. The caller wraps it in `selectorContainer`, together with any content that follows the items, such as a prompt shown while the list is empty.
