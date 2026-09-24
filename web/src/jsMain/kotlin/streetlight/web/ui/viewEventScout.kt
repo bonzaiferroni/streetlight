@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.modifier.Accent
 import koala.LottieFile
 import koala.dom.*
 import koala.model.dedupNotNull
@@ -35,19 +36,19 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
-                    formSubmitLegacy("Next", model::submitLocation, messages = locationEditor.messages)
+                    formSubmit("Next", model::submitLocation, locationEditor.messages, Accent)
                 }
                 EventScoutStage.EventSearch -> formBodyProto {
                     eventSearchForm(model)
                 }
                 EventScoutStage.EventEdit -> column {
                     eventEditFormBody(editor, isAdmin)
-                    formSubmitLegacy("Next", model::review, messages = editor.message)
+                    formSubmit("Next", model::review, editor.message, Accent)
                 }
                 EventScoutStage.Post -> formBodyProto {
                     val location = locationScout.stateNow.location ?: error("location not found")
                     postRow(editor.editNow, location)
-                    formSubmitLegacy("Post", model::post, messages = model.postMessage)
+                    formSubmit("Post", model::post, model.postMessage, Accent)
                 }
             }
         }

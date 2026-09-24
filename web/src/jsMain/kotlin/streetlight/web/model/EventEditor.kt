@@ -92,7 +92,7 @@ class EventEditor(
         if (!imageEditor.finalizeImage(message)) return null
         val edit = editState.now
 
-        message.set("Sending...", true)
+        message.deliverSending()
         return when (editNow.eventId) {
             null -> api.event.createEvent(edit)
             else -> api.event.updateEvent(edit)

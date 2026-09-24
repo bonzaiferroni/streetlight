@@ -96,7 +96,7 @@ class LocationEditor(
         imageEditor.finalizeImage(messages)
         val edit = editField.now
 
-        messages.set("Sending...", true)
+        messages.deliverSending()
         return when (editNow.locationId) {
             null -> api.location.createLocation(edit).toDataOrNull(messages)
             else -> api.location.updateLocation(edit).toDataOrNull(messages)

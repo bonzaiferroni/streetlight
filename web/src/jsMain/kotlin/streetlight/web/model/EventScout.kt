@@ -83,7 +83,7 @@ class EventScout(
     fun post() {
         val galaxyId = galaxy?.galaxyId ?: return
         scope.launch {
-            postMessage.set("Posting...", true)
+            postMessage.deliverSending("Posting...")
             val eventId = when (val event = stateNow.event) {
                 null -> editor.submitSuspend()?.eventId
                 else -> event.eventId

@@ -168,6 +168,8 @@ The form functions for a record live in `FooForm.kt`, one per card, each taking 
 
 An editor uploads a pending image with `imageEditor.finalizeImage(messenger)` before it sends the edit.
 
+The function that does a submit's work calls `deliverSending()` on its messenger before its API call. `formSubmit` does not track the work itself.
+
 ## Entity Header
 
 `entityHeader` renders the header of an `Entity`, reading its content from the extensions in `streetlight.web.layouts`. A header for content that is not an `Entity` calls `pageHeader` with each value.

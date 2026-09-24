@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.modifier.Accent
 import koala.dom.*
 import koala.dom.MenuAction
 import streetlight.model.data.LocationEdit
@@ -20,9 +21,9 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
             tab("edit") {
                 column {
                     locationEditFormBody(model)
-                    formSubmitLegacy(
+                    formSubmit(
                         label = "Save",
-                        onSubmit = {
+                        onClick = {
                             launchEffect(::viewLocationUpdater) {
                                 val location = model.submitSuspend()
                                 if (location != null) {
@@ -30,7 +31,8 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                                 }
                             }
                         },
-                        messages = model.messages,
+                        messenger = model.messages,
+                        buttonMod = Accent,
                         back = MenuAction("go back", onClick = portal::goBack)
                     )
                 }

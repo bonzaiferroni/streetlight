@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.modifier.Accent
 import koala.dom.MenuAction
 import koala.dom.RouteScope
 import koala.dom.ViewScope
@@ -24,9 +25,9 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
             tab("edit") {
                 column {
                     eventEditFormBody(model)
-                    formSubmitLegacy(
+                    formSubmit(
                         label = "Save",
-                        onSubmit = {
+                        onClick = {
                             launchEffect {
                                 val event = model.submitSuspend()
                                 if (event != null) {
@@ -34,7 +35,8 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
                                 }
                             }
                         },
-                        messages = model.message,
+                        messenger = model.message,
+                        buttonMod = Accent,
                         back = MenuAction("go back", onClick = portal::goBack)
                     )
                 }

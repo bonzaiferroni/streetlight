@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.modifier.Accent
 import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.column
@@ -24,11 +25,11 @@ fun ViewScope.editTaskContent(task: EditTaskContent) {
     column {
         textBlock("Check to make sure this information is complete.")
         locationEditFormBody(editor)
-        formSubmitLegacy("done", {
+        formSubmit("done", {
             launchEffect {
 
             }
-        })
+        }, buttonMod = Accent)
     }
 }
 
