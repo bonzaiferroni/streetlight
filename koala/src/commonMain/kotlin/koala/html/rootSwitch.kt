@@ -27,11 +27,6 @@ inline fun <reified T : Enum<T>> FlowContent.rootSwitch(
 val <T> Attribute<T>.optionAttribute
     get() = Attribute("$name-option", isCustom, toStringValue, toValue)
 
-// restores the stored value of a root setting in the head, or applies the fallback
-fun <T> rootSwitchScript(attribute: Attribute<T>, fallback: T) = jsScriptOf {
-    invoke(KoalaFun.initRootSwitch, attribute.identifier, attribute.toStringValue(fallback))
-}
-
 // marks the switch button whose value matches the root
 fun <T> rootSwitchCss(
     attribute: Attribute<T>,

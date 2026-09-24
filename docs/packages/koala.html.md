@@ -18,4 +18,4 @@ Server-renderable components declared on `FlowContent`.
 
 The app marks the selected button by adding `rootSwitchCss(attribute, values)` to its own stylesheet. The default style sets `color` to `--primary-fg`; a caller passes another style to change it.
 
-`rootSwitchScript(attribute, fallback)` is the head script that restores the setting on load, applying the fallback when nothing is stored. The app places it in its page head.
+The setting is restored on load through the app's `HeadScriptConfig`, described in `koala.interop.md`.

@@ -4,7 +4,6 @@ import koala.Stylesheet
 import koala.Js
 import koala.Asset
 import koala.PageResource
-import koala.interop.KoalaHeadScript
 import kotlinx.html.*
 
 fun HTML.appHead(
@@ -23,7 +22,7 @@ fun HTML.appHead(
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") {
             defer = true
         }
-        scriptUnsafe(KoalaHeadScript)
+        scriptUnsafe(resource.headScript)
         block()
         style {
             unsafe {

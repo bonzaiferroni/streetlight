@@ -164,8 +164,6 @@ object FeedRow {
     val ToggleExpand = Base.withBemModifier("expand-row")
 }
 
-val FeedModeScript get() = rootSwitchScript(FeedRow.Mode, FeedMode.Grid)
-
 //language="CSS"
 val FeedProtoCss get() = with(FeedRow) { """
     

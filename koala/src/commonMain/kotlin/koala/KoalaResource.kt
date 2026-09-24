@@ -3,6 +3,8 @@ package koala
 interface PageResource {
     val bundle: JsBundle
     val styles: String
+    // built with buildHeadScript
+    val headScript: String
 }
 
 interface JsBundle {

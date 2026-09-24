@@ -5,11 +5,13 @@ import koala.PageResource
 import koala.html.AppScreen
 import koala.html.appHead
 import koala.html.applyFiles
-import koala.html.scriptUnsafe
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import streetlight.model.data.PageTheme
-import streetlight.web.layouts.FeedModeScript
+import koala.interop.HeadScriptConfig
+import koala.interop.RootSwitch
+import streetlight.web.layouts.FeedMode
+import streetlight.web.layouts.FeedRow
 
 fun HTML.appPage(
     title: String,
@@ -22,7 +24,8 @@ fun HTML.appPage(
         supportProtobuf()
         supportGeoMap()
         applyFiles(JsFile)
-        scriptUnsafe(FeedModeScript)
     }
     appBody(screen, resource, theme, block)
 }
+
+

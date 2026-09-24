@@ -7,7 +7,7 @@ Calls between server-rendered markup and the browser. Markup names a global JS f
 | Kind | Declared as | Defined by |
 |---|---|---|
 | Kotlin function exposed to markup | `JsSignature` in `KoalaFun` | A `KtFunction` in `interopUtilities` (jsMain), added to `globalThis` at startup |
-| Plain JS function for the head | `jsFunctionOf` in `KoalaFun` | `define` in `KoalaHeadScript` |
+| Plain JS function for the head | `jsFunctionOf` in `KoalaFun` | `define` in `buildHeadScript` |
 
 Markup calls either with `invokeJs(args)`, as in `onClick = KoalaFun.toggleRootModifier.invokeJs(DayTheme)`. A script calls a `jsFunctionOf` function with `invoke` inside `jsScriptOf`.
 
@@ -22,4 +22,16 @@ A site-wide display setting lives on `document.documentElement` and in `localSto
 
 An apply function writes the element and `localStorage` together. An init function runs in the head, before the body renders, so the stored setting is the first style shown. `initRootSwitch` sets the fallback when nothing is stored.
 
-`KoalaHeadScript` defines both init functions and invokes `initRootModifier` for `DayTheme`. `appHead` emits it before the app's head content, so an app script in the head can invoke them for its own settings.
+An app declares its root switches once, as a `HeadScriptConfig` of `RootSwitch(attribute, fallback)`, and builds it into `PageResource.headScript` with `buildHeadScript` at startup. `appHead` emits it first in the head of every page. The script defines both init functions, restores `DayTheme`, and invokes `initRootSwitch` for each switch. The app writes no JS for a setting.
+
+A root switch has these parts:
+
+| Part | Declared in |
+|---|---|
+| The `Attribute` | The app |
+| `RootSwitch` in the app's `HeadScriptConfig` | The app |
+| `rootSwitch`, the control | The app's markup, from `koala.html` |
+| `rootSwitchCss`, marking the selected option | The app's stylesheet, listed in `KtStyles` |
+| CSS that reads the attribute | The app's stylesheet |
+| `applyRootSwitch` | `interopUtilities` |
+| `initRootSwitch` | `buildHeadScript` |

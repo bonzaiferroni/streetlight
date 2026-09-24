@@ -1,8 +1,5 @@
 package koala.interop
 
-import koala.modifier.DayTheme
-import koala.modifier.jsScriptOf
-
 //language="JS"
 object KoalaFun {
     val ScrollToId = JsSignature("scrollToId")
@@ -26,12 +23,4 @@ object KoalaFun {
             document.documentElement.setAttribute(name, value);
         }
     """.trimIndent())
-}
-
-val KoalaHeadScript get() = with(KoalaFun) {
-    jsScriptOf {
-        define(initRootModifier)
-        define(initRootSwitch)
-        invoke(initRootModifier, DayTheme)
-    }
 }

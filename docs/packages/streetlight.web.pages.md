@@ -20,3 +20,7 @@ The package follows a consistent structure for defining web pages and common lay
 * **Layout Components**: `appBody` and `appHeader` define the persistent visual structure of the site, including the navigation bar, logo, and main content slots (`shellBox`).
 * **Support Functions**: Extension functions on `HEAD` (found in `supports.kt`) manage the inclusion of external scripts and stylesheets, such as MapLibre for geographic maps or Protobuf for data serialization.
 * **AppBody Object**: A central object that maintains a set of `Id` constants used for targeting specific DOM elements during client-side interactions and styling.
+
+### Head Script
+
+`StreetlightHeadScript`, declared in `appPage.kt`, is the `HeadScriptConfig` holding the site's root switches. `ServerResource` builds it into `PageResource.headScript`, which `appHead` emits on every page. A new root switch is added to it.
