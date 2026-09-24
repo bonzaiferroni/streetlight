@@ -95,3 +95,7 @@ The unit is a view model together with the view that binds to it. Assertions run
 The binding is what needs a browser. A view model tested alone is a unit test.
 
 Leave the shape of a request to the server to `streetlight.server.e2e`.
+
+## Scout Fixtures
+
+`ScoutUtility.kt` builds stored records for scout tests: `testLocation` in Denver and `testEventLocation` at a given location. `TestLocationClient` takes the locations it holds and finds them by name.

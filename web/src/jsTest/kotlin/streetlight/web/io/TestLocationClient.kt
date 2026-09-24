@@ -9,6 +9,7 @@ import kampfire.model.EmailChange
 import kampfire.model.GeoPoint
 import kampfire.model.GeoRect
 import kampfire.model.LoginRequest
+import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.PasswordChange
 import kampfire.model.PasswordVerification
@@ -25,14 +26,18 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
-class TestLocationClient: LocationClient {
+/** Finds the [locations] it holds by name. */
+class TestLocationClient(
+    private val locations: List<Location> = emptyList(),
+): LocationClient {
     override suspend fun readLocation(locationId: LocationId): Outcome<Location> = TODO()
     override suspend fun readLocation(slug: Slug): Outcome<Location> = TODO()
     override suspend fun readLocationContent(slug: Slug): Outcome<LocationContent> = TODO()
     override suspend fun readLocationUpdaterContent(slug: Slug): Outcome<LocationUpdaterContent> = TODO()
     override suspend fun parseLocation(request: ParseRequest): Outcome<LocationEdit> = TODO()
     override suspend fun readLocationsInBounds(bounds: GeoRect): Outcome<List<LocationInfo>> = TODO()
-    override suspend fun searchLocations(query: String, city: String?, state: String?, limit: Int): Outcome<List<Location>> = TODO()
+    override suspend fun searchLocations(query: String, city: String?, state: String?, limit: Int): Outcome<List<Location>> =
+        Ok(locations.filter { it.name?.contains(query, ignoreCase = true) == true }.take(limit))
     override suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent> = TODO()
     override suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>> = TODO()
     override suspend fun updateLocationConfig(edit: LocationConfig): Outcome<Unit> = TODO()
