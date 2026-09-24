@@ -9,6 +9,7 @@ import kampfire.model.mutableTapOf
 import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
@@ -44,6 +45,7 @@ class LocationScout(
     val mapMessage = MessageStore()
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
+    private var osmJob: Job? = null
 
     val queryField = state.mutableTapOf({ it.query }) { copy(query = it) }
     val cityField = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
@@ -83,8 +85,10 @@ class LocationScout(
             }
         }
 
-        queryField.reactIn(scope) { query ->
-            val locations = api.location.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
+        state.tapOf { it.query to it.city }.reactIn(scope) { (query, city) ->
+            osmJob?.cancel()
+            queryMessage.clear()
+            val locations = api.location.searchLocations(query, city?.takeIf { it.isNotBlank() })
                 .toDataOr(toaster) { return@reactIn }
             state.set { copy(locations = locations) }
         }
@@ -104,7 +108,8 @@ class LocationScout(
             return
         }
         queryMessage.deliverSending("Searching OSM...")
-        scope.launch {
+        osmJob?.cancel()
+        osmJob = scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy?.geoRect.takeIf { city == null }?.scaleBy(5f)
             val locations = osm.readLocations(query, stateNow.city, bounds).toDataOr(queryMessage) { return@launch }
