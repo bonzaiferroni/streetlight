@@ -31,7 +31,7 @@ The more button toggles the expanded content of a `feedRow`. Only a component wi
 
 A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRow.Mode`. A feed opts in with the `FeedRow.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedProtoCss` alone places it.
 
-`FeedModeScript` initializes the setting in the head of `appPage`, falling back to `Grid`. `feedModeControl`, above the feed in `feedSection`, applies a mode with `applyRootAttribute`. Each of its buttons carries its mode as `FeedSection.ModeOption`, and `FeedSectionCss` marks the button matching the root.
+`FeedModeScript`, a `rootSwitchScript`, initializes the setting in the head of `appPage`, falling back to `Grid`. A `rootSwitch` above the feed in `feedSection` switches it, showing each mode as its `FeedMode.toSvg()` icon, and `FeedSectionCss` marks the selected mode with `rootSwitchCss`.
 
 The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A modifier that differs by mode lives in the CSS, not on the element, including the direction and gap of `PostLine`. A spacing modifier such as `Gap(n)` renders as an inline style, which no stylesheet rule overrides, so a spacing that differs by mode is never set with one.
 

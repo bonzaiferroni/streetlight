@@ -15,7 +15,7 @@ val interopUtilities = listOf(
     KtFunction(KoalaFun.ToggleAncestor, ::toggleAncestor),
     KtFunction(KoalaFun.toggleRootModifier, ::toggleRootModifier),
     KtFunction(KoalaFun.toggleRootModifierWithTransition, ::toggleRootModifierWithTransition),
-    KtFunction(KoalaFun.applyRootAttribute, ::applyRootAttribute),
+    KtFunction(KoalaFun.applyRootSwitch, ::applyRootSwitch),
 )
 
 fun scrollToId(id: String) = document.getElementOrNullById(id)?.scrollIntoView(ScrollIntoViewOptions(ScrollBehavior.smooth))
@@ -31,7 +31,7 @@ fun toggleRootModifier(mod: String) {
     localStorage.setItem(mod, classes.contains(ClassName(mod)).toString())
 }
 
-fun applyRootAttribute(name: String, value: String) {
+fun applyRootSwitch(name: String, value: String) {
     document.documentElement.setAttribute(name, value)
     localStorage.setItem(name, value)
 }

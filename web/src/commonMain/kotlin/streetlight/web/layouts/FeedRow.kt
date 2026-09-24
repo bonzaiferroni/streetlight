@@ -7,7 +7,6 @@ import kotlinx.css.px
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.interop.KoalaFun
 import kampfire.api.Markdown
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
@@ -165,9 +164,7 @@ object FeedRow {
     val ToggleExpand = Base.withBemModifier("expand-row")
 }
 
-val FeedModeScript get() = jsScriptOf {
-    invoke(KoalaFun.initRootAttribute, FeedRow.Mode.identifier, FeedMode.Grid.name)
-}
+val FeedModeScript get() = rootSwitchScript(FeedRow.Mode, FeedMode.Grid)
 
 //language="CSS"
 val FeedProtoCss get() = with(FeedRow) { """

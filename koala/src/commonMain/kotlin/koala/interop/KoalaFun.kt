@@ -9,7 +9,7 @@ object KoalaFun {
     val ToggleAncestor = JsSignature("toggleAncestor")
     val toggleRootModifier = JsSignature("toggleRootModifier")
     val toggleRootModifierWithTransition = JsSignature("toggleRootModifierWithTransition")
-    val applyRootAttribute = JsSignature("applyRootAttribute")
+    val applyRootSwitch = JsSignature("applyRootSwitch")
     val findAndInitTabs = JsSignature("findAndInitTabs")
 
     val initRootModifier = jsFunctionOf("""
@@ -20,8 +20,8 @@ object KoalaFun {
         } 
     """.trimIndent())
 
-    val initRootAttribute = jsFunctionOf("""
-        function initRootAttribute(name, fallback) {
+    val initRootSwitch = jsFunctionOf("""
+        function initRootSwitch(name, fallback) {
             const value = localStorage.getItem(name) ?? fallback;
             document.documentElement.setAttribute(name, value);
         }
@@ -31,7 +31,7 @@ object KoalaFun {
 val KoalaHeadScript get() = with(KoalaFun) {
     jsScriptOf {
         define(initRootModifier)
-        define(initRootAttribute)
+        define(initRootSwitch)
         invoke(initRootModifier, DayTheme)
     }
 }

@@ -18,8 +18,8 @@ A site-wide display setting lives on `document.documentElement` and in `localSto
 | Setting | Applied with | Initialized with |
 |---|---|---|
 | A class, on or off | `toggleRootModifier(mod)` | `initRootModifier(mod)` |
-| An attribute with a value | `applyRootAttribute(name, value)` | `initRootAttribute(name, fallback)` |
+| An attribute with a value | `applyRootSwitch(name, value)` | `initRootSwitch(name, fallback)` |
 
-An apply function writes the element and `localStorage` together. An init function runs in the head, before the body renders, so the stored setting is the first style shown. `initRootAttribute` sets the fallback when nothing is stored.
+An apply function writes the element and `localStorage` together. An init function runs in the head, before the body renders, so the stored setting is the first style shown. `initRootSwitch` sets the fallback when nothing is stored.
 
 `KoalaHeadScript` defines both init functions and invokes `initRootModifier` for `DayTheme`. `appHead` emits it before the app's head content, so an app script in the head can invoke them for its own settings.
