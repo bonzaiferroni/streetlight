@@ -53,3 +53,13 @@ A method that reports to the user takes a `Messenger` parameter. The view decide
 ## Editing
 
 A model editing a record holds an edit DTO in its state. On a successful send it clears the fields the sender filled and keeps the choices they made, so a second send starts from the same settings.
+
+## Viewer Settings
+
+A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postAndResetState`, so its view binds to the model.
+
+## Posting
+
+A scout's `galaxy` is optional. Without one, `post()` saves the record and creates no post row, and the record is found through its city.
+
+A scout reports a successful post to the `Toaster`, since the view it posted from may be gone. With `postAndResetState` set, it calls `reset()` and returns to its first stage. Otherwise it sets `isPosted`, which the view follows to the galaxy, or to `HomeRoute` when there is no galaxy.

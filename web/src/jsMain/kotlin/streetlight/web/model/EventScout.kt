@@ -29,12 +29,15 @@ class EventScout(
     private val locationScout: LocationScout,
     private val scope: CoroutineScope,
     private val api: ApiClient,
+    private val toaster: Toaster,
+    siteConfig: SiteConfig,
 ) {
     private val state = storeOf(EventScoutState())
     val stateFlow = state.flow
     val stateNow get() = state.now
 
     val postMessage = MessageStore()
+    val postAndResetState = siteConfig.postAndResetState
 
     val postFlow = stateFlow.dedup { it.post }
     val stage = state.mutableTapOf({ it.stage }) { copy(stage = it) }
@@ -79,20 +82,38 @@ class EventScout(
         }
     }
 
-    /** Saves the event when it is new, then posts it to the galaxy. */
+    /** Saves the event when it is new, then posts it to the galaxy when there is one. */
     fun post() {
-        val galaxyId = galaxy?.galaxyId ?: return
         scope.launch {
             postMessage.deliverSending("Posting...")
-            val eventId = when (val event = stateNow.event) {
-                null -> editor.submitSuspend()?.eventId
-                else -> event.eventId
+            val (eventId, title) = when (val event = stateNow.event) {
+                null -> editor.submitSuspend()?.let { it.eventId to it.title }
+                else -> event.eventId to event.title
             } ?: return@launch
 
-            val edit = PostEdit(null, galaxyId, PostType.Event, eventId.value, null)
-            val post = api.post.createPost(edit).toDataOr(postMessage) { return@launch }
-            state.set { copy(postId = post.postId) }
+            val postId = galaxy?.let { galaxy ->
+                val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
+                api.post.createPost(edit).toDataOr(postMessage) { return@launch }.postId
+            }
+            when (postAndResetState.now) {
+                true -> {
+                    toaster.deliverSuccess("Posted! Ready for the next one.")
+                    reset()
+                }
+                false -> {
+                    toaster.deliverSuccess(galaxy?.let { "Posted to ${it.name}." } ?: "Posted $title.")
+                    state.set { copy(postId = postId, isPosted = true) }
+                }
+            }
         }
+    }
+
+    /** Returns to the location search with nothing chosen. */
+    fun reset() {
+        state.set { EventScoutState() }
+        editor.reset()
+        locationScout.reset()
+        postMessage.clear()
     }
 
     private fun addConstructionMarker(point: GeoPoint) {
@@ -109,6 +130,7 @@ data class EventScoutState(
     val event: EventLocation? = null,
     val queryEvents: List<EventLocation> = emptyList(),
     val postId: PostId? = null,
+    val isPosted: Boolean = false,
 )
 
 enum class EventScoutStage(label: String? = null) : Labeled {

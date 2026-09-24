@@ -25,10 +25,11 @@ class EventEditor(
     private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    private val state = storeOf(EventEditorState(
+    private val initialState = EventEditorState(
         edit = initialEvent ?: EventEdit(),
         costString = initialEvent?.cost?.toString() ?: "",
-    ))
+    )
+    private val state = storeOf(initialState)
     val stateFlow = state.flow
     val stateNow get() = state.now
     val editNow get() = stateNow.edit
@@ -57,6 +58,13 @@ class EventEditor(
         costState.reactIn(scope) { costString ->
             editState.update { it.copy(cost = costString.toFloatOrNull()) }
         }
+    }
+
+    /** Returns to the initial event and clears the messages. */
+    fun reset() {
+        state.set { initialState }
+        message.clear()
+        parseMessage.clear()
     }
 
     fun setLocationId(value: LocationId?) = editState.update { it.copy(locationId = value) }

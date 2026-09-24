@@ -37,6 +37,7 @@ class LocationScout(
     private val map: MarkerMap,
     private val toaster: Toaster,
     private val api: ApiClient,
+    siteConfig: SiteConfig,
 ) {
     private val initialState = LocationScoutState()
     private val state = storeOf(initialState)
@@ -46,6 +47,7 @@ class LocationScout(
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
     private var osmJob: Job? = null
+    val postAndResetState = siteConfig.postAndResetState
 
     val queryField = state.mutableTapOf({ it.query }) { copy(query = it) }
     val cityField = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
@@ -148,15 +150,34 @@ class LocationScout(
         else -> location
     }
 
-    fun postToGalaxy() {
-        val galaxyId = galaxy?.galaxyId ?: return
+    /** Saves the location when it is new, then posts it to the galaxy when there is one. */
+    fun post() {
         scope.launch {
             val location = submitLocation() ?: return@launch
-
-            val edit = PostEdit(null, galaxyId, PostType.Location, location.locationId.value, null)
-            val post = api.post.createPost(edit).toDataOr(postMessage) { return@launch }
-            state.set { copy(postId = post.postId) }
+            val postId = galaxy?.let { galaxy ->
+                val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
+                api.post.createPost(edit).toDataOr(postMessage) { return@launch }.postId
+            }
+            when (postAndResetState.now) {
+                true -> {
+                    toaster.deliverSuccess("Posted! Ready for the next one.")
+                    reset()
+                }
+                false -> {
+                    toaster.deliverSuccess(galaxy?.let { "Posted to ${it.name}." } ?: "Posted ${location.name ?: "Location"}.")
+                    state.set { copy(postId = postId, isPosted = true) }
+                }
+            }
         }
+    }
+
+    /** Returns to the search with nothing chosen, cancelling an OpenStreetMap search. */
+    fun reset() {
+        osmJob?.cancel()
+        state.set { initialState }
+        queryMessage.clear()
+        mapMessage.clear()
+        postMessage.clear()
     }
 }
 
@@ -168,6 +189,7 @@ data class LocationScoutState(
     val location: Location? = null,
     val isReviewing: Boolean = false,
     val postId: PostId? = null,
+    val isPosted: Boolean = false,
 )
 
 enum class LocationScoutStage: Labeled {

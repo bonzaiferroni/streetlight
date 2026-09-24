@@ -72,14 +72,14 @@ fun AppContainer.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
 fun AppContainer.getMediaEditor(edit: MediaEdit, scope: CoroutineScope) =
     MediaEditor(edit, scope, koin.get(), koin.get())
 
-fun AppContainer.getLocationScout(galaxy: Galaxy, editor: LocationEditor, scope: CoroutineScope) =
-    LocationScout(galaxy, editor, scope, koin.get(), koin.get(), koin.get(), koin.get())
+fun AppContainer.getLocationScout(galaxy: Galaxy?, editor: LocationEditor, scope: CoroutineScope) =
+    LocationScout(galaxy, editor, scope, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getEventEditor(edit: EventEdit, scope: CoroutineScope) =
     EventEditor(edit, scope, koin.get())
 
-fun AppContainer.getEventScout(galaxy: Galaxy, editor: EventEditor, location: LocationScout, scope: CoroutineScope) =
-    EventScout(galaxy, editor, location, scope, koin.get())
+fun AppContainer.getEventScout(galaxy: Galaxy?, editor: EventEditor, location: LocationScout, scope: CoroutineScope) =
+    EventScout(galaxy, editor, location, scope, koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())

@@ -16,12 +16,14 @@ class SiteConfig(
     val stateFlow = state.flow
     val showTransitState = state.mutableTapOf({ it.showTransit }) { copy(showTransit = it) }
     val themeFlow = state.mutableTapOf({ it.theme }) { copy(theme = it) }
+    val postAndResetState = state.mutableTapOf({ it.postAndReset }) { copy(postAndReset = it) }
 }
 
 @Serializable
 data class SiteConfigState(
     val showTransit: Boolean = false,
     val theme: SiteTheme = SiteTheme.Dark,
+    val postAndReset: Boolean = false,
 )
 
 private const val SITE_CONFIG_KEY = "streetlight.site-config"
