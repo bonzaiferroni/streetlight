@@ -34,7 +34,7 @@ fun ViewScope.viewGalaxyFoundry() {
             button("Found Galaxy", model::submit, Accent)
         }
 
-        appFooter(sourcePathUi("viewGalaxyFoundry.kt"))
+        appFooter(sourcePathJsUi("viewGalaxyFoundry.kt"))
     }
 }
 
@@ -48,5 +48,3 @@ Streetlight is in an early stage of development. It's current focus is our homet
 Theoretically, your map can focus on any part of the world, but features like transit updates may not be available.
 """
 
-/** The repository path of a file in this package. */
-fun sourcePathUi(filename: String) = "web/src/jsMain/kotlin/streetlight/web/ui/${filename}"

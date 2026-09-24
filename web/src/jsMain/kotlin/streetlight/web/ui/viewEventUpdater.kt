@@ -45,7 +45,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
                 }
             }
         }
-        appFooter(sourcePathUi("viewEventUpdater.kt"))
+        appFooter(sourcePathJsUi("viewEventUpdater.kt"))
     }
 }
 

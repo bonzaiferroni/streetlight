@@ -56,7 +56,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
             }
         }
 
-        appFooter(sourcePathUi("viewEventScout.kt"))
+        appFooter(sourcePathJsUi("viewEventScout.kt"))
     }
 }
 

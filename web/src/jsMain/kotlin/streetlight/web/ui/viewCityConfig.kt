@@ -20,7 +20,7 @@ fun ViewScope.viewCityConfig(city: City) {
             messenger = messenger,
             back = MenuAction("go back", onClick = portal::goBack),
         )
-        appFooter(sourcePathUi("viewCityConfig.kt"))
+        appFooter(sourcePathJsUi("viewCityConfig.kt"))
     }
 }
 

@@ -41,8 +41,12 @@ fun initTabs(container: HTMLElement) {
         val startHeight = viewport.offsetHeight
         val endHeight = (panels[index] as HTMLElement).offsetHeight
 
-        viewport.style.setProperty("height", "${startHeight}px")
-        viewport.offsetHeight // a load bearing property reference
+        val animatesHeight = startHeight != endHeight
+
+        if (animatesHeight) {
+            viewport.style.setProperty("height", "${startHeight}px")
+            viewport.offsetHeight // a load bearing property reference
+        }
 
         panels[currentIndex].classList.remove(TabsStyle.IsActive.className)
         buttons[currentIndex].classList.remove(TabsStyle.IsActive.className)
@@ -51,7 +55,7 @@ fun initTabs(container: HTMLElement) {
         panels[index].classList.add(TabsStyle.IsActive.className)
         buttons[index].classList.add(TabsStyle.IsActive.className)
 
-        viewport.style.setProperty("height", "${endHeight}px")
+        if (animatesHeight) viewport.style.setProperty("height", "${endHeight}px")
     }
 
     buttons.forEachIndexed { index, button ->

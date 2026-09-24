@@ -4,10 +4,10 @@ import koala.SiteImage
 import koala.dom.*
 import koala.html.Id
 import streetlight.web.layouts.feedRow
+import streetlight.web.pages.appHeader
 
 fun ViewScope.viewGalaxyList() {
-
-    column(mod = BodyStyle.MainColumn) {
+    shellBody("viewGalaxyList.kt") {
         pageHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
 
         lazyTabs(Id("galaxy-list-tabs")) {
@@ -30,7 +30,7 @@ fun ViewScope.viewGalaxyList() {
                 }
             }
             tab("Search") {
-                textBlock("Coming soon")
+                comingSoon()
             }
         }
     }

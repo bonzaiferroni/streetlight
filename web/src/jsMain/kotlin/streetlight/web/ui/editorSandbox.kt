@@ -42,5 +42,5 @@ fun ViewScope.editorSandbox() {
         }
     }
 
-    appFooter(sourcePathUi("editorSandbox.kt"))
+    appFooter(sourcePathJsUi("editorSandbox.kt"))
 }

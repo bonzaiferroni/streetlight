@@ -94,7 +94,7 @@ fun ViewScope.viewLocationConfig(
             }
         }
 
-        appFooter(sourcePathUi("viewLocationConfig.kt"))
+        appFooter(sourcePathJsUi("viewLocationConfig.kt"))
     }
 }
 

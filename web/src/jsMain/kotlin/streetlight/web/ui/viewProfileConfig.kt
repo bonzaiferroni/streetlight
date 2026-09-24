@@ -34,7 +34,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
         }
         formSubmit("Save", model::submit, model.messages)
 
-        appFooter(sourcePathUi("viewProfileConfig.kt"))
+        appFooter(sourcePathJsUi("viewProfileConfig.kt"))
 
         dock.mergeState(ProfileConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
