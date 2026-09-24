@@ -7,6 +7,7 @@ import koala.model.dedupNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.Star
 import streetlight.model.ui.EventScoutRoute
 import koala.html.AppRoute
 import koala.model.FetcherContent
@@ -17,7 +18,7 @@ import streetlight.web.layouts.postRow
 import streetlight.web.layouts.route
 import streetlight.web.model.EventScoutStage
 
-fun ViewScope.viewEventScout(galaxy: Galaxy?, isAdmin: Boolean) {
+fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
     val locationEditor = app.getLocationEditor(LocationEdit(), contentScope)
     val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
@@ -47,14 +48,18 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, isAdmin: Boolean) {
                     eventSearchForm(model)
                 }
                 EventScoutStage.EventEdit -> column {
-                    eventEditFormBody(editor, isAdmin)
+                    eventEditFormBody(editor, star.isAdmin)
                     formSubmit("Next", model::review, editor.message, Accent)
                 }
                 EventScoutStage.Post -> formBodyProto {
-                    val location = locationScout.stateNow.location ?: error("location not found")
-                    postRow(editor.editNow, location)
+                    model.stateNow.event?.let {
+                        feedRow(it, true)
+                    } ?: run {
+                        val location = locationScout.stateNow.location ?: error("location not found")
+                        postRow(editor.editNow, location, star.username)
+                    }
                     column(AlignItemsEnd) {
-                        checkBox(model.postAndResetState, "post and start over")
+                        dropMenu(model.postModeState)
                         formSubmit("Post", model::post, model.postMessage, Accent)
                     }
                 }
@@ -64,9 +69,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, isAdmin: Boolean) {
 }
 
 fun RouteScope.viewEventScoutRoute() {
-    routeBlock<EventScoutRoute, FetcherContent> { content ->
-        starGate { star ->
-            viewEventScout(content.toContentOrNull<Galaxy>(), star.isAdmin)
-        }
+    starRouteBlock<EventScoutRoute, FetcherContent> { star, content ->
+        viewEventScout(content.toContentOrNull<Galaxy>(), star)
     }
 }

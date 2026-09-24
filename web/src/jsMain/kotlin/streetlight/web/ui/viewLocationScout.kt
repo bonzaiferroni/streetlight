@@ -1,11 +1,11 @@
 package streetlight.web.ui
 
-import kampfire.api.Username
 import koala.dom.*
 import koala.dom.MenuAction
 import koala.model.dedupNotNull
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.Star
 import koala.html.AppRoute
 import koala.model.FetcherContent
 import koala.model.toContentOrNull
@@ -16,7 +16,7 @@ import streetlight.web.layouts.postRow
 import streetlight.web.layouts.route
 import streetlight.web.model.LocationScoutStage
 
-fun ViewScope.viewLocationScout(galaxy: Galaxy?, username: Username) {
+fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), contentScope)
     val model = app.getLocationScout(galaxy, editor, contentScope)
@@ -42,13 +42,10 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, username: Username) {
                 LocationScoutStage.Review -> column {
                     model.stateNow.location?.let {
                         feedRow(it, true)
-                    } ?: editor.editNow.let {
-                        val edit = editor.editNow
-                        postRow(edit, username)
-                    }
+                    } ?: postRow(editor.editNow, star.username)
 
                     column(AlignItemsEnd) {
-                        checkBox(model.postAndResetState, "post and start over")
+                        dropMenu(model.postModeState)
                         formSubmit(
                             label = "Post",
                             onClick = model::post,
@@ -64,7 +61,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, username: Username) {
 
 fun RouteScope.viewLocationScoutRoute() {
     starRouteBlock<LocationScoutRoute, FetcherContent> { star, content ->
-        viewLocationScout(content.toContentOrNull<Galaxy>(), star.username)
+        viewLocationScout(content.toContentOrNull<Galaxy>(), star)
     }
 }
 

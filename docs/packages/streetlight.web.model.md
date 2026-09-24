@@ -56,10 +56,16 @@ A model editing a record holds an edit DTO in its state. On a successful send it
 
 ## Viewer Settings
 
-A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postAndResetState`, so its view binds to the model.
+A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postModeState`, so its view binds to the model.
 
 ## Posting
 
 A scout's `galaxy` is optional. Without one, `post()` saves the record and creates no post row, and the record is found through its city.
 
-A scout reports a successful post to the `Toaster`, since the view it posted from may be gone. With `postAndResetState` set, it calls `reset()` and returns to its first stage. Otherwise it sets `isPosted`, which the view follows to the galaxy, or to `HomeRoute` when there is no galaxy.
+A scout reports a successful post to the `Toaster`, since the view it posted from may be gone. Its post mode, `LocationPostMode` or `EventPostMode`, decides what follows.
+
+| Mode | After the post |
+|---|---|
+| `ResetLocation` | `reset()`, back to the location search |
+| `ResetEvent` | `resetEvent()`, back to the event search at the same location |
+| `Return` | Sets `isPosted`, which the view follows to the galaxy, or to `HomeRoute` when there is no galaxy |

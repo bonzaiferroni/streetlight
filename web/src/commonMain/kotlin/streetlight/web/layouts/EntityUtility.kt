@@ -2,6 +2,7 @@ package streetlight.web.layouts
 
 import koala.SvgFile
 import koala.html.AppRoute
+import kampfire.model.Url
 import koala.model.Doc
 import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
@@ -14,6 +15,7 @@ import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Entity
+import streetlight.model.data.RecordType
 import streetlight.model.data.Star
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.EventRoute
@@ -24,6 +26,7 @@ import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.ui.postMenu
 import streetlight.web.ui.starToggle
+import kotlin.time.Instant
 
 val Location.route get() = LocationRoute(slug)
 val Event.route get() = EventRoute(slug)
@@ -58,7 +61,11 @@ fun Entity.toThemeColor(): ThemeColor = when (this) {
     is Location -> ThemeColor.Location
     is MediaPost -> ThemeColor.Media
     is Media -> ThemeColor.Media
-    is CustomEntity -> ThemeColor.Primary
+    is CustomEntity -> when (recordType) {
+        RecordType.Location -> ThemeColor.Location
+        RecordType.Event -> ThemeColor.Event
+        else -> ThemeColor.Primary
+    }
     is Star -> ThemeColor.Primary
 }
 
@@ -66,6 +73,11 @@ fun Entity.toFlair(): FlairIcon = when (this) {
     is EventLocation,is EventPost, is Event -> FlairIcon.Event
     is LocationPost, is Location -> FlairIcon.Location
     is MediaPost, is Media -> FlairIcon.Media
+    is CustomEntity -> when (recordType) {
+        RecordType.Location -> FlairIcon.Location
+        RecordType.Event -> FlairIcon.Event
+        else -> FlairIcon.Default
+    }
     else -> FlairIcon.Default
 }
 
@@ -75,30 +87,33 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
-    is EventLocation -> buildList {
-        startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
-        cost?.let { add(costCell(it, url)) }
-        locationName?.let { add(EntityCell(SvgFile.MapPin, it, null)) }
-    }
+    is EventLocation -> eventCells(startsAt, cost, url, locationName)
     is EventPost -> event.toCells()
-    is Event -> buildList {
-        startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
-        cost?.let { add(costCell(it, website)) }
-    }
+    is Event -> eventCells(startsAt, cost, website, null)
     is Galaxy -> buildList {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
     is LocationPost -> location.toCells()
     is MediaPost -> null
-    is Location -> buildList {
-        add(EntityCell(SvgFile.MapPin, mapType ?: "Location", null))
-        city?.let { add(EntityCell(SvgFile.City, it, null)) }
-        if (eventCount > 0) add(eventCountCell(eventCount))
-    }
+    is Location -> locationCells(mapType, city, eventCount)
     is Media -> null
     is CustomEntity -> null
     is Star -> null
+}
+
+/** The cells of an event: its date, time, cost linking to [purchaseUrl], and [locationName]. */
+fun eventCells(startsAt: Instant?, cost: Float?, purchaseUrl: Url?, locationName: String?) = buildList {
+    startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
+    cost?.let { add(costCell(it, purchaseUrl)) }
+    locationName?.let { add(EntityCell(SvgFile.MapPin, it, null)) }
+}
+
+/** The cells of a location: its [mapType], [city], and [eventCount] when it has events. */
+fun locationCells(mapType: String?, city: String?, eventCount: Int) = buildList {
+    add(EntityCell(SvgFile.MapPin, mapType ?: "Location", null))
+    city?.let { add(EntityCell(SvgFile.City, it, null)) }
+    if (eventCount > 0) add(eventCountCell(eventCount))
 }
 
 /**

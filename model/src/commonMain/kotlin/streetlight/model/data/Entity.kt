@@ -30,7 +30,7 @@ sealed interface Entity {
     val createdAt: Instant? get() = null
 }
 
-/** An [Entity] built directly, for content that has no type of its own. */
+/** An [Entity] built directly, for content that has no type of its own, such as a preview of [recordType]. */
 @Serializable
 data class CustomEntity(
     override val label: String,
@@ -44,6 +44,7 @@ data class CustomEntity(
     val route: AppRoute? = null,
     override val links: List<ExtraLink>? = null,
     override val createdAt: Instant? = null,
+    val recordType: RecordType? = null,
 ): Entity
 
 /** A page of a feed, with the marks and tallies of its posts and the cursor of the next page. */

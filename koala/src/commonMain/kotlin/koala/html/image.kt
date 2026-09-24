@@ -64,7 +64,7 @@ fun IMG.configureImage(
     lazy: Boolean,
     block: IMG.() -> Unit
 ) {
-    this.src = (src ?: image?.variants.largest ?: SiteImage.placeholderLg).value
+    this.src = (src ?: image?.variants.largest ?: image?.url ?: SiteImage.placeholderLg).value
     alt?.let {
         this.alt = it
     }

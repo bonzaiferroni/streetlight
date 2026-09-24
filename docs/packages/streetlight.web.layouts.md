@@ -70,3 +70,7 @@ An entry shows its image with `containImage`, passing the `Image` itself so it c
 A cell for a single property, such as `costCell`, is a function in `cellGrid.kt` returning an `EntityCell`.
 
 A cell whose text does not name its subject, such as a count, carries a label.
+
+## Previews
+
+A preview of an edit, in `postRow.kt`, is a `feedRow` of a `CustomEntity` carrying the edit's `recordType`, which gives it the color and flair of the record. It passes the cells from the builder its record's `toCells()` branch uses, such as `eventCells`, and is posted by the signed-in star just now, as other viewers will see it.

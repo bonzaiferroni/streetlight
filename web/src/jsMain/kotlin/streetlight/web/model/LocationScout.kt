@@ -47,7 +47,7 @@ class LocationScout(
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
     private var osmJob: Job? = null
-    val postAndResetState = siteConfig.postAndResetState
+    val postModeState = siteConfig.locationPostModeState
 
     val queryField = state.mutableTapOf({ it.query }) { copy(query = it) }
     val cityField = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
@@ -158,12 +158,12 @@ class LocationScout(
                 val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
                 api.post.createPost(edit).toDataOr(postMessage) { return@launch }.postId
             }
-            when (postAndResetState.now) {
-                true -> {
+            when (postModeState.now) {
+                LocationPostMode.ResetLocation -> {
                     toaster.deliverSuccess("Posted! Ready for the next one.")
                     reset()
                 }
-                false -> {
+                LocationPostMode.Return -> {
                     toaster.deliverSuccess(galaxy?.let { "Posted to ${it.name}." } ?: "Posted ${location.name ?: "Location"}.")
                     state.set { copy(postId = postId, isPosted = true) }
                 }

@@ -37,7 +37,7 @@ class EventScout(
     val stateNow get() = state.now
 
     val postMessage = MessageStore()
-    val postAndResetState = siteConfig.postAndResetState
+    val postModeState = siteConfig.eventPostModeState
 
     val postFlow = stateFlow.dedup { it.post }
     val stage = state.mutableTapOf({ it.stage }) { copy(stage = it) }
@@ -95,17 +95,29 @@ class EventScout(
                 val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
                 api.post.createPost(edit).toDataOr(postMessage) { return@launch }.postId
             }
-            when (postAndResetState.now) {
-                true -> {
+            when (postModeState.now) {
+                EventPostMode.ResetLocation -> {
                     toaster.deliverSuccess("Posted! Ready for the next one.")
                     reset()
                 }
-                false -> {
+                EventPostMode.ResetEvent -> {
+                    toaster.deliverSuccess("Posted! Ready for another event here.")
+                    resetEvent()
+                }
+                EventPostMode.Return -> {
                     toaster.deliverSuccess(galaxy?.let { "Posted to ${it.name}." } ?: "Posted $title.")
                     state.set { copy(postId = postId, isPosted = true) }
                 }
             }
         }
+    }
+
+    /** Returns to the event search at the chosen location, with no event chosen. */
+    fun resetEvent() {
+        state.set { EventScoutState(stage = EventScoutStage.EventSearch) }
+        editor.reset()
+        editor.setLocationId(locationScout.stateNow.location?.locationId)
+        postMessage.clear()
     }
 
     /** Returns to the location search with nothing chosen. */
