@@ -8,6 +8,6 @@ Server-renderable components declared on `FlowContent`.
 
 ## Images
 
-`image` and `featureImage` share `configureImage`, which sets the `srcset`, `sizes="auto"`, the aspect ratio and lazy loading from an `Image`, falling back to `SiteImage.placeholder`.
+`image` and `containImage` share `configureImage`, which sets the `srcset`, `sizes="auto"`, the aspect ratio and lazy loading from an `Image`, falling back to `SiteImage.placeholder`.
 
-`featureImage` shows the image over a blurred, scaled backdrop of the same image. Its `object-fit` is set on the root and inherited by the content image, so a caller changes the fit on the root alone.
+`containImage` shows the image over a blurred, scaled backdrop of the same image. Its `object-fit` is set on the root and inherited by the content image, so a caller changes the fit on the root alone.

@@ -29,21 +29,23 @@ The more button toggles the expanded content of a `feedRow`. Only a component wi
 
 ### Feed Modes
 
-A feed is laid out by `FeedMode`, set on its mount as `FeedRow.Mode` by `layoutFeed(mode)`. Every mode renders the same markup, and the mode selector in `FeedProtoCss` alone places it.
+A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRow.Mode`. A feed opts in with the `FeedRow.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedProtoCss` alone places it.
 
-The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A modifier that differs by mode lives in the CSS, not on the element.
+`FeedModeScript` initializes the setting in the head of `appPage`, falling back to `Grid`. `feedModeControl`, above the feed in `feedSection`, applies a mode with `applyRootAttribute`. Each of its buttons carries its mode as `FeedSection.ModeOption`, and `FeedSectionCss` marks the button matching the root.
+
+The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A modifier that differs by mode lives in the CSS, not on the element, including the direction and gap of `PostLine`. A spacing modifier such as `Gap(n)` renders as an inline style, which no stylesheet rule overrides, so a spacing that differs by mode is never set with one.
+
+The table records each mode's intended layout in more detail than a specification usually holds. The modes are finely engineered, and the detail preserves the intent so a later tweak keeps to it. Keep it when amending.
 
 | Mode | Feed | Entry |
 |---|---|---|
 | `Row` | One column | Thumbnail, centered text and badge in a row, cells below; one row from 960px with the cells as its right half |
 | `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2, contained over its backdrop, with no padding, left-aligned text and badge below, then cells. The expanded content and more button are hidden |
-| `Minimal` | Not yet styled | |
+| `Minimal` | One column | One row with no padding: an 8-unit square image, left-aligned text, and the flair badge at the same height. The postline is on one line, its parts separated by a non-breaking space. Cells, expanded content and more button are hidden |
 
-`feedSection` lays out in `Grid`. `layoutFeed` defaults to `Row`. In `Grid`, a child of the mount that is not an entry, such as the more button, spans the full width.
+In `Grid`, a child of the mount that is not an entry, such as the more button, spans the full width.
 
-An entry shows its image with `featureImage`, passing the `Image` itself so it carries its source set. `Row` sets `object-fit: cover`, which fills the square thumbnail and hides the backdrop. `Grid` keeps the `contain` fit.
-
-`entityBody` renders an entity's description and links. `feedRow` shows it as its expanded content, capped with `limit`, and `entityHeader` shows it in full with the edit route. The links are a grid of equal-width buttons, capped at `--unit-32`: in columns that wrap on a narrow container, and in one column beside the description from 960px.
+An entry shows its image with `containImage`, passing the `Image` itself so it carries its source set. `Row` sets `object-fit: cover`, which fills the square thumbnail and hides the backdrop. `Grid` keeps the `contain` fit.
 
 ## Cells
 

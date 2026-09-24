@@ -7,6 +7,7 @@ import kotlinx.css.px
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import koala.interop.KoalaFun
 import kampfire.api.Markdown
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
@@ -35,7 +36,7 @@ fun DIV.configureFeedRow(
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
 ) {
-    addModifiers(modify(FeedRow.Base, ZenBg))
+    addModifiers(FeedRow.Base)
 
     val image = entity.image // td: make placeholder depend on post type
     val colorScheme = entity.toThemeColor()
@@ -103,7 +104,7 @@ fun FlowContent.entityBody(
 }
 
 fun FlowContent.flairBadge(flair: Svg) {
-    icon(flair, modify(Width(10), ColorSchemeFg, OpacityLow))
+    icon(flair, modify(FeedRow.Flair, ColorSchemeFg, OpacityLow))
 }
 
 fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
@@ -111,7 +112,7 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
     val galaxy = entity.post?.galaxy?.takeIf { isUniverse }
 
-    column(modify(MarginTop(2.px), TextSmall, Gap(0), OpacityHigh)) {
+    column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
         textBlock {
             +"posted by "
             when (username) {
@@ -143,14 +144,18 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
 enum class FeedMode { Minimal, Row, Grid }
 
 object FeedRow {
+    // a site-wide setting, held on the root element
     val Mode = enumAttributeOf<FeedMode>("feed-mode")
+    val Feed = Class("feed")
 
     val Base = Class("feed-row")
     val Content = Base.withBemElement("content")
     val Image = Base.withBemElement("image")
     val Text = Base.withBemElement("text")
     val Badge = Base.withBemElement("badge")
+    val Flair = Base.withBemElement("flair")
     val Feature = Base.withBemElement("feature")
+    val PostLine = Base.withBemElement("post-line")
     val MoreButton = Base.withBemElement("more-button")
     val ExpandedContent = Base.withBemElement("expanded-content")
     val ExpandedLinks = Base.withBemElement("expanded-links")
@@ -158,6 +163,10 @@ object FeedRow {
     val Cells = Base.withBemElement("cells")
 
     val ToggleExpand = Base.withBemModifier("expand-row")
+}
+
+val FeedModeScript get() = jsScriptOf {
+    invoke(KoalaFun.initRootAttribute, FeedRow.Mode.identifier, FeedMode.Grid.name)
 }
 
 //language="CSS"
@@ -168,7 +177,8 @@ $Base {
     gap: 0;
     grid-template-rows: auto 1fr;
     container-type: inline-size;
-    padding: var(--unit);
+    padding: 2px;
+    background: var(--zen-bg);
     
     &:not($ToggleExpand) {
         $ExpandedContent {
@@ -206,14 +216,18 @@ $Text {
     text-align: center;
 }
 
-// the thumbnail is cut to match a cover fit, which hides the backdrop
+/* the thumbnail is cut to match a cover fit, which hides the backdrop */
 $Image $Feature { object-fit: cover; }
+
+$PostLine { gap: 0; }
 
 $Badge { grid-area: badge; }
 
+$Flair { width: calc(var(--unit) * 10); }
+
 $Cells { grid-area: cells; }
 
-${Mode.selector(FeedMode.Grid)} {
+${Mode.selector(FeedMode.Grid)} $Feed {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 
@@ -242,6 +256,33 @@ ${Mode.selector(FeedMode.Grid)} {
     $Text { text-align: start; }
 
     $ExpandedContent, $MoreButton { display: none; }
+}
+
+${Mode.selector(FeedMode.Minimal)} $Feed {
+    $Base { padding: 0; }
+
+    $Content {
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "image text badge";
+    }
+
+    $Image {
+        width: calc(var(--unit) * 8);
+        height: calc(var(--unit) * 8);
+        border: none;
+        border-radius: 0;
+    }
+
+    $Text { text-align: start; }
+
+    $Flair { width: calc(var(--unit) * 8); }
+
+    $PostLine { flex-direction: row; }
+
+    /* a trailing space would collapse at the end of the line, so the space is non-breaking */
+    $PostLine > :first-child::after { content: "\00a0"; }
+
+    $Cells, $ExpandedContent, $MoreButton { display: none; }
 }
 
 $ExpandedContent {

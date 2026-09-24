@@ -63,6 +63,8 @@ $Foo {
 
 The stylesheet refers to each class by interpolating the val, as in `$Foo`, and never by writing the selector, except for classes owned by another library. A class declared in an object is interpolated with the getter wrapped in `with(FooObject) { """ ... """ }`.
 
+A comment inside the stylesheet string is a CSS comment, `/* ... */`. A Kotlin `//` comment there is stylesheet text: the browser reads it as part of the next selector and drops that rule.
+
 A rule of one or two declarations that fits on one line is written on one line. A family of such rules is written as consecutive lines with no blank line between them, and the property names and values on those lines are aligned in columns.
 
 A stylesheet that serves a single component is declared in that component's file, with its classes in an object named for the component, as `CellGrid.Base` in `cellGrid.kt`.

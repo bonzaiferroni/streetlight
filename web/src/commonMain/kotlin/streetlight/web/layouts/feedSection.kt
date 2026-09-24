@@ -3,6 +3,7 @@ package streetlight.web.layouts
 import koala.modifier.*
 import koala.html.*
 import koala.interop.JsSignature
+import koala.interop.KoalaFun
 import koala.interop.ThisElement
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
@@ -38,7 +39,9 @@ fun FlowContent.feedSection(
             }
         }
 
-        layoutFeed(FeedMode.Grid) {
+        feedModeControl()
+
+        layoutFeed {
             // td: message when empty
             feed.entities.forEach { entity ->
                 val curator = feed.curatorOf(entity)
@@ -55,12 +58,21 @@ fun FlowContent.feedSection(
     }
 }
 
+fun FlowContent.feedModeControl() {
+    row(JustifyContentCenter) {
+        FeedSection.ModeOptions.forEach { mode ->
+            button(mode.name, Zen) {
+                setAttribute(FeedSection.ModeOption.to(mode))
+                onClick = KoalaFun.applyRootAttribute.invokeJs(FeedRow.Mode.identifier, mode.name)
+            }
+        }
+    }
+}
+
 fun FlowContent.layoutFeed(
-    mode: FeedMode = FeedMode.Row,
     block: FlowContent.() -> Unit
 ) {
-    column(FeedSection.MountId, FeedSection.FeedColumnMod) {
-        setAttribute(FeedRow.Mode.to(mode))
+    column(FeedSection.MountId, modify(FeedRow.Feed, FeedSection.FeedColumnMod)) {
         block()
     }
 }
@@ -74,4 +86,15 @@ object FeedSection {
 
     val SortByMark = JsSignature("sortByMark")
     val MorePosts = JsSignature("morePosts")
+
+    val ModeOption = enumAttributeOf<FeedMode>("feed-mode-option")
+    val ModeOptions = FeedMode.entries
+}
+
+// the option matching the root's mode is marked
+//language="CSS"
+val FeedSectionCss get() = with(FeedSection) {
+    ModeOptions.joinToString("\n") { mode ->
+        "${FeedRow.Mode.selector(mode)} ${ModeOption.selector(mode)} { outline: 2px solid rgb(var(--primary)); }"
+    }
 }
