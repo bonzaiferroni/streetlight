@@ -28,5 +28,4 @@ enum class ToggleType {
     Event,
     Galaxy,
     Location,
-    Post,
 }

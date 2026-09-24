@@ -21,7 +21,7 @@ class PasswordEditor() {
 
     /** The password, validated, or a problem when the confirmation differs. */
     fun getOutcome(): Outcome<Password> = when {
-        stateNow.password != stateNow.confirmation -> Problem("Password input does not match").also { println("${stateNow.password} ${stateNow.confirmation}") }
+        stateNow.password != stateNow.confirmation -> Problem("Password input does not match")
         else -> Password(stateNow.password).toValidOutcome()
     }
 }
