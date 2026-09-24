@@ -1,6 +1,17 @@
 # streetlight.server.integration
 
+## Introduction
+
 Integration tests for the server. Each file covers one user-facing flow from its entry point to the state it leaves behind.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.server.db.datascope` | The flows under test |
+| `streetlight.server.model` | Scopes and test fakes |
+| `org.jetbrains.exposed` | Database reads in assertions |
+| `kotlin.test` | Assertions |
 
 Shared fixtures and utilities live one package up, in `streetlight.server` of the test source set. Fakes for the injected clients live in `streetlight.server.model` of the test source set.
 
@@ -10,7 +21,7 @@ Shared fixtures and utilities live one package up, in `streetlight.server` of th
 
 `DatabaseTest` is the base class for any test that touches the database. It holds one PostgreSQL container for the whole run, drops and raises the schema once, and truncates every table before each test.
 
-| Scope | What |
+| Scope | Work |
 |---|---|
 | Once per run | Container start, connection, schema reset and raise |
 | Once per test | Truncate all tables, fresh `TestServer` |

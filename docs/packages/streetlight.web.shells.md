@@ -1,8 +1,19 @@
 # streetlight.web.shells
 
+## Introduction
+
 The server-rendered content of a route. A shell is declared in `commonMain` so the server renders it on the initial load and the browser consumes it with `routeBlock`.
 
-## What Belongs in the Shell
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.web.layouts` | Components that lay out content |
+| `streetlight.web.pages` | `appHeader` and `appFooter` |
+| `koala.html` | Components and `dataIsland` |
+| `streetlight.model` | Route content types |
+
+## Shell Content
 
 Content the user needs to see immediately, to understand what the page is, belongs in the shell. Content that can gracefully appear once the bundle has loaded belongs in the view instead.
 
@@ -50,8 +61,6 @@ Every shell ends its body container with `appFooter`. The body container is a `s
 ## Feeds
 
 A `FeedEntity` is rendered with `feedRow` from `streetlight.web.layouts`, as described in `streetlight.web.layouts.md`. A feed of content that is not specific to a galaxy passes `isUniverse = true`.
-
-`feedSection` takes the `GalaxyId` or `CityId` the feed belongs to and marks its section with it. The more button pages through `Api.Cities.ReadFeed` when the section is marked with a city, and through `Api.Posts.ReadFeed` otherwise.
 
 ## Universe
 

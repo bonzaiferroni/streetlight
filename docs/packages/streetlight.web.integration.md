@@ -1,6 +1,17 @@
 # streetlight.web.integration
 
+## Introduction
+
 Browser tests for the web client. A test here mounts a view into a real DOM, drives it, and asserts on both the DOM and the view model behind it.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `koala.dom` | Mounting views |
+| `streetlight.web.io` | Test clients |
+| `kotlin.test` | Assertions |
+| `com.microsoft.playwright` | The page runner, in `jvmTest` |
 
 `docs/testing.md` states how tests are written. This document states what this package provides.
 
@@ -38,7 +49,7 @@ Discovery loads the page with Mocha's `dryRun`, and an empty result fails the ru
 
 `ViewTest` is the base class. It builds a container and a scope before each test and tears both down after.
 
-| Scope | What |
+| Scope | Work |
 |---|---|
 | Once per test | A `MainScope`, an `AppContainer` from `buildTestApp` |
 | On teardown | The scope is cancelled and every mounted element is removed |
@@ -63,7 +74,7 @@ Register a service here when a mounted view resolves it. The container stays sma
 
 The helpers in `ViewUtility.kt` act on a mounted `View` through the labels a user sees or the block labels a view declares. A test never reaches into the DOM by structure.
 
-| Helper | What it drives |
+| Helper | Drives |
 |---|---|
 | `writeIn`, `editor` | A markdown editor, by block label |
 | `chooseIn` | A drop menu, by the block label around it |

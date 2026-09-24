@@ -12,6 +12,10 @@ A package document is specification only. It states what is true of the package 
 
 A negative specification is valuable when it is not redundant and not more clearly stated as a positive specification.
 
+A package document says how to do a thing, not what each thing is. It does not catalog the package: no entry per component, view, column or endpoint, and no account of how a particular part of the UI looks or is built. A specific part is named only as an example, and only where the example makes a specification clearer than the rule alone. A new component, column or screen that follows the existing specifications needs no amendment.
+
+A specific structure is described only when no general specification can carry it, such as a finely engineered layout whose intent must survive later changes. It is introduced with a line stating why it is included, so a later sweep keeps it.
+
 ## Reading Documents
 
 Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.

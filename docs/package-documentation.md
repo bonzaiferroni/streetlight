@@ -37,10 +37,28 @@ Exclude:
 | Code blocks            | Use them where a shape is clearer shown than described                                                      |
 | Placeholder names      | `Foo` stands for any type or val name, as in `FooCss`                                                       |
 | Structure first        | Reach for the heading, table, list, or code block that fits the content. Prose carries what none of them can |
+| No "what" openers      | A line never opens with "What". Name the thing directly                                                    |
 
 Recording a convention does not mean writing at length. A convention that fits in a table row is a table row.
 
 A document that runs past a page or two has started describing types.
+
+## Sections
+
+A package document opens with these sections, in this order.
+
+| Section | Holds |
+|---|---|
+| `## Introduction` | A brief description of the package domain |
+| `## Dependencies` | The packages it depends on, each with the part it provides |
+| `## Naming` | The naming patterns of its files and types, where the package has them |
+
+The specification follows, under headings that name its topics. The document closes with these sections, where present, in this order.
+
+| Section | Holds |
+|---|---|
+| `## Workflows` | Step lists for recurring tasks in the package |
+| `## Known Issues` | Defects recorded as described below |
 
 ## Known Issues
 

@@ -1,26 +1,25 @@
-### Introduction
+# streetlight.web.pages
 
-The `streetlight.web.pages` package contains the high-level DSL definitions for constructing HTML pages in the Streetlight web application. These functions typically combine the application's layout components, such as `appBody`, with specific content shells to form complete `HTML` document structures.
+## Introduction
 
-### Dependencies
+Whole HTML documents the server responds with: the head, the app body around a route's shell, and standalone pages.
 
-The most common packages this package depends on are:
+## Dependencies
 
-* `koala.html`: For core HTML component DSLs and utilities.
-* `koala.modifier`: For modifiers and utility classes.
-* `kotlinx.html`: The base library for Kotlin-based HTML generation.
-* `streetlight.model.data`: For accessing domain models like `Event` and `Location` to be displayed on pages.
-* `streetlight.web.shells`: For including the reusable UI "shells" that define the main content areas of the pages.
+| Package | Provides |
+|---|---|
+| `koala.html` | `appHead`, and the components the body is built from |
+| `koala.modifier` | Modifiers and classes |
+| `koala.interop` | `HeadScriptConfig` and `RootSwitch` |
+| `kotlinx.html` | The HTML DSL |
+| `streetlight.web.shells` | The shells placed in the body |
 
-### Structures
+## Pages
 
-The package follows a consistent structure for defining web pages and common layout elements:
+A page is an extension on `HTML`. It calls `appHead` with its title, then builds its body. A route's page is `appPage`, which places the route's shell inside `appBody`.
 
-* **Page DSLs**: Functions like `homePage`, `eventPage`, and `locationPage` are extensions on `HTML`. They generally call a `head` function to set metadata and external supports (like maps or protobuf), then invoke `appBody` to wrap the main content.
-* **Layout Components**: `appBody` and `appHeader` define the persistent visual structure of the site, including the navigation bar, logo, and main content slots (`shellBox`).
-* **Support Functions**: Extension functions on `HEAD` (found in `supports.kt`) manage the inclusion of external scripts and stylesheets, such as MapLibre for geographic maps or Protobuf for data serialization.
-* **AppBody Object**: A central object that maintains a set of `Id` constants used for targeting specific DOM elements during client-side interactions and styling.
+A head support, such as maps or protobuf, is a `HEAD` extension in `supports.kt`, added by the page that needs it.
 
-### Head Script
+## Head Script
 
-`StreetlightHeadScript`, declared in `appPage.kt`, is the `HeadScriptConfig` holding the site's root switches. `ServerResource` builds it into `PageResource.headScript`, which `appHead` emits on every page. A new root switch is added to it.
+The site's root switches are declared in `StreetlightHeadScript` in `appPage.kt`. A new root switch is added there.

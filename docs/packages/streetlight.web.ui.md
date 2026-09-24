@@ -1,6 +1,18 @@
 # streetlight.web.ui
 
+## Introduction
+
 The browser-side presentation layer. View functions build the DOM through the `koala.dom` DSL and wire it to state exposed by the view models in `streetlight.web.model`.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `koala.dom` | The DOM DSL and `ViewScope` |
+| `koala.modifier` | Modifiers and classes |
+| `streetlight.web.model` | View models |
+| `streetlight.web.layouts` | Server-renderable components |
+| `streetlight.model` | DTOs and routes |
 
 ## Layers
 
@@ -112,9 +124,6 @@ A form is built from the components in `Form.kt`, each a `ViewScope` extension.
 | `formRow` | Form entries in two columns when there is room, and in one column on a narrow screen |
 | `formSection(name)` | One form entry. Its heading does most of the work of saying what the field does |
 | `centeredText`, `formBullets` | Information a field needs beyond its heading, inside its `formSection` |
-| `formTextField(field, label)` | A text field bound to a `MutableTap<String>` |
-| `imageFormSection(instructions, imageEditor)` | An image drop bound to an `ImageEditor` |
-| `linksFormSection(linksState)` | The editable list of a record's `ExtraLink`s, bound to a `MutableTap<List<ExtraLink>>` |
 | `formSubmit(label, onClick, messenger, back)` | The submit button, its `messageBox`, and an optional back action |
 
 Form entries go in a `formRow`. An entry that deserves the full width on a wide screen, such as a `markdownEditor`, sits in the `formCard` outside any `formRow`.
@@ -133,7 +142,7 @@ An editor uploads a pending image with `imageEditor.finalizeImage(messenger)` be
 
 `entityHeader` renders the header of an `Entity`, reading its content from the extensions in `streetlight.web.layouts`. A header for content that is not an `Entity` calls `pageHeader` with each value.
 
-A value the entity holds but the header shows differently is a parameter defaulted to the entity's own, as `cells` and `image`. A city with no image shows `SiteImage.PearlStreet`.
+A value the entity holds but the header shows differently is a parameter defaulted to the entity's own, as `cells` and `image`.
 
 ## Services
 
@@ -198,10 +207,6 @@ A side route is for a route that not every view wants, such as a config route. A
 
 The dock holds routes only. An action belongs in the view it acts on.
 
-The dock is a column: the title, then a row of the left routes, main routes and right routes. The trays are `Flex1` on either side of the main routes, which keeps the main routes centered.
-
-The main routes and each tray are a pill of `RouteDockStyle.Glass` with `BlurBackdrop`. `RouteDockCss` holds only the translucent colors and the selection outline, and the rest is modifiers.
-
 A dock route equal to the route now carries `RouteDockStyle.RouteNow`, applied with `flowModifier` over `Portal.routeState`. The match is by route, not screen, because routes of one dock can share a screen. It updates in place, so a dock that persists across routes is not rebuilt to move the indicator.
 
 ### State
@@ -224,6 +229,6 @@ A view hides the dock with `dock.setVisible(false)`, for content it would otherw
 
 Visibility is not part of `RouteDockState`. That state is the dock's content, handed over once per route, while visibility toggles as often as the view's own content does.
 
-The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`. It fades and drifts down rather than disappearing.
+The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`.
 
 Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.

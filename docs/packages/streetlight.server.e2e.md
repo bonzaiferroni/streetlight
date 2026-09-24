@@ -1,6 +1,16 @@
 # streetlight.server.e2e
 
+## Introduction
+
 End-to-end tests. A test here drives a real browser against a real server and a real database, and asserts on both what the page shows and what the database holds.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `com.microsoft.playwright` | The browser |
+| `org.jetbrains.exposed` | Database reads in assertions |
+| `org.junit.jupiter` | The test lifecycle |
 
 `docs/testing.md` states how tests are written. This document states what this package provides.
 
@@ -10,7 +20,7 @@ The package is distinct from `streetlight.server.integration`, which enters belo
 
 `BrowserTest` extends `DatabaseTest`, so it inherits the shared container and the truncate before each test.
 
-| Scope | What |
+| Scope | Work |
 |---|---|
 | Once per run | Playwright, one Chromium browser |
 | Once per test | A Ktor server on a free port, a fresh `BrowserContext` and `Page` |

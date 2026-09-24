@@ -1,5 +1,17 @@
 # kampfire.model
 
+## Introduction
+
+Result and state types shared by every app: `Outcome` and `Problem`, and the `Store` and `Tap` state types.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `kampfire.api` | Wire value types |
+| `kotlinx.serialization` | Serialization of results |
+| `kotlinx.coroutines` | `Flow`, behind `Store` and `Tap` |
+
 ## Problem
 
 A `Problem` communicates a failed condition to the user. Its message is written for the user.

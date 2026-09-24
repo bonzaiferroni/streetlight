@@ -1,6 +1,17 @@
 # streetlight.server.api
 
+## Introduction
+
 Tests that enter the server through an HTTP request and assert on the database. There is no browser and no client code: the request is built from an `Api` endpoint and sent to the real routing tree over a test client.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.model` | `Api` endpoints |
+| `io.ktor.server.testing` | `testApplication` and the test client |
+| `org.jetbrains.exposed` | Database reads in assertions |
+| `kotlin.test` | Assertions |
 
 `docs/testing.md` states how tests are written. This document states what this package provides.
 

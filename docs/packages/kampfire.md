@@ -1,8 +1,15 @@
-T# kampfire
+# kampfire
+
+## Introduction
 
 Utilities and types for apps that communicate with a server in a multiplatform context. Everything is in `commonMain`, so the client and the server hold the same code.
 
-`kampfire` depends on no UI or DOM module. `koala` depends on it.
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `kotlinx.serialization` | Serialization of wire types |
+| `kotlinx.coroutines` | `Flow`, behind `Store` and `Tap` |
 
 ## Packages
 

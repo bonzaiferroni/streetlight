@@ -1,8 +1,20 @@
 # streetlight.server.routes
 
+## Introduction
+
 Implementations of the endpoints declared in `streetlight.model.Api`. One realm of the application per file.
 
-## File Naming
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.model` | `Api` endpoints and DTOs |
+| `streetlight.server.model` | `ApiScope` and content reads |
+| `streetlight.server.db.datascope` | Operations that span daos |
+| `klutch.server` | `authGate`, `getApi` and `postApi` |
+| `kampfire.model` | `Outcome` |
+
+## Naming
 
 A file is named `serveFoo.kt` and holds one function, `fun ApiScope.serveFoo()`. The name matches the `Api` subtree it implements, so `Api.Feedback` is implemented by `serveFeedback`.
 

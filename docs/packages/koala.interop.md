@@ -1,6 +1,16 @@
 # koala.interop
 
+## Introduction
+
 Calls between server-rendered markup and the browser. Markup names a global JS function; the browser defines it.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `koala.modifier` | `jsScriptOf`, `Attribute` and root modifier classes |
+| `koala.html` | `Id` and `Class` arguments |
+| `web` (Kotlin wrappers) | DOM and `localStorage` access in `jsMain` |
 
 ## Global Functions
 

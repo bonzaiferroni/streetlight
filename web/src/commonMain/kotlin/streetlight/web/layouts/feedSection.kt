@@ -24,8 +24,13 @@ fun FlowContent.feedSection(
             setAttribute(AppAttribute.CityId.to(it))
         }
 
-        filigree {
-            heading2("Posts", SectionHeadingMod)
+        // the spacer matches the switch, keeping the heading centered
+        row(AlignItemsCenter) {
+            div(FeedSection.SwitchWidth)
+            filigree(Flex1) {
+                heading2("Posts", SectionHeadingMod)
+            }
+            rootSwitch(FeedRow.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd)) { icon(it.toSvg()) }
         }
 
         feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
@@ -38,8 +43,6 @@ fun FlowContent.feedSection(
                 }
             }
         }
-
-        rootSwitch(FeedRow.Mode, JustifyContentCenter) { icon(it.toSvg()) }
 
         layoutFeed {
             // td: message when empty
@@ -75,6 +78,8 @@ object FeedSection {
 
     val SortByMark = JsSignature("sortByMark")
     val MorePosts = JsSignature("morePosts")
+
+    val SwitchWidth = Width(12)
 }
 
 fun FeedMode.toSvg() = when (this) {

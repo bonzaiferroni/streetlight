@@ -1,6 +1,18 @@
 # streetlight.web.model
 
+## Introduction
+
 View models. Each holds the state behind one view and the calls that change it.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.model` | DTOs and routes |
+| `streetlight.web.io` | `ApiClient` |
+| `kampfire.model` | `Store`, `Tap`, `Messenger` and `Outcome` |
+| `koala.model` | `Portal` and `GeoCamera` |
+| `kotlinx.coroutines` | View model work |
 
 ## Construction
 

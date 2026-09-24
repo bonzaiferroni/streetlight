@@ -1,6 +1,16 @@
 # streetlight.server.plugins
 
+## Introduction
+
 Ktor installation and configuration, and the assembly of the routing tree.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `io.ktor.server` | Plugins and routing |
+| `streetlight.server.model` | `ServerScope` and `DaoFacade` |
+| `streetlight.server.routes` | Serve functions |
 
 Two kinds of member live here, separated by receiver. A function on `Application` configures the server. A function on `ApiScope` serves endpoints, and follows the conventions in `streetlight.server.routes.md`.
 
@@ -47,10 +57,6 @@ These serve functions live here rather than in `streetlight.server.routes`:
 
 ## Daemons
 
-`SiteStatusDaemon` is a background worker, constructed and launched by `configureMetrics`. It holds the `DaoFacade` and the Micrometer registry, and writes metrics to the database on an interval.
-
-`TableDaemon` is launched by `configureDatabases` after `initDb`. It runs the time-dependent aggregates of `streetlight.server.db.tables` every 15 minutes, in the order they depend on each other.
-
-A daemon is launched from the configure function of the concern it serves, so that the thing it depends on is installed before it starts.
+A daemon is a background worker on an interval, named `FooDaemon`. It is launched from the configure function of the concern it serves, so that the thing it depends on is installed before it starts, as `configureDatabases` launches `TableDaemon` after `initDb`.
 
 `configureTransit` launches the GTFS load in the application's own scope, so stopping the application cancels it. Startup work belongs in a configure function rather than a serve function.

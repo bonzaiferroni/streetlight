@@ -1,16 +1,23 @@
 # koala.html
 
+## Introduction
+
 Server-renderable components declared on `FlowContent`.
 
-## Buttons
+## Dependencies
 
-`btn` renders a link styled by `BtnStyle.Class`. A flair, when present, is its first child in a fixed column, and the text is centered in the region to its right, kept a `--unit` from the flair. Without a flair the text is centered in the whole button.
+| Package | Provides |
+|---|---|
+| `kotlinx.html` | The HTML DSL |
+| `koala.modifier` | Modifiers and classes |
+| `koala.interop` | `KoalaFun` for markup that calls the browser |
+| `kampfire.model` | Shared model types |
 
 ## Images
 
-`image` and `containImage` share `configureImage`, which sets the `srcset`, `sizes="auto"`, the aspect ratio and lazy loading from an `Image`, falling back to `SiteImage.placeholder`.
+An image component takes the `Image`, not a URL of one size, so it renders the image's source set. A new image component configures its `img` with `configureImage`.
 
-`containImage` shows the image over a blurred, scaled backdrop of the same image. Its `object-fit` is set on the root and inherited by the content image, so a caller changes the fit on the root alone.
+A caller changes the fit of a `containImage` on its root, which the content image inherits.
 
 ## Root Switch
 

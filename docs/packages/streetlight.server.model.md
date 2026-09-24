@@ -1,6 +1,17 @@
 # streetlight.server.model
 
+## Introduction
+
 The server's dependency container: the scope interfaces a receiver carries, the facades that group its services, and the interfaces for everything outside the process.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.server.db.services` | The daos in `DaoFacade` |
+| `klutch.server` | Providers and identity |
+| `streetlight.model.data` | DTOs |
+| `org.koin` | The container |
 
 ## Scopes
 

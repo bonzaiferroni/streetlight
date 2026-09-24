@@ -1,6 +1,17 @@
 # streetlight.agent
 
+## Introduction
+
 Work that talks to a language model: prompting, structured decoding, and the HTML trimming that keeps a page within a prompt.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `ai.koog` | Prompting and structured decoding against the model |
+| `com.fleeksoft.ksoup` | HTML parsing and trimming |
+| `kampfire.model` | `Outcome` |
+| `io.ktor.client` | Page fetching |
 
 ## HtmlParserClient
 

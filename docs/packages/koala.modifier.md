@@ -1,6 +1,17 @@
 # koala.modifier
 
+## Introduction
+
 A `Modifier` is one change to an HTML element. `Modifier` is a sealed interface, and `ModifierSet` holds an array of nullable modifiers while being a `Modifier` itself, so a set nests inside a set.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `kotlinx.css` | CSS value types |
+| `kotlinx.html` | The tags modifiers apply to |
+| `koala.html` | `Class` and `Id` |
+| `web` (Kotlin wrappers) | DOM access in `jsMain` |
 
 ## Modifier Kinds
 

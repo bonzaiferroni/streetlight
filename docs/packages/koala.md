@@ -1,6 +1,16 @@
 # koala
 
+## Introduction
+
 The base set of components and functionality for web apps. It declares `View`, a unit of UI within the browser, and the tools views are built from.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `kampfire` | Wire and state types |
+| `kotlinx.html` | The HTML DSL |
+| `kotlinx.coroutines` | Coroutines behind views and state |
 
 `koala` depends on `kampfire`. `kampfire` does not depend on `koala`.
 
