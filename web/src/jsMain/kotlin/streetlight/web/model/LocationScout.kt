@@ -22,6 +22,12 @@ import streetlight.model.data.toEditOrNull
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OSMClient
 
+/**
+ * Finds or creates a location, and can post it to [galaxy].
+ *
+ * A location is found in Streetlight as the query is typed, or in OpenStreetMap on request. The stage follows
+ * from the state: nothing chosen is a search, a new location is an edit, a chosen or reviewed one is a review.
+ */
 class LocationScout(
     val galaxy: Galaxy?,
     val editor: LocationEditor,
@@ -90,6 +96,7 @@ class LocationScout(
         }
     }
 
+    /** Searches OpenStreetMap for the query, within the city or near the galaxy. */
     fun queryOSM() {
         val query = stateNow.query
         if (query.isBlank()) {
@@ -106,6 +113,7 @@ class LocationScout(
         }
     }
 
+    /** Offers the OpenStreetMap place at the center of the map. */
     fun whatIsHere() {
         scope.launch(::whatIsHere) {
             val center = map.geoMap.camera.centerState.now
@@ -117,6 +125,7 @@ class LocationScout(
         }
     }
 
+    /** Starts a new location named with the query, at the center of the map. */
     fun createLocation() {
         state.set { copy(edit = LocationEdit(name = stateNow.query, geoPoint = map.centerNow)) }
     }
@@ -126,6 +135,7 @@ class LocationScout(
         state.set { copy(isReviewing = true) }
     }
 
+    /** The chosen location, or the new one once saved. */
     suspend fun submitLocation() = when (val location = stateNow.location) {
         null -> editor.submitSuspend().also { location ->
             state.set { copy(location = location) }

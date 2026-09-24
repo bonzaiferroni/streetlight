@@ -13,6 +13,7 @@ import streetlight.model.external.OSMLocation
 import streetlight.model.external.toGeoPoint
 import streetlight.model.external.toHoursSchedule
 
+/** The fields of a location a form sends. */
 @Serializable
 data class LocationEdit(
     override val locationId: LocationId? = null,
@@ -71,15 +72,18 @@ data class LocationEdit(
         }.takeIf { it.isNotEmpty() }
     }
 
+    /** True when the location is missing an image, a website, or a description of at least 100 characters. */
     val needsReview get() = image == null || website == null || description == null || description.length < 100
 }
 
+/** The keys of the parts of a [LocationEdit] its validity checks. */
 object LocationProperty {
     val Name = "name"
     val GeoPoint = "geolocation"
     val City = "city"
 }
 
+/** This edit, with any field it lacks taken from [edit]. */
 fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
     LocationEdit(
         locationId = locationId ?: edit.locationId,
@@ -105,8 +109,10 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
     )
 } ?: this
 
+/** [edit], with any field it lacks taken from this edit. */
 fun LocationEdit.mergeRight(edit: LocationEdit?) = edit?.mergeLeft(this) ?: this
 
+/** An edit of a new location from this OpenStreetMap place. */
 fun OSMLocation.toEdit() = LocationEdit(
     mapId = osmId,
     name = name?.takeIf { it.isNotBlank() },
@@ -126,4 +132,5 @@ fun OSMLocation.toEdit() = LocationEdit(
     website = extraTags?.website?.toUrl()
 )
 
+/** [toEdit], or `null` when the place lacks what a location needs. */
 fun OSMLocation.toEditOrNull() = runCatching { toEdit() }.getOrNull()

@@ -20,6 +20,7 @@ fun Document.querySelector(queryable: Queryable) = querySelector(queryable.selec
 fun Document.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList()
 
 fun Element.closest(queryable: Queryable) = closest(queryable.selector)
+/** The nearest ancestor matching [queryable]. Throws when there is none. */
 fun Element.requireClosest(queryable: Queryable) = closest(queryable.selector) as? HTMLElement
     ?: error("closest not found: ${queryable.selector}")
 
@@ -28,8 +29,13 @@ fun Element.asHtmlElement() = this as HTMLElement
 @Deprecated("query from document or element")
 fun querySelector(queryable: Queryable) = document.body.querySelector(queryable)
 
+/** Removes the inline style of [property]. */
 fun CSSStyleDeclaration.removeStyle(property: Property<*>) = removeProperty(property.name)
 
+/**
+ * A readable path from the document root to this element, by id or tag, for error messages. [subject] is
+ * prefixed when given.
+ */
 fun Element.getPath(subject: Any? = null, limit: Int = Int.MAX_VALUE): String = buildString {
     subject?.let {
         append("[${it.toString().takeEllipsis(40)}]")

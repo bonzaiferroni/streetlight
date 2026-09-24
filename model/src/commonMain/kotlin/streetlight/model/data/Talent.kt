@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A skill a user offers, with their experience. */
 @Serializable
 data class Talent(
     val talentId: TalentId,
@@ -25,6 +26,7 @@ value class TalentId(override val value: Uuid): RecordId {
     companion object { fun random() = TalentId(Uuid.random()) }
 }
 
+/** The kinds of [Talent]. */
 enum class TalentType {
     Music,
     Performance,
@@ -35,12 +37,14 @@ enum class TalentType {
     Other,
 }
 
+/** The level of a [Talent]. */
 enum class TalentLevel {
     Beginner,
     Intermediate,
     Professional,
 }
 
+/** The fields of a talent a form sends. */
 @Serializable
 data class TalentEdit(
     val talentId: TalentId? = null,
@@ -52,6 +56,7 @@ data class TalentEdit(
     val yearStarted: Int = 2025,
 )
 
+/** An edit of this talent, starting from its current values. */
 fun Talent.toEdit() = TalentEdit(
     talentId = talentId,
     name = name,

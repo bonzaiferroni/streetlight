@@ -12,6 +12,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.DIV
 import kotlinx.html.div
 
+/** [text] rendered from markdown, cut to [limit] characters when given. */
 fun FlowContent.markdown(
     text: Markdown,
     mod: Modifier? = null,
@@ -27,6 +28,7 @@ fun FlowContent.markdown(
     ), mod, block
 )
 
+/** Configures this element as rendered markdown of [blocks]. */
 fun DIV.configureMarkdown(
     blocks: List<ParsedBlock>,
     mod: Modifier? = null,
@@ -37,6 +39,7 @@ fun DIV.configureMarkdown(
     renderMarkdownBlocks(blocks)
 }
 
+/** Markdown already parsed into [blocks], rendered. */
 fun FlowContent.markdown(
     blocks: List<ParsedBlock>,
     mod: Modifier? = null,
@@ -47,6 +50,11 @@ fun FlowContent.markdown(
     }
 }
 
+/**
+ * The text with its markdown syntax removed, cut to [maxLength] characters.
+ *
+ * A link keeps its text, an image is dropped, and a table becomes "[table]".
+ */
 fun String.stripMarkdown(maxLength: Int = Int.MAX_VALUE): String {
     val sb = StringBuilder(minOf(length, maxLength + 16))
     var i = 0

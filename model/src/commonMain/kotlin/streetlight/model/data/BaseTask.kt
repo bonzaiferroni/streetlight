@@ -6,6 +6,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A task a user takes up on a record, such as reviewing an edit, with its decision and status. */
 @Serializable
 data class BaseTask(
     val taskId: TaskId,
@@ -24,12 +25,14 @@ value class TaskId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
+/** The review status of a piece of content. */
 enum class ContentStatus {
     Submitted,
     Accepted,
     Rejected,
 }
 
+/** The status of a task. */
 enum class TaskStatus {
     Requested,
     Accepted,
@@ -37,6 +40,7 @@ enum class TaskStatus {
     Dismissed,
 }
 
+/** Whether a post is live in its galaxy's feed or waiting for review. */
 enum class FeedStatus {
     Reviewing,
     Live,
@@ -44,9 +48,11 @@ enum class FeedStatus {
     Removed,
 }
 
+/** A task a user can take up. */
 @Serializable
 sealed interface StarTask
 
+/** A task to answer the question of a [Quorum]. */
 @Serializable
 data class QuorumTask(
     val taskId: TaskId,
@@ -60,6 +66,7 @@ data class QuorumTask(
     val quorumId get() = QuorumId(recordId)
 }
 
+/** A task to review an edit. */
 @Serializable
 data class EditTask(
     val taskId: TaskId,
@@ -72,9 +79,11 @@ data class EditTask(
     val editLogId get() = EditLogId(recordId)
 }
 
+/** What a task view shows for a task. */
 @Serializable
 sealed interface TaskContent: Labeled
 
+/** The content of a quorum task: the question and the record it is about. */
 @Serializable
 data class QuorumReviewContent(
     val quorum: Quorum,
@@ -84,6 +93,7 @@ data class QuorumReviewContent(
     override val label get() = quorum.question.label
 }
 
+/** The content of an edit task: the edit and the record it changes. */
 @Serializable
 data class EditTaskContent(
     val task: EditTask,

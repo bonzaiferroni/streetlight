@@ -8,6 +8,12 @@ import kotlinx.html.DIV
 import web.html.HTMLDivElement
 import web.html.HTMLElement
 
+/**
+ * A column of [items], each built by [block], where a click selects an item into [selection] and a second click
+ * clears it.
+ *
+ * Shows [emptyText] while there are no items.
+ */
 fun <Item> ViewScope.selectionBlock(
     items: Tap<List<Item>>,
     selection: MutableTap<Item?>,

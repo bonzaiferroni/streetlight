@@ -12,6 +12,7 @@ import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.pageHeader
 
+/** A site doc beside the table of all site docs. */
 fun FlowContent.siteDocShell(content: DocContent) {
     val doc = content.node.doc
     val table = content.table
@@ -29,6 +30,7 @@ fun FlowContent.siteDocShell(content: DocContent) {
     }
 }
 
+/** The links of [table], nested by level. */
 fun FlowContent.siteDocTable(table: DocTable) {
     table.forEach { item ->
         navigation(SiteDocRoute(item.docId)) {
@@ -42,6 +44,7 @@ fun FlowContent.siteDocTable(table: DocTable) {
     }
 }
 
+/** The sections of a doc, with jump links when more than one has an id. */
 fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, Flex1) {

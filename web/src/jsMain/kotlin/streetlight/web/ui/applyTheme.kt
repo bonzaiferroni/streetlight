@@ -8,6 +8,7 @@ import kotlinx.css.pct
 import streetlight.model.data.PageTheme
 import web.dom.document
 
+/** Sets [theme] on the body, or clears the page theme when `null`. */
 fun applyTheme(theme: PageTheme?) {
     val body = document.body
     body.setStyle(KoalaStyle.Accent, theme?.accent)

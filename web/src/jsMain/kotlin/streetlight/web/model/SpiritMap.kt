@@ -10,6 +10,7 @@ import streetlight.model.data.SpiritId
 import streetlight.web.io.ApiClient
 import streetlight.web.io.SpiritSocket
 
+/** Shares the map's position with other viewers over a socket, while spirit vision is on. */
 class SpiritMap(
     private val geoMap: GeoCamera,
     private val scope: CoroutineScope,

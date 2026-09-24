@@ -12,6 +12,10 @@ import koala.utils.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlin.uuid.Uuid
 
+/**
+ * An HTML attribute, with the conversions between its value and its text. A custom attribute is written with a
+ * `data-` prefix.
+ */
 data class Attribute<T>(
     val name: String,
     val isCustom: Boolean = false,
@@ -24,7 +28,9 @@ data class Attribute<T>(
         false -> name
     }
 
+    /** An [AttributeValue] setting this attribute to [value]. */
     fun to(value: T) = AttributeValue(this, value)
+    /** The selector of elements whose attribute holds [value]. */
     fun selector(value: T) = AttributeValue(this, value).selector
 
     override fun toString() = selector
@@ -58,6 +64,7 @@ data class Attribute<T>(
     }
 }
 
+/** A custom attribute holding a record id, read with [block] from the [Uuid]. */
 fun <T> idAttributeOf(identifier: String, block: (Uuid) -> T ) =
     Attribute(identifier, true) { block(Uuid.parse(it)) }
 
@@ -74,27 +81,33 @@ fun intAttributeOf(identifier: String, isCustom: Boolean = false) =
 
 fun slugAttributeOf(identifier: String) = Attribute(identifier, false) { it.toSlug() }
 
+/** An attribute that is either present or absent, with no value. */
 fun unitAttributeOf(identifier: String, isCustom: Boolean = false) =
     Attribute(identifier, isCustom, { "" }) { }
 
+/** A custom attribute holding an enum entry by name. */
 inline fun <reified T: Enum<T>> enumAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, { it.name }) { enumValueOf(it) }
 
+/** A custom attribute holding a value as JSON. */
 inline fun <reified T> jsonAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, jsonConfig::encodeToString, jsonConfig::decodeFromString)
 
 
 
+/** Labels the element with [label] over its corner, or nothing when it is `null`. */
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
     label?.let {
         blockLabel = it
     }
 }
 
+/** Sets the attribute of [expression] to its value. */
 fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeValue<T>) {
     attributes[expression.attribute.identifier] = expression.toStringValue()
 }
 
+/** Sets [attribute] to [value], or removes it when [value] is `null`. */
 fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?) {
     if (value != null) {
         attributes[attribute.identifier] = value.toString()
@@ -103,6 +116,7 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?
     }
 }
 
+/** Makes a click on this element act on the popover with [id]: toggle it, or [action] when given. */
 fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, action: String? = null) {
     setAttribute(Attribute.PopoverTarget, id.identifier)
     action?.let {
@@ -110,6 +124,7 @@ fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, action: String? = null) {
     }
 }
 
+/** The label shown over the element's corner. */
 var CoreAttributeGroupFacade.blockLabel: String?
     get() = attributes[Attribute.BlockLabel.identifier]
     set(value) {

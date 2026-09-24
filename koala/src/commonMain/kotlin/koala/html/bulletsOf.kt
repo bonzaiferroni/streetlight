@@ -3,6 +3,7 @@ package koala.html
 import koala.modifier.*
 import kotlinx.html.FlowContent
 
+/** A bulleted list of [content]. */
 fun FlowContent.bulletsOf(mod: Modifier? = null, vararg content: String) {
     ulist(modify(mod, Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight), ListAxis.Column) {
         content.forEach { text ->
@@ -19,6 +20,7 @@ fun FlowContent.bulletsOf(mod: Modifier, content: List<String>) {
     bulletsOf(mod, *content.toTypedArray())
 }
 
+/** A bulleted list with an item built by each of [contents]. */
 fun FlowContent.bulletsOf(mod: Modifier? = null, vararg contents: FlowContent.() -> Unit) {
     ulist(modify(mod, Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight), ListAxis.Column) {
         contents.forEach { element ->

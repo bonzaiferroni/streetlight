@@ -6,6 +6,7 @@ import web.dom.document
 import web.html.HTMLElement
 import web.window.window
 
+/** The caret's offset in this element's text, or `null` when the selection is outside it. */
 fun HTMLElement.caretOffset(): Int? {
     val selection = window.getSelection() ?: return null
     if (selection.rangeCount == 0) return null
@@ -19,6 +20,7 @@ fun HTMLElement.caretOffset(): Int? {
     return probe.toString().length
 }
 
+/** The child of this element that holds the caret, or `null`. */
 fun HTMLElement.activeChunk(): HTMLElement? {
     val selection = window.getSelection() ?: return null
     if (selection.rangeCount == 0) return null
@@ -28,7 +30,13 @@ fun HTMLElement.activeChunk(): HTMLElement? {
         node = node.parentNode
     }
     return node as? HTMLElement
-}fun placeCaretAcross(targets: List<Pair<HTMLElement, String>>, offset: Int) {
+}
+
+/**
+ * Places the caret at [offset] in text spread across [targets], each an element and its text, counting one
+ * character between them.
+ */
+fun placeCaretAcross(targets: List<Pair<HTMLElement, String>>, offset: Int) {
     var remaining = offset
     targets.forEach { (element, chunk) ->
         if (remaining <= chunk.length) {
@@ -42,6 +50,7 @@ fun HTMLElement.activeChunk(): HTMLElement? {
     }
 }
 
+/** Places the caret at [offset] in this element's text. */
 fun HTMLElement.placeCaret(offset: Int) {
     val selection = window.getSelection() ?: return
     val safeOffset = offset.coerceIn(0, textContent?.length ?: 0)

@@ -6,6 +6,10 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.ui.Screen
 
+/**
+ * The bar of the site and star helm buttons, each opening its popover. A button hides while its panel is shown
+ * beside the content.
+ */
 fun FlowContent.helmBar() {
     val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, Outline)
     siteHelmPopover()

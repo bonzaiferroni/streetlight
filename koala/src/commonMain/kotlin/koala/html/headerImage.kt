@@ -5,6 +5,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** A 3:2 image under a darkening gradient, with [text] as a heading over its bottom edge. */
 fun FlowContent.headerImage(
     text: String,
     src: Url?,

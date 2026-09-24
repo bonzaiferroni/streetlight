@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.toGeoPoint
 
+/** A place as the map reference service knows it. */
 @Serializable
 data class MapLocation(
     val mapId: MapId,
@@ -21,8 +22,10 @@ data class MapLocation(
     val website: String?,
 )
 
+/** The id of a place in the map reference service. */
 typealias MapId = Long
 
+/** A place as it is first described, before it is a location. */
 @Serializable
 data class PlaceProto(
     val name: String? = null,
@@ -37,6 +40,7 @@ data class PlaceProto(
     val isValid get() = !name.isNullOrBlank() && geoPoint != null
 }
 
+/** This OpenStreetMap place as a [MapLocation]. Throws when it lacks a road or state. */
 fun OSMLocation.toMapLocation() = MapLocation(
     mapId = osmId,
     name = name,
@@ -56,4 +60,5 @@ fun OSMLocation.toMapLocation() = MapLocation(
     website = extraTags?.website
 )
 
+/** [toMapLocation], or `null` when the place lacks what it needs. */
 fun OSMLocation.toMapLocationOrNull() = runCatching { toMapLocation() }.getOrNull()

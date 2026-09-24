@@ -26,6 +26,7 @@ import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Star
 
+/** The entity markers on the map and its focus. */
 class MarkerMap(
     private val scope: CoroutineScope,
     val geoMap: GeoMap,
@@ -56,14 +57,17 @@ class MarkerMap(
         }
     }
 
+    /** Replaces the markers with those of [entities]. */
     fun setPoints(entities: List<Entity>) {
         createAndSetMarkers(entities, emptyList())
     }
 
+    /** Adds markers for the [entities] not yet shown. */
     fun addPoints(entities: List<Entity>) {
         createAndSetMarkers(entities, stateNow.markers ?: emptyList())
     }
 
+    /** Keeps the markers that match [predicate]. */
     fun filterPoints(predicate: (EntityMarker) -> Boolean) {
         stateNow.markers?.filter(predicate)?.let {
             setMarkers(it)
@@ -85,6 +89,7 @@ class MarkerMap(
         setMarkers(markers)
     }
 
+    /** Focuses [marker] and pans to it. */
     fun setFocus(marker: EntityMarker) {
         val focus = MarkerFocus(marker)
         geoMap.setFocus(focus)
@@ -92,6 +97,7 @@ class MarkerMap(
         state.set { copy(focus = focus)}
     }
 
+    /** Frames every marker. */
     fun showAll() {
         val markers = stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
         when(val bounds = getContainingBounds(markers.map { it.geoPoint })) {
@@ -106,6 +112,7 @@ data class StreetMapState(
     val focus: GeoFocus? = null,
 )
 
+/** The markers inside and outside the map view. */
 data class PartitionedMarkers(
     val bounded: List<EntityMarker>,
     val unbounded: List<EntityMarker>,

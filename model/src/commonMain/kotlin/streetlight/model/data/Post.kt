@@ -6,6 +6,7 @@ import kampfire.api.Username
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/** A post sharing a record to a galaxy, with its lean and light count. */
 @Serializable
 data class Post(
     val postId: PostId,
@@ -21,6 +22,7 @@ data class Post(
     val updatedAt: Instant,
 )
 
+/** The name and slug of the galaxy a post belongs to. */
 @Serializable
 data class GalaxyTrace(
     val galaxyId: GalaxyId,

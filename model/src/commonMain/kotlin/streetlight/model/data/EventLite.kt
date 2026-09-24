@@ -4,6 +4,7 @@ import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
 
+/** The few fields of an event a list needs. */
 @Serializable
 data class EventLite(
     val id: Int,

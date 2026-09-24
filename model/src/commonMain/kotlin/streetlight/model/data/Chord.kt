@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A chord by its pitch, quality and extensions. */
 @Serializable
 data class Chord(
     val pitch: Int,
@@ -11,6 +12,7 @@ data class Chord(
 ) {
     val chromatic get() = Chromatic.ofPitch(pitch)
 
+    /** The chord written in [style], relative to the song's root pitch. */
     fun toNotation(
         rootPitch: Int = 60,
         style: NotationStyle = NotationStyle.Letters
@@ -31,6 +33,7 @@ data class Chord(
     }
 }
 
+/** The quality of a chord, with its letter and degree notation. */
 enum class ChordQuality(val letterNotation: String, val degreeNotation: String) {
     Major("maj", ""),        // C, D, E… (default, often no suffix)
     Minor("m", "-"),         // Cm, Dm, etc.
@@ -39,6 +42,7 @@ enum class ChordQuality(val letterNotation: String, val degreeNotation: String) 
     Suspended("sus", "sus")  // Csus (usually 2 or 4 implied: Csus2, Csus4)
 }
 
+/** An extension added to a chord. */
 enum class ChordExtension(val notation: String) {
     Second("2"),
     Fourth("4"),
@@ -50,6 +54,7 @@ enum class ChordExtension(val notation: String) {
     Thirteenth("13")
 }
 
+/** Reads a chord written in [style], or returns `null`. */
 fun parseChord(text: String, style: NotationStyle): Chord? {
     if (text.isBlank()) return null
     var index = 0

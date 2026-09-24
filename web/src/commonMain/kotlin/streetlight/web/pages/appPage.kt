@@ -13,6 +13,7 @@ import koala.interop.RootSwitch
 import streetlight.web.layouts.FeedMode
 import streetlight.web.layouts.FeedRow
 
+/** An app page for [screen], with the head that supports the map, and the body of [appBody]. */
 fun HTML.appPage(
     title: String,
     screen: AppScreen,

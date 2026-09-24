@@ -9,8 +9,10 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import streetlight.model.data.NewMessage
 
+/** The recipient of the message being written; the dialog is open while it is set. */
 val recipientState = storeOf<Username?>(null)
 
+/** The dialog for writing a message, opened with [startMessage]. */
 fun ViewScope.wireMessageDialog() {
     val isOpen = recipientState.mutableTapOf({ it != null }) { if (it) this else null }
     dialog(isOpen) {
@@ -39,6 +41,7 @@ fun ViewScope.wireMessageDialog() {
     }
 }
 
+/** Opens the message dialog to [recipient]. */
 fun startMessage(recipient: Username) {
     recipientState.set(recipient)
 }

@@ -16,6 +16,7 @@ import streetlight.model.data.toRecordId
 import web.http.arrayBuffer
 import web.http.text
 
+/** The response decoded as [encoding]: CBOR, or JSON by default. */
 suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Outcome<Returned> {
     return when (encoding) {
         EncodingType.Cbor -> decodeBytes()
@@ -23,6 +24,7 @@ suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?
     }
 }
 
+/** The response decoded from JSON, or a [Problem] for a failed status or a body that does not decode. */
 suspend inline fun <reified Returned> Response.decodeText(): Outcome<Returned> {
     val status = status.toInt()
     return when (status) {
@@ -35,6 +37,7 @@ suspend inline fun <reified Returned> Response.decodeText(): Outcome<Returned> {
     }
 }
 
+/** The response decoded from JSON, or `null`. */
 suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     if (!ok) {
         console.log("request failed: $status")
@@ -63,6 +66,10 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     }
 }
 
+/**
+ * The response decoded from the CBOR [Outcome] the server writes, or a [Problem] for a failed status or a body
+ * that does not decode.
+ */
 suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> {
     return when (status.toInt()) {
         200 -> {
@@ -83,6 +90,7 @@ suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> {
     }
 }
 
+/** The encodings a response can be asked for in. */
 enum class EncodingType(val headerValue: String) {
     Cbor("application/cbor"),
     Json("application/json"),

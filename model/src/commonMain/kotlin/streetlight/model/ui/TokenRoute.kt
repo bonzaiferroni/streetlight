@@ -4,6 +4,7 @@ import kampfire.api.ActionResult
 import kampfire.model.Token
 import streetlight.model.data.AuthTokenType
 
+/** A route reached from an emailed link, carrying its [token]. */
 interface TokenRoute: StringIdRoute {
     val token: Token
     val tokenType: AuthTokenType

@@ -24,6 +24,12 @@ import streetlight.model.data.SpaceType
 import streetlight.model.data.toRecordId
 import kotlin.uuid.Uuid
 
+/**
+ * The screens of the app, each with the parse that turns its path into a route.
+ *
+ * A screen with a shell is rendered by the server on the initial load. A screen that retains within itself keeps
+ * its view as its route changes.
+ */
 enum class Screen(
     override val routeParse: RouteParse,
     pathRoot: String? = null,
@@ -96,27 +102,32 @@ enum class Screen(
 }
 
 // interfaces
+/** A route of the Streetlight app. */
 sealed interface StreetlightRoute: AppRoute {
     // td: gather as build parameter
     override val origin get() = "http://localhost:8080"
 }
 
+/** A route whose path ends in a record id. */
 interface RecordIdRoute: StreetlightRoute {
     val recordId: RecordId?
 
     override fun toRelativePath() = toIdSitePath(recordId)
 }
 
+/** A route whose path ends in a slug. */
 sealed interface SlugRoute: StreetlightRoute {
     val slug: SlugValue?
     override fun toRelativePath() = toIdSitePath(slug)
 }
 
+/** A route whose path ends in a number. */
 interface IntIdRoute: StreetlightRoute {
     val id: Int?
     override fun toRelativePath() = toIdSitePath(id)
 }
 
+/** A route whose path ends in a text id. */
 interface StringIdRoute: StreetlightRoute {
     val id: String
     override fun toRelativePath() = toIdSitePath(id)
@@ -204,6 +215,7 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     override fun toRelativePath() = toIdSitePath(id)
 }
 
+/** The route's base path followed by [id], or the base path alone when it is `null`. */
 fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
 fun AppRoute.toIdSitePath(id: SlugValue?) = toIdSitePath(id?.value)
 fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())

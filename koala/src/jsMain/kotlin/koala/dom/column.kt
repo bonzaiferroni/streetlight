@@ -9,6 +9,7 @@ import koala.modifier.Modifier
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
+/** A flex [column] with [id]. */
 fun AppendScope.column(
     id: Id?,
     mod: Modifier? = null,
@@ -18,6 +19,7 @@ fun AppendScope.column(
     content()
 }
 
+/** A flex column. */
 fun AppendScope.column(
     mod: Modifier? = null,
     content: DIV.() -> Unit = { },

@@ -11,6 +11,11 @@ import kotlinx.html.Unsafe
 import kotlinx.html.org.w3c.dom.events.Event
 import web.html.HTMLElement
 
+/**
+ * A unit of UI in the browser: the elements built into [mount], the coroutines behind them, and its child views.
+ *
+ * Disposing a view cancels its coroutines, disposes its children in reverse order, and runs its disposers.
+ */
 class View(
     private var consumer: AppendScope,
     parentScope: CoroutineScope,

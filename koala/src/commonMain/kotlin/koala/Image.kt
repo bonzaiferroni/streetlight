@@ -15,6 +15,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** An image with its stored size variants and the details shown with it: description, attribution and caption. */
 @Serializable
 data class Image(
     override val url: Url,
@@ -35,6 +36,7 @@ data class Image(
     val value get() = url.value
     val filename get() = url.filename
 
+    /** The URL of the variant at exactly [size], or `null`. */
     fun getSizeOrNull(size: ImageSize) = variants.getSize(size)
 
     val thumb get() = variants.thumb
@@ -44,6 +46,7 @@ data class Image(
     val largest get() = variants.largest
 }
 
+/** The id of a stored image. */
 @JvmInline
 @Serializable
 value class ImageId(override val value: Uuid): TableId<Uuid> {
@@ -52,9 +55,12 @@ value class ImageId(override val value: Uuid): TableId<Uuid> {
     companion object { fun random() = ImageId(Uuid.random())}
 }
 
+/** An [Image] of this URL, with no variants. */
 fun Url.toImage() = Image(this)
+/** An [Image] of this URL, with no variants. */
 fun String.toImage() = Image(Url(this))
 
+/** An [Image] of the site's own file at [path], with its details. */
 fun siteImageOf(
     path: String,
     aspectRatio: Float? = null,
@@ -75,10 +81,13 @@ fun siteImageOf(
     description = description,
 )
 
+/** The URL of the site's own image at [path]. */
 fun siteImageUrlOf(path: String) = "$imgPath$path".toUrl()
 
+/** The URL of the variant at [size], or the placeholder at that size. */
 fun Image?.getVariantOrPlaceholder(size: ImageSize) = this?.getSizeOrNull(size) ?: SiteImage.getPlaceholder(size)
 
+/** This image, with any detail it lacks taken from [image]. */
 fun Image.merge(image: Image) = Image(
     url = this.url,
     aspect = this.aspect ?: image.aspect,
@@ -89,4 +98,5 @@ fun Image.merge(image: Image) = Image(
     variants = this.variants ?: image.variants
 )
 
+/** The last path segment without its extension. */
 fun String.filenameWithoutExtension(): String = substringAfterLast('/').substringBeforeLast('.')

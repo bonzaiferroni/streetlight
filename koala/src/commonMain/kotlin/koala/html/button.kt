@@ -6,6 +6,7 @@ import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
 import kotlinx.html.button as buttonTag
 
+/** A button styled as a [btn], showing [text] after an optional [flair]. */
 fun FlowContent.button(
     text: String,
     mod: Modifier? = null,
@@ -17,6 +18,7 @@ fun FlowContent.button(
     }
 }
 
+/** Configures this element as a button styled as a [btn], showing [text] after an optional [flair]. */
 fun BUTTON.configureButton(
     text: String,
     mod: Modifier? = null,
@@ -35,6 +37,7 @@ fun BUTTON.configureButton(
     }
 }
 
+/** A button showing only the icon [svg]. */
 fun FlowContent.button(
     svg: Svg,
     mod: Modifier? = null,
@@ -45,6 +48,7 @@ fun FlowContent.button(
     }
 }
 
+/** Configures this element as a button showing only the icon [svg]. */
 fun BUTTON.configureSvgButton(
     svg: Svg,
     mod: Modifier? = null,
@@ -55,6 +59,7 @@ fun BUTTON.configureSvgButton(
     block()
 }
 
+/** A button with no appearance of its own, holding whatever [block] builds. */
 fun FlowContent.button(
     mod: Modifier? = null,
     block: BUTTON.() -> Unit = {}
@@ -64,6 +69,7 @@ fun FlowContent.button(
     }
 }
 
+/** Configures this element as a button with no appearance of its own. */
 fun BUTTON.configureElementButton(
     mod: Modifier? = null,
     block: BUTTON.() -> Unit = {}

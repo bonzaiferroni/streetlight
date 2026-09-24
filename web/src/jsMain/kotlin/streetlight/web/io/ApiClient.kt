@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+/** The Streetlight API, as one client per model, as `api.city`. It mirrors `DaoFacade` on the server. */
 interface ApiClient {
     val accountAction: AccountActionClient
     val city: CityClient

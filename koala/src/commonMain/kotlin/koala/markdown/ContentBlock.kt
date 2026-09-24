@@ -5,6 +5,7 @@ package koala.markdown
 import kampfire.model.Labeled
 import koala.markdown.ContentBlock.*
 
+/** The kinds of markdown block. */
 enum class ContentBlock {
     Image,
     Paragraph,
@@ -17,6 +18,7 @@ enum class ContentBlock {
     Table,
 }
 
+/** The levels of a heading. */
 enum class HeadingLevel: Labeled {
     H1,
     H2,

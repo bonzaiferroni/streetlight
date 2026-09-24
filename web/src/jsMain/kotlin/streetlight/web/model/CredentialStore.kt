@@ -8,6 +8,7 @@ import kampfire.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
 
+/** The sign-in form. The username and the stay-logged-in choice persist in local storage. */
 class CredentialStore {
     private val state = storeOf(UserCredState(
         usernameText = localStorage[USERNAME_KEY] ?: "",
@@ -22,6 +23,7 @@ class CredentialStore {
         copy(stayLoggedIn = value)
     }
 
+    /** The request for the typed credentials, or `null` when either is blank. */
     fun getLoginRequest(): LoginRequest? {
         val usernameOrEmail = stateNow.usernameText.takeIf { it.isNotBlank() } ?: return null
         val password = stateNow.passwordText.takeIf { it.isNotBlank() }?.let { Password(it).obfuscatePassword() }
@@ -34,6 +36,7 @@ class CredentialStore {
         )
     }
 
+    /** Clears the password, and remembers the username after a successful sign-in that stays logged in. */
     fun followUpAuth(isSuccess: Boolean) {
         if (isSuccess && stateNow.stayLoggedIn) {
             localStorage.setItem(USERNAME_KEY, stateNow.usernameText)

@@ -12,6 +12,7 @@ import koala.model.RouteContent
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
+/** An event with the details of its location, as a feed shows it. */
 @Serializable
 data class EventLocation(
     val eventId: EventId,
@@ -62,11 +63,13 @@ data class EventLocation(
     override val body get() = description
     override val markerId get() = eventId.toString()
 
+    /** The location's name, or its address, or a placeholder. */
     val locationLabel get() = locationName ?: address ?: "(geolocation)"
 
     // val endsAtOrLater get() = if (endsAt != null && startsAt != null) endsAt - startsAt else null
 }
 
+/** The address and city joined as one line, leaving out what is missing. */
 fun addressLineOf(address: String?, city: String?) = buildString {
     address?.let {
         append(it)

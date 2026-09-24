@@ -1,5 +1,6 @@
 package koala.modifier
 
+/** The layers of the page, each with the `z-index` its [mod] sets. */
 enum class AppLayer(val zIndex: Int? = null) {
     Backdrop(-1),
     Body,

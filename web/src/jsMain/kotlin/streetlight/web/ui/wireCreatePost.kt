@@ -8,6 +8,7 @@ import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.model.ui.MediaForgeRoute
 
+/** The create post menu, posting to the galaxy of the button that opened it. */
 fun ViewScope.wireCreatePost() {
     popoverMenu(
         popoverId = PopoverId.CreatePost,

@@ -24,6 +24,11 @@ import kotlinx.html.js.div
 import web.html.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Renders [block] as a child view for each value of [flow], starting with [initialValue].
+ *
+ * The previous child view is disposed before the next is built. With [Magic] in [mod], the change is animated.
+ */
 fun <Value> ViewScope.flowBlock(
     initialValue: Value,
     flow: Flow<Value>,
@@ -93,6 +98,11 @@ fun <Value> ViewScope.flowBlock(
     return element
 }
 
+/**
+ * Renders [block] as a child view for each value of [tap], rebuilding when it changes.
+ *
+ * The previous child view is disposed before the next is built. With [Magic] in [mod], the change is animated.
+ */
 fun <Value> ViewScope.flowBlock(
     tap: Tap<Value>,
     mod: Modifier? = null,

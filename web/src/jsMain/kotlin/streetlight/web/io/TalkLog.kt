@@ -15,6 +15,7 @@ import streetlight.model.data.*
 import streetlight.web.ui.CommentView
 import kotlin.uuid.Uuid
 
+/** The live comments of a space: its history, and the comments created and updated as they arrive. */
 class TalkLog(
     private val scope: CoroutineScope,
     private val spaceId: Uuid,
@@ -54,13 +55,16 @@ class TalkLog(
         client.connect()
     }
 
+    /** The comments of the space so far. */
     suspend fun readHistory() = api.talk.readHistory(spaceId, spaceType)
 
+    /** Sorts the comments by [value]. */
     fun setSortBy(value: PostOrder) {
         commentViews.clear() // is this a memory leak? we need to cancel a supervisor job
         state.update { it.copy(sortBy = value) }
     }
 
+    /** Changes the text of the comment [commentId], returning whether it changed, or `null` on a problem. */
     suspend fun updateComment(commentId: CommentId, text: Markdown): Boolean? {
         val response = api.talk.updateComment(UpdatedComment(
             commentId = commentId,
@@ -73,6 +77,7 @@ class TalkLog(
         }
     }
 
+    /** Adds a comment, as a reply to [parentId] when given, returning its id, or `null` on a problem. */
     suspend fun createComment(parentId: CommentId?, text: Markdown): CommentId? {
         val response = api.talk.createComment(NewComment(
             spaceId = spaceId,
@@ -102,6 +107,7 @@ class TalkLog(
     }
 }
 
+/** The sort order of a [TalkLog]. */
 data class TalkLogState(
     val sortBy: PostOrder = PostOrder.Old,
 )

@@ -5,6 +5,7 @@ import streetlight.model.Api
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit
 
+/** The calls of `Api.Feedback`. */
 interface FeedbackClient {
     suspend fun feedFeedback(): Outcome<List<Feedback>>
     suspend fun createFeedback(edit: FeedbackEdit): Outcome<Unit>

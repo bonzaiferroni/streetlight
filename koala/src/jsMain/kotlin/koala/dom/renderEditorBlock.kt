@@ -10,6 +10,7 @@ import kotlinx.html.dom.create
 import kotlinx.html.js.div
 import web.html.HTMLElement
 
+/** A new editor block element rendering [block]. */
 fun createEditorBlock(block: ParsedBlock): HTMLElement {
     val div = document.create.div { }.asWeb()
     div.syncAttributes(block)
@@ -19,6 +20,7 @@ fun createEditorBlock(block: ParsedBlock): HTMLElement {
     return div
 }
 
+/** Updates this editor block to render [block], rebuilding its spans only when they no longer match. */
 fun HTMLElement.syncEditorBlock(block: ParsedBlock) {
     syncAttributes(block)
     val segments = block.toEditorSegments()
@@ -33,6 +35,7 @@ fun HTMLElement.syncEditorBlock(block: ParsedBlock) {
 private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLElement) =
     renderEditorBlock(block, element, block.toEditorSegments())
 
+/** Sets this editor block's type, heading level and image to match [block]. */
 fun HTMLElement.syncAttributes(block: ParsedBlock) {
     setAttribute(EditorStyle.BlockType.to(block.markdown.blockType))
     when (val markdown = block.markdown) {
@@ -76,9 +79,11 @@ private fun AppendScope.renderSegmentsBlock(chunk: String, segments: List<Editor
     }
 }
 
+/** Shows the first inline image among [spans] behind this editor block, or none. */
 fun HTMLElement.syncFirstImage(spans: List<MarkdownSpan>) =
     syncImage(spans.firstNotNullOfOrNull { it as? MarkdownInlineImage }?.url)
 
+/** Shows the image at [url] behind this editor block, or none when it is `null`. */
 fun HTMLElement.syncImage(url: Url?) {
     if (url == null) {
         unmodify(EditorStyle.WithImage)

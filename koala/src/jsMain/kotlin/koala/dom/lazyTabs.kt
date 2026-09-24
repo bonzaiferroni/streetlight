@@ -11,6 +11,12 @@ import koala.interop.initTabs
 import web.html.HTMLDivElement
 import web.html.HTMLElement
 
+/**
+ * Tabs whose panels are built the first time each is shown.
+ *
+ * The selected tab follows [indexState] when given, and otherwise starts at [defaultTab]. A container with [id]
+ * restores its selected tab from `localStorage`.
+ */
 fun ViewScope.lazyTabs(
     id: Id? = null,
     mod: Modifier? = null,

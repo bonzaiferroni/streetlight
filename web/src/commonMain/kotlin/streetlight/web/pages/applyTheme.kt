@@ -7,6 +7,7 @@ import kotlinx.css.pct
 import kotlinx.html.BODY
 import streetlight.model.data.PageTheme
 
+/** Sets the colors and gradients of [theme] as the body's custom properties. */
 fun BODY.applyTheme(theme: PageTheme) {
     setStyle(
         KoalaStyle.Accent.of(theme.accent),

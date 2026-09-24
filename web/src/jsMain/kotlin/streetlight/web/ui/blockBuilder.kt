@@ -17,6 +17,7 @@ import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
 
+/** The editor of the block [blockId], by the kind of block. */
 fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     val editor = model.getBlock(blockId)
     when (val block = editor.blockState.now) {
@@ -31,6 +32,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     }
 }
 
+/** The editor row of a block above its [content]. */
 fun ViewScope.blockBuilder(
     editor: BlockEditor,
     content: FlowContent.() -> Unit
@@ -39,6 +41,7 @@ fun ViewScope.blockBuilder(
     content()
 }
 
+/** The editor of a block whose content is drawn from its page, shown as a placeholder. */
 fun ViewScope.blockBuilder(
     editor: BlockEditor,
 ) {

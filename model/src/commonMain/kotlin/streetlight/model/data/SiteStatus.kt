@@ -11,6 +11,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
+/** The site's metrics over one period, at one [MetricResolution]. */
 @Serializable
 data class SiteStatus(
     val siteStatusId: SiteStatusId,
@@ -22,6 +23,7 @@ data class SiteStatus(
     val endedAt: Instant,
     val createdAt: Instant,
 ) {
+    /** The value of [metric] in this period, or `null` when it was not recorded. */
     fun getMetricOrNull(metric: SiteMetric): Double? = when(metric.metricType) {
         MetricType.Count -> integers[metric]?.toDouble()
         MetricType.Average -> doubles[metric]
@@ -38,6 +40,7 @@ value class SiteStatusId(override val value: Long): TableId<Long> {
     }
 }
 
+/** The metrics the site records, each read from a Micrometer meter. */
 enum class SiteMetric(
     val metricType: MetricType,
     val meterName: String,
@@ -50,18 +53,21 @@ enum class SiteMetric(
     override val label = name.pascalToTitle()
 }
 
+/** How a metric is gathered over a period. */
 enum class MetricType {
     Count,
     Average,
     Max,
 }
 
+/** The axis a metric is charted on, shared by metrics of the same unit. */
 enum class MetricAxis: Labeled {
     RequestLatency;
 
     override val label = name.pascalToTitle()
 }
 
+/** The periods metrics are recorded over. Each is aggregated from the one before it. */
 enum class MetricResolution(val duration: Duration) {
     OneMinute(1.minutes),
     FiveMinutes(5.minutes),
@@ -74,6 +80,7 @@ enum class MetricResolution(val duration: Duration) {
         get() = if (ordinal > 0) entries[ordinal - 1] else null
 }
 
+/** A labeled moment on a chart. */
 data class ChartEvent(
     val label: String,
     val time: Instant,

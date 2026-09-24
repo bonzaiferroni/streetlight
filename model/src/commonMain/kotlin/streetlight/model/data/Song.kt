@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A song in a user's repertoire, with its notation. */
 @Serializable
 data class Song(
     val songId: SongId,
@@ -24,6 +25,7 @@ value class SongId(override val value: Uuid): RecordId {
     companion object { fun random() = SongId(Uuid.random()) }
 }
 
+/** A song at an event, with its request if there is one. */
 @Serializable
 data class EventSong(
     val song: Song,

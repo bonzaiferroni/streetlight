@@ -11,6 +11,11 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.onClick
 
+/**
+ * A popover with [id], positioned against [anchor] or the anchor of its id.
+ *
+ * A manual popover, with [isManual], stays open until something closes it.
+ */
 fun FlowContent.popover(
     id: Id,
     mod: Modifier? = null,
@@ -23,6 +28,7 @@ fun FlowContent.popover(
     }
 }
 
+/** Configures this element as a [popover]. */
 fun DIV.configurePopover(
     id: Id,
     mod: Modifier? = null,
@@ -37,6 +43,7 @@ fun DIV.configurePopover(
     block()
 }
 
+/** A [popover] styled as a card. */
 fun FlowContent.popoverCard(
     id: Id,
     mod: Modifier? = null,
@@ -47,10 +54,12 @@ fun FlowContent.popoverCard(
     }
 }
 
+/** Makes a click on this button hide the popover with [id]. */
 fun BUTTON.closePopoverOnClick(id: Id) {
     setPopoverTarget(id, "hide")
 }
 
+/** Makes a click on this link hide the popover with [id]. */
 fun A.closePopoverOnClick(id: Id) {
     onClick = InlineJs.closePopover(id).block
 }

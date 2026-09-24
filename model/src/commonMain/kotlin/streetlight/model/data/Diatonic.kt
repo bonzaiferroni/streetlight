@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+/** The seven degrees of the diatonic scale. */
 enum class Diatonic(val degree: Int, val letter: Char, val pitch: Int) {
     Do(1, 'C', 0),
     Re(2, 'D', 2),
@@ -9,6 +10,7 @@ enum class Diatonic(val degree: Int, val letter: Char, val pitch: Int) {
     La(6, 'A', 9),
     Ti(7, 'B', 11);
 
+    /** The degree written in [style]. */
     fun toLabel(style: NotationStyle) = when (style) {
         NotationStyle.Letters -> letter
         NotationStyle.Degrees -> degree.toString()

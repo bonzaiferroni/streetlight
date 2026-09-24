@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A mark a galaxy's members can put on a post, leaning it up or down in the feed. */
 @Serializable
 data class GalaxyMark(
     val markId: MarkId,
@@ -25,6 +26,7 @@ value class MarkId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
+/** How far a mark leans a post in its galaxy's feed. */
 enum class Lean(override val label: String, val value: Int): Labeled {
     StrongPositive("+2", +2),
     Positive("+1", +1),
@@ -33,6 +35,7 @@ enum class Lean(override val label: String, val value: Int): Labeled {
     StrongNegative("-2", -2),
 }
 
+/** The count of a mark on a post, and whether the caller placed it. */
 @Serializable
 data class MarkTally(
     val markId: MarkId,
@@ -40,8 +43,10 @@ data class MarkTally(
     val isMarked: Boolean,
 )
 
+/** How a galaxy's marks are placed: a single mark, a positive and negative pair, or several. */
 enum class CuratorType { Single, Polar, Multi }
 
+/** The [CuratorType] of these marks, or `null` when there are none. */
 fun List<GalaxyMark>.getCuratorType(): CuratorType? {
     if (isEmpty()) return null
     if (size == 1) return CuratorType.Single
@@ -49,6 +54,7 @@ fun List<GalaxyMark>.getCuratorType(): CuratorType? {
     return CuratorType.Multi
 }
 
+/** The [CuratorStatus] of the post [postId], from its galaxy's [marks] and its tallies. */
 fun curatorStatusOf(postId: PostId, marks: List<GalaxyMark>, postMarks: List<MarkTally>?) = marks.getCuratorType()?.let { voteType ->
     CuratorStatus(postId, voteType, marks.map { mark ->
         val postMark = postMarks?.firstOrNull { it.markId == mark.markId }
@@ -62,20 +68,24 @@ fun curatorStatusOf(postId: PostId, marks: List<GalaxyMark>, postMarks: List<Mar
     })
 }
 
+/** The marks a post carries in its galaxy, shown by its curator badge. */
 @Serializable
 data class CuratorStatus(
     val postId: PostId,
     val curatorType: CuratorType,
     val marks: List<FeedMark>,
 ) {
+    /** The sum of each mark's lean times its count. */
     val postLean get() = marks.sumOf { it.lean.value * it.count }
     val maxCount get() = marks.maxOf { it.count }
 
+    /** The count of [markId] as a fraction of the highest count, or `null` when no mark is placed. */
     fun progressOf(markId: MarkId) = maxCount.takeIf { it > 0 }?.let { max ->
         marks.first { it.markId == markId }.count / max.toFloat()
     } ?: 0f
 }
 
+/** A request to place or remove a mark on a post. */
 @Serializable
 data class MarkUpdate(
     val markId: MarkId,
@@ -83,6 +93,7 @@ data class MarkUpdate(
     val isMarked: Boolean,
 )
 
+/** A mark of a galaxy, with its count on a post and whether the caller placed it. */
 @Serializable
 data class FeedMark(
     val markId: MarkId,

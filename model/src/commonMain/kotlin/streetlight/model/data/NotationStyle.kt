@@ -1,10 +1,12 @@
 package streetlight.model.data
 
+/** How pitches are written: as letters, or as degrees of the scale. */
 enum class NotationStyle(val label: String) {
     Letters("Letters"),
     Degrees("Degrees"),
 }
 
+/** [pitch] written in [style], relative to [rootPitch]. */
 fun notationOf(
     pitch: Int,
     rootPitch: Int,
@@ -18,6 +20,7 @@ fun notationOf(
     }
 }
 
+/** [chord] written in [style], relative to [rootPitch]. */
 fun notationOf(
     chord: Chord,
     rootPitch: Int = 60,
@@ -27,6 +30,7 @@ fun notationOf(
     NotationStyle.Degrees -> degreeNotationOf(chord, rootPitch)
 }
 
+/** [chord] written with letters, as "C#m7/E". */
 fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
     val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
     append(chromatic.label)
@@ -39,6 +43,7 @@ fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
     }
 }
 
+/** [chord] written with scale degrees. */
 fun degreeNotationOf(chord: Chord, rootPitch: Int) = buildString {
     val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
     append(chromatic.diatonic.degree)
@@ -53,6 +58,7 @@ fun degreeNotationOf(chord: Chord, rootPitch: Int) = buildString {
     }
 }
 
+/** The pitch [text] names in [style], or `null`. */
 fun pitchOf(text: String, style: NotationStyle): Int? {
     val firstChar = text.getOrNull(0) ?: return null
     val pitch = when (style) {

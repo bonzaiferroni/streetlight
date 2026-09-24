@@ -7,6 +7,10 @@ import streetlight.model.ui.Screen
 import streetlight.web.io.OmniClient
 import kotlin.time.Duration.Companion.days
 
+/**
+ * Connects [omni] while a star is signed in, and toasts its recent records, except messages while the inbox is
+ * shown.
+ */
 fun ViewScope.wireOmni(omni: OmniClient) {
     val screenState = portal.screenState
 

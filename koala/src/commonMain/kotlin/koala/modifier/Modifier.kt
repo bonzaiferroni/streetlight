@@ -6,12 +6,16 @@ import kotlinx.html.FlowContent
 import kotlinx.html.style
 import kotlinx.html.unsafe
 
+/** One change to an element: a [Class], an [InlineStyle], an [AttributeValue], or a [ModifierSet] of them. */
 sealed interface Modifier
 
+/** Modifiers applied together, in order. A `null` member is skipped, and a set may hold another set. */
 class ModifierSet(val modifiers: Array<out Modifier?>): Modifier
 
+/** This set followed by [modifiers]. */
 fun ModifierSet.append(vararg modifiers: Modifier?) = modify(this, *modifiers)
 
+/** Applies [modifiers] while the tag is built, appending to the classes and styles it already has. */
 fun TagConfig.addModifiers(vararg modifiers: Modifier?) = applyModifiers(modifiers)
 
 private fun TagConfig.applyModifiers(modifiers: Array<out Modifier?>) {
@@ -63,6 +67,7 @@ internal fun StringBuilder.appendClass(modifier: Class) {
 //
 //fun ModifierSet.append(vararg modifiers: Modifier?) = this + modify(*modifiers)
 
+/** A [ModifierSet] of [modifiers]. */
 fun modify(vararg modifiers: Modifier?) = ModifierSet(modifiers)
 
 //fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
@@ -120,12 +125,14 @@ fun modify(vararg modifiers: Modifier?) = ModifierSet(modifiers)
 //    classes += modifier.mapNotNull { it?.identifier }
 //}
 
+/** Prints the CSS that [block] adds to this builder. */
 fun CssBuilder.printCss(block: () -> Unit) {
     val len = toString().length
     block()
     println(toString().substring(len))
 }
 
+/** A `style` element holding [style]. */
 fun FlowContent.stylesheet(style: String) {
     style {
         unsafe {

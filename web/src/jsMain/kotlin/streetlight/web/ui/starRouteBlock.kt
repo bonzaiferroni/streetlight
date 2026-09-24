@@ -8,6 +8,7 @@ import koala.html.AppRoute
 import koala.model.FetcherContent
 import streetlight.model.data.Star
 
+/** A `routeBlock` behind a [starGate]. */
 inline fun <reified Route: AppRoute, reified Content: FetcherContent> RouteScope.starRouteBlock(
     mod: Modifier? = null,
     crossinline content: ViewScope.(Star, Content) -> Unit

@@ -14,6 +14,7 @@ import kotlinx.html.js.em as emTag
 import kotlinx.html.js.strong as strongTag
 import kotlinx.html.js.span as spanTag
 
+/** [text] as a paragraph. */
 fun AppendScope.textBlock(
     text: String = "",
     mod: Modifier? = null,
@@ -24,6 +25,7 @@ fun AppendScope.textBlock(
     block?.invoke(this)
 }.unsafeCast<HTMLParagraphElement>()
 
+/** A paragraph showing each distinct value of [binding], as text from [provideValue]. */
 fun <T> ViewScope.textBlock(
     binding: Flow<T>,
     mod: Modifier? = null,

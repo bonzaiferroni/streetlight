@@ -8,6 +8,7 @@ import kotlinx.html.js.onInputFunction
 import web.html.HTMLButtonElement
 import web.html.HTMLInputElement
 
+/** A button labeled [text], filled with the color of [colorState], that opens the browser's color picker. */
 fun ViewScope.colorPicker(
     text: String,
     colorState: MutableTap<Rgb>,

@@ -20,6 +20,7 @@ import streetlight.model.ui.SiteMonitorRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
+/** The site menu as a popover from the helm button. */
 fun FlowContent.siteHelmPopover() {
     popover(SiteHelm.popoverId, SiteHelm.PopoverClass, SiteHelm.PositionAnchor) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
@@ -40,6 +41,7 @@ fun FlowContent.siteHelmPopover() {
     stylesheet(SiteHelmCss)
 }
 
+/** The site menu in the left panel. */
 fun FlowContent.siteMenuSidebar() {
     column {
         filigree {

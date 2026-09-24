@@ -5,6 +5,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.P
 import kotlinx.html.p
 
+/** [content] as small, faded text. */
 fun FlowContent.textLabel(
     content: String,
     mod: Modifier? = null,

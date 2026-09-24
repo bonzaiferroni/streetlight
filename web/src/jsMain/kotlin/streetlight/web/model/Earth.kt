@@ -22,6 +22,10 @@ import streetlight.model.ui.PostMapRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * The model of the map screens: it loads the markers of each [EarthRoute] and follows a focus on a galaxy to its
+ * map.
+ */
 class Earth(
     private val scope: CoroutineScope,
     initialMap: EarthMap?,
@@ -65,6 +69,7 @@ class Earth(
 
     fun setFocus(marker: EntityMarker) = markerMap.setFocus(marker)
 
+    /** Frames every marker. */
     fun showAll() = markerMap.showAll()
 
     private suspend fun collectRoute(route: EarthRoute) {

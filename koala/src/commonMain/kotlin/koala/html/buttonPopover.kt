@@ -4,6 +4,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** A button labeled [label] that opens a popover holding what [block] builds. */
 fun FlowContent.buttonPopover(
     label: String,
     mod: Modifier? = null,

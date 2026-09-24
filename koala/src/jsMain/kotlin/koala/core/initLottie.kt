@@ -7,6 +7,7 @@ import koala.external.lottie
 import koala.modifier.Attribute
 import web.html.HTMLElement
 
+/** Starts each Lottie animation under [ancestor]. */
 fun queryAndInitLotties(ancestor: HTMLElement) {
     val elements = ancestor.querySelectorAll(Attribute.Lottie.selector).asList()
     elements.forEach {
@@ -14,6 +15,7 @@ fun queryAndInitLotties(ancestor: HTMLElement) {
     }
 }
 
+/** Starts the Lottie animation that [element] names, looping. */
 fun initLottie(element: HTMLElement) {
     val path = element.getAttribute(Attribute.Lottie.identifier) ?: return
     lottie.loadAnimation(

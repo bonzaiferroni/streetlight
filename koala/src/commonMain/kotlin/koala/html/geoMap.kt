@@ -5,6 +5,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** The element the browser mounts a map into, centered on [initialPoint] when given. */
 fun FlowContent.geoMapMount(
     initialPoint: GeoPoint? = null,
     mod: Modifier? = null,
@@ -15,6 +16,7 @@ fun FlowContent.geoMapMount(
     }
 }
 
+/** Configures this element as a [geoMapMount]. */
 fun DIV.configureGeoMapMount(
     initialPoint: GeoPoint? = null,
     mod: Modifier? = null,
@@ -28,6 +30,7 @@ fun DIV.configureGeoMapMount(
     block()
 }
 
+/** The class and ids of the map's elements. */
 object GeoMapKey {
     val MapMount = Class("map-mount")
     val Window = Id("map-window")

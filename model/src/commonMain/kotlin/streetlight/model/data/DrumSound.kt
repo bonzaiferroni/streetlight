@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A drum sound at a beat of a measure. */
 @Serializable
 data class DrumSound(
     val beat: Int,
@@ -10,11 +11,14 @@ data class DrumSound(
     val isPhraseEnd: Boolean,
     val pitch: Int?
 ) {
+    /** The sound written as notation, read back with [parseDrumSound]. */
     fun toNotation() = "${expression.shortId}${pitch?.let { "_p$it" } ?: ""}_b${beat}${duration?.let { "_d$it" } ?: ""}"
 
+    /** The MIDI pitch that plays this sound. */
     fun toMidiPitch() = expression.toMidiPitch(pitch)
 }
 
+/** The drums a [DrumSound] can play. */
 enum class DrumNote(val shortId: String) {
     Snare("Sn"),
     Kick("Ki"),
@@ -58,6 +62,7 @@ enum class DrumNote(val shortId: String) {
     }
 }
 
+/** Reads a drum sound written by [DrumSound.toNotation], or returns `null`. */
 fun parseDrumSound(text: String, isPhraseEnd: Boolean): DrumSound? {
     val split = text.split("_")
     val note = toDrumNote(split[0]) ?: return null

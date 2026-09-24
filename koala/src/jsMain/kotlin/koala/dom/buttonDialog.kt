@@ -4,6 +4,7 @@ import koala.modifier.*
 import kampfire.model.storeOf
 import kampfire.model.toggle
 
+/** A button labeled [label] that opens a dialog holding what [block] builds. */
 fun ViewScope.buttonDialog(
     label: String,
     mod: Modifier? = null,

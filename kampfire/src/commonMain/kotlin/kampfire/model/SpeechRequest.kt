@@ -3,6 +3,7 @@ package kampfire.model
 import kampfire.utils.toFilenameFormat
 import kotlinx.serialization.Serializable
 
+/** A request to turn [text] into speech, in a [voice] and [theme]. */
 @Serializable
 data class SpeechRequest(
     val text: String,
@@ -11,9 +12,11 @@ data class SpeechRequest(
     val filename: String? = null,
     val isCached: Boolean = false,
 ) {
+    /** The name the audio is saved under: [filename] if given, or one made from the text and voice. */
     fun toFilename(): String = filename?.let { toFilenameFormat(it) } ?: "${toFilenameFormat(text)}-${voice}"
 }
 
+/** The voices of the Kokoro speech model. */
 enum class KokoroVoice(
     val apiName: String,
     val label: String,
@@ -52,6 +55,7 @@ enum class KokoroVoice(
     }
 }
 
+/** The voices of the Gemini speech model, named for their character. */
 enum class GeminiVoice(
     val apiName: String
 ) {
@@ -87,6 +91,7 @@ enum class GeminiVoice(
     }
 }
 
+/** The voices of the Orpheus speech model. */
 enum class OrpheusVoice(
     val apiName: String
 ) {

@@ -25,6 +25,12 @@ import streetlight.model.data.EmailStatus
 import streetlight.model.data.viableEmail
 import streetlight.web.io.ApiClient
 
+/**
+ * Edits the signed-in account: completing a guest registration, and adding, verifying, removing, or changing its
+ * email and password.
+ *
+ * A change to an account with a viable email asks for the current password in [verifyPasswordField].
+ */
 class AccountEditor(
     private val initialAccount: Account,
     private val scope: CoroutineScope,
@@ -64,6 +70,7 @@ class AccountEditor(
         }
     }
 
+    /** Upgrades a guest account with the password and optional email in the editors, then reloads the user. */
     fun completeRegistration(messenger: Messenger) {
         val email = emailEditor.getOutcome().toDataOr(messenger) { return }
 
@@ -81,6 +88,7 @@ class AccountEditor(
         }
     }
 
+    /** Asks the server to resend the verification email for the account's address. */
     fun verifyExistingEmail() {
         scope.launch(::verifyExistingEmail) {
             emailMessages.deliverSending()
@@ -90,6 +98,7 @@ class AccountEditor(
         }
     }
 
+    /** Clears the email locally so a new one can be entered; nothing is sent until [addEmail]. */
     fun changeEmail() {
         state.set { copy(
             account = account.copy(email = null, emailStatus = null),
@@ -99,6 +108,7 @@ class AccountEditor(
         ) }
     }
 
+    /** Removes the account's email, with the password when the email is verified. */
     fun removeEmail() {
         scope.launch(::removeEmail) {
             val password = when (stateNow.hasVerifiedEmail) {
@@ -119,6 +129,7 @@ class AccountEditor(
         }
     }
 
+    /** Sets the email in [emailEditor] as the account's unverified email and sends its verification. */
     fun addEmail() {
         val email = emailEditor.getOutcome().toDataOrNull(emailMessages) ?: return
         val passwordNow = if (stateNow.account.viableEmail != null) {
@@ -140,6 +151,7 @@ class AccountEditor(
         }
     }
 
+    /** Changes the password to the one in [passwordEditor]. */
     fun changePassword(messenger: Messenger) {
         val password = passwordEditor.getOutcome().toDataOr(messenger) { return }
         val passwordNow = if (stateNow.account.viableEmail != null) {
@@ -157,6 +169,7 @@ class AccountEditor(
         }
     }
 
+    /** Sends a password reset link to [email]. */
     fun resetPassword(email: EmailAddress, messenger: Messenger) {
         scope.launch(::resetPassword) {
             messenger.deliverSending()

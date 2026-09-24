@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A guest at an event, with the songs they want to play. */
 @Serializable
 data class Guest(
     val guestId: GuestId,

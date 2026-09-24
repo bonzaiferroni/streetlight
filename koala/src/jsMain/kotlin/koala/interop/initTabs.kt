@@ -19,6 +19,12 @@ import web.mutation.MutationObserver
 import web.mutation.MutationObserverInit
 import web.storage.localStorage
 
+/**
+ * Wires a server-rendered tabs [container]: its buttons select a panel, the viewport animates to the panel's
+ * height, and the selection is restored from `localStorage` when the container has an id.
+ *
+ * Does nothing for a container already initialized.
+ */
 fun initTabs(container: HTMLElement) {
     if (!container.isModified(TabsStyle.Initial)) return
     container.unmodify(TabsStyle.Initial)
@@ -81,6 +87,7 @@ fun initTabs(container: HTMLElement) {
     }
 }
 
+/** Wires every tabs container under [parent] that is not yet initialized, with [initTabs]. */
 fun findAndInitTabs(parent: HTMLElement) {
     parent.querySelectorAll(TabsStyle.Initial).forEach { initTabs(it as HTMLElement) }
 }

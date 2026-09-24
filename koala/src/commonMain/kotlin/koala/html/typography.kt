@@ -7,6 +7,7 @@ import kotlinx.html.strong as strongTag
 import koala.modifier.*
 import koala.markdown.HeadingLevel
 
+/** [content] as a paragraph, after what [block] builds. */
 inline fun FlowContent.textBlock(
     content: String = "",
     mod: Modifier? = null,
@@ -103,6 +104,7 @@ fun FlowContent.heading6(
     }
 }
 
+/** [text] as a heading of [level]. */
 fun FlowContent.heading(
     level: HeadingLevel,
     text: String,

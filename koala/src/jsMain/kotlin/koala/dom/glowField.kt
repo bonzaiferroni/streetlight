@@ -11,6 +11,7 @@ import web.pointer.POINTER_MOVE
 import web.pointer.PointerEvent
 import kotlin.math.roundToInt
 
+/** A field with a handle that positions the glow of [state] by dragging. */
 fun ViewScope.glowField(
     state: MutableTap<Glow>,
     mod: Modifier? = null,

@@ -7,6 +7,7 @@ import streetlight.model.data.ExtraLink
 import streetlight.web.pages.configureAppFooter
 import web.html.HTMLElement
 
+/** Appends an app footer and starts its animation. */
 fun AppendScope.appFooter(
     sourcePath: String,
     vararg additional: ExtraLink

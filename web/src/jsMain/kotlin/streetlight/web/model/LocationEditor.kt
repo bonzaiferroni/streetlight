@@ -19,6 +19,7 @@ import streetlight.model.data.mergeLeft
 import streetlight.model.external.Address
 import streetlight.web.io.ApiClient
 
+/** Creates or updates a location. */
 class LocationEditor(
     initialData: LocationEdit,
     private val scope: CoroutineScope,
@@ -60,6 +61,7 @@ class LocationEditor(
     //     state.set { copy(edit = block(it.edit)) }
     // }
 
+    /** Fills the blanks of the edit from the location's website. */
     fun readWebsite() {
         val website = editNow.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
@@ -70,6 +72,7 @@ class LocationEditor(
         }
     }
 
+    /** Whether the edit is valid, showing the reason when not. */
     fun isEditValid(): Boolean {
         val validMessage = editNow.validity.message
         messages.set(validMessage)
@@ -87,6 +90,7 @@ class LocationEditor(
         }
     }
 
+    /** Saves the location, returning it, or `null` when invalid or failed. */
     suspend fun submitSuspend(): Location? {
         if (!isEditValid()) return null
         imageEditor.finalizeImage(messages)

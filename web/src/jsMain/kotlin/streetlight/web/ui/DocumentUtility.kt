@@ -8,6 +8,7 @@ import web.dom.Document
 import web.dom.ElementId
 import web.html.HTMLElement
 
+/** Sets the tab title to [title], followed by the site name. */
 fun Document.setTitle(title: String) {
     this.title = "$title | Streetlight"
 }

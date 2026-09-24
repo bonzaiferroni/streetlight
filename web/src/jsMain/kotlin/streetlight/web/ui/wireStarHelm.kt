@@ -25,6 +25,7 @@ import streetlight.web.pages.StarHelm
 import web.dom.document
 import web.html.HTMLElement
 
+/** Fills both star helms: the menu of the signed-in star, or the sign-in panel. */
 fun ViewScope.wireStarHelm() {
     val barElement = document.body.querySelector(StarHelm.StarBarHelm) ?: error("star helm content not found")
     wireStarHelm(barElement)

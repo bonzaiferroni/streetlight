@@ -1,7 +1,9 @@
 package koala.markdown
 
+/** Parses markdown lists, nesting each more indented run of lines as the sublist of the item above it. */
 class MarkdownListParser(private val spanParser: MarkdownSpanParser) {
 
+    /** The list in [chunk] between [from] and [to], or `null` when it holds no item. */
     fun parse(chunk: String, from: Int = 0, to: Int = chunk.length): MarkdownList? {
         val list = OpenList()
 

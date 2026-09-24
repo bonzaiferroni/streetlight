@@ -16,6 +16,10 @@ import streetlight.web.ui.starCheck
 import web.dom.document
 import web.html.HTMLElement
 
+/**
+ * Lights or unlights the star toggle around [element], updating every toggle of the same item and its count
+ * before the server answers.
+ */
 fun ViewScope.toggleAny(element: HTMLElement) {
     starCheck { return }
 
@@ -36,6 +40,7 @@ fun ViewScope.toggleAny(element: HTMLElement) {
     }
 }
 
+/** A [toggleAny] that also forgets the star's cached galaxies. */
 fun ViewScope.toggleGalaxy(element: HTMLElement) {
     toggleAny(element)
     app.get<DataCache>().galaxyFleet.clear()

@@ -13,6 +13,7 @@ import streetlight.model.data.Platform
 import streetlight.model.ui.Screen
 import streetlight.web.io.ApiClient
 
+/** Sends the bug report being written, with the screen, path, and device it came from. */
 class BugReporter(private val scope: CoroutineScope, private val api: ApiClient) {
     private val sending = DropWhileBusy()
     private val state = storeOf(BugReporterState())
@@ -20,6 +21,7 @@ class BugReporter(private val scope: CoroutineScope, private val api: ApiClient)
     val bugState = state.mutableTapOf({ it.bug }) { copy(bug = it) }
     val descriptionState = bugState.mutableTapOf({ it.description }) { copy(description = it) }
 
+    /** Sends the report and returns `true`, or `false` when the report is invalid or one is already sending. */
     fun report(messenger: Messenger, screen: Screen?, path: String?): Boolean {
         val edit = state.now.bug.takeIf { it.isValid }?.copy(
             screen = screen,

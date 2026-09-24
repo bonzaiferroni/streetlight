@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Locations`. */
 interface LocationClient {
     suspend fun readLocation(locationId: LocationId): Outcome<Location>
     suspend fun readLocation(slug: Slug): Outcome<Location>

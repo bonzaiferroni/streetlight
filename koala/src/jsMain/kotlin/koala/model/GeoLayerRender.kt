@@ -182,6 +182,7 @@ internal class GeoLayerRender(
     }
 }
 
+/** The distance in meters that [pixelRadius] covers at [zoom], near the latitude [refLatitude]. */
 fun clusterRadiusMetersOf(zoom: Float, refLatitude: Double, pixelRadius: Int): Double {
     val metersPerPixel = (40_075_016.686 * cos(refLatitude * DEG_TO_RAD)) / (2.0f.pow(zoom) * MAPLIBRE_TILE_SIZE)
     return pixelRadius * metersPerPixel

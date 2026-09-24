@@ -4,6 +4,7 @@ import koala.Svg
 import koala.SvgFile
 import streetlight.model.data.PostType
 
+/** The icon badge of an entity type. */
 enum class FlairIcon(val small: Svg) {
     Default(SvgFile.FlameLarge),
     Event(SvgFile.CalendarLarge),

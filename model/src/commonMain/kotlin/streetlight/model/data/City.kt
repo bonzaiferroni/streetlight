@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A city, with the counts of its locations, upcoming events and galaxies. */
 @Serializable
 data class City(
     val cityId: CityId,

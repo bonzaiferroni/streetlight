@@ -13,6 +13,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlin.getValue
 
+/** The fields of an event a form sends, with the date and times it is scheduled at. */
 @Serializable
 data class EventEdit(
     val eventId: EventId? = null,
@@ -41,9 +42,12 @@ data class EventEdit(
             TimeZone.currentSystemDefault()
         }
 
+    /** The start of the event, from its date, start time and time zone, or `null` when any is missing. */
     val startsAt get() = startTime?.let { timeZone?.let { date?.atTime(startTime)?.toInstant(it) } }
+    /** The end of the event, from its date, end time and time zone, or `null` when any is missing. */
     val endsAt get() = endTime?.let { timeZone?.let { date?.atTime(endTime)?.toInstant(it) } }
 
+    /** The event's links as shown: its website, a tickets link when it has a cost, and its other links. */
     val displayedLinks by lazy {
         buildList {
             website?.let { url ->
@@ -67,9 +71,11 @@ data class EventEdit(
         }.toValidityCheck()
     }
 
+    /** True when the event is missing an image, a website, or a description of at least 100 characters. */
     val needsReview get() = image == null || website == null || description == null || description.length < 100
 }
 
+/** The keys of the parts of an [EventEdit] its validity checks. */
 object EventProperty {
     val Title = "title"
     val StartTime = "start time"
@@ -77,6 +83,7 @@ object EventProperty {
     val Cost = "cost"
 }
 
+/** An edit of this event, starting from its current values. */
 fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
@@ -93,6 +100,7 @@ fun Event.toEdit() = EventEdit(
     timeZoneId = timeZone.id,
 )
 
+/** This edit, with any field it lacks taken from [other]. */
 fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
     EventEdit(
         eventId = eventId ?: it.eventId,
@@ -113,4 +121,5 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
     )
 } ?: this
 
+/** [other], with any field it lacks taken from this edit. */
 fun EventEdit.mergeRight(other: EventEdit?) = other?.mergeLeft(this) ?: this

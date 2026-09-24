@@ -9,6 +9,12 @@ import koala.model.MarkerId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/**
+ * Content shown in a feed, a header, or anywhere else an entity appears.
+ *
+ * Its members name general content. A type maps its own fields onto them and leaves a member it does not hold at
+ * its default.
+ */
 @Serializable
 sealed interface Entity {
     val label: String
@@ -24,6 +30,7 @@ sealed interface Entity {
     val createdAt: Instant? get() = null
 }
 
+/** An [Entity] built directly, for content that has no type of its own. */
 @Serializable
 data class CustomEntity(
     override val label: String,
@@ -39,6 +46,7 @@ data class CustomEntity(
     override val createdAt: Instant? = null,
 ): Entity
 
+/** A page of a feed, with the marks and tallies of its posts and the cursor of the next page. */
 @Serializable
 data class EntityFeed(
     val entities: List<Entity>,
@@ -46,8 +54,10 @@ data class EntityFeed(
     val tallies: Map<PostId, List<MarkTally>>? = null,
     val nextCursor: EntityCursor? = null,
 ) {
+    /** True when this is the last page. */
     val isCompleted get() = nextCursor == null
 
+    /** The curator status of [entity] when it is a post in a galaxy with marks, or `null`. */
     fun curatorOf(entity: Entity): CuratorStatus? {
         val postId = entity.post?.postId ?: return null
         val galaxyId = entity.post?.galaxy?.galaxyId ?: return null

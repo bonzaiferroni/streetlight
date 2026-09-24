@@ -10,6 +10,7 @@ import streetlight.model.data.CommentId
 import streetlight.model.ui.StarRoute
 import streetlight.web.shells.SectionHeadingMod
 
+/** The comments of [route] as threads. */
 fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
     val comments = comments.sortedBy { it.createdAt }
     val childIds = mutableListOf<CommentId>()

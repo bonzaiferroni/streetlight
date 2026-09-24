@@ -15,6 +15,7 @@ import streetlight.web.layouts.route
 import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenu
 
+/** The menu of the star's galaxies. */
 fun ViewScope.wireGalaxyMenu() {
     val fleet = app.get<DataCache>().galaxyFleet
     popoverMenu(

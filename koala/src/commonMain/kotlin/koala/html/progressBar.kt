@@ -4,6 +4,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** A bar filled to [progress], from 0 to 1. */
 fun FlowContent.progressBar(
     progress: Float = 0f,
     mod: Modifier? = modify(Height(2), MinWidth(16)),

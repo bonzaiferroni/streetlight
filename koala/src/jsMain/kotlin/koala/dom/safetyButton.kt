@@ -7,6 +7,11 @@ import koala.html.configureButton
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
 
+/**
+ * A button that asks for a second click, showing [confirmText], before it calls [onConfirm].
+ *
+ * [onClick] receives whether the click was the confirming one.
+ */
 fun AppendScope.safetyButton(
     text: String,
     onConfirm: (() -> Unit)? = null,
@@ -35,6 +40,10 @@ fun AppendScope.safetyButton(
     }
 }
 
+/**
+ * A button that asks for a second click before it calls [onConfirm], delivering [message] to [messenger] on the
+ * first.
+ */
 fun ViewScope.safetyButton(
     text: String,
     onConfirm: () -> Unit,

@@ -5,12 +5,14 @@ import koala.modifier.Koala
 import koala.modifier.Rgb
 import kotlinx.serialization.Serializable
 
+/** The layout and theme of a page. */
 @Serializable
 data class PageDesign(
     val layout: PageLayout?,
     val theme: PageTheme?,
 )
 
+/** The colors and background glows of a page. */
 @Serializable
 data class PageTheme(
     val accent: Rgb = Koala.accent,

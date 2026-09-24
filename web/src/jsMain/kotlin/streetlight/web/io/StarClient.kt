@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Stars`, for the signed-in user and user pages. */
 interface StarClient {
     suspend fun readPendingEdits(): Outcome<List<EditLog>>
     suspend fun readStarContent(username: Username): Outcome<StarContent>

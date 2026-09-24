@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 import kotlin.collections.listOf
 
+/** The notation of a song: its parts, and the sections they are composed into. */
 @Stable
 @Serializable
 data class SongNotation(
@@ -14,8 +15,10 @@ data class SongNotation(
     val parts: List<SongPart>,
     val composition: List<SongSection> = emptyList(),
 ) {
+    /** True when no section has [sectionId]. */
     fun validateSectionId(sectionId: String) = composition.none { it.sectionId == sectionId }
 
+    /** The number of sections whose id starts with [rootId], to suggest the next variation. */
     fun suggestSectionId(rootId: String) = composition.suggestVariation(rootId) { it.sectionId }
 
     companion object {
@@ -28,6 +31,7 @@ data class SongNotation(
     }
 }
 
+/** An example song, notated in full. */
 val amazingGrace = SongNotation(
     rootPitch = 67,
     measureBeats = 4,
@@ -67,6 +71,7 @@ val amazingGrace = SongNotation(
     ),
 )
 
+/** The number of items whose id from [provideId] starts with [rootId]. */
 fun <T> List<T>.suggestVariation(rootId: String, provideId: (T) -> String) = count { provideId(it).startsWith(rootId) }
     .takeIf { it > 0 }
     ?.let { "$rootId ${'A' + it}" }

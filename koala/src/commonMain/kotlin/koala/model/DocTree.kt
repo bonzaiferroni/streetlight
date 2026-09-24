@@ -1,10 +1,12 @@
 package koala.model
 
+/** The docs of a site as nodes by id, and the root nodes in order. */
 data class DocTree(
     val nodes: Map<DocId, DocNode>,
     val roots: List<DocNode>
 )
 
+/** The table of contents of the tree. */
 fun DocTree.toTable(): List<DocTableItem> {
     fun DocNode.toTableItem(): DocTableItem = DocTableItem(
         docId = doc.docId,
@@ -19,12 +21,14 @@ fun DocTree.toTable(): List<DocTableItem> {
     }
 }
 
+/** Builds the children of a doc in a [docTreeOf] block. */
 class DocNodeBuilder(
     val doc: Doc?
 ) {
     internal val children: MutableList<DocChild> = mutableListOf()
     internal val childNodes: MutableList<DocNode> = mutableListOf()
 
+    /** Adds [child] after the previous children, with its own children added in [block]. */
     fun add(child: Doc, block: (DocNodeBuilder.() -> Unit)? = null) {
         children.add(DocChild(child, block))
     }
@@ -61,6 +65,10 @@ class DocNodeBuilder(
 
 internal data class DocChild(val doc: Doc, val block: (DocNodeBuilder.() -> Unit)?)
 
+/**
+ * Builds a [DocTree] from the docs added in [block], linking each to its parent, neighbors and children. Throws
+ * on a repeated doc id.
+ */
 fun docTreeOf(block: DocNodeBuilder.() -> Unit): DocTree {
     val builder = DocNodeBuilder(null)
     val nodes: MutableMap<DocId, DocNode> = mutableMapOf()

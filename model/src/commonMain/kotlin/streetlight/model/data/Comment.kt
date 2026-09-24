@@ -8,6 +8,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A comment on a galaxy or a post. */
 @Serializable
 data class Comment(
     val commentId: CommentId,
@@ -31,6 +32,7 @@ value class CommentId(override val value: Uuid) : RecordId {
     override fun toString() = value.toString()
 }
 
+/** A comment as it is sent, naming the space it belongs to. */
 @Serializable
 data class NewComment(
     val spaceId: Uuid,
@@ -42,6 +44,7 @@ data class NewComment(
     val postId get() = if (spaceType == SpaceType.Post) PostId(spaceId) else error("invalid SpaceType")
 }
 
+/** A change to the text of a comment. */
 @Serializable
 data class UpdatedComment(
     val commentId: CommentId,

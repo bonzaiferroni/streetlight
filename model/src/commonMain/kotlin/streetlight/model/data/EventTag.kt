@@ -3,6 +3,7 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
+/** A tag describing the kind of an event. */
 @Serializable
 data class EventTag(
     val eventTagId: EventTagId,
@@ -18,11 +19,13 @@ value class EventTagId(val value: String) {
     }
 }
 
+/** A tag named [name], with an id made from it. */
 fun eventTagOf(name: String) = EventTag(
     eventTagId = EventTagId.fromName(name),
     name = name
 )
 
+/** The tags every event can take. */
 object DefaultEventTag {
     val streetPerformance = eventTagOf("Street Performance")
     val liveMusic = eventTagOf("Live Music")

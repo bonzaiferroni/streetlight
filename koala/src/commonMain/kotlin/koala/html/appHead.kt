@@ -6,6 +6,10 @@ import koala.Asset
 import koala.PageResource
 import kotlinx.html.*
 
+/**
+ * The head of an app page: the viewport, fonts, icon and Lottie, then [PageResource.headScript], the content of
+ * [block], and [PageResource.styles].
+ */
 fun HTML.appHead(
     title: String,
     resource: PageResource,
@@ -32,10 +36,12 @@ fun HTML.appHead(
     }
 }
 
+/** Links each of [files], a script or a stylesheet. */
 fun HEAD.applyFiles(files: Collection<Asset>) {
     files.forEach { applyFile(it) }
 }
 
+/** Links [file], a script or a stylesheet. Throws for any other asset. */
 fun HEAD.applyFile(file: Asset) {
     when (file) {
         is Js -> linkScript(file)
@@ -44,6 +50,7 @@ fun HEAD.applyFile(file: Asset) {
     }
 }
 
+/** Links the script [file], deferred when the file says so. */
 fun FlowOrMetaDataOrPhrasingContent.linkScript(file: Js) {
     script(src = file.url.value) {
         this.defer = file.isDeferred
@@ -54,6 +61,7 @@ fun HEAD.linkCssFile(file: Stylesheet) {
     link { rel = "stylesheet"; href = file.url.value }
 }
 
+/** Links the Fira Sans font. */
 fun HEAD.linkFira() {
     link(rel = "preconnect", href = "https://fonts.googleapis.com")
     link {

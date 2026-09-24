@@ -8,6 +8,7 @@ import streetlight.web.layouts.EntityCell
 import streetlight.web.layouts.toCells
 import streetlight.web.layouts.configureFeedRow
 
+/** Appends a feed row; see the server-rendered `feedRow`. */
 fun AppendScope.feedRow(
     entity: Entity,
     isUniverse: Boolean,

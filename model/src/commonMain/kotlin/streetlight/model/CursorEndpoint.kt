@@ -9,6 +9,7 @@ import streetlight.model.data.SortDirection
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** An endpoint that pages its feed with an [EntityCursor], with a parameter for each part of a cursor. */
 interface CursorEndpoint {
     val recordId: EndpointParam<Uuid>
     val markId: EndpointParam<Uuid>
@@ -18,6 +19,7 @@ interface CursorEndpoint {
     val recordAt: EndpointParam<Instant>
 }
 
+/** Writes the parts of [cursor] as the parameters of [endpoint], or nothing when it is `null`. */
 fun PathBuilder.writeCursor(endpoint: CursorEndpoint, cursor: EntityCursor?) {
     if (cursor == null) return
     cursor.recordId?.let { writeParam(endpoint.recordId, it) }

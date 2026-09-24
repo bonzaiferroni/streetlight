@@ -10,6 +10,7 @@ fun ViewScope.wireFps() {
 private var frameCount = 0
 private var lastTick = performance.now()
 
+/** Calls [onFps] each second with the frames drawn in it. */
 fun startFpsCounter(onFps: (Int) -> Unit) {
     fun tick(now: Double) {
         frameCount++

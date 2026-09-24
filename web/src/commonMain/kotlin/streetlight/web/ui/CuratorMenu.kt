@@ -25,6 +25,7 @@ import streetlight.model.data.MarkId
 import streetlight.model.data.CuratorType
 import streetlight.web.interop.AppFun
 
+/** The attributes a post's curator badge and menu are found and updated by. */
 object CuratorMenu {
     val PostLean = Class("post-lean")
     val CuratorJson = jsonAttributeOf<CuratorStatus>("curator")
@@ -33,6 +34,7 @@ object CuratorMenu {
     val MarkButtonId = idAttributeOf("mark-button-id") { MarkId(it) }
     val MarkBarId = idAttributeOf("mark-bar-id") { MarkId(it) }
 
+    /** The text of a post's lean: the sum, or a dot when there is none. */
     fun postLeanTextOf(sum: Int?) = sum?.takeIf { it != 0 }?.toMetricString() ?: "•"
 }
 
@@ -47,6 +49,7 @@ $MarkButtonId {
 }
 """}
 
+/** The mark badge of a post, by its curator's type. */
 fun FlowContent.curatorBadge(curator: CuratorStatus) {
     when (curator.curatorType) {
         CuratorType.Polar -> polarBadge(curator)
@@ -55,6 +58,7 @@ fun FlowContent.curatorBadge(curator: CuratorStatus) {
     }
 }
 
+/** Up and down mark buttons around the post's lean, which opens the curator menu. */
 fun FlowContent.polarBadge(curator: CuratorStatus) {
     val upMark = curator.marks.first { it.lean.value > 0 }
     val downMark = curator.marks.first { it.lean.value < 0 }
@@ -112,6 +116,7 @@ fun DIV.configureMarkBar(mark: FeedMark) {
     setAttribute(CuratorMenu.MarkBarId.to(mark.markId))
 }
 
+/** The post's lean, opening the curator menu to choose among its marks. */
 fun FlowContent.multiBadge(curator: CuratorStatus) {
     button {
         setJsonData(CuratorMenu.CuratorJson, curator)

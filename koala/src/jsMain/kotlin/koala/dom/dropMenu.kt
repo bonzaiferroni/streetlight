@@ -9,6 +9,7 @@ import kotlinx.html.js.option
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
 
+/** A select of [options] bound to [state]. */
 fun ViewScope.dropMenu(
     options: List<String>,
     state: MutableTap<String>,
@@ -54,6 +55,7 @@ fun ViewScope.dropMenu(
     return element
 }
 
+/** A select of [trueLabel] and [falseLabel] bound to the boolean [state]. */
 fun ViewScope.dropMenu(
     trueLabel: String,
     falseLabel: String,
@@ -67,6 +69,7 @@ fun ViewScope.dropMenu(
     config = config
 )
 
+/** A select of every entry of the enum [E], by label, bound to [state]. */
 inline fun <reified E> ViewScope.dropMenu(
     state: MutableTap<E>,
     mod: Modifier? = null,
@@ -79,6 +82,7 @@ inline fun <reified E> ViewScope.dropMenu(
     return dropMenu(values, textField, mod, block)
 }
 
+/** A select of "None" and every entry of the enum [E], by label, bound to [field]. */
 inline fun <reified E> ViewScope.dropMenuNullable(
     field: MutableTap<E?>,
     mod: Modifier? = null,

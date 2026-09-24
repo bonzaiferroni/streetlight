@@ -12,6 +12,7 @@ import web.html.HTMLElement
 import web.timers.setTimeout
 import kotlin.time.Duration.Companion.milliseconds
 
+/** Connects the MapLibre map to its [camera]: carries out pans and reports the map's position and altitude back. */
 class GeoCameraController(
     val jsMap: maplibregl.Map,
     val windowElement: HTMLElement,
@@ -78,6 +79,7 @@ class GeoCameraController(
         }
     }
 
+    /** Sets the altitude classes of the map window for [zoom]. */
     fun setAltitude(zoom: Double) {
         val altitude = altitudeOf(zoom)
         if (altitude == altitudeNow) return
@@ -92,6 +94,7 @@ class GeoCameraController(
         altitudeNow = altitude
     }
 
+    /** Reports the map's center, bounds and zoom to the camera. */
     fun relayBounds(isMoving: Boolean) {
         val center = jsMap.getCenter().toGeoPoint()
         val bounds = jsMap.getBounds().toGeoBounds()

@@ -5,6 +5,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.DIV
 import kotlinx.html.div
 
+/** A row that scrolls sideways, snapping to each child. */
 fun FlowContent.carousel(mod: Modifier? = null, content: DIV.() -> Unit) {
     div {
         addModifiers(CarouselKey.Class, mod)

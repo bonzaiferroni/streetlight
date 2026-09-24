@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import web.dom.Element
 import web.geometry.DOMRectReadOnly
 
+/** The browser's `ResizeObserver`. */
 external class ResizeObserver(
     callback: (Array<ResizeObserverEntry>, ResizeObserver) -> Unit
 ) {
@@ -31,6 +32,7 @@ external interface ResizeObserverOptions {
     var box: String? // "content-box", "border-box", or "device-pixel-content-box"
 }
 
+/** A flow of this element's content box, emitting each time it resizes. */
 fun Element.resizeFlow(): Flow<DOMRectReadOnly> = callbackFlow {
     val observer = ResizeObserver { entries, _ ->
         trySend(entries[0].contentRect)

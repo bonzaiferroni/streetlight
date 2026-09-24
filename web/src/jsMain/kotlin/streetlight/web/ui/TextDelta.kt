@@ -10,6 +10,7 @@ import streetlight.model.utils.CommonText
 import streetlight.model.utils.RemovedText
 import streetlight.model.utils.createTextDelta
 
+/** A grid of [deltaRow]s. */
 fun AppendScope.deltaGrid(
     mod: Modifier? = null,
     content: DIV.() -> Unit
@@ -19,6 +20,7 @@ fun AppendScope.deltaGrid(
     }
 }
 
+/** [label] and the text of [value], marked with what was added and removed since [previousValue]. */
 fun AppendScope.deltaRow(
     label: String,
     value: Any?,

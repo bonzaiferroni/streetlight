@@ -22,12 +22,14 @@ import streetlight.web.ui.toaster
 import web.dom.Element
 import web.html.HTMLElement
 
+/** Toggles the mark of the button [element] on its post. */
 fun ViewScope.queryAndUpdateMark(element: HTMLElement): CuratorStatus? {
     val markId = element.requireAttribute(CuratorMenu.MarkButtonId)
     val baseElement = element.requireClosest(CuratorMenu.CuratorJson)
     return updateMark(markId, baseElement)
 }
 
+/** Toggles [markId] on the post of [baseElement], showing the change before the server answers. */
 fun ViewScope.updateMark(markId: MarkId, baseElement: Element): CuratorStatus? {
     starCheck { return null }
     val curator = baseElement.requireAttribute(CuratorMenu.CuratorJson).toggleMark(markId)
@@ -41,6 +43,7 @@ fun ViewScope.updateMark(markId: MarkId, baseElement: Element): CuratorStatus? {
     return curator
 }
 
+/** This status with [markId] toggled; marking one mark of a polar curator unmarks the others. */
 fun CuratorStatus.toggleMark(markId: MarkId): CuratorStatus {
     val isMarked = !marks.first { it.markId == markId }.isMarked
     val clearOthers = isMarked && curatorType == CuratorType.Polar
@@ -62,6 +65,7 @@ fun CuratorStatus.toggleMark(markId: MarkId): CuratorStatus {
     )
 }
 
+/** Shows [curator] in the tallies, buttons, bars, and lean text inside this element. */
 fun Element.applyCurator(curator: CuratorStatus) {
     curator.marks.forEach { mark ->
         // apply tally text

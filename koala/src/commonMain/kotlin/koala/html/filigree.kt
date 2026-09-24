@@ -4,6 +4,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** Frames what [block] builds, usually a heading, between two decorative rules. */
 fun FlowContent.filigree(
     mod: Modifier? = null,
     ruleMod: Modifier = MaxWidth(16),
@@ -14,6 +15,7 @@ fun FlowContent.filigree(
     }
 }
 
+/** Adds the rules of a [filigree] around what [block] builds. */
 fun DIV.configureFiligree(
     ruleMaxWidth: Modifier = MaxWidth(16),
     block: DIV.() -> Unit

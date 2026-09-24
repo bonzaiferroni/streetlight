@@ -7,6 +7,7 @@ import kampfire.model.toValidityCheck
 import koala.Image
 import kotlinx.serialization.Serializable
 
+/** The fields of a galaxy a form sends. */
 @Serializable
 data class GalaxyEdit(
     val galaxyId: GalaxyId? = null,
@@ -43,11 +44,13 @@ data class GalaxyEdit(
     }
 }
 
+/** The keys of the parts of a [GalaxyEdit] its validity checks. */
 object GalaxyProperty {
     val Name = "name"
     val Path = "path"
 }
 
+/** An edit of this galaxy, starting from its current values and [marks]. */
 fun Galaxy.toEdit(marks: List<GalaxyMark>) = GalaxyEdit(
     galaxyId = galaxyId,
     cityId = cityId,

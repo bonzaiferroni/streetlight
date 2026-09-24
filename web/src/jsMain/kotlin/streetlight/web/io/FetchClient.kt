@@ -42,7 +42,14 @@ import web.sse.EventSource
 import kotlin.let
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Performs every HTTP call to the Streetlight API, and opens its sockets and event streams.
+ *
+ * A call returns an [Outcome]: the response decoded from CBOR, or a [Problem] for a failed status or a request
+ * that could not be made.
+ */
 class FetchClient() {
+    /** Calls [endpoint] with the parameters [block] writes, asking for [acceptEncoding]. */
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> get(
         endpoint: Endpoint,
         acceptEncoding: EncodingType? = null,
@@ -54,6 +61,7 @@ class FetchClient() {
             acceptEncoding = acceptEncoding
         ) { it.decodeBytes() }
 
+    /** Calls [endpoint] with the parameters [block] writes. */
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
@@ -62,6 +70,7 @@ class FetchClient() {
         path = resolvePath(endpoint, block)
     ) { it.decodeBytes() }
 
+    /** Calls [endpoint] with [id] as the last path segment. */
     suspend inline fun <Id, reified Returned, Endpoint : GetByIdEndpoint<Id, Returned>> getApi(
         endpoint: Endpoint,
         id: Id,
@@ -71,6 +80,7 @@ class FetchClient() {
         path = resolvePath("${endpoint.path}/$id", endpoint, block)
     ) { it.decodeBytes() }
 
+    /** Calls [endpoint] with [query] as its query string. */
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
@@ -79,17 +89,20 @@ class FetchClient() {
         return request(RequestMethod.GET, url) { it.decodeBytes() }
     }
 
+    /** Calls [endpoint] with [body] as JSON. */
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): Outcome<Returned> =
         request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.decodeBytes() }
 
+    /** Calls [endpoint] with no body. */
     suspend inline fun <reified Returned> postApi(
         endpoint: PostEndpoint<Unit, Returned>,
     ): Outcome<Returned> =
         request(RequestMethod.POST, endpoint.path, null) { it.decodeBytes() }
 
+    /** Fetches [path] and decodes it as a GTFS feed of [feedType], or returns `null` when there is no content. */
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
         feedType: ProtobufType
@@ -104,11 +117,13 @@ class FetchClient() {
         return feedType.decode(array)
     }
 
+    /** Opens a websocket to [endpoint] with [params]. */
     fun connectSocket(
         endpoint: Endpoint<*, *>,
         vararg params: Pair<String, String>
     ) = connectSocket(endpoint.path, *params)
 
+    /** Opens a websocket to [path] on this host with [params], secure when the page is. */
     fun connectSocket(
         path: String,
         vararg params: Pair<String, String>
@@ -122,11 +137,13 @@ class FetchClient() {
         return socket
     }
 
+    /** Opens an event stream from [endpoint] with [params]. */
     fun connectSSE(
         endpoint: Endpoint<*, *>,
         vararg params: Pair<String, String>
     ) = connectSSE(endpoint.path, *params)
 
+    /** Opens an event stream from [path] with [params]. */
     fun connectSSE(
         path: String,
         vararg params: Pair<String, String>,
@@ -137,11 +154,13 @@ class FetchClient() {
         return EventSource(fullPath)
     }
 
+    /** The path of [endpoint] with the parameters [block] writes. */
     fun <E : Endpoint<*, *>> resolvePath(
         endpoint: E,
         block: (PathBuilder.(E) -> Unit)? = null
     ) = resolvePath(endpoint.path, endpoint, block)
 
+    /** [path] with the parameters [block] writes for [endpoint]. */
     fun <E : Endpoint<*, *>> resolvePath(
         path: String,
         endpoint: E,
@@ -153,6 +172,12 @@ class FetchClient() {
         return builder.build()
     }
 
+    /**
+     * Sends a request, retrying a failed fetch up to [maxAttempts] times, and reads the response with
+     * [handleResponse].
+     *
+     * A 401, 409, 429 or 500 status becomes the matching [HttpProblem].
+     */
     suspend fun <T> request(
         method: RequestMethod,
         path: String,
@@ -208,6 +233,7 @@ class FetchClient() {
         return handleResponse(response)
     }
 
+    /** Uploads the local file of [blobImage] to [postUrl] with its details, returning the stored image. */
     suspend fun uploadBlob(postUrl: String, blobImage: Image): Outcome<Image> {
         val response = fetch(blobImage.url.value)
         val blob = response.blob()

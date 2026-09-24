@@ -10,6 +10,10 @@ import web.html.HTMLElement
 import web.keyboard.KeyboardEvent
 import web.window.window
 
+/**
+ * Moves the caret between the cells of a markdown table in this editor on an arrow key, returning whether it
+ * handled [event].
+ */
 fun HTMLElement.handleTableNavigation(event: KeyboardEvent): Boolean {
     val vertical = event.key == "ArrowUp" || event.key == "ArrowDown"
     val horizontal = event.key == "ArrowLeft" || event.key == "ArrowRight"
@@ -25,6 +29,7 @@ fun HTMLElement.handleTableNavigation(event: KeyboardEvent): Boolean {
     }
 }
 
+/** True when this editor block is of [type]. */
 fun HTMLElement.isBlockType(type: ContentBlock) = getAttribute(EditorStyle.BlockType) == type
 
 private fun HTMLElement.moveTableVertical(block: HTMLElement, event: KeyboardEvent): Boolean {

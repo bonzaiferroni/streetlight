@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A person's contact details. */
 @Serializable
 data class Contact(
     val id: Int,

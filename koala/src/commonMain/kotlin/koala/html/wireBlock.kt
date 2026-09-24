@@ -5,6 +5,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.style
 
+/** An element with [id] that the browser wires a view into, hidden until then unless [isVisibleWhileLoading]. */
 fun FlowContent.wiringBlock(
     id: Id,
     mod: Modifier? = null,

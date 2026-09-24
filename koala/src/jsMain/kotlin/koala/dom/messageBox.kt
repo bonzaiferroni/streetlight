@@ -6,6 +6,7 @@ import koala.modifier.*
 import koala.html.MessageBox
 import kampfire.model.Tap
 
+/** The message of [tap] in a card styled by its type, or nothing while it is `null`. */
 fun ViewScope.messageBox(
     tap: Tap<UIMessage?>,
     mod: Modifier? = null,
@@ -24,6 +25,7 @@ fun ViewScope.messageBox(
 //     mod: Modifier? = null,
 // ) = messageBox(store, mod)
 
+/** The class that styles a [messageBox] for this type, or `null` for a plain message. */
 fun UIMessageType.toModifier() = when (this) {
     UIMessageType.Error -> MessageBox.Error
     UIMessageType.Success -> MessageBox.Success

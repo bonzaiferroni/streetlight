@@ -9,6 +9,7 @@ import streetlight.model.data.*
 import koala.modifier.*
 import kotlinx.css.pct
 
+/** A standalone sign-up page for [event]. */
 fun HTML.eventSignUp(event: Event, resource: PageResource) {
     appHead("Sign Up | ${event.title}", resource) {
         applyFiles(EventSignUpFiles)

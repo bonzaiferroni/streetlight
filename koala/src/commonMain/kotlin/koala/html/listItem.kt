@@ -6,6 +6,7 @@ import kotlinx.html.OL
 import kotlinx.html.UL
 import kotlinx.html.li
 
+/** A list item holding [text], after what [block] builds. */
 fun OL.listItem(
     text: String? = null,
     mod: Modifier? = null,
@@ -20,6 +21,7 @@ fun OL.listItem(
     }
 }
 
+/** A list item holding [text], after what [block] builds. */
 fun UL.listItem(
     text: String? = null,
     mod: Modifier? = null,

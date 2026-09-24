@@ -4,6 +4,7 @@ import koala.modifier.*
 import koala.modifier.enumAttributeOf
 import streetlight.model.utils.TextDeltaDisplay
 
+/** Shows the difference between two texts; [Display] hides the removed or the added text. */
 object TextDeltaStyle {
     val CommonText = Class("common-text")
     val AddedText = Class("added-text")

@@ -11,6 +11,7 @@ import koala.html.setId
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
+/** The star menu as a popover from the helm button. */
 fun FlowContent.starHelmPopover() {
     popover(StarHelm.PopoverId, StarHelm.PopoverClass) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {

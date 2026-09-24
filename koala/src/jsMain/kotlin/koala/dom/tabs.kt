@@ -9,6 +9,11 @@ import koala.html.configureTabs
 import koala.interop.initTabs
 import web.html.HTMLDivElement
 
+/**
+ * Tabs over panels, with the selected tab kept in step with [indexState] when given.
+ *
+ * A container with [id] restores its selected tab from `localStorage`.
+ */
 fun ViewScope.tabs(
     id: Id? = null,
     mod: Modifier? = null,

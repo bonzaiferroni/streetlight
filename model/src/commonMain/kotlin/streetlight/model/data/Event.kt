@@ -13,6 +13,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** An event at a location. */
 @Stable
 @Serializable
 data class Event(

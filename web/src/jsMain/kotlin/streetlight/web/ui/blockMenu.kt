@@ -11,6 +11,12 @@ import kampfire.model.storeOf
 import streetlight.model.data.*
 import kotlin.uuid.Uuid
 
+/**
+ * A button that opens the menu of blocks to add, by category, calling [onSelection] with the chosen block.
+ *
+ * [name] labels the container added to; without it the button adds above a block. Containers are offered only
+ * above [depth] 2.
+ */
 fun ViewScope.blockMenu(
     name: String?,
     depth: Int,
@@ -58,6 +64,7 @@ fun getCategories(depth: Int) = buildList {
     add(BlockCategory.Content)
 }
 
+/** The blocks of [category] that can be added at [depth]. */
 fun getOptions(category: BlockCategory, depth: Int) = buildList {
     when (category) {
         BlockCategory.Basic -> {

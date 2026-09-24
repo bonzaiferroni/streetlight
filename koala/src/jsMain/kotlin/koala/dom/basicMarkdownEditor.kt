@@ -10,6 +10,11 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLElement
 
+/**
+ * An editable plain-text area bound to [state], labeled [label] over its corner.
+ *
+ * Typing writes to [state], and a change to [state] from elsewhere replaces the text.
+ */
 fun ViewScope.basicMarkdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,

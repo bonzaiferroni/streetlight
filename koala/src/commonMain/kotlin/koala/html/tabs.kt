@@ -5,6 +5,11 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.p
 
+/**
+ * Tabs over panels, with [initialTab] selected. The browser wires them with [initTabs].
+ *
+ * A container with [id] restores its selected tab from `localStorage`.
+ */
 fun FlowContent.tabs(
     id: Id? = null,
     mod: Modifier? = null,
@@ -17,6 +22,7 @@ fun FlowContent.tabs(
     }
 }
 
+/** Configures this element as [tabs]. */
 fun DIV.configureTabs(
     id: Id?,
     mod: Modifier?,
@@ -33,6 +39,7 @@ fun DIV.configureTabs(
     configureTabsViewport(viewportMod, scope.tabs, initialIndex)
 }
 
+/** Marks this element as a tabs container, not yet wired, with [initialIndex] selected. */
 fun DIV.configureTabsContainer(
     id: Id?,
     mod: Modifier?,
@@ -45,6 +52,7 @@ fun DIV.configureTabsContainer(
     setAttribute(TabsStyle.Index.to(initialIndex))
 }
 
+/** Adds the row of tab buttons, with [initialIndex] active. */
 fun DIV.configureTabsHeader(
     tabs: List<TabHeader>,
     initialIndex: Int,
@@ -65,6 +73,7 @@ fun DIV.configureTabsHeader(
     }
 }
 
+/** Adds the viewport holding a panel per tab, with [initialIndex] shown. */
 fun DIV.configureTabsViewport(
     viewportMod: Modifier?,
     tabs: List<Tab>,

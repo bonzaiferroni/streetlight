@@ -17,6 +17,7 @@ class ThemeEditor(initialTheme: PageTheme?) {
     val gammaState = state.mutableTapOf({ it.gamma }) { copy(gamma = it) }
     val colorFluxState = state.mutableTapOf({ it.colorFlux }) { copy(colorFlux = it) }
 
+    /** The edited theme, or `null` when it is the default. */
     fun buildTheme(): PageTheme? {
         return state.now.takeIf { it != Koala }
     }

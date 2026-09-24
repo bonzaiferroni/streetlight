@@ -6,6 +6,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
+/** A flex [row] with [id]. */
 inline fun AppendScope.row(
     id: Id,
     mod: Modifier? = null,
@@ -15,6 +16,7 @@ inline fun AppendScope.row(
     content()
 }
 
+/** A flex row. */
 inline fun AppendScope.row(
     mod: Modifier? = null,
     crossinline content: DIV.() -> Unit,

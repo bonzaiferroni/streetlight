@@ -6,6 +6,7 @@ import web.cssom.ClassName
 import web.dom.Element
 import web.html.HTMLElement
 
+/** Applies [modifier] to this live element. */
 fun <T: Element> T.modify(modifier: Modifier): T {
     when (modifier) {
         is Class -> classList.add(modifier.className)
@@ -18,6 +19,7 @@ fun <T: Element> T.modify(modifier: Modifier): T {
     return this
 }
 
+/** Removes [modifier] from this live element. */
 fun <T: Element> T.unmodify(modifier: Modifier): T {
     when (modifier) {
         is Class -> classList.remove(modifier.className)
@@ -33,6 +35,7 @@ fun <T: Element> T.unmodify(modifier: Modifier): T {
 inline val Element.style: CSSStyleDeclaration get() = unsafeCast<HTMLElement>().style
 inline val Class.className: ClassName get() = ClassName(identifier)
 
+/** Removes [modifier] and adds it back on the next frame, restarting any animation it starts. */
 fun <T: Element> T.trigger(modifier: Class): T {
     classList.remove(modifier.className)
     requestAnimationFrame {
@@ -41,6 +44,7 @@ fun <T: Element> T.trigger(modifier: Class): T {
     return this
 }
 
+/** Adds [modifier] on the next animation frame, so a transition sees it arrive. */
 fun <T: HTMLElement> T.modifyAfterFrame(modifier: Class): T {
     requestAnimationFrame {
         classList.add(modifier.className)
@@ -48,6 +52,7 @@ fun <T: HTMLElement> T.modifyAfterFrame(modifier: Class): T {
     return this
 }
 
+/** Removes [modifier] on the next animation frame, so a transition sees it leave. */
 fun <T: HTMLElement> T.unmodifyAfterFrame(modifier: Class): T {
     requestAnimationFrame {
         classList.remove(modifier.className)
@@ -55,6 +60,7 @@ fun <T: HTMLElement> T.unmodifyAfterFrame(modifier: Class): T {
     return this
 }
 
+/** True when the element carries [modifier], every member for a set. */
 fun Element.isModified(modifier: Modifier): Boolean = when (modifier) {
     is Class -> classList.contains(modifier.className)
     is InlineStyle<*> -> style.getPropertyValue(modifier.property.identifier) == modifier.stringValue
@@ -62,6 +68,7 @@ fun Element.isModified(modifier: Modifier): Boolean = when (modifier) {
     is ModifierSet -> modifier.modifiers.all { it == null || isModified(it) }
 }
 
+/** Applies [modifier] when the element lacks it and removes it otherwise, returning whether it is now applied. */
 fun Element.toggle(modifier: Modifier): Boolean {
     val isModified = !isModified(modifier)
     if (isModified) {
@@ -72,6 +79,7 @@ fun Element.toggle(modifier: Modifier): Boolean {
     return isModified
 }
 
+/** True when every part of [modifier] is found in this one. */
 fun Modifier.contains(modifier: Modifier): Boolean {
     if (modifier is ModifierSet) return modifier.modifiers.all { it == null || contains(it) }
     return when (this) {

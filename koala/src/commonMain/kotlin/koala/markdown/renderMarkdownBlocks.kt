@@ -20,6 +20,7 @@ import kotlinx.html.thead
 import kotlinx.html.tr
 import kotlinx.html.ul
 
+/** Renders [blocks] as HTML. */
 fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {
     div {
         addModifiers(MarkdownStyle.Block)
@@ -39,6 +40,7 @@ fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {
     }
 }
 
+/** Renders [heading], centered, in a [filigree] when it asks for one. */
 fun FlowContent.renderHeading(heading: MarkdownHeading) {
     val containerMod = modify(MarginTop(4))
     val headingMod = modify(TextAlignCenter)
@@ -56,6 +58,7 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
     if (heading.filigree) filigree(containerMod, block = block) else div(containerMod, block)
 }
 
+/** Renders [block] as a paragraph, with its first inline image floated beside it. */
 fun FlowContent.renderParagraph(block: MarkdownParagraph) {
     textBlock {
         addModifiers(MarkdownStyle.Paragraph)
@@ -64,6 +67,7 @@ fun FlowContent.renderParagraph(block: MarkdownParagraph) {
     }
 }
 
+/** Renders [block] as a blockquote, with its citation below. */
 fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
     figure {
         addModifiers(MarkdownStyle.Blockquote)
@@ -81,6 +85,7 @@ fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
     }
 }
 
+/** Renders [block] as preformatted code. */
 fun FlowContent.renderCodeBlock(block: MarkdownCodeBlock) {
     pre {
         code {
@@ -94,6 +99,7 @@ fun FlowContent.renderHorizontalRule() {
     hr { }
 }
 
+/** Renders [block] as a figure captioned with its alt text. */
 fun FlowContent.renderImage(block: MarkdownBlockImage) {
     figure {
         addModifiers(MarkdownStyle.BlockImage)
@@ -111,6 +117,7 @@ fun FlowContent.renderImage(block: MarkdownBlockImage) {
     }
 }
 
+/** Renders [block], ordered or unordered. */
 fun FlowContent.renderList(block: MarkdownList) {
     when (block) {
         is MarkdownOrderedList -> renderOrderedList(block)
@@ -118,6 +125,7 @@ fun FlowContent.renderList(block: MarkdownList) {
     }
 }
 
+/** Renders [block] as an ordered list, with nested lists. */
 fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
     ol {
         addModifiers(MarkdownStyle.OrderedList)
@@ -136,6 +144,7 @@ fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
     }
 }
 
+/** Renders [block] as an unordered list, with the bullet its marker chooses and nested lists. */
 fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
     val markerMod = when (block.marker) {
         '*' -> ListStyleDisc
@@ -164,6 +173,7 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
     }
 }
 
+/** Renders [block] as a table. A cell holding only an image shows the image. */
 fun FlowContent.renderTable(block: MarkdownTable) {
     val hasHeader = block.header.cells.any { it.spans.isNotEmpty() }
 

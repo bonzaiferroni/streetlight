@@ -10,6 +10,7 @@ import streetlight.model.data.VehicleType
 import streetlight.web.model.Streetlight
 import kotlin.js.json
 
+/** The zoom at which transit stops show. */
 const val STOP_ZOOM = 14
 
 fun ViewScope.viewTransitMap(

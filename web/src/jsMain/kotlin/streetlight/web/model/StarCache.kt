@@ -16,6 +16,11 @@ import kotlin.collections.minus
 import kotlin.collections.plus
 import kotlin.uuid.Uuid
 
+/**
+ * The items a star has lit, and their data.
+ *
+ * While signed out, lights are kept in local storage under [cacheKey] and sent once the star signs in.
+ */
 class StarCache<Id, Item>(
     val toggleType: ToggleType,
     private val cacheKey: String,
@@ -69,6 +74,7 @@ class StarCache<Id, Item>(
         }
     }
 
+    /** Lights or unlights [id], returning whether it is now lit. */
     fun toggleLight(id: Id): Boolean {
         val isLitNow = stateNow.lights.contains(id)
         when (isLitNow) {

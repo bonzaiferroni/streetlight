@@ -14,6 +14,7 @@ import web.history.PageTransitionEvent
 import web.sse.EventSource
 import web.window.window
 
+/** An event stream carrying JSON: [messageFlow] emits each message received. */
 class SSEClient<Message>(
     private val scope: CoroutineScope,
     private val messageSerializer: KSerializer<Message>,
@@ -57,6 +58,7 @@ class SSEClient<Message>(
     }
 }
 
+/** An [SSEClient] of the stream [provideSource] opens. */
 inline fun <reified Message> sseClientOf(
     scope: CoroutineScope,
     noinline provideSource: suspend () -> EventSource,

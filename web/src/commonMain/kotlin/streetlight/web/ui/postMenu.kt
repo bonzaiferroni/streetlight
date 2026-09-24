@@ -12,6 +12,7 @@ import koala.modifier.idAttributeOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostId
 
+/** Opens the menu of the post [postId]. */
 fun FlowContent.postMenu(postId: PostId, username: Username?) {
     // val anchor = PositionAnchor("menu-${slug}")
     button(AlignSelfCenter) {

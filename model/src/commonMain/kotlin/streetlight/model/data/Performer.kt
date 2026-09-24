@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A user's profile as a street performer, with the handle their tips go to. */
 @Serializable
 data class Performer(
     val performerId: PerformerId,

@@ -6,7 +6,12 @@ import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
-// a button per value of a root setting; each applies its value to the root element and localStorage
+/**
+ * Renders a row of buttons, one per value of the root setting [attribute].
+ *
+ * Each button applies its value to the root element and to `localStorage`, and [content] builds what it shows.
+ * [rootSwitchCss] marks the selected button.
+ */
 inline fun <reified T : Enum<T>> FlowContent.rootSwitch(
     attribute: Attribute<T>,
     mod: Modifier? = null,
@@ -23,11 +28,15 @@ inline fun <reified T : Enum<T>> FlowContent.rootSwitch(
     }
 }
 
-// the button of a switch carries its value under this attribute
+/** The attribute a [rootSwitch] button carries its value under, named for this root setting. */
 val <T> Attribute<T>.optionAttribute
     get() = Attribute("$name-option", isCustom, toStringValue, toValue)
 
-// marks the switch button whose value matches the root
+/**
+ * CSS that applies [style] to the [rootSwitch] button whose value matches the root setting [attribute].
+ *
+ * The app places it in its own stylesheet.
+ */
 fun <T> rootSwitchCss(
     attribute: Attribute<T>,
     values: Iterable<T>,

@@ -27,6 +27,10 @@ import kampfire.model.requestWithCursor
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OmniClient
 
+/**
+ * A star's chats and the messages of the open chat. Both lists page in as they are scrolled to the end, and new
+ * messages arrive live.
+ */
 class Inbox(
     private val scope: CoroutineScope,
     private val star: Star,
@@ -73,6 +77,7 @@ class Inbox(
         }
     }
 
+    /** Opens [chat] and loads its latest messages. */
     fun openChat(chat: ChatPreview?) {
         scope.launch(::openChat) {
             messageList.clear()
@@ -82,6 +87,7 @@ class Inbox(
         }
     }
 
+    /** Switches between the archived and active chats. */
     fun setIsArchive(isArchive: Boolean) {
         if (isArchive == state.now.isArchive) return
         scope.launch(::setIsArchive) {
@@ -92,6 +98,7 @@ class Inbox(
         }
     }
 
+    /** Moves the open chat into or out of the archive and opens the next chat in the list. */
     fun toggleArchive() {
         val chatId = state.now.openChat?.chatId ?: return
         scope.launch {
@@ -107,6 +114,10 @@ class Inbox(
         }
     }
 
+    /**
+     * Sends [content] to the open chat, returning `false` when there is none, the content is blank, or sending
+     * fails.
+     */
     suspend fun sendReply(content: Markdown, messenger: Messenger): Boolean {
         val reply = ReplyMessage(
             chatId = state.now.openChat?.chatId ?: return false,

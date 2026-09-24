@@ -2,12 +2,14 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A chord held for a [duration] of beats in a measure. A `null` chord is a rest. */
 @Serializable
 data class MeasureChord(
     val duration: Int?,
     val expression: Chord?,
     val isPhraseEnd: Boolean = false,
 ) {
+    /** The chord and its duration written in [style], relative to [rootPitch]. */
     fun toNotation(
         rootPitch: Int = 60,
         style: NotationStyle = NotationStyle.Letters
@@ -37,6 +39,7 @@ data class MeasureChord(
     }
 }
 
+/** Reads a measure chord written by [MeasureChord.toNotation], or returns `null`. */
 fun parseMeasureChord(text: String, style: NotationStyle, isPhraseEnd: Boolean): MeasureChord? {
     var text = text
     val duration = if (text.contains('_')) {

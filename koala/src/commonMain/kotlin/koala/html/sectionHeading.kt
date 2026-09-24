@@ -4,6 +4,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** A heading row with the label built by [labelContent] centered, after what [block] builds. */
 fun FlowContent.sectionHeading(
     labelContent: DIV.() -> Unit,
     mod: Modifier? = null,
@@ -21,6 +22,7 @@ fun FlowContent.sectionHeading(
     }
 }
 
+/** A heading row with [label] centered, after what [block] builds. */
 fun FlowContent.sectionHeading(
     label: String,
     mod: Modifier? = null,

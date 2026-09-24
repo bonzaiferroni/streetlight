@@ -12,6 +12,7 @@ import kotlinx.html.UL
 import kotlinx.html.ol
 import kotlinx.html.ul
 
+/** An ordered list laid out along [axis]. */
 fun FlowContent.olist(
     mod: Modifier? = null,
     axis: ListAxis = ListAxis.Column,
@@ -23,6 +24,7 @@ fun FlowContent.olist(
     }
 }
 
+/** An unordered list laid out along [axis]. */
 fun FlowContent.ulist(
     mod: Modifier? = null,
     axis: ListAxis = ListAxis.Column,
@@ -45,6 +47,7 @@ internal fun TagConfig.configureListing(
     addModifiers(mod, ListKey.Class, axisClass)
 }
 
+/** The direction a list lays out its items. */
 enum class ListAxis {
     Row,
     Column

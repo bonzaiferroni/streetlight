@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `UserApi` and `Api.Users`: signing in and out, signing up, and uploads. */
 interface UserClient {
     suspend fun createUser(request: SignUpRequest): Outcome<Unit>
     suspend fun login(request: LoginRequest): Outcome<Unit>

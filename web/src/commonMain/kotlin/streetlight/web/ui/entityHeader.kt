@@ -11,6 +11,7 @@ import streetlight.web.layouts.toCells
 import streetlight.web.layouts.entityButtonsOf
 import streetlight.web.layouts.toThemeColor
 
+/** The [pageHeader] of [entity], described by [descriptor], such as "a galaxy". */
 fun FlowContent.entityHeader(
     entity: Entity,
     descriptor: String,

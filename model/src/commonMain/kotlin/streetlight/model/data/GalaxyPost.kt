@@ -19,6 +19,7 @@ value class PostId(override val value: Uuid): RecordId {
     }
 }
 
+/** The orders a galaxy's feed can be sorted in. */
 enum class PostOrder(label: String? = null): Labeled {
     New,
     Old,
@@ -28,6 +29,7 @@ enum class PostOrder(label: String? = null): Labeled {
     override val label = label ?: name
 }
 
+/** A post sharing a location. */
 @Serializable
 data class LocationPost(
     val location: Location,
@@ -35,6 +37,7 @@ data class LocationPost(
 ): Entity by location {
 }
 
+/** A post sharing an event. */
 @Serializable
 data class EventPost(
     val event: EventLocation,
@@ -42,6 +45,7 @@ data class EventPost(
 ): Entity by event {
 }
 
+/** A post sharing media. */
 @Serializable
 data class MediaPost(
     val media: Media,

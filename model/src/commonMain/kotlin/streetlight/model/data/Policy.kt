@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A rule of conduct or content, for the whole site or one galaxy, that users can flag records against. */
 @Serializable
 data class Policy(
     val policyId: PolicyId,

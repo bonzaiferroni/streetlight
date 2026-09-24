@@ -5,6 +5,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.HR
 import kotlinx.html.hr as hrElement
 
+/** A horizontal rule in the current color. */
 fun FlowContent.hr(
     mod: Modifier? = null,
     block: HR.() -> Unit = { }

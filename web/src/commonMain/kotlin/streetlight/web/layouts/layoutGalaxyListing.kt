@@ -9,6 +9,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.PostListing
 import streetlight.model.data.PostType
 
+/** The posts of a galaxy, as one list for one post type or a tab for each. */
 fun FlowContent.layoutPostListing(types: Set<PostType>, listing: PostListing) {
     when (types.size) {
         0 -> {

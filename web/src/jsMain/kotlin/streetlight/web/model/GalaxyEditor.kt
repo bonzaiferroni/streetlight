@@ -28,6 +28,7 @@ import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 
+/** Creates or updates a galaxy. The saved area is the map view at submit. */
 class GalaxyEditor(
     galaxy: GalaxyEdit,
     private val scope: CoroutineScope,
@@ -89,6 +90,7 @@ class GalaxyEditor(
         }
     }
 
+    /** Sets the galaxy's city and pans the map to it. */
     fun setCity(value: City?) {
         state.set { copy(
             city = value,
@@ -100,6 +102,7 @@ class GalaxyEditor(
         }
     }
 
+    /** Adds a neutral mark named [name], returning `false` when the name's length is invalid. */
     fun addMark(name: String): Boolean {
         val trimmedName = name.trim().takeIf { it.length in GalaxyMark.ValidLength } ?: return false
         editState.set { copy(marks = marks + GalaxyMark(MarkId(Uuid.random()), Lean.Neutral, trimmedName)) }
@@ -115,6 +118,7 @@ class GalaxyEditor(
         editState.set { copy(marks = marks.map { if (it.markId == markId) mark.copy(lean = lean) else it })}
     }
 
+    /** Saves the galaxy with its image and design, then goes to its page. */
     fun submit() {
         val message = editState.now.validity.message
 

@@ -3,6 +3,7 @@ package koala.html
 import kotlinx.html.*
 import koala.modifier.*
 
+/** A flex [column] with [id]. */
 fun FlowContent.column(
     id: Id?,
     mod: Modifier? = null,
@@ -16,6 +17,7 @@ fun FlowContent.column(
     }
 }
 
+/** A flex column. */
 fun FlowContent.column(
     mod: Modifier? = null,
     content: DIV.() -> Unit = { },

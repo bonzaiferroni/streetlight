@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import streetlight.model.data.PlaceProto
 import streetlight.model.utils.osmHoursToSchedule
 
+/** A place as OpenStreetMap's search returns it. */
 @Serializable
 data class OSMLocation(
     @SerialName("place_id")
@@ -37,6 +38,7 @@ data class OSMLocation(
     val extraTags: OSMExtra? = null
 )
 
+/** The address of an OpenStreetMap place. */
 @Serializable
 data class Address(
     @SerialName("house_number")
@@ -52,6 +54,7 @@ data class Address(
     val countryCode: String? = null
 )
 
+/** The extra tags of an OpenStreetMap place, such as its website and opening hours. */
 @Serializable
 data class OSMExtra(
     val website: String? = null,
@@ -79,6 +82,7 @@ data class OSMExtra(
     val levels: String? = null,
 )
 
+/** A search of OpenStreetMap. */
 @Serializable
 data class OSMQuery(
     val amenity: String? = null,
@@ -102,6 +106,7 @@ fun OSMLocation.toGeoBounds() = GeoRect(
     ne = GeoPoint(lat = bounds[1], lng = bounds[3])
 )
 
+/** A city as OpenStreetMap describes it. */
 @Serializable
 data class OSMCity(
     val name: String,
@@ -112,6 +117,7 @@ data class OSMCity(
     val geoRect: GeoRect,
 )
 
+/** The place as a city. Throws when it lacks what a city needs. */
 fun OSMLocation.toOSMCity() = OSMCity(
     name = name ?: error("name not found"),
     state = address.state ?: "",
@@ -121,12 +127,15 @@ fun OSMLocation.toOSMCity() = OSMCity(
     geoRect = toGeoBounds(),
 )
 
+/** The place's opening hours, or `null` when it has none that can be read. */
 fun OSMLocation.toHoursSchedule() = extraTags?.opening_hours?.let { osmHoursToSchedule(it) }
 
+/** [toOSMCity], or `null` when the place lacks what a city needs. */
 fun OSMLocation.toOSMCityOrNull() = runCatching {
     toOSMCity()
 }.getOrNull()
 
+/** The place as a [PlaceProto]. */
 fun OSMLocation.toPlaceProto() = PlaceProto(
     name = name,
     address = address.road?.let { road ->

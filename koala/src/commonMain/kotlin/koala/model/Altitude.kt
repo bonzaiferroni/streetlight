@@ -3,6 +3,10 @@ package koala.model
 import koala.modifier.Class
 import koala.html.GeoMapKey
 
+/**
+ * The zoom bands of the map, each with the class the map window carries within it. A marker can be limited to
+ * the altitudes it shows at.
+ */
 enum class Altitude(val cssClass: Class, val zoom: Double) {
     Kite(Class("kite"), 16.0),
     Raincloud(Class("raincloud"), 14.5),
@@ -14,6 +18,7 @@ enum class Altitude(val cssClass: Class, val zoom: Double) {
     override fun toString() = cssClass.selector
 }
 
+/** The [Altitude] of the map at [zoom]. */
 fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
 
 // language="CSS"

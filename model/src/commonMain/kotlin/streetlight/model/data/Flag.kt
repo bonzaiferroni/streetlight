@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A user's report that a record breaks a policy. */
 @Serializable
 data class Flag(
     val flagId: FlagId,

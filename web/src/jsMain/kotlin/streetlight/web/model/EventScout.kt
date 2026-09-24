@@ -19,6 +19,10 @@ import streetlight.model.data.PostId
 import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
 
+/**
+ * Posts an event to [galaxy] in stages: find or create its location with [LocationScout], then find or create
+ * the event.
+ */
 class EventScout(
     val galaxy: Galaxy?,
     private val editor: EventEditor,
@@ -58,6 +62,7 @@ class EventScout(
     // fun setStage(value: EventScoutStage) = state.set { it. }
     // fun setEvent(value: EventLocation?) = state.set { copy(event = value) }
 
+    /** Starts a new event titled with the query. */
     fun create() {
         editor.titleState.set(stateNow.query)
         state.set { copy(stage = EventScoutStage.EventEdit) }
@@ -74,6 +79,7 @@ class EventScout(
         }
     }
 
+    /** Saves the event when it is new, then posts it to the galaxy. */
     fun post() {
         val galaxyId = galaxy?.galaxyId ?: return
         scope.launch {

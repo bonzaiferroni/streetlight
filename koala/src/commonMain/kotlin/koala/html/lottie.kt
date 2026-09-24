@@ -4,6 +4,7 @@ import koala.Lottie
 import kotlinx.html.*
 import koala.modifier.*
 
+/** A square Lottie animation of [file], played by the browser. */
 fun FlowContent.lottie(
     file: Lottie,
     mod: Modifier? = null,

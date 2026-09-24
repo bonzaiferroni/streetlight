@@ -15,6 +15,12 @@ import web.html.HTMLDivElement
 import web.html.HTMLElement
 import kotlin.math.abs
 
+/**
+ * A scrolling column of [list], applying each change in place rather than rebuilding.
+ *
+ * Each item is a child view built by [content], sized as [expectedHeight] until it renders. [scrollState]
+ * reports whether the scroll is within [scrollBoundaryMargin] of either end.
+ */
 fun <T, K> ViewScope.lazyColumn(
     list: LiveList<T, K>,
     mod: Modifier? = null,
@@ -102,6 +108,7 @@ fun <T, K> ViewScope.lazyColumn(
     return container
 }
 
+/** The scroll position of a [lazyColumn]. */
 data class LazyColumnState(
     val scrollIndex: Int = 0,
 )

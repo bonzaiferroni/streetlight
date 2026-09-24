@@ -5,6 +5,7 @@ import kampfire.model.toValidityCheck
 import koala.Image
 import kotlinx.serialization.Serializable
 
+/** The fields of a city a form sends: its name, image, description and links. */
 @Serializable
 data class CityEdit(
     val cityId: CityId,
@@ -20,10 +21,12 @@ data class CityEdit(
     }
 }
 
+/** The keys of the parts of a [CityEdit] its validity checks. */
 object CityProperty {
     val Name = "name"
 }
 
+/** An edit of this city, starting from its current values. */
 fun City.toEdit() = CityEdit(
     cityId = cityId,
     name = name,

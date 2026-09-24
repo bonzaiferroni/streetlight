@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
 
+/** Creates a guest or registered account and signs in. */
 class UserCreator(
     private val scope: CoroutineScope,
     private val gate: SessionClient,

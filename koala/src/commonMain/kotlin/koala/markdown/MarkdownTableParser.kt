@@ -1,7 +1,9 @@
 package koala.markdown
 
+/** Parses markdown tables: a header row, an optional delimiter row of alignments, and the rows below. */
 class MarkdownTableParser(private val spanParser: MarkdownSpanParser) {
 
+    /** The table in [chunk] between [from] and [to], or `null` when it has no header. */
     fun parse(chunk: String, from: Int = 0, to: Int = chunk.length): MarkdownTable? {
         var header: MarkdownTableRow? = null
         var alignments: List<MarkdownTableAlignment> = emptyList()

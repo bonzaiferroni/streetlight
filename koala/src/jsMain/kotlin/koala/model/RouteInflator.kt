@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+/** Fetches the content of each new route as it arrives, skipping the initial route of a screen with a shell. */
 class RouteInflator(
     private val scope: CoroutineScope, // appScope
     private val fetcher: ContentFetcher,
@@ -34,6 +35,7 @@ class RouteInflator(
         }
     }
 
+    /** The content fetched for [route]. Throws, after telling the user, when it is missing or another type. */
     suspend inline fun <reified T: FetcherContent> contentFor(route: AppRoute): T {
         val delivered = delivery?.await()
         val content = (if (delivered?.route == route) delivered.content else null) as? T
@@ -49,11 +51,13 @@ class RouteInflator(
     }
 }
 
+/** The content fetched for a route. */
 data class RouteDelivery(
     val route: AppRoute,
     val content: FetcherContent?
 )
 
+/** Maps a route to the call that fetches its content. The app implements it. */
 interface ContentFetcher {
     suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent>
 }

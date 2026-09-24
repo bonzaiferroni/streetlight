@@ -11,6 +11,7 @@ import koala.html.image
 import koala.html.setId
 import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 
+/** The signed-in star's image, filled in by the client. */
 fun FlowOrInteractiveOrPhrasingContent.starBadge() {
     image(SvgFile.Someone, modify(OpacityHigh, Size100P, BorderRadius50P, MoonShadow)) {
         setId(StarBadgeKey.Id)

@@ -1,5 +1,10 @@
 package kampfire.model
 
+/**
+ * A size an image is stored in, with its file [label], its width, and the aspect it is cut to, if any.
+ *
+ * An image narrower than [minWidthPx] is not stored at this size.
+ */
 enum class ImageSize(val label: String, val widthPx: Int, val minWidthPx: Int, val aspectRatio: Float?) {
     Thumb("th", THUMB_IMAGE_SIZE, 0, 1f),
     Small("sm", SMALL_IMAGE_SIZE, 0, null),

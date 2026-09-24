@@ -3,6 +3,7 @@ package streetlight.web.io
 import koala.external.FeedEntity
 import streetlight.model.Api
 
+/** The calls of `Api.Gtfs`, for the routes and live vehicles of the transit network. */
 class TransitClient(private val client: FetchClient) {
     suspend fun readAreaTransit() = client.getApi(Api.Gtfs.Routes)
     suspend fun readVehiclePositions(feedType: ProtobufType) =

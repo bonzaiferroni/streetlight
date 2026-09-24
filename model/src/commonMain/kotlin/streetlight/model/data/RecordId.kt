@@ -3,10 +3,12 @@ package streetlight.model.data
 import kampfire.api.TableId
 import kotlin.uuid.Uuid
 
+/** The id of a record, wrapping its [Uuid]. Each record type has its own. */
 sealed interface RecordId: TableId<Uuid> {
     val string get() = value.toString()
 }
 
+/** This id as the record id type [T]. Throws for a type that is not registered here. */
 inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     StarId::class -> StarId(this) as T
     GalaxyId::class -> GalaxyId(this) as T
@@ -37,4 +39,5 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     else -> error("invalid recordId type: ${T::class.simpleName}")
 }
 
+/** This text parsed as a [Uuid], as the record id type [T]. */
 inline fun <reified T> String.toRecordId() = Uuid.parse(this).toRecordId<T>()

@@ -1,5 +1,6 @@
 package koala
 
+/** The site's SVG icons. */
 object SvgFile : FileSet<Svg>() {
     val Archive = add("archive.svg")
     val ArrowLeft = add("arrow-left.svg")

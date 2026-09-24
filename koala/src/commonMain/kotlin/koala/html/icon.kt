@@ -6,6 +6,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 
+/** The SVG [file] as a square icon in the current color. */
 fun FlowContent.icon(
     file: Svg,
     mod: Modifier? = SmallIconHeight,
@@ -20,6 +21,7 @@ fun FlowContent.icon(
     }
 }
 
+/** Configures this element as an [icon] of [file]. */
 fun DIV.configureIcon(
     file: Svg,
     mod: Modifier? = null,

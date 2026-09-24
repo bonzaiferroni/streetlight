@@ -5,6 +5,7 @@ import kotlinx.browser.localStorage
 import org.w3c.dom.get
 import kotlin.reflect.KProperty
 
+/** A property backed by `localStorage` under [key], reading [defaultValue] when nothing is stored. */
 class LocalStorageDelegate<T>(
     private val key: String,
     private val getter: (String) -> T,
@@ -19,6 +20,7 @@ class LocalStorageDelegate<T>(
     }
 }
 
+/** A [LocalStorageDelegate] converting its value with [getter] and [setter]. */
 fun <T> storageOf(
     key: String,
     getter: (String) -> T,
@@ -26,6 +28,7 @@ fun <T> storageOf(
     defaultValue: T,
 ) = LocalStorageDelegate(key, getter, setter, defaultValue)
 
+/** A [LocalStorageDelegate] storing its value as JSON. */
 inline fun <reified T> jsonStorageOf(
     key: String,
     defaultValue: T,
@@ -36,6 +39,7 @@ inline fun <reified T> jsonStorageOf(
     defaultValue = defaultValue,
 )
 
+/** A [LocalStorageDelegate] storing a list as JSON, empty by default. */
 inline fun <reified T> jsonListStorageOf(
     key: String,
 ) = storageOf(
@@ -45,6 +49,7 @@ inline fun <reified T> jsonListStorageOf(
     defaultValue = emptyList(),
 )
 
+/** A [LocalStorageDelegate] storing a set as comma-separated values, empty by default. */
 fun <T> setStorageOf(
     key: String,
     toString: (T) -> String = { it.toString() },

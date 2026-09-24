@@ -23,6 +23,7 @@ import streetlight.web.model.ContainerId
 import streetlight.web.model.LayoutEditor
 import kotlin.uuid.Uuid
 
+/** The editor of a page layout: its blocks, and the blocks removed from it, which can be restored. */
 fun ViewScope.layoutBuilder(model: LayoutEditor) {
     column(BodyStyle.MainColumn) {
         containerBuilder(model, model.mainContainerId)
@@ -34,6 +35,7 @@ fun ViewScope.layoutBuilder(model: LayoutEditor) {
     }
 }
 
+/** The editors of a container's blocks, closed by a row that adds a block to it. */
 fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
@@ -46,6 +48,11 @@ fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     }
 }
 
+/**
+ * The controls above a block: add above, edit, remove, and move. The label opens [menuContent] when given.
+ *
+ * While a block moves, the row becomes the button that moves it here.
+ */
 fun ViewScope.editorRow(
     editor: BlockEditor,
     isEditingState: MutableTap<Boolean>? = null,
@@ -105,6 +112,7 @@ fun ViewScope.editorRow(
     }
 }
 
+/** The row at the end of a container, which adds a block or receives the moving block. */
 fun ViewScope.lastEditorRow(
     editor: ContainerEditor
 ) {

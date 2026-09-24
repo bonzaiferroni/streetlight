@@ -9,6 +9,7 @@ import streetlight.model.data.LocationEdit
 
 // previews
 
+/** A preview of the feed row [edit] will post as. */
 fun FlowContent.postRow(edit: LocationEdit, username: Username?) {
     feedRow(
         entity = CustomEntity(
@@ -22,6 +23,7 @@ fun FlowContent.postRow(edit: LocationEdit, username: Username?) {
     )
 }
 
+/** A preview of the feed row [event] will post as. */
 fun FlowContent.postRow(event: EventEdit, location: Location) {
     feedRow(
         entity = CustomEntity(
@@ -33,7 +35,7 @@ fun FlowContent.postRow(event: EventEdit, location: Location) {
         ),
         isUniverse = false,
         cells = listOfNotNull(
-            startsAtCell(event.startsAt),
+            event.startsAt?.let { startsAtCell(it) },
             event.cost?.let { costCell(it, event.website) },
         ),
     )

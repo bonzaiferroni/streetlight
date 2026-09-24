@@ -5,6 +5,7 @@ import kotlinx.html.FlowOrPhrasingContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
 
+/** [text] in a span. */
 fun FlowOrPhrasingContent.textSpan(
     text: String,
     mod: Modifier? = null,

@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+/** The policies every site starts with. */
 enum class SeedPolicy(
     val policyScope: PolicyScope,
     val policyType: PolicyType,
@@ -88,6 +89,9 @@ enum class SeedPolicy(
     ),
 }
 
+/** Where a policy applies: the whole site, only outside galaxies, or one galaxy. */
 enum class PolicyScope { Universe, UniverseOnly, Galaxy }
+/** Whether a policy forbids or asks for something. */
 enum class PolicyType { Dont, Do }
+/** Whether a policy governs what is posted or how users behave. */
 enum class PolicyTarget { Content, Conduct }

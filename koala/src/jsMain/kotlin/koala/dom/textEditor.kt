@@ -12,6 +12,7 @@ import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.textArea
 import org.w3c.dom.HTMLTextAreaElement
 
+/** A plain text area of [rows] rows bound to [state], labeled [label] over its corner. */
 fun ViewScope.textEditor(
     state: MutableTap<Markdown>,
     label: String? = null,

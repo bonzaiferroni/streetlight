@@ -10,6 +10,7 @@ import koala.modifier.*
 import kotlinx.css.LinearDimension
 import kotlinx.css.rem
 
+/** A standalone page for requesting songs at [event]. */
 fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>, resource: PageResource) {
     appHead(event.title, resource) {
         applyFiles(EventPortalFiles)

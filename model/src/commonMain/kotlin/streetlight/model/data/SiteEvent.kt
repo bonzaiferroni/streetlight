@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A moment worth marking on the site's status charts, such as a deploy. */
 @Serializable
 data class SiteEvent(
     val siteEventId: SiteEventId,

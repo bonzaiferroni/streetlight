@@ -6,6 +6,7 @@ import koala.modifier.*
 import koala.html.LottieClass
 import kotlinx.html.*
 
+/** Renders [spans] as inline HTML. Inline images are left out, as [renderFirstInlineImage] places them. */
 fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>) {
     spans.forEach { span ->
         when (span) {
@@ -55,12 +56,14 @@ fun FlowOrPhrasingContent.renderText(span: MarkdownText) {
     +span.text
 }
 
+/** Renders the first inline image among [spans], floated to the right. */
 fun FlowOrPhrasingContent.renderFirstInlineImage(spans: List<MarkdownSpan>) {
     spans.firstNotNullOfOrNull { it as? MarkdownInlineImage }?.let {
         renderInlineImage(it)
     }
 }
 
+/** Renders [span] floated to the right, captioned with its alt text. */
 fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     span {
         addModifiers(MarkdownStyle.InlineImage, FloatRight, MarginLeft(2), MarginBottom(2))
@@ -78,6 +81,7 @@ fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     }
 }
 
+/** Renders [span] as an image. */
 fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
     img {
         addModifiers(BorderRadius1, MoonShadow)
@@ -86,6 +90,7 @@ fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
     }
 }
 
+/** Renders [span] as a Lottie animation. */
 fun FlowContent.renderLottieImage(span: MarkdownImage) {
     div {
         addModifiers(LottieClass.Core)
@@ -93,11 +98,13 @@ fun FlowContent.renderLottieImage(span: MarkdownImage) {
     }
 }
 
+/** The `s` tag, for struck-through text. */
 open class S(
     initialAttributes: Map<String, String>,
     override val consumer: TagConsumer<*>,
 ) : HTMLTag("s", consumer, initialAttributes, null, inlineTag = true, emptyTag = false), HtmlInlineTag
 
+/** An `s` tag holding what [block] builds. */
 @HtmlTagMarker
 inline fun FlowOrPhrasingContent.s(classes: String? = null, crossinline block: S.() -> Unit = {}): Unit =
     S(attributesMapOf("class", classes), consumer).visit(block)

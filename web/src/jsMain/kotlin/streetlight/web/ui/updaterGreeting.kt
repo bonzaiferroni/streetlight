@@ -15,6 +15,7 @@ import koala.dom.textBlock
 import koala.html.em
 import streetlight.model.data.Star
 
+/** Greets [star] on a form that edits [targetName], pointing a new scout to the content policy. */
 fun ViewScope.updaterGreeting(star: Star, targetName: String) = grid(
     IntroStyle.Columns, AlignItemsCenter
 ) {

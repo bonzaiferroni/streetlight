@@ -10,6 +10,10 @@ import kotlinx.html.HTML
 import kotlinx.html.body
 import streetlight.model.data.PageTheme
 
+/**
+ * The body of an app page: the site menu, the content panel with the portal mount and the server-rendered shell
+ * of [shellBlock], the star panel, and the overlay. The page's [theme] is applied to the body.
+ */
 fun HTML.appBody(
     screen: AppScreen,
     resource: PageResource,

@@ -15,6 +15,10 @@ import koala.model.DocTableItem
 import streetlight.model.data.*
 import streetlight.model.data.Feedback as FeedbackDto
 
+/**
+ * The endpoints of the Streetlight API, as a tree of nodes under `/api/v1`. Both the server and the web client
+ * bind to these objects.
+ */
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Content: ApiNode(this) {

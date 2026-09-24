@@ -12,27 +12,32 @@ import kotlinx.datetime.toInstant
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/** A request to read a record from a page. */
 @Serializable
 sealed interface ParseRequest {
     val url: Url
 }
 
+/** A request to read the page at a URL. */
 @Serializable
 data class UrlParseRequest(
     override val url: Url
 ): ParseRequest
 
+/** A request to read a page from its HTML, already fetched. */
 @Serializable
 data class HtmlParseRequest(
     override val url: Url,
     val html: String,
 ): ParseRequest
 
+/** A request to read a record from an image, such as a flyer. */
 @Serializable
 data class ImageParseRequest(
     override val url: Url,
 ): ParseRequest
 
+/** The location and events read from a page. */
 @Serializable
 data class MultiEventParseResult(
     val hasContent: Boolean? = null,
@@ -41,6 +46,7 @@ data class MultiEventParseResult(
     val events: List<EventEdit>
 )
 
+/** What a language model read from a page, not yet checked. */
 @Serializable
 data class ColdParse(
     val hasContent: Boolean? = null,
@@ -48,24 +54,28 @@ data class ColdParse(
     val events: List<EventParse>? = null,
 )
 
+/** The events a language model read from a page. */
 @Serializable
 data class MultiEventParse(
     val hasContent: Boolean? = null,
     val events: List<EventParse>? = null,
 )
 
+/** The events read from a page, as edits. */
 @Serializable
 data class MultiEventParseResponse(
     val hasContent: Boolean? = null,
     val events: List<EventEdit>? = null,
 )
 
+/** The event a language model read from a page. */
 @Serializable
 data class SingleEventParse(
     val hasContent: Boolean? = null,
     val event: EventParse? = null,
 )
 
+/** A location as a language model read it from a page. */
 @Serializable
 data class LocationParse(
     val name: String? = null,
@@ -82,6 +92,7 @@ data class LocationParse(
     val imageUrl: String? = null,
 )
 
+/** An event as a language model read it from a page. */
 @Serializable
 data class EventParse(
     val name: String? = null,
@@ -106,6 +117,7 @@ data class EventParse(
     ) = date.atTime(time).toInstant(timeZone)
 }
 
+/** An edit of a new event from what was read. */
 fun EventParse.toEventEdit(
     locationId: LocationId?
 ) = EventEdit(

@@ -2,6 +2,11 @@ package streetlight.web.model
 
 import streetlight.model.data.*
 
+/**
+ * Rebuilds [block] with the contents of its edited [containers].
+ *
+ * Returns `null` for a tabs block without tabs; a columns block without containers is returned unchanged.
+ */
 fun buildBlock(block: LayoutBlock, containers: List<ContainerDefinition>?): LayoutBlock? {
     return when (block) {
         is TabsBlock -> {

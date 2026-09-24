@@ -12,6 +12,7 @@ import koala.dom.rawDialogContent
 import koala.html.Id
 import streetlight.model.data.Star
 
+/** The sign-in dialog, opened by [SignIn.isOpen] and closed once a star signs in. */
 fun ViewScope.wireSignInDialog() {
     session.starState.reactIn(contentScope) { star ->
         if (star != null) {
@@ -43,6 +44,7 @@ fun ViewScope.wireSignInDialog() {
     }
 }
 
+/** The signed-in star; otherwise opens the sign-in dialog and runs [block], which must leave. */
 inline fun ViewScope.starCheck(block: () -> Nothing): Star {
     return when (val star = session.starState.now) {
         null -> {

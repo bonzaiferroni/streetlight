@@ -6,6 +6,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
+/** A container whose children are stacked in one grid cell, over one another. */
 inline fun AppendScope.box(
     mod: Modifier? = null,
     crossinline content: DIV.() -> Unit = { },
@@ -14,6 +15,7 @@ inline fun AppendScope.box(
     content()
 }.asWeb()
 
+/** A [box] with [id]. */
 inline fun AppendScope.box(
     id: Id,
     mod: Modifier? = null,

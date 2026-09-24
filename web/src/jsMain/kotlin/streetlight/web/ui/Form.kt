@@ -16,11 +16,13 @@ import kampfire.model.MutableTap
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
 
+/** The column of a form's cards. */
 fun ViewScope.formColumn(
     mod: Modifier? = null,
     content: DIV.() -> Unit,
 ) = column(mod = modify(mod, Gap(2)), content = content)
 
+/** A card of form fields under the heading [name]. */
 fun ViewScope.formCard(
     name: String?,
     mod: Modifier? = null,
@@ -68,6 +70,11 @@ fun ViewScope.formBullets(
     bulletsOf(FormMod.Bullets, *bullets)
 }
 
+/**
+ * The submit row of a form: the [back] action, the messages of [messenger], and the submit button.
+ *
+ * [enabledTap] enables the button and [isDisplayedFlow] shows it.
+ */
 fun ViewScope.formSubmit(
     label: String = "submit",
     onClick: () -> Unit,
@@ -108,6 +115,7 @@ fun ViewScope.formField(
     block()
 }
 
+/** A text field with an optional [footnote] beneath. */
 fun ViewScope.formTextField(
     field: MutableTap<String>,
     label: String? = null,
@@ -122,6 +130,7 @@ fun ViewScope.formTextField(
     }
 }
 
+/** An animation that fills the space beside a form. */
 fun ViewScope.formFiller(
     lottie: Lottie
 ) = lottie(lottie, MaxHeight(16))

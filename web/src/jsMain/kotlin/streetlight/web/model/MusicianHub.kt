@@ -9,6 +9,7 @@ import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.web.io.ApiClient
 
+/** Lists songs and adds new ones. */
 class MusicianHub(
     private val scope: CoroutineScope,
     private val api: ApiClient

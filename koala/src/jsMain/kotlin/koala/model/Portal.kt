@@ -32,6 +32,11 @@ import web.window.window
 import kotlin.time.Clock
 import kotlin.time.Instant
 
+/**
+ * The current route of the app, kept in step with the address bar.
+ *
+ * It reads the route from the address on load and on browser navigation, and intercepts clicks on local links.
+ */
 class Portal(
     initialRoute: AppRoute,
     val screens: List<AppScreen>,
@@ -101,17 +106,20 @@ class Portal(
         })
     }
 
+    /** A flow of the routes of type [T]. */
     inline fun <reified T : AppRoute> routeFlowOf(emitDistinct: Boolean = true): Flow<T> {
         val base = stateFlow.mapNotNull { it.route as? T }
 
         return if (emitDistinct) base.distinctUntilChanged() else base
     }
 
+    /** Navigates to [route], remembering the current one and its scroll position. */
     fun go(route: AppRoute) {
         val navigation = Navigation(route, 0.0)
         go(navigation, backstack + Navigation(stateNow.route, window.scrollY))
     }
 
+    /** Returns to the last route, or to the latest one at [sitePath], returning whether there was one. */
     fun goBack(sitePath: String? = null): Boolean {
         val (index, route) = when (sitePath) {
             null -> backstack.lastOrNull()?.let { IndexedValue(0, it) } ?: return false
@@ -123,11 +131,13 @@ class Portal(
         return true
     }
 
+    /** Rebuilds the current route. */
     fun refresh() {
         console.log("refreshing")
         state.set { copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
     }
 
+    /** Marks the app as broken, so later navigation reloads the page. */
     fun notifyWrecked() {
         console.log("arr the ship wrecked")
         isWrecked = true
@@ -159,6 +169,7 @@ class Portal(
 }
 
 // Portal's state should change if and only if the route changes
+/** The current route, whether it is the one the page loaded with, and the scroll position to restore. */
 data class PortalState(
     val route: AppRoute,
     val canGoBack: Boolean = false,

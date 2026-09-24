@@ -22,6 +22,7 @@ import streetlight.model.data.SiteMetric
 import streetlight.model.data.SiteStatus
 import streetlight.web.io.ApiClient
 
+/** Charts the site's status over a time frame, and polls for new points at the frame's resolution. */
 class SiteMonitor(
     private val scope: CoroutineScope,
     private val api: ApiClient,
@@ -55,6 +56,7 @@ class SiteMonitor(
             }
         )
     }
+    /** The newest point of each metric as it arrives. */
     val pointFlow = statusFlow.map { point ->
         stateNow.metrics.map { metric -> ChartPoint(timeOf(point), point.getMetricOrZero(metric)) }
     }

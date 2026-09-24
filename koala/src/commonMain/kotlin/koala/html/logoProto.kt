@@ -4,6 +4,7 @@ import koala.SvgFile
 import kotlinx.html.*
 import koala.modifier.*
 
+/** The large flame logo, glowing. */
 fun FlowContent.logoProto(
     mod: Modifier? = null
 ) {

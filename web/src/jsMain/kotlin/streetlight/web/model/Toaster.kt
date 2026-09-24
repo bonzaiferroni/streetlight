@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
+/** Shows each message as a toast for ten seconds. */
 class Toaster(
     private val scope: CoroutineScope
 ): Messenger {

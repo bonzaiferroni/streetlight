@@ -11,6 +11,7 @@ import streetlight.model.data.DefaultLayout
 import streetlight.model.data.StarEdit
 import streetlight.web.io.ApiClient
 
+/** Edits the signed-in star's profile and its design. */
 class ProfileEditor(
     initialData: StarEdit,
     private val scope: CoroutineScope,

@@ -3,6 +3,7 @@ package koala.dom
 import kotlinx.js.JsPlainObject
 import web.dom.Element
 
+/** The browser's `IntersectionObserver`. */
 external class IntersectionObserver {
     constructor(
         callback: (Array<IntersectionObserverEntry>, IntersectionObserver) -> Unit
@@ -31,6 +32,7 @@ external interface IntersectionObserverInit {
     var threshold: dynamic
 }
 
+/** Calls [block] each time the element enters or leaves the viewport, with whether it is visible. */
 fun Element.onView(block: (Boolean) -> Unit) {
     val observer = IntersectionObserver { entries, _ ->
         entries.forEach { entry ->
@@ -41,6 +43,7 @@ fun Element.onView(block: (Boolean) -> Unit) {
     observer.observe(this)
 }
 
+/** Calls [block] once, the first time the element enters the viewport. */
 fun Element.onFirstView(block: () -> Unit) {
     val observer = IntersectionObserver { entries, obs ->
         entries.forEach { entry ->

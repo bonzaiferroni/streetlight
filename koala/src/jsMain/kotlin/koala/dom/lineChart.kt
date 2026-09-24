@@ -11,6 +11,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
+/** A line chart titled [title], redrawn with each value of [dataFlow] and extended with each value of [pointFlow]. */
 fun ViewScope.lineChart(
     title: String,
     dataFlow: Flow<ChartData>,
@@ -36,6 +37,7 @@ fun ViewScope.lineChart(
     }
 }
 
+/** A random walk of [points] values, [interval] apart and ending at [end], for trying a chart without data. */
 fun mockSiteStatus(
     points: Int = 48,
     interval: Duration = 30.minutes,

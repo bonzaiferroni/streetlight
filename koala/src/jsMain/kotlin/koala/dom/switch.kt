@@ -12,6 +12,7 @@ import web.html.HTMLDivElement
 import web.keyboard.KEY_DOWN
 import web.keyboard.KeyboardEvent
 
+/** A switch labeled [label], bound to [state], toggled by click, Enter or Space. */
 fun ViewScope.switch(
     label: String,
     state: MutableTap<Boolean>,

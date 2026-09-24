@@ -14,6 +14,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+/** The result of a call that can fail: [Ok] with data, or a [Problem]. Either may carry a [message] for the user. */
 @Serializable
 sealed interface Outcome <out T> {
     val message: String?
@@ -24,6 +25,7 @@ sealed interface Outcome <out T> {
     }
 }
 
+/** The data of an [Ok], or the result of [onProblem], which must leave the caller. */
 @OptIn(ExperimentalContracts::class)
 inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Nothing): T {
     contract {
@@ -35,6 +37,12 @@ inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Nothing): T {
     }
 }
 
+/**
+ * The data of an [Ok], delivering the outcome's messages along the way.
+ *
+ * On [Ok] it delivers the outcome's message, or [defaultOkMessage], to [okMessenger]. On [Problem] it delivers
+ * the problem to [messenger] and calls [onProblem], which must leave the caller.
+ */
 @OptIn(ExperimentalContracts::class)
 inline fun <T> Outcome<T>.toDataOr(
     messenger: Messenger,
@@ -60,6 +68,7 @@ inline fun <T> Outcome<T>.toDataOr(
     }
 }
 
+/** The data of an [Ok], or `null` after passing the problem to [onProblem]. */
 fun <T> Outcome<T>.toDataOrNull(onProblem: ((Problem) -> Unit)? = null): T? = when (this) {
     is Ok -> data
     is Problem -> {
@@ -68,12 +77,14 @@ fun <T> Outcome<T>.toDataOrNull(onProblem: ((Problem) -> Unit)? = null): T? = wh
     }
 }
 
+/** The data of an [Ok], or `null`, delivering the outcome's messages as [toDataOr] does. */
 fun <T> Outcome<T>.toDataOrNull(
     messenger: Messenger,
     defaultOkMessage: String? = null,
     okMessenger: Messenger = messenger,
 ) = toDataOrNull(messenger, defaultOkMessage, okMessenger) { it }
 
+/** The data of an [Ok] mapped with [block], or `null`, delivering the outcome's messages as [toDataOr] does. */
 fun <T1, T2> Outcome<T1>.toDataOrNull(
     messenger: Messenger,
     defaultOkMessage: String? = null,
@@ -94,6 +105,7 @@ fun <T1, T2> Outcome<T1>.toDataOrNull(
     }
 }
 
+/** The data of an [Ok], or, on a problem, [onProblem] followed by [onFinished], which must leave the caller. */
 inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Unit, onFinished: () -> Nothing): T = when (this) {
     is Ok -> data
     is Problem -> {
@@ -102,26 +114,39 @@ inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Unit, onFinished: () 
     }
 }
 
+/** A successful [Outcome] holding [data]. */
 @Serializable
 data class Ok<T>(
     val data: T,
     override val message: String? = null
 ): Outcome<T>
 
+/**
+ * A failed [Outcome]. Its [message] is written for the user.
+ *
+ * A problem is declared once, as a property of a `FooProblem` object, and returned from there.
+ */
 @Serializable
 data class  Problem(
     override val message: String,
 ): Outcome<Nothing>
 
+/** [Ok] holding [data], or `null` when there is none. */
 fun <T> outcomeOf(data: T?): Outcome<T>? = when (data) {
     null -> null
     else -> Ok(data)
 }
 
+/** [Ok] holding this value, or `null` when it is `null`. */
 fun <T> T?.toOutcome() = outcomeOf(this)
 
+/** [Ok] holding this value. */
 fun <T> T.toOk() = Ok(this)
 
+/**
+ * Serializes an [Outcome] as an optional message and optional data. An outcome with data reads back as [Ok], and
+ * one without as [Problem].
+ */
 class OutcomeSerializer<T>(
     private val dataSerializer: KSerializer<T>
 ) : KSerializer<Outcome<T>> {

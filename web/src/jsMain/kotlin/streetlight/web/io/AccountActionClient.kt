@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls that change a signed-in account's email and password, under `Api.AccountAction`. */
 interface AccountActionClient {
     suspend fun verifyExistingEmail(): Outcome<Unit>
     suspend fun readEmailVerificationIsSent(): Outcome<Boolean>

@@ -2,10 +2,12 @@ package koala.markdown
 
 import kampfire.model.Url
 
+/** A parsed block of markdown. */
 sealed interface MarkdownBlock {
     val blockType: ContentBlock
 }
 
+/** An image in markdown, written `![alt](url, width)`, with the positions of its alt text and URL in the source. */
 interface MarkdownImage: MarkdownUrl {
     val altText: String
     val altTextIndex: Int
@@ -15,12 +17,14 @@ interface MarkdownImage: MarkdownUrl {
 
 // Blocks
 
+/** A block made of inline spans. */
 interface MarkdownTextBlock {
     val spans: List<MarkdownSpan>
 }
 
 // Paragraph
 
+/** A paragraph. */
 data class MarkdownParagraph(
     override val spans: List<MarkdownSpan>
 ): MarkdownBlock, MarkdownTextBlock {
@@ -33,6 +37,7 @@ data class MarkdownParagraph(
 
 // Heading
 
+/** A heading of [level] 1 to 6. A heading ending in `---` is drawn in a [filigree]. */
 data class MarkdownHeading(
     val level: Int,
     val filigree: Boolean,
@@ -43,12 +48,14 @@ data class MarkdownHeading(
 
 // Horizontal Rule
 
+/** A horizontal rule. */
 data object MarkdownHorizontalRule: MarkdownBlock {
     override val blockType get() = ContentBlock.HorizontalRule
 }
 
 // Code Block
 
+/** A fenced code block, with the position of its code in the source. */
 data class MarkdownCodeBlock(
     val language: String?,
     val code: String,
@@ -59,6 +66,7 @@ data class MarkdownCodeBlock(
 
 // Blockquote
 
+/** A blockquote. A last line starting with `--` is its [citation]. */
 data class MarkdownBlockquote(
     val paragraphs: List<MarkdownParagraph>,
     val citation: String?
@@ -68,10 +76,12 @@ data class MarkdownBlockquote(
 
 // Lists
 
+/** A list of items, each of which may hold a sublist. */
 sealed interface MarkdownList: MarkdownBlock {
     val items: List<MarkdownListItem>
 }
 
+/** An unordered list. Its [marker] chooses the bullet; `_` draws none. */
 data class MarkdownUnorderedList(
     val marker: Char,
     override val items: List<MarkdownListItem>
@@ -83,6 +93,7 @@ data class MarkdownUnorderedList(
     }
 }
 
+/** An ordered list, numbered from [startNumber]. */
 data class MarkdownOrderedList(
     val startNumber: Int,
     override val items: List<MarkdownListItem>
@@ -90,6 +101,7 @@ data class MarkdownOrderedList(
     override val blockType get() = ContentBlock.OrderedList
 }
 
+/** An item of a list, with an optional nested list. */
 data class MarkdownListItem(
     val spans: List<MarkdownSpan>,
     val sublist: MarkdownList? = null
@@ -97,6 +109,7 @@ data class MarkdownListItem(
 
 // Image
 
+/** An image on a line of its own, shown as a figure with its alt text as the caption. */
 data class MarkdownBlockImage(
     override val altText: String,
     override val altTextIndex: Int,
@@ -110,6 +123,7 @@ data class MarkdownBlockImage(
 
 // Table
 
+/** A table, with its header, column alignments and rows. */
 data class MarkdownTable(
     val header: MarkdownTableRow,
     val alignments: List<MarkdownTableAlignment>,
@@ -118,6 +132,7 @@ data class MarkdownTable(
     override val blockType get() = ContentBlock.Table
 }
 
+/** The alignment of a table column. */
 enum class MarkdownTableAlignment { Left, Center, Right, None }
 
 data class MarkdownTableCell(val spans: List<MarkdownSpan>)

@@ -9,6 +9,7 @@ import kotlinx.html.js.label
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
+/** A checkbox bound to [field], with [label] beside it. */
 fun ViewScope.checkBox(
     field: MutableTap<Boolean>,
     label: String,
@@ -20,6 +21,7 @@ fun ViewScope.checkBox(
     +label
 }
 
+/** A checkbox bound to [field]. */
 fun ViewScope.checkBox(
     field: MutableTap<Boolean>,
     block: (INPUT.() -> Unit)? = null

@@ -5,9 +5,11 @@ import kampfire.api.Username
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/** A message on the omni socket, the live feed of what happens across the site. */
 @Serializable
 sealed interface OmniMessage
 
+/** Something that happened on the site, with the time it happened and a line describing it. */
 @Serializable
 sealed interface OmniRecord: OmniMessage {
     val recordAt: Instant
@@ -72,6 +74,7 @@ data class GalaxyFounded(
 //    override val recordAt get() = sentAt
 //}
 
+/** The recent records, sent when a client connects. */
 @Serializable
 data class OmniHistory(val records: List<OmniRecord>): OmniMessage
 

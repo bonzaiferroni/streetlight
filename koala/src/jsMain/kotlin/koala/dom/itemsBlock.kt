@@ -17,6 +17,12 @@ import web.html.HTMLElement
 import kotlin.collections.plus
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Renders each item of [state] as a child view, keeping the views of items that stay and positioning them in a
+ * column.
+ *
+ * With [Magic] in [mod], items fade in and out. The block hides itself while empty.
+ */
 fun <Item> ViewScope.itemsBlock(
     state: Tap<List<Item>>,
     mod: Modifier? = null,
@@ -122,6 +128,7 @@ private data class ViewElement(
     }
 }
 
+/** [itemsBlock] with each item paired with its index. */
 fun <Item> ViewScope.indexedItemsBlock(
     state: Tap<List<Item>>,
     mod: Modifier? = null,
@@ -139,6 +146,7 @@ fun <Item> ViewScope.indexedItemsBlock(
     )
 }
 
+/** An item and its index in a list. */
 data class IndexedItem<T>(
     val index: Int,
     val value: T,

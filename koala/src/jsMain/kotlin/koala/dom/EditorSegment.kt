@@ -10,10 +10,13 @@ import kotlin.collections.forEach
 import kotlin.sequences.forEach
 import kotlin.sequences.plus
 
+/** A range of a markdown chunk and the class the editor styles it with. */
 data class EditorSegment(val from: Int, val to: Int, val mod: Class)
 
+/** The styled ranges of this block's text, covering it end to end. */
 fun ParsedBlock.toEditorSegments(): List<EditorSegment> = segmentsIn(chunk, 0, chunk.length, markdown.editorSpans())
 
+/** The styled ranges of [chunk] from [from] to [to], from its markdown [spans], with the text between them as extra. */
 fun segmentsIn(chunk: String, from: Int, to: Int, spans: Sequence<MarkdownSpan>): List<EditorSegment> = buildList {
     var index = from
 
@@ -78,6 +81,7 @@ private fun MarkdownListItem.editorSpans(): Sequence<MarkdownSpan> =
     spans.asSequence() + (sublist?.editorSpans() ?: emptySequence())
 
 
+/** True when this element's spans already render [segments] of [chunk], so it need not be rebuilt. */
 fun HTMLElement.matchesEditorSegments(chunk: String, segments: List<EditorSegment>?): Boolean {
     if (segments == null) return false
 

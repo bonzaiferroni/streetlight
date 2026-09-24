@@ -12,9 +12,11 @@ import koala.markdown.ContentBlock.Paragraph
 import koala.markdown.ContentBlock.Table
 import koala.markdown.ContentBlock.UnorderedList
 
+/** The blocks of [markdown]. */
 fun markdownBlocksOf(markdown: Markdown) =
     MarkdownParser().parseBlocks(markdown.value)
 
+/** Parses markdown into blocks, line by line. A line that opens no other block is a paragraph. */
 class MarkdownParser {
 
     private val spanParser = MarkdownSpanParser()
@@ -23,6 +25,10 @@ class MarkdownParser {
     private val blocks = mutableListOf<ParsedBlock>()
     private val openBlock = OpenBlock()
 
+    /**
+     * The blocks of [text], each with its source text. With [keepBlanks], each blank line is kept as an empty
+     * paragraph, as the editor needs.
+     */
     fun parseBlocks(text: String, keepBlanks: Boolean = false): List<ParsedBlock> {
         blocks.clear()
         openBlock.reset()
@@ -206,11 +212,13 @@ private class OpenBlock {
     }
 }
 
+/** A block of markdown and the source text it was parsed from. */
 data class ParsedBlock(
     val chunk: String,
     val markdown: MarkdownBlock
 )
 
+/** True when [line] starts a block of this kind. */
 fun ContentBlock.opens(line: String): Boolean = when (this) {
     Image -> MarkdownRegex.ImageBlock.matches(line)
     Heading -> line.startsWith("#")
@@ -223,6 +231,7 @@ fun ContentBlock.opens(line: String): Boolean = when (this) {
     Paragraph -> line.isNotBlank()
 }
 
+/** True when [line] continues an open block of this kind. */
 fun ContentBlock.accepts(line: String): Boolean = when (this) {
     Code -> true
     BlockQuote, UnorderedList, OrderedList, Table -> opens(line)
@@ -234,12 +243,15 @@ fun ContentBlock.accepts(line: String): Boolean = when (this) {
     Image, Heading, HorizontalRule -> false
 }
 
+/** True when [line] ends an open block of this kind, as a closing fence ends a code block. */
 fun ContentBlock.closes(line: String): Boolean =
     this == Code && line.startsWith("```")
 
+/** The kind of block [line] opens, in order of precedence, or `null` for a blank line. */
 fun markdownBlockTypeOf(line: String): ContentBlock? =
     blockPrecedence.firstOrNull { it.opens(line) }
 
+/** Patterns of the markdown syntax. */
 object MarkdownRegex {
     val HorizontalRule = Regex("""^(-{3,}|\*{3,})\s*$""")
     val UnorderedItem = Regex("""^\s*[-*+_] .*""")

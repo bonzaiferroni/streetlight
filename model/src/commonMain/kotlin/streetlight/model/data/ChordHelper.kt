@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+/** Helpers for reading and writing chords. */
 object ChordHelper {
     val map = mapOf(
         "A" to listOf(45, 52, 57, 64, 69),

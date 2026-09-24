@@ -6,6 +6,7 @@ import koala.html.setId
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
+/** A `div` with [mod] applied. */
 fun AppendScope.div(
     mod: Modifier?,
     block: DIV.() -> Unit = { }
@@ -14,6 +15,7 @@ fun AppendScope.div(
     block()
 }.asWeb()
 
+/** A `div` with [id] and [mod] applied. */
 fun AppendScope.div(
     id: Id,
     mod: Modifier?,

@@ -22,6 +22,7 @@ import streetlight.model.data.RecordEdit
 import streetlight.model.data.verb
 import streetlight.model.utils.TextDeltaDisplay
 
+/** The edits of a record, each with a dialog that shows [content] for the edit and the one before it. */
 inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
     editLogs: List<EditLog>,
     crossinline content: ViewScope.(T, T?) -> Unit

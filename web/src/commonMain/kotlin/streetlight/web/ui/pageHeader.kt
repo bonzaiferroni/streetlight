@@ -19,6 +19,11 @@ import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.cellGrid
 import streetlight.web.layouts.entityBody
 
+/**
+ * The header card of a page: an image beside the title panel, then the cells, buttons, description, and links.
+ *
+ * [descriptor] is the small line under the title, such as "a galaxy".
+ */
 fun FlowContent.pageHeader(
     title: String,
     descriptor: String,

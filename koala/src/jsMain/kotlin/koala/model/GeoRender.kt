@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import web.html.HTMLElement
 import kotlin.time.Duration.Companion.milliseconds
 
+/** Draws the map's layers and keeps the focused marker marked, clearing the focus on a click of the map itself. */
 class GeoRender(
     private val windowElement: HTMLElement,
     private val jsMap: maplibregl.Map,
@@ -62,6 +63,7 @@ class GeoRender(
         }
     }
 
+    /** Focuses the marker of [focus], or clears the focus when it is `null`. */
     fun setFocus(focus: GeoFocus?) {
         val markerId = when (focus) {
             is MarkerFocus -> focus.marker.markerId
@@ -88,6 +90,7 @@ class GeoRender(
 
     }
 
+    /** Culls each layer's markers to [bounds], widened a little, and reclusters on a change of zoom. */
     fun setBounds(bounds: GeoRect, zoom: Float, isMoving: Boolean) {
         // resize to ensure comprehensive view region
         val bounds = bounds.scaleBy(1.2f)

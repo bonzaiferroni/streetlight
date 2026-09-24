@@ -7,12 +7,14 @@ import koala.external.Position
 import koala.external.maplibregl
 import kotlinx.browser.window
 
+/** The point a fraction [t] of the way to [dest]. */
 fun maplibregl.LngLat.interpolateTo(dest: maplibregl.LngLat, t: Double): maplibregl.LngLat =
     maplibregl.LngLat(
         lng = lng + (dest.lng - lng) * t,
         lat = lat + (dest.lat - lat) * t
     )
 
+/** Animates the marker from [origin] to [destination] over [durationMs]. */
 fun maplibregl.Marker.move(
     origin: maplibregl.LngLat,
     destination: maplibregl.LngLat,

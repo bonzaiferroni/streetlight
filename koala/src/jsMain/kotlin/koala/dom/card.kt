@@ -12,6 +12,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.html.HTMLElement
 
+/** A container with a card's background and corners. */
 fun AppendScope.card(
     mod: Modifier? = null,
     content: DIV.() -> Unit = {},
@@ -20,6 +21,7 @@ fun AppendScope.card(
     content()
 }.asWeb()
 
+/** A card showing a thumbnail beside a title and description, calling [onClick] when clicked. */
 fun AppendScope.cardOf(
     title: String,
     thumbUrl: Url?,

@@ -22,7 +22,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                 entity = event,
                 descriptor = "at",
                 cells = listOfNotNull(
-                    startsAtCell(event.startsAt),
+                    event.startsAt?.let { startsAtCell(it) },
                     event.cost?.let { costCell(it, event.url) },
                     starCell(event.host),
                 ),

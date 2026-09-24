@@ -16,12 +16,14 @@ import streetlight.model.data.ExtraLink
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
+/** The footer of a page, with a link to the source at [sourcePath] when given. */
 fun FlowContent.appFooter(sourcePath: String? = null) {
     column {
         configureAppFooter(sourcePath)
     }
 }
 
+/** Renders an [appFooter] into this div, listing the [additional] source links beneath the main one. */
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16)))
     lottie(LottieFile.SpinningCircles, Height(24))
@@ -62,6 +64,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
 
 private fun sourceUrlOf(path: String) = "https://github.com/bonzaiferroni/streetlight/blob/main/$path"
 
+/** The lines the footer picks from at random. */
 val prayers = listOf(
     "May we build a world of faithful giants.",
 )

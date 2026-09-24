@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A sung note held for a duration. A `null` pitch is a rest. */
 @Serializable
 data class VocalNote(
     val utterance: String?,
@@ -9,6 +10,7 @@ data class VocalNote(
     val pitch: Int?,
     val isPhraseEnd: Boolean = false,
 ) {
+    /** The note and its duration written in [style], relative to [rootPitch]. */
     fun toNotation(
         rootPitch: Int = 60,
         style: NotationStyle = NotationStyle.Degrees
@@ -28,6 +30,7 @@ data class VocalNote(
     }
 }
 
+/** Reads a vocal note written by [VocalNote.toNotation], or returns `null`. */
 fun parseVocalNote(text: String, style: NotationStyle, isPhraseEnd: Boolean): VocalNote? {
     var utterance = text
     var pitch: Int? = null

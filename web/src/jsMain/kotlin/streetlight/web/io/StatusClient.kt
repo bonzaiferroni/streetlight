@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Status`. */
 interface StatusClient {
     suspend fun feedSiteStatusFeed(resolution: MetricResolution): Outcome<SiteStatusFeed>
     suspend fun readLastSiteStatus(resolution: MetricResolution): Outcome<SiteStatus>

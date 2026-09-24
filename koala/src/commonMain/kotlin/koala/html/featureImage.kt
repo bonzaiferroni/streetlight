@@ -9,6 +9,12 @@ import kotlinx.html.div
 import kotlinx.html.img
 
 // the content image is contained over a blurred backdrop of the same image
+/**
+ * Shows [image] whole, contained over a blurred and scaled backdrop of the same image, falling back to
+ * [placeholder].
+ *
+ * The fit is set on the root and inherited by the image, so a caller changes it with [mod].
+ */
 fun FlowContent.containImage(
     image: Image? = null,
     mod: Modifier? = null,

@@ -14,6 +14,7 @@ import streetlight.model.data.CityEdit
 import streetlight.model.ui.CityRoute
 import streetlight.web.io.ApiClient
 
+/** Edits an existing city and goes to its page once saved. */
 class CityEditor(
     edit: CityEdit,
     private val scope: CoroutineScope,

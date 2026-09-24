@@ -17,15 +17,18 @@ import org.w3c.dom.HTMLButtonElement as W3CButtonElement
 import org.w3c.dom.HTMLImageElement as W3CImageElement
 import web.html.*
 
+/** The DOM element type of kotlinx.html, which the Kotlin wrappers' element types are cast to and from. */
 typealias W3CElement = W3CElementCore
 
 fun HTMLElement.asW3C() = unsafeCast<W3CElement>()
 fun W3CElement.asWeb() = unsafeCast<HTMLElement>()
 
 fun HTMLElement.clear() = asW3C().clear()
+/** Appends what [block] builds to this element's children. */
 fun HTMLElement.append(block: AppendScope.() -> Unit) = asW3C().append {
     block()
 }.asWeb()
+/** Prepends what [block] builds before this element's children. */
 fun HTMLElement.prepend(block: AppendScope.() -> Unit) = asW3C().prepend {
     block()
 }.asWeb()
@@ -38,6 +41,7 @@ fun W3CInputElement.asWeb() = unsafeCast<HTMLInputElement>()
 fun W3CButtonElement.asWeb() = unsafeCast<HTMLButtonElement>()
 fun W3CImageElement.asWeb() = unsafeCast<HTMLImageElement>()
 
+/** A new `div`, not yet in the document. */
 fun Document.createDiv(
     mod: Modifier? = null,
     config: DIV.() -> Unit = { },

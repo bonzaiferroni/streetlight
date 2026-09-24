@@ -3,6 +3,7 @@ package kampfire.api
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
+/** Text written in markdown. */
 @JvmInline
 @Serializable
 value class Markdown(val value: String) {

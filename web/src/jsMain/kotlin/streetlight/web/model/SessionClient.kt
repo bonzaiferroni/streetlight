@@ -19,6 +19,7 @@ import streetlight.web.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
 
+/** The signed-in star, and sign-in and sign-out. */
 class SessionClient(
     private val scope: CoroutineScope,
     private val api: ApiClient,
@@ -34,6 +35,7 @@ class SessionClient(
     val signedInFlow = stateFlow.dedup { it.isSignedIn }
     val signedOutAtFlow = stateFlow.dedup { it.signedOutAt }
 
+    /** Signs in with the session cookie, when no star is signed in. */
     fun signIn(receiver: Messenger?) {
         if (stateNow.star != null) return
         console.log("signing in")
@@ -42,6 +44,7 @@ class SessionClient(
         }
     }
 
+    /** Signs in with [request]. */
     fun signIn(request: LoginRequest, receiver: Messenger) {
         scope.launch("sign-in") {
             api.user.login(request).toDataOr(receiver) { return@launch }
@@ -49,6 +52,7 @@ class SessionClient(
         }
     }
 
+    /** Reads the star of the current session. */
     suspend fun readUser(receiver: Messenger?) {
         val star = api.star.validateLogin().toDataOr(receiver ?: PrintLnMessenger) { return }
         console.log("signed in: ${star.accountType}")
@@ -66,6 +70,7 @@ class SessionClient(
         state.set { copy(star = star) }
     }
 
+    /** Signs out, clears the cached content and data, and goes home. */
     fun signOut() {
         println("signing out")
         scope.launch(::signOut) {

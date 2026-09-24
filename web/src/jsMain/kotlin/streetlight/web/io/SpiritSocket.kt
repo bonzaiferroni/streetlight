@@ -11,6 +11,7 @@ import streetlight.model.data.SpiritFrame
 import web.events.EventHandler
 import web.sockets.WebSocket
 
+/** The spirit socket: announces this visitor's spirit and position, and emits the frames of the others. */
 class SpiritSocket(
     private val api: ApiClient,
     private val scope: CoroutineScope
@@ -21,6 +22,7 @@ class SpiritSocket(
     private var socket: WebSocket? = null
     private var spirit: Spirit? = null
     
+    /** Opens the socket and announces [spirit]. */
     fun connect(spirit: Spirit) {
         this.spirit = spirit
         val socket = api.post.connectSpiritVision().also { this.socket = it }
@@ -43,6 +45,7 @@ class SpiritSocket(
         socket = null
     }
     
+    /** Moves this visitor's spirit to [point]. */
     fun updatePosition(point: GeoPoint) {
         spirit = spirit?.copy(position = point)
         val spiritId = spirit?.spiritId ?: return

@@ -5,6 +5,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 
+/** An empty element, sized by [mod], that takes up space. */
 fun FlowContent.spacer(
     mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null,
@@ -15,6 +16,7 @@ fun FlowContent.spacer(
     }
 }
 
+/** [text] as a centered heading. */
 fun FlowContent.centeredHeading(
     text: String,
     mod: Modifier? = null,

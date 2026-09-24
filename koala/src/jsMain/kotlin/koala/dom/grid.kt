@@ -7,6 +7,7 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.css.fr
 import kotlinx.html.DIV
 
+/** A grid with the columns of [template], switching to [queryTemplate] on a narrow screen. */
 fun AppendScope.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     mod: Modifier? = null,

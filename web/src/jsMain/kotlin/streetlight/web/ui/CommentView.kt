@@ -17,6 +17,12 @@ import streetlight.web.io.TalkLog
 import web.html.HTMLElement
 import web.html.HTMLParagraphElement
 
+/**
+ * A comment in a talk log, with its replies, and its reply and edit forms.
+ *
+ * A new reply or edit to a comment is staged until the viewer asks to show it, so the thread does not shift
+ * while read.
+ */
 class CommentView(
     comment: Comment,
     val model: TalkLog,

@@ -20,6 +20,12 @@ import kotlinx.html.span
 import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
 
+/**
+ * The facts of an entity as a grid of icon cells, with a row of [buttons] beneath. Nothing renders when both are
+ * empty.
+ *
+ * A cell with a url is a link.
+ */
 fun FlowContent.cellGrid(
     cells: List<EntityCell>?,
     buttons: List<EntityButton>?,
@@ -77,9 +83,8 @@ $Base {
 }
 """ }
 
-fun startsAtCell(startsAt: Instant?) = startsAt?.let {
-    EntityCell(SvgFile.Clock, it.toTimeFormat(), null)
-}
+/** The time of day [startsAt]. */
+fun startsAtCell(startsAt: Instant) = EntityCell(SvgFile.Clock, startsAt.toTimeFormat(), null)
 
 fun dateCell(startsAt: Instant) = EntityCell(SvgFile.Calendar, startsAt.toFutureFormat(), null)
 
@@ -90,6 +95,7 @@ fun FlowContent.exampleStartsAtCell() {
 //    }
 }
 
+/** The cost, or FREE, linking to [purchaseUrl] when there is a cost. */
 fun costCell(cost: Float, purchaseUrl: Url?): EntityCell {
     val ticketsUrl = cost.takeIf { it != 0f }?.let {
         purchaseUrl
@@ -107,12 +113,14 @@ fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFo
 
 fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
 
+/** Expands and collapses the body of the feed row around it. */
 fun FlowContent.moreButton() {
     icon(SvgFile.Info, modify(CellGrid.ButtonIconMod, FeedRow.MoreButton)) {
         onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
     }
 }
 
+/** One cell of a [cellGrid]: an icon, a text with an optional dimmer [label], and a link when [url] is given. */
 data class EntityCell(
     val icon: Svg,
     val text: String,

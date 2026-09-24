@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The event stream of the omni log. */
 interface OmniLogClient {
     fun connectOmniLog(): EventSource
 }

@@ -12,6 +12,7 @@ import streetlight.web.interop.applyCurator
 import streetlight.web.interop.updateMark
 import web.dom.Element
 
+/** The curator menu of a post, for marking it. */
 fun ViewScope.wireCuratorMenu() {
     popoverMenu(
         popoverId = PopoverId.Curator,

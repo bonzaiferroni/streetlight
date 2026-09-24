@@ -6,12 +6,14 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+/** The opening hours of a location: its regular hours and the days that override them. */
 @Serializable
 data class HoursSchedule(
     val default: BusinessHours = BusinessHours(),
     val overrides: List<HoursOverride> = emptyList(),
 )
 
+/** Hours that replace the regular ones over a span of dates, once or recurring each year. Empty hours mean closed. */
 @Serializable
 data class HoursOverride(
     val label: String,            // "Summer Hours", "Christmas Day"
@@ -21,11 +23,13 @@ data class HoursOverride(
     val hours: BusinessHours = BusinessHours(),  // empty = closed
 )
 
+/** A span of the day, in minutes from midnight. */
 @Serializable
 data class TimeWindow(
     val open: Int,  // minutes since midnight: 540 = 09:00
     val close: Int,
 ) {
+    /** True when [minuteOfDay] falls in the window. */
     fun contains(minuteOfDay: Int): Boolean =
         minuteOfDay in open until close
 
@@ -40,6 +44,7 @@ data class TimeWindow(
     }
 }
 
+/** The opening windows of each day of the week. */
 @Serializable
 data class BusinessHours(
     val mon: List<TimeWindow> = emptyList(),
@@ -50,6 +55,7 @@ data class BusinessHours(
     val sat: List<TimeWindow> = emptyList(),
     val sun: List<TimeWindow> = emptyList(),
 ) {
+    /** True when the location is open at [instant] in [zone]. */
     fun isOpen(instant: Instant, zone: TimeZone): Boolean {
         val local = instant.toLocalDateTime(zone)
         val minuteOfDay = local.hour * 60 + local.minute

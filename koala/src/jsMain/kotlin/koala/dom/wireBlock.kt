@@ -4,6 +4,10 @@ import koala.html.Id
 import web.dom.document
 import web.html.HTMLElement
 
+/**
+ * Mounts a child view built by [block] into the server-rendered element with [elementId], once it comes into
+ * view unless [wireOnView] is off.
+ */
 fun ViewScope.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
@@ -18,6 +22,7 @@ fun ViewScope.wireBlock(
     return element
 }
 
+/** Mounts a child view built by [block] into [element], once it comes into view unless [wireOnView] is off. */
 fun ViewScope.wireBlock(
     name: String,
     element: HTMLElement,

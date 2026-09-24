@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Talk`, and the talk event stream. */
 interface TalkClient {
     suspend fun readHistory(spaceId: Uuid, spaceType: SpaceType): Outcome<List<Comment>>
     suspend fun createComment(comment: NewComment): Outcome<CommentId>

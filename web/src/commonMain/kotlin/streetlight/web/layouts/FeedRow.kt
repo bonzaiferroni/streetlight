@@ -18,6 +18,11 @@ import streetlight.web.ui.PopoverId
 import streetlight.web.ui.curatorBadge
 import kotlin.time.Clock
 
+/**
+ * An entity in a feed. Its layout follows the page's [FeedMode].
+ *
+ * [isUniverse] shows the galaxy each post was made to. A [curator] replaces the flair badge with its marks.
+ */
 fun FlowContent.feedRow(
     entity: Entity,
     isUniverse: Boolean,
@@ -29,6 +34,7 @@ fun FlowContent.feedRow(
     }
 }
 
+/** Renders a [feedRow] into this div. */
 fun DIV.configureFeedRow(
     entity: Entity,
     isUniverse: Boolean,
@@ -77,7 +83,7 @@ fun DIV.configureFeedRow(
     entityBody(description, links, limit = 1000)
 }
 
-// the description and links of an entity, shared by feedRow and entityHeader
+/** The description and links of an entity, shared by [feedRow] and `entityHeader`, with an edit link to [editRoute]. */
 fun FlowContent.entityBody(
     description: Markdown?,
     links: List<ExtraLink>?,
@@ -106,6 +112,7 @@ fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(FeedRow.Flair, ColorSchemeFg, OpacityLow))
 }
 
+/** Who posted [entity] and when, and to which galaxy when [isUniverse]. */
 fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     val username = entity.post?.username ?: entity.username ?: return
     val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
@@ -140,6 +147,7 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     }
 }
 
+/** The layouts of a feed row, chosen by the viewer with a root switch. */
 enum class FeedMode { Minimal, Row, Grid }
 
 object FeedRow {

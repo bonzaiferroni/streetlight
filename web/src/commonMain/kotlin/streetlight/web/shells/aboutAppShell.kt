@@ -77,6 +77,7 @@ fun FlowContent.aboutAppShell() {
     }
 }
 
+/** A row labeled [role] linking to the GitHub repository [repo] of [user], in a new tab. */
 fun FlowContent.githubLink(
     role: String,
     name: String,
@@ -94,6 +95,7 @@ fun FlowContent.githubLink(
     }
 }
 
+/** A link to [url] that opens in a new tab. */
 fun FlowContent.externalLink(
     url: String,
     text: String

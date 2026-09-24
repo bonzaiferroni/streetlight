@@ -15,6 +15,7 @@ import streetlight.model.data.TabsBlock
 import streetlight.web.io.ApiClient
 import kotlin.uuid.Uuid
 
+/** Edits a page layout as a tree of block and container editors, with blocks moved by a start and finish. */
 class LayoutEditor(
     initialLayout: PageLayout?,
     private val defaultLayout: PageLayout,
@@ -57,11 +58,13 @@ class LayoutEditor(
 
     fun getParent(containerId: ContainerId) = getParentOrNull(containerId) ?: error("parent block not found")
 
+    /** Creates a container for [container] one level below the block [blockId]. */
     fun createContainer(blockId: BlockId, container: LayoutContainer): ContainerId {
         val parentContainer = getParent(blockId)
         return createContainer(container, parentContainer.depth + 1)
     }
 
+    /** Creates editors for [container] and its blocks at [depth]. */
     fun createContainer(container: LayoutContainer, depth: Int): ContainerId {
         val containerId = ContainerId(Uuid.random())
         val blockIds = container.blocks.map { block ->
@@ -95,6 +98,7 @@ class LayoutEditor(
         container.removeBlock(blockId)
     }
 
+    /** Moves the moving block to the place of [blockId]. */
     fun finishMove(blockId: BlockId) {
         val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
         removeFromContainer(movingBlockId)
@@ -104,6 +108,7 @@ class LayoutEditor(
         state.set { copy(movingBlockId = null, removedBlockIds = removedBlockIds - movingBlockId) }
     }
 
+    /** Moves the moving block to the end of [containerId]. */
     fun finishMoveToContainer(containerId: ContainerId) {
         val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
         removeFromContainer(movingBlockId)
@@ -113,11 +118,13 @@ class LayoutEditor(
         state.set { copy(movingBlockId = null, removedBlockIds = removedBlockIds - movingBlockId) }
     }
 
+    /** Takes [blockId] out of its container and keeps it among the removed blocks. */
     fun removeFromLayout(blockId: BlockId) {
         removeFromContainer(blockId)
         state.set { copy(removedBlockIds = removedBlockIds + blockId) }
     }
 
+    /** The edited layout, uploading its new images, or `null` when empty or equal to the default layout. */
     suspend fun buildLayout(messenger: Messenger): PageLayout? {
         val blocks = buildContainer(mainContainerId, messenger).takeIf { it.isNotEmpty() } ?: return null
         return PageLayout(blocks).takeIf { it != defaultLayout }
@@ -171,6 +178,7 @@ data class LayoutEditorState(
     val removedBlockIds: List<BlockId> = emptyList(),
 )
 
+/** The containers a block holds, or `null` for a block that holds none. */
 fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {
     is TabsBlock -> tabs
     is ColumnsBlock -> listOf(this)

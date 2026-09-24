@@ -3,6 +3,7 @@ package streetlight.model.utils
 import kampfire.model.Labeled
 import kotlin.jvm.JvmInline
 
+/** The difference between two texts, as segments common to both, removed, or added. */
 data class TextDelta(
     val addedLength: Int,
     val removedLength: Int,
@@ -17,6 +18,7 @@ data class TextDelta(
     }
 }
 
+/** A segment of a [TextDelta]. */
 sealed interface DeltaText {
     val text: String
 }
@@ -30,6 +32,7 @@ value class RemovedText(override val text: String) : DeltaText
 @JvmInline
 value class AddedText(override val text: String) : DeltaText
 
+/** Which side of a [TextDelta] a view shows. */
 enum class TextDeltaDisplay(override val label: String): Labeled {
     Removed("Removed Content"),
     Added("Added Content"),
@@ -38,6 +41,7 @@ enum class TextDeltaDisplay(override val label: String): Labeled {
     // override val label get() = name
 }
 
+/** The difference from [old] to [new], by character. */
 fun createTextDelta(old: String?, new: String?): TextDelta {
     if (old.isNullOrEmpty() && new.isNullOrEmpty()) return TextDelta.Empty
     if (old.isNullOrEmpty() && !new.isNullOrEmpty()) return TextDelta.allAdded(new)

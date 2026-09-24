@@ -11,6 +11,7 @@ import koala.external.LineStringGeometry
 import koala.external.MapSource
 import koala.external.maplibregl
 
+/** A [LineMarker] as a MapLibre source and layer. */
 class LineRender(
     val marker: LineMarker,
     val mapSource: MapSource,
@@ -26,6 +27,7 @@ class LineRender(
     }
 }
 
+/** The marker's lines as GeoJSON in a MapLibre line layer. */
 fun LineMarker.toLineRender(jsMap: maplibregl.Map): LineRender {
     val lines = lines.map { points ->
         val line = points.map { arrayOf(it.lng, it.lat) }.toJsArray()

@@ -1,5 +1,6 @@
 package koala.modifier
 
+/** The timing and scale of Koala's transitions. */
 object MagicStyle {
     const val Interval = 222
     const val InitialScale = .8

@@ -3,6 +3,7 @@ package koala
 import kampfire.model.ImageSize
 import kampfire.model.ImageVariant
 
+/** The site's own images, including the placeholders shown when an image is missing. */
 object SiteImage : FileSet<Image>() {
     val crossing = siteImageOf("crossing.jpg")
 

@@ -8,11 +8,16 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlin.uuid.Uuid
 
+/** A value with a key that stays with it while the list changes. */
 data class KeyValue<K,T>(
     val key: K,
     val value: T,
 )
 
+/**
+ * A view of a list tap in which each item carries a stable key, so a view can keep each item's element as the
+ * list changes.
+ */
 class KeyedListTap<K, T>(
     private val source: MutableTap<List<T>>,
     private val newKey: () -> K
@@ -45,11 +50,14 @@ class KeyedListTap<K, T>(
     override fun update(transform: (List<KeyValue<K, T>>) -> List<KeyValue<K, T>>) = write(transform)
 }
 
+/** A [KeyedListTap] of this list, keyed by random [Uuid]s. */
 fun <T> MutableTap<List<T>>.keyedListField(): MutableTap<List<KeyValue<Uuid, T>>> =
     KeyedListTap(this) { Uuid.random() }
 
+/** The keys of the list, in order. */
 fun <K, T> Tap<List<KeyValue<K, T>>>.keysField() = tapOf { items -> items.map { it.key } }
 
+/** A lens onto the value of the item with [key]. */
 fun <K, T> MutableTap<List<KeyValue<K, T>>>.mutableTapOf(key: K) = mutableTapOf({ items -> items.first { it.key == key }.value }) { value ->
     map { if (it.key == key) it.copy(value = value) else it }
 }

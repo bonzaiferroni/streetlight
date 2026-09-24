@@ -17,6 +17,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.onClick
 
+/** The form that sets a new password with the reset [token], sent by its own script. */
 fun FlowContent.passwordResetForm(token: Token, resource: PageResource) {
     column(MaxWidth(64)) {
         column(MaxWidth(48)) {

@@ -22,6 +22,37 @@ Dokka generates the API reference from the signatures of `kampfire`, `koala`, `m
 
 A module's build includes its package documents in the reference with `includes.from(...)`, so each document is the description on its package page. A new package document for a documented module is picked up by the module's include pattern.
 
+## KDoc
+
+Public functions and types carry a KDoc comment. It follows the Kotlin coding conventions and aims for clarity: enough that a reader understands the declaration, and nothing the signature already says.
+
+A class member follows the same rule. A declaration whose name already says everything carries no KDoc:
+
+- Modifier values and `Class` vals
+- `FooCss` stylesheet vals
+- Table columns
+- Endpoint objects in `Api`
+- DTO properties
+- `Screen` entries
+- Overrides, which inherit the documentation of what they override
+- `external` declarations, which mirror the API of their library
+
+| Part | Rule |
+|---|---|
+| Summary | The first sentence, naming the declaration's effect or subject. It is often the whole comment |
+| Detail | Only what a caller needs and the signature does not give |
+| Parameters | Linked in the prose, as `[attribute]`. `@param` and `@return` only for a description too long to fit the prose |
+| Links | `[Name]` for any declaration the comment mentions |
+
+```kotlin
+/**
+ * Renders a row of buttons, one per value of the root setting [attribute].
+ *
+ * Each button applies its value to the root element and to `localStorage`, and
+ * [content] builds what it shows. [rootSwitchCss] marks the selected button.
+ */
+```
+
 ## Reading Documents
 
 Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.

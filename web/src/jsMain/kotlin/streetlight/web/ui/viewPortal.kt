@@ -91,6 +91,7 @@ fun ViewScope.viewPortal() {
 }
 
 // td: consider making this a service
+/** The route scope currently shown, for handlers outside the view tree. */
 object RouteView {
     private var _activeScope: RouteScope? = null
     val activeScope: RouteScope get() = _activeScope ?: error("active route scope not found")

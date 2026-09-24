@@ -8,6 +8,7 @@ import kampfire.model.setTrue
 import koala.modifier.*
 import streetlight.model.data.Star
 
+/** Renders [content] for the signed-in star, or [baseContent] while no star is signed in. */
 fun ViewScope.starGate(
     mod: Modifier? = null,
     baseContent: ViewScope.() -> Unit = ViewScope::signInToContinue,
@@ -21,6 +22,7 @@ fun ViewScope.starGate(
     }
 }
 
+/** A button that opens the sign-in dialog. */
 fun ViewScope.signInToContinue() {
     button(onClick = { SignIn.isOpen.setTrue() }) {
         textBlock("Sign in to continue.")

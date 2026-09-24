@@ -38,6 +38,7 @@ fun RouteScope.viewMediumUpdaterRoute() {
     }
 }
 
+/** Goes to each route [routeFlow] emits. */
 fun ViewScope.goOnRoute(routeFlow: Flow<AppRoute>) {
     contentScope.launch {
         routeFlow.collect { route ->

@@ -8,6 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 
+/** A container with a card's background and corners. */
 inline fun FlowContent.card(
     mod: Modifier? = null,
     crossinline content: DIV.() -> Unit,
@@ -18,6 +19,7 @@ inline fun FlowContent.card(
     }
 }
 
+/** A card showing a thumbnail beside a title and description. */
 fun FlowContent.cardOf(
     title: String,
     thumbUrl: Url?,
@@ -39,6 +41,7 @@ fun FlowContent.cardOf(
     }
 }
 
+/** A card showing a thumbnail beside a title and description, linking to [route] when it is not `null`. */
 fun FlowContent.cardOf(
     route: AppRoute?,
     title: String,

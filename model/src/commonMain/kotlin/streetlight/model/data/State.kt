@@ -4,6 +4,7 @@ import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
+/** A state or province, as cities are grouped under it. */
 @Serializable
 data class State(
     val stateId: StateId,

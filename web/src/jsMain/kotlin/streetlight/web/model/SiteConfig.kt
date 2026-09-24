@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import streetlight.web.utils.localStoreOf
 
+/** The viewer's site settings, kept in local storage. */
 class SiteConfig(
     private val scope: CoroutineScope
 ) {

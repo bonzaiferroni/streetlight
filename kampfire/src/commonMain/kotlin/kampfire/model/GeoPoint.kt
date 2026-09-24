@@ -4,6 +4,7 @@ import kampfire.utils.ParameterMap
 import kotlinx.serialization.Serializable
 import kotlin.math.*
 
+/** A point on the earth, in degrees of longitude and latitude. */
 @Serializable
 data class GeoPoint(
     val lng: Double,
@@ -20,6 +21,7 @@ data class GeoPoint(
     @Deprecated("use new param structure")
     fun toQuery() = "lng=$lng&lat=$lat"
 
+    /** True when [other] is at the same point, within rounding. */
     fun isTouching(other: GeoPoint) = abs(lng - other.lng) < 1e-9 && abs(lat - other.lat) < 1e-9
 
     companion object {
@@ -37,11 +39,13 @@ data class GeoPoint(
             GeoPoint(it[0], it[1])
         }
 
+        /** Reads a point written as `lng,lat`, or returns `null`. */
         fun of(value: String): GeoPoint? = value.split(",").mapNotNull { it.toDoubleOrNull() }
             .takeIf { it.size == 2 }?.let { GeoPoint(it[0], it[1]) }
     }
 }
 
+/** The great-circle distance to [other]. */
 fun GeoPoint.distanceTo(other: GeoPoint): Distance {
     val lat1 = lat * DEG_TO_RAD
     val lat2 = other.lat * DEG_TO_RAD
@@ -57,6 +61,7 @@ fun GeoPoint.distanceTo(other: GeoPoint): Distance {
     return Distance.ofMeters(EARTH_RADIUS * c)
 }
 
+/** An approximate distance to [other], cheaper than [distanceTo] and accurate over a region. */
 fun GeoPoint.regionalDistanceTo(other: GeoPoint): Distance {
     val lat1 = lat * DEG_TO_RAD
     val lat2 = other.lat * DEG_TO_RAD
@@ -68,6 +73,7 @@ fun GeoPoint.regionalDistanceTo(other: GeoPoint): Distance {
     return Distance.ofMeters(EARTH_RADIUS * sqrt(x * x + y * y))
 }
 
+/** Projects the point onto a plane in meters, accurate near the latitude [refLat]. */
 fun GeoPoint.toPlanarPoint(refLat: Double): Point {
     val latRad = lat * DEG_TO_RAD
     val lngRad = lng * DEG_TO_RAD

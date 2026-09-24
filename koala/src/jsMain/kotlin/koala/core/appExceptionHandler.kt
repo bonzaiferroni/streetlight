@@ -8,6 +8,10 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Adds the name of the failing coroutine and the path of its view and element to an exception's message, then
+ * rethrows it.
+ */
 val appExceptionHandler = CoroutineExceptionHandler { context, throwable ->
     try {
         throwable.asDynamic().message = buildString {
@@ -34,12 +38,14 @@ val appExceptionHandler = CoroutineExceptionHandler { context, throwable ->
     throw throwable
 }
 
+/** The view a coroutine belongs to, carried in its context for error messages. */
 class ViewTelemetry(
     val view: View,
 ) : AbstractCoroutineContextElement(Key) {
     companion object Key : CoroutineContext.Key<ViewTelemetry>
 }
 
+/** The names of this view and its ancestors, from the root. */
 fun ViewScope.getPath(): String =
     generateSequence(this) { it.parent }
         .toList().asReversed()

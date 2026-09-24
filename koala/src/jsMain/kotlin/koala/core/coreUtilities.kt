@@ -18,6 +18,7 @@ import web.pointer.PointerEvent
 
 fun Document.queryAll(modifier: Queryable) = querySelectorAll(modifier.selector).asList()
 
+/** Calls [onClick] on each click of the element with [id], and marks it clickable. */
 fun Document.onClick(id: Id, onClick: () -> Unit) = querySelector(id.identifier)?.let {
     val element = it as HTMLElement
     element.modify(Clickable)
@@ -26,12 +27,14 @@ fun Document.onClick(id: Id, onClick: () -> Unit) = querySelector(id.identifier)
     })
 }
 
+/** The value of [attribute] on the first element that has it, or `null`. */
 fun Document.queryAttribute(attribute: Attribute<*>) = querySelector(attribute.selector)?.attributes?.get(attribute)
 
 fun Element.queryAll(modifier: Queryable) = querySelectorAll(modifier.selector).asList()
 
 fun Element.queryFirstOrNull(modifier: Queryable) = querySelector(modifier.selector) as? HTMLElement
 
+/** Appends a new `div` with [id] and returns it. */
 fun Element.appendDiv(id: Id? = null): HTMLElement {
     val element = document.createElement("div")
     if (id != null) {

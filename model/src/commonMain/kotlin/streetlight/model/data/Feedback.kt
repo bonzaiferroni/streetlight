@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** Feedback a user sent about the site, public or private. */
 @Serializable
 data class Feedback(
     val feedbackId: FeedbackId,
@@ -35,6 +36,7 @@ enum class FeedbackType(override val label: String): Labeled {
     Issue("Issue");
 }
 
+/** The platform feedback was sent from. */
 enum class Platform {
     Web,
     Android,
@@ -44,6 +46,7 @@ enum class Platform {
     MacOS,
 }
 
+/** The fields of feedback as it is sent. */
 @Serializable
 data class FeedbackEdit(
     val feedbackId: FeedbackId? = null,

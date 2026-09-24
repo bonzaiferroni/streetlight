@@ -11,6 +11,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.onClick
 
+/** A link to [href], with an optional [flair] before its content. */
 fun FlowContent.navigation(
     href: String? = null,
     mod: Modifier? = null,
@@ -41,6 +42,7 @@ internal fun A.configureNavigation(
     config()
 }
 
+/** A text link to [href] in the primary color. */
 fun FlowContent.navigation(
     text: String,
     href: String,
@@ -53,6 +55,7 @@ fun FlowContent.navigation(
     }
 }
 
+/** A link to [route]. */
 fun FlowContent.navigation(
     route: AppRoute,
     mod: Modifier? = null,
@@ -69,6 +72,7 @@ fun FlowContent.navigation(
     )
 }
 
+/** A link to [route], or a plain [box] around the same content when it is `null`. */
 fun FlowContent.navigationIfNotNull(
     route: AppRoute? = null,
     mod: Modifier? = null,
@@ -78,6 +82,7 @@ fun FlowContent.navigationIfNotNull(
     navigationIfNotNull(route?.toRelativePath(), mod, id, block)
 }
 
+/** A link to [href], or a plain [box] around the same content when it is `null`. */
 fun FlowContent.navigationIfNotNull(
     href: String? = null,
     mod: Modifier? = null,
@@ -93,6 +98,7 @@ fun FlowContent.navigationIfNotNull(
     }
 }
 
+/** A link that scrolls to the element with [targetId]. */
 fun FlowContent.navigation(
     targetId: Id,
     mod: Modifier? = null,

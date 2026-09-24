@@ -26,6 +26,7 @@ import streetlight.web.ui.toaster
 import web.dom.document
 import web.html.HTMLElement
 
+/** Replaces the feed with the galaxy's posts sorted by the mark on [element]. */
 fun sortByMark(element: HTMLElement) {
     val markId = element.requireAttribute(AppAttribute.MarkId)
     val galaxyId = element.requireClosestAttribute(AppAttribute.GalaxyId)
@@ -44,6 +45,7 @@ fun sortByMark(element: HTMLElement) {
     }
 }
 
+/** Appends the next page of the feed and removes the more button [element]. */
 fun morePosts(element: HTMLElement) {
     val nextCursor = element.requireAttribute(FeedSection.NextCursor)
     val galaxyId = element.getClosestAttribute(AppAttribute.GalaxyId)
@@ -66,6 +68,7 @@ fun morePosts(element: HTMLElement) {
     }
 }
 
+/** Appends the rows of [feed], and a more button when it continues. */
 fun AppendScope.appendFeed(feed: EntityFeed) {
     feed.entities.forEach { post ->
         val curator = feed.curatorOf(post)

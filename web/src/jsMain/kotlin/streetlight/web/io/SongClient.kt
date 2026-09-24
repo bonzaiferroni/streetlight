@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Songs`. */
 interface SongClient {
     suspend fun readSongs(): Outcome<List<Song>>
     suspend fun createSong(song: NewSong): Outcome<SongId>

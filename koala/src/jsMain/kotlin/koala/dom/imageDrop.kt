@@ -6,6 +6,10 @@ import koala.modifier.*
 import kampfire.model.MutableTap
 import koala.toImage
 
+/**
+ * An image picker bound to [field]: a drop area while it is empty, and what [block] builds with a button to
+ * clear it once set.
+ */
 fun ViewScope.imageDrop(
     field: MutableTap<Image?>,
     mod: Modifier? = null,
@@ -29,6 +33,7 @@ fun ViewScope.imageDrop(
     }
 }
 
+/** An image picker bound to [field], showing the picked image. */
 fun ViewScope.imageDrop(
     field: MutableTap<Image?>,
     mod: Modifier? = null,

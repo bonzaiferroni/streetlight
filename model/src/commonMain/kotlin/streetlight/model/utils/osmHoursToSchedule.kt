@@ -35,6 +35,7 @@ private val SINGLE_DATE_REGEX = Regex(
 
 private val ALL_DAYS = DayOfWeek.entries
 
+/** Reads an OpenStreetMap `opening_hours` value into an [HoursSchedule], or returns `null` when it cannot. */
 fun osmHoursToSchedule(raw: String): HoursSchedule? {
     val input = raw.trim()
 

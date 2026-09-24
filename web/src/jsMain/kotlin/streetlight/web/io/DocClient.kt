@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of the site's docs. */
 interface DocClient {
     suspend fun readSiteDoc(docId: DocId): Outcome<DocContent>
     suspend fun readSiteDocTable(): Outcome<List<DocTableItem>>

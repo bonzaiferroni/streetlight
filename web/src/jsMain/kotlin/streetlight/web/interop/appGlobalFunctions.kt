@@ -5,6 +5,7 @@ import koala.interop.KtFunction
 import streetlight.web.layouts.FeedSection
 import streetlight.web.ui.StarToggle
 
+/** The app's functions callable from HTML event handlers. */
 fun ViewScope.appGlobalFunctions() = listOf(
     KtFunction(StarToggle.ToggleAny, this::toggleAny),
     KtFunction(StarToggle.ToggleGalaxy, this::toggleGalaxy),

@@ -14,6 +14,11 @@ import web.html.HTMLElement
 import web.keyboard.KEY_DOWN
 import web.keyboard.KeyboardEvent
 
+/**
+ * An editor bound to [state] that styles its markdown as it is typed, labeled [label] over its corner.
+ *
+ * With [onEnterSubmit], Enter submits and Shift+Enter starts a new line.
+ */
 fun ViewScope.markdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,

@@ -15,6 +15,12 @@ import web.pointer.CLICK
 import web.pointer.PointerEvent
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * A modal dialog that is open while [state] is `true`, holding a child view built by [content] each time it
+ * opens.
+ *
+ * A click on the backdrop closes it.
+ */
 fun ViewScope.dialog(
     state: MutableTap<Boolean>,
     mod: Modifier? = null,
@@ -72,6 +78,7 @@ fun ViewScope.dialog(
     return element
 }
 
+/** The content of a [dialog]: [title] in a filigree over a card holding what [content] builds. */
 fun ViewScope.dialogContent(
     title: String?,
     mod: Modifier? = null,
@@ -82,6 +89,7 @@ fun ViewScope.dialogContent(
     }
 }
 
+/** The content of a [dialog]: [title] in a filigree over what [content] builds, with no card. */
 fun ViewScope.rawDialogContent(
     title: String?,
     mod: Modifier? = null,
@@ -98,6 +106,7 @@ fun ViewScope.rawDialogContent(
     }
 }
 
+/** A card styled for a [dialog]. */
 fun ViewScope.dialogCard(
     mod: Modifier? = null,
     content: ViewScope.() -> Unit
@@ -105,6 +114,7 @@ fun ViewScope.dialogCard(
     content()
 }
 
+/** Shows the dialog as modal and reveals it. */
 fun HTMLDialogElement.open() {
     showModal()
     modify(Reveal)

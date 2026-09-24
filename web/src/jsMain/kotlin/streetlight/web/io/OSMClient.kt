@@ -12,7 +12,9 @@ import web.http.fetch
 // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
+/** Calls OpenStreetMap's search directly, outside the Streetlight API. */
 class OSMClient() {
+    /** The place at [point]. */
     suspend fun readLocationAt(point: GeoPoint): Outcome<OSMLocation> {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
@@ -22,6 +24,7 @@ class OSMClient() {
         return response.decodeText()
     }
 
+    /** The places matching [query]. */
     suspend fun readLocations(query: OSMQuery): Outcome<List<OSMLocation>> {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
 
@@ -30,6 +33,7 @@ class OSMClient() {
         return response.decodeText()
     }
 
+    /** The places matching [query], narrowed by [city] or [bounds]. */
     suspend fun readLocations(query: String, city: String? = null, bounds: GeoRect? = null): Outcome<List<OSMLocation>> {
         val query = when (city?.takeIf { it.isNotBlank() }) {
             null -> query
@@ -61,6 +65,7 @@ private val headers = Headers().apply {
     append("Accept", "application/json")
 }
 
+/** The query as OpenStreetMap's search parameters. */
 fun OSMQuery.toQuery() = listOfNotNull(
     amenity?.let { "amenity=${encodeURIComponent(it)}" },
     street?.let { "street=${encodeURIComponent(it)}" },

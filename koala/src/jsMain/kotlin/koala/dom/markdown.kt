@@ -8,6 +8,7 @@ import koala.markdown.markdownBlocksOf
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
+/** Markdown already parsed into [blocks], rendered. */
 fun AppendScope.markdown(
     blocks: List<ParsedBlock>,
     mod: Modifier? = null,
@@ -16,6 +17,7 @@ fun AppendScope.markdown(
     configureMarkdown(blocks, mod, block)
 }
 
+/** [text] rendered from markdown. */
 fun AppendScope.markdown(
     text: Markdown,
     mod: Modifier? = null,

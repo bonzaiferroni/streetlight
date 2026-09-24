@@ -15,6 +15,12 @@ object PopoverMenuMod {
     val Column = modify(Gap2Px)
 }
 
+/**
+ * A popover shared by every button that targets [popoverId]. It anchors to the button that opened it and shows
+ * [content] for the value [transform] reads from that button.
+ *
+ * A click on another button while open moves the popover to it.
+ */
 fun <T> ViewScope.popoverMenu(
     popoverId: Id,
     transform: (HTMLElement) -> T?,

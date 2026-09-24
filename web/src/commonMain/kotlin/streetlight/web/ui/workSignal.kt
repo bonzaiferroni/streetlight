@@ -7,6 +7,7 @@ import koala.html.icon
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** A spinning icon that shows work in progress. */
 fun FlowContent.workSignal(
     mod: Modifier? = IconStyle.DefaultMod,
     config: DIV.() -> Unit = { }

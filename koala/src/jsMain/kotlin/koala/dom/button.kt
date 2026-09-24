@@ -21,6 +21,7 @@ import web.html.HTMLButtonElement
 import web.pointer.CLICK
 import web.pointer.PointerEvent
 
+/** A button styled as a btn, showing [text] after an optional [flair], calling [onClick] when clicked. */
 fun AppendScope.button(
     text: String,
     onClick: (() -> Unit)? = null,
@@ -42,6 +43,7 @@ fun AppendScope.button(
     return element
 }
 
+/** A button showing only the icon [svg], calling [onClick] when clicked. */
 fun AppendScope.button(
     svg: Svg,
     onClick: (() -> Unit)? = null,
@@ -62,6 +64,7 @@ fun AppendScope.button(
     return element
 }
 
+/** A button with no appearance of its own, holding what [block] builds, calling [onClick] when clicked. */
 fun AppendScope.button(
     onClick: (() -> Unit)? = null,
     mod: Modifier? = null,
@@ -81,6 +84,7 @@ fun AppendScope.button(
     return element
 }
 
+/** A link to [url] styled as a btn. */
 fun AppendScope.button(
     label: String,
     url: Url,
@@ -107,6 +111,7 @@ private fun configureButtonEvents(
     }
 }
 
+/** Enables [element] while [flow] emits `true`. */
 @Deprecated("use field")
 fun ViewScope.configureEnabledFlow(
     element: HTMLButtonElement,
@@ -121,6 +126,7 @@ fun ViewScope.configureEnabledFlow(
     }
 }
 
+/** Enables [element] while [tap] is `true`. */
 fun ViewScope.configureEnabledFlow(
     element: HTMLButtonElement,
     tap: Tap<Boolean>,

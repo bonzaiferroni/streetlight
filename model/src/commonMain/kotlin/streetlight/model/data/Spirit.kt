@@ -9,6 +9,7 @@ import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import kotlin.jvm.JvmInline
 
+/** A visitor shown on the map as they move. */
 @Serializable
 data class Spirit(
     val spiritId: SpiritId,
@@ -25,6 +26,7 @@ value class SpiritId(val value: Int) {
     }
 }
 
+/** A frame of the spirit socket: a spirit arriving, or one moving. */
 @Serializable
 sealed interface SpiritFrame {
     @Serializable

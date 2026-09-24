@@ -4,6 +4,7 @@ import kampfire.model.storeOf
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
+/** A layer of markers on the map, with its points, lines and visibility. */
 class GeoLayer(
     val config: GeoLayerConfig,
 ) {
@@ -23,16 +24,19 @@ class GeoLayer(
     fun setIsVisible(value: Boolean) = state.update { it.copy(isVisible = value) }
 }
 
+/** The markers of a [GeoLayer] and whether it is visible. */
 data class GeoLayerState(
     val isVisible: Boolean = true,
     val points: List<PointMarker> = emptyList(),
     val lines: List<LineMarker> = emptyList(),
 )
 
+/** The id of a [GeoLayer]. */
 @JvmInline
 @Serializable
 value class GeoLayerId(val string: String) {
     override fun toString() = string
 }
 
+/** The settings of a [GeoLayer]. With [clusterRadiusPx], points closer than that on screen are clustered. */
 data class GeoLayerConfig(val layerId: GeoLayerId, val clusterRadiusPx: Int? = null)

@@ -93,6 +93,7 @@ fun ViewScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Co
     }
 }
 
+/** Adds a new [comment]: a root at the end its sort order puts it, or a reply staged on its parent. */
 fun ViewScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
@@ -123,6 +124,7 @@ fun ViewScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) 
     }
 }
 
+/** Stages the updated text of a comment. */
 fun ViewScope.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
@@ -131,6 +133,7 @@ fun ViewScope.updateComment(model: TalkLog, message: CommentUpdated) {
     }
 }
 
+/** A text editor that calls [send] and clears when it returns. */
 fun ViewScope.commentEditor(
     label: String,
     initialText: Markdown,

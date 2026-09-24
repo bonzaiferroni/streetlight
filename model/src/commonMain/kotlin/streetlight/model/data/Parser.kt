@@ -5,6 +5,10 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/**
+ * The selectors that read the events of a website, found once and reused on each fetch, with a count of its
+ * failures in a row.
+ */
 @Serializable
 data class Parser(
     val parserId: ParserId,
@@ -26,6 +30,7 @@ value class ParserId(override val value: Uuid): RecordId {
     companion object { fun random() = ParserId(Uuid.random())}
 }
 
+/** The kinds of page a [Parser] reads: a feed of events, or the page of one event. */
 enum class SchemaType {
     EventFeed,
     EventPage,

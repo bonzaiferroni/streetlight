@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Events`. */
 interface EventClient {
     suspend fun readEventId(eventId: EventId): Outcome<Event>
     suspend fun readEventSlug(slug: Slug): Outcome<EventLocation>

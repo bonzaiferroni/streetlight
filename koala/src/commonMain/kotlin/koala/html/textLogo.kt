@@ -4,6 +4,7 @@ import koala.SvgFile
 import koala.modifier.*
 import kotlinx.html.FlowContent
 
+/** The Streetlight logo: the wordmark with a glowing flame. */
 fun FlowContent.textLogo(
     mod: Modifier? = null
 ) {
@@ -23,6 +24,7 @@ fun FlowContent.textLogo(
     }
 }
 
+/** The [textLogo], linking home. */
 fun FlowContent.topLogo() {
     navigation("/", AlignSelfCenter) {
         textLogo(Height(5))

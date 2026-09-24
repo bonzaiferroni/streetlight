@@ -15,6 +15,7 @@ import streetlight.model.data.EntityCursor
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
+/** Loads the posts of each settled map view, so a view already covered by a completed query is not asked again. */
 class EarthCache(
     private val scope: CoroutineScope,
     private val api: ApiClient,
@@ -34,6 +35,7 @@ class EarthCache(
         }
     }
 
+    /** Starts over for a new map; only a map with [isQueriedMap] loads posts by view. */
     fun setMapContext(isQueriedMap: Boolean) {
         this.isQueriedMap = isQueriedMap
         queries.clear()
@@ -67,9 +69,11 @@ class EarthCache(
     }
 }
 
+/** Where the post query of one view left off. */
 data class MapCursor(
     val cursor: EntityCursor.Lean?,
     val isComplete: Boolean
 )
 
+/** The most overlapping views a query lists as already seen. */
 const val MAX_VIEWED = 8

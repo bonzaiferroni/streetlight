@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A sequence of vocal notes in a song part. */
 @Serializable
 data class VocalSequence(
     override val sequenceId: SequenceId,

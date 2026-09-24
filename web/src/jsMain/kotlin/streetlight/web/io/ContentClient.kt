@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Content`, for the content of routes that belong to no other node. */
 interface ContentClient {
     suspend fun readHomeContent(): Outcome<HomeContent>
     suspend fun readCityListContent(): Outcome<CityListContent>

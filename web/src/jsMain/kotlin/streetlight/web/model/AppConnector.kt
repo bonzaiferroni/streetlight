@@ -3,6 +3,7 @@ package streetlight.web.model
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 
+/** Holds the payment handles a star links to their profile, trimmed as they are typed. */
 class AppConnector {
     private val state = storeOf(AppConnectorState())
 

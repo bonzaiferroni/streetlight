@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Messages`, and the chat socket. */
 interface MessageClient {
     suspend fun sendMessage(message: NewMessage): Outcome<Unit>
     suspend fun sendMessage(message: ReplyMessage): Outcome<Unit>

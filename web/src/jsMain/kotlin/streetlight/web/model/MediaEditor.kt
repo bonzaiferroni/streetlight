@@ -16,6 +16,7 @@ import streetlight.model.data.PostEdit
 import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
 
+/** Creates or updates media. */
 class MediaEditor(
     initialContent: MediaEdit,
     private val scope: CoroutineScope,
@@ -51,6 +52,7 @@ class MediaEditor(
     // fun setSubtitle(subtitle: String) = setContent { it.copy(subtitle = subtitle) }
     // fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
+    /** Saves the media with its image and design, and posts it to [galaxy] when given. */
     fun submitPost(galaxy: Galaxy? = null) {
         if (!editField.now.isValid) return
         scope.launch {

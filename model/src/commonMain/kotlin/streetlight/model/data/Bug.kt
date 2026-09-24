@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A bug report, with the device it came from. */
 @Serializable
 data class Bug(
     val bugId: BugId,
@@ -34,6 +35,7 @@ enum class BugStatus(override val label: String): Labeled {
     Dismissed("Dismissed");
 }
 
+/** The fields of a bug report as it is sent. */
 @Serializable
 data class BugEdit(
     val bugId: BugId? = null,

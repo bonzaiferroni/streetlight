@@ -3,6 +3,10 @@ package koala.dom
 import koala.modifier.*
 import koala.model.ScriptLoader
 
+/**
+ * Loads the script at [src] once, then builds [content]. Content is built at once when the script is already
+ * loaded.
+ */
 fun ViewScope.lazyScript(
     src: String,
     onLoad: suspend () -> Unit = { },

@@ -4,6 +4,7 @@ import koala.modifier.*
 import kotlinx.css.pct
 import kotlinx.html.*
 
+/** A text input, labeled [label] over its corner. */
 fun FlowContent.textField(
     label: String? = null,
     mod: Modifier? = null,
@@ -27,6 +28,7 @@ fun FlowContent.textField(
     }
 }
 
+/** Configures this element as the labeled container of a [textField]. */
 fun DIV.configureTextFieldContainer(
     label: String?,
     mod: Modifier?
@@ -35,6 +37,7 @@ fun DIV.configureTextFieldContainer(
     setAttribute(Attribute.BlockLabel, label?.lowercase())
 }
 
+/** Configures this element as the input of a [textField]. */
 fun INPUT.configureTextFieldInput(
     id: Id?,
     textMod: Modifier?,

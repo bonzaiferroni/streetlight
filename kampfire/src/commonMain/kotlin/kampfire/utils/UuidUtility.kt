@@ -7,8 +7,10 @@ import kotlin.uuid.Uuid
 
 fun randomUuidString() = Uuid.random().toStringId()
 
+/** A random integer, from the hash of a random [Uuid]. */
 fun randomInt() = Uuid.random().toStringId().hashCode()
 
+/** The id as text, read back with [fromStringId]. */
 fun Uuid.toStringId() = this.toString()
 
 fun Uuid.Companion.fromStringId(stringId: String) = Uuid.parse(stringId)

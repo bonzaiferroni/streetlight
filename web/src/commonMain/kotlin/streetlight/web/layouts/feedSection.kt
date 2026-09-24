@@ -11,6 +11,12 @@ import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 import streetlight.web.ui.AppAttribute
 
+/**
+ * The posts section of a page: a heading with the [FeedMode] switch, the mark filters of a galaxy, and the feed
+ * with a button for more.
+ *
+ * [galaxyId] or [cityId] names the feed the more button reads from.
+ */
 fun FlowContent.feedSection(
     feed: EntityFeed,
     galaxyId: GalaxyId? = null,
@@ -30,7 +36,7 @@ fun FlowContent.feedSection(
             filigree(Flex1) {
                 heading2("Posts", SectionHeadingMod)
             }
-            rootSwitch(FeedRow.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd)) { icon(it.toSvg()) }
+            rootSwitch(FeedRow.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
         }
 
         feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
@@ -61,6 +67,7 @@ fun FlowContent.feedSection(
     }
 }
 
+/** The column that feed rows mount in, and that more rows append to. */
 fun FlowContent.layoutFeed(
     block: FlowContent.() -> Unit
 ) {

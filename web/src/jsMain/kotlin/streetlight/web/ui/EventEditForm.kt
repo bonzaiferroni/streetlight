@@ -111,6 +111,7 @@ fun ViewScope.eventImageForm(model: EventEditor) =
         imageEditor = model.imageEditor
     )
 
+/** A date with buttons that step it by a day. */
 fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
     fun changeDate(delta: Int) {
         val date = field.now ?: Clock.System.now().toLocalDate()
@@ -133,6 +134,7 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
     }
 }
 
+/** A time with buttons that step it, showing [defaultLabel] when unset. */
 fun ViewScope.timeIndicator(field: MutableTap<LocalTime?>, defaultLabel: String) {
     fun changeTime(delta: Int) {
         val time = field.now ?: LocalTime(12, 0)

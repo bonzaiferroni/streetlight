@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Galaxies`. */
 interface GalaxyClient {
     suspend fun createGalaxy(galaxy: GalaxyEdit): Outcome<Slug>
     suspend fun updateGalaxy(galaxy: GalaxyEdit): Outcome<Slug>

@@ -26,6 +26,7 @@ import streetlight.model.data.VehicleType
 import streetlight.web.io.TransitClient
 import kotlin.time.Duration.Companion.seconds
 
+/** Draws transit routes and polls vehicle positions while the map is viewed. */
 class TransitMap(
     private val scope: CoroutineScope,
     private val client: TransitClient,
@@ -172,6 +173,7 @@ data class VehicleMarker(
     override val altitude get() = Altitude.Raincloud
 }
 
+/** The marker of this vehicle, fading with the age of its position, or `null` without an id or position. */
 fun VehiclePosition.toMarker(currentTime: Long, vehicleType: VehicleType): VehicleMarker? {
     val vehicleId = vehicle?.id ?: return null
     val position = position ?: return null
@@ -188,6 +190,7 @@ fun VehiclePosition.toMarker(currentTime: Long, vehicleType: VehicleType): Vehic
     )
 }
 
+/** The marker of this vehicle, fading with the age of its position. */
 fun TransitVehicle.toMarker(currentTime: Long, vehicleType: VehicleType): VehicleMarker {
     val vehicleTime = timestamp.toString().toLong()
     val secondsSinceCapture = (currentTime - vehicleTime).toInt()

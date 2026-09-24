@@ -17,6 +17,7 @@ fun ViewScope.datetimeInput() {
     }
 }
 
+/** A date input bound to [field], empty when it is `null`. */
 fun ViewScope.dateInput(
     field: MutableTap<LocalDate?>,
     mod: Modifier? = null,
@@ -58,6 +59,7 @@ fun ViewScope.dateInput(
     return element
 }
 
+/** A time input bound to [field], in steps of [step], empty when it is `null`. */
 fun ViewScope.timeInput(
     field: MutableTap<LocalTime?>,
     mod: Modifier? = null,

@@ -7,6 +7,11 @@ import kampfire.api.Username
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/**
+ * An account as it is stored, with its credentials, roles and activity.
+ *
+ * [disabledPasswordHash] holds the password hash while the account is locked.
+ */
 data class UserRecord(
     val userId: TableId<Uuid>,
     val username: Username,
@@ -38,6 +43,7 @@ val AuthUser.isAdmin: Boolean
 val AuthUser.isUser: Boolean
     get() = UserRole.User in roles
 
+/** The values a new account is created from. */
 data class UserSeed(
     val request: SignUpRequest,
     val passwordHash: PasswordHash?,
@@ -46,6 +52,7 @@ data class UserSeed(
     val guestToken: HashedToken?,
 )
 
+/** Whether an account is a guest, with no password or email, or registered. */
 enum class AccountType {
     Guest,
     Registered

@@ -6,6 +6,7 @@ import koala.html.MessageBox
 import streetlight.web.model.Toaster
 import streetlight.web.pages.AppBody
 
+/** Shows the toasts of [Toaster]. */
 fun ViewScope.wireToaster() {
     val model = app.get<Toaster>()
 

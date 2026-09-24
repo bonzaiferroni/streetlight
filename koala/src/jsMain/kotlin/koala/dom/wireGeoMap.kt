@@ -20,6 +20,10 @@ import web.keyboard.KeyboardEvent
 import web.performance.performance
 import web.window.window
 
+/**
+ * Attaches the app's shared map to the mount in [ancestor] once it comes into view, returning its camera
+ * controller.
+ */
 fun ViewScope.wireGeoMap(
     ancestor: HTMLElement,
 ): GeoCameraController {
@@ -48,6 +52,7 @@ fun ViewScope.wireGeoMap(
 
 // private var cachedContext: GeoCameraController? = null
 
+/** The app's camera controller, creating the map and its renderer on first use. */
 fun ViewScope.wireMapContext(
     mount: HTMLElement
 ): GeoCameraController {
@@ -71,6 +76,7 @@ fun ViewScope.wireMapContext(
     return cameraController
 }
 
+/** Pans the map with WASD or the arrow keys and rotates it with Q and E. */
 fun wireKeyboardControls(widget: maplibregl.Map) {
     val pressedKeys = mutableMapOf<KeyCode, Boolean>()
 

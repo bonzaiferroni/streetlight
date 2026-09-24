@@ -7,6 +7,7 @@ import koala.dom.popoverOption
 import koala.modifier.Attribute
 import streetlight.model.ui.StarRoute
 
+/** The menu of a star named on the page, to visit or message them. */
 fun ViewScope.wireStarMenu() {
     popoverMenu(
         popoverId = PopoverId.StarMenu,

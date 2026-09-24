@@ -12,6 +12,11 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
+/**
+ * The camera over the map: its center, view and zoom as the map reports them, and requests to pan it.
+ *
+ * A settled state is one the camera has stopped moving on.
+ */
 class GeoCamera(
     private val scope: CoroutineScope,
 ) {
@@ -34,16 +39,19 @@ class GeoCamera(
     val centerState = settledState.tapOf { it.center }
     val settledViewState = settledState.tapOf { it.view }
 
+    /** Pans the map to [point]. */
     fun panMap(point: GeoPoint) {
         panMap(PanPoint(point))
     }
 
+    /** Fits the map to [bounds]. */
     fun panMap(bounds: GeoRect) {
         scope.launch {
             panBoundsFlow.emit(bounds)
         }
     }
 
+    /** Pans the map as [pan] asks. Does nothing when the camera is already there. */
     fun panMap(pan: PanPoint) {
         if (pan.point.isTouching(stateNow.center) && (pan.zoom == null || pan.zoom == stateNow.zoom)) return
         scope.launch {
@@ -60,6 +68,7 @@ class GeoCamera(
     }
 }
 
+/** The camera's position, whether it is moving, whether the map is in view, and the focused marker. */
 data class GeoCameraState(
     val center: GeoPoint = GeoPoint.Denver,
     val view: GeoRect = GeoRect.Denver,
@@ -69,6 +78,7 @@ data class GeoCameraState(
     val focus: PointMarker? = null,
 )
 
+/** A point to pan to, with an optional [zoom]. A [snap] pan jumps there without animating. */
 data class PanPoint(
     val point: GeoPoint,
     val zoom: Float? = null,

@@ -6,6 +6,7 @@ import kampfire.utils.ParameterMap
 import kampfire.utils.readFloat
 import kotlinx.serialization.Serializable
 
+/** A request for what is in [bounds] at [zoom]. */
 @Serializable
 data class MapQueryLegacy(
     val bounds: GeoRect,

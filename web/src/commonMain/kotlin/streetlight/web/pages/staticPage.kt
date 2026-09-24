@@ -9,6 +9,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
 
+/** A page without the client app, showing [block] beside the site menu. */
 fun HTML.staticPage(
     title: String,
     resource: PageResource,

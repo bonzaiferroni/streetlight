@@ -8,6 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.html.HTMLDivElement
 
+/** A square Lottie animation of [file], started at once. */
 fun AppendScope.lottie(
     file: Lottie,
     mod: Modifier? = null,

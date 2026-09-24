@@ -12,6 +12,7 @@ import streetlight.web.shells.InformationSharedContent
 import streetlight.web.shells.PrivacyIntro
 import streetlight.web.shells.UpcomingSectionsContent
 
+/** The site's own docs, such as About and Privacy. */
 object SiteDoc {
     val About = Doc("about-streetlight", "About Streetlight", "[Intro Content]".toMarkdown())
 
@@ -34,6 +35,7 @@ object SiteDoc {
     )
 }
 
+/** The site docs as a tree, for their navigation. */
 val SiteDocTree by lazy {
     docTreeOf {
         add(SiteDoc.About) {
@@ -45,6 +47,7 @@ val SiteDocTree by lazy {
     }
 }
 
+/** The site docs by id. */
 val SiteDocTable by lazy {
     SiteDocTree.toTable()
 }

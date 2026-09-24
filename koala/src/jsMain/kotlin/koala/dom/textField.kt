@@ -15,6 +15,11 @@ import web.html.HTMLParagraphElement
 import web.keyboard.KEY_DOWN
 import web.keyboard.KeyboardEvent
 
+/**
+ * A text input bound to [field], labeled [label] over its corner.
+ *
+ * With [maxLength], a count of characters used is shown. With [onEnterSubmit], Enter submits.
+ */
 fun ViewScope.textField(
     field: MutableTap<String>,
     label: String? = null,
@@ -78,7 +83,9 @@ fun ViewScope.textField(
     return parent
 }
 
+/** True when the event is Enter without Shift, outside text composition. */
 fun KeyboardEvent.isEnterSubmit() = key == "Enter" && !shiftKey && !isComposing
+/** Calls [onEnterSubmit] and prevents the default when the event [isEnterSubmit]. */
 fun KeyboardEvent.handleEnterSubmit(onEnterSubmit: () -> Unit) {
     if (isEnterSubmit()) {
         preventDefault()

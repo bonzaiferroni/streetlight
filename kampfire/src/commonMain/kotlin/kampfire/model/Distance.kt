@@ -3,6 +3,10 @@ package kampfire.model
 import kotlin.jvm.JvmInline
 import kotlin.math.*
 
+/**
+ * A distance, stored in meters. Create one with [ofMeters] and its siblings, or [meters] and its siblings on a
+ * number.
+ */
 @JvmInline
 value class Distance private constructor(val meters: Double) : Comparable<Distance> {
     init {

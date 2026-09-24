@@ -8,6 +8,7 @@ import streetlight.model.data.OmniHistory
 import streetlight.model.data.OmniMessage
 import streetlight.model.data.OmniRecord
 
+/** The live feed of what happens across the site, keeping the latest records. */
 class OmniClient(
     private val scope: CoroutineScope,
     private val api: ApiClient
@@ -56,6 +57,7 @@ class OmniClient(
     }
 }
 
+/** The records an [OmniClient] holds. */
 data class OmniLogState(
     val records: List<OmniRecord> = emptyList()
 )

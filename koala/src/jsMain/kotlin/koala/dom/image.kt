@@ -14,6 +14,7 @@ import web.events.LOAD
 import web.events.addEventListener
 import web.html.HTMLImageElement
 
+/** The image at [url], hidden while there is none. */
 fun AppendScope.image(
     url: Url? = SiteImage.placeholderLg,
     mod: Modifier? = null,
@@ -32,6 +33,7 @@ fun AppendScope.image(
     return element
 }
 
+/** The image of [state], hidden while it is `null` and, with [hideOnError], while it fails to load. */
 fun ViewScope.image(
     state: Tap<Image?>,
     mod: Modifier? = null,

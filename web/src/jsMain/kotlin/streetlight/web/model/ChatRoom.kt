@@ -10,6 +10,7 @@ import streetlight.model.data.ChatMessage
 import streetlight.web.io.ApiClient
 import streetlight.web.io.WebChatSocket
 
+/** A live chat over a socket, opened the first time the room becomes active. */
 class ChatRoom(
     private val scope: CoroutineScope,
     private val client: ApiClient
@@ -38,6 +39,7 @@ class ChatRoom(
         state.set { copy(isActive = value) }
     }
 
+    /** Sends the message being typed and clears it. */
     fun sendMessage() {
         val socket = socket ?: return
         socket.send(ChatMessage("user", stateNow.message, Clock.System.now()))

@@ -21,6 +21,7 @@ import web.html.HTMLElement
 // globalThis.geoMapWindow: HTMLElement? = null
 external val globalThis: dynamic
 
+/** The map window, created in the map mount under [ancestor] on first use and reused after. */
 fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
     val geoMapWindow = globalThis.geoMapWindow as? HTMLElement
     geoMapWindow?.let {
@@ -46,6 +47,10 @@ fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
     return element
 }
 
+/**
+ * Creates the map in [mount] with 3D buildings, centered on the mount's point or the last position viewed, and
+ * remembers each position it moves to.
+ */
 fun initGeoMap(mount: HTMLElement): HTMLElement {
     console.log("initializing geomap!")
     val window = mount.appendDiv(GeoMapKey.Window)
@@ -167,6 +172,7 @@ private const val MAP_CENTER_LAT_KEY = "geomap.center.lat"
 private const val MAP_CENTER_LNG_KEY = "geomap.center.lng"
 private const val MAP_ZOOM_KEY = "geomap.zoom"
 
+/** Adds elevation shading and terrain to the map. */
 fun addTerrain(widget: maplibregl.Map) {
     widget.addSource("dem", MapSource(
         type = "raster-dem",

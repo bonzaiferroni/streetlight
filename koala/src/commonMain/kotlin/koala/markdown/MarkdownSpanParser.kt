@@ -2,6 +2,7 @@ package koala.markdown
 
 import kampfire.model.toUrl
 
+/** Parses the inline spans of a block. Unmatched markers are kept as plain text. */
 class MarkdownSpanParser {
 
     private val spans = mutableListOf<MarkdownSpan>()
@@ -11,6 +12,7 @@ class MarkdownSpanParser {
     private var cursor = 0
     private var plainStart = 0
 
+    /** The spans of [text] between [from] and [to]. */
     fun parse(text: String, from: Int = 0, to: Int = text.length): List<MarkdownSpan> {
         spans.clear()
         this.text = text
@@ -160,6 +162,7 @@ class MarkdownSpanParser {
     }
 }
 
+/** The URL, type and width of an image, read from its markdown arguments. */
 data class ParsedImageArgs(
     val url: String,
     val type: ImageType,
@@ -189,6 +192,7 @@ private fun imageTypeOf(url: String): ImageType {
     return ImageType.entries.firstOrNull { extension in it.extensions } ?: ImageType.Image
 }
 
+/** The kind of image a URL points to, by its extension. A `.json` file is a Lottie animation. */
 enum class ImageType(vararg extensions: String) {
     Image,
     Lottie("json");

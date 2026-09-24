@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A user's practice of a song, with their notes and how it went. */
 @Serializable
 data class Rendition(
     val renditionId: RenditionId,
@@ -22,6 +23,7 @@ value class RenditionId(override val value: Uuid): RecordId {
     companion object { fun random() = RenditionId(Uuid.random()) }
 }
 
+/** A rendition as it is sent. */
 @Serializable
 data class NewRendition(
     val songId: SongId,
@@ -29,6 +31,7 @@ data class NewRendition(
     val rating: SelfRating?,
 )
 
+/** How a user rates their own rendition. */
 enum class SelfRating(override val label: String): Labeled {
     FirstSteps("First Steps"),
     NeedsWork("Needs Work"),

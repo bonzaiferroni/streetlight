@@ -3,6 +3,7 @@ package koala.modifier
 import kotlinx.css.*
 import kotlinx.serialization.Serializable
 
+/** The colors, spacing unit and background glows a Koala stylesheet is built from. */
 data class KoalaTheme(
     val paper: Rgb = Rgb(18, 26, 26),
     val ink: Rgb = Rgb(238, 230, 230),
@@ -26,8 +27,10 @@ data class KoalaTheme(
     }
 }
 
+/** The default [KoalaTheme]. */
 val Koala = KoalaTheme()
 
+/** The custom properties the theme sets, for the accent, primary, and background glow colors. */
 object KoalaStyle {
     val Accent = Property<Rgb>("accent", true)
     val Primary = Property<Rgb>("primary", true)
@@ -49,6 +52,7 @@ object KoalaStyle {
     val GammaFocus = Property<LinearDimension>("gamma-focus", true)
 }
 
+/** Where a background glow sits, as percentages of the viewport, and its radius. */
 @Serializable
 data class GlowPosition(
     val x: Int, // 0-100% of viewport
@@ -59,6 +63,7 @@ data class GlowPosition(
         "circle ${radius.coerceIn(0, 200)}vw at ${x.coerceIn(0, 200)}% ${y.coerceIn(0, 200)}%"
 }
 
+/** A background glow: its color, position, strength and focus. */
 @Serializable
 data class Glow(
     val color: Rgb,
@@ -67,4 +72,5 @@ data class Glow(
     val focus: Int,
 )
 
+/** The glow's color as `rgba()`, with its energy as the alpha. */
 fun Glow.rgba() = "rgba($color, ${energy / 100.0})"

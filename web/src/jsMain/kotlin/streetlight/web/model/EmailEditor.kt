@@ -11,6 +11,7 @@ import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 
+/** The email field of a form, filled from [emailTap] when given. */
 class EmailEditor(
     private val emailTap: Tap<EmailAddress?>?,
     private val scope: CoroutineScope
@@ -27,6 +28,7 @@ class EmailEditor(
 
     val emailStringField = state.mutableTapOf({ it.emailString }) { copy(emailString = it) }
 
+    /** The typed email, validated, or `null` when blank or when [emailTap] already holds one. */
     fun getOutcome(): Outcome<EmailAddress?> = stateNow.emailString.takeIf { emailTap?.now == null && it.isNotBlank() }
         ?.trim()?.toEmailAddress()?.toValidOutcome()
         ?: Ok(null)

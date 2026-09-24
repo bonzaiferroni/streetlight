@@ -3,6 +3,7 @@ package koala.html
 import kotlinx.html.*
 import koala.modifier.*
 
+/** A line showing [propertyName], dimmed, followed by [propertyValue]. */
 fun FlowContent.textProperty(
     propertyName: String,
     propertyValue: String,
@@ -20,6 +21,7 @@ fun FlowContent.textProperty(
     }
 }
 
+/** A row showing [propertyName], dimmed, followed by what [block] builds. */
 fun FlowContent.textProperty(
     propertyName: String,
     mod: Modifier? = null,

@@ -4,6 +4,7 @@ import kampfire.utils.ParameterMap
 import kampfire.utils.readDoubleList
 import kotlinx.serialization.Serializable
 
+/** A rectangle on the earth, from its southwest to its northeast corner. */
 @Serializable
 data class GeoRect(
     val sw: GeoPoint,
@@ -20,16 +21,20 @@ data class GeoRect(
     val height get() = north - south
     val center get() = GeoPoint((west + east) / 2.0, (south + north) / 2.0)
 
+    /** True when [point] is inside the rectangle or on its edge. */
     fun contains(point: GeoPoint) = west <= point.lng && east >= point.lng &&
             south <= point.lat && north >= point.lat
 
+    /** True when [other] is wholly inside the rectangle. */
     fun contains(other: GeoRect) = west <= other.west && east >= other.east &&
             south <= other.south && north >= other.north
 
+    /** The area this rectangle shares with [other], in square degrees. */
     fun overlapArea(other: GeoRect): Double =
         maxOf(0.0, minOf(east, other.east) - maxOf(west, other.west)) *
                 maxOf(0.0, minOf(north, other.north) - maxOf(south, other.south))
 
+    /** The rectangle scaled by [factor] around its center. */
     fun scaleBy(factor: Float): GeoRect {
         val center = center
         val halfWidth = width / 2.0 * factor
@@ -53,16 +58,24 @@ data class GeoRect(
             return GeoRect(GeoPoint(bounds[0], bounds[1]), GeoPoint(bounds[2], bounds[3]))
         }
 
+        /** Reads a rectangle written as `sw:ne`, or returns `null`. */
         fun of(value: String): GeoRect? = value.split(":").mapNotNull { GeoPoint.of(it) }
             .takeIf { it.size == 2 }?.let { GeoRect(it[0], it[1]) }
 
+        /** Reads rectangles written by [toArrayString], or returns `null` when any is malformed. */
         fun arrayOf(value: String): List<GeoRect>? = value.split("|").map { of(it) }
             .takeIf { bounds -> bounds.all { it != null } }?.filterNotNull()
     }
 }
 
+/** The rectangles joined by `|`, read back with [GeoRect.arrayOf]. */
 fun List<GeoRect>.toArrayString(): String = joinToString("|") { it.toString() }
 
+/**
+ * The smallest rectangle holding every point, or `null` when there are fewer than two distinct points.
+ *
+ * A set of points that spans the antimeridian gets the tighter rectangle across it.
+ */
 fun getContainingBounds(points: List<GeoPoint>): GeoRect? {
     if (points.size < 2) return null
 

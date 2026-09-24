@@ -20,6 +20,7 @@ import kotlinx.html.hiddenInput
 import kotlinx.html.submitInput
 import streetlight.web.ui.BodyStyle
 
+/** A static page that shows [message] under [title], followed by [block]. */
 fun HTML.messagePage(
     title: String,
     message: FlowContent.() -> Unit,
@@ -53,6 +54,7 @@ fun HTML.messagePage(
     )
 }
 
+/** A form that posts [token] to [endpoint] with a submit button labeled [text]. */
 fun FlowContent.formSubmit(
     text: String,
     token: Token,

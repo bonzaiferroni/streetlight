@@ -15,6 +15,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A place where events happen, such as a venue, park or corner. */
 @Serializable
 data class Location(
     override val locationId: LocationId,
@@ -84,6 +85,7 @@ value class LocationId(override val value: Uuid): RecordId {
     companion object { fun random() = LocationId(Uuid.random())}
 }
 
+/** The parts of a location's address. */
 @Serializable
 data class LocationAddress(
     val streetAddress: String,
@@ -93,6 +95,7 @@ data class LocationAddress(
     val country: String? = null,
 )
 
+/** An edit of this location, starting from its current values. */
 fun Location.toEdit() = LocationEdit(
     locationId = locationId,
     mapId = mapId,
@@ -114,6 +117,7 @@ fun Location.toEdit() = LocationEdit(
     image = image,
 )
 
+/** An edit of a new location from this place. */
 fun PlaceProto.toEdit() = LocationEdit(
     name = name,
     address = address,
@@ -122,6 +126,7 @@ fun PlaceProto.toEdit() = LocationEdit(
     website = website?.toUrl()
 )
 
+/** An edit of a new location from what was read of a page. */
 fun LocationParse.toEdit(
     locationId: LocationId? = null
 ) = LocationEdit(
@@ -142,6 +147,7 @@ fun LocationParse.toEdit(
     image = imageUrl?.toUrl()?.let { Image(it) },
 )
 
+/** The address read of a page, or `null`. */
 fun LocationParse.toAddress() = address?.let {
     LocationAddress(
         streetAddress = it,

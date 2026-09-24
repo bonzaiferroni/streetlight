@@ -8,6 +8,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A logged edit to a record: who made it, what it changed, and whether it was reviewed. */
 @Serializable
 data class EditLog(
     val editLogId: EditLogId,
@@ -26,6 +27,7 @@ value class EditLogId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
+/** An edit of a record, labeled for its log. */
 @Serializable
 sealed interface RecordEdit {
     val recordType: RecordType
@@ -33,6 +35,7 @@ sealed interface RecordEdit {
     val image: Image? get() = null
 }
 
+/** The kinds of record that can be edited, flagged or reviewed. */
 enum class RecordType: Labeled {
     Location,
     Event,
@@ -45,17 +48,20 @@ enum class RecordType: Labeled {
     override fun toString() = label
 }
 
+/** Whether an edit created, updated or deleted a record. */
 enum class EditType {
     Create,
     Update,
     Delete,
 }
 
+/** The review status of an edit. */
 enum class EditStatus {
     PendingReview,
     Accepted,
 }
 
+/** The past-tense verb of the edit, for its log. */
 val EditType.verb get() = when(this) {
     EditType.Create -> "created"
     EditType.Update -> "updated"

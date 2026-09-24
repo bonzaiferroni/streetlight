@@ -9,6 +9,7 @@ import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.web.io.ApiClient
 
+/** Shows and edits one song. */
 class SongProfile(
     private val songId: SongId,
     private val scope: CoroutineScope,

@@ -13,6 +13,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A piece of media a user shares: text, an image, or a link. */
 @Serializable
 data class Media(
     val mediaId: MediaId,
@@ -46,6 +47,7 @@ value class MediaId(override val value: Uuid): RecordId {
     }
 }
 
+/** The kinds of [Media]. */
 enum class MediaType(label: String? = null): Labeled {
     Text,
     Image,

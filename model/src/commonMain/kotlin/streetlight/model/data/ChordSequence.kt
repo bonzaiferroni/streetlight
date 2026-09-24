@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A repeating sequence of chords in a song part. */
 @Serializable
 data class ChordSequence(
     override val sequenceId: SequenceId,
@@ -14,6 +15,7 @@ data class ChordSequence(
         return chords.sumOf { it.duration ?: measureBeats } / measureBeats
     }
 
+    /** The chord at [index], cycling through the sequence. */
     fun getChordAt(index: Int) = chords[index % chords.size]
 
     override fun setSequenceId(sequenceId: SequenceId) = copy(sequenceId = sequenceId)

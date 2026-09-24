@@ -43,6 +43,7 @@ data class TransitRoute(
 @Serializable
 value class TransitRouteId(val value: String)
 
+/** The kinds of transit vehicle. */
 enum class VehicleType {
     Bus,
     LightRail,

@@ -11,6 +11,10 @@ import koala.markdown.accepts
 import koala.markdown.markdownBlockTypeOf
 import web.html.HTMLElement
 
+/**
+ * Reads a markdown editor's DOM after input: merges or splits its block elements to match the parsed markdown,
+ * and keeps the caret in place.
+ */
 class MarkdownInputParser(private val model: MarkdownEditor) {
 
     private val blocks = mutableListOf<ParsedBlock>()
@@ -23,6 +27,7 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
     private var activeOffset: Int? = null
     private var caretTargetOffset: Int? = null
 
+    /** Rebuilds the editor's blocks from [container] after input, returning the markdown it now holds. */
     fun syncFromInput(container: HTMLElement): Markdown {
         reset()
         activeElement = container.activeChunk()

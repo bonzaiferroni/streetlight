@@ -5,6 +5,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 
+/** A container whose children are stacked in one grid cell, over one another. */
 fun FlowContent.box(
     mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null,
@@ -15,6 +16,7 @@ fun FlowContent.box(
     }
 }
 
+/** A [box] with [id]. */
 fun FlowContent.box(
     id: Id?,
     mod: Modifier? = null,

@@ -5,6 +5,7 @@ import koala.modifier.enumAttributeOf
 import koala.modifier.intAttributeOf
 import koala.markdown.ContentBlock
 
+/** The classes and attributes of the markdown editor. */
 object EditorStyle {
     val Container = Class("mde")
     val SWYG = Class("swyg")

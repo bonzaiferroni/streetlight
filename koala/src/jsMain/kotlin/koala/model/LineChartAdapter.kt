@@ -18,6 +18,7 @@ import koala.external.TitleOption
 import koala.external.TooltipOption
 import web.html.HTMLElement
 
+/** Draws [ChartData] as an ECharts line chart in [container], keeping at most [windowSize] points per series. */
 class LineChartAdapter(
     private val container: HTMLElement,
     private val title: String,
@@ -31,6 +32,7 @@ class LineChartAdapter(
         observer.observe(container)
     }
 
+    /** Replaces the chart's data with [data]. */
     fun renderData(data: ChartData) {
         if (data.series.isEmpty()) return
         series = data.series.map { line ->
@@ -42,6 +44,7 @@ class LineChartAdapter(
         chart.setOption(getOption())
     }
 
+    /** Adds one point to each point series, in order. Ignored when the count does not match the series. */
     fun addPoint(slice: List<ChartPoint>) {
         if (slice.size != series.count { it is PointSeries }) return
         val points = slice.iterator()

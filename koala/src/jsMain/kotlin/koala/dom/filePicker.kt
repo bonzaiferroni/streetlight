@@ -22,6 +22,12 @@ import web.html.HTMLImageElement
 import web.html.HTMLInputElement
 import web.url.URL
 
+/**
+ * An area that picks a file of [mimeType] by click or by drop, and previews it.
+ *
+ * [onPickFile] receives a `blob:` URL of the file. A file of another type is refused with a message to
+ * [onMessage].
+ */
 fun AppendScope.filePicker(
     mimeType: MimeType = MimeType.All,
     mod: Modifier? = null,
@@ -92,6 +98,7 @@ fun AppendScope.filePicker(
     })
 }
 
+/** The kinds of file a [filePicker] accepts. */
 enum class MimeType(val label: String) {
     All("*"),
     Image("image");

@@ -1,5 +1,6 @@
 package koala.html
 
+/** The JS call of [identifier] with each of [args] quoted as a string. */
 fun invoke(identifier: String, vararg args: String) = buildString {
     append(identifier)
     append("('")

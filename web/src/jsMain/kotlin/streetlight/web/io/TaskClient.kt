@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Tasks`. */
 interface TaskClient {
     suspend fun readUserTasks(): Outcome<List<TaskContent>>
     suspend fun readReview(taskId: TaskId): Outcome<TaskContent>

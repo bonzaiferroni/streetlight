@@ -4,6 +4,7 @@ import kampfire.api.Slug
 import kampfire.api.toSlug
 import koala.html.SegmentParse
 
+/** A route of the earth view, showing one of its layers. */
 sealed interface EarthRoute: StreetlightRoute {
     override val screen get() = Screen.Earth
     val layer: EarthLayer
@@ -31,6 +32,7 @@ data class PostMapRoute(override val title: String = "Earth"): EarthRoute {
     override fun toRelativePath() = "/earth"
 }
 
+/** Reads an earth route from its path: `/earth`, `/earth/galaxy/{slug}`, or `/earth/city/{slug}`. */
 val parseEarthRoute = SegmentParse(listOf("city", "galaxy")) { segments ->
     when (segments.getOrNull(1)) {
         "city" -> CityMapRoute(segments.takeSegment(2)?.toSlug())
@@ -39,4 +41,5 @@ val parseEarthRoute = SegmentParse(listOf("city", "galaxy")) { segments ->
     }
 }
 
+/** The path segment at [index], or `null` when it is missing or blank. */
 fun List<String>.takeSegment(index: Int) = getOrNull(index)?.takeIf { it.isNotBlank() }

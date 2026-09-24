@@ -6,6 +6,7 @@ import streetlight.model.Api
 import streetlight.model.writeCursor
 import streetlight.model.data.*
 
+/** The calls of `Api.Cities`. */
 interface CityClient {
     suspend fun readCity(slug: Slug): Outcome<City>
     suspend fun readTopCities(): Outcome<List<City>>

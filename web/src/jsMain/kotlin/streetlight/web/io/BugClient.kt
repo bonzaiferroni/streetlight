@@ -4,6 +4,7 @@ import kampfire.model.Outcome
 import streetlight.model.Api
 import streetlight.model.data.BugEdit
 
+/** The calls of `Api.Bugs`. */
 interface BugClient {
     suspend fun report(edit: BugEdit): Outcome<Unit>
 }

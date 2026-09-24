@@ -25,6 +25,7 @@ import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
+/** The calls of `Api.Medias`. */
 interface MediaClient {
     suspend fun readMedia(slug: Slug): Outcome<Media>
     suspend fun createMedia(edit: MediaEdit): Outcome<Media>

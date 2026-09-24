@@ -17,6 +17,7 @@ import kotlinx.css.ObjectFit
 import kotlinx.css.TextAlign
 import kotlinx.css.Visibility
 
+/** The CSS property descriptors, standard first and custom after. */
 object Css {
     val Height = Property<LinearDimension>("height")
     val MinHeight = Property<LinearDimension>("min-height")

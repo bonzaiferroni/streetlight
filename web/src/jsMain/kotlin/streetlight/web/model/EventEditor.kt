@@ -19,6 +19,7 @@ import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeRight
 import streetlight.web.io.ApiClient
 
+/** Creates or updates an event. */
 class EventEditor(
     initialEvent: EventEdit?,
     private val scope: CoroutineScope,
@@ -60,6 +61,7 @@ class EventEditor(
 
     fun setLocationId(value: LocationId?) = editState.update { it.copy(locationId = value) }
 
+    /** Whether the edit is valid, showing the reason when not. */
     fun isEditValid(): Boolean {
         val validMessage = editNow.validity.message
         message.set(validMessage)
@@ -72,6 +74,7 @@ class EventEditor(
         }
     }
 
+    /** Fills the edit from the event page at the edit's website. */
     fun parseFromUrl() {
         val url = state.now.edit.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
@@ -83,6 +86,7 @@ class EventEditor(
         }
     }
 
+    /** Uploads the image and saves the event, returning it, or `null` when invalid or failed. */
     suspend fun submitSuspend(): Event? {
         if (!isEditValid()) return null
         if (!imageEditor.finalizeImage(message)) return null

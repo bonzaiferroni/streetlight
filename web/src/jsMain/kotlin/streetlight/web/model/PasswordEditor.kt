@@ -7,6 +7,7 @@ import kampfire.model.Problem
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 
+/** A password field with its confirmation. */
 class PasswordEditor() {
     private val state = storeOf(PasswordEditorState())
     private val stateNow get() = state.now
@@ -18,6 +19,7 @@ class PasswordEditor() {
         state.set { copy(password = "", confirmation = "")}
     }
 
+    /** The password, validated, or a problem when the confirmation differs. */
     fun getOutcome(): Outcome<Password> = when {
         stateNow.password != stateNow.confirmation -> Problem("Password input does not match").also { println("${stateNow.password} ${stateNow.confirmation}") }
         else -> Password(stateNow.password).toValidOutcome()

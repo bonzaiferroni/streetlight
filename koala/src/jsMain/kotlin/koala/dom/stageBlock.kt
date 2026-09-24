@@ -10,6 +10,12 @@ import web.html.HTMLDivElement
 import web.html.HTMLElement
 import kotlin.enums.enumEntries
 
+/**
+ * Steps through the entries of the enum [State]: a numbered row of stage headings over the content [block]
+ * builds for the current stage.
+ *
+ * A heading of an earlier stage returns to it. [isHeadingStage] leaves a stage out of the headings.
+ */
 inline fun <reified State> ViewScope.stageBlock(
     stage: MutableTap<State>,
     mod: Modifier? = null,

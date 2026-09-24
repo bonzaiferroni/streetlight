@@ -19,6 +19,7 @@ import js.typedarrays.Int8Array
 import js.typedarrays.toByteArray
 import js.typedarrays.toInt8Array
 
+/** A websocket carrying CBOR: [messageFlow] emits each message received, and [send] writes a request. */
 class SocketClient<Message, Request>(
     private val scope: CoroutineScope,
     private val messageSerializer: KSerializer<Message>,
@@ -32,6 +33,7 @@ class SocketClient<Message, Request>(
 
     private val cbor = defaultCbor
 
+    /** Opens the socket from [provideSocket]. */
     fun connect() {
         scope.launch {
             val socket = provideSocket().also { socket = it }
@@ -48,12 +50,14 @@ class SocketClient<Message, Request>(
         }
     }
 
+    /** Closes the socket. Throws when it is not connected. */
     fun disconnect() {
         val socket = socket ?: error("socket not connected: ${this::class.simpleName}")
         socket.close()
         this.socket = null
     }
 
+    /** Sends [request]. Throws when the socket is not connected or has no request serializer. */
     fun send(request: Request) {
         val socket = socket ?: error("socket not connected: ${this::class.simpleName}")
         socket.send(encode(request).toInt8Array())
@@ -72,13 +76,16 @@ class SocketClient<Message, Request>(
     }
 }
 
+/** The CBOR format of the app's sockets and responses. */
 val defaultCbor = Cbor.Default
 
+/** A [SocketClient] that only receives. */
 inline fun <reified Message> socketClientOf(
     scope: CoroutineScope,
     noinline provideSocket: suspend () -> WebSocket,
 ): SocketClient<Message, Unit> = SocketClient(scope, serializer(), null, provideSocket)
 
+/** A [SocketClient] that receives and sends. */
 inline fun <reified Message, reified Request> socketRequestClientOf(
     scope: CoroutineScope,
     noinline provideSocket: suspend () -> WebSocket,

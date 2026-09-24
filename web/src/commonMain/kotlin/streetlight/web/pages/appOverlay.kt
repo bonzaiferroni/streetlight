@@ -9,6 +9,7 @@ import kotlinx.html.FlowContent
 import streetlight.web.ui.WorkSignalStyle
 import streetlight.web.ui.workSignal
 
+/** The fixed layer over the page: the helm bar, the work signal, and the route dock. */
 fun FlowContent.appOverlay() {
     column(AppOverlay.Container, AppLayer.Overlay.mod) {
         helmBar()
@@ -20,6 +21,7 @@ fun FlowContent.appOverlay() {
     }
 }
 
+/** Restores the revealed side panels at page load. */
 val AppOverlayScript get() = with(AppOverlay) {
     jsScriptOf {
         invoke(initRootModifier, RevealLeftPanel)

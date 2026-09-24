@@ -14,6 +14,10 @@ import kotlinx.html.ImgLoading
 import kotlinx.html.div
 import kotlinx.html.img
 
+/**
+ * Shows the image at [imageUrl] over a blurred backdrop of itself, filling the width, or contained when
+ * [fillWidth] is off.
+ */
 fun FlowContent.fillImage(
     imageUrl: Url?,
     mod: Modifier? = null,
@@ -34,6 +38,7 @@ fun FlowContent.fillImage(
     }
 }
 
+/** [fillImage] for an [Image], rendering its source set. */
 fun FlowContent.fillImageSrcSet(
     image: Image? = null,
     mod: Modifier? = null,
@@ -54,6 +59,7 @@ fun FlowContent.fillImageSrcSet(
     }
 }
 
+/** Configures this element as a [fillImage]. */
 fun DIV.configureFillImage(
     src: Url?,
     variants: ImageVariants?,

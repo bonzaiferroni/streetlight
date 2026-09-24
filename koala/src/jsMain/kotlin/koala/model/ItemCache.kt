@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.collections.List
 
+/** A cache of items, loaded with [provideInitialItems] on first use and kept current as items are added. */
 class ItemCache<Item, ItemId>(
     private val scope: CoroutineScope,
     private val onError: Messenger,
@@ -28,6 +29,7 @@ class ItemCache<Item, ItemId>(
         return _flow
     }
 
+    /** Adds [item], replacing any with the same id. */
     fun addItem(item: Item) {
         val id = provideId(item)
         items.removeAll { provideId(it) == id }
@@ -37,18 +39,22 @@ class ItemCache<Item, ItemId>(
         }
     }
 
+    /** The item with [id] if it is already loaded, without loading. */
     fun getCachedItem(id: ItemId) = items.firstOrNull { provideId(it) == id }
 
+    /** The item with [id], loading the items first if needed. */
     suspend fun getItem(id: ItemId): Item? {
         initializeItems()
         return items.firstOrNull { provideId(it) == id }
     }
 
+    /** Empties the cache, so the next use loads again. */
     fun clear() {
         items.clear()
         isInitialized = false
     }
 
+    /** The items, loading them first if needed. */
     suspend fun getItems(): List<Item> {
         initializeItems()
         return items

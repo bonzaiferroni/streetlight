@@ -10,6 +10,10 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
+/**
+ * Launches [block] named [name], so an exception in it names where it came from. A failure delivers [message] to
+ * [messenger] and rethrows.
+ */
 fun CoroutineScope.launch(
     name: String,
     messenger: Messenger? = null,
@@ -32,6 +36,7 @@ fun CoroutineScope.launch(
     }
 }
 
+/** [launch], named for [function]. */
 fun CoroutineScope.launch(
     function: KFunction<*>,
     receiver: Messenger? = null,
@@ -39,6 +44,7 @@ fun CoroutineScope.launch(
     block: suspend CoroutineScope.() -> Unit,
 ) = launch(function.name, receiver, message, block)
 
+/** [launch], named for [context]. */
 fun CoroutineScope.launch(
     context: KClass<*>,
     receiver: Messenger? = null,

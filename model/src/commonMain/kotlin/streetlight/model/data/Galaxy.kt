@@ -12,6 +12,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A community of users around a place or a theme, with a feed of the posts its members share. */
 @Serializable
 data class Galaxy(
     val galaxyId: GalaxyId,
@@ -50,6 +51,7 @@ value class GalaxyId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
+/** Who may post to a galaxy. */
 enum class PostPermission(label: String? = null): Labeled {
     Everyone,
     Accounts("Streetlight accounts"),
@@ -58,6 +60,7 @@ enum class PostPermission(label: String? = null): Labeled {
     override val label = label ?: name
 }
 
+/** The settings of a galaxy its hosts edit, with its marks. */
 @Serializable
 data class GalaxyConfig(
     val galaxy: Galaxy,

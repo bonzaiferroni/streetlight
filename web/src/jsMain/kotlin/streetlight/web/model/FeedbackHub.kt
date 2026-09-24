@@ -15,6 +15,7 @@ import streetlight.model.data.FeedbackEdit
 import streetlight.model.data.Platform
 import streetlight.web.io.FeedbackClient
 
+/** Lists feedback and sends new feedback. */
 class FeedbackHub(
     private val scope: CoroutineScope,
     private val api: FeedbackClient,

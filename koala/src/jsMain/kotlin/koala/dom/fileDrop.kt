@@ -7,6 +7,7 @@ import koala.modifier.SlideDown
 import koala.modifier.modify
 import kampfire.model.MutableTap
 
+/** A file picker that sets [field] to the picked file's URL, or shows the URL once one is set. */
 fun ViewScope.fileDrop(field: MutableTap<Url?>) {
     flowBlock(field, modify(Magic, Blur, SlideDown)) { url ->
         if (url != null) {

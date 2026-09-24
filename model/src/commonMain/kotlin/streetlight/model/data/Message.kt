@@ -8,6 +8,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+/** A private message in a chat. */
 @Serializable
 data class Message(
     val messageId: MessageId,
@@ -26,6 +27,7 @@ value class MessageId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
+/** A message that starts a chat with [recipient]. */
 @Serializable
 data class NewMessage(
     val recipient: Username,
@@ -35,12 +37,14 @@ data class NewMessage(
     val isValid get() = content.value.isNotBlank()
 }
 
+/** A reply in an existing chat. */
 @Serializable
 data class ReplyMessage(
     val chatId: ChatId,
     val content: Markdown,
 )
 
+/** A chat as the inbox lists it: its members, subject, and last message. */
 @Serializable
 data class ChatPreview(
     val chatId: ChatId,
@@ -61,12 +65,14 @@ value class ChatId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
+/** A request for a page of a chat's messages, after [cursor]. */
 @Serializable
 data class ChatMessageRequest(
     val chatId: ChatId,
     val cursor: TimeCursor? = null,
 )
 
+/** A request for a page of the user's chats, archived or not, after [cursor]. */
 @Serializable
 data class ChatRequest(
     val isArchive: Boolean,

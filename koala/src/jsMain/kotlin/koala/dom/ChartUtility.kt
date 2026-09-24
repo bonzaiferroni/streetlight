@@ -19,6 +19,7 @@ import koala.external.TimeLabelFormatter
 import kotlinx.browser.document
 import kotlinx.browser.window
 
+/** Values and a theme that style ECharts charts with the app's CSS variables. */
 object ChartUtility {
     val DefaultTimeAxis = AxisOption(
         type = "time",
@@ -31,8 +32,10 @@ object ChartUtility {
         rgbVar("--gamma-rgb"),
     )
 
+    /** The color of the line at [index], cycling through [LineColors]. */
     fun getLineColor(index: Int) = LineColors[index % LineColors.size]
 
+    /** The value of the CSS variable [name] on the root element. */
     fun cssVar(name: String): String =
         window.getComputedStyle(document.documentElement!!)
             .getPropertyValue(name)
@@ -40,8 +43,10 @@ object ChartUtility {
 
     fun rgb(value: String) = "rgb($value)"
 
+    /** The CSS color of the RGB variable [cssVar]. */
     fun rgbVar(cssVar: String) = rgb(cssVar(cssVar))
 
+    /** An ECharts theme built from the current CSS variables, so a chart follows the day or night theme. */
     fun buildTheme(): EChartsTheme {
         val ink = cssVar("--ink-fg")
         val muted = cssVar("--ink-dim")

@@ -5,6 +5,7 @@ import kampfire.model.LoginRequest
 import kampfire.model.PrivateInfo
 import kampfire.model.SignUpRequest
 
+/** The account endpoints: sign in, sign out, sign up, and account details. */
 object UserApi: ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
 ), "user") {

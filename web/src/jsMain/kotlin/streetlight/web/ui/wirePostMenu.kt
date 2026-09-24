@@ -7,6 +7,7 @@ import koala.dom.*
 import koala.modifier.Attribute
 import streetlight.model.data.PostId
 
+/** The menu of a post, for reporting or removing it. */
 fun ViewScope.wirePostMenu() {
     popoverMenu(PostMenu.PopoverId, {
         val username = it.getAttribute(Attribute.Username) ?: return@popoverMenu null

@@ -6,6 +6,7 @@ import streetlight.model.data.*
 import streetlight.model.writeCursor
 import web.sockets.WebSocket
 
+/** The calls of posts and their marks, and the spirit socket. */
 interface PostClient {
     suspend fun createPost(post: PostEdit): Outcome<Post>
     suspend fun editPost(post: PostEdit): Outcome<Post>

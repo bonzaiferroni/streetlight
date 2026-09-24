@@ -6,6 +6,7 @@ import kotlinx.css.fr
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
+/** A grid with the columns of [template], switching to [queryTemplate] on a narrow screen. */
 fun FlowContent.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     queryTemplate: GridTemplateColumns = template,
@@ -29,6 +30,7 @@ internal fun DIV.configureGridColumns(
 object GridColumns {
     val Class = Class("grid")
 
+    /** Columns that fill the row, each at least a minimum width. */
     fun repeatFill(minPx: Int) = GridTemplateColumns("repeat(auto-fill, minmax(${400}px, 1fr))")
 
     val QueryTemplate = Property<GridTemplateColumns>("grid-query-columns", true)

@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+/** The kinds of space comments belong to. */
 enum class SpaceType(paramValue: String? = null) {
     Galaxy,
     Post;

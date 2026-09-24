@@ -5,6 +5,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 import kotlinx.html.section as sectionTag
 
+/** A `section` laid out as a flex column. */
 fun FlowContent.section(
     mod: Modifier? = null,
     block: SECTION.() -> Unit = {}
@@ -15,6 +16,7 @@ fun FlowContent.section(
     }
 }
 
+/** A [section] with [id]. */
 fun FlowContent.section(
     id: Id,
     mod: Modifier? = null,
@@ -26,6 +28,7 @@ fun FlowContent.section(
     }
 }
 
+/** A [section] opening with [title] in a [filigree]. */
 fun FlowContent.section(
     title: String,
     mod: Modifier? = null,

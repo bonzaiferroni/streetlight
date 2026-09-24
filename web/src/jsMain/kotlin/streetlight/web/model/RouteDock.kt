@@ -21,6 +21,11 @@ import streetlight.model.ui.StarConfigRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 
+/**
+ * The navigation dock of the current route: a title and main, left, and right route links.
+ *
+ * A page can add to the dock with [mergeState]; a merge for a route not yet current waits for that route.
+ */
 class RouteDock(scope: CoroutineScope, val portal: Portal) {
     private val state = storeOf<RouteDockState?>(null)
     private var stateRoute: AppRoute? = null
@@ -43,6 +48,7 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
         }
     }
 
+    /** Sets the non-null parts of [merge] on the dock of [route]. */
     fun mergeState(route: AppRoute, merge: RouteDockState) {
         when (route) {
             stateRoute -> applyMerge(merge)

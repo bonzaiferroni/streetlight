@@ -17,6 +17,11 @@ import streetlight.model.data.Location
 import streetlight.web.layouts.CellGrid
 import kotlin.uuid.Uuid
 
+/**
+ * A button that lights or unlights an item for the star, with its count.
+ *
+ * The click calls [signature] with the toggle's element, which reads the item from its attributes.
+ */
 fun FlowContent.starToggle(
     toggleType: ToggleType,
     isLit: Boolean,

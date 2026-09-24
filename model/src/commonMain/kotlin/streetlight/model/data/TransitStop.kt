@@ -6,6 +6,7 @@ import kotlin.jvm.JvmInline
 // gtfs data csv columns
 // stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station,stop_timezone,wheelchair_boarding
 // 26199,26199,Nine Mile Station Gate J,Vehicles Travelling Southwest,39.657746,-104.846604,,,0,33719,,1
+/** A stop on the transit network. */
 @Serializable
 data class TransitStop(
     val transitStopId: TransitStopId,
@@ -31,6 +32,7 @@ value class TransitStopId(val value: String)
 
 // route_id,service_id,trip_id,trip_headsign,direction_id,block_id,shape_id
 // 0,SA,115699058,Union Station,0,   0  4,1325342
+/** One run of a route. */
 data class TransitTrip(
     val transitTripId: String,
     val transitRouteId: TransitRouteId,
@@ -57,6 +59,7 @@ data class TransitTrip(
 
 // trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled,timepoint
 // 115699058,11:34:00,11:34:00,26175,1,,0,1,,1
+/** When a trip reaches a stop. */
 data class TransitStopTime(
     val tripId: String,
     val arrivalTime: String,
@@ -79,6 +82,7 @@ data class TransitStopTime(
 
 // shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled
 // 1325342,39.655623,-104.999767,1,
+/** The path a route's vehicles travel. */
 data class TransitShape(
     val shapeId: String,
     val latitude: Double,

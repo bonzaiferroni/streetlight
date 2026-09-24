@@ -8,6 +8,7 @@ import koala.dom.column
 import koala.dom.onView
 import koala.dom.mountChildView
 
+/** Renders [content] with the data of [requestData] once the block is viewed. A failed request is toasted. */
 fun <T> ViewScope.dataBlock(
     requestData: suspend () -> Outcome<T>,
     mod: Modifier? = null,

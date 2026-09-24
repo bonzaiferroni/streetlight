@@ -4,11 +4,13 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CompletableDeferred
 import org.w3c.dom.HTMLScriptElement
 
+/** Loads external scripts once each. */
 object ScriptLoader {
     private val loaded = mutableMapOf<String, CompletableDeferred<Unit>>()
 
     fun isLoaded(src: String): Boolean = loaded[src]?.let { it.isCompleted && !it.isCancelled } == true
 
+    /** Loads the script at [src], waiting for it when it is already loading. */
     suspend fun load(src: String) {
         loaded.getOrPut(src) {
             val deferred = CompletableDeferred<Unit>()

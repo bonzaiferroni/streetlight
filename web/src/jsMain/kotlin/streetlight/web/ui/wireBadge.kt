@@ -9,6 +9,7 @@ import streetlight.web.pages.StarBadgeKey
 import web.dom.document
 import web.html.HTMLImageElement
 
+/** Shows the signed-in star's image in the star badge. */
 fun ViewScope.wireBadge() {
     val gate = app.get<SessionClient>()
 

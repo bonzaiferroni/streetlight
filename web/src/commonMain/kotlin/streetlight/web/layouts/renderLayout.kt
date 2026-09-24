@@ -13,6 +13,7 @@ import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.LayoutStyle
 import streetlight.web.ui.headerOf
 
+/** Renders the page of [content] by its design's layout, or the default layout of its kind. */
 fun FlowContent.renderLayout(content: DesignContent) {
     val layout = content.design?.layout ?: PageLayout.defaultOf(content)
     renderColumn(layout.blocks, content)
