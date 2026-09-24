@@ -40,7 +40,7 @@ fun FlowContent.pageHeader(
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {
             // image
             image?.let {
-                metaImage(image, modify(VignetteOver, MinWidth(0)))
+                metaImage(image, modify(VignetteOver, MinWidth(0), FocusInSlow))
             }
 
             // title panel

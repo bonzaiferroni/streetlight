@@ -19,6 +19,7 @@ val Scale = Class("scale")
 
 val AutoMagic = Class("auto-magic")
 val FadeIn = Class("fade-in")
+val FocusInSlow = Class("focus-in-slow")
 val FadeOut = Class("fade-out")
 val ScaleOut = Class("scale-out")
 val ScaleIn = Class("scale-in")
@@ -29,6 +30,7 @@ val Shimmer = Class("working")
 val MagicCss get() = with (MagicStyle) { """
 :root {
     --magic-interval: ${Interval}ms;
+    --magic-interval-slow: calc(var(--magic-interval) * 4);
     --magic-easing: ease-in-out;
     --magic-cubic-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --magic-blur: blur(6px);
@@ -55,6 +57,8 @@ val MagicCss get() = with (MagicStyle) { """
     --transition-box-shadow: box-shadow var(--magic-interval) var(--magic-easing);
     --transition-visibility: visibility var(--magic-interval) var(--magic-easing);
     --transition-background: background var(--magic-interval) var(--magic-easing);
+    --transition-opacity-slow: opacity var(--magic-interval-slow) var(--magic-easing);
+    --transition-filter-slow: filter var(--magic-interval-slow) var(--magic-easing);
 }
 
 $GlowShadow {
@@ -70,66 +74,30 @@ $GlowBackground {
 }
 
 @keyframes anti-shadow {
-    0% {
-        filter: drop-shadow(0 3px 1px black);
-    }
-    25% {
-        filter: drop-shadow(0 3px 1px black);
-    }
-    40% {
-        filter: drop-shadow(-1px 3px 1px black);
-    }
-    65% {
-        filter: drop-shadow(0 3px 1px black);
-    }
-    80% {
-        filter: drop-shadow(1px 3px 2px black);
-    }
-    100% {
-        filter: drop-shadow(0 3px 1px black);
-    }
+    0%   { filter: drop-shadow(0 3px 1px black); }
+    25%  { filter: drop-shadow(0 3px 1px black); }
+    40%  { filter: drop-shadow(-1px 3px 1px black); }
+    65%  { filter: drop-shadow(0 3px 1px black); }
+    80%  { filter: drop-shadow(1px 3px 2px black); }
+    100% { filter: drop-shadow(0 3px 1px black); }
 }
 
 @keyframes glow-shadow {
-    0% {
-        filter: drop-shadow(0 0 2px rgb(var(--rho-rgb)));
-    }
-    25% {
-        filter: drop-shadow(0 -1px 3px rgb(var(--beta-rgb)));
-    }
-    40% {
-        filter: drop-shadow(1px 0 1px rgb(var(--rho-rgb)));
-    }
-    65% {
-        filter: drop-shadow(0 -1px 2px rgb(var(--gamma-rgb)));
-    }
-    80% {
-        filter: drop-shadow(-1px 0 1px rgb(var(--beta-rgb)));
-    }
-    100% {
-        filter: drop-shadow(0 0 2px rgb(var(--rho-rgb)));
-    }
+    0%   { filter: drop-shadow(0 0 2px rgb(var(--rho-rgb))); }
+    25%  { filter: drop-shadow(0 -1px 3px rgb(var(--beta-rgb))); }
+    40%  { filter: drop-shadow(1px 0 1px rgb(var(--rho-rgb))); }
+    65%  { filter: drop-shadow(0 -1px 2px rgb(var(--gamma-rgb))); }
+    80%  { filter: drop-shadow(-1px 0 1px rgb(var(--beta-rgb))); }
+    100% { filter: drop-shadow(0 0 2px rgb(var(--rho-rgb))); }
 }
 
 @keyframes glow-background {
-    0% {
-        background-color: rgb(var(--rho-rgb));
-    }
-    25% {
-        background-color: rgb(var(--beta-rgb));
-    }
-    40% {
-        background-color: rgb(var(--rho-rgb));
-    }
-    65% {
-        background-color: rgb(var(--gamma-rgb));
-    }
-    80% {
-        background-color: rgb(var(--beta-rgb));
-    }
-    100% {
-        background-color: rgb(var(--rho-rgb));
-    }
+    0%   { background-color: rgb(var(--rho-rgb)); }
+    25%  { background-color: rgb(var(--beta-rgb)); }
+    40%  { background-color: rgb(var(--rho-rgb)); }
+    65%  { background-color: rgb(var(--gamma-rgb)); }
+    80%  { background-color: rgb(var(--beta-rgb)); }
+    100% { background-color: rgb(var(--rho-rgb)); }
 }
 
 @keyframes glow-flash {
@@ -174,12 +142,8 @@ $GlowBackground {
 /* slow spin */
 
 @keyframes loop-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
 }
 
 $SpinLoop {
@@ -187,15 +151,9 @@ $SpinLoop {
 }
 
 @keyframes loop-fade {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-    100% {
-        opacity: 1;
-    }
+    0%   { opacity: 1; }
+    50%  { opacity: 0.6; }
+    100% { opacity: 1; }
 }
 
 $FadeLoop {
@@ -262,7 +220,7 @@ $Shimmer::after {
 }
 
 @keyframes shimmer {
-    0% { transform: translateX(-100%); }
+    0%   { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
 }
 
@@ -272,6 +230,15 @@ $FadeIn {
     transition: var(--transition-opacity);
 
     @starting-style {
+        opacity: 0;
+    }
+}
+
+$FocusInSlow {
+    transition: var(--transition-filter-slow), var(--transition-opacity-slow);
+
+    @starting-style {
+        filter: var(--magic-blur);
         opacity: 0;
     }
 }

@@ -8,6 +8,7 @@ import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationRoute
 import streetlight.web.layouts.renderLayout
 import streetlight.web.pages.appFooter
+import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 
 fun FlowContent.locationShell(
@@ -15,11 +16,15 @@ fun FlowContent.locationShell(
 ) {
     val location = content.location
     val routeNow = LocationRoute(location.slug)
-    column(BodyStyle.MainColumn) {
-        setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
-        renderLayout(content)
+    column(BodyStyle.ShellColumn) {
+        appHeader()
 
-        appFooter()
+        column(BodyStyle.MainColumn) {
+            setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
+            renderLayout(content)
+
+            appFooter()
+        }
     }
 
     dataIsland(LocationShell.islandId, content)
