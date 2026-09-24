@@ -7,6 +7,23 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinJvm) apply false
+    alias(libs.plugins.dokka)
+}
+
+// the API reference, published to GitHub Pages by .github/workflows/kdoc.yml
+dependencies {
+    dokka(project(":kampfire"))
+    dokka(project(":koala"))
+    dokka(project(":model"))
+    dokka(project(":web"))
+    dokka(project(":server"))
+}
+
+dokka {
+    moduleName.set("Streetlight")
+    dokkaPublications.html {
+        outputDirectory.set(rootDir.resolve("docs/kdoc"))
+    }
 }
 
 tasks.register("projectTests") {

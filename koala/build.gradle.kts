@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.serialization)
     alias(libs.plugins.jsPlainObjects)
+    alias(libs.plugins.dokka)
 }
 
 kotlin {

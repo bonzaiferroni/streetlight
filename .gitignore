@@ -41,3 +41,6 @@ users.json
 benchmark/node_modules/
 benchmark/traces/
 benchmark/server
+
+# generated API reference, published by CI
+/docs/kdoc/

@@ -16,6 +16,10 @@ A package document says how to do a thing, not what each thing is. It does not c
 
 A specific structure is described only when no general specification can carry it, such as a finely engineered layout whose intent must survive later changes. It is introduced with a line stating why it is included, so a later sweep keeps it.
 
+## API Reference
+
+Dokka generates the API reference from the signatures of `kampfire`, `koala`, `model`, `web` and `server`, and `.github/workflows/kdoc.yml` publishes it to GitHub Pages on every push to `master`. `./gradlew :dokkaGenerate` writes it to `docs/kdoc` locally, which is ignored by git and served for preview with a static server. A module is added to the reference by applying the `dokka` plugin in its build and listing it under `dokka(...)` in the root build.
+
 ## Reading Documents
 
 Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.
