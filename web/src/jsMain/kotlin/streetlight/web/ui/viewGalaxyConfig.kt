@@ -1,20 +1,22 @@
 package streetlight.web.ui
 
-import koala.LottieFile
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
+import koala.html.heading1
 import koala.html.spacer
 import streetlight.model.data.GalaxyConfig
 import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
+import streetlight.web.layouts.route
 
 fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
     val model = app.getGalaxyEditor(config.galaxy.toEdit(config.marks), contentScope)
+    val initialGalaxy = config.galaxy
 
-    column {
-        introSection("Galaxy Settings", lottie = LottieFile.ServerSync) {
-            textBlock("Here you can make changes to your galaxy.")
+    configBody("Galaxy", "Config", "viewGalaxyConfig.kt") {
+        navigation(initialGalaxy.route) {
+            heading1(initialGalaxy.name, TextAlignCenter)
         }
 
         lazyTabs {
@@ -48,8 +50,6 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
             messageBox(model.editMessage)
             button("Save", model::submit, Accent)
         }
-
-        appFooter(sourcePathJsUi("viewGalaxyConfig.kt"))
     }
 }
 

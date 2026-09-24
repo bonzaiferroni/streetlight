@@ -17,7 +17,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
-    column(BodyStyle.MainColumn) {
+    configBody("Event", "Config", "viewEventUpdater.kt") {
         lazyTabs {
             tab("edit") {
                 column {
@@ -45,7 +45,6 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
                 }
             }
         }
-        appFooter(sourcePathJsUi("viewEventUpdater.kt"))
     }
 }
 

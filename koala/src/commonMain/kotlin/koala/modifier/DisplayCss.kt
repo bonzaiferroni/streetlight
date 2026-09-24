@@ -33,6 +33,8 @@ val AccentFg = Class("accent-fg")
 val Primary = Class("primary")
 val Editor = Class("editor")
 val PrimaryFg = Class("primary-fg")
+/** Text in a gradient from the accent to the primary foreground, left to right. */
+val AccentPrimaryGradientFg = Class("accent-primary-gradient-fg")
 val WhiteFg = Class("white-fg")
 val SystemFg = Class("editor-fg")
 val ErrorFg = Class("red-fg")
@@ -148,6 +150,12 @@ $CardGradientBg  { background:       var(--card-gradient-bg); }
 $InkGradientBg {
     background: color-mix(in srgb, currentColor 50%, transparent);
     mask-image: var(--ink-gradient-bg);
+}
+
+$AccentPrimaryGradientFg {
+    background-image: linear-gradient(to right, var(--accent-fg), var(--primary-fg));
+    background-clip: text;
+    color: transparent;
 }
 
 $NightInk { color: var(--white-fg); }

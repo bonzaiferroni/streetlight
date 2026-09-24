@@ -16,7 +16,7 @@ import streetlight.web.model.GalaxyEditor
 fun ViewScope.galaxyNameFormRow(model: GalaxyEditor) = formRow {
     formSection("Name") {
         formTextField(
-            field = model.nameField,
+            field = model.nameState,
             label = GalaxyProperty.Name,
             footnote = nameCharacters,
             maxLength = Slug.MAX_LENGTH

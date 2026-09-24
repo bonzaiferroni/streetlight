@@ -7,6 +7,7 @@ import koala.html.filigree
 import koala.html.heading1
 import kotlinx.html.DIV
 
+@Deprecated("use body component")
 fun ViewScope.introSection(
     name: String,
     mod: Modifier? = null,

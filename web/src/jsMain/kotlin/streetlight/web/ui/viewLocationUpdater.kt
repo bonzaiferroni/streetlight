@@ -13,7 +13,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
-    column(BodyStyle.MainColumn) {
+    configBody("Location", "Config", "viewLocationUpdater.kt") {
         lazyTabs {
             tab("edit") {
                 column {
@@ -43,7 +43,6 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                 }
             }
         }
-        appFooter(sourcePathJsUi("viewLocationUpdater.kt"))
     }
 }
 

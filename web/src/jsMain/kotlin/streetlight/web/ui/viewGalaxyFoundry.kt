@@ -29,10 +29,13 @@ fun ViewScope.viewGalaxyFoundry() {
             }
         }
 
-        row(JustifyContentSpaceBetween) {
-            button("back", { portal.goBack() })
-            button("Found Galaxy", model::submit, Accent)
-        }
+        formSubmit(
+            label = "Found Galaxy",
+            onClick = model::submit,
+            messenger = model.editMessage,
+            buttonMod = Accent,
+            back = MenuAction("back", onClick = portal::goBack),
+        )
     }
 }
 

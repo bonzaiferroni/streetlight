@@ -60,7 +60,7 @@ class GalaxyEditor(
     val marksState = editState.mutableTapOf({ it.marks }) { copy(marks = it) }
     val markIdsState = editState.tapOf { it.marks.map { mark -> mark.markId } }
 
-    val nameField = editState.mutableTapOf({ it.name ?: "" }) { value ->
+    val nameState = editState.mutableTapOf({ it.name ?: "" }) { value ->
         if (value.isNotEmpty() && !GalaxyEdit.isValidName(value)) return@mutableTapOf this
         val slug = slugOf(value)
         copy(name = value, slug = slug)

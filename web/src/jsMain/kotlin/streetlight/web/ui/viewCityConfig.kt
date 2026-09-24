@@ -11,7 +11,7 @@ fun ViewScope.viewCityConfig(city: City) {
     val model = CityEditor(city.toEdit(), contentScope, api, portal)
     val messenger = MessageStore()
 
-    column(BodyStyle.MainColumn) {
+    configBody("City", "Config", "viewCityConfig.kt") {
         cityDetailsForm(model)
         cityLinksForm(model)
         formSubmit(
@@ -20,7 +20,6 @@ fun ViewScope.viewCityConfig(city: City) {
             messenger = messenger,
             back = MenuAction("go back", onClick = portal::goBack),
         )
-        appFooter(sourcePathJsUi("viewCityConfig.kt"))
     }
 }
 

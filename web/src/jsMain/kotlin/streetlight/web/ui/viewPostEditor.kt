@@ -4,7 +4,6 @@ import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
 import koala.html.AppRoute
-import koala.html.heading1
 import koala.model.dedupNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -18,16 +17,12 @@ fun ViewScope.viewMediaConfig(model: MediaEditor) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
-    section(FlexColumn) {
-        heading1("Edit Post", TextAlignCenter)
-
+    configBody("Media", "Config", "viewPostEditor.kt") {
         mediaForm(model)
 
         row(JustifyContentEnd) {
             button("Edit", onClick = model::submitPost)
         }
-
-        appFooter(sourcePathJsUi("viewPostEditor.kt"))
     }
 }
 

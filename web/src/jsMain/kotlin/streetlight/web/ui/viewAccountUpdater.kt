@@ -16,16 +16,13 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
-import koala.html.topLogo
 import streetlight.model.data.Account
 import streetlight.model.data.Star
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.AccountEditor
 
 fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
-    column(mod = BodyStyle.MainColumn) {
-        topLogo()
-
+    configBody("Star", "Config", "viewAccountUpdater.kt") {
         introSection("Account", lottie = LottieFile.ServerSync) {
             textBlock("Here you can make changes to your account.")
         }
@@ -35,11 +32,9 @@ fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
         } else {
             starConfigTabs(model)
         }
-
-        appFooter(sourcePathJsUi("viewAccountUpdater.kt"))
-
-        dock.mergeState(StarConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
+
+    dock.mergeState(StarConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
 }
 
 fun RouteScope.viewStarConfigRoute() {

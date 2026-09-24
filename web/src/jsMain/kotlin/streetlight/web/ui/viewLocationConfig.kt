@@ -5,7 +5,6 @@ import koala.modifier.*
 import koala.dom.*
 import koala.html.Id
 import koala.html.heading1
-import koala.html.heading3
 import kampfire.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
@@ -34,15 +33,10 @@ fun ViewScope.viewLocationConfig(
         }
     }
 
-    column(BodyStyle.MainColumn) {
-        column(modify(Gap0, MarginTop(1))) {
-            filigree {
-                heading3("configure", modify(TextUppercase, OpacityHalf))
-            }
-            flowBlock(locationState) { location ->
-                navigation(location.route) {
-                    heading1(location.name, TextAlignCenter)
-                }
+    configBody("Location", "Config", "viewLocationConfig.kt") {
+        flowBlock(locationState) { location ->
+            navigation(location.route) {
+                heading1(location.name, TextAlignCenter)
             }
         }
 
@@ -93,8 +87,6 @@ fun ViewScope.viewLocationConfig(
                 // locationAutomationForm(content)
             }
         }
-
-        appFooter(sourcePathJsUi("viewLocationConfig.kt"))
     }
 }
 

@@ -116,18 +116,30 @@ A shell view with a map uses `shellBoxWithMap` and sets the marker points from t
 
 ## Page Body
 
-A routed view without a shell builds its page with `shellBody`, passing its file name, the same way a shell does in `streetlight.web.shells.md`.
+A routed view without a shell builds its page with `mainBody`, passing its file name, the same way a shell does in `streetlight.web.shells.md`.
 
 ```kotlin
 fun ViewScope.viewFoo() {
-    shellBody("viewFoo.kt") {
+    mainBody("viewFoo.kt") {
         pageHeader("Foo", "a subtitle", SiteImage.Foo)
         // body
     }
 }
 ```
 
-`viewFooConfig` and `viewFooUpdater` views, and screens outside the base layout such as the sandbox, inbox and earth, do not use it.
+A view that configures or creates a record, named `viewFooConfig` or `viewFooScout`, builds its page with `configBody` instead. Its `configHeader` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
+
+```kotlin
+configBody("Foo", "Config", "viewFooConfig.kt") {
+    // body
+}
+```
+
+The two title parts render as one word, `titleFirst` in `AccentFg` and `titleSecond` in `PrimaryFg`.
+
+`mainBody` and `configBody` differ only in their header. Both are built on `pageBody`, which holds the shape they share. A new kind of body is built on `pageBody` too.
+
+Screens outside the base layout, such as the sandbox, inbox and earth, use neither.
 
 ## Forms
 

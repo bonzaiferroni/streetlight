@@ -3,21 +3,34 @@ package streetlight.web.ui
 import koala.html.column
 import koala.html.section
 import koala.modifier.*
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 
+/** The page of a shell: the [appHeader], then [content] in a body section closed by the footer. */
 fun FlowContent.mainBody(
     sourceFile: String,
     mod: Modifier? = null,
     content: SECTION.() -> Unit
+) = pageBody(sourcePathShells(sourceFile), mod, { appHeader() }, content)
+
+/**
+ * The shape every body shares: what [header] builds, then [content] in a body section closed by a footer linking
+ * [sourcePath].
+ */
+fun FlowContent.pageBody(
+    sourcePath: String,
+    mod: Modifier?,
+    header: DIV.() -> Unit,
+    content: SECTION.() -> Unit,
 ) {
     column(modify(BodyStyle.ShellColumn, mod)) {
-        appHeader()
+        header()
         section(BodyStyle.MainColumn) {
             content()
-            appFooter(sourcePathShells(sourceFile))
+            appFooter(sourcePath)
         }
     }
 }

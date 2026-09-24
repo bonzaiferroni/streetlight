@@ -2,13 +2,16 @@ package streetlight.web.ui
 
 import koala.LottieFile
 import koala.dom.*
+import koala.html.heading1
 import koala.model.dedupNotNull
+import koala.modifier.TextAlignCenter
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.postRow
+import streetlight.web.layouts.route
 import streetlight.web.model.EventScoutStage
 
 fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
@@ -24,9 +27,9 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
         else -> false
     }
 
-    mainBody("viewEventScout.kt") {
-        introSection("Event Scout", lottie = LottieFile.StrollingMan) {
-            textBlock("Let's post an event to ${galaxy.name}.")
+    configBody("Event", "Scout", "viewEventScout.kt") {
+        navigation(galaxy.route) {
+            heading1(galaxy.name, TextAlignCenter)
         }
 
         stageBlock(model.stage, isHeadingStage = ::isHeadingStage) { stage ->

@@ -9,7 +9,7 @@ The server-rendered content of a route. A shell is declared in `commonMain` so t
 | Package | Provides |
 |---|---|
 | `streetlight.web.layouts` | Components that lay out content |
-| `streetlight.web.ui` | `shellBody` |
+| `streetlight.web.ui` | `mainBody` |
 | `koala.html` | Components and `dataIsland` |
 | `streetlight.model` | Route content types |
 
@@ -29,7 +29,7 @@ A shell declares no state. State the browser needs is carried in attributes and 
 
 ```kotlin
 fun FlowContent.fooShell(content: FooContent) {
-    shellBody("fooShell.kt") {
+    mainBody("fooShell.kt") {
         // body
     }
 
@@ -41,12 +41,12 @@ object FooShell {
 }
 ```
 
-`shellBody` from `streetlight.web.ui` builds the header, the body column and the footer. It takes the shell's file name, which the footer links as the source. The body lambda runs inside the body column.
+`mainBody` from `streetlight.web.ui` builds the header, the body `section` and the footer. It takes the shell's file name, which the footer links as the source. The body lambda runs inside the body `section`.
 
 | Part | Holds |
 |---|---|
-| `shellBody` | The route's content |
-| `dataIsland` | The content, after `shellBody` |
+| `mainBody` | The route's content |
+| `dataIsland` | The content, after `mainBody` |
 
 ## Data Island
 

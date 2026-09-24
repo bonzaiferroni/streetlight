@@ -20,6 +20,10 @@ A page is an extension on `HTML`. It calls `appHead` with its title, then builds
 
 A head support, such as maps or protobuf, is a `HEAD` extension in `supports.kt`, added by the page that needs it.
 
+## Headers
+
+A page header is built on `rayHeader`, which places its content between a ray in `AccentFg` on the left and one in `PrimaryFg` on the right. Content in the header follows the same colors from left to right.
+
 ## Head Script
 
 The site's root switches are declared in `StreetlightHeadScript` in `appPage.kt`. A new root switch is added there.
