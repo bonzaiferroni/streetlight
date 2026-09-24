@@ -18,7 +18,7 @@ A specific structure is described only when no general specification can carry i
 
 ## API Reference
 
-Dokka generates the API reference from the signatures of `kampfire`, `koala`, `model`, `web` and `server`, and `.github/workflows/kdoc.yml` publishes it to GitHub Pages on every push to `master`. `./gradlew :dokkaGenerate` writes it to `docs/kdoc` locally, which is ignored by git and served for preview with a static server. A module is added to the reference by applying the `dokka` plugin in its build and listing it under `dokka(...)` in the root build.
+Dokka generates the API reference from the signatures of `kampfire`, `koala`, `model`, `web` and `server`, and `.github/workflows/kdoc.yml` publishes it to GitHub Pages on every push to `main`. `./gradlew :dokkaGenerate` writes it to `docs/kdoc` locally, which is ignored by git and served for preview with a static server. A module is added to the reference by applying the `dokka` plugin in its build and listing it under `dokka(...)` in the root build.
 
 ## Reading Documents
 

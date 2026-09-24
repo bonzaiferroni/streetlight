@@ -3,7 +3,7 @@ name: API Reference
 # builds the Dokka reference and publishes it to GitHub Pages
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
