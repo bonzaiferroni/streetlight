@@ -7,7 +7,6 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import com.fleeksoft.ksoup.select.Elements
-import com.fleeksoft.ksoup.select.Selector
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.engine.apache5.Apache5
 import io.ktor.client.plugins.HttpRedirect
@@ -24,6 +23,7 @@ import kampfire.model.toUrl
 import kotlinx.coroutines.CancellationException
 import kotlin.time.Clock
 import kotlin.time.Instant
+import kotlin.time.TimeSource
 
 private val logger = KotlinLogging.logger("ktor-fetch-client")
 
@@ -41,13 +41,13 @@ private val httpClient by lazy {
             header("User-Agent", StreetlightAgent.UserAgent)
             header("Accept", StreetlightAgent.Accept)
             header("Accept-Language", StreetlightAgent.AcceptLanguage)
-            header("Connection", StreetlightAgent.Connection)
         }
     }
 }
 
 suspend fun fetchText(initialUrl: Url): Outcome<FetchText> {
     logger.info { "fetching url: ${initialUrl.value.take(100)}" }
+    val start = TimeSource.Monotonic.markNow()
     return try {
         val response: HttpResponse = httpClient.get(initialUrl.value)
         if (response.status != HttpStatusCode.OK) {
@@ -58,7 +58,8 @@ suspend fun fetchText(initialUrl: Url): Outcome<FetchText> {
             fetchUrl = initialUrl,
             pageUrl = response.request.url.toString().toUrl(),
             text = response.bodyAsText(),
-            fetchedAt = Clock.System.now()
+            fetchedAt = Clock.System.now(),
+            millis = start.elapsedNow().inWholeMilliseconds,
         ))
     } catch (e: CancellationException) {
         throw e
@@ -84,10 +85,8 @@ fun Element.tryQuery(selector: String): Outcome<Elements> {
 
     return try {
         Ok(select(selector))
-    } catch (e: Selector.SelectorParseException) {
-        Problem("Malformed selector: $selector")
-    } catch (e: IllegalArgumentException) {
-        Problem("Invalid selector: $selector")
+    } catch (e: Exception) {
+        Problem("Invalid selector: $selector (${e.message})")
     }
 }
 
@@ -96,4 +95,5 @@ data class FetchText(
     val pageUrl: Url,
     val text: String,
     val fetchedAt: Instant,
+    val millis: Long = 0,
 )

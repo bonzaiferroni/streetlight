@@ -30,12 +30,24 @@ fun htmlToMarkdown(html: String): Markdown? =
 
 private fun String.normalizeSpace(): String = replace('\u00A0', ' ').trim()
 
+/**
+ * The first element matching [selector] that has meaningful content, text or an image, or `null`,
+ * including when [selector] is not a valid query.
+ *
+ * The LM reads html with empty elements trimmed away, so an empty match is skipped to reach the
+ * element the LM saw.
+ */
 fun Element.queryElement(selector: String?): Element? = selector?.let { query ->
     when (val outcome = tryQuery(query)) {
-        is Problem -> error(outcome.message)
-        is Ok -> outcome.data.firstOrNull()
+        is Problem -> null
+        is Ok -> outcome.data.firstOrNull { it.hasMeaningfulContent() }
     }
 }
+
+private fun Element.hasMeaningfulContent(): Boolean =
+    text().isNotBlank() || getAllElements().any { it.isImage() }
+
+private fun Element.isImage() = tagName() == "img" && (hasAttr("src") || hasAttr("srcset"))
 
 fun Element?.plainText(): String? =
     this?.text()?.normalizeSpace()?.takeIf { it.isNotEmpty() }

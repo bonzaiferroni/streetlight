@@ -26,6 +26,7 @@ import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
+import kotlin.time.TimeSource
 
 class KoogHtmlParserClient(
     private val config: LmConfig,
@@ -35,7 +36,6 @@ class KoogHtmlParserClient(
     private var lastCallAt = Instant.DISTANT_PAST
     private val executor = config.toExecutor()
     private val console = KotlinLogging.logger("dao")
-    private val cache = mutableMapOf<Int, ParserContent>()
     private val trimmer = HtmlTrimmer()
     private val log = KotlinLogging.logger(KoogHtmlParserClient::class)
 
@@ -48,31 +48,12 @@ class KoogHtmlParserClient(
         instructions: String,
         type: KType,
         retryCount: Int,
+        observer: HtmlParseObserver?,
     ): Outcome<T> {
-        val response = withCache(doc.hashCode()) {
-            readHtmlContent(url, doc, instructions, type, retryCount)
+        return when (val response = readHtmlContent(url, doc, instructions, type, retryCount, observer)) {
+            is Ok -> tryDecode<T>(response.data, type)?.let { Ok(it) } ?: LMProblem.Decoding
+            is Problem -> response
         }
-        return when (response) {
-            is Ok -> tryDecode<T>(response.data.json, type)?.let { Ok(it) } ?: LMProblem.Decoding
-            is Problem -> Problem(response.message)
-        }
-    }
-
-    private suspend fun withCache(cacheKey: Int, block: suspend () -> Outcome<ParserContent>): Outcome<ParserContent> {
-        val cachedContent = cache[cacheKey]
-        if (cachedContent != null) return Ok(cachedContent)
-
-        val response = block()
-        if (response is Ok) {
-            cache[cacheKey] = response.data
-
-            if (cache.size > 25) {
-                val firstKey = cache.keys.firstOrNull()
-                firstKey?.let { key -> cache.remove(key) }
-            }
-        }
-
-        return response
     }
 
     private suspend fun readHtmlContent(
@@ -81,29 +62,28 @@ class KoogHtmlParserClient(
         instructions: String,
         type: KType,
         retryCount: Int,
-    ): Outcome<ParserContent> {
+        observer: HtmlParseObserver?,
+    ): Outcome<String> {
         log.info { "Reading html: ${url.value.take(50)}" }
         val trimmed = trimmer.trimHtml(doc)
         val content = config.htmlCharLimit?.let { limit ->
-            if (trimmed.length > limit) log.warn { "Truncating html from ${trimmed.length} to $limit chars: $url" }
-            trimmed.take(limit)
-        } ?: trimmed
+            if (trimmed.html.length > limit) log.warn { "Truncating html from ${trimmed.html.length} to $limit chars: $url" }
+            trimmed.html.take(limit)
+        } ?: trimmed.html
+        observer?.trimmed(trimmed, content)
 
         val prompt = prompt(
             id = "dev-assistant",
-            params = config.toParams(temperature = 0.5, schema = type.toBasicSchema())
+            params = config.toParams(temperature = lmTemperature, schema = type.toStandardSchema())
         ) {
-            system("You read web pages and extract relevant information as json.")
+            system("You read web pages and respond with json, following the instructions that come after the page.")
 
-            user("$instructions\n\nFor reference, here is the url:\n$url\n\nHere is the HTML:\n$content")
+            user("Here is the HTML of $url:\n$content\n\n$instructions")
         }
 
         logger.info { "LM Parse: $url" }
 
-        return when (val outcome = executePrompt(prompt, retryCount)) {
-            is Problem -> outcome
-            is Ok -> Ok(ParserContent(document = doc, json = outcome.data))
-        }
+        return executePrompt(prompt, retryCount, observer)
     }
 
     private fun LLMClientException.isBusy(): Boolean =
@@ -120,11 +100,22 @@ class KoogHtmlParserClient(
             .let { Duration.parse(it) }
     }.getOrNull()
 
-    private suspend fun executePrompt(prompt: Prompt, retryCount: Int): Outcome<String> {
+    private suspend fun executePrompt(prompt: Prompt, retryCount: Int, observer: HtmlParseObserver?): Outcome<String> {
         repeat(retryCount) { attempt ->
             try {
                 waitForCallInterval()
-                return Ok(executor.execute(prompt, config.model).textContent())
+                val start = TimeSource.Monotonic.markNow()
+                val response = executor.execute(prompt, config.model)
+                val json = response.textContent()
+                observer?.responded(
+                    model = config.model.id,
+                    json = json,
+                    inputTokens = response.metaInfo.inputTokensCount,
+                    outputTokens = response.metaInfo.outputTokensCount,
+                    millis = start.elapsedNow().inWholeMilliseconds,
+                    attempts = attempt + 1,
+                )
+                return Ok(json)
             } catch (e: LLMClientException) {
                 log.error { e }
                 if (!e.isBusy()) return LMProblem.Unspecified
@@ -144,13 +135,9 @@ class KoogHtmlParserClient(
     }
 
     override suspend fun <T> readImage(url: String, instructions: String, type: KType): T? {
-        val cacheKey = url.hashCode()
-        val cached = cache[cacheKey]
-        if (cached != null) return tryDecode(cached.json, type)
-
         val prompt = prompt(
             id = "dev-assistant",
-            params = config.toParams(temperature = 0.5, schema = type.toBasicSchema())
+            params = config.toParams(temperature = lmTemperature, schema = type.toStandardSchema())
         ) {
             system("You read images and extract relevant information as json.")
 
@@ -170,15 +157,6 @@ class KoogHtmlParserClient(
         }
 
         val json = executor.execute(prompt, config.model).textContent()
-        cache[cacheKey] = ParserContent(
-            document = null,
-            json = json
-        )
-
-        if (cache.size > 10) {
-            val firstKey = cache.keys.firstOrNull()
-            firstKey?.let { cache.remove(it) }
-        }
         return tryDecode(json, type)
     }
 
@@ -191,11 +169,6 @@ class KoogHtmlParserClient(
     }
 }
 
-data class ParserContent(
-    val document: Document?,
-    val json: String,
-)
-
 private val logger = KotlinLogging.logger(KoogHtmlParserClient::class)
 
 object LMProblem {
@@ -204,3 +177,5 @@ object LMProblem {
     val Decoding = Problem("Unable to decode LM response.")
     val UsageLimit = Problem("LM has reached its usage limit.")
 }
+
+private const val lmTemperature = 0.1

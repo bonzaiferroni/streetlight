@@ -15,6 +15,7 @@ interface HtmlParserClient {
         instructions: String,
         type: KType,
         retryCount: Int = 3,
+        observer: HtmlParseObserver? = null,
     ): Outcome<T>
     suspend fun <T> readImage(url: String, instructions: String, type: KType): T?
 }
@@ -24,4 +25,5 @@ suspend inline fun <reified T: Any> HtmlParserClient.readHtml(
     doc: Document,
     instructions: String,
     retryCount: Int = 3,
-): Outcome<T> = readHtml(url, doc, instructions, typeOf<T>(), retryCount)
+    observer: HtmlParseObserver? = null,
+): Outcome<T> = readHtml(url, doc, instructions, typeOf<T>(), retryCount, observer)

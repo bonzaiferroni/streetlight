@@ -7,8 +7,12 @@ import kotlinx.serialization.descriptors.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-fun KType.toBasicSchema(): LLMParams.Schema {
-    return LLMParams.Schema.JSON.Basic(
+/**
+ * The standard JSON schema of this type, with every property required so a model cannot skip one.
+ * A nullable property is required to be present, and may be `null`.
+ */
+fun KType.toStandardSchema(): LLMParams.Schema {
+    return LLMParams.Schema.JSON.Standard(
         name = (classifier as? KClass<*>)?.simpleName ?: error("must be a named type"),
         schema = toJsonSchema()
     )
@@ -31,29 +35,17 @@ fun KType.toJsonSchema(): JsonObject {
         }
     }
 
-    val required = buildList<JsonElement> {
-        for (i in 0 until descriptor.elementsCount) {
-            if (!descriptor.isElementOptional(i) &&
-                !descriptor.getElementDescriptor(i).isNullable
-            ) {
-                add(JsonPrimitive(descriptor.getElementName(i)))
-            }
-        }
-    }
-
     return JsonObject(
         buildMap {
             put("type", JsonPrimitive("object"))
             put("properties", JsonObject(properties))
-            if (required.isNotEmpty()) {
-                put("required", JsonArray(required))
-            }
+            put("required", JsonArray(properties.keys.map { JsonPrimitive(it) }))
         }
     )
 }
 
-fun SerialDescriptor.toSchema(): JsonObject =
-    buildJsonObject {
+fun SerialDescriptor.toSchema(): JsonObject {
+    val schema = buildJsonObject {
         when (kind) {
             PrimitiveKind.STRING -> put("type", JsonPrimitive("string"))
             PrimitiveKind.INT,
@@ -76,6 +68,7 @@ fun SerialDescriptor.toSchema(): JsonObject =
                     }
                 }
                 put("properties", JsonObject(nestedProps))
+                put("required", JsonArray(nestedProps.keys.map { JsonPrimitive(it) }))
             }
 
             else -> put("type", JsonPrimitive("string"))
@@ -102,3 +95,7 @@ fun SerialDescriptor.toSchema(): JsonObject =
             }
         }
     }
+    if (!isNullable) return schema
+    val type = schema["type"] ?: return schema
+    return JsonObject(schema + ("type" to JsonArray(listOf(type, JsonPrimitive("null")))))
+}

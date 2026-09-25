@@ -6,6 +6,7 @@ import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import streetlight.agent.LMProblem
 import streetlight.agent.parseHtmlDocument
 import streetlight.agent.readHtml
@@ -20,36 +21,29 @@ class EventPageReader(
     private val locationConfig: LocationConfigContent,
     private val origin: Origin,
     private val initialUrl: Url,
-    private val daemon: ParseDaemon
+    private val daemon: ParseDaemon,
+    private val tracker: PageTracker,
 ) {
     val koog get() = daemon.koog
     val dao get() = daemon.dao
     val log get() = daemon.log
-
-    /** The result of the last [read]. */
-    var outcome = PageOutcome.Skipped
-        private set
 
     suspend fun read(): RawEvent? {
         val gate = daemon.getRobotGate(origin)
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
         val fetch = gate.fetchWhenOpen(initialUrl, fetchMode).toDataOr {
             daemon.logProblem(it)
-            outcome = it.toFetchOutcome()
+            tracker.finished(it.toFetchOutcome(), it)
             return null
         }
 
-        fun finish(result: PageOutcome, doc: Document? = null) {
-            outcome = result
-            saveHtml(result, fetch.pageUrl, fetch.text, doc)
-        }
-
-        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOr {
-            daemon.logProblem(it)
-            finish(PageOutcome.NoHtml)
+        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(daemon::logProblem)
+        tracker.fetched(fetchMode, fetch, doc)
+        if (doc == null) {
+            tracker.finished(PageOutcome.NoHtml)
             return null
         }
-        val pageUrl = dao.link.registerFetch(origin.originId, doc, fetch)
+        val pageUrl = dao.registerFetch(origin.originId, doc, fetch)
 
         val report = doc.readStructuredData()
         if (report.jsonLdBlocks > 0 || report.microdataEventCount > 0) {
@@ -60,10 +54,10 @@ class EventPageReader(
 
         val pageSchema = origin.getPageSchema(fetch.pageUrl, doc).toDataOr {
             daemon.logProblem(it)
-            finish(it.toSchemaOutcome(), doc)
+            tracker.finished(it.toSchemaOutcome(), it)
             return null
         }
-        finish(PageOutcome.Content, doc)
+        tracker.finished(PageOutcome.Content)
         return parsePageEvent(pageSchema, doc, locationConfig.config.parseMode, pageUrl).also {
             println("Cost: ${it.cost}")
         }
@@ -80,6 +74,7 @@ class EventPageReader(
             // println(length) td: a better way to score quality of selector
 
             if (!isSuccess) {
+                tracker.storedSchemaTried(content, false)
                 dao.parser.updateResult(schema.parserId, false)
                 return@mapNotNull null
             }
@@ -88,6 +83,7 @@ class EventPageReader(
         }.sortedByDescending { it.first }.firstOrNull()?.let { (length, schema) ->
             println("chose: $length")
             dao.parser.updateResult(schema.parserId, true)
+            tracker.storedSchemaTried(schema.schema, true)
             return Ok(schema.schema as EventPageSchema)
         }
 
@@ -95,7 +91,11 @@ class EventPageReader(
 
         // td: likewise limit LM call by interval
         val content = koog.readHtml<ContentParse<EventPageSchema>>(
-            url = url, doc = doc, instructions = SchemaParserText.EventPageSelectorsInstructions, retryCount = lmRetryCount
+            url = url,
+            doc = doc,
+            instructions = SchemaParserText.EventPageSelectorsInstructions,
+            retryCount = lmRetryCount,
+            observer = tracker,
         ).toDataOr {
             if (it == LMProblem.UsageLimit) {
                 daemon.lmUsageLimitReached = true
@@ -112,8 +112,14 @@ class EventPageReader(
             dao.origin.registerIncomplete(originId)
         }
 
-        dao.parser.create(originId, contentSchema, fetchMode)
-        return Ok(contentSchema)
+        val validated = contentSchema.validate(doc.body())
+        tracker.schemaCreated(contentSchema, validated)
+        val schema = validated.toDataOr {
+            daemon.logProblem(it)
+            return SchemaProblem.Invalid
+        }
+        dao.parser.create(originId, schema, fetchMode)
+        return Ok(schema)
     }
 
     private fun parsePageEvent(

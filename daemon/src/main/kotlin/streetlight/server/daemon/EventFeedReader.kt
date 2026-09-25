@@ -13,7 +13,6 @@ import streetlight.agent.parseHtmlDocument
 import streetlight.agent.readHtml
 import streetlight.agent.tryQuery
 import streetlight.model.data.EventFeedSchema
-import streetlight.model.data.Location
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
 import streetlight.model.data.toOriginId
@@ -24,14 +23,14 @@ class EventFeedReader(
     private val location: LocationConfigContent,
     private val origin: Origin,
     private val initialUrl: Url,
-    private val daemon: ParseDaemon
+    private val daemon: ParseDaemon,
+    private val tracker: ParseTracker,
 ) {
     val koog get() = daemon.koog
     val dao get() = daemon.dao
     val log get() = daemon.log
 
-    /** The tally of the last [read]. */
-    val report = FeedReport(initialUrl)
+    private val feed get() = tracker.feed
 
     suspend fun read(): List<RawEvent>? {
         val link = dao.link.readLinkByAlias(initialUrl)
@@ -43,34 +42,31 @@ class EventFeedReader(
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
         val fetch = gate.fetchWhenOpen(url, fetchMode).toDataOr {
             daemon.logProblem(it)
-            report.outcome = it.toFetchOutcome()
+            feed.finished(it.toFetchOutcome(), it)
             return null
         }
 
-        fun finish(outcome: PageOutcome, doc: Document? = null) {
-            report.outcome = outcome
-            saveHtml(outcome, fetch.pageUrl, fetch.text, doc)
-        }
-
-        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOr {
-            daemon.logProblem(it)
-            finish(PageOutcome.NoHtml)
+        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(daemon::logProblem)
+        feed.fetched(fetchMode, fetch, doc)
+        if (doc == null) {
+            feed.finished(PageOutcome.NoHtml)
             return null
         }
-        dao.link.registerFetch(origin.originId, doc, fetch)
+        dao.registerFetch(origin.originId, doc, fetch)
 
         val feedSchema = origin.getFeedSchema(url, doc).toDataOr {
             daemon.logProblem(it)
-            finish(it.toSchemaOutcome(), doc)
+            feed.finished(it.toSchemaOutcome(), it)
             return null
         }
         val body = doc.body()
         val pageElements = feedSchema.event?.let { body.tryQuery(it).toDataOrNull(daemon::logProblem) }
+        feed.collect(pageElements.orEmpty())
         if (pageElements.isNullOrEmpty()) {
-            finish(PageOutcome.InvalidSelector, doc)
+            feed.finished(PageOutcome.InvalidSelector)
             return null
         }
-        finish(PageOutcome.Content, doc)
+        feed.finished(PageOutcome.Content)
 
         return pageElements.mapNotNull { element ->
             val feedEvent = RawEvent(
@@ -85,15 +81,19 @@ class EventFeedReader(
             )
 
             val pageUrl = feedEvent.url ?: return@mapNotNull feedEvent
-            report.links++
+            tracker.linkFound()
             val pageLink = dao.link.readLinkByAlias(pageUrl)
             if (pageLink != null) return@mapNotNull null
-            val pageOrigin = pageUrl.toOriginId()?.takeIf { it != origin.originId }?.let {
-                dao.origin.readOrCreateOrigin(it)
-            } ?: origin
-            val reader = EventPageReader(location, pageOrigin, pageUrl, daemon)
-            val pageEvent = reader.read()
-            report.pages.add(reader.outcome)
+            val pageTracker = tracker.page(pageUrl)
+            val pageEvent = if (tracker.shouldFetch(pageUrl)) {
+                val pageOrigin = pageUrl.toOriginId()?.takeIf { it != origin.originId }?.let {
+                    dao.origin.readOrCreateOrigin(it)
+                } ?: origin
+                EventPageReader(location, pageOrigin, pageUrl, daemon, pageTracker).read()
+            } else {
+                pageTracker.finished(PageOutcome.Benched)
+                null
+            }
 
             RawEvent(
                 title = pageEvent?.title ?: feedEvent.title,
@@ -118,6 +118,7 @@ class EventFeedReader(
             val eventSelector = schema.event ?: return@forEach
             val pageElements = body.tryQuery(eventSelector).toDataOr { return@forEach }
             val isSuccess = !pageElements.isEmpty()
+            feed.storedSchemaTried(schema, isSuccess)
             dao.parser.updateResult(parser.parserId, isSuccess)
             if (isSuccess) return Ok(schema)
         }
@@ -126,7 +127,11 @@ class EventFeedReader(
 
         // td: limit LM call by interval
         val content = koog.readHtml<ContentParse<EventFeedSchema>>(
-            url = url, doc = doc, instructions = SchemaParserText.EventFeedSelectorsInstructions, retryCount = lmRetryCount
+            url = url,
+            doc = doc,
+            instructions = SchemaParserText.EventFeedSelectorsInstructions,
+            retryCount = lmRetryCount,
+            observer = feed,
         ).toDataOr {
             if (it == LMProblem.UsageLimit) {
                 daemon.lmUsageLimitReached = true
@@ -143,7 +148,13 @@ class EventFeedReader(
             dao.origin.registerIncomplete(originId)
         }
 
-        dao.parser.create(originId, contentSchema, fetchMode)
-        return Ok(contentSchema)
+        val validated = contentSchema.validate(doc.body())
+        feed.schemaCreated(contentSchema, validated)
+        val schema = validated.toDataOr {
+            daemon.logProblem(it)
+            return SchemaProblem.Invalid
+        }
+        dao.parser.create(originId, schema, fetchMode)
+        return Ok(schema)
     }
 }

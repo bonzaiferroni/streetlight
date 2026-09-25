@@ -31,7 +31,6 @@ import streetlight.model.data.toOriginId
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
 import streetlight.server.routes.createEvent
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
@@ -51,13 +50,11 @@ class ParseDaemon(private val server: Server) {
 
     suspend fun start() {
         while (true) {
-            val report = CheckReport(Clock.System.now())
             val locations = dao.location.readCheckable(checkInterval - 1.hours)
             locations.forEach { location ->
                 if (location.config.parseMode == ParseMode.None) return@forEach
-                checkLocation(location)?.let(report.feeds::add)
+                checkLocation(location)
             }
-            report.write(Clock.System.now())
             log.info { "completed location check" }
             delay(10.minutes)
         }
@@ -68,25 +65,37 @@ class ParseDaemon(private val server: Server) {
         robotGates.getOrPut(origin.originId) { origin.getRobotGate() }
     }
 
-    private suspend fun checkLocation(config: LocationConfigContent): FeedReport? {
+    /** Reads the feed of a location and creates its new events, then writes the location's parse log. */
+    private suspend fun checkLocation(config: LocationConfigContent) {
         val location = config.location
         dao.location.updateCheckedAt(location.locationId)
 
         val feedUrl = requireNotNull(location.eventsUrl)
-        val originId = feedUrl.toOriginId() ?: return null
+        val originId = feedUrl.toOriginId() ?: return
 
         val origin = dao.origin.readOrCreateOrigin(originId)
 
-        val reader = EventFeedReader(config, origin, feedUrl.normalize(), this)
+        val tracker = ParseTracker(location.slug.toString(), feedUrl.normalize())
+        val reader = EventFeedReader(config, origin, feedUrl.normalize(), this, tracker)
         reader.read()?.forEach { event ->
+            tracker.eventFound()
             val edit = event.toEventEdit(location.timezoneId, location.locationId)
-            val startsAt = edit.startsAt ?: return@forEach
+            val startsAt = edit.startsAt ?: run {
+                tracker.eventUnparsed(event)
+                return@forEach
+            }
             val existingEvent = dao.event.readEventAt(location.locationId, startsAt)
-            if (existingEvent != null) return@forEach
-            server.createEvent(null, edit).toDataOr { return@forEach }
-            reader.report.newEvents++
+            if (existingEvent != null) {
+                tracker.eventDuplicate()
+                return@forEach
+            }
+            server.createEvent(null, edit).toDataOr {
+                tracker.eventFailed()
+                return@forEach
+            }
+            tracker.eventCreated()
         }
-        return reader.report
+        tracker.report().write(originId)
     }
 
     fun logProblem(problem: Problem) {

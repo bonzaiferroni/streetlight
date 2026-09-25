@@ -26,6 +26,7 @@ import streetlight.agent.fetchText
 import streetlight.model.data.FetchMode
 import java.net.URI
 import kotlin.time.Clock
+import kotlin.time.TimeSource
 
 private val logger = KotlinLogging.logger("playwright-fetch-client")
 
@@ -55,6 +56,7 @@ suspend fun fetchText(url: Url, mode: FetchMode) = when (mode) {
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withContext(browserContext) {
     logger.info { "fetching url with scripting: ${initialUrl.value.take(100)}" }
+    val start = TimeSource.Monotonic.markNow()
     browser.newContext(contextOptions()).use { context ->
         context.setDefaultTimeout(StreetlightAgent.Timeout.toDouble())
         context.setDefaultNavigationTimeout(StreetlightAgent.Timeout.toDouble())
@@ -80,7 +82,10 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
 
             return@withContext try {
                 page.waitForLoadState(LoadState.LOAD)
-                Ok(FetchText(initialUrl, page.url().toUrl(), page.content(), Clock.System.now()))
+                Ok(FetchText(
+                    initialUrl, page.url().toUrl(), page.content(), Clock.System.now(),
+                    millis = start.elapsedNow().inWholeMilliseconds,
+                ))
             } catch (e: TimeoutError) {
                 logger.warn { "timeout fetching ${initialUrl.value.take(100)}" }
                 Problem("Url timed out: $initialUrl")

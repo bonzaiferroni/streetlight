@@ -35,9 +35,11 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 An Ollama model runs with thinking turned off.
 
-## Caching
+The parser runs on `qwen3.5-parser`, a model derived from `qwen3.5:9b` that adds `PARAMETER num_predict 1024` to cap the response length. Koog does not forward a maximum token count to Ollama, so the cap lives in the model. Its Modelfile is `~/apps/ollama/qwen3.5-parser.Modelfile` and is built with `ollama create qwen3.5-parser -f <Modelfile>`.
 
-`KoogHtmlParserClient` caches a response against the hash of the document it parsed, and evicts the oldest entry past a fixed size. A repeated parse of the same page costs nothing.
+## Structured Output
+
+`KType.toStandardSchema()` builds the response schema, sent as a standard JSON schema to every provider. Every property is required, and a nullable property is typed as its type or `null`, so a model cannot skip a field by leaving it out. The parser samples at a temperature of 0.1.
 
 ## Rate Limiting
 
@@ -51,4 +53,18 @@ A removal is added only for content that cannot carry event information. Element
 
 Hidden content is kept, since pages hide events in modals, tabs and collapsed sections.
 
+| Measure | Rule |
+|---|---|
+| Attribute values | Whitespace collapsed in every value |
+| `data-*` attributes | Removed when the value is over 200 characters |
+| Sibling runs | Past the tenth consecutive sibling sharing a tag and class, the rest are removed |
+
+A run is collapsed only in the prompt copy. Selectors run against the full page, so every item in the run is still read.
+
 `KoogHtmlParserClient` cuts the trimmed html to `LmConfig.htmlCharLimit` before building the prompt, so the instructions always reach the model. A provider that truncates an oversized prompt itself may drop them.
+
+`HtmlTrimmer.trimHtml` returns a `TrimResult` of the html and its `TrimStats`.
+
+## Call Observer
+
+`readHtml` takes an optional `HtmlParseObserver`, and the client reports to it as the call proceeds: the `TrimResult` with the prompt html exactly as the model reads it, and the response with its tokens, time and attempts. A caller that passes none is unaffected.

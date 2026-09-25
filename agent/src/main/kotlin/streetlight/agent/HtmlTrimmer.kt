@@ -5,17 +5,29 @@ import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import com.fleeksoft.ksoup.nodes.Node
 import com.fleeksoft.ksoup.nodes.TextNode
+import kotlinx.serialization.Serializable
 
 class HtmlTrimmer {
 
-    /** Returns the html of a trimmed copy of [doc], leaving [doc] unchanged. */
-    fun trimHtml(doc: Document): String {
+    /** Trims a copy of [doc], leaving [doc] unchanged. */
+    fun trimHtml(doc: Document): TrimResult {
         val trimmed = doc.clone()
         trimmed.outputSettings().prettyPrint(false)
         trimHead(trimmed)
         trimBody(trimmed)
+        val runsCollapsed = collapseRuns(trimmed.body())
 
-        return trimmed.outerHtml()
+        val html = trimmed.outerHtml()
+        return TrimResult(
+            html = html,
+            stats = TrimStats(
+                rawChars = doc.outerHtml().length,
+                trimmedChars = html.length,
+                rawTextChars = doc.body().text().length,
+                trimmedTextChars = trimmed.body().text().length,
+                runsCollapsed = runsCollapsed,
+            )
+        )
     }
 
     private fun trimHead(doc: Document) {
@@ -104,11 +116,35 @@ class HtmlTrimmer {
     private fun trimAttributes(element: Element) {
         element.attributes().toList().forEach { attribute ->
             val key = attribute.key.lowercase()
+            val value = attribute.value.trim().replace(whitespace, " ")
             when {
                 key in removableAttributes || key.startsWith("on") -> element.removeAttr(attribute.key)
-                key == "class" -> element.attr(attribute.key, attribute.value.trim().split(whitespace).joinToString(" "))
+                key.startsWith("data-") && value.length > maxDataValueLength -> element.removeAttr(attribute.key)
+                value != attribute.value -> element.attr(attribute.key, value)
             }
         }
+    }
+
+    /**
+     * Removes each element child past [maxRunLength] in a run of consecutive siblings sharing a tag and class,
+     * returning the number removed.
+     */
+    private fun collapseRuns(element: Element): Int {
+        var signature: String? = null
+        var count = 0
+        var removed = 0
+        element.children().toList().forEach { child ->
+            val next = "${child.tagName()}.${child.className()}"
+            count = if (next == signature) count + 1 else 1
+            signature = next
+            if (count > maxRunLength) {
+                child.remove()
+                removed++
+            } else {
+                removed += collapseRuns(child)
+            }
+        }
+        return removed
     }
 
     private fun keepHeadLink(element: Element): Boolean {
@@ -187,5 +223,20 @@ class HtmlTrimmer {
         )
 
         private val whitespace = Regex("\\s+")
+        private const val maxDataValueLength = 200
+        private const val maxRunLength = 10
     }
 }
+
+/** The trimmed [html] of a document, with [stats] on what the trim removed. */
+data class TrimResult(val html: String, val stats: TrimStats)
+
+/** The size of a document before and after a trim, and the runs of siblings it collapsed. */
+@Serializable
+data class TrimStats(
+    val rawChars: Int,
+    val trimmedChars: Int,
+    val rawTextChars: Int,
+    val trimmedTextChars: Int,
+    val runsCollapsed: Int,
+)
