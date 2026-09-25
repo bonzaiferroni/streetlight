@@ -4,7 +4,7 @@ import kampfire.api.PostEndpoint
 import kampfire.model.Token
 import koala.PageResource
 import koala.modifier.*
-import koala.html.BtnStyle
+import koala.html.ButtonStyle
 import koala.html.card
 import koala.html.column
 import koala.html.filigree
@@ -63,7 +63,7 @@ fun FlowContent.formSubmit(
     addModifiers(AlignSelfEnd)
     hiddenInput(name = "token") { value = token.value }
     submitInput {
-        addModifiers(BtnStyle.Class)
+        addModifiers(ButtonStyle.Class)
         value = text
     }
 }

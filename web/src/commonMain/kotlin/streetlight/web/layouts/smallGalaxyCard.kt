@@ -20,7 +20,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     navigation(route) {
                         heading5(galaxy.name, LineHeight1)
                     }
-                    val modifiers = modify(TextSmall, FadeBottom, Flex1).let {
+                    val modifiers = modify(TextSmall, FadeBottom, Flex1, MaxHeight(5)).let {
                         when (galaxy.description) {
                             null -> it.append(Italic, InkDimFg)
                             else -> it

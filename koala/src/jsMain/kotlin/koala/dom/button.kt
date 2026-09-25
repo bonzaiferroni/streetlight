@@ -7,7 +7,7 @@ import koala.html.configureElementButton
 import koala.html.configureSvgButton
 import kampfire.model.Tap
 import kampfire.model.Url
-import koala.html.BtnStyle
+import koala.html.ButtonStyle
 import koala.modifier.Modifier
 import koala.modifier.modify
 import kotlinx.coroutines.flow.Flow
@@ -90,7 +90,7 @@ fun AppendScope.button(
     url: Url,
     mod: Modifier? = null,
     config: A.() -> Unit = { }
-) = navigation(url.value, modify(mod, BtnStyle.Class)) {
+) = navigation(url.value, modify(mod, ButtonStyle.Class)) {
     config()
     span {
         +label

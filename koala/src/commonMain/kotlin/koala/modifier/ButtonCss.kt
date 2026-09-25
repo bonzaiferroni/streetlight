@@ -1,11 +1,6 @@
 package koala.modifier
 
-import koala.html.BtnStyle
 import koala.html.ButtonStyle
-
-object ButtonStyle {
-
-}
 
 // language="CSS"
 val ButtonCss get() = with(ButtonStyle) {"""
@@ -24,7 +19,7 @@ body {
     --danger-shadow: 0 0 .8rem rgb(var(--danger)), var(--btn-outline);
 }
 
-${BtnStyle.Class} {
+${ButtonStyle.Class} {
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: var(--unit);
@@ -67,17 +62,17 @@ $ButtonText {
     white-space: nowrap;
 }
 
-${BtnStyle.Class}$Accent {
+${ButtonStyle.Class}$Accent {
     box-shadow: var(--accent-shadow);
     background: var(--accent-button);
 }
 
-${BtnStyle.Class}$Secondary {
+${ButtonStyle.Class}$Secondary {
     box-shadow: none;
     background: var(--secondary-button);
 }
 
-${BtnStyle.Class}$Zen {
+${ButtonStyle.Class}$Zen {
     color: var(--ink-fg);
     background: var(--zen-bg);
     box-shadow: none;
@@ -91,45 +86,45 @@ ${BtnStyle.Class}$Zen {
 }
 
 $DayTheme {
-    ${BtnStyle.Class} {
+    ${ButtonStyle.Class} {
         background: var(--primary-button-day);
     }
 
-    ${BtnStyle.Class}$Secondary {
+    ${ButtonStyle.Class}$Secondary {
         box-shadow: none;
         background: var(--secondary-button);
     }
 
-    ${BtnStyle.Class}$Accent {
+    ${ButtonStyle.Class}$Accent {
         box-shadow: var(--btn-outline);
         background: var(--accent-button-day);
     }
 
-    ${BtnStyle.Class}$Zen {
+    ${ButtonStyle.Class}$Zen {
         background: var(--zen-button-day);
     }
 }
 
 $Shimmer {
-    &${BtnStyle.Class}, ${BtnStyle.Class} {
+    &${ButtonStyle.Class}, ${ButtonStyle.Class} {
         pointer-events: none;
         opacity: .9;
     }
 }
 
-${BtnStyle.Class}$Danger {
+${ButtonStyle.Class}$Danger {
     background: var(--danger-bg);
     box-shadow: var(--danger-shadow);
 }
 
-${BtnStyle.Class}$BackgroundImage {
+${ButtonStyle.Class}$BackgroundImage {
     position: relative;
     overflow: hidden;
     z-index: 0;
     box-shadow: 0 0 .8rem rgba(var(--ink), .2);
 }
 
-${BtnStyle.Class}$BackgroundImage::before {
+${ButtonStyle.Class}$BackgroundImage::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -144,18 +139,18 @@ ${BtnStyle.Class}$BackgroundImage::before {
     z-index: -1;
 }
 
-${BtnStyle.Class}[disabled] {
+${ButtonStyle.Class}[disabled] {
     background: var(--gray-bg);
     color: var(--ink-disabled);
     cursor: not-allowed;
     box-shadow: none;
 }
 
-${BtnStyle.Class}[disabled]:hover {
+${ButtonStyle.Class}[disabled]:hover {
     animation: none;
 }
 
-${BtnStyle.Class}:hover {
+${ButtonStyle.Class}:hover {
     animation: glow-shadow 10s infinite linear;
 }
 

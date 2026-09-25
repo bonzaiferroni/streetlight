@@ -173,7 +173,7 @@ object FeedRow {
 }
 
 //language="CSS"
-val FeedProtoCss get() = with(FeedRow) { """
+val FeedRowCss get() = with(FeedRow) { """
     
 $Base {
     display: grid;

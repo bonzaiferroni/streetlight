@@ -25,7 +25,7 @@ fun BUTTON.configureButton(
     flair: String? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(BtnStyle.Class, mod)
+    addModifiers(ButtonStyle.Class, mod)
     block()
     flair?.let {
         span {
@@ -79,6 +79,7 @@ fun BUTTON.configureElementButton(
 }
 
 object ButtonStyle {
+    val Class = Class("btn")
     val IconClass = Class("icon-button")
     val ElementClass = Class("element-button")
 }

@@ -71,7 +71,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
         }
         row {
             spacer(Flex1)
-            btn("➕ Create a Galaxy", GalaxyFoundryRoute, Accent)
+            btn("➕ Create a Galaxy", GalaxyFoundryRoute, Zen)
         }
     }
 }

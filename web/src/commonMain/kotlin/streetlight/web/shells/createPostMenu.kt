@@ -8,7 +8,7 @@ import streetlight.web.ui.PopoverId
 
 /** Opens the create post menu, for posts to [galaxy] when given. */
 fun FlowContent.createPostMenu(galaxy: Galaxy? = null) {
-    button("Create Post", Accent, "☰") {
+    button("Create Post", Zen, "☰") {
         setPopoverTarget(PopoverId.CreatePost)
         galaxy?.let {
             setAttribute(Attribute.Slug.to(galaxy.slug))
