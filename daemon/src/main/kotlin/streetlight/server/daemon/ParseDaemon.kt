@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import streetlight.agent.KoogParserClient
+import streetlight.agent.KoogHtmlParserClient
 import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.EventEdit
@@ -31,6 +31,7 @@ import streetlight.model.data.toOriginId
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
 import streetlight.server.routes.createEvent
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
@@ -38,7 +39,7 @@ import kotlin.time.Instant
 class ParseDaemon(private val server: Server) {
 
     val dao = server.dao
-    val koog = server.provide<KoogParserClient>()
+    val koog = server.provide<KoogHtmlParserClient>()
     val log = KotlinLogging.logger(ParseDaemon::class)
 
     var startedAt = Instant.DISTANT_PAST
@@ -50,14 +51,15 @@ class ParseDaemon(private val server: Server) {
 
     suspend fun start() {
         while (true) {
-            val galaxy = dao.galaxy.readGalaxy(Slug("tag"), null) ?: return
+            val report = CheckReport(Clock.System.now())
             val locations = dao.location.readCheckable(checkInterval - 1.hours)
             locations.forEach { location ->
                 if (location.config.parseMode == ParseMode.None) return@forEach
-                checkLocation(location, galaxy)
+                checkLocation(location)?.let(report.feeds::add)
             }
+            report.write(Clock.System.now())
             log.info { "completed location check" }
-            delay(1.minutes)
+            delay(10.minutes)
         }
     }
 
@@ -66,12 +68,12 @@ class ParseDaemon(private val server: Server) {
         robotGates.getOrPut(origin.originId) { origin.getRobotGate() }
     }
 
-    private suspend fun checkLocation(config: LocationConfigContent, galaxy: Galaxy) {
+    private suspend fun checkLocation(config: LocationConfigContent): FeedReport? {
         val location = config.location
         dao.location.updateCheckedAt(location.locationId)
 
         val feedUrl = requireNotNull(location.eventsUrl)
-        val originId = feedUrl.toOriginId() ?: return
+        val originId = feedUrl.toOriginId() ?: return null
 
         val origin = dao.origin.readOrCreateOrigin(originId)
 
@@ -81,16 +83,10 @@ class ParseDaemon(private val server: Server) {
             val startsAt = edit.startsAt ?: return@forEach
             val existingEvent = dao.event.readEventAt(location.locationId, startsAt)
             if (existingEvent != null) return@forEach
-            val event = server.createEvent(null, edit).toDataOr { return@forEach }
-            dao.post.create(
-                PostEdit(
-                    postId = null,
-                    galaxyId = galaxy.galaxyId,
-                    postType = PostType.Event,
-                    recordId = event.eventId.value,
-                ), null
-            )
+            server.createEvent(null, edit).toDataOr { return@forEach }
+            reader.report.newEvents++
         }
+        return reader.report
     }
 
     fun logProblem(problem: Problem) {
@@ -131,6 +127,7 @@ data class RawEvent(
 )
 
 private val checkInterval = 24.hours
+internal const val lmRetryCount = 10
 
 private fun RawEvent.toEventEdit(timeZoneId: String?, locationId: LocationId): EventEdit {
 

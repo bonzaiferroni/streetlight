@@ -44,3 +44,4 @@ benchmark/server
 
 # generated API reference, published by CI
 /docs/kdoc/
+/logs

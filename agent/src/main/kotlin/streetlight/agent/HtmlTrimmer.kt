@@ -8,11 +8,14 @@ import com.fleeksoft.ksoup.nodes.TextNode
 
 class HtmlTrimmer {
 
+    /** Returns the html of a trimmed copy of [doc], leaving [doc] unchanged. */
     fun trimHtml(doc: Document): String {
-        trimHead(doc)
-        trimBody(doc)
+        val trimmed = doc.clone()
+        trimmed.outputSettings().prettyPrint(false)
+        trimHead(trimmed)
+        trimBody(trimmed)
 
-        return doc.outerHtml()
+        return trimmed.outerHtml()
     }
 
     private fun trimHead(doc: Document) {
@@ -43,6 +46,10 @@ class HtmlTrimmer {
         node: Node,
         keepNode: (Node) -> Boolean
     ) {
+        when (node) {
+            is Element -> trimAttributes(node)
+            is TextNode -> node.text(node.text())
+        }
         if (node is Element) {
             val children = node.childNodes().toList()
             for (child in children) {
@@ -60,7 +67,7 @@ class HtmlTrimmer {
 
             is Element -> when (node.tagName().lowercase()) {
                 "title" -> hasMeaningfulContent(node)
-                "meta" -> true
+                "meta" -> keepMeta(node)
                 "link" -> keepHeadLink(node)
                 else -> false
             }
@@ -85,6 +92,23 @@ class HtmlTrimmer {
             }
 
             else -> false
+        }
+    }
+
+    private fun keepMeta(element: Element): Boolean {
+        if (element.hasAttr("charset") || element.hasAttr("http-equiv")) return false
+        val name = element.attr("name").lowercase()
+        if (name in removableMetaNames) return false
+        return !name.endsWith("-verification") && !name.startsWith("msapplication") && !name.startsWith("apple-")
+    }
+
+    private fun trimAttributes(element: Element) {
+        element.attributes().toList().forEach { attribute ->
+            val key = attribute.key.lowercase()
+            when {
+                key in removableAttributes || key.startsWith("on") -> element.removeAttr(attribute.key)
+                key == "class" -> element.attr(attribute.key, attribute.value.trim().split(whitespace).joinToString(" "))
+            }
         }
     }
 
@@ -135,7 +159,40 @@ class HtmlTrimmer {
             "button",
             "select",
             "option",
-            "textarea"
+            "textarea",
+            "nav",
         )
+
+        private val removableMetaNames = setOf(
+            "viewport",
+            "theme-color",
+            "color-scheme",
+            "robots",
+            "googlebot",
+            "generator",
+            "format-detection",
+            "referrer",
+        )
+
+        private val removableAttributes = setOf(
+            "style",
+            "srcset",
+            "sizes",
+            "width",
+            "height",
+            "loading",
+            "decoding",
+            "fetchpriority",
+            "elementtiming",
+            "tabindex",
+            "target",
+            "rel",
+            "crossorigin",
+            "referrerpolicy",
+            "integrity",
+            "nonce",
+        )
+
+        private val whitespace = Regex("\\s+")
     }
 }

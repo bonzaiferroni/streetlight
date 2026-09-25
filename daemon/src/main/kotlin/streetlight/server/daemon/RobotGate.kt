@@ -2,6 +2,7 @@ package streetlight.server.daemon
 
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Outcome
+import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toDataOr
 import kotlinx.coroutines.delay
@@ -15,6 +16,10 @@ import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
+
+object RobotProblem {
+    val Disallowed = Problem("Path is disallowed by robots.txt.")
+}
 
 class RobotGate(
     text: String?,
@@ -70,7 +75,7 @@ class RobotGate(
     }
 
     suspend fun fetchWhenOpen(url: Url, mode: FetchMode): Outcome<FetchText> {
-        waitUntilOpen(url)
+        if (!waitUntilOpen(url)) return RobotProblem.Disallowed
         return fetchText(url, mode)
     }
 

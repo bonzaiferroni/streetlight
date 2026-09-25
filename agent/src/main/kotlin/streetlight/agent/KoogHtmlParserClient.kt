@@ -16,17 +16,28 @@ import kampfire.model.Url
 import kampfire.utils.takeEllipsis
 import klutch.utils.logger
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.io.files.Path
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 class KoogHtmlParserClient(
     env: Environment,
-    private val retryDelay: Duration = 10.seconds,
+    private val retryDelay: Duration = 30.seconds,
+    private val callInterval: Duration = 12.seconds,
 ): HtmlParserClient {
+    private val callMutex = Mutex()
+    private var lastCallAt = Instant.DISTANT_PAST
     private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
     private val console = KotlinLogging.logger("dao")
     private val cache = mutableMapOf<Int, ParserContent>()
@@ -36,9 +47,15 @@ class KoogHtmlParserClient(
     override suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KClass<T>): Outcome<T>
         = readHtml(url, doc, instructions, type.createType())
 
-    override suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KType): Outcome<T> {
+    override suspend fun <T: Any> readHtml(
+        url: Url,
+        doc: Document,
+        instructions: String,
+        type: KType,
+        retryCount: Int,
+    ): Outcome<T> {
         val response = withCache(doc.hashCode()) {
-            readHtmlContent(url, doc, instructions, type)
+            readHtmlContent(url, doc, instructions, type, retryCount)
         }
         return when (response) {
             is Ok -> tryDecode<T>(response.data.json, type)?.let { Ok(it) } ?: LMProblem.Decoding
@@ -68,7 +85,7 @@ class KoogHtmlParserClient(
         doc: Document,
         instructions: String,
         type: KType,
-        retryCount: Int = 3,
+        retryCount: Int,
     ): Outcome<ParserContent> {
         log.info { "Reading html: ${url.value.take(50)}" }
         val content = trimmer.trimHtml(doc)
@@ -94,21 +111,40 @@ class KoogHtmlParserClient(
     }
 
     private fun LLMClientException.isBusy(): Boolean =
-        toString().contains("UNAVAILABLE") || toString().contains("503")
+        toString().contains("UNAVAILABLE") || toString().contains("503") || toString().contains("429")
+
+    /** The delay from the `RetryInfo` detail of a Google error body, or `null`. */
+    private fun LLMClientException.readRetryDelay(): Duration? = runCatching {
+        val text = toString()
+        val body = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1)
+        Json.parseToJsonElement(body).jsonObject["error"]!!.jsonObject["details"]!!.jsonArray
+            .map { it.jsonObject }
+            .first { it["@type"]?.jsonPrimitive?.content?.endsWith("RetryInfo") == true }
+            .getValue("retryDelay").jsonPrimitive.content
+            .let { Duration.parse(it) }
+    }.getOrNull()
 
     private suspend fun executePrompt(prompt: Prompt, retryCount: Int): Outcome<String> {
         repeat(retryCount) { attempt ->
             try {
+                waitForCallInterval()
                 return Ok(executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content)
             } catch (e: LLMClientException) {
                 log.error { e }
                 if (!e.isBusy()) return LMProblem.Unspecified
                 if (attempt == retryCount - 1) return LMProblem.Busy
-                log.info { "Model busy, retrying in ${retryDelay.inWholeSeconds}s (attempt ${attempt + 1} of $retryCount)" }
-                delay(retryDelay)
+                val wait = e.readRetryDelay() ?: retryDelay
+                log.info { "Model busy, retrying in ${wait.inWholeSeconds}s (attempt ${attempt + 1} of $retryCount)" }
+                delay(wait)
             }
         }
         return LMProblem.Unspecified
+    }
+
+    private suspend fun waitForCallInterval() = callMutex.withLock {
+        val remaining = callInterval - (Clock.System.now() - lastCallAt)
+        if (remaining.isPositive()) delay(remaining)
+        lastCallAt = Clock.System.now()
     }
 
     override suspend fun <T> readImage(url: String, instructions: String, type: KType): T? {

@@ -8,6 +8,7 @@ import kampfire.model.Url
 import kampfire.model.toDataOr
 import streetlight.agent.LMProblem
 import streetlight.agent.parseHtmlDocument
+import streetlight.agent.readHtml
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
@@ -25,11 +26,29 @@ class EventPageReader(
     val dao get() = daemon.dao
     val log get() = daemon.log
 
+    /** The result of the last [read]. */
+    var outcome = PageOutcome.Skipped
+        private set
+
     suspend fun read(): RawEvent? {
         val gate = daemon.getRobotGate(origin)
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
-        val fetch = gate.fetchWhenOpen(initialUrl, fetchMode).toDataOr(daemon::logProblem) { return null }
-        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOr(daemon::logProblem) { return null }
+        val fetch = gate.fetchWhenOpen(initialUrl, fetchMode).toDataOr {
+            daemon.logProblem(it)
+            outcome = it.toFetchOutcome()
+            return null
+        }
+
+        fun finish(result: PageOutcome, doc: Document? = null) {
+            outcome = result
+            saveHtml(result, fetch.pageUrl, fetch.text, doc)
+        }
+
+        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOr {
+            daemon.logProblem(it)
+            finish(PageOutcome.NoHtml)
+            return null
+        }
         val pageUrl = dao.link.registerFetch(origin.originId, doc, fetch)
 
         val report = doc.readStructuredData()
@@ -39,7 +58,12 @@ class EventPageReader(
                     "microdataEvents=${report.microdataEventCount} types=${report.types}" }
         }
 
-        val pageSchema = origin.getPageSchema(fetch.pageUrl, doc).toDataOr(daemon::logProblem) { return null }
+        val pageSchema = origin.getPageSchema(fetch.pageUrl, doc).toDataOr {
+            daemon.logProblem(it)
+            finish(it.toSchemaOutcome(), doc)
+            return null
+        }
+        finish(PageOutcome.Content, doc)
         return parsePageEvent(pageSchema, doc, locationConfig.config.parseMode, pageUrl).also {
             println("Cost: ${it.cost}")
         }
@@ -71,7 +95,7 @@ class EventPageReader(
 
         // td: likewise limit LM call by interval
         val content = koog.readHtml<ContentParse<EventPageSchema>>(
-            url = url, doc = doc, instructions = SchemaParserText.EventPageSelectorsInstructions
+            url = url, doc = doc, instructions = SchemaParserText.EventPageSelectorsInstructions, retryCount = lmRetryCount
         ).toDataOr {
             if (it == LMProblem.UsageLimit) {
                 daemon.lmUsageLimitReached = true
