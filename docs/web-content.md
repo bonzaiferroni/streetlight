@@ -9,7 +9,7 @@ The directory is organized into several functional subdirectories:
 * **css/**: Contains standard CSS files. Stylesheets declared in Kotlin live in `koala.modifier`.
 * **img/**: Static image assets, including JPEGs and PNGs used throughout the application.
 * **js/**: JavaScript source and compiled outputs. This includes:
-    * **koala/** and **streetlight/**: Compiled Kotlin/JS modules (e.g., `koala.js`, `web.js`).
+    * **streetlight/**, **event-portal/**, **hello-portal/**: Compiled `webscripts` modules. The `web` and `koala` bundles are not served from `www`; the server serves both from `/js/streetlight/<build-id>/`.
     * **Handwritten scripts**: Files like `utils.js`, and `geoMap.js` provide targeted functionality.
 * **lottie/**: JSON animation files for use with the Lottie web library.
 * **svg/**: Vector graphics used for icons, markers, and UI elements.

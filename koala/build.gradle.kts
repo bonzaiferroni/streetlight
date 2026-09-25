@@ -23,9 +23,6 @@ kotlin {
                     useChromeHeadless()
                 }
             }
-            distribution {
-                outputDirectory.set(projectDir.resolve("../www/js/koala"))
-            }
         }
         binaries.executable()
     }

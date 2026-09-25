@@ -1,7 +1,6 @@
 bounty:
 -help/faq
 -contribute
--cities
 -delete user data
 -update privacy doc
 -my galaxies
@@ -21,6 +20,7 @@ bounty:
 -add talents
 -add menus
 -add narration framework to articles
+-clean up Entity.toCells()
 
 me:
 -add headers to

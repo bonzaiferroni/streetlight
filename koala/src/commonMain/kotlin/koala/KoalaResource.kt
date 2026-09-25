@@ -11,13 +11,13 @@ interface PageResource {
 /** The script bundles of an app. */
 interface JsBundle {
     val web: Js
+    val koala: Js
     val passwordReset: Js
 }
 
 /** The scripts Koala loads on every page. */
 object JsFile : FileSet<Js>() {
     val Utils = addJs("utils.js")
-    val Koala = addJs("koala/koala.js")
 }
 
 /** The Lottie animations of the site. */
