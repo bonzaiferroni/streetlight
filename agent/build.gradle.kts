@@ -12,11 +12,13 @@ dependencies {
     implementation(project(":kabinet"))
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.apache5)
     implementation(libs.ktor.server.websockets)
     implementation(libs.exposed.core)
 
-    implementation("ai.koog:koog-agents:0.7.3")
-    implementation("com.fleeksoft.ksoup:ksoup:0.2.5")
+    implementation(libs.koog.agents)
+    implementation(libs.koog.google.client)
+    implementation(libs.fleeksoft.ksoup)
 }
 
 application {

@@ -1,14 +1,10 @@
 package streetlight.agent
 
-import ai.koog.prompt.dsl.Prompt
+import ai.koog.prompt.Prompt
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.LLMClientException
-import ai.koog.prompt.executor.clients.google.GoogleModels
-import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
-import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.nodes.Document
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kabinet.utils.Environment
 import kampfire.model.Outcome
 import kampfire.model.Ok
 import kampfire.model.Problem
@@ -32,13 +28,12 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 class KoogHtmlParserClient(
-    env: Environment,
+    private val config: LmConfig,
     private val retryDelay: Duration = 30.seconds,
-    private val callInterval: Duration = 12.seconds,
 ): HtmlParserClient {
     private val callMutex = Mutex()
     private var lastCallAt = Instant.DISTANT_PAST
-    private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
+    private val executor = config.toExecutor()
     private val console = KotlinLogging.logger("dao")
     private val cache = mutableMapOf<Int, ParserContent>()
     private val trimmer = HtmlTrimmer()
@@ -88,14 +83,15 @@ class KoogHtmlParserClient(
         retryCount: Int,
     ): Outcome<ParserContent> {
         log.info { "Reading html: ${url.value.take(50)}" }
-        val content = trimmer.trimHtml(doc)
+        val trimmed = trimmer.trimHtml(doc)
+        val content = config.htmlCharLimit?.let { limit ->
+            if (trimmed.length > limit) log.warn { "Truncating html from ${trimmed.length} to $limit chars: $url" }
+            trimmed.take(limit)
+        } ?: trimmed
 
         val prompt = prompt(
             id = "dev-assistant",
-            params = LLMParams(
-                temperature = 0.5,
-                schema = type.toBasicSchema()
-            )
+            params = config.toParams(temperature = 0.5, schema = type.toBasicSchema())
         ) {
             system("You read web pages and extract relevant information as json.")
 
@@ -128,7 +124,7 @@ class KoogHtmlParserClient(
         repeat(retryCount) { attempt ->
             try {
                 waitForCallInterval()
-                return Ok(executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content)
+                return Ok(executor.execute(prompt, config.model).textContent())
             } catch (e: LLMClientException) {
                 log.error { e }
                 if (!e.isBusy()) return LMProblem.Unspecified
@@ -142,7 +138,7 @@ class KoogHtmlParserClient(
     }
 
     private suspend fun waitForCallInterval() = callMutex.withLock {
-        val remaining = callInterval - (Clock.System.now() - lastCallAt)
+        val remaining = config.callInterval - (Clock.System.now() - lastCallAt)
         if (remaining.isPositive()) delay(remaining)
         lastCallAt = Clock.System.now()
     }
@@ -154,10 +150,7 @@ class KoogHtmlParserClient(
 
         val prompt = prompt(
             id = "dev-assistant",
-            params = LLMParams(
-                temperature = 0.5,
-                schema = type.toBasicSchema()
-            )
+            params = config.toParams(temperature = 0.5, schema = type.toBasicSchema())
         ) {
             system("You read images and extract relevant information as json.")
 
@@ -176,7 +169,7 @@ class KoogHtmlParserClient(
             }
         }
 
-        val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+        val json = executor.execute(prompt, config.model).textContent()
         cache[cacheKey] = ParserContent(
             document = null,
             json = json

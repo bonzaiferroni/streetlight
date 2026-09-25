@@ -3,8 +3,10 @@ package streetlight.agent
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.prompt.dsl.prompt
+import ai.koog.http.client.ktor.KtorKoogHttpClient
+import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.clients.google.GoogleModels
-import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
+import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
 import streetlight.model.data.ChatMessage
@@ -15,7 +17,9 @@ class ChatAgent(
     private val model: LLModel = GoogleModels.Gemini2_5Flash,
     private val onResponse: suspend (ChatMessage) -> Unit
 ) {
-    private val executor = simpleGoogleAIExecutor(apiKey)
+    private val executor = MultiLLMPromptExecutor(
+        GoogleLLMClient(apiKey = apiKey, httpClientFactory = KtorKoogHttpClient.Factory())
+    )
 
     private val agent get() = AIAgent(
         promptExecutor = executor,
@@ -61,8 +65,8 @@ class ChatAgent(
             }
         }
 
-        val response = executor.execute(prompt, model).first()
-        val reply = ChatMessage(identifier, response.content, Clock.System.now())
+        val response = executor.execute(prompt, model)
+        val reply = ChatMessage(identifier, response.textContent(), Clock.System.now())
         messages.add(reply)
         // console.log("responding: ${response.content}")
         onResponse(reply)

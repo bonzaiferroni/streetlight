@@ -13,6 +13,8 @@ application {
 
 dependencies {
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.http)
 
     testImplementation(kotlin("test"))
 
@@ -25,7 +27,7 @@ dependencies {
     implementation(project(":agent"))
 
     implementation(libs.fleeksoft.ksoup)
-    implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
+    implementation(libs.flexmark.html2md.converter)
     implementation(libs.playwright)
 }
 

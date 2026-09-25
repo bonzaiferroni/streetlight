@@ -84,7 +84,6 @@ class HtmlTrimmer {
                 val tag = node.tagName().lowercase()
 
                 if (tag in removableBodyTags) return false
-                if (isHidden(node)) return false
 
                 if (tag == "img") return hasUsefulImage(node)
 
@@ -134,12 +133,6 @@ class HtmlTrimmer {
                 else -> false
             }
         }
-    }
-
-    private fun isHidden(element: Element): Boolean {
-        if (element.hasAttr("hidden")) return true
-        if (element.attr("aria-hidden").equals("true", ignoreCase = true)) return true
-        return false
     }
 
     companion object {

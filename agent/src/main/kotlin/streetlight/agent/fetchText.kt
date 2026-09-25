@@ -9,6 +9,8 @@ import com.fleeksoft.ksoup.nodes.Element
 import com.fleeksoft.ksoup.select.Elements
 import com.fleeksoft.ksoup.select.Selector
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.client.engine.apache5.Apache5
+import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
@@ -19,13 +21,17 @@ import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toProblem
 import kampfire.model.toUrl
+import kotlinx.coroutines.CancellationException
 import kotlin.time.Clock
 import kotlin.time.Instant
 
 private val logger = KotlinLogging.logger("ktor-fetch-client")
 
 private val httpClient by lazy {
-    HttpClient {
+    HttpClient(Apache5) {
+        install(HttpRedirect) {
+            allowHttpsDowngrade = true
+        }
         install(HttpTimeout) {
             requestTimeoutMillis = StreetlightAgent.Timeout.toLong()
             connectTimeoutMillis = StreetlightAgent.Timeout.toLong()
@@ -42,17 +48,24 @@ private val httpClient by lazy {
 
 suspend fun fetchText(initialUrl: Url): Outcome<FetchText> {
     logger.info { "fetching url: ${initialUrl.value.take(100)}" }
-    val response: HttpResponse = httpClient.get(initialUrl.value)
-    if (response.status != HttpStatusCode.OK) {
-        logger.info { "non-OK ${response.status} for ${initialUrl.value}, location=${response.headers[HttpHeaders.Location]}" }
-        return response.status.toProblem()
+    return try {
+        val response: HttpResponse = httpClient.get(initialUrl.value)
+        if (response.status != HttpStatusCode.OK) {
+            logger.info { "non-OK ${response.status} for ${initialUrl.value}, location=${response.headers[HttpHeaders.Location]}" }
+            return response.status.toProblem()
+        }
+        Ok(FetchText(
+            fetchUrl = initialUrl,
+            pageUrl = response.request.url.toString().toUrl(),
+            text = response.bodyAsText(),
+            fetchedAt = Clock.System.now()
+        ))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        logger.info { "fetch failed for ${initialUrl.value}: $e" }
+        Problem("Fetch failed: ${e.message ?: e::class.simpleName}")
     }
-    return Ok(FetchText(
-        fetchUrl = initialUrl,
-        pageUrl = response.request.url.toString().toUrl(),
-        text = response.bodyAsText(),
-        fetchedAt = Clock.System.now()
-    ))
 }
 
 suspend fun fetchText(url: String) = fetchText(url.toUrl())
