@@ -107,6 +107,8 @@ class EventReport {
     var found = 0
     var created = 0
     var past = 0
+    var untitled = 0
+    var shortened = 0
     var duplicates = 0
     var createFailed = 0
     val unparsedDates = mutableListOf<String>()

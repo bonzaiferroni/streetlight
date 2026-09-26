@@ -34,7 +34,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Fetch | HTTP status, mode, final url, chars, visible text chars, time taken |
 | LM | Model, trim stats, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Events | Found, created, past, duplicates, failed creates, date text that did not parse |
+| Events | Found, created, past, untitled, shortened, duplicates, failed creates, date text that did not parse |
 
 A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
 
@@ -64,11 +64,13 @@ A check reads at most 30 event pages. A page past the limit is recorded as `defe
 
 An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and its pages are fetched through Playwright from the next read on.
 
-A `Scripting` fetch waits after the load event until the body's text has held steady for a second, up to 8 seconds, so content rendered late is included. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
+A `Scripting` fetch scrolls down a screen at a time after the load event until the body's text has held steady for a second, up to 8 seconds, so content rendered late or loaded on scroll is included. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
 
 ## Events
 
-A feed's events are created only with a start date and time that is still ahead. An event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. Feeds supply what they readily can; other events are posted by hand.
+A feed's events are created only with a title, and a start date and time that is still ahead. This is the final guard on what reaches users. An event with no title is dropped and counted under `untitled`, an event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. An untitled or unparsed event marks its feed and page `Partial`. Feeds supply what they readily can; other events are posted by hand.
+
+An event's description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
 Date text is parsed by `parseLocalDateTime`, after every Unicode space is folded to a plain one. It reads a year-less date as the nearest such date to today, using a named weekday to choose among candidates.
 
@@ -83,9 +85,9 @@ A schema from the LM is validated against the page it was made from before it is
 | Schema | Must match | Otherwise |
 |---|---|---|
 | Feed | `event`, at least one element | Any other selector that is invalid or matches in no event is set to null |
-| Page | `title` a plausible field, `description` plausible prose | Any other selector that is invalid or matches nothing is set to null |
+| Page | `title` a plausible field | Any other selector that is invalid or matches nothing is set to null, `description` included when it matches no plausible prose |
 
-A failed schema is not stored, and the page is recorded as `read-invalid-selector`. The page test is the one a stored schema must pass to be reused.
+A failed schema is not stored, and the page records `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
 
 ## Field Queries
 

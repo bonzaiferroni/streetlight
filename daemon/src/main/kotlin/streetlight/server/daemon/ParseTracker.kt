@@ -74,6 +74,17 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         pages.firstOrNull { it.url == event.url }?.partial("Date text did not parse: $text")
     }
 
+    /** Records an event found with no title, marking its feed and page [ParseOutcome.Partial]. */
+    fun eventUntitled(event: RawEvent) {
+        events.untitled++
+        feed.partial("An event had no title")
+        pages.firstOrNull { it.url == event.url }?.partial("The event had no title")
+    }
+
+    fun descriptionShortened() {
+        events.shortened++
+    }
+
     fun eventPast() {
         events.past++
     }

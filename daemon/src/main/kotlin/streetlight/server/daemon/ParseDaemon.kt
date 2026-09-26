@@ -80,7 +80,11 @@ class ParseDaemon(private val server: Server) {
         val reader = EventFeedReader(config, origin, feedUrl.normalize(), this, tracker)
         reader.read()?.forEach { event ->
             tracker.eventFound()
-            val edit = event.toEventEdit(location.timezoneId, location.locationId)
+            if (event.title.isNullOrBlank()) {
+                tracker.eventUntitled(event)
+                return@forEach
+            }
+            val edit = event.toEventEdit(location.timezoneId, location.locationId, tracker)
             val startsAt = edit.startsAt ?: run {
                 tracker.eventUnparsed(event)
                 return@forEach
@@ -144,13 +148,15 @@ data class RawEvent(
 private val checkInterval = 24.hours
 internal const val lmRetryCount = 10
 
-private fun RawEvent.toEventEdit(timeZoneId: String?, locationId: LocationId): EventEdit {
+private fun RawEvent.toEventEdit(timeZoneId: String?, locationId: LocationId, tracker: ParseTracker): EventEdit {
 
     val dateTimeText = listOfNotNull(date, startTime.takeIf { it != date })
         .joinToString(" ")
         .takeIf { it.isNotBlank() }
 
-    val description = descriptionHtml?.let { htmlToMarkdown(it) }
+    val description = descriptionHtml?.let { htmlToMarkdown(it) }?.value?.let { full ->
+        shortenDescription(full, url).also { if (it != full) tracker.descriptionShortened() }
+    }
     val start = dateTimeText?.let { parseLocalDateTime(it, timeZoneId) }
     val end = endTime?.let { parseTimeFromText(it) }
 

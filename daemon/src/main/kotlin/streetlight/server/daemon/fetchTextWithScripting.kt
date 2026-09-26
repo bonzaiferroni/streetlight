@@ -99,12 +99,13 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
     }
 }
 
-/** Waits until the body's visible text has held its length for [settleMillis], at most [maxSettleMillis]. */
+/** Scrolls down a screen at a time until the body's visible text has held its length for [settleMillis], at most [maxSettleMillis]. */
 private fun Page.waitForSettledText() {
     val start = System.currentTimeMillis()
     var length = bodyTextLength()
     var stableSince = start
     while (System.currentTimeMillis() - start < maxSettleMillis) {
+        runCatching { evaluate("window.scrollBy(0, window.innerHeight)") }
         waitForTimeout(pollMillis.toDouble())
         val next = bodyTextLength()
         val now = System.currentTimeMillis()

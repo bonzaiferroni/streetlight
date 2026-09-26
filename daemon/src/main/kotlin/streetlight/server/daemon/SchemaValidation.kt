@@ -37,11 +37,9 @@ fun EventFeedSchema.validate(body: Element): Outcome<EventFeedSchema> {
 /** Validates a page schema from the LM against the [body] it was made from, setting any other selector that fails to null. */
 fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
     if (body.queryElement(title) { it.isPlausibleField() } == null) return Problem("Title selector does not match: $title")
-    if (body.queryElement(description) { it.isPlausibleProse() } == null) {
-        return Problem("Description selector does not match: $description")
-    }
     val page = listOf(body)
     return Ok(copy(
+        description = description.keepIfMatches(page) { it.isPlausibleProse() },
         location = location.keepIfMatches(page),
         address = address.keepIfMatches(page),
         image = image.keepIfMatches(page),
@@ -54,8 +52,8 @@ fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
     ))
 }
 
-private fun String?.keepIfMatches(elements: List<Element>): String? =
-    this?.takeIf { selector -> elements.any { it.queryElement(selector) != null } }
+private fun String?.keepIfMatches(elements: List<Element>, test: (Element) -> Boolean = { true }): String? =
+    this?.takeIf { selector -> elements.any { it.queryElement(selector, test) != null } }
 
 /** The count of [events] each event-level selector of this schema matches, by field name. */
 fun EventFeedSchema.fieldFill(events: List<Element>): Map<String, Int> = mapOf(

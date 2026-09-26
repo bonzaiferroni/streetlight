@@ -66,7 +66,7 @@ class EventPageReader(
         parsers.sortedByDescending { it.lastSuccessAt }.mapNotNull { schema ->
             val content = schema.schema as? EventPageSchema ?: return@mapNotNull null
             val pageEvent = parsePageEvent(content, doc, ParseMode.Full)
-            val isSuccess = !pageEvent.title.isNullOrBlank() && !pageEvent.descriptionHtml.isNullOrBlank()
+            val isSuccess = !pageEvent.title.isNullOrBlank()
 
             val length = pageEvent.descriptionHtml?.length
             // println(length) td: a better way to score quality of selector

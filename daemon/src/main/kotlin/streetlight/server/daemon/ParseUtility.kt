@@ -7,6 +7,7 @@ import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.Ok
 import kampfire.model.Problem
+import kampfire.model.Url
 import kampfire.model.toUrl
 import streetlight.agent.tryQuery
 import streetlight.model.data.OriginId
@@ -27,6 +28,33 @@ fun htmlToMarkdown(html: String): Markdown? =
         ?.trim()
         ?.takeIf { it.isNotBlank() }
         ?.toMarkdown()
+
+/**
+ * The whole paragraphs of [text] that fit within [maxDescriptionChars], or its first sentences when its first
+ * paragraph does not fit, followed by a link to [url] to read more. [text] is returned whole when it fits.
+ */
+fun shortenDescription(text: String, url: Url?): String {
+    if (text.length <= maxDescriptionChars) return text
+    val paragraphs = text.split(paragraphBreak)
+    val kept = paragraphs.fitting("\n\n").ifEmpty { paragraphs.first().split(sentenceBreak).fitting(" ") }
+        .ifEmpty { text.take(maxDescriptionChars).substringBeforeLast(' ') + "…" }
+    return url?.let { "$kept\n\n[Read more]($it)" } ?: kept
+}
+
+/** The leading parts joined by [separator], as many as fit within [maxDescriptionChars]. */
+private fun List<String>.fitting(separator: String): String {
+    var kept = ""
+    for (part in this) {
+        val next = if (kept.isEmpty()) part else "$kept$separator$part"
+        if (next.length > maxDescriptionChars) break
+        kept = next
+    }
+    return kept
+}
+
+private const val maxDescriptionChars = 1000
+private val paragraphBreak = Regex("""\n\s*\n""")
+private val sentenceBreak = Regex("""(?<=[.!?])\s+""")
 
 private fun String.normalizeSpace(): String = replace('\u00A0', ' ').trim()
 
