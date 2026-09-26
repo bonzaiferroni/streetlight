@@ -83,6 +83,7 @@ class EventFeedReader(
             return null
         }
         feed.read(SchemaType.EventFeed)
+        val feedUrls = setOf(url.normalize(), fetch.pageUrl.normalize())
 
         return pageElements.mapNotNull { element ->
             val feedEvent = RawEvent(
@@ -96,9 +97,14 @@ class EventFeedReader(
             )
 
             val pageUrl = feedEvent.url ?: return@mapNotNull feedEvent
+            if (pageUrl in feedUrls) return@mapNotNull feedEvent
             tracker.linkFound()
+            if (tracker.hasPage(pageUrl)) return@mapNotNull feedEvent
             val pageLink = dao.link.readLinkByAlias(pageUrl)
-            if (pageLink != null && !pageLink.wantsRead()) return@mapNotNull null
+            if (pageLink != null && !pageLink.wantsRead()) {
+                tracker.pageKnown()
+                return@mapNotNull null
+            }
             if (!tracker.canReadPage()) {
                 tracker.pageDeferred(pageUrl)
                 return@mapNotNull null

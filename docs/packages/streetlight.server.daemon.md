@@ -25,7 +25,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Page html | `../logs/parser/<build>/html/<address>.html`, for each page that did not succeed |
 | Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
-- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the feed was read and yielded no event created or already known, or the check failed. A later check in the same build overwrites the report, and the report saves the feed's html.
+- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the feed was read and yielded no event created, duplicated or known, or the check failed. A later check in the same build overwrites the report, and the report saves the feed's html.
 - An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the daemon moves to the next location. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
 - A reader takes its tracker, never null, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit of `read()`), and consults it before fetching. A reader computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
@@ -56,6 +56,9 @@ A page that reaches its server records what its read found on its `Link`, the fe
 | `parseNote` | Text | Each reason behind the values, joined |
 
 - Each read overwrites the link's values, since they describe the last read.
+- An event whose link normalizes to the feed's own url has no page of its own, such as a link to a route inside the feed's app, and is built from the feed's data.
+- An event page is read at most once in a check. An event whose page was already read in the check is built from its own feed data, since one page cannot speak for each event's date.
+- An event whose page link already has an outcome is dropped as known, and counted under `known`.
 - An event page is read again only when its link is `Granted` with no `parseOutcome` and content that is null or `Unread`: a read interrupted before classification, or content awaiting scripting. `wantsRead` states it.
 - A feed is not read again when its link is not `Granted`, its content is `OffSchema`, `OffScope` or `Unknown`, or its `parseOutcome` is `Fail`. `stopsFeed` states it. A failure waits for a better build.
 - An event whose date text does not parse marks the feed, and the page it was read from, `Partial`.

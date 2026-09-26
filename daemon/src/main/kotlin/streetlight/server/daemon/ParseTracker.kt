@@ -45,6 +45,14 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         pagesRead++
     }
 
+    /** Whether the event page at [url] was already read, or tried, this check. */
+    fun hasPage(url: Url): Boolean = pages.any { it.url == url && it.isAttempted }
+
+    /** Records an event page skipped because its link already has an outcome. */
+    fun pageKnown() {
+        events.known++
+    }
+
     /** Whether another event page may be read this check. */
     fun canReadPage(): Boolean = pagesRead < maxPagesPerCheck
 
@@ -118,7 +126,7 @@ class ParseTracker(private val location: String, feedUrl: Url) {
      * event that was created or already known.
      */
     fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
-        (feed.isAttempted && events.created + events.duplicates == 0)
+        (feed.isAttempted && events.created + events.duplicates + events.known == 0)
 
     /** Records the check as cut short by [error]. */
     fun failed(error: Exception) {
