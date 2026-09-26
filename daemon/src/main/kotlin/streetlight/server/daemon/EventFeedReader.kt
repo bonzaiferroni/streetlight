@@ -94,6 +94,7 @@ class EventFeedReader(
                 cost = element.queryElement(feedSchema.cost).plainText(),
                 date = element.dateText(feedSchema.date, feedSchema.month, feedSchema.day),
                 startTime = element.queryElement(feedSchema.time).plainText(),
+                location = element.queryElement(feedSchema.eventLocation).plainText(),
             )
 
             val pageUrl = feedEvent.url ?: return@mapNotNull feedEvent
@@ -131,6 +132,8 @@ class EventFeedReader(
                 date = date,
                 startTime = startTime,
                 endTime = pageEvent?.endTime,
+                location = pageEvent?.location ?: feedEvent.location,
+                address = pageEvent?.address,
             )
         }
     }

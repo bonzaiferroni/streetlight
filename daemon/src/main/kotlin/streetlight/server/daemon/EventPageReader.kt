@@ -96,6 +96,8 @@ class EventPageReader(
             date = body.dateText(schema.date, schema.month, schema.day) { it.isPlausibleField() },
             startTime = body.queryElement(schema.startTime) { it.isPlausibleField() }.plainText(),
             endTime = body.queryElement(schema.endTime) { it.isPlausibleField() }.plainText(),
+            location = body.queryElement(schema.location) { it.isPlausibleField() }.plainText(),
+            address = body.queryElement(schema.address) { it.isPlausibleField() }.plainText(),
         )
     }
 }

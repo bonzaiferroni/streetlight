@@ -17,6 +17,7 @@ import streetlight.agent.LMProblem
 import streetlight.agent.TrimResult
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.FetchMode
+import streetlight.model.data.Location
 import streetlight.model.data.LinkAccess
 import streetlight.model.data.LinkContent
 import streetlight.model.data.OriginId
@@ -121,12 +122,33 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         events.created++
     }
 
+    /** Records the location [text] as naming the new [location]. */
+    fun locationSpawned(text: String, location: Location) {
+        events.spawnedLocations.add("$text → ${location.label}")
+    }
+
+    /** Records the location [text] as naming the known [location]. */
+    fun locationMatched(text: String, location: Location) {
+        events.matchedLocations.add("$text → ${location.label}")
+    }
+
+    /** Records the location [text] as naming no distinct place, leaving its event at the feed's location. */
+    fun locationFellBack(text: String) {
+        events.fallbackLocations.add(text)
+    }
+
+    /** Records the location [text] as naming a place that could not be created, for [problem]. */
+    fun locationFailed(text: String, problem: Problem) {
+        events.locationFailures.add("$text: ${problem.message}")
+    }
+
     /**
-     * Whether the check needs a report: it failed, some page needs work, or its feed was read and yielded no
-     * event that was created or already known.
+     * Whether the check needs a report: it failed, some page needs work, its feed was read and yielded no event
+     * that was created or already known, or a location was spawned or failed to be.
      */
     fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
-        (feed.isAttempted && events.created + events.duplicates + events.known == 0)
+        (feed.isAttempted && events.created + events.duplicates + events.known == 0) ||
+        events.spawnedLocations.isNotEmpty() || events.locationFailures.isNotEmpty()
 
     /** Records the check as cut short by [error]. */
     fun failed(error: Exception) {

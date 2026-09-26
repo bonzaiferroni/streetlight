@@ -33,6 +33,7 @@ import streetlight.model.data.ParseMode
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostType
 import streetlight.model.data.toOriginId
+import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
 import streetlight.server.routes.createEvent
@@ -51,6 +52,7 @@ class ParseDaemon(private val server: Server) {
     val dao = server.dao
     val koog = server.provide<KoogHtmlParserClient>()
     val mediator = SchemaMediator(koog, lmRetryCount)
+    private val spawner = LocationSpawner(server, server.provide<MapReferenceClient>())
     val log = KotlinLogging.logger(ParseDaemon::class)
 
     var startedAt = Instant.DISTANT_PAST
@@ -101,13 +103,19 @@ class ParseDaemon(private val server: Server) {
         if (tracker.needsReport()) tracker.write(originId)
     }
 
-    /** Creates the event read as [event] at [location], unless it lacks a title or a start ahead, or duplicates one. */
-    private suspend fun createEvent(event: RawEvent, location: Location, tracker: ParseTracker) {
+    /**
+     * Creates the event read as [event] from the feed of [feedLocation], at the location it names, unless it lacks a
+     * title or a start ahead, or duplicates one.
+     */
+    private suspend fun createEvent(event: RawEvent, feedLocation: Location, tracker: ParseTracker) {
         tracker.eventFound()
-        val edit = event.toEventEdit(location.timezoneId, location.locationId, tracker)
-        val title = edit.title ?: return tracker.eventUntitled(event)
-        val startsAt = edit.startsAt ?: return tracker.eventUnparsed(event)
-        if (startsAt < Clock.System.now()) return tracker.eventPast()
+        val feedEdit = event.toEventEdit(feedLocation.timezoneId, feedLocation.locationId, tracker)
+        val title = feedEdit.title ?: return tracker.eventUntitled(event)
+        val feedStart = feedEdit.startsAt ?: return tracker.eventUnparsed(event)
+        if (feedStart < Clock.System.now()) return tracker.eventPast()
+        val location = spawner.locate(event, feedLocation, tracker)
+        val edit = feedEdit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
+        val startsAt = edit.startsAt ?: return
         val zone = edit.timeZone ?: return
         val day = startsAt.toLocalDateTime(zone).date
         val sameDay = dao.event.readEventsBetween(
@@ -156,6 +164,8 @@ data class RawEvent(
     val date: String? = null,
     val startTime: String? = null,
     val endTime: String? = null,
+    val location: String? = null,
+    val address: String? = null,
 )
 
 private val checkInterval = 24.hours

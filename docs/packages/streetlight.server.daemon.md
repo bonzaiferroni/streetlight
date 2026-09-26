@@ -8,7 +8,8 @@ A standalone process that reads location event feeds and the event pages they li
 
 | Package | Provides |
 |---|---|
-| `streetlight.server.model` | `Server`, the DAO and event creation |
+| `streetlight.server.model` | `Server`, the DAO, event creation and the `MapReferenceClient` |
+| `streetlight.server.db.datascope` | Location creation |
 | `streetlight.agent` | Fetching, html parsing, the `SchemaMediator`, schema validation and date parsing |
 
 ## General Model
@@ -85,6 +86,18 @@ An event's description is kept to 1,000 characters of markdown, respecting the v
 An event's date text joins its `date`, `month` and `day` selectors. When an event is read from both its feed and its page, its date and start time are taken as the first pair that parses: the page's own, the feed's date with the page's time, the page's date with the feed's time, then the feed's own.
 
 Date text is parsed by `parseLocalDateTime`, after every Unicode space is folded to a plain one. It reads a year-less date as the nearest such date to today, using a named weekday to choose among candidates.
+
+## Locations
+
+An event is placed at its feed's location unless its location text clearly names a distinct place. The text is the page's `location`, or else the feed's `eventLocation`. `LocationSpawner` takes a place as distinct only when all of these hold:
+
+- the text does not `fuzzyMatches` the feed location's name;
+- OpenStreetMap finds a single place (place rank 30, not a city or street) whose name `fuzzyMatches` the text, within 200 km of the feed location;
+- no such place lies within 150 m of the feed location, which would make the text a room or stage of the feed's venue.
+
+Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map.
+
+Map searches are bounded to the 200 km around the feed location, paced to one a second, and kept for the daemon's run. The report lists `spawnedLocations`, `matchedLocations`, `fallbackLocations` and `locationFailures`, and a check that spawned a location, or failed to, is always reported.
 
 ## Strikes
 
