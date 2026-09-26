@@ -83,6 +83,3 @@ A screen whose route is likely to be shared or linked from another site is rende
 
 `readFooContent` is a `DaoScope` extension in `streetlight.server.model`.
 
-## LM Instructions
-
-`SchemaParserText` and `ParserText` hold the instructions sent to the language model. They are written for a capable model and state what is wanted, not how one model tends to go wrong. A mistake a particular model makes, such as malformed CSS, is caught by validation rather than answered with an instruction, so the instructions carry over to another model.

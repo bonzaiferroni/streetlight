@@ -23,6 +23,8 @@ data class EventFeedSchema(
     val description: String? = null,
     val date: String? = null,
     val time: String? = null,
+    val month: String? = null,
+    val day: String? = null,
 ): SelectorSchema {
     override val schemaType get() = SchemaType.EventFeed
 }
@@ -41,6 +43,8 @@ data class EventPageSchema(
     val endTime: String? = null,
     val ageMin: String? = null,
     val contact: String? = null,
+    val month: String? = null,
+    val day: String? = null,
 ): SelectorSchema {
     override val schemaType get() = SchemaType.EventPage
 }

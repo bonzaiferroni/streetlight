@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import streetlight.agent.KoogHtmlParserClient
+import streetlight.agent.SchemaMediator
+import streetlight.agent.parseLocalDateTime
+import streetlight.agent.parseTimeFromText
 import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.EventEdit
@@ -46,6 +49,7 @@ class ParseDaemon(private val server: Server) {
 
     val dao = server.dao
     val koog = server.provide<KoogHtmlParserClient>()
+    val mediator = SchemaMediator(koog, lmRetryCount)
     val log = KotlinLogging.logger(ParseDaemon::class)
 
     var startedAt = Instant.DISTANT_PAST

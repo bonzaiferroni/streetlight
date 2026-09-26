@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-package streetlight.server.daemon
+package streetlight.agent
 
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -101,6 +101,9 @@ private val unicodeSpace = Regex("""[\s\p{Z}]+""")
 private val yearPattern = Regex("""\b(\d{4})\b""")
 private val dayPattern = Regex("""\b(\d{1,2})(?:st|nd|rd|th)?\b""", RegexOption.IGNORE_CASE)
 private val wordPattern = Regex("""[a-z]+""")
+
+/** Whether this text names a month, such as "Sep" or "September". */
+internal fun String.hasMonthName(): Boolean = wordPattern.findAll(normalizeSpaces().lowercase()).any { it.value in monthNames }
 
 fun parseTimeFromText(text: String): LocalTime? =
     timePattern.find(text.normalizeSpaces().lowercase())?.let { match ->

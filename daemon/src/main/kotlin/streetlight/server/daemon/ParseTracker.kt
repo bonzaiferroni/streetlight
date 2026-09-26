@@ -10,7 +10,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.jsonObject
 import streetlight.agent.FetchText
-import streetlight.agent.HtmlParseObserver
+import streetlight.agent.SchemaObserver
+import streetlight.agent.SchemaProblem
+import streetlight.agent.fieldFill
 import streetlight.agent.LMProblem
 import streetlight.agent.TrimResult
 import streetlight.model.data.EventFeedSchema
@@ -146,7 +148,7 @@ class ParseTracker(private val location: String, feedUrl: Url) {
 }
 
 /** Tracks one page's pass through each stage, and observes its LM call. */
-class PageTracker internal constructor(internal val url: Url, private val tracker: ParseTracker) : HtmlParseObserver {
+class PageTracker internal constructor(internal val url: Url, private val tracker: ParseTracker) : SchemaObserver {
     private val page = PageReport(url.value)
     private val items = mutableListOf<Any>()
     private val notes = mutableListOf<String>()
@@ -196,8 +198,11 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         if (status !in 500..599) page.access = LinkAccess.Refused
     }
 
-    /** Records a stored [schema] tried on the page, and whether it was [chosen]. */
-    fun storedSchemaTried(schema: SelectorSchema, chosen: Boolean) {
+    override fun requested(kind: String) {
+        page.lm.add(LmReport(kind))
+    }
+
+    override fun storedSchemaTried(schema: SelectorSchema, chosen: Boolean) {
         val report = schemaReport()
         report.storedTried++
         if (chosen) {
@@ -206,8 +211,7 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         }
     }
 
-    /** Records a [schema] from the LM and the outcome of its validation against the page. */
-    fun schemaCreated(schema: SelectorSchema, validated: Outcome<SelectorSchema>) {
+    override fun schemaCreated(schema: SelectorSchema, validated: Outcome<SelectorSchema>) {
         val report = schemaReport()
         report.source = "new"
         when (validated) {
@@ -310,7 +314,7 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
 
     private fun schemaReport() = page.schema ?: SchemaReport().also { page.schema = it }
 
-    private fun lmReport() = page.lm ?: LmReport().also { page.lm = it }
+    private fun lmReport() = page.lm.lastOrNull() ?: LmReport().also { page.lm.add(it) }
 }
 
 /** The access, content, schema type, parse outcome and note of the page at [url], to record on its link. */

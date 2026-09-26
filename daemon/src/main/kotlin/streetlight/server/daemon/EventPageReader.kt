@@ -1,23 +1,24 @@
 package streetlight.server.daemon
 
 import com.fleeksoft.ksoup.nodes.Document
-import kampfire.model.Ok
-import kampfire.model.Outcome
-import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import streetlight.agent.LMProblem
+import streetlight.agent.SchemaProblem
+import streetlight.agent.isPlausibleField
+import streetlight.agent.isPlausibleProse
+import streetlight.agent.absoluteUrl
+import streetlight.agent.innerHtml
+import streetlight.agent.plainText
 import streetlight.agent.parseHtmlDocument
-import streetlight.agent.readHtml
+import streetlight.agent.queryElement
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.FetchMode
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
-import streetlight.model.data.SchemaType
 import streetlight.model.data.ParseMode
-import streetlight.server.model.ContentParse
-import streetlight.server.routes.SchemaParserText
+import streetlight.model.data.SchemaType
 import streetlight.server.utils.readImageUrl
 
 class EventPageReader(
@@ -27,7 +28,6 @@ class EventPageReader(
     private val daemon: ParseDaemon,
     private val tracker: PageTracker,
 ) {
-    val koog get() = daemon.koog
     val dao get() = daemon.dao
     val log get() = daemon.log
 
@@ -57,8 +57,16 @@ class EventPageReader(
                     "microdataEvents=${report.microdataEventCount} types=${report.types}" }
         }
 
-        val pageSchema = origin.getPageSchema(fetch.pageUrl, doc).toDataOr {
+        val pageSchema = daemon.mediator.pageSchema(
+            url = fetch.pageUrl,
+            doc = doc,
+            store = OriginSchemaStore(dao, origin),
+            timeZoneId = locationConfig.location.timezoneId,
+            allowLm = !daemon.lmUsageLimitReached,
+            observer = tracker,
+        ).toDataOr {
             daemon.logProblem(it)
+            if (it == LMProblem.UsageLimit) daemon.lmUsageLimitReached = true
             tracker.schemaFailed(it)
             if (it == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) return read(FetchMode.Scripting)
             return null
@@ -67,64 +75,6 @@ class EventPageReader(
         return parsePageEvent(pageSchema, doc, locationConfig.config.parseMode, pageUrl).also {
             log.debug { "Parsed ${fetch.pageUrl}: description ${it.descriptionHtml?.length ?: 0} chars, cost ${it.cost}" }
         }
-    }
-
-    private suspend fun Origin.getPageSchema(url: Url, doc: Document): Outcome<EventPageSchema> {
-        val parsers = dao.parser.read(originId)
-        parsers.sortedByDescending { it.lastSuccessAt }.mapNotNull { schema ->
-            val content = schema.schema as? EventPageSchema ?: return@mapNotNull null
-            val pageEvent = parsePageEvent(content, doc, ParseMode.Full)
-            val isSuccess = !pageEvent.title.isNullOrBlank()
-
-            val length = pageEvent.descriptionHtml?.length
-            // println(length) td: a better way to score quality of selector
-
-            if (!isSuccess) {
-                tracker.storedSchemaTried(content, false)
-                dao.parser.updateResult(schema.parserId, false)
-                return@mapNotNull null
-            }
-
-            length to schema
-        }.sortedByDescending { it.first }.firstOrNull()?.let { (_, schema) ->
-            dao.parser.updateResult(schema.parserId, true)
-            tracker.storedSchemaTried(schema.schema, true)
-            return Ok(schema.schema as EventPageSchema)
-        }
-
-        if (daemon.lmUsageLimitReached) return LMProblem.UsageLimit
-
-        // td: likewise limit LM call by interval
-        val content = koog.readHtml<ContentParse<EventPageSchema>>(
-            url = url,
-            doc = doc,
-            instructions = SchemaParserText.EventPageSelectorsInstructions,
-            retryCount = lmRetryCount,
-            observer = tracker,
-        ).toDataOr {
-            if (it == LMProblem.UsageLimit) {
-                daemon.lmUsageLimitReached = true
-            }
-            return it
-        }
-
-        if (content.isIncompleteContent) {
-            log.info { "Found incomplete content: $url" }
-            dao.origin.registerIncomplete(originId)
-        }
-        val contentSchema = content.content
-        if (!content.isExpectedContent || contentSchema == null) {
-            return if (content.isIncompleteContent) SchemaProblem.Incomplete else Problem("Document content was not an event page")
-        }
-
-        val validated = contentSchema.validate(doc.body())
-        tracker.schemaCreated(contentSchema, validated)
-        val schema = validated.toDataOr {
-            daemon.logProblem(it)
-            return SchemaProblem.Invalid
-        }
-        dao.parser.create(originId, schema, fetchMode)
-        return Ok(schema)
     }
 
     private fun parsePageEvent(
@@ -143,7 +93,7 @@ class EventPageReader(
             contact = body.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),
             cost = body.queryElement(schema.cost) { it.isPlausibleField() }.plainText(),
             ageMin = body.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText(),
-            date = body.queryElement(schema.date) { it.isPlausibleField() }.plainText(),
+            date = body.dateText(schema.date, schema.month, schema.day) { it.isPlausibleField() },
             startTime = body.queryElement(schema.startTime) { it.isPlausibleField() }.plainText(),
             endTime = body.queryElement(schema.endTime) { it.isPlausibleField() }.plainText(),
         )

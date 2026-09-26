@@ -1,11 +1,10 @@
-package streetlight.server.daemon
+package streetlight.agent
 
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.toDataOr
-import streetlight.agent.tryQuery
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
 

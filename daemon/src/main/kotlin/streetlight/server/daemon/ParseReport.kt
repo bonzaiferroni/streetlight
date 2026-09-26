@@ -59,7 +59,7 @@ class PageReport(val url: String) {
     var status: Int? = null
     var notes: List<String> = emptyList()
     var fetch: FetchReport? = null
-    var lm: LmReport? = null
+    val lm = mutableListOf<LmReport>()
     var schema: SchemaReport? = null
 }
 
@@ -73,9 +73,9 @@ data class FetchReport(
     val millis: Long,
 )
 
-/** The LM call for a page, with the trim of its html and the model's raw response. */
+/** One LM request for a page, of [kind] `schema` or `time`, with the trim of its html and the raw response. */
 @Serializable
-class LmReport {
+class LmReport(val kind: String? = null) {
     var model: String? = null
     var trim: TrimStats? = null
     var capCutChars: Int = 0

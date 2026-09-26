@@ -4,13 +4,17 @@ import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import streetlight.agent.FetchText
+import streetlight.agent.SchemaStore
 import streetlight.model.data.Link
 import streetlight.model.data.LinkAlias
 import streetlight.model.data.LinkAliasId
 import streetlight.model.data.LinkAccess
 import streetlight.model.data.LinkContent
 import streetlight.model.data.LinkId
+import streetlight.model.data.Origin
 import streetlight.model.data.OriginId
+import streetlight.model.data.ParserId
+import streetlight.model.data.SelectorSchema
 import streetlight.model.data.ParseOutcome
 import streetlight.model.data.toOriginId
 import streetlight.server.model.DaoFacade
@@ -87,3 +91,17 @@ fun Link.wantsRead() = access == LinkAccess.Granted && parseOutcome == null &&
 fun Link.stopsFeed() = access != LinkAccess.Granted || content in feedStopContent || parseOutcome == ParseOutcome.Fail
 
 private val feedStopContent = setOf(LinkContent.OffSchema, LinkContent.OffScope, LinkContent.Unknown)
+
+/** The stored schemas of [origin], kept in its parser table rows. */
+class OriginSchemaStore(private val dao: DaoFacade, private val origin: Origin) : SchemaStore {
+    override suspend fun readParsers() = dao.parser.read(origin.originId)
+    override suspend fun updateResult(parserId: ParserId, isSuccess: Boolean) {
+        dao.parser.updateResult(parserId, isSuccess)
+    }
+    override suspend fun create(schema: SelectorSchema) {
+        dao.parser.create(origin.originId, schema, origin.fetchMode)
+    }
+    override suspend fun registerIncomplete() {
+        dao.origin.registerIncomplete(origin.originId)
+    }
+}

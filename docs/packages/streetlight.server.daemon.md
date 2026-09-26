@@ -9,7 +9,7 @@ A standalone process that reads location event feeds and the event pages they li
 | Package | Provides |
 |---|---|
 | `streetlight.server.model` | `Server`, the DAO and event creation |
-| `streetlight.agent` | Fetching, html parsing and the LM schema parser |
+| `streetlight.agent` | Fetching, html parsing, the `SchemaMediator`, schema validation and date parsing |
 
 ## Parse Reports
 
@@ -26,7 +26,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 - The tracker derives every reported value. A new stat is added in the tracker alone.
 - The feed reader hands each event page reader the child `PageTracker` from `tracker.page(url)`.
 - `PageTracker.collect` keeps any other object the tracker draws on when the report is built, such as the feed's event elements.
-- A `PageTracker` is the `HtmlParseObserver` passed to `readHtml`, which fills the LM stage.
+- A `PageTracker` is the `SchemaObserver` passed to the `SchemaMediator`, which fills the schema and LM stages. Each request to the LM is its own entry in the page's `lm` list, of kind `schema` or `time`.
 - A report holds the feed page, each event page read, and the events the feed yielded. Each page has one section per stage, as far as it got: `fetch`, `lm`, `schema`, and its `outcome` and HTTP `status`.
 
 | Stage | Logged |
@@ -74,32 +74,13 @@ An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is 
 
 An event's description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
+An event's date text joins its `date`, `month` and `day` selectors. When an event is read from both its feed and its page, its date and start time are taken as the first pair that parses: the page's own, the feed's date with the page's time, the page's date with the feed's time, then the feed's own.
+
 Date text is parsed by `parseLocalDateTime`, after every Unicode space is folded to a plain one. It reads a year-less date as the nearest such date to today, using a named weekday to choose among candidates.
 
 ## Strikes
 
 `ParseTracker` counts consecutive strikes per origin within one check. A 4xx or 5xx response to a page adds a strike to the origin of the url requested, and a successful fetch from that origin clears them. At 3 strikes, `shouldFetch` is false, and the feed reader records the origin's remaining event pages as `benched`, whose events keep the data read from the feed.
-
-## Schema Validation
-
-A schema from the LM is validated against the page it was made from before it is stored. Each selector is run against the raw page.
-
-| Schema | Must match | Otherwise |
-|---|---|---|
-| Feed | `event`, at least one element | Any other selector that is invalid or matches in no event is set to null |
-| Page | `title` a plausible field | Any other selector that is invalid or matches nothing is set to null, `description` included when it matches no plausible prose |
-
-A failed schema is not stored, and the page records `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
-
-## Field Queries
-
-A selector is expected to match a single element. `queryElement` takes the matches in document order and returns the first that has text or an image and passes the field's test: plausible prose for `description`, a plausible field for the other text fields. It returns null for an invalid selector.
-
-- A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
-- Matches with no text or image are skipped, since the LM reads html with empty elements trimmed.
-- Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
-- An event page's image is the image its meta declares for outside links (`og:image`, `twitter:image`, `image`) when it has one, and the schema's `image` otherwise. A feed's image comes from its schema alone.
-
 
 ## Workflows
 

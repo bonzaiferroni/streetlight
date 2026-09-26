@@ -1,25 +1,24 @@
 package streetlight.server.daemon
 
-import com.fleeksoft.ksoup.nodes.Document
-import kampfire.model.Ok
-import kampfire.model.Outcome
-import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import streetlight.agent.LMProblem
+import streetlight.agent.SchemaProblem
+import streetlight.agent.isPlausibleProse
+import streetlight.agent.absoluteUrl
+import streetlight.agent.innerHtml
+import streetlight.agent.plainText
 import streetlight.agent.parseHtmlDocument
-import streetlight.agent.readHtml
+import streetlight.agent.parseLocalDateTime
+import streetlight.agent.queryElement
 import streetlight.agent.tryQuery
-import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.FetchMode
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
 import streetlight.model.data.SchemaType
 import streetlight.model.data.toOriginId
-import streetlight.server.model.ContentParse
-import streetlight.server.routes.SchemaParserText
 
 class EventFeedReader(
     private val location: LocationConfigContent,
@@ -28,11 +27,11 @@ class EventFeedReader(
     private val daemon: ParseDaemon,
     private val tracker: ParseTracker,
 ) {
-    val koog get() = daemon.koog
     val dao get() = daemon.dao
     val log get() = daemon.log
 
     private val feed get() = tracker.feed
+    private val timeZoneId get() = location.location.timezoneId
 
     suspend fun read(): List<RawEvent>? {
         val link = dao.link.readLinkByAlias(initialUrl)
@@ -62,8 +61,16 @@ class EventFeedReader(
         if (doc == null) return null
         dao.registerFetch(origin.originId, doc, fetch)
 
-        val feedSchema = origin.getFeedSchema(url, doc).toDataOr {
+        val feedSchema = daemon.mediator.feedSchema(
+            url = url,
+            doc = doc,
+            store = OriginSchemaStore(dao, origin),
+            timeZoneId = timeZoneId,
+            allowLm = !daemon.lmUsageLimitReached,
+            observer = feed,
+        ).toDataOr {
             daemon.logProblem(it)
+            if (it == LMProblem.UsageLimit) daemon.lmUsageLimitReached = true
             feed.schemaFailed(it)
             if (it == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) return read(url, FetchMode.Scripting)
             return null
@@ -84,7 +91,7 @@ class EventFeedReader(
                 image = element.queryElement(feedSchema.image).absoluteUrl("src"),
                 descriptionHtml = element.queryElement(feedSchema.description) { it.isPlausibleProse() }.innerHtml(),
                 cost = element.queryElement(feedSchema.cost).plainText(),
-                date = element.queryElement(feedSchema.date).plainText(),
+                date = element.dateText(feedSchema.date, feedSchema.month, feedSchema.day),
                 startTime = element.queryElement(feedSchema.time).plainText(),
             )
 
@@ -106,6 +113,7 @@ class EventFeedReader(
                 null
             }
 
+            val (date, startTime) = startOf(pageEvent, feedEvent)
             RawEvent(
                 title = pageEvent?.title ?: feedEvent.title,
                 url = pageUrl,
@@ -114,58 +122,30 @@ class EventFeedReader(
                 contact = pageEvent?.contact,
                 cost = pageEvent?.cost ?: feedEvent.cost,
                 ageMin = pageEvent?.ageMin,
-                date = pageEvent?.date ?: feedEvent.date,
-                startTime = pageEvent?.startTime ?: feedEvent.startTime,
+                date = date,
+                startTime = startTime,
                 endTime = pageEvent?.endTime,
             )
         }
     }
 
-    private suspend fun Origin.getFeedSchema(url: Url, doc: Document): Outcome<EventFeedSchema> {
-        val body = doc.body()
-        val parsers = dao.parser.read(originId)
-        parsers.sortedByDescending { it.lastSuccessAt }.forEach { parser ->
-            val schema = parser.schema as? EventFeedSchema ?: return@forEach
-            val eventSelector = schema.event ?: return@forEach
-            val pageElements = body.tryQuery(eventSelector).toDataOr { return@forEach }
-            val isSuccess = !pageElements.isEmpty()
-            feed.storedSchemaTried(schema, isSuccess)
-            dao.parser.updateResult(parser.parserId, isSuccess)
-            if (isSuccess) return Ok(schema)
-        }
+    /**
+     * The date and start time text of an event, pairing the page's with the feed's: the first pair that parses,
+     * the page's preferred, or the page's own when none does.
+     */
+    private fun startOf(page: RawEvent?, feed: RawEvent): Pair<String?, String?> {
+        val pairs = listOf(
+            page?.date to page?.startTime,
+            feed.date to page?.startTime,
+            page?.date to feed.startTime,
+            feed.date to feed.startTime,
+        )
+        return pairs.firstOrNull { (date, time) -> startParses(date, time) }
+            ?: ((page?.date ?: feed.date) to (page?.startTime ?: feed.startTime))
+    }
 
-        if (daemon.lmUsageLimitReached) return LMProblem.UsageLimit
-
-        // td: limit LM call by interval
-        val content = koog.readHtml<ContentParse<EventFeedSchema>>(
-            url = url,
-            doc = doc,
-            instructions = SchemaParserText.EventFeedSelectorsInstructions,
-            retryCount = lmRetryCount,
-            observer = feed,
-        ).toDataOr {
-            if (it == LMProblem.UsageLimit) {
-                daemon.lmUsageLimitReached = true
-            }
-            return it
-        }
-
-        if (content.isIncompleteContent) {
-            log.info { "Found incomplete content: $url" }
-            dao.origin.registerIncomplete(originId)
-        }
-        val contentSchema = content.content
-        if (!content.isExpectedContent || contentSchema == null) {
-            return if (content.isIncompleteContent) SchemaProblem.Incomplete else Problem("Document content was not an event feed")
-        }
-
-        val validated = contentSchema.validate(doc.body())
-        feed.schemaCreated(contentSchema, validated)
-        val schema = validated.toDataOr {
-            daemon.logProblem(it)
-            return SchemaProblem.Invalid
-        }
-        dao.parser.create(originId, schema, fetchMode)
-        return Ok(schema)
+    private fun startParses(date: String?, time: String?): Boolean {
+        val text = listOfNotNull(date, time.takeIf { it != date }).joinToString(" ").ifBlank { return false }
+        return parseLocalDateTime(text, timeZoneId) != null
     }
 }
