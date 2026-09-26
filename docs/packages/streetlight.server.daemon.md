@@ -34,7 +34,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Fetch | HTTP status, mode, final url, chars, visible text chars, time taken |
 | LM | Model, trim stats, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Events | Found, created, past, untitled, shortened, duplicates, failed creates, date text that did not parse |
+| Events | Found, created, past, untitled, shortened, duplicates with their titles, failed creates with their reasons, date text that did not parse |
 
 A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
 
@@ -62,13 +62,15 @@ A check reads at most 30 event pages. A page past the limit is recorded as `defe
 
 ## Fetch Mode
 
-An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and its pages are fetched through Playwright from the next read on.
+An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and the reader fetches that page again through Playwright within the same read. Its later pages are fetched through Playwright too.
 
-A `Scripting` fetch scrolls down a screen at a time after the load event until the body's text has held steady for a second, up to 8 seconds, so content rendered late or loaded on scroll is included. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
+A `Scripting` fetch scrolls down with the mouse wheel after the load event until the body's text has held steady for 3 seconds, up to 15 seconds, so content rendered late or loaded on scroll is included. The wheel scrolls whatever container is under the pointer, which a script scrolling the window does not reach. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
 
 ## Events
 
 A feed's events are created only with a title, and a start date and time that is still ahead. This is the final guard on what reaches users. An event with no title is dropped and counted under `untitled`, an event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. An untitled or unparsed event marks its feed and page `Partial`. Feeds supply what they readily can; other events are posted by hand.
+
+An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the daemon or by a person and whatever its start time. Each duplicate is counted, and its pair of titles reported under `duplicateTitles`. An event whose image cannot be stored is still created, without the image, and reported under `imageFailures`, since the image is decoration and the event is the data.
 
 An event's description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
@@ -96,6 +98,7 @@ A selector is expected to match a single element. `queryElement` takes the match
 - A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
 - Matches with no text or image are skipped, since the LM reads html with empty elements trimmed.
 - Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
+- An event page's image is the image its meta declares for outside links (`og:image`, `twitter:image`, `image`) when it has one, and the schema's `image` otherwise. A feed's image comes from its schema alone.
 
 
 ## Workflows

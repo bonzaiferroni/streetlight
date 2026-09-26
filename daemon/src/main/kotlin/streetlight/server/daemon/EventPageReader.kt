@@ -11,12 +11,14 @@ import streetlight.agent.LMProblem
 import streetlight.agent.parseHtmlDocument
 import streetlight.agent.readHtml
 import streetlight.model.data.EventPageSchema
+import streetlight.model.data.FetchMode
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
 import streetlight.model.data.SchemaType
 import streetlight.model.data.ParseMode
 import streetlight.server.model.ContentParse
 import streetlight.server.routes.SchemaParserText
+import streetlight.server.utils.readImageUrl
 
 class EventPageReader(
     private val locationConfig: LocationConfigContent,
@@ -30,8 +32,13 @@ class EventPageReader(
     val log get() = daemon.log
 
     suspend fun read(): RawEvent? {
-        val gate = daemon.getRobotGate(origin)
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
+        return read(fetchMode)
+    }
+
+    /** Reads the page fetched in [fetchMode], and again with scripting when its content is incomplete. */
+    private suspend fun read(fetchMode: FetchMode): RawEvent? {
+        val gate = daemon.getRobotGate(origin)
         val fetch = gate.fetchWhenOpen(initialUrl, fetchMode).toDataOr {
             daemon.logProblem(it)
             tracker.fetchFailed(it)
@@ -53,6 +60,7 @@ class EventPageReader(
         val pageSchema = origin.getPageSchema(fetch.pageUrl, doc).toDataOr {
             daemon.logProblem(it)
             tracker.schemaFailed(it)
+            if (it == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) return read(FetchMode.Scripting)
             return null
         }
         tracker.read(SchemaType.EventPage)
@@ -129,7 +137,7 @@ class EventPageReader(
         return RawEvent(
             title = body.queryElement(schema.title) { it.isPlausibleField() }.plainText(),
             url = pageUrl,
-            image = body.queryElement(schema.image).absoluteUrl("src"),
+            image = doc.readImageUrl()?.value ?: body.queryElement(schema.image).absoluteUrl("src"),
             descriptionHtml = body.queryElement(schema.description) { it.isPlausibleProse() }
                 .takeIf { parseMode == ParseMode.Full }.innerHtml(),
             contact = body.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),

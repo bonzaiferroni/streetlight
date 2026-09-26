@@ -89,12 +89,21 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         events.past++
     }
 
-    fun eventDuplicate() {
+    /** Records an event whose [title] fuzzily matched the [existing] title of an event the same day. */
+    fun eventDuplicate(title: String, existing: String) {
         events.duplicates++
+        events.duplicateTitles.add("$title → $existing")
     }
 
-    fun eventFailed() {
+    /** Records an event titled [title] that could not be created, for [problem]. */
+    fun eventFailed(title: String, problem: Problem) {
         events.createFailed++
+        events.createFailures.add("$title: ${problem.message}")
+    }
+
+    /** Records an event titled [title] created without its image, which could not be stored. */
+    fun imageFailed(title: String) {
+        events.imageFailures.add(title)
     }
 
     fun eventCreated() {

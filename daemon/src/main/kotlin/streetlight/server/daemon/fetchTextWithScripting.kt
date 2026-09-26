@@ -99,13 +99,13 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
     }
 }
 
-/** Scrolls down a screen at a time until the body's visible text has held its length for [settleMillis], at most [maxSettleMillis]. */
+/** Scrolls down with the mouse wheel until the body's visible text has held its length for [settleMillis], at most [maxSettleMillis]. */
 private fun Page.waitForSettledText() {
     val start = System.currentTimeMillis()
     var length = bodyTextLength()
     var stableSince = start
     while (System.currentTimeMillis() - start < maxSettleMillis) {
-        runCatching { evaluate("window.scrollBy(0, window.innerHeight)") }
+        runCatching { mouse().wheel(0.0, scrollPixels) }
         waitForTimeout(pollMillis.toDouble())
         val next = bodyTextLength()
         val now = System.currentTimeMillis()
@@ -131,9 +131,10 @@ private fun Page.foldFrames() {
     }
 }
 
-private const val settleMillis = 1_000L
+private const val settleMillis = 3_000L
 private const val pollMillis = 250L
-private const val maxSettleMillis = 8_000L
+private const val maxSettleMillis = 15_000L
+private const val scrollPixels = 2_500.0
 private const val minFrameTextChars = 200
 
 private val absoluteBodyHtmlScript = """

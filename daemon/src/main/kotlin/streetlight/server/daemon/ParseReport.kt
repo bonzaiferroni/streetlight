@@ -14,7 +14,7 @@ import streetlight.model.data.ParseOutcome
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its reports are written to. */
-const val parserBuildId = "V5"
+const val parserBuildId = "V6"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
@@ -112,6 +112,9 @@ class EventReport {
     var duplicates = 0
     var createFailed = 0
     val unparsedDates = mutableListOf<String>()
+    val duplicateTitles = mutableListOf<String>()
+    val createFailures = mutableListOf<String>()
+    val imageFailures = mutableListOf<String>()
 }
 
 /**

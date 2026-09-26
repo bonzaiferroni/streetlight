@@ -20,6 +20,7 @@ import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
+import streetlight.model.data.Location
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.LocationId
 import streetlight.model.data.Origin
@@ -31,6 +32,11 @@ import streetlight.model.data.toOriginId
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
 import streetlight.server.routes.createEvent
+import kampfire.utils.fuzzyMatches
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -78,34 +84,29 @@ class ParseDaemon(private val server: Server) {
 
         val tracker = ParseTracker(location.slug.toString(), feedUrl.normalize())
         val reader = EventFeedReader(config, origin, feedUrl.normalize(), this, tracker)
-        reader.read()?.forEach { event ->
-            tracker.eventFound()
-            if (event.title.isNullOrBlank()) {
-                tracker.eventUntitled(event)
-                return@forEach
-            }
-            val edit = event.toEventEdit(location.timezoneId, location.locationId, tracker)
-            val startsAt = edit.startsAt ?: run {
-                tracker.eventUnparsed(event)
-                return@forEach
-            }
-            if (startsAt < Clock.System.now()) {
-                tracker.eventPast()
-                return@forEach
-            }
-            val existingEvent = dao.event.readEventAt(location.locationId, startsAt)
-            if (existingEvent != null) {
-                tracker.eventDuplicate()
-                return@forEach
-            }
-            server.createEvent(null, edit).toDataOr {
-                tracker.eventFailed()
-                return@forEach
-            }
-            tracker.eventCreated()
-        }
+        reader.read()?.forEach { createEvent(it, location, tracker) }
         tracker.records().forEach { dao.recordLink(it) }
         if (tracker.needsReport()) tracker.write(originId)
+    }
+
+    /** Creates the event read as [event] at [location], unless it lacks a title or a start ahead, or duplicates one. */
+    private suspend fun createEvent(event: RawEvent, location: Location, tracker: ParseTracker) {
+        tracker.eventFound()
+        val edit = event.toEventEdit(location.timezoneId, location.locationId, tracker)
+        val title = edit.title ?: return tracker.eventUntitled(event)
+        val startsAt = edit.startsAt ?: return tracker.eventUnparsed(event)
+        if (startsAt < Clock.System.now()) return tracker.eventPast()
+        val zone = edit.timeZone ?: return
+        val day = startsAt.toLocalDateTime(zone).date
+        val sameDay = dao.event.readEventsBetween(
+            locationId = location.locationId,
+            from = day.atStartOfDayIn(zone),
+            until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
+        )
+        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.eventDuplicate(title, it.title) }
+        val created = server.createEvent(null, edit, isImageRequired = false).toDataOr { return tracker.eventFailed(title, it) }
+        if (edit.image != null && created.image == null) tracker.imageFailed(title)
+        tracker.eventCreated()
     }
 
     fun logProblem(problem: Problem) {
@@ -160,23 +161,13 @@ private fun RawEvent.toEventEdit(timeZoneId: String?, locationId: LocationId, tr
     val start = dateTimeText?.let { parseLocalDateTime(it, timeZoneId) }
     val end = endTime?.let { parseTimeFromText(it) }
 
-    // val notes = listOfNotNull(
-    //     end?.let { "* **Ends:** $it" },
-    //     cost?.let { "* **Cost:** $it" },
-    //     ageMin?.let { "* **Ages:** $it" },
-    // )
-    // td: escape markdown
-    val timeNote = if (start == null) (startTime ?: date)?.let { "**Time:** $it" } else null
-
     val body = listOfNotNull(
-        timeNote,
         description,
-        // notes.joinToString("\n").takeIf { it.isNotBlank() },
     ).joinToString("\n\n").takeIf { it.isNotBlank() }
 
     return EventEdit(
         locationId = locationId,
-        title = title,
+        title = title?.withoutBracketNotes()?.takeIf { it.isNotBlank() },
         description = body?.toMarkdown(),
         contact = contact, // td: gather phone/email/social media separately
         website = url,

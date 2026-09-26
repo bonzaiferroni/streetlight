@@ -19,6 +19,10 @@ Utilities and types for apps that communicate with a server in a multiplatform c
 | `kampfire.model` | Requests, results, and the state and messaging types built on them, such as `Outcome`, `Messenger`, `Store`, and `Tap` |
 | `kampfire.utils` | General extensions with no domain in them |
 
+## Fuzzy Matching
+
+`String.fuzzyMatches` decides whether two texts name the same thing, such as two listings of one event. It compares words, each word of the text with fewer words to its closest word in the other by Levenshtein distance, so added words and small spelling differences both still match. It has no rules for any one language, and is the matcher to reuse wherever two names are compared.
+
 ## Shared Types
 
 A type that both sides send, receive, or store belongs here.

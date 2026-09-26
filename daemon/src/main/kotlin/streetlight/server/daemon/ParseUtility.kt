@@ -56,6 +56,12 @@ private const val maxDescriptionChars = 1000
 private val paragraphBreak = Regex("""\n\s*\n""")
 private val sentenceBreak = Regex("""(?<=[.!?])\s+""")
 
+/** This title without its bracketed notes, such as "[SOLD OUT]". */
+fun String.withoutBracketNotes(): String = replace(bracketNote, " ").replace(whitespaceRun, " ").trim()
+
+private val bracketNote = Regex("""\[[^\]]*]""")
+private val whitespaceRun = Regex("""\s+""")
+
 private fun String.normalizeSpace(): String = replace('\u00A0', ' ').trim()
 
 /** The first element matching [selector] that has text or an image and passes [test], or `null`, including when [selector] is invalid. */

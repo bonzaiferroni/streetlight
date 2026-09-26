@@ -13,6 +13,7 @@ import streetlight.agent.parseHtmlDocument
 import streetlight.agent.readHtml
 import streetlight.agent.tryQuery
 import streetlight.model.data.EventFeedSchema
+import streetlight.model.data.FetchMode
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
 import streetlight.model.data.SchemaType
@@ -43,8 +44,13 @@ class EventFeedReader(
             if (link.fetchedAt >= daemon.startedAt) return null
             link.url
         } ?: initialUrl
-        val gate = daemon.getRobotGate(origin)
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
+        return read(url, fetchMode)
+    }
+
+    /** Reads the feed at [url] fetched in [fetchMode], and again with scripting when its content is incomplete. */
+    private suspend fun read(url: Url, fetchMode: FetchMode): List<RawEvent>? {
+        val gate = daemon.getRobotGate(origin)
         val fetch = gate.fetchWhenOpen(url, fetchMode).toDataOr {
             daemon.logProblem(it)
             feed.fetchFailed(it)
@@ -59,6 +65,7 @@ class EventFeedReader(
         val feedSchema = origin.getFeedSchema(url, doc).toDataOr {
             daemon.logProblem(it)
             feed.schemaFailed(it)
+            if (it == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) return read(url, FetchMode.Scripting)
             return null
         }
         val body = doc.body()
