@@ -16,7 +16,8 @@ import kotlin.math.abs
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-fun parseLocalDateTime(text: String, timeZoneId: String?): LocalDateTime? {
+fun parseLocalDateTime(rawText: String, timeZoneId: String?): LocalDateTime? {
+    val text = rawText.normalizeSpaces()
     val zone = timeZoneId
         ?.let { id -> runCatching { TimeZone.of(id) }.getOrNull() }
         ?: return null
@@ -92,12 +93,20 @@ private val timePattern = Regex(
     RegexOption.IGNORE_CASE,
 )
 
+/**
+ * Replaces each run of whitespace, including Unicode spaces such as the narrow no-break space some sites put
+ * before "PM", with a single space. Java's `\s` matches none of the Unicode spaces.
+ */
+private fun String.normalizeSpaces() = replace(unicodeSpace, " ")
+
+private val unicodeSpace = Regex("""[\s\p{Z}]+""")
+
 private val yearPattern = Regex("""\b(\d{4})\b""")
 private val dayPattern = Regex("""\b(\d{1,2})(?:st|nd|rd|th)?\b""", RegexOption.IGNORE_CASE)
 private val wordPattern = Regex("""[a-z]+""")
 
 fun parseTimeFromText(text: String): LocalTime? =
-    timePattern.find(text.lowercase())?.let { match ->
+    timePattern.find(text.normalizeSpaces().lowercase())?.let { match ->
         val meridiem = match.groupValues[3].takeIf { it.isNotEmpty() }
         val hour = (match.groupValues[1].takeIf { it.isNotEmpty() }
             ?: match.groupValues[4]).toIntOrNull() ?: return null
@@ -115,7 +124,7 @@ fun parseTimeFromText(text: String): LocalTime? =
     }
 
 fun parseDateFromText(text: String, now: Instant, zone: TimeZone): LocalDate? {
-    val lower = text.lowercase()
+    val lower = text.normalizeSpaces().lowercase()
     val withoutTime = timePattern.replace(lower, " ")
 
     val words = wordPattern.findAll(withoutTime).map { it.value }.toList()

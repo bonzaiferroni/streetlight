@@ -103,13 +103,13 @@ class EventPageReader(
             return it
         }
 
-        val contentSchema = content.content
-        if (!content.isExpectedContent || contentSchema == null) {
-            return Problem("Document content was not an event page")
-        }
         if (content.isIncompleteContent) {
             log.info { "Found incomplete content: $url" }
             dao.origin.registerIncomplete(originId)
+        }
+        val contentSchema = content.content
+        if (!content.isExpectedContent || contentSchema == null) {
+            return Problem("Document content was not an event page")
         }
 
         val validated = contentSchema.validate(doc.body())
@@ -130,17 +130,17 @@ class EventPageReader(
     ): RawEvent {
         val body = doc.body()
         return RawEvent(
-            title = body.queryElement(schema.title).takeIf { it.isPlausibleField() }.plainText(),
+            title = body.queryElement(schema.title) { it.isPlausibleField() }.plainText(),
             url = pageUrl,
             image = body.queryElement(schema.image).absoluteUrl("src"),
-            descriptionHtml = body.queryElement(schema.description)
-                .takeIf { parseMode == ParseMode.Full && it.isPlausibleProse() }.innerHtml(),
-            contact = body.queryElement(schema.contact).takeIf { it.isPlausibleField() }.plainText(),
-            cost = body.queryElement(schema.cost).takeIf { it.isPlausibleField() }.plainText(),
-            ageMin = body.queryElement(schema.ageMin).takeIf { it.isPlausibleField() }.plainText(),
-            date = body.queryElement(schema.date).takeIf { it.isPlausibleField() }.plainText(),
-            startTime = body.queryElement(schema.startTime).takeIf { it.isPlausibleField() }.plainText(),
-            endTime = body.queryElement(schema.endTime).takeIf { it.isPlausibleField() }.plainText(),
+            descriptionHtml = body.queryElement(schema.description) { it.isPlausibleProse() }
+                .takeIf { parseMode == ParseMode.Full }.innerHtml(),
+            contact = body.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),
+            cost = body.queryElement(schema.cost) { it.isPlausibleField() }.plainText(),
+            ageMin = body.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText(),
+            date = body.queryElement(schema.date) { it.isPlausibleField() }.plainText(),
+            startTime = body.queryElement(schema.startTime) { it.isPlausibleField() }.plainText(),
+            endTime = body.queryElement(schema.endTime) { it.isPlausibleField() }.plainText(),
         )
     }
 }

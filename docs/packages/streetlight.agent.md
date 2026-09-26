@@ -57,7 +57,7 @@ Hidden content is kept, since pages hide events in modals, tabs and collapsed se
 |---|---|
 | Attribute values | Whitespace collapsed in every value |
 | `data-*` attributes | Removed when the value is over 200 characters |
-| Sibling runs | Past the tenth consecutive sibling sharing a tag and class, the rest are removed |
+| Sibling runs | Past the tenth consecutive sibling sharing a tag and first class, the rest are removed |
 
 A run is collapsed only in the prompt copy. Selectors run against the full page, so every item in the run is still read.
 

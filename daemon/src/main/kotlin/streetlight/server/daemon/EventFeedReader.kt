@@ -73,8 +73,7 @@ class EventFeedReader(
                 title = element.queryElement(feedSchema.title).plainText(),
                 url = element.queryElement(feedSchema.link).absoluteUrl("href")?.toUrl()?.normalize(),
                 image = element.queryElement(feedSchema.image).absoluteUrl("src"),
-                descriptionHtml = element.queryElement(feedSchema.description)
-                    .takeIf { it.isPlausibleProse() }.innerHtml(),
+                descriptionHtml = element.queryElement(feedSchema.description) { it.isPlausibleProse() }.innerHtml(),
                 cost = element.queryElement(feedSchema.cost).plainText(),
                 date = element.queryElement(feedSchema.date).plainText(),
                 startTime = element.queryElement(feedSchema.time).plainText(),
@@ -139,13 +138,13 @@ class EventFeedReader(
             return it
         }
 
-        val contentSchema = content.content
-        if (!content.isExpectedContent || contentSchema == null) {
-            return Problem("Document content was not an event feed")
-        }
         if (content.isIncompleteContent) {
             log.info { "Found incomplete content: $url" }
             dao.origin.registerIncomplete(originId)
+        }
+        val contentSchema = content.content
+        if (!content.isExpectedContent || contentSchema == null) {
+            return Problem("Document content was not an event feed")
         }
 
         val validated = contentSchema.validate(doc.body())

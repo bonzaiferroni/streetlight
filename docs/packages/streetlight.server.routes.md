@@ -82,3 +82,7 @@ Every route that has a shell has a content endpoint returning the result of `rea
 A screen whose route is likely to be shared or linked from another site is rendered here on the initial load. Its branch in `renderScreen` calls `renderFoo`, an `ApiScope` extension returning `HtmlRender`, which reads the route's content with `readFooContent` and passes it to `fooShell` inside `appPage`. A screen with no branch is rendered by `renderClientBase`, and the browser builds its content.
 
 `readFooContent` is a `DaoScope` extension in `streetlight.server.model`.
+
+## LM Instructions
+
+`SchemaParserText` and `ParserText` hold the instructions sent to the language model. They are written for a capable model and state what is wanted, not how one model tends to go wrong. A mistake a particular model makes, such as malformed CSS, is caught by validation rather than answered with an instruction, so the instructions carry over to another model.

@@ -11,7 +11,7 @@ import streetlight.model.data.OriginId
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its logs are written to. Raised when a stage changes. */
-const val parserBuildId = "V1"
+const val parserBuildId = "V3"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
@@ -117,6 +117,7 @@ class SchemaReport {
 class EventReport {
     var found = 0
     var created = 0
+    var past = 0
     var duplicates = 0
     var createFailed = 0
     val unparsedDates = mutableListOf<String>()

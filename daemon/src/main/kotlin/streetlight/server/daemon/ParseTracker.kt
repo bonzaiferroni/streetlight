@@ -56,6 +56,10 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         events.unparsedDates.add(listOfNotNull(event.date, event.startTime).joinToString(" | ").ifEmpty { "(none)" })
     }
 
+    fun eventPast() {
+        events.past++
+    }
+
     fun eventDuplicate() {
         events.duplicates++
     }

@@ -82,6 +82,8 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
 
             return@withContext try {
                 page.waitForLoadState(LoadState.LOAD)
+                page.waitForSettledText()
+                page.foldFrames()
                 Ok(FetchText(
                     initialUrl, page.url().toUrl(), page.content(), Clock.System.now(),
                     millis = start.elapsedNow().inWholeMilliseconds,
@@ -96,6 +98,73 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
         }
     }
 }
+
+/**
+ * Waits until the body's visible text has held its length for [settleMillis], so content rendered after the
+ * load event is included, giving up [maxSettleMillis] after load.
+ */
+private fun Page.waitForSettledText() {
+    val start = System.currentTimeMillis()
+    var length = bodyTextLength()
+    var stableSince = start
+    while (System.currentTimeMillis() - start < maxSettleMillis) {
+        waitForTimeout(pollMillis.toDouble())
+        val next = bodyTextLength()
+        val now = System.currentTimeMillis()
+        if (next != length) {
+            length = next
+            stableSince = now
+        } else if (now - stableSince >= settleMillis) {
+            return
+        }
+    }
+}
+
+private fun Page.bodyTextLength() = runCatching { innerText("body").length }.getOrDefault(0)
+
+/**
+ * Replaces each child iframe holding at least [minFrameTextChars] of text with a div of its body html, since
+ * [Page.content] leaves out iframe contents. The div carries the frame's url as `data-frame-src`, and relative
+ * links inside it are made absolute against that url.
+ */
+private fun Page.foldFrames() {
+    frames().filter { it != mainFrame() && it.parentFrame() == mainFrame() }.forEach { frame ->
+        runCatching {
+            if (frame.innerText("body").length < minFrameTextChars) return@forEach
+            val html = frame.evaluate(absoluteBodyHtmlScript) as String
+            frame.frameElement().evaluate(foldFrameScript, mapOf("html" to html, "src" to frame.url()))
+        }.onFailure { logger.warn { "unable to fold frame ${frame.url().take(100)}: ${it.message}" } }
+    }
+}
+
+private const val settleMillis = 1_000L
+private const val pollMillis = 250L
+private const val maxSettleMillis = 8_000L
+private const val minFrameTextChars = 200
+
+private val absoluteBodyHtmlScript = """
+    () => {
+        const body = document.body.cloneNode(true);
+        for (const el of body.querySelectorAll('[href], [src]')) {
+            for (const attr of ['href', 'src']) {
+                const value = el.getAttribute(attr);
+                if (value) {
+                    try { el.setAttribute(attr, new URL(value, document.baseURI).href); } catch (e) {}
+                }
+            }
+        }
+        return body.innerHTML;
+    }
+"""
+
+private val foldFrameScript = """
+    (frame, arg) => {
+        const div = document.createElement('div');
+        div.setAttribute('data-frame-src', arg.src);
+        div.innerHTML = arg.html;
+        frame.replaceWith(div);
+    }
+"""
 
 fun closeBrowser() {
     browser.close()

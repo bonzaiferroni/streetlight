@@ -31,6 +31,7 @@ import streetlight.model.data.toOriginId
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
 import streetlight.server.routes.createEvent
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
@@ -82,6 +83,10 @@ class ParseDaemon(private val server: Server) {
             val edit = event.toEventEdit(location.timezoneId, location.locationId)
             val startsAt = edit.startsAt ?: run {
                 tracker.eventUnparsed(event)
+                return@forEach
+            }
+            if (startsAt < Clock.System.now()) {
+                tracker.eventPast()
                 return@forEach
             }
             val existingEvent = dao.event.readEventAt(location.locationId, startsAt)

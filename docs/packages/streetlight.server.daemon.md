@@ -34,7 +34,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Fetch | HTTP status, mode, final url, chars, visible text chars, time taken |
 | LM | Model, trim stats, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Events | Found, created, duplicates, failed creates, date text that did not parse |
+| Events | Found, created, past, duplicates, failed creates, date text that did not parse |
 
 | Outcome | Meaning |
 |---|---|
@@ -48,6 +48,18 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | `read-no-content` | The page is not the expected content |
 | `read-invalid-selector` | A new LM schema failed validation, or the feed event selector matched nothing |
 | `read-content` | The expected content was read |
+
+## Fetch Mode
+
+An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and its pages are fetched through Playwright from the next read on.
+
+A `Scripting` fetch waits after the load event until the body's text has held steady for a second, up to 8 seconds, so content rendered late is included. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
+
+## Events
+
+A feed's events are created only with a start date and time that is still ahead. An event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. Feeds supply what they readily can; other events are posted by hand.
+
+Date text is parsed by `parseLocalDateTime`, which reads a year-less date as the nearest such date to today, using a named weekday to choose among candidates.
 
 ## Strikes
 
@@ -64,5 +76,19 @@ A schema from the LM is validated against the page it was made from before it is
 
 A failed schema is not stored, and the page is recorded as `read-invalid-selector`. The page test is the one a stored schema must pass to be reused.
 
-`queryElement` returns null for an invalid selector and skips matches with no text or image, since the LM reads html with empty elements trimmed.
+## Field Queries
 
+A selector is expected to match a single element. `queryElement` takes the matches in document order and returns the first that has text or an image and passes the field's test: plausible prose for `description`, a plausible field for the other text fields. It returns null for an invalid selector.
+
+- A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
+- Matches with no text or image are skipped, since the LM reads html with empty elements trimmed.
+- Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
+
+
+## Workflows
+
+Starting a new build:
+
+1. Raise `parserBuildId`.
+2. Dump the `parser` table to `logs/schema/parser-<timestamp>.json`.
+3. Delete all rows of `parser`, `link` and `event`, clear `location.checked_at`, and reset each `origin` to `fetch_mode` Basic with no `robots_txt`, so the build reads every location from a fresh state.

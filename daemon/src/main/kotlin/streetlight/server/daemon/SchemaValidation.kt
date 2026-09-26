@@ -45,8 +45,8 @@ fun EventFeedSchema.validate(body: Element): Outcome<EventFeedSchema> {
  * selector that is invalid, or matches nothing, is set to null.
  */
 fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
-    if (!body.queryElement(title).isPlausibleField()) return Problem("Title selector does not match: $title")
-    if (!body.queryElement(description).isPlausibleProse()) {
+    if (body.queryElement(title) { it.isPlausibleField() } == null) return Problem("Title selector does not match: $title")
+    if (body.queryElement(description) { it.isPlausibleProse() } == null) {
         return Problem("Description selector does not match: $description")
     }
     val page = listOf(body)
