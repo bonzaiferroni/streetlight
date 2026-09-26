@@ -50,6 +50,7 @@ A galaxy's slug is written by `createGalaxy` and by no other function. `updateGa
 | Kotlin | Column |
 |---|---|
 | Instant | timestamp |
+| enum class | `enumeration`, stored by ordinal. An enum stored this way only ever has entries appended, never reordered or removed |
 
 ## Aggregate Columns
 

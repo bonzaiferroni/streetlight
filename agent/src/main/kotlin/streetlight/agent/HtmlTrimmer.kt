@@ -127,8 +127,7 @@ class HtmlTrimmer {
 
     /**
      * Removes each element child past [maxRunLength] in a run of consecutive siblings sharing a tag and first
-     * class, returning the number removed. Later classes are left out of the match, since lists often vary
-     * them per item, as in `eventlist-event--hasimg`.
+     * class, returning the number removed.
      */
     private fun collapseRuns(element: Element): Int {
         var signature: String? = null

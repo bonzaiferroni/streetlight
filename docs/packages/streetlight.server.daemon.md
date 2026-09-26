@@ -18,10 +18,10 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Output | Path |
 |---|---|
 | Parse report | `../logs/parser/<build>/<origin>.json` |
-| Page html | `../logs/parser/<build>/html/<address>.html` |
-| Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each page sent to the LM |
+| Page html | `../logs/parser/<build>/html/<address>.html`, for each page that did not succeed |
+| Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
-- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, `tracker.report()` builds the `ParseReport` and `write` saves it. A later check in the same build overwrites it.
+- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`, as stated under Links. A later check in the same build overwrites the report.
 - A reader takes its tracker, never null, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit of `read()`), and consults it before fetching. A reader computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
 - The feed reader hands each event page reader the child `PageTracker` from `tracker.page(url)`.
@@ -36,18 +36,29 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
 | Events | Found, created, past, duplicates, failed creates, date text that did not parse |
 
-| Outcome | Meaning |
-|---|---|
-| `skipped` | The page was not fetched, since its link was already read |
-| `benched` | The page was not fetched, since its origin is benched |
-| `blocked` | robots.txt disallows the path, and no html is cached |
-| `unreachable` | The fetch failed, and no html is cached |
-| `no-html` | The html did not parse |
-| `limit` | The LM usage limit is reached |
-| `lm-error` | The LM failed for any other reason |
-| `read-no-content` | The page is not the expected content |
-| `read-invalid-selector` | A new LM schema failed validation, or the feed event selector matched nothing |
-| `read-content` | The expected content was read |
+A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
+
+## Links
+
+A page that reaches its server records what its read found on its `Link`, the feed included. `checkLocation` records them through `recordLink` when the check finishes, creating the link when missing. A page that never reached its server leaves no record: a 5xx or no response, a benched or deferred page, or one skipped by its link.
+
+| Column | Values | Set from |
+|---|---|---|
+| `access` | `Granted`, `RobotsBlock`, `Refused`, never null | The HTTP status and robots.txt. Any status other than 200 below 500 is `Refused` |
+| `content` | `Schema`, `OffSchema`, `OffScope`, `Unknown`, `Unread` | What the read found. `OffSchema` is the LM's "not the expected content", `Unknown` is not html, `Unread` needs scripting. Null when not yet classified |
+| `schemaType` | `EventFeed`, `EventPage` | The schema that read it, when `content` is `Schema` |
+| `parseOutcome` | `Complete`, `Partial`, `Fail` | The parse with the schema. A rejected schema, or a feed whose event selector matched nothing, is `Fail`. Content still unread under scripting is `Fail` |
+| `parseNote` | Text | Each reason behind the values, joined |
+
+- Each read overwrites the link's values, since they describe the last read.
+- An event page is read again only when its link is `Granted` with no `parseOutcome` and content that is null or `Unread`: a read interrupted before classification, or content awaiting scripting. `wantsRead` states it.
+- A feed is not read again when its link is not `Granted`, its content is `OffSchema`, `OffScope` or `Unknown`, or its `parseOutcome` is `Fail`. `stopsFeed` states it. A failure waits for a better build.
+- An event whose date text does not parse marks the feed, and the page it was read from, `Partial`.
+- A report is written, and html saved, for each check where some page is `Partial` or `Fail`, or has content other than `Schema`.
+
+## Parse Limit
+
+A check reads at most 30 event pages. A page past the limit is recorded as `deferred`, gets no link, and its event is dropped for this check, so the next check reads the page and builds the event in full. Pages skipped by their link do not count toward the limit, so a large feed is read in full over a series of checks.
 
 ## Fetch Mode
 
@@ -59,7 +70,7 @@ A `Scripting` fetch waits after the load event until the body's text has held st
 
 A feed's events are created only with a start date and time that is still ahead. An event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. Feeds supply what they readily can; other events are posted by hand.
 
-Date text is parsed by `parseLocalDateTime`, which reads a year-less date as the nearest such date to today, using a named weekday to choose among candidates.
+Date text is parsed by `parseLocalDateTime`, after every Unicode space is folded to a plain one. It reads a year-less date as the nearest such date to today, using a named weekday to choose among candidates.
 
 ## Strikes
 

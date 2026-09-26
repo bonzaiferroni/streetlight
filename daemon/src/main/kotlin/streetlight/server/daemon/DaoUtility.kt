@@ -7,19 +7,17 @@ import streetlight.agent.FetchText
 import streetlight.model.data.Link
 import streetlight.model.data.LinkAlias
 import streetlight.model.data.LinkAliasId
+import streetlight.model.data.LinkAccess
+import streetlight.model.data.LinkContent
 import streetlight.model.data.LinkId
 import streetlight.model.data.OriginId
+import streetlight.model.data.ParseOutcome
 import streetlight.model.data.toOriginId
 import streetlight.server.model.DaoFacade
 import kotlin.time.Clock
 import kotlin.uuid.Uuid
 
-/**
- * Records the fetch of a page as a link with its aliases, returning the page's url.
- *
- * The link belongs to the origin of the page's canonical or final url, which a redirect can place on another
- * host than [fetchOriginId], so that origin is created when missing.
- */
+/** Records the fetch of a page as a link with its aliases, creating its origin when missing, and returns the page's url. */
 suspend fun DaoFacade.registerFetch(
     fetchOriginId: OriginId,
     doc: Document,
@@ -38,7 +36,7 @@ suspend fun DaoFacade.registerFetch(
             link.updateLink(it)
         } ?: Link(
             linkId = LinkId(Uuid.random()), originId = originId, url = url, schemaType = null,
-            fetchedAt = fetch.fetchedAt, createdAt = now,
+            fetchedAt = fetch.fetchedAt, createdAt = now, access = LinkAccess.Granted,
         ).also {
             link.createLink(it)
         }
@@ -55,3 +53,37 @@ suspend fun DaoFacade.registerFetch(
 
     return pageUrl
 }
+
+/** Records [record] on the link for its url, creating the link when missing. */
+suspend fun DaoFacade.recordLink(record: LinkRecord) {
+    val existing = link.readLinkByAlias(record.url) ?: link.readLink(record.url)
+    if (existing != null) {
+        link.updateLink(existing.copy(
+            access = record.access,
+            content = record.content,
+            schemaType = record.schemaType,
+            parseOutcome = record.parseOutcome,
+            parseNote = record.note,
+        ))
+        return
+    }
+    val originId = record.url.toOriginId() ?: return
+    origin.readOrCreateOrigin(originId)
+    val now = Clock.System.now()
+    val created = Link(
+        linkId = LinkId(Uuid.random()), originId = originId, url = record.url, schemaType = record.schemaType,
+        fetchedAt = now, createdAt = now, access = record.access, content = record.content,
+        parseOutcome = record.parseOutcome, parseNote = record.note,
+    )
+    link.createLink(created)
+    link.createAliasIgnore(LinkAlias(LinkAliasId(Uuid.random()), created.linkId, record.url, now))
+}
+
+/** Whether an event page's link calls for another read: served, and never classified or awaiting scripting. */
+fun Link.wantsRead() = access == LinkAccess.Granted && parseOutcome == null &&
+    (content == null || content == LinkContent.Unread)
+
+/** Whether a feed's link stops it from being read again. */
+fun Link.stopsFeed() = access != LinkAccess.Granted || content in feedStopContent || parseOutcome == ParseOutcome.Fail
+
+private val feedStopContent = setOf(LinkContent.OffSchema, LinkContent.OffScope, LinkContent.Unknown)

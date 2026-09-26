@@ -93,10 +93,7 @@ private val timePattern = Regex(
     RegexOption.IGNORE_CASE,
 )
 
-/**
- * Replaces each run of whitespace, including Unicode spaces such as the narrow no-break space some sites put
- * before "PM", with a single space. Java's `\s` matches none of the Unicode spaces.
- */
+/** Replaces each run of whitespace, including Unicode spaces, with a single space. */
 private fun String.normalizeSpaces() = replace(unicodeSpace, " ")
 
 private val unicodeSpace = Regex("""[\s\p{Z}]+""")

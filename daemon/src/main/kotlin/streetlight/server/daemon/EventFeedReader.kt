@@ -15,6 +15,7 @@ import streetlight.agent.tryQuery
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
+import streetlight.model.data.SchemaType
 import streetlight.model.data.toOriginId
 import streetlight.server.model.ContentParse
 import streetlight.server.routes.SchemaParserText
@@ -34,6 +35,10 @@ class EventFeedReader(
 
     suspend fun read(): List<RawEvent>? {
         val link = dao.link.readLinkByAlias(initialUrl)
+        if (link?.stopsFeed() == true) {
+            feed.skipped(PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
+            return null
+        }
         val url = link?.let {
             if (link.fetchedAt >= daemon.startedAt) return null
             link.url
@@ -42,31 +47,28 @@ class EventFeedReader(
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
         val fetch = gate.fetchWhenOpen(url, fetchMode).toDataOr {
             daemon.logProblem(it)
-            feed.finished(it.toFetchOutcome(), it)
+            feed.fetchFailed(it)
             return null
         }
 
         val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(daemon::logProblem)
         feed.fetched(fetchMode, fetch, doc)
-        if (doc == null) {
-            feed.finished(PageOutcome.NoHtml)
-            return null
-        }
+        if (doc == null) return null
         dao.registerFetch(origin.originId, doc, fetch)
 
         val feedSchema = origin.getFeedSchema(url, doc).toDataOr {
             daemon.logProblem(it)
-            feed.finished(it.toSchemaOutcome(), it)
+            feed.schemaFailed(it)
             return null
         }
         val body = doc.body()
         val pageElements = feedSchema.event?.let { body.tryQuery(it).toDataOrNull(daemon::logProblem) }
         feed.collect(pageElements.orEmpty())
         if (pageElements.isNullOrEmpty()) {
-            feed.finished(PageOutcome.InvalidSelector)
+            feed.noEvents(SchemaType.EventFeed)
             return null
         }
-        feed.finished(PageOutcome.Content)
+        feed.read(SchemaType.EventFeed)
 
         return pageElements.mapNotNull { element ->
             val feedEvent = RawEvent(
@@ -82,15 +84,18 @@ class EventFeedReader(
             val pageUrl = feedEvent.url ?: return@mapNotNull feedEvent
             tracker.linkFound()
             val pageLink = dao.link.readLinkByAlias(pageUrl)
-            if (pageLink != null) return@mapNotNull null
-            val pageTracker = tracker.page(pageUrl)
+            if (pageLink != null && !pageLink.wantsRead()) return@mapNotNull null
+            if (!tracker.canReadPage()) {
+                tracker.pageDeferred(pageUrl)
+                return@mapNotNull null
+            }
             val pageEvent = if (tracker.shouldFetch(pageUrl)) {
                 val pageOrigin = pageUrl.toOriginId()?.takeIf { it != origin.originId }?.let {
                     dao.origin.readOrCreateOrigin(it)
                 } ?: origin
-                EventPageReader(location, pageOrigin, pageUrl, daemon, pageTracker).read()
+                EventPageReader(location, pageOrigin, pageUrl, daemon, tracker.page(pageUrl)).read()
             } else {
-                pageTracker.finished(PageOutcome.Benched)
+                tracker.pageBenched(pageUrl)
                 null
             }
 
@@ -144,7 +149,7 @@ class EventFeedReader(
         }
         val contentSchema = content.content
         if (!content.isExpectedContent || contentSchema == null) {
-            return Problem("Document content was not an event feed")
+            return if (content.isIncompleteContent) SchemaProblem.Incomplete else Problem("Document content was not an event feed")
         }
 
         val validated = contentSchema.validate(doc.body())

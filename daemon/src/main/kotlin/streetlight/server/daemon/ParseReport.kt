@@ -2,49 +2,35 @@ package streetlight.server.daemon
 
 import kampfire.model.Problem
 import kampfire.model.Url
+import kampfire.model.toHttpProblem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import streetlight.agent.LMProblem
 import streetlight.agent.TrimStats
+import streetlight.model.data.LinkAccess
+import streetlight.model.data.LinkContent
 import streetlight.model.data.OriginId
+import streetlight.model.data.ParseOutcome
 import java.io.File
 
-/** The build of the parse pipeline, naming the folder its logs are written to. Raised when a stage changes. */
-const val parserBuildId = "V3"
+/** The build of the parse pipeline, naming the folder its reports are written to. */
+const val parserBuildId = "V5"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
-/** The result of reading one page. */
+/** The state of a page in one check: whether it was attempted, or why not. */
 @Serializable
-enum class PageOutcome {
+enum class PageState {
+    @SerialName("attempted") Attempted,
     @SerialName("skipped") Skipped,
     @SerialName("benched") Benched,
-    @SerialName("blocked") Blocked,
-    @SerialName("unreachable") Unreachable,
-    @SerialName("no-html") NoHtml,
-    @SerialName("limit") Limit,
-    @SerialName("lm-error") LmError,
-    @SerialName("read-no-content") NoContent,
-    @SerialName("read-invalid-selector") InvalidSelector,
-    @SerialName("read-content") Content,
+    @SerialName("deferred") Deferred,
 }
 
-/** Maps a problem from fetching a page to its [PageOutcome]. */
-fun Problem.toFetchOutcome() = when (this) {
-    RobotProblem.Disallowed -> PageOutcome.Blocked
-    else -> PageOutcome.Unreachable
-}
+/** The HTTP status this problem was made from by [toHttpProblem], or `null` when it came from elsewhere. */
+fun Problem.toHttpStatus(): Int? = (100..599).firstOrNull { it.toHttpProblem() == this }
 
-/** Maps a problem from finding a page schema to its [PageOutcome]. */
-fun Problem.toSchemaOutcome() = when (this) {
-    LMProblem.UsageLimit -> PageOutcome.Limit
-    SchemaProblem.Invalid -> PageOutcome.InvalidSelector
-    LMProblem.Busy, LMProblem.Unspecified, LMProblem.Decoding -> PageOutcome.LmError
-    else -> PageOutcome.NoContent
-}
-
-/** What one check of a location did: its feed, each event page read, and the events the feed yielded. */
+/** The report of one check of a location: its feed, each event page read, and the events the feed yielded. */
 @Serializable
 class ParseReport(
     val buildId: String,
@@ -66,9 +52,12 @@ class ParseReport(
 /** One page's pass through each stage, as far as it got. */
 @Serializable
 class PageReport(val url: String) {
-    var outcome = PageOutcome.Skipped
+    var state = PageState.Skipped
+    var access: LinkAccess? = null
+    var content: LinkContent? = null
+    var parseOutcome: ParseOutcome? = null
     var status: Int? = null
-    var problem: String? = null
+    var notes: List<String> = emptyList()
     var fetch: FetchReport? = null
     var lm: LmReport? = null
     var schema: SchemaReport? = null
@@ -98,7 +87,7 @@ class LmReport {
 }
 
 /**
- * How a page got its schema: a [source] of `stored` or `new`, the stored schemas tried, and for a new one
+ * The schema stage of a page: a [source] of `stored` or `new`, the stored schemas tried, and for a new one
  * the [validation] result and the fields validation [dropped]. A feed adds its [eventCount] and how many
  * events each field matched in [fieldFill].
  */

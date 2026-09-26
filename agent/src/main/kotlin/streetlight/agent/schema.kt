@@ -7,10 +7,7 @@ import kotlinx.serialization.descriptors.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
-/**
- * The standard JSON schema of this type, with every property required so a model cannot skip one.
- * A nullable property is required to be present, and may be `null`.
- */
+/** The standard JSON schema of this type, with every property required and a nullable one allowed to be `null`. */
 fun KType.toStandardSchema(): LLMParams.Schema {
     return LLMParams.Schema.JSON.Standard(
         name = (classifier as? KClass<*>)?.simpleName ?: error("must be a named type"),

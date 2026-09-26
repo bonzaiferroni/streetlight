@@ -40,7 +40,9 @@ A class member follows the same rule. A declaration whose name already says ever
 | Part | Rule |
 |---|---|
 | Summary | The first sentence, naming the declaration's effect or subject. It is often the whole comment |
+| Opening | A type or value opens with a noun phrase whose head names what it is, as in "The outcome of a parse attempt". It never opens with a wh-clause such as "How…" or "What…", which leaves the subject unnamed. A Boolean opens with "Whether" |
 | Detail | Only what a caller needs and the signature does not give |
+| Excluded | Implementation detail, storage concerns, and the reason behind a choice. What a reader should know beyond the declaration's purpose belongs in the package document |
 | Parameters | Linked in the prose, as `[attribute]`. `@param` and `@return` only for a description too long to fit the prose |
 | Links | `[Name]` for any declaration the comment mentions |
 

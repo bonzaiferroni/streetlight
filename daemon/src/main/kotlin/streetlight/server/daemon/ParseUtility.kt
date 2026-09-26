@@ -30,14 +30,7 @@ fun htmlToMarkdown(html: String): Markdown? =
 
 private fun String.normalizeSpace(): String = replace('\u00A0', ' ').trim()
 
-/**
- * The first element matching [selector] that has meaningful content, text or an image, and passes [test],
- * or `null`, including when [selector] is not a valid query.
- *
- * A selector is expected to match a single element. When it matches several, the matches are taken in
- * document order and the first to pass is used. The LM reads html with empty elements trimmed away, so an
- * empty match is skipped to reach the element the LM saw.
- */
+/** The first element matching [selector] that has text or an image and passes [test], or `null`, including when [selector] is invalid. */
 fun Element.queryElement(selector: String?, test: (Element) -> Boolean = { true }): Element? = selector?.let { query ->
     when (val outcome = tryQuery(query)) {
         is Problem -> null

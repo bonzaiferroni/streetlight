@@ -20,7 +20,7 @@ import kotlin.time.Duration.Companion.seconds
  * The language model behind [KoogHtmlParserClient], and what is needed to reach it.
  *
  * [key] is required by hosted providers, and [baseUrl] overrides the provider's default address.
- * [callInterval] spaces model calls to stay within a provider's rate limit. [think] turns a
+ * [callInterval] spaces model calls. [think] turns a
  * reasoning model's thinking on or off where the provider supports it.
  */
 data class LmConfig(
@@ -50,10 +50,7 @@ data class LmConfig(
         else -> error("Unsupported provider: ${model.provider.id}")
     }
 
-    /**
-     * The most html characters a prompt can carry within the context length of [model], leaving room
-     * for the instructions and the response, or `null` when the model's context length is unknown.
-     */
+    /** The most html characters a prompt can carry within the context length of [model], or `null` when it is unknown. */
     val htmlCharLimit: Int? get() = model.contextLength
         ?.let { ((it - promptReserveTokens) * htmlCharsPerToken).toInt() }
 

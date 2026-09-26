@@ -13,6 +13,7 @@ import streetlight.agent.readHtml
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
+import streetlight.model.data.SchemaType
 import streetlight.model.data.ParseMode
 import streetlight.server.model.ContentParse
 import streetlight.server.routes.SchemaParserText
@@ -33,16 +34,13 @@ class EventPageReader(
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
         val fetch = gate.fetchWhenOpen(initialUrl, fetchMode).toDataOr {
             daemon.logProblem(it)
-            tracker.finished(it.toFetchOutcome(), it)
+            tracker.fetchFailed(it)
             return null
         }
 
         val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(daemon::logProblem)
         tracker.fetched(fetchMode, fetch, doc)
-        if (doc == null) {
-            tracker.finished(PageOutcome.NoHtml)
-            return null
-        }
+        if (doc == null) return null
         val pageUrl = dao.registerFetch(origin.originId, doc, fetch)
 
         val report = doc.readStructuredData()
@@ -54,12 +52,12 @@ class EventPageReader(
 
         val pageSchema = origin.getPageSchema(fetch.pageUrl, doc).toDataOr {
             daemon.logProblem(it)
-            tracker.finished(it.toSchemaOutcome(), it)
+            tracker.schemaFailed(it)
             return null
         }
-        tracker.finished(PageOutcome.Content)
+        tracker.read(SchemaType.EventPage)
         return parsePageEvent(pageSchema, doc, locationConfig.config.parseMode, pageUrl).also {
-            println("Cost: ${it.cost}")
+            log.debug { "Parsed ${fetch.pageUrl}: description ${it.descriptionHtml?.length ?: 0} chars, cost ${it.cost}" }
         }
     }
 
@@ -80,8 +78,7 @@ class EventPageReader(
             }
 
             length to schema
-        }.sortedByDescending { it.first }.firstOrNull()?.let { (length, schema) ->
-            println("chose: $length")
+        }.sortedByDescending { it.first }.firstOrNull()?.let { (_, schema) ->
             dao.parser.updateResult(schema.parserId, true)
             tracker.storedSchemaTried(schema.schema, true)
             return Ok(schema.schema as EventPageSchema)
@@ -109,7 +106,7 @@ class EventPageReader(
         }
         val contentSchema = content.content
         if (!content.isExpectedContent || contentSchema == null) {
-            return Problem("Document content was not an event page")
+            return if (content.isIncompleteContent) SchemaProblem.Incomplete else Problem("Document content was not an event page")
         }
 
         val validated = contentSchema.validate(doc.body())

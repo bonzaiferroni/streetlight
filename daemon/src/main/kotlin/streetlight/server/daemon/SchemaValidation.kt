@@ -11,14 +11,10 @@ import streetlight.model.data.EventPageSchema
 
 object SchemaProblem {
     val Invalid = Problem("The LM schema failed validation against its page.")
+    val Incomplete = Problem("The page content is incomplete without scripting.")
 }
 
-/**
- * Runs each selector of a feed schema from the LM against the [body] it was made from.
- *
- * The event selector must match at least one element. Any other selector that is invalid, or matches
- * in no event, is set to null.
- */
+/** Validates a feed schema from the LM against the [body] it was made from, setting any other selector that fails to null. */
 fun EventFeedSchema.validate(body: Element): Outcome<EventFeedSchema> {
     val selector = event ?: return Problem("No event selector")
     val events = body.tryQuery(selector).toDataOr { return it }
@@ -38,12 +34,7 @@ fun EventFeedSchema.validate(body: Element): Outcome<EventFeedSchema> {
     ))
 }
 
-/**
- * Runs each selector of a page schema from the LM against the [body] it was made from.
- *
- * The title and description must pass the same test a stored schema must pass to be reused. Any other
- * selector that is invalid, or matches nothing, is set to null.
- */
+/** Validates a page schema from the LM against the [body] it was made from, setting any other selector that fails to null. */
 fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
     if (body.queryElement(title) { it.isPlausibleField() } == null) return Problem("Title selector does not match: $title")
     if (body.queryElement(description) { it.isPlausibleProse() } == null) {
@@ -66,7 +57,7 @@ fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
 private fun String?.keepIfMatches(elements: List<Element>): String? =
     this?.takeIf { selector -> elements.any { it.queryElement(selector) != null } }
 
-/** How many of [events] each event-level selector of this schema matches, by field name. */
+/** The count of [events] each event-level selector of this schema matches, by field name. */
 fun EventFeedSchema.fieldFill(events: List<Element>): Map<String, Int> = mapOf(
     "title" to title,
     "eventLocation" to eventLocation,

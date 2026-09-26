@@ -66,7 +66,7 @@ class ParseDaemon(private val server: Server) {
         robotGates.getOrPut(origin.originId) { origin.getRobotGate() }
     }
 
-    /** Reads the feed of a location and creates its new events, then writes the location's parse log. */
+    /** Reads the feed of a location, creates its new events, and records each page's outcome on its link. */
     private suspend fun checkLocation(config: LocationConfigContent) {
         val location = config.location
         dao.location.updateCheckedAt(location.locationId)
@@ -100,7 +100,8 @@ class ParseDaemon(private val server: Server) {
             }
             tracker.eventCreated()
         }
-        tracker.report().write(originId)
+        tracker.records().forEach { dao.recordLink(it) }
+        if (tracker.needsReport()) tracker.write(originId)
     }
 
     fun logProblem(problem: Problem) {

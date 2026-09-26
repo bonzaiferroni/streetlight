@@ -14,6 +14,10 @@ data class Link(
     val schemaType: SchemaType?,
     val fetchedAt: Instant,
     val createdAt: Instant,
+    val access: LinkAccess,
+    val content: LinkContent? = null,
+    val parseOutcome: ParseOutcome? = null,
+    val parseNote: String? = null,
 )
 
 @JvmInline

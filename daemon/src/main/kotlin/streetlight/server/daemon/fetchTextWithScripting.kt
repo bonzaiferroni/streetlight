@@ -99,10 +99,7 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
     }
 }
 
-/**
- * Waits until the body's visible text has held its length for [settleMillis], so content rendered after the
- * load event is included, giving up [maxSettleMillis] after load.
- */
+/** Waits until the body's visible text has held its length for [settleMillis], at most [maxSettleMillis]. */
 private fun Page.waitForSettledText() {
     val start = System.currentTimeMillis()
     var length = bodyTextLength()
@@ -122,11 +119,7 @@ private fun Page.waitForSettledText() {
 
 private fun Page.bodyTextLength() = runCatching { innerText("body").length }.getOrDefault(0)
 
-/**
- * Replaces each child iframe holding at least [minFrameTextChars] of text with a div of its body html, since
- * [Page.content] leaves out iframe contents. The div carries the frame's url as `data-frame-src`, and relative
- * links inside it are made absolute against that url.
- */
+/** Replaces each child iframe holding at least [minFrameTextChars] of text with a div of its body html, marked with the frame's url. */
 private fun Page.foldFrames() {
     frames().filter { it != mainFrame() && it.parentFrame() == mainFrame() }.forEach { frame ->
         runCatching {
