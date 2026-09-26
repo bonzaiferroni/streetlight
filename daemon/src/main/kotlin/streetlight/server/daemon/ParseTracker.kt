@@ -34,6 +34,7 @@ class ParseTracker(private val location: String, feedUrl: Url) {
     private val events = EventReport()
     private var links = 0
     private var pagesRead = 0
+    private var failure: String? = null
 
     /** The tracker of the feed page itself. */
     val feed = PageTracker(feedUrl, this)
@@ -112,16 +113,25 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         events.created++
     }
 
-    /** Whether the check needs a report, when some page needs work. */
-    fun needsReport(): Boolean = allPages().any { it.needsWork }
+    /**
+     * Whether the check needs a report: it failed, some page needs work, or its feed was read and yielded no
+     * event that was created or already known.
+     */
+    fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
+        (feed.isAttempted && events.created + events.duplicates == 0)
+
+    /** Records the check as cut short by [error]. */
+    fun failed(error: Exception) {
+        failure = "${error::class.simpleName}: ${error.message}"
+    }
 
     /** The record of each page that reached its server, the feed first, for its link. */
     fun records(): List<LinkRecord> = allPages().mapNotNull { it.record() }
 
-    /** Writes the report to `<origin>.json`, and saves the html of each page that needs work. */
+    /** Writes the report to `<origin>.json`, and saves the html of the feed and of each page that needs work. */
     fun write(originId: OriginId) {
         report().write(originId)
-        allPages().filter { it.needsWork }.forEach { it.saveHtml() }
+        (listOf(feed) + pages.filter { it.needsWork }).forEach { it.saveHtml() }
     }
 
     /** Builds the report of the check. */
@@ -133,6 +143,7 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         links = links,
         pages = pages.map { it.report() },
         events = events,
+        failure = failure,
     )
 
     internal fun strike(url: Url) {
@@ -268,6 +279,8 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         if (page.parseOutcome == ParseOutcome.Complete) page.parseOutcome = ParseOutcome.Partial
         notes.add(note)
     }
+
+    internal val isAttempted get() = page.state == PageState.Attempted
 
     /** Whether the page needs work: a partial or failed parse, or content no schema reads. */
     internal val needsWork get() = page.parseOutcome in needsWorkOutcomes || page.content in needsWorkContent

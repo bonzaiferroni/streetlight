@@ -11,6 +11,10 @@ A standalone process that reads location event feeds and the event pages they li
 | `streetlight.server.model` | `Server`, the DAO and event creation |
 | `streetlight.agent` | Fetching, html parsing, the `SchemaMediator`, schema validation and date parsing |
 
+## General Model
+
+Parsing is built as a general model. A change is made only when its mechanism holds for any site, with no knowledge of a particular site, template or page builder, and when its need is seen across many origins. A site whose content does not fit the model is left unread rather than handled as a special case.
+
 ## Parse Reports
 
 Reports are kept per build of the parse pipeline. `parserBuildId` names the build and is raised when any stage changes, so each build's results can be compared with the last. Paths are relative to the `daemon` working directory, and `../logs/parser` holds only build folders.
@@ -21,7 +25,8 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Page html | `../logs/parser/<build>/html/<address>.html`, for each page that did not succeed |
 | Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
-- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`, as stated under Links. A later check in the same build overwrites the report.
+- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the feed was read and yielded no event created or already known, or the check failed. A later check in the same build overwrites the report, and the report saves the feed's html.
+- An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the daemon moves to the next location. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
 - A reader takes its tracker, never null, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit of `read()`), and consults it before fetching. A reader computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
 - The feed reader hands each event page reader the child `PageTracker` from `tracker.page(url)`.
@@ -64,7 +69,7 @@ A check reads at most 30 event pages. A page past the limit is recorded as `defe
 
 An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and the reader fetches that page again through Playwright within the same read. Its later pages are fetched through Playwright too.
 
-A `Scripting` fetch scrolls down with the mouse wheel after the load event until the body's text has held steady for 3 seconds, up to 15 seconds, so content rendered late or loaded on scroll is included. The wheel scrolls whatever container is under the pointer, which a script scrolling the window does not reach. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
+A `Scripting` fetch scrolls down with the mouse wheel after the load event until the page's text, its frames included, has held steady for 3 seconds, up to 15 seconds, so content rendered late or loaded on scroll is included. The wheel scrolls whatever container is under the pointer, which a script scrolling the window does not reach. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
 
 ## Events
 

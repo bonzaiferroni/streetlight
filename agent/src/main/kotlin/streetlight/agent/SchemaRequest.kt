@@ -20,9 +20,17 @@ data class EventFeedSchemaRequest(
     val time: String? = null,
 ) {
     fun toSchema() = EventFeedSchema(
-        event = event, feedLocation = feedLocation, address = address, title = title,
-        eventLocation = eventLocation, link = link, image = image, cost = cost,
-        description = description, date = date, time = time,
+        event = event.selectorOrNull(),
+        feedLocation = feedLocation.selectorOrNull(),
+        address = address.selectorOrNull(),
+        title = title.selectorOrNull(),
+        eventLocation = eventLocation.selectorOrNull(),
+        link = link.selectorOrNull(),
+        image = image.selectorOrNull(),
+        cost = cost.selectorOrNull(),
+        description = description.selectorOrNull(),
+        date = date.selectorOrNull(),
+        time = time.selectorOrNull(),
     )
 }
 
@@ -42,9 +50,17 @@ data class EventPageSchemaRequest(
     val contact: String? = null,
 ) {
     fun toSchema() = EventPageSchema(
-        title = title, location = location, address = address, image = image, cost = cost,
-        description = description, date = date, startTime = startTime, endTime = endTime,
-        ageMin = ageMin, contact = contact,
+        title = title.selectorOrNull(),
+        location = location.selectorOrNull(),
+        address = address.selectorOrNull(),
+        image = image.selectorOrNull(),
+        cost = cost.selectorOrNull(),
+        description = description.selectorOrNull(),
+        date = date.selectorOrNull(),
+        startTime = startTime.selectorOrNull(),
+        endTime = endTime.selectorOrNull(),
+        ageMin = ageMin.selectorOrNull(),
+        contact = contact.selectorOrNull(),
     )
 }
 
@@ -55,3 +71,8 @@ data class EventTimeSchemaRequest(
     val day: String? = null,
     val startTime: String? = null,
 )
+
+/** This selector, or `null` when the LM wrote a null as text, such as "null" or "none". */
+fun String?.selectorOrNull(): String? = this?.takeUnless { it.trim().lowercase() in nullWords }
+
+private val nullWords = setOf("", "null", "none", "n/a")

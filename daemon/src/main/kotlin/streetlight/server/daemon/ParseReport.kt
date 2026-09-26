@@ -14,7 +14,7 @@ import streetlight.model.data.ParseOutcome
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its reports are written to. */
-const val parserBuildId = "V6"
+const val parserBuildId = "V7"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
@@ -40,6 +40,7 @@ class ParseReport(
     val links: Int,
     val pages: List<PageReport>,
     val events: EventReport,
+    val failure: String? = null,
 ) {
     /** Writes this report to `<origin>.json` in [parserLogDir], replacing the report of an earlier check. */
     fun write(originId: OriginId) {

@@ -13,6 +13,10 @@ Work that talks to a language model: prompting, structured decoding, and the HTM
 | `kampfire.model` | `Outcome` |
 | `io.ktor.client` | Page fetching |
 
+## General Model
+
+The parsing in this package follows the General Model of `streetlight.server.daemon`.
+
 ## HtmlParserClient
 
 `HtmlParserClient` is the interface for reading structure out of a page. `KoogHtmlParserClient` implements it against the model named by its `LmConfig`; `TestHtmlParserClient`, in the server's test source set, stands in for it under test.
@@ -89,6 +93,8 @@ The request types are what the LM sees, and `EventFeedSchema` and `EventPageSche
 A server request passes `isRefining = false`, since its requests go to a rate-limited model.
 
 A `SchemaObserver` is told of each request to the LM, each stored schema tried, and each schema created.
+
+A selector the LM writes as text for a null, such as `"null"` or `"none"`, is read as null before validation.
 
 | Time part | Kept when |
 |---|---|

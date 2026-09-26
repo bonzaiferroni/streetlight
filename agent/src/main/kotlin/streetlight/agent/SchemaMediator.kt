@@ -151,9 +151,9 @@ class SchemaMediator(
         ).toDataOrNull() ?: return schema
 
         val refined = schema.copy(
-            month = request.month?.takeIf { events.allHold(it) { text -> text.hasMonthName() } },
-            day = request.day?.takeIf { events.allHold(it) { text -> text.isDayText() } && events.varies(it) },
-            time = request.startTime?.takeIf { events.allHold(it) { text -> parseTimeFromText(text) != null } }
+            month = request.month.selectorOrNull()?.takeIf { events.allHold(it) { text -> text.hasMonthName() } },
+            day = request.day.selectorOrNull()?.takeIf { events.allHold(it) { text -> text.isDayText() } && events.varies(it) },
+            time = request.startTime.selectorOrNull()?.takeIf { events.allHold(it) { text -> parseTimeFromText(text) != null } }
                 ?: schema.time,
         )
         return refined.takeIf { it.startsParse(events, zone) } ?: schema
@@ -176,9 +176,9 @@ class SchemaMediator(
         ).toDataOrNull() ?: return schema
 
         val refined = schema.copy(
-            month = request.month?.takeIf { page.allHold(it) { text -> text.hasMonthName() } },
-            day = request.day?.takeIf { page.allHold(it) { text -> text.isDayText() } },
-            startTime = request.startTime?.takeIf { page.allHold(it) { text -> parseTimeFromText(text) != null } }
+            month = request.month.selectorOrNull()?.takeIf { page.allHold(it) { text -> text.hasMonthName() } },
+            day = request.day.selectorOrNull()?.takeIf { page.allHold(it) { text -> text.isDayText() } },
+            startTime = request.startTime.selectorOrNull()?.takeIf { page.allHold(it) { text -> parseTimeFromText(text) != null } }
                 ?: schema.startTime,
         )
         return refined.takeIf { it.startsParse(page, zone) } ?: schema

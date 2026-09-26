@@ -10,6 +10,7 @@ import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import klutch.server.provide
 import koala.Image
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -88,7 +89,14 @@ class ParseDaemon(private val server: Server) {
 
         val tracker = ParseTracker(location.slug.toString(), feedUrl.normalize())
         val reader = EventFeedReader(config, origin, feedUrl.normalize(), this, tracker)
-        reader.read()?.forEach { createEvent(it, location, tracker) }
+        try {
+            reader.read()?.forEach { createEvent(it, location, tracker) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            log.error(e) { "check failed for ${location.slug}" }
+            tracker.failed(e)
+        }
         tracker.records().forEach { dao.recordLink(it) }
         if (tracker.needsReport()) tracker.write(originId)
     }

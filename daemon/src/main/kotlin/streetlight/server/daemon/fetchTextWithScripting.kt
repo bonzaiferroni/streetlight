@@ -99,15 +99,15 @@ suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withCo
     }
 }
 
-/** Scrolls down with the mouse wheel until the body's visible text has held its length for [settleMillis], at most [maxSettleMillis]. */
+/** Scrolls down with the mouse wheel until the page's visible text, frames included, has held its length for [settleMillis], at most [maxSettleMillis]. */
 private fun Page.waitForSettledText() {
     val start = System.currentTimeMillis()
-    var length = bodyTextLength()
+    var length = visibleTextLength()
     var stableSince = start
     while (System.currentTimeMillis() - start < maxSettleMillis) {
         runCatching { mouse().wheel(0.0, scrollPixels) }
         waitForTimeout(pollMillis.toDouble())
-        val next = bodyTextLength()
+        val next = visibleTextLength()
         val now = System.currentTimeMillis()
         if (next != length) {
             length = next
@@ -118,7 +118,7 @@ private fun Page.waitForSettledText() {
     }
 }
 
-private fun Page.bodyTextLength() = runCatching { innerText("body").length }.getOrDefault(0)
+private fun Page.visibleTextLength() = frames().sumOf { frame -> runCatching { frame.innerText("body").length }.getOrDefault(0) }
 
 /** Replaces each child iframe holding at least [minFrameTextChars] of text with a div of its body html, marked with the frame's url. */
 private fun Page.foldFrames() {
