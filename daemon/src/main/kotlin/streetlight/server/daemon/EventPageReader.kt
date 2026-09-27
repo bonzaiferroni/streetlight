@@ -24,11 +24,11 @@ class EventPageReader(
     private val source: EventFeedSource,
     private val origin: Origin,
     private val initialUrl: Url,
-    private val daemon: ParseDaemon,
+    private val crawler: Crawler,
     private val tracker: PageTracker,
 ) {
-    val dao get() = daemon.dao
-    val log get() = daemon.log
+    val dao get() = crawler.dao
+    val log get() = crawler.log
 
     suspend fun read(): RawEvent? {
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
@@ -37,14 +37,14 @@ class EventPageReader(
 
     /** Reads the page fetched in [fetchMode], and again with scripting when its content is incomplete. */
     private suspend fun read(fetchMode: FetchMode): RawEvent? {
-        val gate = daemon.getRobotGate(origin)
+        val gate = crawler.getRobotGate(origin)
         val fetch = gate.fetchWhenOpen(initialUrl, fetchMode).toDataOr {
-            daemon.logProblem(it)
+            crawler.logProblem(it)
             tracker.fetchFailed(it)
             return null
         }
 
-        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(daemon::logProblem)
+        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(crawler::logProblem)
         tracker.fetched(fetchMode, fetch, doc)
         if (doc == null) return null
         val pageUrl = dao.registerFetch(origin.originId, doc, fetch)
@@ -56,16 +56,16 @@ class EventPageReader(
                     "microdataEvents=${report.microdataEventCount} types=${report.types}" }
         }
 
-        val pageSchema = daemon.mediator.pageSchema(
+        val pageSchema = crawler.mediator.pageSchema(
             url = fetch.pageUrl,
             doc = doc,
             store = OriginSchemaStore(dao, origin),
             timeZoneId = source.timeZoneId,
-            allowLm = !daemon.lmUsageLimitReached,
+            allowLm = !crawler.lmUsageLimitReached,
             observer = tracker,
         ).toDataOr {
-            daemon.logProblem(it)
-            if (it == LMProblem.UsageLimit) daemon.lmUsageLimitReached = true
+            crawler.logProblem(it)
+            if (it == LMProblem.UsageLimit) crawler.lmUsageLimitReached = true
             tracker.schemaFailed(it)
             if (it == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) return read(FetchMode.Scripting)
             return null

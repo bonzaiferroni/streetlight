@@ -1,7 +1,6 @@
 package streetlight.server.daemon
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kampfire.api.Slug
 import kampfire.api.toMarkdown
 import kampfire.model.Problem
 import kampfire.model.Url
@@ -24,12 +23,9 @@ import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventFeedSource
-import streetlight.model.data.Galaxy
 import streetlight.model.data.Origin
 import streetlight.model.data.OriginId
 import streetlight.model.data.ParseMode
-import streetlight.model.data.PostEdit
-import streetlight.model.data.PostType
 import streetlight.model.data.toOriginId
 import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
@@ -45,13 +41,13 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
-class ParseDaemon(private val server: Server) {
+class Crawler(private val server: Server) {
 
     val dao = server.dao
     val koog = server.provide<KoogHtmlParserClient>()
     val mediator = SchemaMediator(koog, lmRetryCount)
     private val spawner = LocationSpawner(server, server.provide<MapReferenceClient>())
-    val log = KotlinLogging.logger(ParseDaemon::class)
+    val log = KotlinLogging.logger(Crawler::class)
 
     var startedAt = Instant.DISTANT_PAST
         private set
@@ -144,7 +140,7 @@ class ParseDaemon(private val server: Server) {
 
 fun CoroutineScope.startParseDaemon(server: Server) {
     launch {
-        ParseDaemon(server).start()
+        Crawler(server).start()
         closeBrowser()
     }
 }

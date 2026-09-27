@@ -25,11 +25,11 @@ class EventFeedReader(
     private val source: EventFeedSource,
     private val origin: Origin,
     private val initialUrl: Url,
-    private val daemon: ParseDaemon,
+    private val crawler: Crawler,
     private val tracker: ParseTracker,
 ) {
-    val dao get() = daemon.dao
-    val log get() = daemon.log
+    val dao get() = crawler.dao
+    val log get() = crawler.log
 
     private val feed get() = tracker.feed
     private val timeZoneId get() = source.timeZoneId
@@ -41,7 +41,7 @@ class EventFeedReader(
             return null
         }
         val url = link?.let {
-            if (link.fetchedAt >= daemon.startedAt) return null
+            if (link.fetchedAt >= crawler.startedAt) return null
             link.url
         } ?: initialUrl
         val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
@@ -50,35 +50,35 @@ class EventFeedReader(
 
     /** Reads the feed at [url] fetched in [fetchMode], and again with scripting when its content is incomplete. */
     private suspend fun read(url: Url, fetchMode: FetchMode): List<RawEvent>? {
-        val gate = daemon.getRobotGate(origin)
+        val gate = crawler.getRobotGate(origin)
         val fetch = gate.fetchWhenOpen(url, fetchMode).toDataOr {
-            daemon.logProblem(it)
+            crawler.logProblem(it)
             feed.fetchFailed(it)
             return null
         }
 
-        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(daemon::logProblem)
+        val doc = parseHtmlDocument(fetch.text, fetch.pageUrl).toDataOrNull(crawler::logProblem)
         feed.fetched(fetchMode, fetch, doc)
         if (doc == null) return null
         dao.registerFetch(origin.originId, doc, fetch)
 
-        val feedSchema = daemon.mediator.feedSchema(
+        val feedSchema = crawler.mediator.feedSchema(
             url = url,
             doc = doc,
             store = OriginSchemaStore(dao, origin),
             timeZoneId = timeZoneId,
             instructions = SchemaParserText.feedSelectorsInstructions(source),
-            allowLm = !daemon.lmUsageLimitReached,
+            allowLm = !crawler.lmUsageLimitReached,
             observer = feed,
         ).toDataOr {
-            daemon.logProblem(it)
-            if (it == LMProblem.UsageLimit) daemon.lmUsageLimitReached = true
+            crawler.logProblem(it)
+            if (it == LMProblem.UsageLimit) crawler.lmUsageLimitReached = true
             feed.schemaFailed(it)
             if (it == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) return read(url, FetchMode.Scripting)
             return null
         }
         val body = doc.body()
-        val pageElements = feedSchema.event?.let { body.tryQuery(it).toDataOrNull(daemon::logProblem) }
+        val pageElements = feedSchema.event?.let { body.tryQuery(it).toDataOrNull(crawler::logProblem) }
         feed.collect(pageElements.orEmpty())
         if (pageElements.isNullOrEmpty()) {
             feed.noEvents(SchemaType.EventFeed)
@@ -116,7 +116,7 @@ class EventFeedReader(
                 val pageOrigin = pageUrl.toOriginId()?.takeIf { it != origin.originId }?.let {
                     dao.origin.readOrCreateOrigin(it)
                 } ?: origin
-                EventPageReader(source, pageOrigin, pageUrl, daemon, tracker.page(pageUrl)).read()
+                EventPageReader(source, pageOrigin, pageUrl, crawler, tracker.page(pageUrl)).read()
             } else {
                 tracker.pageBenched(pageUrl)
                 null
