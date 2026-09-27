@@ -67,7 +67,7 @@ class Crawler(private val server: Server) {
         }
     }
 
-    @JvmName("parseDaemonGetRobotGate")
+    @JvmName("crawlerGetRobotGate")
     suspend fun getRobotGate(origin: Origin): RobotGate = gateMutex.withLock {
         robotGates.getOrPut(origin.originId) { origin.getRobotGate() }
     }
@@ -82,9 +82,8 @@ class Crawler(private val server: Server) {
         val origin = dao.origin.readOrCreateOrigin(originId)
 
         val tracker = ParseTracker(source.sourceName, feedUrl)
-        val reader = EventFeedReader(source, origin, feedUrl, this, tracker)
         try {
-            reader.read()?.forEach { createEvent(it, source, tracker) }
+            crawlEventFeed(source, origin, feedUrl, tracker)?.forEach { createEvent(it, source, tracker) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -138,7 +137,7 @@ class Crawler(private val server: Server) {
     }
 }
 
-fun CoroutineScope.startParseDaemon(server: Server) {
+fun CoroutineScope.startCrawler(server: Server) {
     launch {
         Crawler(server).start()
         closeBrowser()

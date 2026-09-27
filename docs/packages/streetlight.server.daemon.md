@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A standalone process that reads event feeds and the event pages they link to, and creates the events it finds.
+The crawler, a standalone process that reads event feeds and the event pages they link to, and creates the events it finds.
 
 ## Dependencies
 
@@ -12,9 +12,13 @@ A standalone process that reads event feeds and the event pages they link to, an
 | `streetlight.server.db.datascope` | Location creation |
 | `streetlight.agent` | Fetching, html parsing, the `SchemaMediator`, schema validation and date parsing |
 
+## Structure
+
+`Crawler` holds what every piece of work shares: the DAO, the `SchemaMediator`, the robots gates and the run's state. It takes each source from the database and hands it to a service function, an extension of `Crawler` named for its work, such as `crawlEventFeed`, which in turn hands each event page to `crawlEventPage`. A service function keeps no state of its own; a new kind of source is read by a new one.
+
 ## Feed Sources
 
-Each feed is an `EventFeedSource`, read by the same `EventFeedReader`. `readCheckable` gives the feeds not checked within a day: the locations' own first, so their venues are stored before a general feed names them, then the general feeds.
+Each feed is an `EventFeedSource`, read by the same `crawlEventFeed`. `readCheckable` gives the feeds not checked within a day: the locations' own first, so their venues are stored before a general feed names them, then the general feeds.
 
 | Source | Feed | Location of its events |
 |---|---|---|
@@ -38,7 +42,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
 - `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the feed was read and yielded no event created, duplicated or known, or the check failed. A later check in the same build overwrites the report, and the report saves the feed's html.
-- An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the daemon moves to the next location. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
+- An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the crawler moves to the next feed. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
 - A reader takes its tracker, never null, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit of `read()`), and consults it before fetching. A reader computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
 - The feed reader hands each event page reader the child `PageTracker` from `tracker.page(url)`.
@@ -90,7 +94,7 @@ A `Scripting` fetch scrolls down with the mouse wheel after the load event until
 
 A feed's events are created only with a title, and a start date and time that is still ahead. This is the final guard on what reaches users. An event with no title is dropped and counted under `untitled`, an event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. An untitled or unparsed event marks its feed and page `Partial`. Feeds supply what they readily can; other events are posted by hand.
 
-An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the daemon or by a person and whatever its start time. Each duplicate is counted, and its pair of titles reported under `duplicateTitles`. An event whose image cannot be stored is still created, without the image, and reported under `imageFailures`, since the image is decoration and the event is the data.
+An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the crawler or by a person and whatever its start time. Each duplicate is counted, and its pair of titles reported under `duplicateTitles`. An event whose image cannot be stored is still created, without the image, and reported under `imageFailures`, since the image is decoration and the event is the data.
 
 A source's `ParseMode` sets how much is read: `None` skips it, `Partial` shortens each description, and `Full` keeps each description whole. An event's shortened description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
@@ -108,7 +112,7 @@ An event is placed at its feed's location unless its location text clearly names
 
 Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map. A general feed has no location of its own, so the 150 m rule does not apply, and an event whose place is not found is dropped and reported under `unlocatedEvents`, marking its feed and page `Partial`.
 
-Map searches are bounded to the 200 km around the feed's point, paced to one a second, and kept for the daemon's run. The report lists `spawnedLocations`, `matchedLocations`, `fallbackLocations` and `locationFailures`, and a check that spawned a location, or failed to, is always reported.
+Map searches are bounded to the 200 km around the feed's point, paced to one a second, and kept for the crawler's run. The report lists `spawnedLocations`, `matchedLocations`, `fallbackLocations` and `locationFailures`, and a check that spawned a location, or failed to, is always reported.
 
 ## Strikes
 

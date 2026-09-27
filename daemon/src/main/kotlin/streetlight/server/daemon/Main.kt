@@ -25,5 +25,5 @@ fun main() = runBlocking {
 
     val db = connectDb(env)
 
-    startParseDaemon(server)
+    startCrawler(server)
 }

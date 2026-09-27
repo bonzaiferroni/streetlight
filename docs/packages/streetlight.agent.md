@@ -83,7 +83,7 @@ A request to the LM asks for one shape at a time. A follow-up request asks a nar
 
 ## Schema Mediator
 
-`SchemaMediator` finds the schema of a feed or an event page, and is the only caller that asks the LM for one. The daemon and the server both use it.
+`SchemaMediator` finds the schema of a feed or an event page, and is the only caller that asks the LM for one. The crawler and the server both use it.
 
 1. Stored schemas from the `SchemaStore` are tried first. The first feed schema whose `event` selector matches is used, and of the page schemas whose title passes, the one with the longest description.
 2. Otherwise the LM is asked for the whole schema with `EventFeedSchemaRequest` or `EventPageSchemaRequest`, and the answer is validated.
@@ -115,7 +115,7 @@ A schema from the LM is validated against the page it was made from before it is
 | Feed | `event`, at least one element | Any other selector that is invalid or matches in no event is set to null |
 | Page | `title` a plausible field | Any other selector that is invalid or matches nothing is set to null, `description` included when it matches no plausible prose |
 
-A failed schema is not stored, and the daemon records the page as `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
+A failed schema is not stored, and the crawler records the page as `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
 
 ## Field Queries
 
