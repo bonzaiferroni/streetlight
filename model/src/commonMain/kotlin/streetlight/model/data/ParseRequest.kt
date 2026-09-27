@@ -37,30 +37,6 @@ data class ImageParseRequest(
     override val url: Url,
 ): ParseRequest
 
-/** The location and events read from a page. */
-@Serializable
-data class MultiEventParseResult(
-    val hasContent: Boolean? = null,
-    val location: Location? = null,
-    val locationEdit: LocationEdit? = null,
-    val events: List<EventEdit>
-)
-
-/** What a language model read from a page, not yet checked. */
-@Serializable
-data class ColdParse(
-    val hasContent: Boolean? = null,
-    val location: LocationParse? = null,
-    val events: List<EventParse>? = null,
-)
-
-/** The events a language model read from a page. */
-@Serializable
-data class MultiEventParse(
-    val hasContent: Boolean? = null,
-    val events: List<EventParse>? = null,
-)
-
 /** The events read from a page, as edits. */
 @Serializable
 data class MultiEventParseResponse(

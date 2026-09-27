@@ -26,6 +26,7 @@ object HttpProblem {
     val InternalServerError = CoreProblem.Something
     val NotFound = Problem("That resource doesn't exist.")
     val BadRequest = Problem("The request was invalid.")
+    val NotImplemented = CoreProblem.NotImplemented
 }
 
 /** The [HttpProblem] for this status, or a generic one naming it. */
@@ -37,5 +38,6 @@ fun Int.toHttpProblem() = when (this) {
     429 -> HttpProblem.TooManyRequests
     409 -> HttpProblem.Conflict
     500 -> HttpProblem.InternalServerError
+    501 -> HttpProblem.NotImplemented
     else -> Problem("HTTP error: $this")
 }

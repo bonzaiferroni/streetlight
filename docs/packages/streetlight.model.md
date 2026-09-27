@@ -41,7 +41,7 @@ A record the user edits has a `FooEdit` DTO holding the fields a form sends, and
 
 ## Event Feed Sources
 
-`EventFeedSource` is the sealed type of a page the crawler reads events from: a location's own events page, as `LocationConfigContent`, or an `EventFeed` of local events at many locations. It is distinct from the paged feeds below.
+`EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. It is distinct from the paged feeds below.
 
 ## Feeds
 

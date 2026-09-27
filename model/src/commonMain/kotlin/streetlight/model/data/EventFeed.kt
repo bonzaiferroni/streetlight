@@ -8,10 +8,10 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 /** A page listing events whose locations are read along with them. */
-sealed interface EventFeedSource {
-    /** The name of the source, for its reports. */
-    val sourceName: String
-    val url: Url?
+sealed interface EventFeed {
+    /** The name of the feed, for its reports. */
+    val name: String
+    val url: Url
     val timeZoneId: String
     val parseMode: ParseMode
     val geoPoint: GeoPoint
@@ -20,18 +20,29 @@ sealed interface EventFeedSource {
     val location: Location?
 }
 
+/** The events page of a [location]. */
+@Serializable
+data class LocationEventFeed(
+    override val location: Location,
+    override val url: Url,
+    override val parseMode: ParseMode,
+): EventFeed {
+    override val name get() = location.slug.toString()
+    override val timeZoneId get() = location.timezoneId
+    override val geoPoint get() = location.geoPoint
+}
+
 /** A page listing local events at many locations, such as a newspaper's calendar. */
 @Serializable
-data class EventFeed(
+data class GeneralEventFeed(
     val eventFeedId: EventFeedId,
-    val name: String,
+    override val name: String,
     override val url: Url,
     override val geoPoint: GeoPoint,
     override val timeZoneId: String,
     val checkedAt: Instant?,
     val createdAt: Instant,
-): EventFeedSource {
-    override val sourceName get() = name
+): EventFeed {
     override val parseMode get() = ParseMode.Partial
     override val location: Location? get() = null
 }

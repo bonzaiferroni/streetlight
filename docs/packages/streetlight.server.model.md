@@ -31,7 +31,7 @@ Declare the narrowest scope the function uses. A function on `DataScope` is call
 
 ## Facades
 
-`DaoFacade` holds one DAO per table, `ClientFacade` holds the external clients. Both take every member as a defaulted constructor parameter, so a caller replaces one and takes the rest.
+`DaoFacade` holds one DAO per table, `ClientFacade` holds the external clients. Both take every member as a defaulted constructor parameter, so a caller replaces one and takes the rest. `StreetlightAgent` holds the identity the server and the crawler present when they fetch from other sites.
 
 Reach a DAO through `dao.foo` rather than constructing it. A DAO constructed in place is invisible to the container and cannot be substituted.
 
@@ -44,9 +44,8 @@ Anything outside the process sits behind an interface, with the implementation n
 | `MapReferenceClient` | `OSMMapReferenceClient` | `TestMapReferenceClient` |
 | `BlobClient` | `S3BlobClient` | `TestBlobClient` |
 | `EmailClient` | `PostmarkEmailClient` | `TestEmailClient` |
-| `HtmlParserClient` | `KoogHtmlParserClient` | `TestHtmlParserClient` |
 
-The name is the implementation specifier followed by the interface. `HtmlParserClient` is declared in `streetlight.agent` beside the client that implements it; the rest live here.
+The name is the implementation specifier followed by the interface, and the interfaces live here.
 
 An interface earns its place where the call leaves the process. Everything inside it is reached by its own type.
 

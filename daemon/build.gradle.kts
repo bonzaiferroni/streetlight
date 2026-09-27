@@ -24,8 +24,12 @@ dependencies {
     implementation(project(":klutch"))
     implementation(project(":kampfire"))
     implementation(project(":koala"))
-    implementation(project(":agent"))
 
+    implementation(libs.koog.agents)
+    implementation(libs.koog.google.client)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.apache5)
     implementation(libs.fleeksoft.ksoup)
     implementation(libs.flexmark.html2md.converter)
     implementation(libs.playwright)
