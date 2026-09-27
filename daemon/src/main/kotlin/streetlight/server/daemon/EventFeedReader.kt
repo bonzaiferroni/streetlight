@@ -5,6 +5,7 @@ import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import streetlight.agent.LMProblem
+import streetlight.agent.SchemaParserText
 import streetlight.agent.SchemaProblem
 import streetlight.agent.isPlausibleProse
 import streetlight.agent.absoluteUrl
@@ -15,13 +16,13 @@ import streetlight.agent.parseLocalDateTime
 import streetlight.agent.queryElement
 import streetlight.agent.tryQuery
 import streetlight.model.data.FetchMode
-import streetlight.model.data.LocationConfigContent
+import streetlight.model.data.EventFeedSource
 import streetlight.model.data.Origin
 import streetlight.model.data.SchemaType
 import streetlight.model.data.toOriginId
 
 class EventFeedReader(
-    private val location: LocationConfigContent,
+    private val source: EventFeedSource,
     private val origin: Origin,
     private val initialUrl: Url,
     private val daemon: ParseDaemon,
@@ -31,7 +32,7 @@ class EventFeedReader(
     val log get() = daemon.log
 
     private val feed get() = tracker.feed
-    private val timeZoneId get() = location.location.timezoneId
+    private val timeZoneId get() = source.timeZoneId
 
     suspend fun read(): List<RawEvent>? {
         val link = dao.link.readLinkByAlias(initialUrl)
@@ -66,6 +67,7 @@ class EventFeedReader(
             doc = doc,
             store = OriginSchemaStore(dao, origin),
             timeZoneId = timeZoneId,
+            instructions = SchemaParserText.feedSelectorsInstructions(source),
             allowLm = !daemon.lmUsageLimitReached,
             observer = feed,
         ).toDataOr {
@@ -114,7 +116,7 @@ class EventFeedReader(
                 val pageOrigin = pageUrl.toOriginId()?.takeIf { it != origin.originId }?.let {
                     dao.origin.readOrCreateOrigin(it)
                 } ?: origin
-                EventPageReader(location, pageOrigin, pageUrl, daemon, tracker.page(pageUrl)).read()
+                EventPageReader(source, pageOrigin, pageUrl, daemon, tracker.page(pageUrl)).read()
             } else {
                 tracker.pageBenched(pageUrl)
                 null

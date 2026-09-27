@@ -23,10 +23,8 @@ import streetlight.agent.parseTimeFromText
 import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.EventEdit
+import streetlight.model.data.EventFeedSource
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Location
-import streetlight.model.data.LocationConfigContent
-import streetlight.model.data.LocationId
 import streetlight.model.data.Origin
 import streetlight.model.data.OriginId
 import streetlight.model.data.ParseMode
@@ -64,12 +62,11 @@ class ParseDaemon(private val server: Server) {
 
     suspend fun start() {
         while (true) {
-            val locations = dao.location.readCheckable(checkInterval - 1.hours)
-            locations.forEach { location ->
-                if (location.config.parseMode == ParseMode.None) return@forEach
-                checkLocation(location)
+            dao.readCheckable(checkInterval - 1.hours).forEach { source ->
+                if (source.parseMode == ParseMode.None) return@forEach
+                checkFeed(source)
             }
-            log.info { "completed location check" }
+            log.info { "completed feed check" }
             delay(10.minutes)
         }
     }
@@ -79,24 +76,23 @@ class ParseDaemon(private val server: Server) {
         robotGates.getOrPut(origin.originId) { origin.getRobotGate() }
     }
 
-    /** Reads the feed of a location, creates its new events, and records each page's outcome on its link. */
-    private suspend fun checkLocation(config: LocationConfigContent) {
-        val location = config.location
-        dao.location.updateCheckedAt(location.locationId)
+    /** Reads the feed of [source], creates its new events, and records each page's outcome on its link. */
+    private suspend fun checkFeed(source: EventFeedSource) {
+        dao.updateCheckedAt(source)
 
-        val feedUrl = requireNotNull(location.eventsUrl)
+        val feedUrl = source.url?.normalize() ?: return
         val originId = feedUrl.toOriginId() ?: return
 
         val origin = dao.origin.readOrCreateOrigin(originId)
 
-        val tracker = ParseTracker(location.slug.toString(), feedUrl.normalize())
-        val reader = EventFeedReader(config, origin, feedUrl.normalize(), this, tracker)
+        val tracker = ParseTracker(source.sourceName, feedUrl)
+        val reader = EventFeedReader(source, origin, feedUrl, this, tracker)
         try {
-            reader.read()?.forEach { createEvent(it, location, tracker) }
+            reader.read()?.forEach { createEvent(it, source, tracker) }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            log.error(e) { "check failed for ${location.slug}" }
+            log.error(e) { "check failed for ${source.sourceName}" }
             tracker.failed(e)
         }
         tracker.records().forEach { dao.recordLink(it) }
@@ -104,16 +100,16 @@ class ParseDaemon(private val server: Server) {
     }
 
     /**
-     * Creates the event read as [event] from the feed of [feedLocation], at the location it names, unless it lacks a
-     * title or a start ahead, or duplicates one.
+     * Creates the event read as [event] from [source], at the location it names, unless it lacks a title, a start
+     * ahead, or a location, or duplicates one.
      */
-    private suspend fun createEvent(event: RawEvent, feedLocation: Location, tracker: ParseTracker) {
+    private suspend fun createEvent(event: RawEvent, source: EventFeedSource, tracker: ParseTracker) {
         tracker.eventFound()
-        val feedEdit = event.toEventEdit(feedLocation.timezoneId, feedLocation.locationId, tracker)
+        val feedEdit = event.toEventEdit(source.timeZoneId, source.parseMode, tracker)
         val title = feedEdit.title ?: return tracker.eventUntitled(event)
         val feedStart = feedEdit.startsAt ?: return tracker.eventUnparsed(event)
         if (feedStart < Clock.System.now()) return tracker.eventPast()
-        val location = spawner.locate(event, feedLocation, tracker)
+        val location = spawner.locate(event, source, tracker) ?: return tracker.eventUnlocated(event, title)
         val edit = feedEdit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
         val startsAt = edit.startsAt ?: return
         val zone = edit.timeZone ?: return
@@ -171,13 +167,15 @@ data class RawEvent(
 private val checkInterval = 24.hours
 internal const val lmRetryCount = 10
 
-private fun RawEvent.toEventEdit(timeZoneId: String?, locationId: LocationId, tracker: ParseTracker): EventEdit {
+/** The edit of this event with its start read in [timeZoneId], its description shortened unless [parseMode] is [ParseMode.Full]. */
+private fun RawEvent.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: ParseTracker): EventEdit {
 
     val dateTimeText = listOfNotNull(date, startTime.takeIf { it != date })
         .joinToString(" ")
         .takeIf { it.isNotBlank() }
 
     val description = descriptionHtml?.let { htmlToMarkdown(it) }?.value?.let { full ->
+        if (parseMode == ParseMode.Full) return@let full
         shortenDescription(full, url).also { if (it != full) tracker.descriptionShortened() }
     }
     val start = dateTimeText?.let { parseLocalDateTime(it, timeZoneId) }
@@ -188,7 +186,6 @@ private fun RawEvent.toEventEdit(timeZoneId: String?, locationId: LocationId, tr
     ).joinToString("\n\n").takeIf { it.isNotBlank() }
 
     return EventEdit(
-        locationId = locationId,
         title = title?.withoutBracketNotes()?.takeIf { it.isNotBlank() },
         description = body?.toMarkdown(),
         contact = contact, // td: gather phone/email/social media separately

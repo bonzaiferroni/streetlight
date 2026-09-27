@@ -1,5 +1,9 @@
 package streetlight.agent
 
+import streetlight.model.data.EventFeed
+import streetlight.model.data.EventFeedSource
+import streetlight.model.data.LocationConfigContent
+
 //language="MD"
 object SchemaParserText {
 
@@ -100,8 +104,48 @@ An event can be any kind of gathering: a concert, a class or workshop, a lecture
 a festival, a game.
 """
 
-    val EventFeedSelectorsInstructions = """
-Read the HTML above. We believe it is a calendar page or feed with a listing of events at a particular location.
+    /** The instructions for the selectors of a feed listing the events of one location. */
+    val LocationFeedSelectorsInstructions = eventFeedSelectorsInstructions(
+        listing = "events at a particular location",
+        locationGuidance = """
+This feed belongs to a particular location or venue. Assign a selector to `feedLocation` that will return an element
+within the body with textContent that matches the location name. When the event element names the place where the
+event takes place, such as a room, a stage, or another venue, assign that selector to `eventLocation`.""".trim(),
+        feedLocationFields = """
+* feedLocation: This selector should return a single element within the body with text content that matches the name of the location associated with the feed.
+* address: This selector should return a single element within the body with text content that matches the address of the location associated with the feed.""".trim(),
+        eventLocationField = """
+* eventLocation: This selector should return an element with text content naming the place where the event takes place, if it is present within the event element.""".trim(),
+    )
+
+    /** The instructions for the selectors of a feed listing local events at many locations. */
+    val GeneralFeedSelectorsInstructions = eventFeedSelectorsInstructions(
+        listing = "local events at many locations, like you might find on a social media page or news website",
+        locationGuidance = """
+This feed is not associated with a single location, so `feedLocation` and `address` are null. Each event takes place
+at its own location: assign a selector to `eventLocation` that will return an element within the event element with
+textContent naming the place where the event takes place.""".trim(),
+        feedLocationFields = """
+* feedLocation: This should be null.
+* address: This should be null.""".trim(),
+        eventLocationField = """
+* eventLocation: This selector should return an element with text content naming the place where the event takes place.
+    - Every event in this feed takes place at its own location, so this is expected within each event element.""".trim(),
+    )
+
+    /** The instructions for the selectors of the feed [source]. */
+    fun feedSelectorsInstructions(source: EventFeedSource) = when (source) {
+        is LocationConfigContent -> LocationFeedSelectorsInstructions
+        is EventFeed -> GeneralFeedSelectorsInstructions
+    }
+
+    private fun eventFeedSelectorsInstructions(
+        listing: String,
+        locationGuidance: String,
+        feedLocationFields: String,
+        eventLocationField: String,
+    ) = """
+Read the HTML above. We believe it is a calendar page or feed with a listing of $listing.
 
 $EventDefinition
 Your role is to extract a set of CSS selectors that can be used to parse the page for event information.
@@ -116,10 +160,7 @@ Event-specific selectors are queried against each event element and must not rep
 selector as a prefix. If the event selector is ".event-item" and the title sits in
 "<h3 class='event-title'>", the title selector is ".event-title", not ".event-item .event-title".
 
-Sometimes the event feed will be associated with a particular location or venue, and sometimes it will be a list
-of local events like you might find on a social media page or news website. When it is a feed associated with a location,
-assign a selector to `feedLocation` that will return an element within the body with textContent that matches the location name. 
-When there is information about the event location within the event element, assign that selector to `eventLocation`.
+$locationGuidance
 
 If the content of the document does not contain the information that the selector is intended to query,
 leave its value null. A null value in that case is correct and expected.
@@ -137,13 +178,11 @@ $contentObjectInstructions
 For the content object, determine the following:
 
 ### Selectors that will be queried within the body
-* feedLocation: This selector should return a single element within the body with text content that matches the name of the location associated with the feed, if it is a location feed.
-    - This should be null if the feed is not associated with a location.
-* address: This selector should return a single element within the body with text content that matches the address of the location associated with the feed, if it is a location feed.
+$feedLocationFields
 * event: This selector will be used to return a list of elements that each contain details about a specific event.
 
 ### Selectors that will be queried within event elements
-* eventLocation: This selector should return the name of the event location if it is present within the event element.
+$eventLocationField
 * title: This selector should return an element with text content that reflects the event title.
 * link: This selector should return an anchor element with a href attribute with an absolute or relative address to an event page.
     - The event page is the event's own page on this site. Never choose a link to a ticket vendor or any other outside site,

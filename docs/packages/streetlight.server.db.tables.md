@@ -87,23 +87,3 @@ A change to a table's id type is a hand-written migration. `generateMigration` r
 | Swap | Rename the new columns into place, then recreate the primary key, foreign keys and indexes under the names Exposed expects |
 
 Startup recreates the dropped triggers.
-
-## Manual Inserts
-
-`UuidTable` generates its id in Kotlin, so the column has no database default and a row entered by hand fails the not-null constraint. Give the column a default in an `init` block:
-
-```kotlin
-init {
-    id.defaultExpression(CustomFunction("gen_random_uuid", id.columnType))
-}
-```
-
-`defaultExpression` is used because `UuidTable` declares `id` as a final `override val`. It replaces the client-side default, so `createFoo` writes the id. A default set with `withDefinition` is not visible to `generateMigration`, which then offers to drop it in every migration.
-
-To apply the default to an existing table:
-
-```sql
-ALTER TABLE foo ALTER COLUMN id SET DEFAULT gen_random_uuid();
-```
-
-Postgres uses a default only when the column is absent from the insert. An explicit `null` is a value and fails the constraint.

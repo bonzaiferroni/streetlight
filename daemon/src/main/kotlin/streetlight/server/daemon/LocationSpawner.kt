@@ -13,7 +13,7 @@ import kampfire.utils.similarity
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import streetlight.model.data.Location
-import streetlight.model.data.LocationId
+import streetlight.model.data.EventFeedSource
 import streetlight.model.data.toEdit
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.OSMQuery
@@ -27,23 +27,24 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 /**
- * Finds the location of an event read from a location's feed: the distinct place its location text names, read or
- * created, or the feed's own location.
+ * Finds the location of an event read from a feed: the distinct place its location text names, read or created, or
+ * else the feed's own location, when it has one.
  */
 class LocationSpawner(
     private val server: Server,
     private val osm: MapReferenceClient,
 ) {
     private val dao get() = server.dao
-    private val places = mutableMapOf<Pair<String, LocationId>, List<OSMLocation>>()
+    private val places = mutableMapOf<Pair<String, GeoPoint>, List<OSMLocation>>()
     private var searchedAt = Instant.DISTANT_PAST
 
-    /** The location of [event], read from the feed of [feedLocation]. */
-    suspend fun locate(event: RawEvent, feedLocation: Location, tracker: ParseTracker): Location {
+    /** The location of [event], read from [source], or null when it names no place and [source] has no location. */
+    suspend fun locate(event: RawEvent, source: EventFeedSource, tracker: ParseTracker): Location? {
+        val feedLocation = source.location
         val text = event.location?.trim()?.takeIf { it.isNotEmpty() } ?: return feedLocation
-        if (feedLocation.name?.fuzzyMatches(text) == true) return feedLocation
-        val hits = search(text, feedLocation) ?: return feedLocation.also { tracker.locationFellBack(text) }
-        val place = distinctPlace(text, feedLocation.geoPoint, hits)
+        if (feedLocation?.name?.fuzzyMatches(text) == true) return feedLocation
+        val hits = search(text, source.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(text) }
+        val place = distinctPlace(text, source.geoPoint, hits, hasFeedLocation = feedLocation != null)
             ?: return feedLocation.also { tracker.locationFellBack(text) }
 
         dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(text, it) } }
@@ -67,14 +68,14 @@ class LocationSpawner(
         return created
     }
 
-    /** The map places named [text] within [searchRadius] of [feedLocation], or null when the search failed. */
-    private suspend fun search(text: String, feedLocation: Location): List<OSMLocation>? {
-        val key = text.lowercase() to feedLocation.locationId
+    /** The map places named [text] within [searchRadius] of [point], or null when the search failed. */
+    private suspend fun search(text: String, point: GeoPoint): List<OSMLocation>? {
+        val key = text.lowercase() to point
         places[key]?.let { return it }
         delay(searchedAt + searchInterval - Clock.System.now())
         searchedAt = Clock.System.now()
         val hits = tryOrNull {
-            osm.search(OSMQuery(amenity = text, bounds = feedLocation.geoPoint.boundsWithin(searchRadius)))
+            osm.search(OSMQuery(amenity = text, bounds = point.boundsWithin(searchRadius)))
         } ?: return null
         places[key] = hits
         return hits
@@ -82,15 +83,15 @@ class LocationSpawner(
 }
 
 /**
- * The place among [hits] that [text] names within [searchRadius] of the feed location at [feedPoint], the closest
- * name first and then the nearest, unless a place it names lies at the feed location.
+ * The place among [hits] that [text] names within [searchRadius] of the feed at [feedPoint], the closest name first
+ * and then the nearest, unless [hasFeedLocation] and a place it names lies at the feed's location.
  */
-fun distinctPlace(text: String, feedPoint: GeoPoint, hits: List<OSMLocation>): OSMLocation? {
+fun distinctPlace(text: String, feedPoint: GeoPoint, hits: List<OSMLocation>, hasFeedLocation: Boolean = true): OSMLocation? {
     val named = hits.filter { place ->
         place.placeRank >= minPlaceRank && place.name?.fuzzyMatches(text) == true &&
             place.toGeoPoint().distanceTo(feedPoint) <= searchRadius
     }
-    if (named.any { it.toGeoPoint().distanceTo(feedPoint) < sameVenueRadius }) return null
+    if (hasFeedLocation && named.any { it.toGeoPoint().distanceTo(feedPoint) < sameVenueRadius }) return null
     return named.maxWithOrNull(
         compareBy<OSMLocation> { it.name?.similarity(text) ?: 0.0 }
             .thenByDescending { it.toGeoPoint().distanceTo(feedPoint) }

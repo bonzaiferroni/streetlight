@@ -57,12 +57,16 @@ class SchemaMediator(
     private val isRefining: Boolean = true,
 ) {
 
-    /** The schema of the feed [doc] at [url], with dates read in [timeZoneId]. The LM is asked only when [allowLm]. */
+    /**
+     * The schema of the feed [doc] at [url], asked of the LM with [instructions], with dates read in [timeZoneId].
+     * The LM is asked only when [allowLm].
+     */
     suspend fun feedSchema(
         url: Url,
         doc: Document,
         store: SchemaStore,
         timeZoneId: String?,
+        instructions: String = SchemaParserText.LocationFeedSelectorsInstructions,
         allowLm: Boolean = true,
         observer: SchemaObserver? = null,
     ): Outcome<EventFeedSchema> {
@@ -79,7 +83,7 @@ class SchemaMediator(
 
         observer?.requested(schemaRequest)
         val content = client.readHtml<ContentParse<EventFeedSchemaRequest>>(
-            url, doc, SchemaParserText.EventFeedSelectorsInstructions, retryCount, observer,
+            url, doc, instructions, retryCount, observer,
         ).toDataOr { return it }
         val request = content.contentOr(store) { return it }
 

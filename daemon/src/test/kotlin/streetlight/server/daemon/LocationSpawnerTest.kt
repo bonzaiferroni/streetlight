@@ -25,6 +25,15 @@ class LocationSpawnerTest {
     }
 
     @Test
+    fun `a place at the point of a feed with no location is distinct`() {
+        val civicCenter = place(1, "Civic Center Park", lat = 39.7393, lng = -104.9877)
+        assertEquals(
+            civicCenter,
+            distinctPlace("Civic Center Park", feedPoint, listOf(civicCenter), hasFeedLocation = false),
+        )
+    }
+
+    @Test
     fun `a place beyond the search radius is not distinct`() {
         val far = place(1, "Bluebird Theater", lat = 42.3601, lng = -71.0589)
         assertNull(distinctPlace("Bluebird Theater", feedPoint, listOf(far)))

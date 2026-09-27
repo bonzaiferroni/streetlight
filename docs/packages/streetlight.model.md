@@ -39,6 +39,10 @@ A DTO lists its id first, then its non-nullable properties, its nullable propert
 
 A record the user edits has a `FooEdit` DTO holding the fields a form sends, and `Foo.toEdit()` to start an edit from the record. Its `validity` is a `ValidityCheck` of the `FooProperty` keys that are missing.
 
+## Event Feed Sources
+
+`EventFeedSource` is the sealed type of a page the parse daemon reads events from: a location's own events page, as `LocationConfigContent`, or an `EventFeed` of local events at many locations. It is distinct from the paged feeds below.
+
 ## Feeds
 
 An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; a city feed takes it from the location or event.

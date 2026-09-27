@@ -5,12 +5,15 @@ import kampfire.model.Url
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import streetlight.agent.FetchText
 import streetlight.agent.SchemaStore
+import streetlight.model.data.EventFeed
+import streetlight.model.data.EventFeedSource
 import streetlight.model.data.Link
 import streetlight.model.data.LinkAlias
 import streetlight.model.data.LinkAliasId
 import streetlight.model.data.LinkAccess
 import streetlight.model.data.LinkContent
 import streetlight.model.data.LinkId
+import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.Origin
 import streetlight.model.data.OriginId
 import streetlight.model.data.ParserId
@@ -19,7 +22,20 @@ import streetlight.model.data.ParseOutcome
 import streetlight.model.data.toOriginId
 import streetlight.server.model.DaoFacade
 import kotlin.time.Clock
+import kotlin.time.Duration
 import kotlin.uuid.Uuid
+
+/** The feeds not checked within [interval]: the locations' own first, then the general feeds, each oldest first. */
+suspend fun DaoFacade.readCheckable(interval: Duration): List<EventFeedSource> =
+    location.readCheckable(interval) + eventFeed.readCheckable(interval)
+
+/** Marks [source] as checked now. */
+suspend fun DaoFacade.updateCheckedAt(source: EventFeedSource) {
+    when (source) {
+        is LocationConfigContent -> location.updateCheckedAt(source.location.locationId)
+        is EventFeed -> eventFeed.updateCheckedAt(source.eventFeedId)
+    }
+}
 
 /** Records the fetch of a page as a link with its aliases, creating its origin when missing, and returns the page's url. */
 suspend fun DaoFacade.registerFetch(

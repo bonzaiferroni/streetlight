@@ -15,14 +15,13 @@ import streetlight.agent.parseHtmlDocument
 import streetlight.agent.queryElement
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.FetchMode
-import streetlight.model.data.LocationConfigContent
+import streetlight.model.data.EventFeedSource
 import streetlight.model.data.Origin
-import streetlight.model.data.ParseMode
 import streetlight.model.data.SchemaType
 import streetlight.server.utils.readImageUrl
 
 class EventPageReader(
-    private val locationConfig: LocationConfigContent,
+    private val source: EventFeedSource,
     private val origin: Origin,
     private val initialUrl: Url,
     private val daemon: ParseDaemon,
@@ -61,7 +60,7 @@ class EventPageReader(
             url = fetch.pageUrl,
             doc = doc,
             store = OriginSchemaStore(dao, origin),
-            timeZoneId = locationConfig.location.timezoneId,
+            timeZoneId = source.timeZoneId,
             allowLm = !daemon.lmUsageLimitReached,
             observer = tracker,
         ).toDataOr {
@@ -72,7 +71,7 @@ class EventPageReader(
             return null
         }
         tracker.read(SchemaType.EventPage)
-        return parsePageEvent(pageSchema, doc, locationConfig.config.parseMode, pageUrl).also {
+        return parsePageEvent(pageSchema, doc, pageUrl).also {
             log.debug { "Parsed ${fetch.pageUrl}: description ${it.descriptionHtml?.length ?: 0} chars, cost ${it.cost}" }
         }
     }
@@ -80,7 +79,6 @@ class EventPageReader(
     private fun parsePageEvent(
         schema: EventPageSchema,
         doc: Document,
-        parseMode: ParseMode,
         pageUrl: Url? = null,
     ): RawEvent {
         val body = doc.body()
@@ -88,8 +86,7 @@ class EventPageReader(
             title = body.queryElement(schema.title) { it.isPlausibleField() }.plainText(),
             url = pageUrl,
             image = doc.readImageUrl()?.value ?: body.queryElement(schema.image).absoluteUrl("src"),
-            descriptionHtml = body.queryElement(schema.description) { it.isPlausibleProse() }
-                .takeIf { parseMode == ParseMode.Full }.innerHtml(),
+            descriptionHtml = body.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
             contact = body.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),
             cost = body.queryElement(schema.cost) { it.isPlausibleField() }.plainText(),
             ageMin = body.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText(),

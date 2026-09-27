@@ -19,13 +19,24 @@ data class LocationConfig(
 /** The content of a location's config page. */
 @Serializable
 data class LocationConfigContent(
-    val location: Location,
+    override val location: Location,
     val config: LocationConfig,
-): RouteContent
+): RouteContent, EventFeedSource {
+    override val sourceName get() = location.slug.toString()
+    override val url get() = location.eventsUrl
+    override val timeZoneId get() = location.timezoneId
+    override val parseMode get() = config.parseMode
+    override val geoPoint get() = location.geoPoint
+}
 
-/** How much of a location's events page is read automatically. */
+/** The extent of a feed source's events that is read automatically. */
 enum class ParseMode {
+    /** Nothing, the page is not read. */
     None,
+
+    /** The events, with their descriptions shortened to a link back to their page. */
     Partial,
+
+    /** The events, with their whole descriptions. */
     Full,
 }

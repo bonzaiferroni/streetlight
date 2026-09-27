@@ -77,6 +77,8 @@ A run is collapsed only in the prompt copy. Selectors run against the full page,
 
 `SchemaParserText` and `ParserText` hold the instructions sent to the language model, and live beside the client that sends them. They are written for a capable model and state what is wanted, not how one model tends to go wrong. A mistake a particular model makes, such as malformed CSS, is caught by validation rather than answered with an instruction, so the instructions carry over to another model.
 
+A feed's instructions differ by its `EventFeedSource`: a location's feed asks for `feedLocation` and for an `eventLocation` when an event names a room or another venue, and a general feed asks for an `eventLocation` in every event. `feedSelectorsInstructions` picks them.
+
 A request to the LM asks for one shape at a time. A follow-up request asks a narrow question with its own instructions, such as the parts of an event's start, rather than widening the first request.
 
 ## Schema Mediator

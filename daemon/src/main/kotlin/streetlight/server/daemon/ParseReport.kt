@@ -14,7 +14,7 @@ import streetlight.model.data.ParseOutcome
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its reports are written to. */
-const val parserBuildId = "V9"
+const val parserBuildId = "V10"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
@@ -30,11 +30,11 @@ enum class PageState {
 /** The HTTP status this problem was made from by [toHttpProblem], or `null` when it came from elsewhere. */
 fun Problem.toHttpStatus(): Int? = (100..599).firstOrNull { it.toHttpProblem() == this }
 
-/** The report of one check of a location: its feed, each event page read, and the events the feed yielded. */
+/** The report of one check of a feed source: its feed, each event page read, and the events the feed yielded. */
 @Serializable
 class ParseReport(
     val buildId: String,
-    val location: String,
+    val source: String,
     val checkedAt: String,
     val feed: PageReport,
     val links: Int,
@@ -121,6 +121,7 @@ class EventReport {
     val matchedLocations = mutableListOf<String>()
     val fallbackLocations = mutableListOf<String>()
     val locationFailures = mutableListOf<String>()
+    val unlocatedEvents = mutableListOf<String>()
 }
 
 /**

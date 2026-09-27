@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A standalone process that reads location event feeds and the event pages they link to, and creates the events it finds.
+A standalone process that reads event feeds and the event pages they link to, and creates the events it finds.
 
 ## Dependencies
 
@@ -11,6 +11,17 @@ A standalone process that reads location event feeds and the event pages they li
 | `streetlight.server.model` | `Server`, the DAO, event creation and the `MapReferenceClient` |
 | `streetlight.server.db.datascope` | Location creation |
 | `streetlight.agent` | Fetching, html parsing, the `SchemaMediator`, schema validation and date parsing |
+
+## Feed Sources
+
+Each feed is an `EventFeedSource`, read by the same `EventFeedReader`. `readCheckable` gives the feeds not checked within a day: the locations' own first, so their venues are stored before a general feed names them, then the general feeds.
+
+| Source | Feed | Location of its events |
+|---|---|---|
+| `LocationConfigContent` | A location's events page | The location, unless an event names a distinct place |
+| `EventFeed` | A page of local events at many locations, such as a newspaper's calendar | The place each event names; an event naming none is dropped |
+
+Each source asks the LM with its own feed instructions. An `EventFeed` row is added by hand, with the publisher's permission, and is always read `Partial`.
 
 ## General Model
 
@@ -40,7 +51,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Fetch | HTTP status, mode, final url, chars, visible text chars, time taken |
 | LM | Model, trim stats, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Events | Found, created, past, untitled, shortened, duplicates with their titles, failed creates with their reasons, date text that did not parse |
+| Events | Found, created, past, untitled, shortened, duplicates with their titles, failed creates with their reasons, date text that did not parse, events with no location |
 
 A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
 
@@ -81,7 +92,7 @@ A feed's events are created only with a title, and a start date and time that is
 
 An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the daemon or by a person and whatever its start time. Each duplicate is counted, and its pair of titles reported under `duplicateTitles`. An event whose image cannot be stored is still created, without the image, and reported under `imageFailures`, since the image is decoration and the event is the data.
 
-An event's description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
+A source's `ParseMode` sets how much is read: `None` skips it, `Partial` shortens each description, and `Full` keeps each description whole. An event's shortened description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
 An event's date text joins its `date`, `month` and `day` selectors. When an event is read from both its feed and its page, its date and start time are taken as the first pair that parses: the page's own, the feed's date with the page's time, the page's date with the feed's time, then the feed's own.
 
@@ -92,12 +103,12 @@ Date text is parsed by `parseLocalDateTime`, after every Unicode space is folded
 An event is placed at its feed's location unless its location text clearly names a distinct place. The text is the page's `location`, or else the feed's `eventLocation`. `LocationSpawner` takes a place as distinct only when all of these hold:
 
 - the text does not `fuzzyMatches` the feed location's name;
-- OpenStreetMap finds a single place (place rank 30, not a city or street) whose name `fuzzyMatches` the text, within 200 km of the feed location;
+- OpenStreetMap finds a single place (place rank 30, not a city or street) whose name `fuzzyMatches` the text, within 200 km of the feed;
 - no such place lies within 150 m of the feed location, which would make the text a room or stage of the feed's venue.
 
-Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map.
+Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map. A general feed has no location of its own, so the 150 m rule does not apply, and an event whose place is not found is dropped and reported under `unlocatedEvents`, marking its feed and page `Partial`.
 
-Map searches are bounded to the 200 km around the feed location, paced to one a second, and kept for the daemon's run. The report lists `spawnedLocations`, `matchedLocations`, `fallbackLocations` and `locationFailures`, and a check that spawned a location, or failed to, is always reported.
+Map searches are bounded to the 200 km around the feed's point, paced to one a second, and kept for the daemon's run. The report lists `spawnedLocations`, `matchedLocations`, `fallbackLocations` and `locationFailures`, and a check that spawned a location, or failed to, is always reported.
 
 ## Strikes
 

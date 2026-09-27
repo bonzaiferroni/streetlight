@@ -27,8 +27,8 @@ import streetlight.model.data.SelectorSchema
 import streetlight.model.data.toOriginId
 import kotlin.time.Clock
 
-/** Tracks one check of a location, reported to by its readers and consulted before each fetch. */
-class ParseTracker(private val location: String, feedUrl: Url) {
+/** Tracks one check of a feed source, reported to by its readers and consulted before each fetch. */
+class ParseTracker(private val source: String, feedUrl: Url) {
     private val checkedAt = Clock.System.now()
     private val pages = mutableListOf<PageTracker>()
     private val strikes = mutableMapOf<OriginId, Int>()
@@ -97,6 +97,16 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         events.shortened++
     }
 
+    /**
+     * Records an event titled [title] dropped since its location [text] named no place and its feed has no location
+     * of its own, marking its feed and page [ParseOutcome.Partial].
+     */
+    fun eventUnlocated(event: RawEvent, title: String) {
+        events.unlocatedEvents.add("$title: ${event.location ?: "(none)"}")
+        feed.partial("An event had no location")
+        pages.firstOrNull { it.url == event.url }?.partial("The event had no location")
+    }
+
     fun eventPast() {
         events.past++
     }
@@ -132,7 +142,7 @@ class ParseTracker(private val location: String, feedUrl: Url) {
         events.matchedLocations.add("$text → ${location.label}")
     }
 
-    /** Records the location [text] as naming no distinct place, leaving its event at the feed's location. */
+    /** Records the location [text] as naming no distinct place. */
     fun locationFellBack(text: String) {
         events.fallbackLocations.add(text)
     }
@@ -167,7 +177,7 @@ class ParseTracker(private val location: String, feedUrl: Url) {
     /** Builds the report of the check. */
     fun report() = ParseReport(
         buildId = parserBuildId,
-        location = location,
+        source = source,
         checkedAt = checkedAt.toString(),
         feed = feed.report(),
         links = links,

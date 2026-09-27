@@ -118,6 +118,7 @@ Run only the commands the agreed plan calls for. Do not compile or run tests to 
 | Editing and creating files | Allowed, particularly when discussed. Every edit is visible in the git diff |
 | Commands that read files | Allowed |
 | Build and test commands | Left to the user unless discussed, then allowed |
-| Commands that touch git | Always left to the user |
+| Git commands that read, such as `status`, `diff` and `log` | Allowed |
+| Git commands that change the repository or its working tree | Always left to the user |
 
 Change a file by editing its current contents. A write built from an older copy reverts whatever changed in between, in lines the task never touched.
