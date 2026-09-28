@@ -47,7 +47,7 @@ suspend fun Crawler.crawlLead(lead: Lead) {
     }
 
     with(pageTracker) {
-        val link = dao.link.readLinkByAlias(lead.initialUrl)
+        val link = dao.link.readLink(lead.initialUrl)
         if (link?.stopsFeed() == true) {
             pageTracker.skipped(PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
             return
@@ -77,6 +77,7 @@ suspend fun Crawler.crawlLead(lead: Lead) {
  * The document of the page at [url] on [origin], fetched in [fetchMode] through its robots gate and registered as a
  * link, or null when it could not be fetched or parsed.
  */
+context(tracker: PageTracker)
 private suspend fun Crawler.fetchDocument(
     lead: Lead,
     origin: Origin,
@@ -84,9 +85,12 @@ private suspend fun Crawler.fetchDocument(
 ): FetchDocument? {
     val fetch = fetcher.fetch(lead.initialUrl, origin, fetchMode).toDataOr {
         logProblem(it)
+        tracker.fetchFailed(it)
         return null
     }
-    val doc = parseHtmlDocument(fetch.text, fetch.servedUrl).toDataOrNull(this::logProblem) ?: return null
+    val doc = parseHtmlDocument(fetch.text, fetch.servedUrl).toDataOrNull(this::logProblem)
+    tracker.fetched(fetchMode, fetch, doc)
+    if (doc == null) return null
     return FetchDocument(lead, origin, fetch.servedUrl.normalize(), doc, fetch.fetchedAt)
 }
 
@@ -139,4 +143,5 @@ internal suspend fun Crawler.providePageSchema(
     doc = document.doc,
     origin = document.origin,
     timeZoneId = page.feed.timeZoneId,
+    observer = tracker,
 )

@@ -32,19 +32,23 @@ suspend fun DaoFacade.updateCheckedAt(lead: EventFeed) {
     }
 }
 
-/** Records the fetch of [document] on the link of its lead's url, creating it when missing, with its served url as an alias. */
+/**
+ * Records the fetch of [document] on the link of its served url, creating the link and its origin when missing, with
+ * its lead's url as an alias when it differs.
+ */
 suspend fun DaoFacade.registerFetch(document: FetchDocument) {
     val initialUrl = document.lead.initialUrl
     val servedUrl = document.servedUrl
-    val originId = document.origin.originId
+    val originId = servedUrl.toOriginId() ?: document.origin.originId
+    if (originId != document.origin.originId) origin.readOrCreateOrigin(originId)
 
     suspendTransaction {
         val now = Clock.System.now()
-        val existing = link.readLinkByAlias(initialUrl) ?: link.readLink(initialUrl)
+        val existing = link.readLink(servedUrl) ?: link.readLink(initialUrl)
         val record = existing?.copy(fetchedAt = document.fetchedAt)?.also {
             link.updateLink(it)
         } ?: Link(
-            linkId = LinkId(Uuid.random()), originId = originId, url = initialUrl, schemaType = null,
+            linkId = LinkId(Uuid.random()), originId = originId, url = servedUrl, schemaType = null,
             fetchedAt = document.fetchedAt, createdAt = now, access = LinkAccess.Granted,
         ).also {
             link.createLink(it)
@@ -52,14 +56,14 @@ suspend fun DaoFacade.registerFetch(document: FetchDocument) {
 
         fun Url.toLinkAlias() = LinkAlias(LinkAliasId(Uuid.random()), record.linkId, this, now)
 
-        link.createAliasIgnore(initialUrl.toLinkAlias())
         link.createAliasIgnore(servedUrl.toLinkAlias())
+        if (initialUrl != servedUrl) link.createAliasIgnore(initialUrl.toLinkAlias())
     }
 }
 
 /** Records [record] on the link for its url, creating the link when missing. */
 suspend fun DaoFacade.recordLink(record: LinkRecord) {
-    val existing = link.readLinkByAlias(record.url) ?: link.readLink(record.url)
+    val existing = link.readLink(record.url)
     if (existing != null) {
         link.updateLink(existing.copy(
             access = record.access,

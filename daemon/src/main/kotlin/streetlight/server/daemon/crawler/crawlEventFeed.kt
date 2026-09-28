@@ -34,7 +34,7 @@ suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, se
         if (pageUrl in feedUrls) return@forEach deliverEvent(lead, feedEvent, null, tracker)
         tracker.linkFound()
         if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, feedEvent, null, tracker)
-        val pageLink = dao.link.readLinkByAlias(pageUrl)
+        val pageLink = dao.link.readLink(pageUrl)
         if (pageLink != null && !pageLink.wantsRead()) return@forEach tracker.pageKnown()
         if (!tracker.canReadPage()) return@forEach tracker.pageDeferred(pageUrl)
         if (!tracker.shouldFetch(pageUrl)) {
