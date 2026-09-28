@@ -27,3 +27,7 @@ A problem is declared once, as a property of an object, and production code retu
 
 `CoreProblem.Something` is the catchall. It communicates an unexpected error in response to valid user input.
 A test observes the same property production code returns. A fake returns it, and an assertion compares against it. A test never constructs a `Problem` of its own.
+
+## Url
+
+`Url.normalize` gives the one form every link to the same page shares, so urls compare by identity rather than spelling. A url is normalized where it enters a comparison or a store, such as where a DAO builds a crawler's feed, not at each place it is read.

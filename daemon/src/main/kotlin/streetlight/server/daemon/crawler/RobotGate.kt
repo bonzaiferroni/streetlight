@@ -1,17 +1,9 @@
 package streetlight.server.daemon.crawler
 
-import com.fleeksoft.ksoup.nodes.Document
-import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Url
-import kampfire.model.toDataOr
 import kotlinx.coroutines.delay
-import streetlight.server.daemon.agent.FetchText
 import streetlight.server.model.StreetlightAgent
-import streetlight.server.daemon.agent.parseHtmlDocument
-import streetlight.model.data.FetchMode
-import streetlight.model.data.Origin
-import streetlight.model.data.toOriginId
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -72,11 +64,6 @@ class RobotGate(
         val key = groups.keys.firstOrNull { it == agent.lowercase() } ?: "*"
         rules = groups[key].orEmpty()
         interval = delays[key] ?: defaultDelay
-    }
-
-    suspend fun fetchWhenOpen(url: Url, mode: FetchMode): Outcome<FetchText> {
-        if (!waitUntilOpen(url)) return RobotProblem.Disallowed
-        return fetchText(url, mode)
     }
 
     suspend fun waitUntilOpen(url: Url) = waitUntilOpen(url.toRelativePath())

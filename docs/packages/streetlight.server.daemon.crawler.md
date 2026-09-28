@@ -14,17 +14,23 @@ The crawler, a standalone process that reads event feeds and the event pages the
 
 ## Structure
 
-`Crawler` holds what every piece of work shares: the DAO, the `SchemaMediator`, the robots gates and the run's state. It takes each source from the database and hands it to a service function, an extension of `Crawler` named for its work, such as `crawlEventFeed`, which in turn hands each event page to `crawlEventPage`. A service function keeps no state of its own; a new kind of source is read by a new one.
+`Crawler` holds what every piece of work shares: the DAO, its rooms and the run's state. It takes each feed from the database as a `Lead` and hands it to `crawlLead`. A service function is an extension of `Crawler` named for its work, such as `crawlEventFeed` and `crawlEventPage`, and keeps no state of its own; a new kind of lead is read by a new one.
 
-A service function reads as the steps of its work, each step a function of its own, such as `provisionFeedSchema` and `findEventElements`. A step records its own outcome on the tracker, and the service function only routes between steps. A step used by more than one service lives in its own file.
+A room is a class that owns a distinct body of work and its own state, never calls back into the service functions, and is what a test replaces. `PageFetcher` fetches each page once its origin's robots gate opens, with a plain request or in the browser, and keeps the gates and the browser. `SchemaMediator` finds each page's schema and keeps the LM's usage limit. `LocationSpawner` resolves event locations and keeps its map searches. Work that branches on what a page turns out to hold stays with the service functions.
 
-Data that travels between steps together is carried as one package, named for its contents. `crawlLead` is the step every service opens with: it checks the lead is due, fetches its `LeadDocument` in its origin's fetch mode, finds its schema with the provisioning step it is given, and fetches it again with scripting when the content was incomplete. It then hands the document and its schema to the service's block, and gives back what the block gives. A lead is not read when its last read stopped it or it was already fetched this run.
+A service function reads as the steps of its work, each step a function of its own, such as `provisionFeedSchema` and `findEventElements`. A step records its own outcome on the tracker, and the service function only routes between steps. A step that serves more than one service, such as `deliverEvent`, lives in its own file.
 
-`crawlEventFeed` creates each event its feed yields, and `crawlEventPage` gives its event back to the feed's merge.
+Data that travels between steps together is carried as one package, named for its contents. Work flows one way: each desk passes its package on, and the last desk sends it to its destination. Events end in the database through `deliverEvent`, and the tracker ends in the link records and the report when the check is filed. A room answers the desk that asks it; a desk returns nothing.
+
+A `Lead` is a page the crawler is given, with what is known of it before it is fetched: an `EventFeed`, or an `EventPage` carrying its feed and the `feedEvent` the feed showed. `crawlLead` reads every lead: it checks the lead is due, fetches its `FetchDocument` in its origin's fetch mode, finds the schema its kind wants, fetches it again with scripting when the content was incomplete, and hands the document and schema to the service for its kind, pairing each kind of lead with its kind of schema. A lead that is not due, since its last read stopped it or it was already fetched this run, or that cannot be fetched or given a schema, passes on only what it carries: an event page delivers its `feedEvent`.
+
+A page is known by the url it was served from, after redirects and normalized. Its link is recorded under that url, with the url asked for as an alias. A url the page declares for itself, such as a canonical link, is not used.
+
+`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `feedEvent` its lead carries. `deliverEvent` merges the two, the page's preferred and the start taken from the first pairing that parses, and creates the event.
 
 ## Feed Sources
 
-Each feed is an `EventFeed`, read by the same `crawlEventFeed`. `readCheckable` gives the feeds not checked within a day: the locations' own first, so their venues are stored before a general feed names them, then the general feeds.
+Each feed is an `EventFeed`, read by the same `crawlEventFeed`. Its url arrives normalized from the DAO that builds it. `readCheckable` gives the feeds not checked within a day: the locations' own first, so their venues are stored before a general feed names them, then the general feeds.
 
 | Source | Feed | Location of its events |
 |---|---|---|
@@ -49,9 +55,9 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 
 - `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the feed was read and yielded no event created, duplicated or known, or the check failed. A later check in the same build overwrites the report, and the report saves the feed's html.
 - An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the crawler moves to the next feed. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
-- A reader takes its tracker, never null, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit of `read()`), and consults it before fetching. A reader computes no reported value.
+- A step that records takes its tracker as an argument, never null and never inside a package, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit), and consults it before fetching. A step computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
-- The feed reader hands each event page reader the child `PageTracker` from `tracker.page(url)`.
+- `crawlLead` takes an event page's child `PageTracker` from `tracker.page(url)`.
 - `PageTracker.collect` keeps any other object the tracker draws on when the report is built, such as the feed's event elements.
 - A `PageTracker` is the `SchemaObserver` passed to the `SchemaMediator`, which fills the schema and LM stages. Each request to the LM is its own entry in the page's `lm` list, of kind `schema` or `time`.
 - A report holds the feed page, each event page read, and the events the feed yielded. Each page has one section per stage, as far as it got: `fetch`, `lm`, `schema`, and its `outcome` and HTTP `status`.
@@ -92,7 +98,7 @@ A check reads at most 30 event pages. A page past the limit is recorded as `defe
 
 ## Fetch Mode
 
-An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and the reader fetches that page again through Playwright within the same read. Its later pages are fetched through Playwright too.
+An origin is fetched in `Basic` mode until the LM reports a page of it as incomplete content, whether or not the content was the expected kind. `registerIncomplete` then moves the origin to `Scripting`, and `crawlLead` fetches that page again through the `PageFetcher`'s browser within the same read. Its later pages are fetched through Playwright too.
 
 A `Scripting` fetch scrolls down with the mouse wheel after the load event until the page's text, its frames included, has held steady for 3 seconds, up to 15 seconds, so content rendered late or loaded on scroll is included. The wheel scrolls whatever container is under the pointer, which a script scrolling the window does not reach. It then folds each iframe holding text into the page as a `div` marked `data-frame-src`, with its relative links made absolute, since the page's html leaves out iframe contents.
 

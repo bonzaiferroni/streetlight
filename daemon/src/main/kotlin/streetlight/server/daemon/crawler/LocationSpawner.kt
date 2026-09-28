@@ -1,5 +1,6 @@
 package streetlight.server.daemon.crawler
 
+import streetlight.model.data.RawEvent
 import kampfire.model.Distance
 import kampfire.model.GeoPoint
 import kampfire.model.GeoRect
@@ -38,13 +39,13 @@ class LocationSpawner(
     private val places = mutableMapOf<Pair<String, GeoPoint>, List<OSMLocation>>()
     private var searchedAt = Instant.DISTANT_PAST
 
-    /** The location of [event], read from [source], or null when it names no place and [source] has no location. */
-    suspend fun locate(event: RawEvent, source: EventFeed, tracker: ParseTracker): Location? {
-        val feedLocation = source.location
+    /** The location of [event], read from [lead], or null when it names no place and [lead] has no location. */
+    suspend fun locate(event: RawEvent, lead: EventFeed, tracker: ParseTracker): Location? {
+        val feedLocation = lead.location
         val text = event.location?.trim()?.takeIf { it.isNotEmpty() } ?: return feedLocation
         if (feedLocation?.name?.fuzzyMatches(text) == true) return feedLocation
-        val hits = search(text, source.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(text) }
-        val place = distinctPlace(text, source.geoPoint, hits, hasFeedLocation = feedLocation != null)
+        val hits = search(text, lead.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(text) }
+        val place = distinctPlace(text, lead.geoPoint, hits, hasFeedLocation = feedLocation != null)
             ?: return feedLocation.also { tracker.locationFellBack(text) }
 
         dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(text, it) } }

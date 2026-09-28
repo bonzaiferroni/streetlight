@@ -8,23 +8,21 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 /** A page listing events whose locations are read along with them. */
-sealed interface EventFeed {
-    /** The name of the feed, for its reports. */
+sealed interface EventFeed : Lead {
     val name: String
-    val url: Url
     val timeZoneId: String
     val parseMode: ParseMode
     val geoPoint: GeoPoint
-
-    /** The location its events take place at unless they name another. */
     val location: Location?
+
+    override val leadType get() = LeadType.EventFeed
 }
 
 /** The events page of a [location]. */
 @Serializable
 data class LocationEventFeed(
     override val location: Location,
-    override val url: Url,
+    override val initialUrl: Url,
     override val parseMode: ParseMode,
 ): EventFeed {
     override val name get() = location.slug.toString()
@@ -37,7 +35,7 @@ data class LocationEventFeed(
 data class GeneralEventFeed(
     val eventFeedId: EventFeedId,
     override val name: String,
-    override val url: Url,
+    override val initialUrl: Url,
     override val geoPoint: GeoPoint,
     override val timeZoneId: String,
     val checkedAt: Instant?,

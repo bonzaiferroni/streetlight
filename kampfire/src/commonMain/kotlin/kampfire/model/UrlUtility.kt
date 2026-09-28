@@ -1,13 +1,9 @@
-package streetlight.server.daemon.crawler
+package kampfire.model
 
-import com.fleeksoft.ksoup.nodes.Document
-import kampfire.model.Url
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-
+/**
+ * This url in the one form every link to the same page shares: fragment dropped, scheme and host lowercased, the
+ * default port dropped, the path resolved, encoding settled, and the query sorted with tracking parameters removed.
+ */
 fun Url.normalize(): Url {
     val noFragment = value.substringBefore('#')
     val schemeEnd = noFragment.indexOf("://")

@@ -1,5 +1,6 @@
 package streetlight.server.daemon.crawler
 
+import streetlight.model.data.RawEvent
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.Ok
@@ -224,7 +225,7 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         page.status = 200
         page.fetch = FetchReport(
             mode = mode.name,
-            finalUrl = fetch.pageUrl.value,
+            finalUrl = fetch.servedUrl.value,
             chars = fetch.text.length,
             textChars = doc?.body()?.text()?.length,
             millis = fetch.millis,
@@ -332,7 +333,7 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
 
     /** Saves the page's html with the html the LM read. */
     internal fun saveHtml() {
-        fetch?.let { saveHtml(it.pageUrl, it.text, promptHtml) }
+        fetch?.let { saveHtml(it.servedUrl, it.text, promptHtml) }
     }
 
     override fun trimmed(result: TrimResult, promptHtml: String) {

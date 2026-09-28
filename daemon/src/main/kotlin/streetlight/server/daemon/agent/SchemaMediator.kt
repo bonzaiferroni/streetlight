@@ -40,10 +40,11 @@ class SchemaMediator(
     private val dao: DaoFacade,
     private val retryCount: Int = 3,
 ) {
+    private var isUsageLimitReached = false
 
     /**
      * The schema of the feed [doc] at [url] on [origin], asked of the LM with [instructions], with dates read in
-     * [timeZoneId]. The LM is asked only when [allowLm].
+     * [timeZoneId]. The LM is not asked once it has reached its usage limit.
      */
     suspend fun feedSchema(
         url: Url,
@@ -51,7 +52,6 @@ class SchemaMediator(
         origin: Origin,
         timeZoneId: String?,
         instructions: String = SchemaParserText.LocationFeedSelectorsInstructions,
-        allowLm: Boolean = true,
         observer: SchemaObserver? = null,
     ): Outcome<EventFeedSchema> {
         val body = doc.body()
@@ -63,12 +63,12 @@ class SchemaMediator(
             dao.parser.updateResult(parser.parserId, isSuccess)
             if (isSuccess) return Ok(schema)
         }
-        if (!allowLm) return LMProblem.UsageLimit
+        if (isUsageLimitReached) return LMProblem.UsageLimit
 
         observer?.requested(schemaRequest)
         val content = client.readHtml<ContentParse<EventFeedSchemaRequest>>(
             url, doc, instructions, retryCount, observer,
-        ).toDataOr { return it }
+        ).toDataOr { return it.alsoNoteLimit() }
         val request = content.contentOr(origin) { return it }
 
         val schema = request.toSchema()
@@ -81,15 +81,14 @@ class SchemaMediator(
     }
 
     /**
-     * The schema of the event page [doc] at [url] on [origin], with its date read in [timeZoneId]. The LM is asked
-     * only when [allowLm].
+     * The schema of the event page [doc] at [url] on [origin], with its date read in [timeZoneId]. The LM is not
+     * asked once it has reached its usage limit.
      */
     suspend fun pageSchema(
         url: Url,
         doc: Document,
         origin: Origin,
         timeZoneId: String?,
-        allowLm: Boolean = true,
         observer: SchemaObserver? = null,
     ): Outcome<EventPageSchema> {
         val body = doc.body()
@@ -107,12 +106,12 @@ class SchemaMediator(
             observer?.storedSchemaTried(schema, true)
             return Ok(schema)
         }
-        if (!allowLm) return LMProblem.UsageLimit
+        if (isUsageLimitReached) return LMProblem.UsageLimit
 
         observer?.requested(schemaRequest)
         val content = client.readHtml<ContentParse<EventPageSchemaRequest>>(
             url, doc, SchemaParserText.EventPageSelectorsInstructions, retryCount, observer,
-        ).toDataOr { return it }
+        ).toDataOr { return it.alsoNoteLimit() }
         val request = content.contentOr(origin) { return it }
 
         val schema = request.toSchema()
@@ -174,6 +173,9 @@ class SchemaMediator(
         )
         return refined.takeIf { it.startsParse(page, zone) } ?: schema
     }
+    /** This problem, noting when it is the LM's usage limit. */
+    private fun Problem.alsoNoteLimit(): Problem = also { if (it == LMProblem.UsageLimit) isUsageLimitReached = true }
+
     /** The content of this parse, or the result of [onProblem]. An incomplete page marks [origin] for scripting. */
     private suspend inline fun <T> ContentParse<T>.contentOr(origin: Origin, onProblem: (Problem) -> Nothing): T {
         if (isIncompleteContent) dao.origin.registerIncomplete(origin.originId)

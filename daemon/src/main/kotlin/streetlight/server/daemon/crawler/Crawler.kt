@@ -1,121 +1,68 @@
 package streetlight.server.daemon.crawler
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kampfire.api.toMarkdown
 import kampfire.model.Problem
-import kampfire.model.Url
-import kampfire.model.toDataOr
-import kampfire.model.toDataOrNull
-import kampfire.model.toUrl
 import klutch.server.provide
-import koala.Image
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import streetlight.server.daemon.agent.HtmlParserClient
 import streetlight.server.daemon.agent.SchemaMediator
-import streetlight.server.daemon.agent.parseLocalDateTime
-import streetlight.server.daemon.agent.parseTimeFromText
-import streetlight.server.model.StreetlightAgent
-import streetlight.server.daemon.agent.fetchText
-import streetlight.model.data.EventEdit
 import streetlight.model.data.EventFeed
-import streetlight.model.data.Origin
-import streetlight.model.data.OriginId
 import streetlight.model.data.ParseMode
 import streetlight.model.data.toOriginId
 import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
-import streetlight.server.routes.createEvent
-import kampfire.utils.fuzzyMatches
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
-/** The reader of each feed that is due, asking the LM through [client] for the schemas it needs. */
-class Crawler(private val server: Server, client: HtmlParserClient) {
+/**
+ * The reader of each feed that is due, fetching its pages with [fetcher] and asking the LM through [client] for the
+ * schemas it needs.
+ */
+class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFetcher) {
 
     val dao = server.dao
     val mediator = SchemaMediator(client, dao, lmRetryCount)
-    private val spawner = LocationSpawner(server, server.provide<MapReferenceClient>())
+    val spawner = LocationSpawner(server, server.provide<MapReferenceClient>())
     val log = KotlinLogging.logger(Crawler::class)
 
     var startedAt = Instant.DISTANT_PAST
         private set
-    var lmUsageLimitReached = false
-
-    private val gateMutex = Mutex()
-    private val robotGates = mutableMapOf<OriginId, RobotGate>()
 
     suspend fun start() {
         while (true) {
-            dao.readCheckable(checkInterval - 1.hours).forEach { source ->
-                if (source.parseMode == ParseMode.None) return@forEach
-                checkFeed(source)
+            dao.readCheckable(checkInterval - 1.hours).forEach { lead ->
+                if (lead.parseMode == ParseMode.None) return@forEach
+                checkFeed(lead)
             }
             log.info { "completed feed check" }
             delay(10.minutes)
         }
     }
 
-    @JvmName("crawlerGetRobotGate")
-    suspend fun getRobotGate(origin: Origin): RobotGate = gateMutex.withLock {
-        robotGates.getOrPut(origin.originId) { origin.getRobotGate() }
-    }
+    /** Reads the feed of [lead], creates its new events, and records each page's outcome on its link. */
+    private suspend fun checkFeed(lead: EventFeed) {
+        dao.updateCheckedAt(lead)
 
-    /** Reads the feed of [source], creates its new events, and records each page's outcome on its link. */
-    private suspend fun checkFeed(source: EventFeed) {
-        dao.updateCheckedAt(source)
+        val originId = lead.initialUrl.toOriginId() ?: return
 
-        val feedUrl = source.url.normalize()
-        val originId = feedUrl.toOriginId() ?: return
-
-        val tracker = ParseTracker(source.name, feedUrl)
-        try {
-            crawlEventFeed(source, feedUrl, tracker)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            log.error(e) { "check failed for ${source.name}" }
-            tracker.failed(e)
+        val tracker = ParseTracker(lead.name, lead.initialUrl)
+        with (tracker) {
+            try {
+                crawlLead(lead)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                log.error(e) { "check failed for ${lead.name}" }
+                tracker.failed(e)
+            }
+            tracker.records().forEach { dao.recordLink(it) }
+            if (tracker.needsReport()) tracker.write(originId)
         }
-        tracker.records().forEach { dao.recordLink(it) }
-        if (tracker.needsReport()) tracker.write(originId)
-    }
-
-    /**
-     * Creates the event read as [event] from [source], at the location it names, unless it lacks a title, a start
-     * ahead, or a location, or duplicates one.
-     */
-    internal suspend fun createEvent(event: RawEvent, source: EventFeed, tracker: ParseTracker) {
-        tracker.eventFound()
-        val feedEdit = event.toEventEdit(source.timeZoneId, source.parseMode, tracker)
-        val title = feedEdit.title ?: return tracker.eventUntitled(event)
-        val feedStart = feedEdit.startsAt ?: return tracker.eventUnparsed(event)
-        if (feedStart < Clock.System.now()) return tracker.eventPast()
-        val location = spawner.locate(event, source, tracker) ?: return tracker.eventUnlocated(event, title)
-        val edit = feedEdit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
-        val startsAt = edit.startsAt ?: return
-        val zone = edit.timeZone ?: return
-        val day = startsAt.toLocalDateTime(zone).date
-        val sameDay = dao.event.readEventsBetween(
-            locationId = location.locationId,
-            from = day.atStartOfDayIn(zone),
-            until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
-        )
-        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.eventDuplicate(title, it.title) }
-        val created = server.createEvent(null, edit, isImageRequired = false).toDataOr { return tracker.eventFailed(title, it) }
-        if (edit.image != null && created.image == null) tracker.imageFailed(title)
-        tracker.eventCreated()
     }
 
     fun logProblem(problem: Problem) {
@@ -123,94 +70,18 @@ class Crawler(private val server: Server, client: HtmlParserClient) {
     }
 
     fun logProblem(message: String) = logProblem(Problem(message))
-
-    private suspend fun Origin.getRobotGate(): RobotGate {
-        robotsTxt?.let {
-            return it.toRobotGate()
-        }
-        val txt = fetchText(originId.toRobotsTxtUrl()).toDataOrNull()?.text
-            ?: return RobotGate(null, StreetlightAgent.AgentToken)
-        dao.origin.updateRobotsTxt(originId, txt)
-        return txt.toRobotGate()
-    }
 }
 
 fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient) {
     launch {
-        Crawler(server, client).start()
-        closeBrowser()
+        val fetcher = PageFetcher(server.dao)
+        try {
+            Crawler(server, client, fetcher).start()
+        } finally {
+            fetcher.close()
+        }
     }
 }
-
-data class RawEvent(
-    val title: String? = null,
-    val url: Url? = null,
-    val image: String? = null,
-    val descriptionHtml: String? = null,
-    val contact: String? = null,
-    val cost: String? = null,
-    val ageMin: String? = null,
-    val date: String? = null,
-    val startTime: String? = null,
-    val endTime: String? = null,
-    val location: String? = null,
-    val address: String? = null,
-)
 
 private val checkInterval = 24.hours
 internal const val lmRetryCount = 10
-
-/** The edit of this event with its start read in [timeZoneId], its description shortened unless [parseMode] is [ParseMode.Full]. */
-private fun RawEvent.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: ParseTracker): EventEdit {
-
-    val dateTimeText = listOfNotNull(date, startTime.takeIf { it != date })
-        .joinToString(" ")
-        .takeIf { it.isNotBlank() }
-
-    val description = descriptionHtml?.let { htmlToMarkdown(it) }?.value?.let { full ->
-        if (parseMode == ParseMode.Full) return@let full
-        shortenDescription(full, url).also { if (it != full) tracker.descriptionShortened() }
-    }
-    val start = dateTimeText?.let { parseLocalDateTime(it, timeZoneId) }
-    val end = endTime?.let { parseTimeFromText(it) }
-
-    val body = listOfNotNull(
-        description,
-    ).joinToString("\n\n").takeIf { it.isNotBlank() }
-
-    return EventEdit(
-        title = title?.withoutBracketNotes()?.takeIf { it.isNotBlank() },
-        description = body?.toMarkdown(),
-        contact = contact, // td: gather phone/email/social media separately
-        website = url,
-        image = image?.let { Image(it.toUrl()) },
-        date = start?.date,
-        startTime = start?.time,
-        endTime = end,
-        timeZoneId = timeZoneId,
-        // td: parse ageMin
-    )
-}
-
-sealed interface FieldResult {
-    data object Absent : FieldResult
-    data class Invalid(val text: String, val reason: String) : FieldResult
-    data class Valid(val value: String, val confidence: Double) : FieldResult
-}
-
-//         val chromeFields = setOfNotNull(
-//            "descriptionHtml".takeIf { gathered.isConstant { event -> event.descriptionHtml } },
-//            "title".takeIf { gathered.isConstant { event -> event.title } },
-//            "date".takeIf { gathered.isConstant { event -> event.date } },
-//        )
-//        if (chromeFields.isNotEmpty()) println("suspected chrome, identical across feed: $chromeFields")
-//
-//        gathered.forEach { raw ->
-//            val judged = raw.copy(
-//                descriptionHtml = raw.descriptionHtml.takeIf { "descriptionHtml" !in chromeFields },
-//                title = raw.title.takeIf { "title" !in chromeFields },
-//                date = raw.date.takeIf { "date" !in chromeFields },
-//            )
-//            val edit = judged.toEventEdit(null, location.timezoneId, location.locationId)
-//            println(prettyPrint(edit))
-//        }

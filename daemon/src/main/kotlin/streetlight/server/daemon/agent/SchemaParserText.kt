@@ -133,8 +133,8 @@ textContent naming the place where the event takes place.""".trim(),
     - Every event in this feed takes place at its own location, so this is expected within each event element.""".trim(),
     )
 
-    /** The instructions for the selectors of the feed [source]. */
-    fun feedSelectorsInstructions(source: EventFeed) = when (source) {
+    /** The instructions for the selectors of the feed [lead]. */
+    fun feedSelectorsInstructions(lead: EventFeed) = when (lead) {
         is LocationEventFeed -> LocationFeedSelectorsInstructions
         is GeneralEventFeed -> GeneralFeedSelectorsInstructions
     }

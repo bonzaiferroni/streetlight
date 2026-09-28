@@ -1,5 +1,6 @@
 package streetlight.server.daemon.crawler
 
+import streetlight.model.data.RawEvent
 import com.fleeksoft.ksoup.nodes.Element
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter
 import com.vladsch.flexmark.util.data.MutableDataSet

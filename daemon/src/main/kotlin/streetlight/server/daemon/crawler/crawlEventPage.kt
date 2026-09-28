@@ -1,8 +1,8 @@
 package streetlight.server.daemon.crawler
 
+import streetlight.model.data.RawEvent
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
-import kampfire.model.Outcome
 import streetlight.server.daemon.agent.isPlausibleField
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.absoluteUrl
@@ -10,38 +10,30 @@ import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
 import streetlight.model.data.EventPageSchema
-import streetlight.model.data.EventFeed
+import streetlight.model.data.EventPage
 import streetlight.model.data.SchemaType
+import streetlight.model.data.SelectorSchema
 import streetlight.server.utils.readImageUrl
 
-/** The event read from its page at [initialUrl], found in the feed of [source], or null when it is not read. */
-suspend fun Crawler.crawlEventPage(source: EventFeed, initialUrl: Url, tracker: PageTracker): RawEvent? =
-    crawlLead(initialUrl, tracker, { provisionPageSchema(source, it) }) { page, schema ->
-        tracker.read(SchemaType.EventPage)
-        parsePageEvent(schema, page.doc, page.pageUrl).also {
-            log.debug { "Parsed ${page.fetch.pageUrl}: description ${it.descriptionHtml?.length ?: 0} chars, cost ${it.cost}" }
+/** Delivers the event [selectorSchema] reads from the event [lead] fetched as [document], merged with what its feed showed. */
+context(tracker: ParseTracker, pageTracker: PageTracker)
+suspend fun Crawler.crawlEventPage(
+    lead: EventPage,
+    document: FetchDocument?,
+    selectorSchema: SelectorSchema?,
+) {
+    val schema = selectorSchema as? EventPageSchema
+    when {
+        document == null || schema == null -> {
+            deliverEvent(lead.feed, lead.feedEvent, null, tracker)
+        }
+        else -> {
+            pageTracker.read(SchemaType.EventPage)
+            val pageEvent = parsePageEvent(schema, document.doc, document.servedUrl)
+            log.debug { "Parsed ${document.servedUrl}: description ${pageEvent.descriptionHtml?.length ?: 0} chars, cost ${pageEvent.cost}" }
+            deliverEvent(lead.feed, lead.feedEvent, pageEvent, tracker)
         }
     }
-
-/** The schema of the event page [lead], stored for its origin or asked of the LM, with its structured data logged. */
-private suspend fun Crawler.provisionPageSchema(
-    source: EventFeed,
-    lead: LeadDocument,
-): Outcome<EventPageSchema> {
-    val report = lead.doc.readStructuredData()
-    if (report.jsonLdBlocks > 0 || report.microdataEventCount > 0) {
-        log.info { "structured data at ${lead.fetch.pageUrl}: blocks=${report.jsonLdBlocks} " +
-                "malformed=${report.jsonLdMalformed} events=${report.eventCount} " +
-                "microdataEvents=${report.microdataEventCount} types=${report.types}" }
-    }
-    return mediator.pageSchema(
-        url = lead.fetch.pageUrl,
-        doc = lead.doc,
-        origin = lead.origin,
-        timeZoneId = source.timeZoneId,
-        allowLm = !lmUsageLimitReached,
-        observer = lead.tracker,
-    )
 }
 
 /** The event read from [doc] by [schema], found at [pageUrl]. */

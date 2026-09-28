@@ -1,9 +1,7 @@
 package streetlight.server.daemon.crawler
 
-import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
-import streetlight.server.daemon.agent.FetchText
 import streetlight.model.data.EventFeed
 import streetlight.model.data.GeneralEventFeed
 import streetlight.model.data.Link
@@ -19,55 +17,44 @@ import streetlight.model.data.toOriginId
 import streetlight.server.model.DaoFacade
 import kotlin.time.Clock
 import kotlin.time.Duration
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 /** The feeds not checked within [interval]: the locations' own first, then the general feeds, each oldest first. */
 suspend fun DaoFacade.readCheckable(interval: Duration): List<EventFeed> =
     location.readCheckableFeeds(interval) + eventFeed.readCheckable(interval)
 
-/** Marks [source] as checked now. */
-suspend fun DaoFacade.updateCheckedAt(source: EventFeed) {
-    when (source) {
-        is LocationEventFeed -> location.updateCheckedAt(source.location.locationId)
-        is GeneralEventFeed -> eventFeed.updateCheckedAt(source.eventFeedId)
+/** Marks [lead] as checked now. */
+suspend fun DaoFacade.updateCheckedAt(lead: EventFeed) {
+    when (lead) {
+        is LocationEventFeed -> location.updateCheckedAt(lead.location.locationId)
+        is GeneralEventFeed -> eventFeed.updateCheckedAt(lead.eventFeedId)
     }
 }
 
-/** Records the fetch of a page as a link with its aliases, creating its origin when missing, and returns the page's url. */
-suspend fun DaoFacade.registerFetch(
-    fetchOriginId: OriginId,
-    doc: Document,
-    fetch: FetchText,
-): Url {
-    val canonicalUrl = doc.readCanonicalUrl(fetch.pageUrl)
-    val visitedUrl = fetch.pageUrl.normalize()
-    val pageUrl = canonicalUrl ?: visitedUrl
-    val originId = pageUrl.toOriginId() ?: fetchOriginId
-    if (originId != fetchOriginId) origin.readOrCreateOrigin(originId)
+/** Records the fetch of [document] on the link of its lead's url, creating it when missing, with its served url as an alias. */
+suspend fun DaoFacade.registerFetch(document: FetchDocument) {
+    val initialUrl = document.lead.initialUrl
+    val servedUrl = document.servedUrl
+    val originId = document.origin.originId
 
     suspendTransaction {
-        val url = canonicalUrl ?: visitedUrl
         val now = Clock.System.now()
-        val record = link.readLink(url)?.copy(fetchedAt = fetch.fetchedAt)?.also {
+        val existing = link.readLinkByAlias(initialUrl) ?: link.readLink(initialUrl)
+        val record = existing?.copy(fetchedAt = document.fetchedAt)?.also {
             link.updateLink(it)
         } ?: Link(
-            linkId = LinkId(Uuid.random()), originId = originId, url = url, schemaType = null,
-            fetchedAt = fetch.fetchedAt, createdAt = now, access = LinkAccess.Granted,
+            linkId = LinkId(Uuid.random()), originId = originId, url = initialUrl, schemaType = null,
+            fetchedAt = document.fetchedAt, createdAt = now, access = LinkAccess.Granted,
         ).also {
             link.createLink(it)
         }
 
         fun Url.toLinkAlias() = LinkAlias(LinkAliasId(Uuid.random()), record.linkId, this, now)
 
-        link.createAliasIgnore(fetch.fetchUrl.toLinkAlias())
-        link.createAliasIgnore(visitedUrl.toLinkAlias())
-
-        canonicalUrl?.let {
-            link.createAliasIgnore(canonicalUrl.toLinkAlias())
-        }
+        link.createAliasIgnore(initialUrl.toLinkAlias())
+        link.createAliasIgnore(servedUrl.toLinkAlias())
     }
-
-    return pageUrl
 }
 
 /** Records [record] on the link for its url, creating the link when missing. */

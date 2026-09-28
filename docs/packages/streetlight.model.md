@@ -39,9 +39,9 @@ A DTO lists its id first, then its non-nullable properties, its nullable propert
 
 A record the user edits has a `FooEdit` DTO holding the fields a form sends, and `Foo.toEdit()` to start an edit from the record. Its `validity` is a `ValidityCheck` of the `FooProperty` keys that are missing.
 
-## Event Feed Sources
+## Leads
 
-`EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. It is distinct from the paged feeds below.
+`Lead` is the sealed type of a page the crawler is given to read, with what is known of it before it is fetched: an `EventFeed`, or an `EventPage` found in a feed, carrying the `RawEvent` the feed showed. `EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. It is distinct from the paged feeds below.
 
 ## Feeds
 
