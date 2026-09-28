@@ -49,6 +49,22 @@ data class EventPageSchema(
     override val schemaType get() = SchemaType.EventPage
 }
 
+/** The selectors of the homepage of a location. [socialLinks] matches a list of elements; each other selector, one. */
+@Serializable
+data class LocationSchema(
+    val name: String? = null,
+    val description: String? = null,
+    val address: String? = null,
+    val phone: String? = null,
+    val email: String? = null,
+    val hours: String? = null,
+    val eventsLink: String? = null,
+    val image: String? = null,
+    val socialLinks: String? = null,
+): SelectorSchema {
+    override val schemaType get() = SchemaType.Location
+}
+
 /** The selector schemas of a location's page at [url]. */
 @Serializable
 data class UrlSchemas(

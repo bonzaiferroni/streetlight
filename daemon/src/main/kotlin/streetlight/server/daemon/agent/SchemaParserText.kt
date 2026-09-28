@@ -91,7 +91,7 @@ several elements. Your role is to find the element that holds each part of the s
 Only this page's event is wanted. The page may mention other dates and times, such as other events, a venue's
 hours, or dates in its description. Those are not the start of this event.
 
-Each selector is queried against the document body and is expected to return a single element.
+Each selector is queried against the whole document and is expected to return a single element.
 When one element holds more than one part, such as "Sep 26", give its selector for each part it holds.
 When the page holds no element for a part, the value of that part is null.
 
@@ -108,7 +108,7 @@ of this page's event: prose, in sentences, about what the event is.
 Only this page's event is wanted. Text about the venue, its membership, sign-in or newsletter forms, other events,
 navigation, or the page's footer is not the description of this event.
 
-The selector is queried against the document body and is expected to return a single element.
+The selector is queried against the whole document and is expected to return a single element.
 When the page holds no description of its event, the value is null.
 
 $SelectorReminder
@@ -125,11 +125,11 @@ a festival, a game.
         listing = "events at a particular location",
         locationGuidance = """
 This feed belongs to a particular location or venue. Assign a selector to `feedLocation` that will return an element
-within the body with textContent that matches the location name. When the event element names the place where the
+within the document with textContent that matches the location name. When the event element names the place where the
 event takes place, such as a room, a stage, or another venue, assign that selector to `eventLocation`.""".trim(),
         feedLocationFields = """
-* feedLocation: This selector should return a single element within the body with text content that matches the name of the location associated with the feed.
-* address: This selector should return a single element within the body with text content that matches the address of the location associated with the feed.""".trim(),
+* feedLocation: This selector should return a single element within the document with text content that matches the name of the location associated with the feed.
+* address: This selector should return a single element within the document with text content that matches the address of the location associated with the feed.""".trim(),
         eventLocationField = """
 * eventLocation: This selector should return an element with text content naming the place where the event takes place, if it is present within the event element.""".trim(),
     )
@@ -170,7 +170,7 @@ query the document.
 
 $SelectorPreferenceInstructions
 
-The document body will be queried for the event selector, and this is expected to return a list of elements.
+The whole document will be queried for the event selector, and this is expected to return a list of elements.
 
 Event-specific selectors are queried against each event element and must not repeat the event
 selector as a prefix. If the event selector is ".event-item" and the title sits in
@@ -193,7 +193,7 @@ $contentObjectInstructions
 
 For the content object, determine the following:
 
-### Selectors that will be queried within the body
+### Selectors that will be queried within the document
 $feedLocationFields
 * event: This selector will be used to return a list of elements that each contain details about a specific event.
 
@@ -228,7 +228,9 @@ query the document.
 
 $SelectorPreferenceInstructions
 
-Each selector will be queried against the document body and is expected to return a single element.     
+Each selector will be queried against the whole document and is expected to return a single element.
+The document includes its head. A meta element there may be selected when it holds the information, such as
+meta[property='og:site_name']; the content attribute of a meta element is read in place of its text content.
 If the content of the document does not contain the information that the selector is intended to query,
 leave its value null. A null value in that case is correct and expected. 
  
@@ -257,6 +259,54 @@ For the content object, determine the following:
 * ageMin: This selector should return an element with text content about the minimum age required to attend the event.
 * contact: This selector should return an element with text content providing an email address, phone number,
     or social media link offered for the express purpose of contacting someone about the event.
+
+$SelectorReminder
+"""
+
+    val LocationSelectorsInstructions = """
+Read the HTML above. We believe it is the homepage of a location or venue that hosts events.
+
+Your role is to extract a set of CSS selectors that can be used to parse the page for information about the location.
+Remember that you are not providing the details themselves, only the selectors that will be used to
+query the document.
+
+$SelectorPreferenceInstructions
+
+Each selector will be queried against the whole document. The socialLinks selector is expected to return a list of
+elements; each other selector is expected to return a single element.
+The document includes its head. A meta element there may be selected when it holds the information, such as
+meta[property='og:site_name']; the content attribute of a meta element is read in place of its text content.
+If the content of the document does not contain the information that the selector is intended to query,
+leave its value null. A null value in that case is correct and expected.
+
+Sometimes the target information will be contained within a set of child elements, that is fine but the
+textContent should evaluate to the desired information where relevant.
+
+Each value should be a valid CSS query.
+
+$contentObjectInstructions
+
+For the content object, determine the following:
+* name: This selector should return an element with text content that is the name of the location.
+* description: This selector should return an element with text content that describes the location: prose, in
+    sentences, about what the location is.
+* address: This selector should return a single element whose text content is the location's whole address, from
+    the street through the postal code, often found in the page's footer.
+* phone: This selector should return an element with text content that is the location's phone number.
+* email: This selector should return an element with text content that is the location's email address, or an
+    anchor whose href begins with "mailto:".
+* hours: This selector should return an element with text content that gives the location's opening hours.
+* eventsLink: This selector should return an anchor element whose href leads to the location's own page of upcoming
+    events, such as a calendar or a list of shows.
+    - Unlike the other elements, the information in the href attribute will be used and not the text content.
+* image: This selector should return an img element with a src attribute referencing an image of the location, such
+    as its logo or a photo of the venue.
+    - Like eventsLink, the src attribute will be used and not the text content.
+* socialLinks: This selector should return the list of anchor elements linking to the location's own profiles on
+    social media, such as Instagram or Facebook.
+    - Like eventsLink, the href attribute of each will be used.
+
+Only this location's details are wanted. Details of another venue, a ticket vendor, or the site's builder are not.
 
 $SelectorReminder
 """

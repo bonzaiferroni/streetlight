@@ -30,16 +30,16 @@ enum class PageState {
 /** The HTTP status this problem was made from by [toHttpProblem], or `null` when it came from elsewhere. */
 fun Problem.toHttpStatus(): Int? = (100..599).firstOrNull { it.toHttpProblem() == this }
 
-/** The report of one check of a feed source: its feed, each event page read, and the events the feed yielded. */
+/** The report of one check of a lead: its own page, each page it led to, and the records it found. */
 @Serializable
 class ParseReport(
     val buildId: String,
     val source: String,
     val checkedAt: String,
-    val feed: PageReport,
+    val lead: PageReport,
     val links: Int,
     val pages: List<PageReport>,
-    val events: EventReport,
+    val records: RecordReport,
     val failure: String? = null,
 ) {
     /** Writes this report to `<origin>.json` in [parserLogDir], replacing the report of an earlier check. */
@@ -60,6 +60,7 @@ class PageReport(val url: String) {
     var status: Int? = null
     var notes: List<String> = emptyList()
     var fetch: FetchReport? = null
+    var trim: TrimStats? = null
     val lm = mutableListOf<LmReport>()
     var schema: SchemaReport? = null
 }
@@ -78,7 +79,6 @@ data class FetchReport(
 @Serializable
 class LmReport(val kind: String? = null) {
     var model: String? = null
-    var trim: TrimStats? = null
     var capCutChars: Int = 0
     var attempts: Int = 0
     var inputTokens: Int? = null
@@ -102,26 +102,19 @@ class SchemaReport {
     var fieldFill: Map<String, Int>? = null
 }
 
-/** The events a feed yielded, with the date text of each event whose start could not be parsed. */
+/** The counts of the records a check found and what became of them; the story of each is in its page's notes. */
 @Serializable
-class EventReport {
+class RecordReport {
     var found = 0
     var created = 0
     var past = 0
-    var untitled = 0
+    var unnamed = 0
     var shortened = 0
     var duplicates = 0
     var known = 0
     var createFailed = 0
-    val unparsedDates = mutableListOf<String>()
-    val duplicateTitles = mutableListOf<String>()
-    val createFailures = mutableListOf<String>()
-    val imageFailures = mutableListOf<String>()
-    val spawnedLocations = mutableListOf<String>()
-    val matchedLocations = mutableListOf<String>()
-    val fallbackLocations = mutableListOf<String>()
-    val locationFailures = mutableListOf<String>()
-    val unlocatedEvents = mutableListOf<String>()
+    var locationsSpawned = 0
+    var locationsFailed = 0
 }
 
 /**

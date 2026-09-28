@@ -1,6 +1,5 @@
 package streetlight.server.daemon.crawler
 
-import streetlight.model.data.RawEvent
 import com.fleeksoft.ksoup.nodes.Element
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter
 import com.vladsch.flexmark.util.data.MutableDataSet
@@ -72,10 +71,5 @@ fun Element.dateText(vararg selectors: String?, test: (Element) -> Boolean = { t
     .joinToString(" ")
     .ifEmpty { null }
 
-fun <T> List<RawEvent>.isConstant(selector: (RawEvent) -> T?): Boolean {
-    if (size < 3) return false
-    val values = mapNotNull(selector)
-    return values.size == size && values.distinct().size == 1
-}
 
 fun OriginId.toRobotsTxtUrl() = "https://${this}/robots.txt".toUrl()

@@ -85,6 +85,8 @@ data class OSMExtra(
 /** A search of OpenStreetMap. */
 @Serializable
 data class OSMQuery(
+    /** A free-form query, such as a name and an address; used alone, in place of the structured fields. */
+    val query: String? = null,
     val amenity: String? = null,
     val street: String? = null,
     val city: String? = null,

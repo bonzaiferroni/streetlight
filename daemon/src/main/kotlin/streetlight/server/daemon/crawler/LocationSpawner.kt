@@ -1,6 +1,7 @@
 package streetlight.server.daemon.crawler
 
-import streetlight.model.data.RawEvent
+import streetlight.model.data.ParseProperty
+import streetlight.model.data.PropertyMap
 import kampfire.model.Distance
 import kampfire.model.GeoPoint
 import kampfire.model.GeoRect
@@ -40,21 +41,21 @@ class LocationSpawner(
     private var searchedAt = Instant.DISTANT_PAST
 
     /** The location of [event], read from [lead], or null when it names no place and [lead] has no location. */
-    suspend fun locate(event: RawEvent, lead: EventFeed, tracker: ParseTracker): Location? {
+    suspend fun locate(event: PropertyMap, lead: EventFeed, tracker: ParseTracker): Location? {
         val feedLocation = lead.location
-        val text = event.location?.trim()?.takeIf { it.isNotEmpty() } ?: return feedLocation
+        val text = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() } ?: return feedLocation
         if (feedLocation?.name?.fuzzyMatches(text) == true) return feedLocation
-        val hits = search(text, lead.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(text) }
+        val hits = search(text, lead.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(event, text) }
         val place = distinctPlace(text, lead.geoPoint, hits, hasFeedLocation = feedLocation != null)
-            ?: return feedLocation.also { tracker.locationFellBack(text) }
+            ?: return feedLocation.also { tracker.locationFellBack(event, text) }
 
-        dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(text, it) } }
+        dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(event, text, it) } }
         dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
             .firstOrNull { location -> location.name?.fuzzyMatches(text) == true }
-            ?.let { return it.also { tracker.locationMatched(text, it) } }
+            ?.let { return it.also { tracker.locationMatched(event, text, it) } }
 
         val edit = place.toEdit().takeIf { it.validity.isValid && it.state != null }
-            ?: return feedLocation.also { tracker.locationFellBack(text) }
+            ?: return feedLocation.also { tracker.locationFellBack(event, text) }
         val created = try {
             server.createLocation(null, edit)
         } catch (e: CancellationException) {
@@ -62,10 +63,10 @@ class LocationSpawner(
         } catch (e: Exception) {
             Problem("${e::class.simpleName}: ${e.message}")
         }.toDataOr {
-            tracker.locationFailed(text, it)
+            tracker.locationFailed(event, text, it)
             return feedLocation
         }
-        tracker.locationSpawned(text, created)
+        tracker.locationSpawned(event, text, created)
         return created
     }
 

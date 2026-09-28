@@ -7,18 +7,19 @@ import kampfire.model.Problem
 import kampfire.model.toDataOr
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
+import streetlight.model.data.LocationSchema
 
 object SchemaProblem {
     val Invalid = Problem("The LM schema failed validation against its page.")
     val Incomplete = Problem("The page content is incomplete without scripting.")
 }
 
-/** Validates a feed schema from the LM against the [body] it was made from, setting any other selector that fails to null. */
-fun EventFeedSchema.validate(body: Element): Outcome<EventFeedSchema> {
+/** Validates a feed schema from the LM against the [document] it was made from, setting any other selector that fails to null. */
+fun EventFeedSchema.validate(document: Element): Outcome<EventFeedSchema> {
     val selector = event ?: return Problem("No event selector")
-    val events = body.tryQuery(selector).toDataOr { return it }
+    val events = document.tryQuery(selector).toDataOr { return it }
     if (events.isEmpty()) return Problem("Event selector matched nothing: $selector")
-    val page = listOf(body)
+    val page = listOf(document)
     return Ok(copy(
         feedLocation = feedLocation.keepIfMatches(page),
         address = address.keepIfMatches(page),
@@ -33,10 +34,10 @@ fun EventFeedSchema.validate(body: Element): Outcome<EventFeedSchema> {
     ))
 }
 
-/** Validates a page schema from the LM against the [body] it was made from, setting any other selector that fails to null. */
-fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
-    if (body.queryElement(title) { it.isPlausibleField() } == null) return Problem("Title selector does not match: $title")
-    val page = listOf(body)
+/** Validates a page schema from the LM against the [document] it was made from, setting any other selector that fails to null. */
+fun EventPageSchema.validate(document: Element): Outcome<EventPageSchema> {
+    if (document.queryElement(title) { it.isPlausibleField() } == null) return Problem("Title selector does not match: $title")
+    val page = listOf(document)
     return Ok(copy(
         description = description.keepIfMatches(page) { it.isPlausibleProse() },
         location = location.keepIfMatches(page),
@@ -48,6 +49,25 @@ fun EventPageSchema.validate(body: Element): Outcome<EventPageSchema> {
         endTime = endTime.keepIfMatches(page),
         ageMin = ageMin.keepIfMatches(page),
         contact = contact.keepIfMatches(page),
+    ))
+}
+
+/**
+ * Validates a location schema from the LM against the [document] it was made from, setting any other selector that
+ * fails to null, wherever on the page its element sits.
+ */
+fun LocationSchema.validate(document: Element): Outcome<LocationSchema> {
+    if (document.queryElement(name) == null) return Problem("Name selector does not match: $name")
+    val page = listOf(document)
+    return Ok(copy(
+        description = description.keepIfMatches(page) { it.isPlausibleProse(allowsChrome = true) },
+        address = address.keepIfMatches(page),
+        phone = phone.keepIfMatches(page),
+        email = email.keepIfMatches(page),
+        hours = hours.keepIfMatches(page),
+        eventsLink = eventsLink.keepIfMatches(page) { it.hasAttr("href") },
+        image = image.keepIfMatches(page) { it.hasAttr("src") },
+        socialLinks = socialLinks.keepIfMatches(page) { it.hasAttr("href") },
     ))
 }
 

@@ -103,7 +103,9 @@ Confirm a version before raising it. An unverified bump is reported, not made.
 
 ## Bounty
 
-A bounty list names its items by the file they change. A file with more than one change lists each as a subitem beneath it. Documentation takes a single item, however many documents it touches.
+A bounty list is organized by what it changes. Each module is a top item in backticks, each file it changes is a bold subitem named by its filename alone, marked (new) when the file does not yet exist or (replaced: Foo.kt) when it takes the place of another, and each change within the file is a subitem beneath it. Documentation takes a single item, however many documents it touches.
+
+A staged bounty need not compile. Code is never added only to make it compile; a failed compile marks where the work stands. A finished bounty lists its compile gaps: each file a bold top item, each gap a subitem beneath it.
 
 ## Scope
 

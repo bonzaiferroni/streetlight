@@ -17,7 +17,6 @@ data class Link(
     val access: LinkAccess,
     val content: LinkContent? = null,
     val parseOutcome: ParseOutcome? = null,
-    val parseNote: String? = null,
 )
 
 @JvmInline

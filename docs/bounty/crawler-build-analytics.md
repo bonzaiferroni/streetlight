@@ -84,7 +84,7 @@ select string_agg(slug, ', ' order by slug) from retry;
 
 A feed that is never staged is not read again within a day (`checkInterval`), so a build only touches what was staged.
 
-**A targeted stage** tests one site from scratch, as V9 did for Swallow Hill: delete its events, its links and their aliases (`link_alias` first), and its parsers, then null `checked_at`. A general feed is staged the same way through `event_feed.checked_at`.
+**A targeted stage** tests one site from scratch, as V9 did for Swallow Hill: delete its events, its links and their aliases (`link_alias` first), and its parsers, then null `checked_at`. A stored lead, such as a general feed, is staged the same way through `lead.checked_at`.
 
 ## Reports
 
@@ -92,10 +92,11 @@ A check writes `logs/parser/Vn/<origin>.json` only when it needs attention: it f
 
 | Part | What to read |
 |---|---|
-| `feed` / `pages[]` | `state`, `access`, `content`, `parseOutcome`, `status`, `notes`, `fetch` (mode, chars, text chars, millis) |
-| `lm[]` | Each request (`schema`, `time`), its trim stats, token counts and the raw `response`: the first place to look when a schema is odd |
+| `lead` / `pages[]` | `state`, `access`, `content`, `parseOutcome`, `status`, `notes`, `fetch` (mode, chars, text chars, millis) |
+| `trim` | The page's trim stats, once per page |
+| `lm[]` | Each request (`schema`, `time`, `description`), its cap cut, token counts and the raw `response`: the first place to look when a schema is odd |
 | `schema` | `source` (new or stored), `validation`, `dropped` fields, `eventCount`, `fieldFill` (how many events each selector filled) |
-| `events` | `found`, `created`, `past`, `untitled`, `duplicates` and `duplicateTitles`, `known`, `unparsedDates`, `createFailures`, `imageFailures`, and the location lists `spawnedLocations`, `matchedLocations`, `fallbackLocations`, `locationFailures`, `unlocatedEvents` |
+| `records` | The counts: `found`, `created`, `past`, `unnamed`, `shortened`, `duplicates`, `known`, `createFailed`, `locationsSpawned`, `locationsFailed`. Each record's story (unparsed dates, duplicate titles, failures, location outcomes) is a note on its page |
 | `failure` | An exception that cut the check short |
 
 The summary pass over a build:
@@ -105,11 +106,11 @@ cd logs/parser/Vn && python3 - <<'EOF'
 import json, glob
 from collections import Counter
 for f in sorted(glob.glob('*.json')):
-    d = json.load(open(f)); fd = d['feed']; e = d['events']; s = fd.get('schema') or {}
+    d = json.load(open(f)); fd = d['lead']; e = d['records']; s = fd.get('schema') or {}
     print(f"{f[:-5][:24]:24} {fd.get('content')} {fd.get('parseOutcome')} ev={s.get('eventCount')} "
           f"pages={dict(Counter(p['state'] for p in d['pages']))} "
           f"found={e['found']} created={e['created']} past={e['past']} dup={e['duplicates']} "
-          f"known={e.get('known', 0)} unparsed={len(e['unparsedDates'])} fail={d.get('failure')!r}")
+          f"known={e.get('known', 0)} notes={len(fd.get('notes', []))} fail={d.get('failure')!r}")
 EOF
 ```
 
@@ -120,7 +121,7 @@ select l.slug, count(*) from event e join location l on l.id = e.location_id
 where e.created_at > now() - interval '3 hours' group by 1 order by 2 desc;
 ```
 
-Every event found lands in exactly one bucket: created, past, untitled, unparsed, duplicate, unlocated or a failed create. Adding up the buckets for a feed shows where its events sank.
+Every event found lands in exactly one bucket: created, past, unnamed, unparsed, duplicate, unlocated or a failed create. Adding up the buckets for a feed shows where its events sank.
 
 ## Probes
 

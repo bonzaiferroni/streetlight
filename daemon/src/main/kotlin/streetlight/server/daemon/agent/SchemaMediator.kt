@@ -12,6 +12,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
+import streetlight.model.data.LocationSchema
 import streetlight.model.data.Origin
 import streetlight.model.data.SelectorSchema
 import streetlight.server.model.DaoFacade
@@ -54,11 +55,10 @@ class SchemaMediator(
         instructions: String = SchemaParserText.LocationFeedSelectorsInstructions,
         observer: SchemaObserver? = null,
     ): Outcome<EventFeedSchema> {
-        val body = doc.body()
         dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
             val schema = parser.schema as? EventFeedSchema ?: return@forEach
             val selector = schema.event ?: return@forEach
-            val isSuccess = body.tryQuery(selector).toDataOrNull()?.isNotEmpty() == true
+            val isSuccess = doc.tryQuery(selector).toDataOrNull()?.isNotEmpty() == true
             observer?.storedSchemaTried(schema, isSuccess)
             dao.parser.updateResult(parser.parserId, isSuccess)
             if (isSuccess) return Ok(schema)
@@ -72,7 +72,7 @@ class SchemaMediator(
         val request = content.contentOr(origin) { return it }
 
         val schema = request.toSchema()
-        val validated = schema.validate(body)
+        val validated = schema.validate(doc)
         observer?.schemaCreated(schema, validated)
         val valid = validated.toDataOr { return SchemaProblem.Invalid }
         val refined = refineFeedStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
@@ -91,16 +91,15 @@ class SchemaMediator(
         timeZoneId: String?,
         observer: SchemaObserver? = null,
     ): Outcome<EventPageSchema> {
-        val body = doc.body()
         dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.mapNotNull { parser ->
             val schema = parser.schema as? EventPageSchema ?: return@mapNotNull null
-            val isSuccess = body.queryElement(schema.title) { it.isPlausibleField() } != null
+            val isSuccess = doc.queryElement(schema.title) { it.isPlausibleField() } != null
             dao.parser.updateResult(parser.parserId, isSuccess)
             if (!isSuccess) {
                 observer?.storedSchemaTried(schema, false)
                 return@mapNotNull null
             }
-            val length = body.queryElement(schema.description) { it.isPlausibleProse() }?.html()?.length ?: 0
+            val length = doc.queryElement(schema.description) { it.isPlausibleProse() }?.html()?.length ?: 0
             length to schema
         }.maxByOrNull { it.first }?.let { (_, schema) ->
             observer?.storedSchemaTried(schema, true)
@@ -115,13 +114,46 @@ class SchemaMediator(
         val request = content.contentOr(origin) { return it }
 
         val schema = request.toSchema()
-        val validated = schema.validate(body)
+        val validated = schema.validate(doc)
         observer?.schemaCreated(schema, validated)
         val valid = validated.toDataOr { return SchemaProblem.Invalid }
         val started = refinePageStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
         val refined = refinePageDescription(url, doc, started, observer)
         dao.parser.create(origin.originId, refined, origin.fetchMode)
         return Ok(refined)
+    }
+
+    /**
+     * The schema of the location homepage [doc] at [url] on [origin]. The LM is not asked once it has reached its
+     * usage limit.
+     */
+    suspend fun locationSchema(
+        url: Url,
+        doc: Document,
+        origin: Origin,
+        observer: SchemaObserver? = null,
+    ): Outcome<LocationSchema> {
+        dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
+            val schema = parser.schema as? LocationSchema ?: return@forEach
+            val isSuccess = doc.queryElement(schema.name) != null
+            observer?.storedSchemaTried(schema, isSuccess)
+            dao.parser.updateResult(parser.parserId, isSuccess)
+            if (isSuccess) return Ok(schema)
+        }
+        if (isUsageLimitReached) return LMProblem.UsageLimit
+
+        observer?.requested(schemaRequest)
+        val content = client.readHtml<ContentParse<LocationSchemaRequest>>(
+            url, doc, SchemaParserText.LocationSelectorsInstructions, retryCount, observer,
+        ).toDataOr { return it.alsoNoteLimit() }
+        val request = content.contentOr(origin) { return it }
+
+        val schema = request.toSchema()
+        val validated = schema.validate(doc)
+        observer?.schemaCreated(schema, validated)
+        val valid = validated.toDataOr { return SchemaProblem.Invalid }
+        dao.parser.create(origin.originId, valid, origin.fetchMode)
+        return Ok(valid)
     }
 
     /** The feed [schema] with the parts of its events' start, asked of the LM when the start does not already parse. */
@@ -133,7 +165,7 @@ class SchemaMediator(
         observer: SchemaObserver?,
     ): EventFeedSchema {
         val eventSelector = schema.event ?: return schema
-        val events = doc.body().tryQuery(eventSelector).toDataOrNull()?.take(sampleSize) ?: return schema
+        val events = doc.tryQuery(eventSelector).toDataOrNull()?.take(sampleSize) ?: return schema
         if (schema.startsParse(events, zone)) return schema
 
         observer?.requested(timeRequest)
@@ -168,7 +200,7 @@ class SchemaMediator(
         ).toDataOrNull() ?: return schema
 
         val description = request.description.selectorOrNull()
-            ?.takeIf { doc.body().queryElement(it) { element -> element.isPlausibleProse() } != null }
+            ?.takeIf { doc.queryElement(it) { element -> element.isPlausibleProse() } != null }
             ?: return schema
         return schema.copy(description = description)
     }
@@ -181,7 +213,7 @@ class SchemaMediator(
         zone: TimeZone,
         observer: SchemaObserver?,
     ): EventPageSchema {
-        val page = listOf(doc.body())
+        val page = listOf(doc)
         if (schema.startsParse(page, zone)) return schema
 
         observer?.requested(timeRequest)
@@ -215,9 +247,9 @@ class SchemaMediator(
 fun EventFeedSchema.startText(element: Element): String? =
     startText(element, date, month, day, time)
 
-/** The text of the start of the event on [body] read by this schema, from its date and its parts. */
-fun EventPageSchema.startText(body: Element): String? =
-    startText(body, date, month, day, startTime)
+/** The text of the start of the event on [document] read by this schema, from its date and its parts. */
+fun EventPageSchema.startText(document: Element): String? =
+    startText(document, date, month, day, startTime)
 
 private fun startText(element: Element, vararg selectors: String?): String? = selectors
     .mapNotNull { selector -> element.queryElement(selector) { it.isPlausibleField() }?.text()?.trim() }

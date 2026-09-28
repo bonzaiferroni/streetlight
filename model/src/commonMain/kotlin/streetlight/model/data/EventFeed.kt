@@ -3,9 +3,7 @@ package streetlight.model.data
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 /** A page listing events whose locations are read along with them. */
 sealed interface EventFeed : Lead {
@@ -33,7 +31,7 @@ data class LocationEventFeed(
 /** A page listing local events at many locations, such as a newspaper's calendar. */
 @Serializable
 data class GeneralEventFeed(
-    val eventFeedId: EventFeedId,
+    val leadId: LeadId,
     override val name: String,
     override val initialUrl: Url,
     override val geoPoint: GeoPoint,
@@ -43,10 +41,4 @@ data class GeneralEventFeed(
 ): EventFeed {
     override val parseMode get() = ParseMode.Partial
     override val location: Location? get() = null
-}
-
-@JvmInline
-@Serializable
-value class EventFeedId(override val value: Uuid): RecordId {
-    override fun toString() = value.toString()
 }

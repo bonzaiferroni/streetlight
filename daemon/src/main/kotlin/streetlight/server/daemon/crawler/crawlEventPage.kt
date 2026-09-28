@@ -1,6 +1,7 @@
 package streetlight.server.daemon.crawler
 
-import streetlight.model.data.RawEvent
+import streetlight.model.data.ParseProperty
+import streetlight.model.data.PropertyMap
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import streetlight.server.daemon.agent.isPlausibleField
@@ -16,7 +17,7 @@ import streetlight.model.data.SelectorSchema
 import streetlight.server.utils.readImageUrl
 
 /** Delivers the event [selectorSchema] reads from the event [lead] fetched as [document], merged with what its feed showed. */
-context(tracker: ParseTracker, pageTracker: PageTracker)
+context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventPage(
     lead: EventPage,
     document: FetchDocument?,
@@ -28,34 +29,31 @@ suspend fun Crawler.crawlEventPage(
             deliverEvent(lead.feed, lead.feedEvent, null, tracker)
         }
         else -> {
-            pageTracker.read(SchemaType.EventPage)
+            tracker.read(lead.initialUrl, SchemaType.EventPage)
             val pageEvent = parsePageEvent(schema, document.doc, document.servedUrl)
-            log.debug { "Parsed ${document.servedUrl}: description ${pageEvent.descriptionHtml?.length ?: 0} chars, cost ${pageEvent.cost}" }
-            if (pageEvent.descriptionHtml == null) pageTracker.partial("The page had no description")
+            log.debug { "Parsed ${document.servedUrl}: description ${pageEvent[ParseProperty.Description]?.length ?: 0} chars" }
+            if (pageEvent[ParseProperty.Description] == null) tracker.partial(lead.initialUrl, "The page had no description")
             deliverEvent(lead.feed, lead.feedEvent, pageEvent, tracker)
         }
     }
 }
 
-/** The event read from [doc] by [schema], found at [pageUrl]. */
+/** The properties of the event on the page [doc], read by [schema], found at [pageUrl]. */
 private fun parsePageEvent(
     schema: EventPageSchema,
     doc: Document,
     pageUrl: Url? = null,
-): RawEvent {
-    val body = doc.body()
-    return RawEvent(
-        title = body.queryElement(schema.title) { it.isPlausibleField() }.plainText(),
-        url = pageUrl,
-        image = doc.readImageUrl()?.value ?: body.queryElement(schema.image).absoluteUrl("src"),
-        descriptionHtml = body.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
-        contact = body.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),
-        cost = body.queryElement(schema.cost) { it.isPlausibleField() }.plainText(),
-        ageMin = body.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText(),
-        date = body.dateText(schema.date, schema.month, schema.day) { it.isPlausibleField() },
-        startTime = body.queryElement(schema.startTime) { it.isPlausibleField() }.plainText(),
-        endTime = body.queryElement(schema.endTime) { it.isPlausibleField() }.plainText(),
-        location = body.queryElement(schema.location) { it.isPlausibleField() }.plainText(),
-        address = body.queryElement(schema.address) { it.isPlausibleField() }.plainText(),
-    )
-}
+): PropertyMap = listOf(
+    ParseProperty.Name to doc.queryElement(schema.title) { it.isPlausibleField() }.plainText(),
+    ParseProperty.Url to pageUrl?.value,
+    ParseProperty.Image to (doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")),
+    ParseProperty.Description to doc.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
+    ParseProperty.Contact to doc.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),
+    ParseProperty.Cost to doc.queryElement(schema.cost) { it.isPlausibleField() }.plainText(),
+    ParseProperty.AgeMin to doc.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText(),
+    ParseProperty.Date to doc.dateText(schema.date, schema.month, schema.day) { it.isPlausibleField() },
+    ParseProperty.StartTime to doc.queryElement(schema.startTime) { it.isPlausibleField() }.plainText(),
+    ParseProperty.EndTime to doc.queryElement(schema.endTime) { it.isPlausibleField() }.plainText(),
+    ParseProperty.Location to doc.queryElement(schema.location) { it.isPlausibleField() }.plainText(),
+    ParseProperty.Address to doc.queryElement(schema.address) { it.isPlausibleField() }.plainText(),
+).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()

@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import streetlight.server.daemon.agent.HtmlParserClient
 import streetlight.server.daemon.agent.SchemaMediator
 import streetlight.model.data.EventFeed
+import streetlight.model.data.Lead
 import streetlight.model.data.ParseMode
 import streetlight.model.data.toOriginId
 import streetlight.server.model.MapReferenceClient
@@ -36,28 +37,29 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
     suspend fun start() {
         while (true) {
             dao.readCheckable(checkInterval - 1.hours).forEach { lead ->
-                if (lead.parseMode == ParseMode.None) return@forEach
-                checkFeed(lead)
+                if (lead is EventFeed && lead.parseMode == ParseMode.None) return@forEach
+                checkLead(lead)
             }
-            log.info { "completed feed check" }
+            log.info { "completed lead check" }
             delay(10.minutes)
         }
     }
 
-    /** Reads the feed of [lead], creates its new events, and records each page's outcome on its link. */
-    private suspend fun checkFeed(lead: EventFeed) {
+    /** Reads [lead], delivers what it finds, and records each page's outcome on its link. */
+    private suspend fun checkLead(lead: Lead) {
         dao.updateCheckedAt(lead)
 
         val originId = lead.initialUrl.toOriginId() ?: return
+        val name = if (lead is EventFeed) lead.name else "${lead.leadType}: ${lead.initialUrl}"
 
-        val tracker = ParseTracker(lead.name, lead.initialUrl)
+        val tracker = ParseTracker(name, lead.initialUrl)
         with (tracker) {
             try {
-                crawlLead(lead)
+                crawl(lead)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                log.error(e) { "check failed for ${lead.name}" }
+                log.error(e) { "check failed for $name" }
                 tracker.failed(e)
             }
             tracker.records().forEach { dao.recordLink(it) }

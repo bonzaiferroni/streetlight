@@ -34,4 +34,5 @@ value class ParserId(override val value: Uuid): RecordId {
 enum class SchemaType {
     EventFeed,
     EventPage,
+    Location,
 }

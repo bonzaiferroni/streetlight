@@ -26,7 +26,7 @@ A `Lead` is a page the crawler is given, with what is known of it before it is f
 
 A page is known by the url it was served from, after redirects and normalized. Its link is recorded under that url, with the url asked for as an alias. A url the page declares for itself, such as a canonical link, is not used.
 
-`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `feedEvent` its lead carries. `deliverEvent` merges the two, the page's preferred and the start taken from the first pairing that parses, and creates the event.
+`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `feedEvent` its lead carries. `deliverEvent` merges the two property maps, the page's preferred except its url and the start taken from the first pairing that parses, and creates the event from `PropertyMap.toEventEdit`. A location's properties become a `LocationEdit` through `toLocationEdit`.
 
 ## Feed Sources
 
@@ -37,7 +37,9 @@ Each feed is an `EventFeed`, read by the same `crawlEventFeed`. Its url arrives 
 | `LocationEventFeed` | A location's events page | The location, unless an event names a distinct place |
 | `GeneralEventFeed` | A page of local events at many locations, such as a newspaper's calendar | The place each event names; an event naming none is dropped |
 
-Each source asks the LM with its own feed instructions. A `GeneralEventFeed` row is added by hand, with the publisher's permission, and is always read `Partial`.
+Each source asks the LM with its own feed instructions. A `GeneralEventFeed` is a row of the `lead` table added by hand, with the publisher's permission, and is always read `Partial`.
+
+The `lead` table holds every lead that is not a location's own feed, each with its `LeadType`. `toLead` builds the lead its type names. A general event feed is read again each day; a `LocationLead`, a url submitted as a location's page, is read once. A lead of the front desk is named in its tracker and report by its feed's name, or by its type and url.
 
 ## General Model
 
@@ -57,17 +59,18 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 - An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the crawler moves to the next feed. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
 - A step that records takes its tracker as an argument, never null and never inside a package, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit), and consults it before fetching. A step computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
-- `crawlLead` takes an event page's child `PageTracker` from `tracker.page(url)`.
-- `PageTracker.collect` keeps any other object the tracker draws on when the report is built, such as the feed's event elements.
-- A `PageTracker` is the `SchemaObserver` passed to the `SchemaMediator`, which fills the schema and LM stages. Each request to the LM is its own entry in the page's `lm` list, of kind `schema` or `time`.
-- A report holds the feed page, each event page read, and the events the feed yielded. Each page has one section per stage, as far as it got: `fetch`, `lm`, `schema`, and its `outcome` and HTTP `status`.
+- A check has one `ParseTracker`, passed as a context. It tracks each page of the check by its url, the lead's own page and any page the lead leads to, and every tracking call names the url of the page it records.
+- `collect(url, item)` keeps any other object the tracker draws on when the report is built, such as the feed's event elements.
+- `tracker.page(url)` is the `SchemaObserver` passed to the `SchemaMediator`, which fills the page's schema and LM stages. Each request to the LM is its own entry in the page's `lm` list, of kind `schema`, `time` or `description`.
+- A report holds the `lead`'s own page, each page it led to, and the counts of the records it found. Each page has one section per stage, as far as it got: `fetch`, `trim`, `lm`, `schema`, and its `outcome` and HTTP `status`. A page's `notes` hold only what its fields do not already say: a record's trouble is noted once, on its own page or else on the lead's, and a fetch problem is noted only when it has no status.
 
 | Stage | Logged |
 |---|---|
 | Fetch | HTTP status, mode, final url, chars, visible text chars, time taken |
-| LM | Model, trim stats, chars cut by the cap, attempts, tokens, time taken, raw response |
+| Trim | The page's trim stats, once for every request made of it |
+| LM | Model, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Events | Found, created, past, untitled, shortened, duplicates with their titles, failed creates with their reasons, date text that did not parse, events with no location |
+| Records | Counts of the records found, created, past, unnamed, shortened, duplicate, known and failed, and of locations spawned and failed. What became of each record is a note on the page it was read from, or on the lead's page |
 
 A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
 
@@ -81,7 +84,6 @@ A page that reaches its server records what its read found on its `Link`, the fe
 | `content` | `Schema`, `OffSchema`, `OffScope`, `Unknown`, `Unread` | What the read found. `OffSchema` is the LM's "not the expected content", `Unknown` is not html, `Unread` needs scripting. Null when not yet classified |
 | `schemaType` | `EventFeed`, `EventPage` | The schema that read it, when `content` is `Schema` |
 | `parseOutcome` | `Complete`, `Partial`, `Fail` | The parse with the schema. A rejected schema, or a feed whose event selector matched nothing, is `Fail`. Content still unread under scripting is `Fail` |
-| `parseNote` | Text | Each reason behind the values, joined |
 
 - Each read overwrites the link's values, since they describe the last read.
 - An event whose link normalizes to the feed's own url has no page of its own, such as a link to a route inside the feed's app, and is built from the feed's data.
@@ -89,7 +91,7 @@ A page that reaches its server records what its read found on its `Link`, the fe
 - An event whose page link already has an outcome is dropped as known, and counted under `known`.
 - An event page is read again only when its link is `Granted` with no `parseOutcome` and content that is null or `Unread`: a read interrupted before classification, or content awaiting scripting. `wantsRead` states it.
 - A feed is not read again when its link is not `Granted`, its content is `OffSchema`, `OffScope` or `Unknown`, or its `parseOutcome` is `Fail`. `stopsFeed` states it. A failure waits for a better build.
-- An event whose date text does not parse marks the feed, and the page it was read from, `Partial`.
+- An event whose date text does not parse marks the lead `Partial`, and the page it was read from `Partial` with a note.
 - A report is written, and html saved, for each check where some page is `Partial` or `Fail`, or has content other than `Schema`.
 
 ## Parse Limit
@@ -104,9 +106,9 @@ A `Scripting` fetch scrolls down with the mouse wheel after the load event until
 
 ## Events
 
-A feed's events are created only with a title, and a start date and time that is still ahead. This is the final guard on what reaches users. An event with no title is dropped and counted under `untitled`, an event whose start cannot be parsed from its date and time text is dropped and its text reported under `unparsedDates`, and an event whose start has passed is dropped and counted under `past`. An untitled or unparsed event marks its feed and page `Partial`. Feeds supply what they readily can; other events are posted by hand.
+A feed's events are created only with a title, and a start date and time that is still ahead. This is the final guard on what reaches users. An event with no title is dropped and counted under `unnamed`, an event whose start cannot be parsed from its date and time text is dropped and its text noted, and an event whose start has passed is dropped and counted under `past`. An untitled or unparsed event marks its feed and page `Partial`. Feeds supply what they readily can; other events are posted by hand.
 
-An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the crawler or by a person and whatever its start time. Each duplicate is counted, and its pair of titles reported under `duplicateTitles`. An event whose image cannot be stored is still created, without the image, and reported under `imageFailures`, since the image is decoration and the event is the data.
+An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the crawler or by a person and whatever its start time. Each duplicate is counted, and its pair of titles noted on its page. An event whose image cannot be stored is still created, without the image, and noted on its page, since the image is decoration and the event is the data.
 
 A source's `ParseMode` sets how much is read: `None` skips it, `Partial` shortens each description, and `Full` keeps each description whole. An event's shortened description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
@@ -122,9 +124,13 @@ An event is placed at its feed's location unless its location text clearly names
 - OpenStreetMap finds a single place (place rank 30, not a city or street) whose name `fuzzyMatches` the text, within 200 km of the feed;
 - no such place lies within 150 m of the feed location, which would make the text a room or stage of the feed's venue.
 
-Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map. A general feed has no location of its own, so the 150 m rule does not apply, and an event whose place is not found is dropped and reported under `unlocatedEvents`, marking its feed and page `Partial`.
+Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map. A general feed has no location of its own, so the 150 m rule does not apply, and an event whose place is not found is dropped and noted on its page, marking its feed and page `Partial`.
 
-Map searches are bounded to the 200 km around the feed's point, paced to one a second, and kept for the crawler's run. The report lists `spawnedLocations`, `matchedLocations`, `fallbackLocations` and `locationFailures`, and a check that spawned a location, or failed to, is always reported.
+Map searches are bounded to the 200 km around the feed's point, paced to one a second, and kept for the crawler's run. Each location resolved, matched, fallen back or failed is noted on its event's page, and a check that spawned a location, or failed to, is always reported.
+
+## Location Leads
+
+`crawlLocationLead` reads a `LocationLead`'s homepage into a `PropertyMap` with its `LocationSchema`: the meta image first, as for an event page, and each of `socialLinks` joined by lines. `deliverLocation` places it on OpenStreetMap with a free-form search of its name and address, and keeps the place of rank 30 whose name `fuzzyMatches` the page's, the closest first. A place already stored by its map id is a duplicate. Otherwise the location is created with no caller from the page's properties, the map filling what the page lacks and giving the address. A lead whose name, place or required fields are missing is noted as failed and not created.
 
 ## Strikes
 

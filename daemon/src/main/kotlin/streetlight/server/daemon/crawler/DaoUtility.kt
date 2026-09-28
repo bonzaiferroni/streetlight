@@ -2,7 +2,9 @@ package streetlight.server.daemon.crawler
 
 import kampfire.model.Url
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
-import streetlight.model.data.EventFeed
+import streetlight.model.data.EventPage
+import streetlight.model.data.Lead
+import streetlight.model.data.LocationLead
 import streetlight.model.data.GeneralEventFeed
 import streetlight.model.data.Link
 import streetlight.model.data.LinkAlias
@@ -20,15 +22,17 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
-/** The feeds not checked within [interval]: the locations' own first, then the general feeds, each oldest first. */
-suspend fun DaoFacade.readCheckable(interval: Duration): List<EventFeed> =
-    location.readCheckableFeeds(interval) + eventFeed.readCheckable(interval)
+/** The leads due a read: the locations' own feeds first, then the stored leads, each oldest first. */
+suspend fun DaoFacade.readCheckable(interval: Duration): List<Lead> =
+    location.readCheckableFeeds(interval) + lead.readCheckable(interval)
 
 /** Marks [lead] as checked now. */
-suspend fun DaoFacade.updateCheckedAt(lead: EventFeed) {
+suspend fun DaoFacade.updateCheckedAt(lead: Lead) {
     when (lead) {
         is LocationEventFeed -> location.updateCheckedAt(lead.location.locationId)
-        is GeneralEventFeed -> eventFeed.updateCheckedAt(lead.eventFeedId)
+        is GeneralEventFeed -> this.lead.updateCheckedAt(lead.leadId)
+        is LocationLead -> this.lead.updateCheckedAt(lead.leadId)
+        is EventPage -> { }
     }
 }
 
@@ -70,7 +74,6 @@ suspend fun DaoFacade.recordLink(record: LinkRecord) {
             content = record.content,
             schemaType = record.schemaType,
             parseOutcome = record.parseOutcome,
-            parseNote = record.note,
         ))
         return
     }
@@ -80,7 +83,7 @@ suspend fun DaoFacade.recordLink(record: LinkRecord) {
     val created = Link(
         linkId = LinkId(Uuid.random()), originId = originId, url = record.url, schemaType = record.schemaType,
         fetchedAt = now, createdAt = now, access = record.access, content = record.content,
-        parseOutcome = record.parseOutcome, parseNote = record.note,
+        parseOutcome = record.parseOutcome,
     )
     link.createLink(created)
     link.createAliasIgnore(LinkAlias(LinkAliasId(Uuid.random()), created.linkId, record.url, now))

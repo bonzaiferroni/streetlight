@@ -83,7 +83,7 @@ A request to the LM asks for one shape at a time. A follow-up request asks a nar
 
 ## Schema Mediator
 
-`SchemaMediator` finds the schema of a feed or an event page, and is the only caller that asks the LM for one. The crawler is its only user; the server's parse endpoints are retired.
+`SchemaMediator` finds the schema of a feed, an event page or a location's homepage, and is the only caller that asks the LM for one. The crawler is its only user; the server's parse endpoints are retired.
 
 1. The schemas stored for the page's origin, in the `parser` table, are tried first. The first feed schema whose `event` selector matches is used, and of the page schemas whose title passes, the one with the longest description.
 2. Otherwise the LM is asked for the whole schema with `EventFeedSchemaRequest` or `EventPageSchemaRequest`, and the answer is validated.
@@ -116,11 +116,18 @@ A schema from the LM is validated against the page it was made from before it is
 
 A failed schema is not stored, and the crawler records the page as `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
 
+## Location Schema
+
+A `LocationSchema` reads a location's homepage toward a `LocationEdit`: its name, description, whole address as one block, phone, email, hours, the link to its events page, an image, and the list of its social links. The phone and email are read only from the location's own homepage, where publishing them states they are public.
+
+`SchemaMediator.locationSchema` finds it the way it finds a page's schema, without follow-ups. A stored schema is reused while its `name` still matches. A new one needs a `name` that matches, or it is invalid; each other field is kept when it matches, `description` as plausible prose, `eventsLink` and each of `socialLinks` with an href (on any site), and `image` with a src. A location's fields are not refused for sitting in a header or footer, where a homepage keeps them.
+
 ## Field Queries
 
-A selector is expected to match a single element. `queryElement` takes the matches in document order and returns the first that has text or an image and passes the field's test: plausible prose for `description`, a plausible field for the other text fields. It returns null for an invalid selector.
+A selector is queried against the whole document, head included, and is expected to match a single element; a list selector, such as a feed's `event` or a location's `socialLinks`, matches many. `queryElement` takes the matches in document order and returns the first that has text, an image or a meta element's content, and passes the field's test: plausible prose for `description`, a plausible field for the other text fields. It returns null for an invalid selector.
 
 - A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
-- Matches with no text or image are skipped, since the LM reads html with empty elements trimmed.
+- Matches with no text, image or meta content are skipped, since the LM reads html with empty elements trimmed.
+- A meta element is read by its `content` attribute in place of its text, so a head value such as `og:site_name` can fill a field.
 - Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
 - An event page's image is the image its meta declares for outside links (`og:image`, `twitter:image`, `image`) when it has one, and the schema's `image` otherwise. A feed's image comes from its schema alone.

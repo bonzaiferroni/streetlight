@@ -15,6 +15,8 @@ import streetlight.model.data.EventPage
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.FetchMode
 import streetlight.model.data.Lead
+import streetlight.model.data.LocationLead
+import streetlight.model.data.LocationSchema
 import streetlight.model.data.Origin
 import streetlight.model.data.SelectorSchema
 import streetlight.model.data.toOriginId
@@ -40,36 +42,30 @@ class FetchDocument(
  * given a schema, passes on only what it already carries.
  */
 context(tracker: ParseTracker)
-suspend fun Crawler.crawlLead(lead: Lead) {
-    val pageTracker = when (lead) {
-        is EventFeed -> tracker.feed
-        is EventPage -> tracker.page(lead.initialUrl)
+suspend fun Crawler.crawl(lead: Lead) {
+    val link = dao.link.readLink(lead.initialUrl)
+    if (link?.stopsFeed() == true) {
+        tracker.skipped(lead.initialUrl, PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
+        return
+    }
+    if (link != null && link.fetchedAt >= startedAt) return
+    val origin = lead.initialUrl.toOriginId()?.let { dao.origin.readOrCreateOrigin(it) } ?: return
+    val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
+
+    var document = fetchDocument(lead, origin, fetchMode)
+    var schemaOutcome = document?.let { provideCrawl(lead, it) }
+    if (schemaOutcome == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) {
+        document = fetchDocument(lead, origin, FetchMode.Scripting)
+        schemaOutcome = document?.let { provideCrawl(lead, it) }
     }
 
-    with(pageTracker) {
-        val link = dao.link.readLink(lead.initialUrl)
-        if (link?.stopsFeed() == true) {
-            pageTracker.skipped(PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
-            return
-        }
-        if (link != null && link.fetchedAt >= startedAt) return
-        val origin = lead.initialUrl.toOriginId()?.let { dao.origin.readOrCreateOrigin(it) } ?: return
-        val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
+    document?.let { dao.registerFetch(it) }
 
-        var document = fetchDocument(lead, origin, fetchMode)
-        var schemaOutcome = document?.let { provideCrawl(lead, it) }
-        if (schemaOutcome == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) {
-            document = fetchDocument(lead, origin, FetchMode.Scripting)
-            schemaOutcome = document?.let { provideCrawl(lead, it) }
-        }
-
-        document?.let { dao.registerFetch(it) }
-
-        val schema = schemaOutcome?.toDataOrNull()
-        when(lead) {
-            is EventFeed -> crawlEventFeed(lead, document, schema)
-            is EventPage -> crawlEventPage(lead, document, schema)
-        }
+    val schema = schemaOutcome?.toDataOrNull()
+    when(lead) {
+        is EventFeed -> crawlEventFeed(lead, document, schema)
+        is EventPage -> crawlEventPage(lead, document, schema)
+        is LocationLead -> crawlLocationLead(lead, document, schema)
     }
 }
 
@@ -77,7 +73,7 @@ suspend fun Crawler.crawlLead(lead: Lead) {
  * The document of the page at [url] on [origin], fetched in [fetchMode] through its robots gate and registered as a
  * link, or null when it could not be fetched or parsed.
  */
-context(tracker: PageTracker)
+context(tracker: ParseTracker)
 private suspend fun Crawler.fetchDocument(
     lead: Lead,
     origin: Origin,
@@ -85,17 +81,17 @@ private suspend fun Crawler.fetchDocument(
 ): FetchDocument? {
     val fetch = fetcher.fetch(lead.initialUrl, origin, fetchMode).toDataOr {
         logProblem(it)
-        tracker.fetchFailed(it)
+        tracker.fetchFailed(lead.initialUrl, it)
         return null
     }
     val doc = parseHtmlDocument(fetch.text, fetch.servedUrl).toDataOrNull(this::logProblem)
-    tracker.fetched(fetchMode, fetch, doc)
+    tracker.fetched(lead.initialUrl, fetchMode, fetch, doc)
     if (doc == null) return null
     return FetchDocument(lead, origin, fetch.servedUrl.normalize(), doc, fetch.fetchedAt)
 }
 
 /** The schema of [document] that its kind of [lead] wants, with a problem logged and recorded on [tracker]. */
-context(tracker: PageTracker)
+context(tracker: ParseTracker)
 private suspend fun Crawler.provideCrawl(
     lead: Lead,
     document: FetchDocument,
@@ -103,45 +99,57 @@ private suspend fun Crawler.provideCrawl(
     val outcome = when (lead) {
         is EventFeed -> provideFeedSchema(lead, document)
         is EventPage -> providePageSchema(lead, document)
+        is LocationLead -> provideLocationSchema(lead, document)
     }
 
     if (outcome is Problem) {
         logProblem(outcome)
-        tracker.schemaFailed(outcome)
+        tracker.schemaFailed(lead.initialUrl, outcome)
     }
 
     return outcome
 }
 
 /**
- * The schema of the feed [document], stored for its origin or asked of the LM with the instructions for [feed], its
+ * The schema of the feed [document], stored for its origin or asked of the LM with the instructions for [lead], its
  * requests recorded on [tracker].
  */
-context(tracker: PageTracker)
+context(tracker: ParseTracker)
 internal suspend fun Crawler.provideFeedSchema(
-    feed: EventFeed,
+    lead: EventFeed,
     document: FetchDocument,
 ): Outcome<EventFeedSchema> = mediator.feedSchema(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
-    timeZoneId = feed.timeZoneId,
-    instructions = SchemaParserText.feedSelectorsInstructions(feed),
-    observer = tracker,
+    timeZoneId = lead.timeZoneId,
+    instructions = SchemaParserText.feedSelectorsInstructions(lead),
+    observer = tracker.page(lead.initialUrl),
 )
 
 /**
  * The schema of the event page [document], stored for its origin or asked of the LM, its requests recorded on
  * [tracker] and its structured data logged.
  */
-context(tracker: PageTracker)
+context(tracker: ParseTracker)
 internal suspend fun Crawler.providePageSchema(
-    page: EventPage,
+    lead: EventPage,
     document: FetchDocument,
 ): Outcome<EventPageSchema> = mediator.pageSchema(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
-    timeZoneId = page.feed.timeZoneId,
-    observer = tracker,
+    timeZoneId = lead.feed.timeZoneId,
+    observer = tracker.page(lead.initialUrl),
+)
+
+context(tracker: ParseTracker)
+internal suspend fun Crawler.provideLocationSchema(
+    lead: LocationLead,
+    document: FetchDocument,
+): Outcome<LocationSchema> = mediator.locationSchema(
+    url = document.servedUrl,
+    doc = document.doc,
+    origin = document.origin,
+    observer = tracker.page(lead.initialUrl),
 )

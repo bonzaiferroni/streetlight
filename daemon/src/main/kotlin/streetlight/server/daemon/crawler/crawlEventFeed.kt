@@ -1,6 +1,7 @@
 package streetlight.server.daemon.crawler
 
-import streetlight.model.data.RawEvent
+import streetlight.model.data.ParseProperty
+import streetlight.model.data.PropertyMap
 import kampfire.model.normalize
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.toDataOrNull
@@ -25,12 +26,12 @@ context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, selectorSchema: SelectorSchema?) {
     if (document == null) return
     val schema = selectorSchema as? EventFeedSchema ?: return
-    val elements = findEventElements(document, schema, tracker.feed) ?: return
+    val elements = findEventElements(lead, document, schema) ?: return
     val feedUrls = setOf(lead.initialUrl, document.servedUrl)
     elements.forEach { element ->
         val feedEvent = parseFeedEvent(element, schema)
 
-        val pageUrl = feedEvent.url ?: return@forEach deliverEvent(lead, feedEvent, null, tracker)
+        val pageUrl = feedEvent[ParseProperty.Url]?.toUrl() ?: return@forEach deliverEvent(lead, feedEvent, null, tracker)
         if (pageUrl in feedUrls) return@forEach deliverEvent(lead, feedEvent, null, tracker)
         tracker.linkFound()
         if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, feedEvent, null, tracker)
@@ -41,29 +42,31 @@ suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, se
             tracker.pageBenched(pageUrl)
             return@forEach deliverEvent(lead, feedEvent, null, tracker)
         }
-        crawlLead(EventPage(pageUrl, lead, feedEvent))
+        crawl(EventPage(pageUrl, lead, feedEvent))
     }
 }
 
-/** The event elements of the feed [document] found by [schema], recorded on [tracker], or null when there are none. */
-private fun Crawler.findEventElements(document: FetchDocument, schema: EventFeedSchema, tracker: PageTracker): List<Element>? {
-    val elements = schema.event?.let { document.doc.body().tryQuery(it).toDataOrNull(this::logProblem) }
-    tracker.collect(elements.orEmpty())
+/** The event elements of the [feed]'s [document] found by [schema], recorded on its page, or null when there are none. */
+context(tracker: ParseTracker)
+private fun Crawler.findEventElements(feed: EventFeed, document: FetchDocument, schema: EventFeedSchema): List<Element>? {
+    val elements = schema.event?.let { document.doc.tryQuery(it).toDataOrNull(this::logProblem) }
+    tracker.collect(feed.initialUrl, elements.orEmpty())
     if (elements.isNullOrEmpty()) {
-        tracker.noEvents(SchemaType.EventFeed)
+        tracker.noEvents(feed.initialUrl, SchemaType.EventFeed)
         return null
     }
-    tracker.read(SchemaType.EventFeed)
+    tracker.read(feed.initialUrl, SchemaType.EventFeed)
     return elements
 }
 
-private fun parseFeedEvent(element: Element, schema: EventFeedSchema) = RawEvent(
-    title = element.queryElement(schema.title).plainText(),
-    url = element.queryElement(schema.link).absoluteUrl("href")?.toUrl()?.normalize(),
-    image = element.queryElement(schema.image).absoluteUrl("src"),
-    descriptionHtml = element.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
-    cost = element.queryElement(schema.cost).plainText(),
-    date = element.dateText(schema.date, schema.month, schema.day),
-    startTime = element.queryElement(schema.time).plainText(),
-    location = element.queryElement(schema.eventLocation).plainText(),
-)
+/** The properties of the event in [element] of a feed, read by [schema]. */
+private fun parseFeedEvent(element: Element, schema: EventFeedSchema): PropertyMap = listOf(
+    ParseProperty.Name to element.queryElement(schema.title).plainText(),
+    ParseProperty.Url to element.queryElement(schema.link).absoluteUrl("href")?.toUrl()?.normalize()?.value,
+    ParseProperty.Image to element.queryElement(schema.image).absoluteUrl("src"),
+    ParseProperty.Description to element.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
+    ParseProperty.Cost to element.queryElement(schema.cost).plainText(),
+    ParseProperty.Date to element.dateText(schema.date, schema.month, schema.day),
+    ParseProperty.StartTime to element.queryElement(schema.time).plainText(),
+    ParseProperty.Location to element.queryElement(schema.eventLocation).plainText(),
+).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
