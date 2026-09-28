@@ -88,7 +88,8 @@ A request to the LM asks for one shape at a time. A follow-up request asks a nar
 1. The schemas stored for the page's origin, in the `parser` table, are tried first. The first feed schema whose `event` selector matches is used, and of the page schemas whose title passes, the one with the longest description.
 2. Otherwise the LM is asked for the whole schema with `EventFeedSchemaRequest` or `EventPageSchemaRequest`, and the answer is validated.
 3. When the start of the events does not parse, the LM is asked the time follow-up with `EventTimeSchemaRequest`: the month, the day and the start time, each alone.
-4. The result is stored for the origin, under its fetch mode, and returned. A page the LM finds incomplete marks its origin for scripting.
+4. When a new page schema has no description, the LM is asked the description follow-up with `EventDescriptionSchemaRequest`, and its answer is kept only when the page reads as plausible prose through it.
+5. The result is stored for the origin, under its fetch mode, and returned. A page the LM finds incomplete marks its origin for scripting.
 
 The request types are what the LM sees, and `EventFeedSchema` and `EventPageSchema` are what is stored. A stored schema holds what every request found, so a field such as `month` is never part of the first request.
 

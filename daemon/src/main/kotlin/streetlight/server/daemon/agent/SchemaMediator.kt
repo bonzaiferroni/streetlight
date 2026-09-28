@@ -118,7 +118,8 @@ class SchemaMediator(
         val validated = schema.validate(body)
         observer?.schemaCreated(schema, validated)
         val valid = validated.toDataOr { return SchemaProblem.Invalid }
-        val refined = refinePageStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
+        val started = refinePageStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
+        val refined = refinePageDescription(url, doc, started, observer)
         dao.parser.create(origin.originId, refined, origin.fetchMode)
         return Ok(refined)
     }
@@ -147,6 +148,29 @@ class SchemaMediator(
                 ?: schema.time,
         )
         return refined.takeIf { it.startsParse(events, zone) } ?: schema
+    }
+
+    /**
+     * The page [schema] with its event's description, asked of the LM when it has none, kept only when the page reads
+     * as prose through it.
+     */
+    private suspend fun refinePageDescription(
+        url: Url,
+        doc: Document,
+        schema: EventPageSchema,
+        observer: SchemaObserver?,
+    ): EventPageSchema {
+        if (schema.description != null) return schema
+
+        observer?.requested(descriptionRequest)
+        val request = client.readHtml<EventDescriptionSchemaRequest>(
+            url, doc, SchemaParserText.EventPageDescriptionInstructions, retryCount, observer,
+        ).toDataOrNull() ?: return schema
+
+        val description = request.description.selectorOrNull()
+            ?.takeIf { doc.body().queryElement(it) { element -> element.isPlausibleProse() } != null }
+            ?: return schema
+        return schema.copy(description = description)
     }
 
     /** The page [schema] with the parts of its event's start, asked of the LM when the start does not already parse. */
@@ -246,6 +270,7 @@ private fun timeZoneOf(id: String?): TimeZone = id?.let { runCatching { TimeZone
 
 private const val schemaRequest = "schema"
 private const val timeRequest = "time"
+private const val descriptionRequest = "description"
 private const val sampleSize = 10
 private const val maxDayTextLength = 24
 private val plausibleSpan = 400.days

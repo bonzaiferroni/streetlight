@@ -31,6 +31,7 @@ suspend fun Crawler.crawlEventPage(
             pageTracker.read(SchemaType.EventPage)
             val pageEvent = parsePageEvent(schema, document.doc, document.servedUrl)
             log.debug { "Parsed ${document.servedUrl}: description ${pageEvent.descriptionHtml?.length ?: 0} chars, cost ${pageEvent.cost}" }
+            if (pageEvent.descriptionHtml == null) pageTracker.partial("The page had no description")
             deliverEvent(lead.feed, lead.feedEvent, pageEvent, tracker)
         }
     }

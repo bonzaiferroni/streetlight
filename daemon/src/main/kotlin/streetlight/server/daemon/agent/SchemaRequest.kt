@@ -72,6 +72,12 @@ data class EventTimeSchemaRequest(
     val startTime: String? = null,
 )
 
+/** The selector asked of the LM for the prose that describes a page's event. */
+@Serializable
+data class EventDescriptionSchemaRequest(
+    val description: String? = null,
+)
+
 /** This selector, or `null` when the LM wrote a null as text, such as "null" or "none". */
 fun String?.selectorOrNull(): String? = this?.takeUnless { it.trim().lowercase() in nullWords }
 

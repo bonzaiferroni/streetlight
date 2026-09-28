@@ -98,6 +98,22 @@ When the page holds no element for a part, the value of that part is null.
 $SelectorReminder
 """
 
+    val EventPageDescriptionInstructions = """
+Read the HTML above. It is the page of a single event. Your role is to find the element that holds the description
+of this page's event: prose, in sentences, about what the event is.
+
+* description: An element whose text content describes this event. It may contain a variety of elements, such as
+    paragraphs, and its text content should evaluate to the whole description.
+
+Only this page's event is wanted. Text about the venue, its membership, sign-in or newsletter forms, other events,
+navigation, or the page's footer is not the description of this event.
+
+The selector is queried against the document body and is expected to return a single element.
+When the page holds no description of its event, the value is null.
+
+$SelectorReminder
+"""
+
     /** The kinds of gathering that count as an event. */
     val EventDefinition = """
 An event can be any kind of gathering: a concert, a class or workshop, a lecture, a market, a meetup,

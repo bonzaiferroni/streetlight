@@ -101,6 +101,10 @@ The catalog holds older entries that do not follow this. Do not undertake a clea
 
 Confirm a version before raising it. An unverified bump is reported, not made.
 
+## Bounty
+
+A bounty list names its items by the file they change. A file with more than one change lists each as a subitem beneath it. Documentation takes a single item, however many documents it touches.
+
 ## Scope
 
 Do the task given. When work uncovers a second thing worth doing, report it and wait, rather than widening the change.
