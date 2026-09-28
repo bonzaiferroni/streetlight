@@ -67,6 +67,11 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     /** Records the page at [url] read with a schema of [type] that found no events to build. */
     fun noEvents(url: Url, type: SchemaType) = page(url).noEvents(type)
 
+    /** Records the page at [url] as read from the structured data it declares, without the LM. */
+    fun readStructured(url: Url) {
+        page(url).notes.add("Read from its JSON-LD")
+    }
+
     /** Records the page at [url] read in full with a schema of [type], clearing its origin's schema strikes. */
     fun read(url: Url, type: SchemaType) {
         page(url).read(type)

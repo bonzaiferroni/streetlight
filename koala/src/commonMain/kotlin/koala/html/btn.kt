@@ -77,6 +77,7 @@ fun FlowContent.btn(
         }
 
     navigation(
+        href = href,
         mod = modify(ButtonStyle.Class, mod),
         flair = flair,
         id = id,

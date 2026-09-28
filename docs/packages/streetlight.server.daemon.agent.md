@@ -124,6 +124,8 @@ A schema's `date` selector is kept only when, for at least half of the elements 
 
 An `LmSchema` is a class the LM is asked to fill. A `SelectorSchema` is one that holds selectors, stored and reused across reads of an origin; a page read only once is better read directly, the LM filling its values. `LocationSchema` holds a location's details read directly by `SchemaMediator.readLocation`, which asks with `LocationInstructions`, wraps the answer in `ContentParse` so an incomplete page promotes its origin to scripting, and stores nothing. Its phone and email are read only from the location's own homepage, where publishing them makes them public.
 
+`StructuredData.kt` reads schema.org JSON-LD into `LdEvent` and `LdPlace` and turns them into an `EventSchema` or `LocationSchema` without the LM. Objects are found at any depth, `@graph` included. A place is an object with a name and an address object that is not an event's location. A start's time is the local time the page states, its offset ignored; an end is kept only on the start's date. A price is kept only in dollars or with no currency. A plain description becomes html paragraphs, a blank line between each and a line break within; one already holding html is kept as it is. An event's performers are read into `LdEvent` though the model does not yet hold them.
+
 `LocationSelectorSchema` reads a location's homepage by selector toward a `LocationEdit`: its name, description, whole address as one block, phone, email, hours, the link to its events page, an image, and the list of its social links. `SchemaMediator.locationSchema` finds it the way it finds a page's schema; the crawler does not use it while locations are read directly.
 
 ## Field Queries
@@ -132,6 +134,6 @@ A selector is queried against the whole document, head included, and is expected
 
 - A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
 - Matches with no text, image or meta content are skipped, since the LM reads html with empty elements trimmed.
-- A meta element is read by its `content` attribute in place of its text, its html and any url attribute, so a head value such as `og:site_name` or `og:image` can fill a field. Every read of an element, parsing and checks alike, goes through `plainText`, `innerHtml` or `absoluteUrl`, which apply this.
+- A meta element is read by its `content` attribute in place of its text, its html and any url attribute, so a head value such as `og:site_name` or `og:image` can fill a field. A `time` element's text is read from its `datetime` attribute when it has one. Every read of an element, parsing and checks alike, goes through `plainText`, `innerHtml` or `absoluteUrl`, which apply this.
 - Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
-- An event page's image is the image its meta declares for outside links (`og:image`, `twitter:image`, `image`) when it has one, and the schema's `image` otherwise. A feed's image comes from its schema alone.
+- An event page's image is the image its JSON-LD declares for its event, then the image its meta declares for outside links (`og:image`, `twitter:image`, `image`), then the schema's `image`. A feed's image comes from its schema alone.

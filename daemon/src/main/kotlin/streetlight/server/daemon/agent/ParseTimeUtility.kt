@@ -51,21 +51,22 @@ fun parseInstantFromFormat(text: String): Instant? {
         ?.let { Instant.fromEpochSeconds(it) }
 }
 
+private val leadingIsoDate = Regex("""\d{4}-\d{2}-\d{2}""")
+
 private val EPOCH_SECONDS_RANGE = 946_684_800L..4_102_444_800L  // 2000-01-01 to 2100-01-01
 
 fun parseLocalDateTimeFromFormat(text: String): LocalDateTime? {
     val trimmed = text.trim()
     if (trimmed.isEmpty()) return null
 
-    runCatching { LocalDateTime.parse(trimmed) }
+    runCatching { LocalDateTime.parse(trimmed.replaceFirst(' ', 'T')) }
         .getOrNull()
         ?.let { return it }
 
-    runCatching { LocalDate.parse(trimmed) }
-        .getOrNull()
-        ?.let { return it.atTime(0, 0) }
-
-    return null
+    val isoDate = leadingIsoDate.matchAt(trimmed, 0) ?: return null
+    val date = runCatching { LocalDate.parse(isoDate.value) }.getOrNull() ?: return null
+    val time = parseTimeFromText(trimmed.substring(isoDate.range.last + 1)) ?: return null
+    return date.atTime(time)
 }
 
 private val monthNames = mapOf(

@@ -54,9 +54,10 @@ private suspend fun Crawler.deliverLocation(
 ) {
     tracker.recordFound()
     val name = location[ParseProperty.Name] ?: declaredName ?: return tracker.recordUnnamed(location)
-    val where = listOfNotNull(location[ParseProperty.Address], area).joinToString(", ").ifEmpty { null }
-    val (place, placedName) = spawner.findPlace(lead.initialUrl, name, declaredName, where) ?: run {
-        val searched = listOfNotNull(name, declaredName, where).distinct().joinToString(" / ")
+    val address = location[ParseProperty.Address]
+    spawner.readStoredAt(name, address)?.let { return tracker.recordDuplicate(location, name, it.label) }
+    val (place, placedName) = spawner.findPlace(lead.initialUrl, name, declaredName, address, area) ?: run {
+        val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
         return tracker.recordFailed(location, name, Problem("No place on the map matches $searched"))
     }
     dao.location.readLocationByMapId(place.osmId)?.let { return tracker.recordDuplicate(location, placedName, it.label) }

@@ -58,4 +58,14 @@ class ParseTimeUtilityTest {
     fun `a month with no day has no date`() {
         assertNull(parseDateFromText("Mar | 8:00 PM 11:00 PM", now, zone))
     }
+
+    @Test
+    fun `an ISO date and time joined by a space are read together`() {
+        assertEquals(LocalDateTime(2026, 10, 16, 20, 0), parseLocalDateTime("2026-10-16 20:00", zone.id))
+    }
+
+    @Test
+    fun `an ISO date with no time has no start`() {
+        assertNull(parseLocalDateTime("2026-10-16", zone.id), "a start needs a time")
+    }
 }

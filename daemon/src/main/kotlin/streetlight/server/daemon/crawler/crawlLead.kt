@@ -2,6 +2,13 @@ package streetlight.server.daemon.crawler
 
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Outcome
+import streetlight.server.daemon.agent.toLocationSchema
+import streetlight.server.daemon.agent.toEventSchema
+import streetlight.server.daemon.agent.readLdPlaces
+import streetlight.server.daemon.agent.readLdEvents
+import streetlight.server.daemon.agent.pageLdEvent
+import streetlight.server.daemon.agent.isCalledOff
+import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.normalize
@@ -41,7 +48,7 @@ class FetchDocument(
  * Reads [lead]: fetches it in its origin's fetch mode, finds the schema its kind of page wants, fetches it again with
  * scripting when its content is incomplete, and hands the document and schema to the service for its kind. A lead
  * that is not due, since its last read stopped it or it was already fetched this run, or that cannot be fetched or
- * given a schema, passes on only what it already carries.
+ * given a schema, passes on only what it already carries. A lead whose page calls its event off passes on nothing.
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawl(lead: Lead) {
@@ -62,6 +69,7 @@ suspend fun Crawler.crawl(lead: Lead) {
     }
 
     document?.let { dao.registerFetch(it) }
+    if (schemaOutcome == SchemaProblem.CalledOff) return
 
     val schema = schemaOutcome?.toDataOrNull()
     when(lead) {
@@ -99,7 +107,7 @@ private suspend fun Crawler.provideCrawl(
     lead: Lead,
     document: FetchDocument,
 ): Outcome<LmSchema> {
-    val outcome = when (lead) {
+    val outcome = readStructured(lead, document) ?: when (lead) {
         is EventFeed -> provideFeedSchema(lead, document)
         is EventPage -> providePageSchema(lead, document)
         is LocationLead -> provideLocationSchema(lead, document)
@@ -173,3 +181,26 @@ internal suspend fun Crawler.provideEventSchema(
     origin = document.origin,
     observer = tracker.page(lead.initialUrl),
 )
+
+/**
+ * The schema of [lead] read from the JSON-LD of its [document] without the LM, when the page declares what one needs,
+ * or null: an event page's or event lead's own event, with a start and, for a lead, a place; a location lead's one
+ * place. An event the page declares cancelled or postponed is [SchemaProblem.CalledOff].
+ */
+context(tracker: ParseTracker)
+private fun readStructured(lead: Lead, document: FetchDocument): Outcome<LmSchema>? {
+    val schema: LmSchema = when (lead) {
+        is EventFeed -> return null
+        is EventPage, is EventLead -> {
+            val event = pageLdEvent(document.doc.readLdEvents(), document.servedUrl) ?: return null
+            if (event.isCalledOff) return SchemaProblem.CalledOff
+            event.toEventSchema()
+                ?.takeIf { lead is EventPage || it.locationName != null || it.locationAddress != null }
+                ?: return null
+        }
+        is LocationLead -> document.doc.readLdPlaces().distinctBy { it.name }.singleOrNull()?.toLocationSchema()
+            ?: return null
+    }
+    tracker.readStructured(lead.initialUrl)
+    return Ok(schema)
+}

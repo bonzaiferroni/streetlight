@@ -12,6 +12,7 @@ import streetlight.model.data.LocationSelectorSchema
 object SchemaProblem {
     val Invalid = Problem("The LM schema failed validation against its page.")
     val Incomplete = Problem("The page content is incomplete without scripting.")
+    val CalledOff = Problem("The page declares its event cancelled or postponed.")
 }
 
 /** Validates a feed schema from the LM against the [document] it was made from, setting any other selector that fails to null. */

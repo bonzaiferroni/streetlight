@@ -24,6 +24,12 @@ enum class ParseProperty {
     Hours,
     EventsLink,
     SocialLinks,
+
+    /** The description a page declares for other platforms to show, as html, kept whole. */
+    DeclaredDescription,
+
+    /** The url where tickets for an event are sold. */
+    Tickets,
 }
 
 /** The text of each property read from a page, not yet parsed. */

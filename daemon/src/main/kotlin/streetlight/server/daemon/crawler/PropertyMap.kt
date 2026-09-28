@@ -1,20 +1,25 @@
 package streetlight.server.daemon.crawler
 
 import kampfire.api.toMarkdown
+import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.Image
 import streetlight.model.data.EventEdit
+import streetlight.model.data.EventSchema
+import streetlight.model.data.ExtraLink
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseMode
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
 import streetlight.server.daemon.agent.parseLocalDateTime
 import streetlight.server.daemon.agent.parseTimeFromText
+import streetlight.server.daemon.agent.readPageLdEvent
+import streetlight.server.utils.readImageUrl
 
 /**
  * The edit of the event these properties describe, its start read in [timeZoneId], its description shortened unless
- * [parseMode] is [ParseMode.Full].
+ * [parseMode] is [ParseMode.Full] or the page declared it.
  */
 fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: ParseTracker): EventEdit {
     val url = this[ParseProperty.Url]?.toUrl()
@@ -25,7 +30,8 @@ fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: 
         .joinToString(" ")
         .takeIf { it.isNotBlank() }
 
-    val description = this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.let { full ->
+    val declared = this[ParseProperty.DeclaredDescription]?.let { htmlToMarkdown(it) }?.value
+    val description = declared ?: this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.let { full ->
         if (parseMode == ParseMode.Full) return@let full
         shortenDescription(full, url).also { if (it != full) tracker.descriptionShortened() }
     }
@@ -40,7 +46,9 @@ fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: 
         title = this[ParseProperty.Name]?.withoutBracketNotes()?.takeIf { it.isNotBlank() },
         description = body?.toMarkdown(),
         contact = this[ParseProperty.Contact], // td: gather phone/email/social media separately
+        cost = this[ParseProperty.Cost]?.let { costOf(it) },
         website = url,
+        links = this[ParseProperty.Tickets]?.let { listOf(ExtraLink("Tickets", it.toUrl())) },
         image = this[ParseProperty.Image]?.let { Image(it.toUrl()) },
         date = start?.date,
         startTime = start?.time,
@@ -59,3 +67,40 @@ fun PropertyMap.toLocationEdit(website: Url?): LocationEdit = LocationEdit(
     eventsUrl = this[ParseProperty.EventsLink]?.toUrl(),
     image = this[ParseProperty.Image]?.let { Image(it.toUrl()) },
 )
+
+/**
+ * The cost in dollars that [text] states: 0 when it says the event is free and names no price, or its lowest dollar
+ * amount, such as 15 for "$15 advance / $20 door". Null when it states neither.
+ */
+internal fun costOf(text: String): Float? {
+    val prices = dollarAmount.findAll(text).mapNotNull { it.groupValues[1].toFloatOrNull() }.toList()
+    prices.minOrNull()?.let { return it }
+    return 0f.takeIf { freeWord.containsMatchIn(text) }
+}
+
+private val dollarAmount = Regex("""\$\s?(\d+(?:\.\d{1,2})?)""")
+private val freeWord = Regex("""\bfree\b""", RegexOption.IGNORE_CASE)
+
+/**
+ * The properties of the event this schema read from the page [doc] at [url], with the image, description and ticket
+ * link the page's JSON-LD declares. Its declared image comes first, then its meta image.
+ */
+fun EventSchema.toPropertyMap(doc: Document, url: Url): PropertyMap {
+    val declared = doc.readPageLdEvent(url)
+    return listOf(
+        ParseProperty.Name to name,
+        ParseProperty.Url to url.value,
+        ParseProperty.Image to (declared?.image ?: doc.readImageUrl()?.value ?: imageUrl),
+        ParseProperty.Description to description,
+        ParseProperty.DeclaredDescription to declared?.description,
+        ParseProperty.Tickets to declared?.tickets,
+        ParseProperty.Contact to contact,
+        ParseProperty.Cost to cost,
+        ParseProperty.AgeMin to ageMin,
+        ParseProperty.Date to date,
+        ParseProperty.StartTime to startTime,
+        ParseProperty.EndTime to endTime,
+        ParseProperty.Location to locationName,
+        ParseProperty.Address to locationAddress,
+    ).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
+}

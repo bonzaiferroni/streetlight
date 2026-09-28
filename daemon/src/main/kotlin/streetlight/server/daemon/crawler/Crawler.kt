@@ -41,7 +41,7 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
                 checkLead(lead)
             }
             log.info { "completed lead check" }
-            delay(10.minutes)
+            delay(1.minutes)
         }
     }
 

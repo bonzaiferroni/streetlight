@@ -25,9 +25,12 @@ private fun Element.metaContent(): String? = attr("content").takeIf { tagName() 
 
 private fun Element.isImage() = tagName() == "img" && (hasAttr("src") || hasAttr("srcset"))
 
-/** The text of this element, or its content when it is a meta element. */
+/** The text of this element: its content when it is a meta element, its datetime when it is a time element that has one. */
 fun Element?.plainText(): String? =
-    this?.let { it.metaContent() ?: it.text() }?.normalizeSpace()?.takeIf { it.isNotEmpty() }
+    this?.let { it.metaContent() ?: it.timeValue() ?: it.text() }?.normalizeSpace()?.takeIf { it.isNotEmpty() }
+
+/** The machine-readable date or time of this element when it is a time element that declares one, or null. */
+private fun Element.timeValue(): String? = attr("datetime").takeIf { tagName() == "time" && it.isNotBlank() }
 
 /** The inner html of this element, or its content when it is a meta element. */
 fun Element?.innerHtml(): String? =
