@@ -27,16 +27,16 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
     configBody("Location", "Scout", "viewLocationScout.kt") {
         configHeading(galaxy?.name ?: "Location", doneRoute)
 
-        stageBlock(model.stageField) { stage ->
+        stageBlock(model.stageState) { stage ->
             when (stage) {
-                LocationScoutStage.Search -> locationFinder(model)
+                LocationScoutStage.Search -> locationFinder(model, star.isAdmin)
                 LocationScoutStage.Edit -> column {
                     locationEditFormBody(editor)
                     formSubmit(
                         label = "Next",
                         onClick = model::review,
                         messenger = editor.messages,
-                        back = MenuAction("Back") { model.stageField.set(LocationScoutStage.Search) }
+                        back = MenuAction("Back") { model.stageState.set(LocationScoutStage.Search) }
                     )
                 }
                 LocationScoutStage.Review -> column {
@@ -50,7 +50,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
                             label = "Post",
                             onClick = model::post,
                             messenger = editor.messages,
-                            back = MenuAction("Edit") { model.stageField.set(LocationScoutStage.Edit) }
+                            back = MenuAction("Edit") { model.stageState.set(LocationScoutStage.Edit) }
                         )
                     }
                 }

@@ -11,7 +11,10 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kampfire.model.toUrl
 import streetlight.model.data.Galaxy
+import streetlight.model.data.LeadType
+import streetlight.model.data.StarLead
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationEntity
@@ -46,13 +49,14 @@ class LocationScout(
     val mapMessage = MessageStore()
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
+    val leadMessage = MessageStore()
     private var osmJob: Job? = null
     val postModeState = siteConfig.locationPostModeState
 
-    val queryField = state.mutableTapOf({ it.query }) { copy(query = it) }
-    val cityField = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
+    val queryState = state.mutableTapOf({ it.query }) { copy(query = it) }
+    val cityState = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
+    val leadState = state.mutableTapOf({ it.lead }) { copy(lead = it) }
     val locationsState = state.tapOf { it.locations }
-    val postField = state.tapOf { it.postId }
     val locationState = state.mutableTapOf({ it.location }) { copy(location = it) }
     val selectionState = state.mutableTapOf<LocationScoutState, LocationEntity?>({ it.location ?: it.edit }) {
         when (it) {
@@ -62,7 +66,7 @@ class LocationScout(
         }
     }
 
-    val stageField = state.mutableTapOf({
+    val stageState = state.mutableTapOf({
         if (it.location == null && it.edit == null) LocationScoutStage.Search
         else if (it.location != null || it.isReviewing) LocationScoutStage.Review
         else LocationScoutStage.Edit
@@ -81,7 +85,7 @@ class LocationScout(
     }
 
     init {
-        stageField.reactIn(scope) {
+        stageState.reactIn(scope) {
             if (it == LocationScoutStage.Search) {
                 editor.reset()
             }
@@ -171,6 +175,21 @@ class LocationScout(
         }
     }
 
+    /** Sends the lead typed in as a location's homepage for the crawler to read. */
+    fun submitLead() {
+        val text = stateNow.lead.trim()
+        if (text.isBlank()) return
+        val url = text.toUrl().takeIf { it.isAbsolute } ?: run {
+            leadMessage.deliver("That isn't a web address.")
+            return
+        }
+        scope.launch {
+            api.star.createLead(StarLead(url, LeadType.Location, galaxy?.galaxyId)).toDataOr(leadMessage) { return@launch }
+            leadMessage.deliverSuccess("Checking it out.")
+            state.set { copy(lead = "") }
+        }
+    }
+
     /** Returns to the search with nothing chosen, cancelling an OpenStreetMap search. */
     fun reset() {
         osmJob?.cancel()
@@ -178,6 +197,7 @@ class LocationScout(
         queryMessage.clear()
         mapMessage.clear()
         postMessage.clear()
+        leadMessage.clear()
     }
 }
 
@@ -190,6 +210,7 @@ data class LocationScoutState(
     val isReviewing: Boolean = false,
     val postId: PostId? = null,
     val isPosted: Boolean = false,
+    val lead: String = "",
 )
 
 enum class LocationScoutStage: Labeled {

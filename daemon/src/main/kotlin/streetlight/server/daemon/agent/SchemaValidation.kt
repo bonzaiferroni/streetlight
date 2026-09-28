@@ -29,7 +29,7 @@ fun EventFeedSchema.validate(document: Element): Outcome<EventFeedSchema> {
         image = image.keepIfMatches(events),
         cost = cost.keepIfMatches(events),
         description = description.keepIfMatches(events),
-        date = date.keepIfMatches(events),
+        date = date?.takeIf { readsAsDate(events, it) },
         time = time.keepIfMatches(events),
     ))
 }
@@ -44,7 +44,7 @@ fun EventPageSchema.validate(document: Element): Outcome<EventPageSchema> {
         address = address.keepIfMatches(page),
         image = image.keepIfMatches(page),
         cost = cost.keepIfMatches(page),
-        date = date.keepIfMatches(page),
+        date = date?.takeIf { readsAsDate(page, it) },
         startTime = startTime.keepIfMatches(page),
         endTime = endTime.keepIfMatches(page),
         ageMin = ageMin.keepIfMatches(page),
@@ -70,6 +70,17 @@ fun LocationSchema.validate(document: Element): Outcome<LocationSchema> {
         socialLinks = socialLinks.keepIfMatches(page) { it.hasAttr("href") },
     ))
 }
+
+/**
+ * Whether the text [selector] reads from these elements is, for at least half of them, a date: a month name, or
+ * numbers such as 9/26.
+ */
+private fun readsAsDate(elements: List<Element>, selector: String): Boolean {
+    val texts = elements.mapNotNull { it.queryElement(selector)?.text() }
+    return texts.isNotEmpty() && texts.count { it.hasMonthName() || numericDate.containsMatchIn(it) } * 2 >= texts.size
+}
+
+private val numericDate = Regex("""\b\d{1,4}[/.-]\d{1,2}([/.-]\d{1,4})?\b""")
 
 private fun String?.keepIfMatches(elements: List<Element>, test: (Element) -> Boolean = { true }): String? =
     this?.takeIf { selector -> elements.any { it.queryElement(selector, test) != null } }

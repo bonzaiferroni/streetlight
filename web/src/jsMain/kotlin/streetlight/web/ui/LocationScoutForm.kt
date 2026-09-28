@@ -8,20 +8,20 @@ import koala.html.spacer
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.model.LocationScout
 
-fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder") {
+fun ViewScope.locationFinder(model: LocationScout, isAdmin: Boolean) = formCard("Location Finder") {
     setStyle(Css.ColorScheme.of(ThemeColor.Location.cssValue))
 
     formRow {
         formSection("search") {
             row {
-                textField(model.queryField, "search", Flex1)
-                textField(model.cityField, "city", Width(24))
+                textField(model.queryState, "search", Flex1)
+                textField(model.cityState, "city", Width(24))
             }
             selectorContainer {
                 selectorBlock(items = model.locationsState, selection = model.selectionState) { location ->
                     searchItem(location.name, location.address, location.city)
                 }
-                flowBlock(model.queryField.tapOf { it.isEmpty() }) { isQueryEmpty ->
+                flowBlock(model.queryState.tapOf { it.isEmpty() }) { isQueryEmpty ->
                     when (isQueryEmpty) {
                         true -> centeredText("Start typing in the search box to see locations")
                         false -> column(AlignItemsCenter) {
@@ -29,6 +29,14 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
                             formSubmit("Search OSM", model::queryOSM, model.queryMessage, Primary)
                         }
                     }
+                }
+            }
+        }
+        if (isAdmin) {
+            formSection("or send us their website") {
+                row(AlignItemsStart) {
+                    textField(model.leadState, "homepage url", Flex1)
+                    formSubmit("Submit", model::submitLead, model.leadMessage)
                 }
             }
         }
@@ -40,7 +48,7 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
             button("What is Here?", model::whatIsHere)
             spacer(Flex1)
             messageBox(model.mapMessage)
-            textField(model.queryField)
+            textField(model.queryState)
             button("Create", onClick = model::createLocation, Accent)
         }
     }

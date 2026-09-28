@@ -116,6 +116,8 @@ A schema from the LM is validated against the page it was made from before it is
 
 A failed schema is not stored, and the crawler records the page as `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
 
+A schema's `date` selector is kept only when, for at least half of the elements it reads, its text is a date: a month name, or numbers such as 9/26. A selector that reads a title or a day alone is dropped, which leaves the start to the time follow-up.
+
 ## Location Schema
 
 A `LocationSchema` reads a location's homepage toward a `LocationEdit`: its name, description, whole address as one block, phone, email, hours, the link to its events page, an image, and the list of its social links. The phone and email are read only from the location's own homepage, where publishing them states they are public.

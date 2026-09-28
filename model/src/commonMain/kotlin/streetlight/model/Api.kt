@@ -217,6 +217,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             val username = usernameParamOf("username")
         }
         object ReadProfileConfig: GetEndpoint<ProfileConfig>(this)
+        object CreateLead: PostEndpoint<StarLead, LeadId>(this)
     }
 
     object AccountAction: ApiNode(this) {

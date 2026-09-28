@@ -38,6 +38,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     private val checkedAt = Clock.System.now()
     private val pages = mutableMapOf(leadUrl to PageTracker(leadUrl, this))
     private val strikes = mutableMapOf<OriginId, Int>()
+    private val schemaStrikes = mutableMapOf<OriginId, Int>()
     private val records = RecordReport()
     private var links = 0
     private var failure: String? = null
@@ -54,14 +55,23 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     /** Records the fetch of the page at [url] as failed with [problem], striking its origin on a 4xx or 5xx. */
     fun fetchFailed(url: Url, problem: Problem) = page(url).fetchFailed(problem)
 
-    /** Records that no schema could be found for the page at [url], for [problem]. */
-    fun schemaFailed(url: Url, problem: Problem) = page(url).schemaFailed(problem)
+    /**
+     * Records that no schema could be found for the page at [url], for [problem], striking its origin when the schema
+     * was invalid.
+     */
+    fun schemaFailed(url: Url, problem: Problem) {
+        page(url).schemaFailed(problem)
+        if (problem == SchemaProblem.Invalid) url.toOriginId()?.let { schemaStrikes[it] = (schemaStrikes[it] ?: 0) + 1 }
+    }
 
     /** Records the page at [url] read with a schema of [type] that found no events to build. */
     fun noEvents(url: Url, type: SchemaType) = page(url).noEvents(type)
 
-    /** Records the page at [url] read in full with a schema of [type]. */
-    fun read(url: Url, type: SchemaType) = page(url).read(type)
+    /** Records the page at [url] read in full with a schema of [type], clearing its origin's schema strikes. */
+    fun read(url: Url, type: SchemaType) {
+        page(url).read(type)
+        url.toOriginId()?.let { schemaStrikes.remove(it) }
+    }
 
     /** Records the page at [url] as not fetched, for the reason given by [state]. */
     fun skipped(url: Url, state: PageState, note: String? = null) = page(url).skipped(state, note)
@@ -86,8 +96,14 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     /** Records the event page at [url] as not read, since the check reached its limit of pages. */
     fun pageDeferred(url: Url) = skipped(url, PageState.Deferred)
 
-    /** Whether the page at [url] may be fetched, false once its origin is benched. */
-    fun shouldFetch(url: Url): Boolean = (url.toOriginId()?.let { strikes[it] } ?: 0) < maxStrikes
+    /**
+     * Whether the page at [url] may be fetched, false once its origin is benched: by consecutive failed fetches, or by
+     * consecutive schemas that failed validation.
+     */
+    fun shouldFetch(url: Url): Boolean {
+        val originId = url.toOriginId() ?: return true
+        return (strikes[originId] ?: 0) < maxStrikes && (schemaStrikes[originId] ?: 0) < maxStrikes
+    }
 
     fun linkFound() {
         links++

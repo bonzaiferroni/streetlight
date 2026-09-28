@@ -34,6 +34,7 @@ interface StarClient {
     suspend fun updateProfile(edit: StarEdit): Outcome<Star>
     suspend fun editStarLink(edit: EditLightRequest): Outcome<Boolean>
     suspend fun readProfileDesign(): Outcome<ProfileConfig>
+    suspend fun createLead(lead: StarLead): Outcome<LeadId>
 }
 
 class BrowserStarClient(private val client: FetchClient): StarClient {
@@ -47,4 +48,5 @@ class BrowserStarClient(private val client: FetchClient): StarClient {
     override suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
     override suspend fun editStarLink(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
     override suspend fun readProfileDesign() = client.getApi(Api.Stars.ReadProfileConfig)
+    override suspend fun createLead(lead: StarLead) = client.postApi(Api.Stars.CreateLead, lead)
 }

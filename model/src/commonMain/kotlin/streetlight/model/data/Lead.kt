@@ -32,6 +32,14 @@ data class LocationLead(
     override val leadType get() = LeadType.Location
 }
 
+/** A lead a user submits: a [url] of a [leadType], from the galaxy [galaxyId] when there is one. */
+@Serializable
+data class StarLead(
+    val url: Url,
+    val leadType: LeadType,
+    val galaxyId: GalaxyId? = null,
+)
+
 /** The kind of a lead, stored by ordinal. */
 enum class LeadType {
     EventPage,

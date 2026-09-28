@@ -46,7 +46,7 @@ class EventScout(
     val queryEventsFlow = state.tapOf { it.queryEvents }
 
     init {
-        locationScout.stageField.reactIn(scope) { locationStage ->
+        locationScout.stageState.reactIn(scope) { locationStage ->
             val stage = when (locationStage) {
                 LocationScoutStage.Search -> EventScoutStage.LocationSearch
                 LocationScoutStage.Edit -> EventScoutStage.LocationEdit

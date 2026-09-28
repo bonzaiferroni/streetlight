@@ -41,7 +41,7 @@ A record the user edits has a `FooEdit` DTO holding the fields a form sends, and
 
 ## Leads
 
-`Lead` is the sealed type of a page the crawler is given to read, with what is known of it before it is fetched: an `EventFeed`, an `EventPage` found in a feed, carrying the `PropertyMap` the feed showed, or a `LocationLead`, a url submitted as a location's page. Its `LeadType` names its kind and is stored by ordinal. `EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. It is distinct from the paged feeds below.
+`Lead` is the sealed type of a page the crawler is given to read, with what is known of it before it is fetched: an `EventFeed`, an `EventPage` found in a feed, carrying the `PropertyMap` the feed showed, or a `LocationLead`, a url submitted as a location's page. Its `LeadType` names its kind and is stored by ordinal. A user submits a lead as a `StarLead` through `Api.Stars.CreateLead`; for now only an admin may, and only a location lead. `EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. It is distinct from the paged feeds below.
 
 A `PropertyMap` holds the text of each `ParseProperty` read from a page, not yet parsed. A property is shared by every kind of record that has the same meaning, such as `Name` for an event's title and a location's name.
 

@@ -39,7 +39,7 @@ Each feed is an `EventFeed`, read by the same `crawlEventFeed`. Its url arrives 
 
 Each source asks the LM with its own feed instructions. A `GeneralEventFeed` is a row of the `lead` table added by hand, with the publisher's permission, and is always read `Partial`.
 
-The `lead` table holds every lead that is not a location's own feed, each with its `LeadType`. `toLead` builds the lead its type names. A general event feed is read again each day; a `LocationLead`, a url submitted as a location's page, is read once. A lead of the front desk is named in its tracker and report by its feed's name, or by its type and url.
+The `lead` table holds every lead that is not a location's own feed, each with its `LeadType`, and for a lead a user submitted, the star who sent it and the galaxy it came from, for the follow-up. `toLead` builds the lead its type names. A general event feed is read again each day; a `LocationLead`, a url submitted as a location's page, is read once. A lead of the front desk is named in its tracker and report by its feed's name, or by its type and url.
 
 ## General Model
 
@@ -134,7 +134,7 @@ Map searches are bounded to the 200 km around the feed's point, paced to one a s
 
 ## Strikes
 
-`ParseTracker` counts consecutive strikes per origin within one check. A 4xx or 5xx response to a page adds a strike to the origin of the url requested, and a successful fetch from that origin clears them. At 3 strikes, `shouldFetch` is false, and the feed reader records the origin's remaining event pages as `benched`, whose events keep the data read from the feed.
+`ParseTracker` counts consecutive strikes per origin within one check. A 4xx or 5xx response to a page adds a strike to the origin of the url requested, and a successful fetch from that origin clears them. A page schema that fails validation adds a schema strike to its origin, and a page read in full clears them, so the LM is not asked again and again for an origin whose pages it cannot read. At 3 strikes of either kind, `shouldFetch` is false, and `crawlEventFeed` records the origin's remaining event pages as `benched`, whose events keep the data read from the feed.
 
 ## Workflows
 

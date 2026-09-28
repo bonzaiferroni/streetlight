@@ -33,4 +33,5 @@ class TestStarClient: StarClient {
     override suspend fun updateProfile(edit: StarEdit): Outcome<Star> = TODO()
     override suspend fun editStarLink(edit: EditLightRequest): Outcome<Boolean> = TODO()
     override suspend fun readProfileDesign(): Outcome<ProfileConfig> = TODO()
+    override suspend fun createLead(lead: StarLead): Outcome<LeadId> = TODO()
 }
