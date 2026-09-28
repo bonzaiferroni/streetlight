@@ -3,6 +3,7 @@ package streetlight.server.daemon.crawler
 import kampfire.model.Url
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import streetlight.model.data.EventPage
+import streetlight.model.data.EventLead
 import streetlight.model.data.Lead
 import streetlight.model.data.LocationLead
 import streetlight.model.data.GeneralEventFeed
@@ -32,6 +33,7 @@ suspend fun DaoFacade.updateCheckedAt(lead: Lead) {
         is LocationEventFeed -> location.updateCheckedAt(lead.location.locationId)
         is GeneralEventFeed -> this.lead.updateCheckedAt(lead.leadId)
         is LocationLead -> this.lead.updateCheckedAt(lead.leadId)
+        is EventLead -> this.lead.updateCheckedAt(lead.leadId)
         is EventPage -> { }
     }
 }

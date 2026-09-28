@@ -50,8 +50,8 @@ fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: 
     )
 }
 
-/** The edit of the location these properties describe, its homepage at [website]. */
-fun PropertyMap.toLocationEdit(website: Url): LocationEdit = LocationEdit(
+/** The edit of the location these properties describe, its homepage at [website] when known. */
+fun PropertyMap.toLocationEdit(website: Url?): LocationEdit = LocationEdit(
     name = this[ParseProperty.Name]?.takeIf { it.isNotBlank() },
     description = this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.toMarkdown(),
     address = this[ParseProperty.Address],

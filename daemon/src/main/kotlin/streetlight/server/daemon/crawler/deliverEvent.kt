@@ -8,7 +8,9 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import streetlight.model.data.EventEdit
 import streetlight.model.data.EventFeed
+import streetlight.model.data.Location
 import streetlight.server.daemon.agent.parseLocalDateTime
 import streetlight.server.routes.createEvent
 import kotlin.time.Clock
@@ -25,9 +27,15 @@ suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageE
     val feedStart = feedEdit.startsAt ?: return tracker.eventUnparsed(event)
     if (feedStart < Clock.System.now()) return tracker.eventPast()
     val location = spawner.locate(event, feed, tracker) ?: return tracker.eventUnlocated(event, title)
-    val edit = feedEdit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
-    val startsAt = edit.startsAt ?: return
-    val zone = edit.timeZone ?: return
+    createEventAt(event, feedEdit, location, tracker)
+}
+
+/** Creates the [event] edited as [edit] at [location], unless an event there the same day already has its title. */
+internal suspend fun Crawler.createEventAt(event: PropertyMap, edit: EventEdit, location: Location, tracker: ParseTracker) {
+    val title = edit.title ?: return
+    val located = edit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
+    val startsAt = located.startsAt ?: return
+    val zone = located.timeZone ?: return
     val day = startsAt.toLocalDateTime(zone).date
     val sameDay = dao.event.readEventsBetween(
         locationId = location.locationId,
@@ -35,8 +43,8 @@ suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageE
         until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
     )
     sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.recordDuplicate(event, title, it.title) }
-    val created = server.createEvent(null, edit, isImageRequired = false).toDataOr { return tracker.recordFailed(event, title, it) }
-    if (edit.image != null && created.image == null) tracker.imageFailed(event, title)
+    val created = server.createEvent(null, located, isImageRequired = false).toDataOr { return tracker.recordFailed(event, title, it) }
+    if (located.image != null && created.image == null) tracker.imageFailed(event, title)
     tracker.recordCreated()
 }
 

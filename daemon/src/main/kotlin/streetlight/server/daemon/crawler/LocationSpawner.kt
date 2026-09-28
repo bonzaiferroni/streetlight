@@ -3,6 +3,11 @@ package streetlight.server.daemon.crawler
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
 import kampfire.model.Distance
+import streetlight.model.data.toOriginId
+import streetlight.model.data.mergeLeft
+import kampfire.model.toUrl
+import kampfire.model.Outcome
+import kampfire.model.Url
 import kampfire.model.GeoPoint
 import kampfire.model.GeoRect
 import kampfire.model.distanceTo
@@ -68,6 +73,62 @@ class LocationSpawner(
         }
         tracker.locationSpawned(event, text, created)
         return created
+    }
+
+    /**
+     * The place on the map named [name], or [declaredName] when [name] finds none, searched with [where], and the name
+     * that found it: of the places whose name matches, one whose website shares the origin of [website], when known,
+     * first, then the closest name.
+     */
+    suspend fun findPlace(
+        website: Url?,
+        name: String,
+        declaredName: String?,
+        where: String?,
+    ): Pair<OSMLocation, String>? {
+        findPlace(website, name, where)?.let { return it to name }
+        val declared = declaredName?.takeIf { it != name } ?: return null
+        return findPlace(website, declared, where)?.let { it to declared }
+    }
+
+    /** The location already stored for [place]: by its map id, or by a matching name at its point. */
+    suspend fun readStored(place: OSMLocation, name: String): Location? =
+        dao.location.readLocationByMapId(place.osmId)
+            ?: dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
+                .firstOrNull { location -> location.name?.fuzzyMatches(name) == true }
+
+    /**
+     * The location created for [place] from the page's [details], its [website] preferred to the map's, with the map
+     * filling what the page lacks and giving the address.
+     */
+    suspend fun createFrom(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
+        val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit())
+        if (!edit.validity.isValid || edit.state == null) return Problem("The place on the map lacks what a location needs")
+        return try {
+            server.createLocation(null, edit)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Problem("${e::class.simpleName}: ${e.message}")
+        }
+    }
+
+    /** The place on the map named [name], searched with [where], preferring one on the origin of [website]. */
+    private suspend fun findPlace(website: Url?, name: String, where: String?): OSMLocation? {
+        val text = listOfNotNull(name, where).joinToString(", ")
+        delay(searchedAt + searchInterval - Clock.System.now())
+        searchedAt = Clock.System.now()
+        val hits = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
+        val origin = website?.toOriginId()
+        return hits
+            .filter { it.placeRank >= minPlaceRank && it.name?.fuzzyMatches(name) == true }
+            .maxWithOrNull(compareBy<OSMLocation>(
+                { place ->
+                    val placeWebsite = place.extraTags?.website ?: place.extraTags?.contactWebsite
+                    origin != null && placeWebsite?.toUrl()?.toOriginId() == origin
+                },
+                { place -> place.name?.similarity(name) ?: 0.0 },
+            ))
     }
 
     /** The map places named [text] within [searchRadius] of [point], or null when the search failed. */

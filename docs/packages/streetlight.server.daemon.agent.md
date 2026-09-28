@@ -79,6 +79,8 @@ A run is collapsed only in the prompt copy. Selectors run against the full page,
 
 A feed's instructions differ by its kind of `EventFeed`: a location's feed asks for `feedLocation` and for an `eventLocation` when an event names a room or another venue, and a general feed asks for an `eventLocation` in every event. `feedSelectorsInstructions` picks them.
 
+A field that pages also declare in their head, such as a title, a name, a description or an image, asks for an element whose content holds it, where an element's content is its text content or a meta element's content attribute; the head is allowed, never preferred. A field found only on the page itself asks for an element in the body with text content. Fields inside a feed's event elements ask for content, so a microdata meta nested in an event can serve.
+
 A request to the LM asks for one shape at a time. A follow-up request asks a narrow question with its own instructions, such as the parts of an event's start, rather than widening the first request.
 
 ## Schema Mediator
@@ -118,11 +120,11 @@ A failed schema is not stored, and the crawler records the page as `Schema` cont
 
 A schema's `date` selector is kept only when, for at least half of the elements it reads, its text is a date: a month name, or numbers such as 9/26. A selector that reads a title or a day alone is dropped, which leaves the start to the time follow-up.
 
-## Location Schema
+## LM Schemas
 
-A `LocationSchema` reads a location's homepage toward a `LocationEdit`: its name, description, whole address as one block, phone, email, hours, the link to its events page, an image, and the list of its social links. The phone and email are read only from the location's own homepage, where publishing them states they are public.
+An `LmSchema` is a class the LM is asked to fill. A `SelectorSchema` is one that holds selectors, stored and reused across reads of an origin; a page read only once is better read directly, the LM filling its values. `LocationSchema` holds a location's details read directly by `SchemaMediator.readLocation`, which asks with `LocationInstructions`, wraps the answer in `ContentParse` so an incomplete page promotes its origin to scripting, and stores nothing. Its phone and email are read only from the location's own homepage, where publishing them makes them public.
 
-`SchemaMediator.locationSchema` finds it the way it finds a page's schema, without follow-ups. A stored schema is reused while its `name` still matches. A new one needs a `name` that matches, or it is invalid; each other field is kept when it matches, `description` as plausible prose, `eventsLink` and each of `socialLinks` with an href (on any site), and `image` with a src. A location's fields are not refused for sitting in a header or footer, where a homepage keeps them.
+`LocationSelectorSchema` reads a location's homepage by selector toward a `LocationEdit`: its name, description, whole address as one block, phone, email, hours, the link to its events page, an image, and the list of its social links. `SchemaMediator.locationSchema` finds it the way it finds a page's schema; the crawler does not use it while locations are read directly.
 
 ## Field Queries
 
@@ -130,6 +132,6 @@ A selector is queried against the whole document, head included, and is expected
 
 - A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
 - Matches with no text, image or meta content are skipped, since the LM reads html with empty elements trimmed.
-- A meta element is read by its `content` attribute in place of its text, so a head value such as `og:site_name` can fill a field.
+- A meta element is read by its `content` attribute in place of its text, its html and any url attribute, so a head value such as `og:site_name` or `og:image` can fill a field. Every read of an element, parsing and checks alike, goes through `plainText`, `innerHtml` or `absoluteUrl`, which apply this.
 - Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
 - An event page's image is the image its meta declares for outside links (`og:image`, `twitter:image`, `image`) when it has one, and the schema's `image` otherwise. A feed's image comes from its schema alone.

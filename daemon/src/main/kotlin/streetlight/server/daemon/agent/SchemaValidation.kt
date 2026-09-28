@@ -7,7 +7,7 @@ import kampfire.model.Problem
 import kampfire.model.toDataOr
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
-import streetlight.model.data.LocationSchema
+import streetlight.model.data.LocationSelectorSchema
 
 object SchemaProblem {
     val Invalid = Problem("The LM schema failed validation against its page.")
@@ -56,7 +56,7 @@ fun EventPageSchema.validate(document: Element): Outcome<EventPageSchema> {
  * Validates a location schema from the LM against the [document] it was made from, setting any other selector that
  * fails to null, wherever on the page its element sits.
  */
-fun LocationSchema.validate(document: Element): Outcome<LocationSchema> {
+fun LocationSelectorSchema.validate(document: Element): Outcome<LocationSelectorSchema> {
     if (document.queryElement(name) == null) return Problem("Name selector does not match: $name")
     val page = listOf(document)
     return Ok(copy(
@@ -66,7 +66,7 @@ fun LocationSchema.validate(document: Element): Outcome<LocationSchema> {
         email = email.keepIfMatches(page),
         hours = hours.keepIfMatches(page),
         eventsLink = eventsLink.keepIfMatches(page) { it.hasAttr("href") },
-        image = image.keepIfMatches(page) { it.hasAttr("src") },
+        image = image.keepIfMatches(page) { it.absoluteUrl("src") != null },
         socialLinks = socialLinks.keepIfMatches(page) { it.hasAttr("href") },
     ))
 }
@@ -76,7 +76,7 @@ fun LocationSchema.validate(document: Element): Outcome<LocationSchema> {
  * numbers such as 9/26.
  */
 private fun readsAsDate(elements: List<Element>, selector: String): Boolean {
-    val texts = elements.mapNotNull { it.queryElement(selector)?.text() }
+    val texts = elements.mapNotNull { it.queryElement(selector).plainText() }
     return texts.isNotEmpty() && texts.count { it.hasMonthName() || numericDate.containsMatchIn(it) } * 2 >= texts.size
 }
 

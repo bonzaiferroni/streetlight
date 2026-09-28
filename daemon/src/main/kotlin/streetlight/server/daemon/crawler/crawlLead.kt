@@ -14,11 +14,13 @@ import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPage
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.FetchMode
+import streetlight.model.data.EventLead
+import streetlight.model.data.EventSchema
 import streetlight.model.data.Lead
+import streetlight.model.data.LmSchema
 import streetlight.model.data.LocationLead
 import streetlight.model.data.LocationSchema
 import streetlight.model.data.Origin
-import streetlight.model.data.SelectorSchema
 import streetlight.model.data.toOriginId
 import streetlight.server.daemon.agent.SchemaParserText
 import kotlin.time.Instant
@@ -66,6 +68,7 @@ suspend fun Crawler.crawl(lead: Lead) {
         is EventFeed -> crawlEventFeed(lead, document, schema)
         is EventPage -> crawlEventPage(lead, document, schema)
         is LocationLead -> crawlLocationLead(lead, document, schema)
+        is EventLead -> crawlEventLead(lead, document, schema)
     }
 }
 
@@ -95,11 +98,12 @@ context(tracker: ParseTracker)
 private suspend fun Crawler.provideCrawl(
     lead: Lead,
     document: FetchDocument,
-): Outcome<SelectorSchema> {
+): Outcome<LmSchema> {
     val outcome = when (lead) {
         is EventFeed -> provideFeedSchema(lead, document)
         is EventPage -> providePageSchema(lead, document)
         is LocationLead -> provideLocationSchema(lead, document)
+        is EventLead -> provideEventSchema(lead, document)
     }
 
     if (outcome is Problem) {
@@ -143,11 +147,27 @@ internal suspend fun Crawler.providePageSchema(
     observer = tracker.page(lead.initialUrl),
 )
 
+/**
+ * The details of the location whose homepage is [document], read directly by the LM, its request recorded on
+ * [tracker].
+ */
 context(tracker: ParseTracker)
 internal suspend fun Crawler.provideLocationSchema(
     lead: LocationLead,
     document: FetchDocument,
-): Outcome<LocationSchema> = mediator.locationSchema(
+): Outcome<LocationSchema> = mediator.readLocation(
+    url = document.servedUrl,
+    doc = document.doc,
+    origin = document.origin,
+    observer = tracker.page(lead.initialUrl),
+)
+
+/** The details of the event whose page is [document], read directly by the LM, its request recorded on [tracker]. */
+context(tracker: ParseTracker)
+internal suspend fun Crawler.provideEventSchema(
+    lead: EventLead,
+    document: FetchDocument,
+): Outcome<EventSchema> = mediator.readEvent(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,

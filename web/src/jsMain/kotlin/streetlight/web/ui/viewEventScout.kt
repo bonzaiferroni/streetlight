@@ -38,7 +38,10 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
         stageBlock(model.stage, isHeadingStage = ::isHeadingStage) { stage ->
             when (stage) {
                 EventScoutStage.LocationSearch -> formBodyProto {
-                    locationFinder(locationScout, star.isAdmin)
+                    column {
+                        locationFinder(locationScout)
+                        if (star.isAdmin) leadForm(model.leadEditor)
+                    }
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)

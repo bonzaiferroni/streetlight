@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Entity
 import streetlight.model.data.Galaxy
+import streetlight.model.data.LeadType
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostId
 import streetlight.model.data.PostType
@@ -37,6 +38,7 @@ class EventScout(
     val stateNow get() = state.now
 
     val postMessage = MessageStore()
+    val leadEditor = LeadEditor(LeadType.Event, galaxy, scope, api)
     val postModeState = siteConfig.eventPostModeState
 
     val postFlow = stateFlow.dedup { it.post }

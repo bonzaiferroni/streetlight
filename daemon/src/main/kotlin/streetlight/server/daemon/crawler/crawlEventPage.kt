@@ -13,7 +13,7 @@ import streetlight.server.daemon.agent.queryElement
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.EventPage
 import streetlight.model.data.SchemaType
-import streetlight.model.data.SelectorSchema
+import streetlight.model.data.LmSchema
 import streetlight.server.utils.readImageUrl
 
 /** Delivers the event [selectorSchema] reads from the event [lead] fetched as [document], merged with what its feed showed. */
@@ -21,7 +21,7 @@ context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventPage(
     lead: EventPage,
     document: FetchDocument?,
-    selectorSchema: SelectorSchema?,
+    selectorSchema: LmSchema?,
 ) {
     val schema = selectorSchema as? EventPageSchema
     when {

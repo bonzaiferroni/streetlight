@@ -32,6 +32,17 @@ data class LocationLead(
     override val leadType get() = LeadType.Location
 }
 
+/** A url submitted as the page of one event, read to create the event, and its location when it is new. */
+@Serializable
+data class EventLead(
+    val leadId: LeadId,
+    override val initialUrl: Url,
+    val checkedAt: Instant?,
+    val createdAt: Instant,
+) : Lead {
+    override val leadType get() = LeadType.Event
+}
+
 /** A lead a user submits: a [url] of a [leadType], from the galaxy [galaxyId] when there is one. */
 @Serializable
 data class StarLead(
@@ -45,6 +56,7 @@ enum class LeadType {
     EventPage,
     EventFeed,
     Location,
+    Event,
 }
 
 @JvmInline

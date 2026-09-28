@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 /** The CSS selectors that pick the parts of a record out of a page. */
 @Serializable
-sealed interface SelectorSchema {
+sealed interface SelectorSchema : LmSchema {
     val schemaType: SchemaType
 }
 
@@ -51,7 +51,7 @@ data class EventPageSchema(
 
 /** The selectors of the homepage of a location. [socialLinks] matches a list of elements; each other selector, one. */
 @Serializable
-data class LocationSchema(
+data class LocationSelectorSchema(
     val name: String? = null,
     val description: String? = null,
     val address: String? = null,

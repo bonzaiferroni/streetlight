@@ -18,20 +18,24 @@ fun Element.queryElement(selector: String?, test: (Element) -> Boolean = { true 
 }
 
 private fun Element.hasMeaningfulContent(): Boolean =
-    text().isNotBlank() || (tagName() == "meta" && attr("content").isNotBlank()) || getAllElements().any { it.isImage() }
+    text().isNotBlank() || !metaContent().isNullOrBlank() || getAllElements().any { it.isImage() }
+
+/** The content of this element when it is a meta element, or null. */
+private fun Element.metaContent(): String? = attr("content").takeIf { tagName() == "meta" }
 
 private fun Element.isImage() = tagName() == "img" && (hasAttr("src") || hasAttr("srcset"))
 
 /** The text of this element, or its content when it is a meta element. */
 fun Element?.plainText(): String? =
-    this?.let { if (it.tagName() == "meta") it.attr("content") else it.text() }?.normalizeSpace()?.takeIf { it.isNotEmpty() }
+    this?.let { it.metaContent() ?: it.text() }?.normalizeSpace()?.takeIf { it.isNotEmpty() }
 
 /** The inner html of this element, or its content when it is a meta element. */
 fun Element?.innerHtml(): String? =
-    this?.let { if (it.tagName() == "meta") it.attr("content") else it.html() }?.takeIf { it.isNotBlank() }
+    this?.let { it.metaContent() ?: it.html() }?.takeIf { it.isNotBlank() }
 
+/** The url in [attribute] of this element, resolved against the page, or in its content when it is a meta element. */
 fun Element?.absoluteUrl(attribute: String): String? =
-    this?.absUrl(attribute)?.normalizeSpace()?.takeIf { it.isNotEmpty() }
+    this?.absUrl(if (tagName() == "meta") "content" else attribute)?.normalizeSpace()?.takeIf { it.isNotEmpty() }
 
 private val boilerplateTags = setOf("nav", "header", "footer", "aside")
 
@@ -50,7 +54,7 @@ fun Element?.isPlausibleProse(allowsChrome: Boolean = false): Boolean {
     val element = this ?: return false
     if (!allowsChrome && element.isBoilerplate()) return false
     if (element.linkDensity() > 0.5f) return false
-    val text = (if (element.tagName() == "meta") element.attr("content") else element.text()).normalizeSpace()
+    val text = (element.metaContent() ?: element.text()).normalizeSpace()
     return text.contains('.') && text.length > 64 && text.split(" ").size >= 12
 }
 

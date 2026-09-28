@@ -3,7 +3,7 @@ package streetlight.server.daemon.agent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
-import streetlight.model.data.LocationSchema
+import streetlight.model.data.LocationSelectorSchema
 
 /** The selectors asked of the LM for a page listing events. */
 @Serializable
@@ -78,7 +78,7 @@ data class LocationSchemaRequest(
     val image: String? = null,
     val socialLinks: String? = null,
 ) {
-    fun toSchema() = LocationSchema(
+    fun toSchema() = LocationSelectorSchema(
         name = name.selectorOrNull(),
         description = description.selectorOrNull(),
         address = address.selectorOrNull(),

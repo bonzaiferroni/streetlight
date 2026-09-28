@@ -158,7 +158,9 @@ A form is built from the components in `Form.kt`, each a `ViewScope` extension.
 
 Form entries go in a `formRow`. An entry that deserves the full width on a wide screen, such as a `markdownEditor`, sits in the `formCard` outside any `formRow`.
 
-Closely related fields share one `formSection`.
+Closely related fields share one `formSection`. A `formSection`'s name is short and names the field or fields it holds.
+
+A submit button sits below the content it relates to: a field and its `formSubmit` stack in a column, never side by side in a row.
 
 `formColumn` serves no clear purpose and is not used in new forms.
 

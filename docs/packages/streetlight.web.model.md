@@ -54,6 +54,10 @@ A method that reports to the user takes a `Messenger` parameter. The view decide
 
 A model editing a record holds an edit DTO in its state. On a successful send it clears the fields the sender filled and keeps the choices they made, so a second send starts from the same settings.
 
+## Submodels
+
+Functionality two models share lives in a submodel named with the suffix `Editor`, such as `EmailEditor` and `LeadEditor`. A model holds its submodel as a property, built in its own constructor, and the view reaches it through the model. The submodel holds its own state, publishes it, and makes its own API call, so the base models stay clean and the work is written once. What differs between its users, such as a `LeadEditor`'s `LeadType`, is passed through its constructor.
+
 ## Viewer Settings
 
 A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postModeState`, so its view binds to the model.

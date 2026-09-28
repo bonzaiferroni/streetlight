@@ -8,7 +8,7 @@ import koala.html.spacer
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.model.LocationScout
 
-fun ViewScope.locationFinder(model: LocationScout, isAdmin: Boolean) = formCard("Location Finder") {
+fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder") {
     setStyle(Css.ColorScheme.of(ThemeColor.Location.cssValue))
 
     formRow {
@@ -29,14 +29,6 @@ fun ViewScope.locationFinder(model: LocationScout, isAdmin: Boolean) = formCard(
                             formSubmit("Search OSM", model::queryOSM, model.queryMessage, Primary)
                         }
                     }
-                }
-            }
-        }
-        if (isAdmin) {
-            formSection("or send us their website") {
-                row(AlignItemsStart) {
-                    textField(model.leadState, "homepage url", Flex1)
-                    formSubmit("Submit", model::submitLead, model.leadMessage)
                 }
             }
         }

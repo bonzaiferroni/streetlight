@@ -127,7 +127,7 @@ fun PlaceProto.toEdit() = LocationEdit(
 )
 
 /** An edit of a new location from what was read of a page. */
-fun LocationParse.toEdit(
+fun LocationSchema.toEdit(
     locationId: LocationId? = null
 ) = LocationEdit(
     locationId = locationId,
@@ -148,7 +148,7 @@ fun LocationParse.toEdit(
 )
 
 /** The address read of a page, or `null`. */
-fun LocationParse.toAddress() = address?.let {
+fun LocationSchema.toAddress() = address?.let {
     LocationAddress(
         streetAddress = it,
         postCode = postalCode,

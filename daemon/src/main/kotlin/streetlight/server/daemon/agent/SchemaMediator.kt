@@ -12,7 +12,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
+import streetlight.model.data.EventSchema
 import streetlight.model.data.LocationSchema
+import streetlight.model.data.LocationSelectorSchema
 import streetlight.model.data.Origin
 import streetlight.model.data.SelectorSchema
 import streetlight.server.model.DaoFacade
@@ -132,9 +134,9 @@ class SchemaMediator(
         doc: Document,
         origin: Origin,
         observer: SchemaObserver? = null,
-    ): Outcome<LocationSchema> {
+    ): Outcome<LocationSelectorSchema> {
         dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
-            val schema = parser.schema as? LocationSchema ?: return@forEach
+            val schema = parser.schema as? LocationSelectorSchema ?: return@forEach
             val isSuccess = doc.queryElement(schema.name) != null
             observer?.storedSchemaTried(schema, isSuccess)
             dao.parser.updateResult(parser.parserId, isSuccess)
@@ -154,6 +156,42 @@ class SchemaMediator(
         val valid = validated.toDataOr { return SchemaProblem.Invalid }
         dao.parser.create(origin.originId, valid, origin.fetchMode)
         return Ok(valid)
+    }
+
+    /**
+     * The details of a location, read directly by the LM from its homepage [doc] at [url] on [origin], and not
+     * stored. The LM is not asked once it has reached its usage limit.
+     */
+    suspend fun readLocation(
+        url: Url,
+        doc: Document,
+        origin: Origin,
+        observer: SchemaObserver? = null,
+    ): Outcome<LocationSchema> {
+        if (isUsageLimitReached) return LMProblem.UsageLimit
+        observer?.requested(readRequest)
+        val content = client.readHtml<ContentParse<LocationSchema>>(
+            url, doc, SchemaParserText.LocationInstructions, retryCount, observer,
+        ).toDataOr { return it.alsoNoteLimit() }
+        return Ok(content.contentOr(origin) { return it })
+    }
+
+    /**
+     * The details of an event and its place, read directly by the LM from its page [doc] at [url] on [origin], and not
+     * stored. The LM is not asked once it has reached its usage limit.
+     */
+    suspend fun readEvent(
+        url: Url,
+        doc: Document,
+        origin: Origin,
+        observer: SchemaObserver? = null,
+    ): Outcome<EventSchema> {
+        if (isUsageLimitReached) return LMProblem.UsageLimit
+        observer?.requested(readRequest)
+        val content = client.readHtml<ContentParse<EventSchema>>(
+            url, doc, SchemaParserText.EventInstructions, retryCount, observer,
+        ).toDataOr { return it.alsoNoteLimit() }
+        return Ok(content.contentOr(origin) { return it })
     }
 
     /** The feed [schema] with the parts of its events' start, asked of the LM when the start does not already parse. */
@@ -252,7 +290,7 @@ fun EventPageSchema.startText(document: Element): String? =
     startText(document, date, month, day, startTime)
 
 private fun startText(element: Element, vararg selectors: String?): String? = selectors
-    .mapNotNull { selector -> element.queryElement(selector) { it.isPlausibleField() }?.text()?.trim() }
+    .mapNotNull { selector -> element.queryElement(selector) { it.isPlausibleField() }.plainText() }
     .filter { it.isNotEmpty() }
     .distinct()
     .joinToString(" ")
@@ -280,13 +318,13 @@ private fun EventPageSchema.startsParse(page: List<Element>, zone: TimeZone) =
 
 /** Whether [selector] matches in at least half of these elements, and every text it matches passes [test]. */
 private fun List<Element>.allHold(selector: String, test: (String) -> Boolean): Boolean {
-    val texts = mapNotNull { it.queryElement(selector)?.text()?.trim() }
+    val texts = mapNotNull { it.queryElement(selector).plainText() }
     return texts.size * 2 >= size && texts.isNotEmpty() && texts.all(test)
 }
 
 /** Whether [selector] yields more than one distinct text across these elements, or matches a single one. */
 private fun List<Element>.varies(selector: String): Boolean {
-    val texts = mapNotNull { it.queryElement(selector)?.text()?.trim() }
+    val texts = mapNotNull { it.queryElement(selector).plainText() }
     return texts.size < 2 || texts.distinct().size > 1
 }
 
@@ -303,6 +341,7 @@ private fun timeZoneOf(id: String?): TimeZone = id?.let { runCatching { TimeZone
 private const val schemaRequest = "schema"
 private const val timeRequest = "time"
 private const val descriptionRequest = "description"
+private const val readRequest = "read"
 private const val sampleSize = 10
 private const val maxDayTextLength = 24
 private val plausibleSpan = 400.days

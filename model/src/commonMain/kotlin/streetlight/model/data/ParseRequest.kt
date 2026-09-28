@@ -1,16 +1,7 @@
 package streetlight.model.data
 
-import kampfire.api.toMarkdown
 import kampfire.model.Url
-import kampfire.model.toUrl
-import koala.toImage
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.toInstant
 import kotlinx.serialization.Serializable
-import kotlin.time.Instant
 
 /** A request to read a record from a page. */
 @Serializable
@@ -44,19 +35,15 @@ data class MultiEventParseResponse(
     val events: List<EventEdit>? = null,
 )
 
-/** The event a language model read from a page. */
+/** The details of a location as the LM reads them from its homepage. */
 @Serializable
-data class SingleEventParse(
-    val hasContent: Boolean? = null,
-    val event: EventParse? = null,
-)
-
-/** A location as a language model read it from a page. */
-@Serializable
-data class LocationParse(
+data class LocationSchema(
     val name: String? = null,
     val description: String? = null,
     val address: String? = null,
+    val phone: String? = null,
+    val email: String? = null,
+    val hours: String? = null,
     val postalCode: String? = null,
     val city: String? = null,
     val state: String? = null,
@@ -66,58 +53,28 @@ data class LocationParse(
     val aboutUrl: String? = null,
     val menuUrl: String? = null,
     val imageUrl: String? = null,
-)
+) : LmSchema
 
-/** An event as a language model read it from a page. */
+/**
+ * The details of an event as the LM reads them from its page, with the place it happens at. Dates and times are the
+ * text our own parsers read: an ISO date and 24-hour times.
+ */
 @Serializable
-data class EventParse(
+data class EventSchema(
     val name: String? = null,
-    val startTime: LocalTime? = null,
-    val endTime: LocalTime? = null,
-    val date: LocalDate? = null,
-    val location: String? = null,
-    val address: String? = null,
-    val imageUrl: String? = null,
+    val date: String? = null,
+    val startTime: String? = null,
+    val endTime: String? = null,
     val description: String? = null,
-    val ageMin: Int? = null,
+    val imageUrl: String? = null,
+    val ageMin: String? = null,
     val cost: String? = null,
     val contact: String? = null,
     val url: String? = null,
-) {
-    val startsAt: Instant? get() = if (startTime != null && date != null) toInstant(date, startTime) else null
-
-    private fun toInstant(
-        date: LocalDate,
-        time: LocalTime,
-        timeZone: TimeZone = TimeZone.currentSystemDefault()
-    ) = date.atTime(time).toInstant(timeZone)
-}
-
-/** An edit of a new event from what was read. */
-fun EventParse.toEventEdit(
-    locationId: LocationId?
-) = EventEdit(
-    title = name ?: "",
-    locationId = locationId,
-    image = imageUrl?.toImage(),
-    description = description?.toMarkdown(),
-    ageMin = ageMin?.takeIf { it > 0 },
-    cost = floatUSDOf(cost),
-    website = url?.toUrl(),
-    startTime = startTime,
-    endTime = endTime,
-    date = date
-)
-
-private fun floatUSDOf(value: String?): Float? {
-    val value = value ?: return null
-    if (value.trim().lowercase() == "free") return 0f
-
-    val cleaned = buildString {
-        for (ch in value) {
-            if (ch.isDigit() || ch == '.') append(ch)
-        }
-    }
-
-    return cleaned.toFloatOrNull()
-}
+    val locationName: String? = null,
+    val locationAddress: String? = null,
+    val locationCity: String? = null,
+    val locationState: String? = null,
+    val locationPostalCode: String? = null,
+    val locationWebsite: String? = null,
+) : LmSchema

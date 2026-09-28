@@ -130,7 +130,13 @@ Map searches are bounded to the 200 km around the feed's point, paced to one a s
 
 ## Location Leads
 
-`crawlLocationLead` reads a `LocationLead`'s homepage into a `PropertyMap` with its `LocationSchema`: the meta image first, as for an event page, and each of `socialLinks` joined by lines. `deliverLocation` places it on OpenStreetMap with a free-form search of its name and address, and keeps the place of rank 30 whose name `fuzzyMatches` the page's, the closest first. A place already stored by its map id is a duplicate. Otherwise the location is created with no caller from the page's properties, the map filling what the page lacks and giving the address. A lead whose name, place or required fields are missing is noted as failed and not created.
+A location lead is read once, so it is read directly: the LM fills a `LocationSchema` with the location's details rather than selectors, through `SchemaMediator.readLocation`, and nothing is stored for reuse. `crawlLocationLead` turns the details into a `PropertyMap`, the page's meta image first. `deliverLocation` places it on OpenStreetMap with a free-form search of its name, address, city, state and postal code. Of the places of rank 30 whose name `fuzzyMatches`, one whose website shares the lead's origin wins first, then the closest name. When the name finds no place, the name the page declares for itself (`og:site_name`) is searched once more, and a place it finds gives the location that name. A place already stored by its map id is a duplicate. Otherwise the location is created with no caller from the page's details, the map filling what the page lacks and giving the address. A lead whose name, place or required fields are missing is noted as failed and not created.
+
+## Event Leads
+
+An event lead is read directly as well: the LM fills an `EventSchema` with the event's details, its dates as an ISO date and 24-hour times, and the details of the place it happens at, through `SchemaMediator.readEvent`. `crawlEventLead` places the event first. `LocationSpawner.findPlace` searches the map by the place's name, address, city, state and postal code, preferring a place on the origin of the website the page gives for it. A place already stored, by its map id or by a matching name at its point, is used as it is; otherwise the location is created first from the map, with the page's website preferred to the map's. The event is then created at it through `createEventAt`, the core `deliverEvent` also ends in, and is read `Partial`. An event whose place finds nothing is noted as unlocated.
+
+`LocationSpawner` holds the placing both lead kinds share: `findPlace`, `readStored` and `createFrom`.
 
 ## Strikes
 

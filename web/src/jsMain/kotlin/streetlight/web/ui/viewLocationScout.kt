@@ -29,7 +29,10 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
 
         stageBlock(model.stageState) { stage ->
             when (stage) {
-                LocationScoutStage.Search -> locationFinder(model, star.isAdmin)
+                LocationScoutStage.Search -> column {
+                    locationFinder(model)
+                    if (star.isAdmin) leadForm(model.leadEditor)
+                }
                 LocationScoutStage.Edit -> column {
                     locationEditFormBody(editor)
                     formSubmit(

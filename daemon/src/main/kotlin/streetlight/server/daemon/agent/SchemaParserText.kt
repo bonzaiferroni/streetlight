@@ -39,8 +39,6 @@ A selector from group 4 or 5 is acceptable when it is the only option, but do no
 over an option from an earlier group merely because it is shorter.
 
 Given those considerations, the selector values you provide should be the minimal selector necessary to return the desired elements.
-
-The selectors should not specifically target elements within the head.
 """
 
     /** Closes each selector instruction. */
@@ -62,13 +60,14 @@ Read the HTML above. It lists events, and each event is an element matched by th
 The date and start time of an event may be split across several elements inside the event element. Your role
 is to find the element that holds each part of the start of an event.
 
-* month: An element whose text content is the month of the event, such as "Sep" or "September".
-* day: An element whose text content is the day of the month of the event, a number from 1 to 31, such as "26"
+* month: An element whose content is the month of the event, such as "Sep" or "September".
+* day: An element whose content is the day of the month of the event, a number from 1 to 31, such as "26"
     or "26th". It is never a year, a price, a count, or part of an address or phone number.
-* startTime: An element whose text content is the time the event begins, such as "7:30 PM". When a page lists
+* startTime: An element whose content is the time the event begins, such as "7:30 PM". When a page lists
     both the time the doors open and the time the show begins, it is the time the show begins. It is the time
     the doors open only when that is the only time listed.
 
+An element's content is its text content, or the content attribute of a meta element.
 Each selector is queried against each event element, and must not repeat the event selector as a prefix.
 When one element holds more than one part, such as "Sep 26", give its selector for each part it holds.
 When an event element holds no element for a part, the value of that part is null.
@@ -81,12 +80,12 @@ $SelectorReminder
 Read the HTML above. It is the page of a single event. The date and start time of the event may be split across
 several elements. Your role is to find the element that holds each part of the start of this page's event.
 
-* month: An element whose text content is the month of the event, such as "Sep" or "September".
-* day: An element whose text content is the day of the month of the event, a number from 1 to 31, such as "26"
-    or "26th". It is never a year, a price, a count, or part of an address or phone number.
-* startTime: An element whose text content is the time the event begins, such as "7:30 PM". When a page lists
-    both the time the doors open and the time the show begins, it is the time the show begins. It is the time
-    the doors open only when that is the only time listed.
+* month: An element in the body whose text content is the month of the event, such as "Sep" or "September".
+* day: An element in the body whose text content is the day of the month of the event, a number from 1 to 31,
+    such as "26" or "26th". It is never a year, a price, a count, or part of an address or phone number.
+* startTime: An element in the body whose text content is the time the event begins, such as "7:30 PM". When a
+    page lists both the time the doors open and the time the show begins, it is the time the show begins. It is
+    the time the doors open only when that is the only time listed.
 
 Only this page's event is wanted. The page may mention other dates and times, such as other events, a venue's
 hours, or dates in its description. Those are not the start of this event.
@@ -102,8 +101,10 @@ $SelectorReminder
 Read the HTML above. It is the page of a single event. Your role is to find the element that holds the description
 of this page's event: prose, in sentences, about what the event is.
 
-* description: An element whose text content describes this event. It may contain a variety of elements, such as
-    paragraphs, and its text content should evaluate to the whole description.
+* description: An element whose content describes this event. It may contain a variety of elements, such as
+    paragraphs, and its content should evaluate to the whole description.
+
+An element's content is its text content, or the content attribute of a meta element.
 
 Only this page's event is wanted. Text about the venue, its membership, sign-in or newsletter forms, other events,
 navigation, or the page's footer is not the description of this event.
@@ -125,13 +126,13 @@ a festival, a game.
         listing = "events at a particular location",
         locationGuidance = """
 This feed belongs to a particular location or venue. Assign a selector to `feedLocation` that will return an element
-within the document with textContent that matches the location name. When the event element names the place where the
+whose content matches the location name. When the event element names the place where the
 event takes place, such as a room, a stage, or another venue, assign that selector to `eventLocation`.""".trim(),
         feedLocationFields = """
-* feedLocation: This selector should return a single element within the document with text content that matches the name of the location associated with the feed.
-* address: This selector should return a single element within the document with text content that matches the address of the location associated with the feed.""".trim(),
+* feedLocation: This selector should return a single element whose content matches the name of the location associated with the feed.
+* address: This selector should return a single element in the body with text content that matches the address of the location associated with the feed.""".trim(),
         eventLocationField = """
-* eventLocation: This selector should return an element with text content naming the place where the event takes place, if it is present within the event element.""".trim(),
+* eventLocation: This selector should return an element whose content names the place where the event takes place, if it is present within the event element.""".trim(),
     )
 
     /** The instructions for the selectors of a feed listing local events at many locations. */
@@ -139,13 +140,13 @@ event takes place, such as a room, a stage, or another venue, assign that select
         listing = "local events at many locations, like you might find on a social media page or news website",
         locationGuidance = """
 This feed is not associated with a single location, so `feedLocation` and `address` are null. Each event takes place
-at its own location: assign a selector to `eventLocation` that will return an element within the event element with
-textContent naming the place where the event takes place.""".trim(),
+at its own location: assign a selector to `eventLocation` that will return an element within the event element whose
+content names the place where the event takes place.""".trim(),
         feedLocationFields = """
 * feedLocation: This should be null.
 * address: This should be null.""".trim(),
         eventLocationField = """
-* eventLocation: This selector should return an element with text content naming the place where the event takes place.
+* eventLocation: This selector should return an element whose content names the place where the event takes place.
     - Every event in this feed takes place at its own location, so this is expected within each event element.""".trim(),
     )
 
@@ -170,7 +171,8 @@ query the document.
 
 $SelectorPreferenceInstructions
 
-The whole document will be queried for the event selector, and this is expected to return a list of elements.
+The whole document will be queried for the event selector, and this is expected to return a list of elements in the
+body. An element's content is its text content, or the content attribute of a meta element.
 
 Event-specific selectors are queried against each event element and must not repeat the event
 selector as a prefix. If the event selector is ".event-item" and the title sits in
@@ -185,7 +187,7 @@ If any of the selectors must target the event element itself, as you might expec
 event content, define it as a single dot: "." This applies only to selectors queried within event elements.
  
 Sometimes the target information will be contained within a set of child elements, that is fine but the
-textContent should evaluate to the desired information where relevant.
+content should evaluate to the desired information where relevant.
 
 Each value should be a valid CSS query, except in the case of a single dot that indicates the event element.
 
@@ -195,24 +197,24 @@ For the content object, determine the following:
 
 ### Selectors that will be queried within the document
 $feedLocationFields
-* event: This selector will be used to return a list of elements that each contain details about a specific event.
+* event: This selector will be used to return a list of elements in the body that each contain details about a specific event.
 
 ### Selectors that will be queried within event elements
 $eventLocationField
-* title: This selector should return an element with text content that reflects the event title.
+* title: This selector should return an element whose content reflects the event title.
 * link: This selector should return an anchor element with a href attribute with an absolute or relative address to an event page.
     - The event page is the event's own page on this site. Never choose a link to a ticket vendor or any other outside site,
       even when it is the only link that names the event.
     - It may be the same as title.
-    - Unlike the other elements, the information in the href attribute will be used and not the text content.
+    - Unlike the other elements, the information in the href attribute will be used and not the content.
 * image: This selector should return an img element with a src attribute referencing an image for the event.
-    - Like link, the src attribute will be used and not the text content.
-* cost: This selector should return an element with text content about the cost of an event or whether it is free.
+    - Like link, the src attribute will be used and not the content.
+* cost: This selector should return an element whose content is the cost of an event or whether it is free.
     - This element should display a dollar amount or some other currency. If this information is not present, this value should be null.
-* description: This selector should return an element with text content that describes the event.
+* description: This selector should return an element whose content describes the event.
     - It may contain a variety of elements.
-* date: This selector should return an element with text content about the date of the event.
-* time: This selector should return an element with text content about the time of the event. 
+* date: This selector should return an element whose content is the date of the event.
+* time: This selector should return an element whose content is the time of the event. 
     - It may be the same as date.
 
 $SelectorReminder
@@ -229,35 +231,36 @@ query the document.
 $SelectorPreferenceInstructions
 
 Each selector will be queried against the whole document and is expected to return a single element.
-The document includes its head. A meta element there may be selected when it holds the information, such as
-meta[property='og:site_name']; the content attribute of a meta element is read in place of its text content.
+The document includes its head, and a meta element there may be selected when it holds the information.
+An element's content is its text content, or the content attribute of a meta element.
 If the content of the document does not contain the information that the selector is intended to query,
 leave its value null. A null value in that case is correct and expected. 
  
 Sometimes the target information will be contained within a set of child elements, that is fine but the
-textContent should evaluate to the desired information where relevant.
+content should evaluate to the desired information where relevant.
 
 Each value should be a valid CSS query.
 
 $contentObjectInstructions
 
 For the content object, determine the following:
-* title: This selector should return an element with text content that reflects the event title.
-* location: This selector should return an element with text content that matches the name of the location.
-* address: This selector should return an element with text content that reflects the address of the location.
-* image: This selector should return an img element with a src attribute referencing an image for the event.
-    - Unlike the other elements, the information in the src attribute will be used and not the text content.
-* cost: This selector should return an element with text content about the cost of an event or whether it is free.
+* title: This selector should return an element whose content is the event title.
+* location: This selector should return an element in the body with text content that matches the name of the location.
+* address: This selector should return an element in the body with text content that reflects the address of the location.
+* image: This selector should return an img element with a src attribute referencing an image for the event, or a meta
+    element whose content is the address of one.
+    - Unlike the other elements, the image's address will be used and not its text content.
+* cost: This selector should return an element in the body with text content about the cost of an event or whether it is free.
     - This element should display a dollar amount or some other currency. If this information is not present, this value should be null.
-* description: This selector should return an element with text content that describes the event.
+* description: This selector should return an element whose content describes the event.
     - It may contain a variety of elements.
-* date: This selector should return an element with text content about the date of the event.
-* startTime: This selector should return an element with text content about the time the event begins.
+* date: This selector should return an element in the body with text content about the date of the event.
+* startTime: This selector should return an element in the body with text content about the time the event begins.
     - It may be the same as date.
-* endTime: This selector should return an element with text content about the time the event ends.
+* endTime: This selector should return an element in the body with text content about the time the event ends.
     - Only provide this if it is different from startTime.
-* ageMin: This selector should return an element with text content about the minimum age required to attend the event.
-* contact: This selector should return an element with text content providing an email address, phone number,
+* ageMin: This selector should return an element in the body with text content about the minimum age required to attend the event.
+* contact: This selector should return an element in the body with text content providing an email address, phone number,
     or social media link offered for the express purpose of contacting someone about the event.
 
 $SelectorReminder
@@ -274,40 +277,94 @@ $SelectorPreferenceInstructions
 
 Each selector will be queried against the whole document. The socialLinks selector is expected to return a list of
 elements; each other selector is expected to return a single element.
-The document includes its head. A meta element there may be selected when it holds the information, such as
-meta[property='og:site_name']; the content attribute of a meta element is read in place of its text content.
+The document includes its head, and a meta element there may be selected when it holds the information.
+An element's content is its text content, or the content attribute of a meta element.
 If the content of the document does not contain the information that the selector is intended to query,
 leave its value null. A null value in that case is correct and expected.
 
 Sometimes the target information will be contained within a set of child elements, that is fine but the
-textContent should evaluate to the desired information where relevant.
+content should evaluate to the desired information where relevant.
 
 Each value should be a valid CSS query.
 
 $contentObjectInstructions
 
 For the content object, determine the following:
-* name: This selector should return an element with text content that is the name of the location.
-* description: This selector should return an element with text content that describes the location: prose, in
-    sentences, about what the location is.
-* address: This selector should return a single element whose text content is the location's whole address, from
-    the street through the postal code, often found in the page's footer.
-* phone: This selector should return an element with text content that is the location's phone number.
-* email: This selector should return an element with text content that is the location's email address, or an
-    anchor whose href begins with "mailto:".
-* hours: This selector should return an element with text content that gives the location's opening hours.
-* eventsLink: This selector should return an anchor element whose href leads to the location's own page of upcoming
+* name: This selector should return an element whose content is the name of the location, and nothing else.
+* description: This selector should return an element whose content describes the location: prose, in sentences,
+    about what the location is.
+* address: This selector should return a single element in the body whose text content is the location's whole
+    address, from the street through the postal code, often found in the page's footer.
+* phone: This selector should return an element in the body with text content that is the location's phone number.
+* email: This selector should return an element in the body with text content that is the location's email address,
+    or an anchor whose href begins with "mailto:".
+* hours: This selector should return an element in the body with text content that gives the location's opening hours.
+* eventsLink: This selector should return an anchor element in the body whose href leads to the location's own page of upcoming
     events, such as a calendar or a list of shows.
     - Unlike the other elements, the information in the href attribute will be used and not the text content.
 * image: This selector should return an img element with a src attribute referencing an image of the location, such
-    as its logo or a photo of the venue.
-    - Like eventsLink, the src attribute will be used and not the text content.
-* socialLinks: This selector should return the list of anchor elements linking to the location's own profiles on
+    as its logo or a photo of the venue, or a meta element whose content is the address of one.
+    - Like eventsLink, the image's address will be used and not its text content.
+* socialLinks: This selector should return the list of anchor elements in the body linking to the location's own profiles on
     social media, such as Instagram or Facebook.
     - Like eventsLink, the href attribute of each will be used.
 
 Only this location's details are wanted. Details of another venue, a ticket vendor, or the site's builder are not.
 
 $SelectorReminder
+"""
+
+    /** Asks for the details of a location read directly from its homepage. */
+    val LocationInstructions = """
+Read the HTML above. We believe it is the homepage of a venue or location that hosts events.
+
+$contentObjectInstructions
+
+For the content object, determine the following:
+* name: name of the location, should be normal casing and appropriately capitalized
+* description: description of the location
+* address: house or building number and street name of the location
+* postalCode: postal code of the location
+* city: city of the location
+* state: state of the location, two letter abbreviation if relevant (e.g. CO)
+* country: country of the location
+* phone: phone number of the location
+* email: email address of the location
+* hours: opening hours of the location, as the page states them
+* url: home page for the location
+* eventsUrl: web address for more information about upcoming events at the location, like a calendar
+* aboutUrl: web address for more information about the location
+* menuUrl: web address for a list of food/drink items available at the location
+* imageUrl: featured image of the location. If the source is the home page for the location, look for a meta tag
+    with og:image or twitter:image properties.
+"""
+
+    /** Asks for the details of one event read directly from its page, with the place it happens at. */
+    val EventInstructions = """
+Read the HTML above. We believe it is the page of a single event.
+
+$EventDefinition
+$contentObjectInstructions
+
+For the content object, determine the following:
+* name: event name or title, should be normal casing and appropriately capitalized
+* date: date of the event as an ISO local date [YYYY-MM-DD]
+* startTime: time of day the event begins as a 24-hour value [HH:MM]. When the page lists both the time the doors
+    open and the time the show begins, it is the time the show begins.
+* endTime: time the event ends as a 24-hour value [HH:MM], only when it is given and different from startTime
+* description: details given about the event, formatted with markdown, paragraphs preserved
+* imageUrl: the featured image for the event, as a full url. Look for a meta tag with og:image or twitter:image.
+* ageMin: the minimum age for attendees, as the page states it
+* cost: the lowest entry fee or ticket price for the event, or Free when there is no cost
+* contact: any name or contact information given for the event
+* url: the url for more information about the event, as a full url
+* locationName: the name of the venue or place where the event happens
+* locationAddress: the house or building number and street name of that place
+* locationCity: the city of that place
+* locationState: the state of that place, two letter abbreviation if relevant (e.g. CO)
+* locationPostalCode: the postal code of that place
+* locationWebsite: the website of that place, as a full url, when the page gives one
+
+Only this page's event is wanted. The page may mention other events; those are not this event.
 """
 }

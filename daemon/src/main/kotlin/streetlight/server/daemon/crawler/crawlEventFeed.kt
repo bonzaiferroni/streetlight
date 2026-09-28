@@ -16,14 +16,14 @@ import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventFeed
 import streetlight.model.data.EventPage
 import streetlight.model.data.SchemaType
-import streetlight.model.data.SelectorSchema
+import streetlight.model.data.LmSchema
 
 /**
  * Delivers the events [selectorSchema] finds in the [lead] fetched as [document], each merged with its event page when it
  * links to one worth reading.
  */
 context(tracker: ParseTracker)
-suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, selectorSchema: SelectorSchema?) {
+suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, selectorSchema: LmSchema?) {
     if (document == null) return
     val schema = selectorSchema as? EventFeedSchema ?: return
     val elements = findEventElements(lead, document, schema) ?: return
