@@ -1,5 +1,6 @@
 package streetlight.server.daemon.agent
 
+import com.fleeksoft.ksoup.internal.StringUtil
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.Ok
 import kampfire.model.Problem
@@ -35,6 +36,10 @@ private fun Element.timeValue(): String? = attr("datetime").takeIf { tagName() =
 /** The inner html of this element, or its content when it is a meta element. */
 fun Element?.innerHtml(): String? =
     this?.let { it.metaContent() ?: it.html() }?.takeIf { it.isNotBlank() }
+
+/** The url [href] resolved against this element's page, or `null` when it cannot be resolved. */
+fun Element.resolveUrl(href: String): String? =
+    StringUtil.resolve(baseUri(), href.normalizeSpace()).takeIf { it.isNotEmpty() }
 
 /** The url in [attribute] of this element, resolved against the page, or in its content when it is a meta element. */
 fun Element?.absoluteUrl(attribute: String): String? =

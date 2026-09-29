@@ -9,8 +9,8 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import streetlight.model.data.EventSchema
-import streetlight.model.data.LocationSchema
+import streetlight.model.data.ParseProperty
+import streetlight.model.data.PropertyMap
 
 /**
  * An event as a page declares it in its JSON-LD, in schema.org's terms. Its [performers] are read, ready for when the
@@ -77,48 +77,38 @@ fun Document.readPageLdEvent(pageUrl: Url): LdEvent? = pageLdEvent(readLdEvents(
 val LdEvent.isCalledOff get() = status?.substringAfterLast('/') in calledOffStatuses
 
 /**
- * This event as an [EventSchema], when it has what an event needs: a name, and a start with its time. Its time is
- * the local time the page states, whatever offset it carries.
+ * The values this event declares, each under its [ParseProperty], to lay over what the page was read for. Its start is
+ * the local time the page states, whatever offset it carries, and its end only on the start's date. Its description
+ * is a [ParseProperty.DeclaredDescription].
  */
-fun LdEvent.toEventSchema(): EventSchema? {
-    val name = name ?: return null
-    val (date, startTime) = splitDateTime(startDate ?: return null)
-    startTime ?: return null
+fun LdEvent.toPropertyMap(): PropertyMap {
+    val (date, startTime) = startDate?.let { splitDateTime(it) } ?: (null to null)
     val (endDate, endTime) = endDate?.let { splitDateTime(it) } ?: (null to null)
-    return EventSchema(
-        name = name,
-        date = date,
-        startTime = startTime,
-        endTime = endTime?.takeIf { endDate == date },
-        description = description,
-        imageUrl = image,
-        cost = price?.let { if (it.toFloatOrNull() == 0f) "Free" else "$$it" }?.takeIf { currency == null || currency == "USD" },
-        url = url,
-        locationName = place?.name,
-        locationAddress = place?.street,
-        locationCity = place?.locality,
-        locationState = place?.region,
-        locationPostalCode = place?.postalCode,
-        locationWebsite = place?.url,
-    )
+    return listOf(
+        ParseProperty.Name to name,
+        ParseProperty.Date to date,
+        ParseProperty.StartTime to startTime,
+        ParseProperty.EndTime to endTime?.takeIf { endDate == date },
+        ParseProperty.Image to image,
+        ParseProperty.DeclaredDescription to description,
+        ParseProperty.Cost to price?.let { if (it.toFloatOrNull() == 0f) "Free" else "$$it" }
+            ?.takeIf { currency == null || currency == "USD" },
+        ParseProperty.Tickets to tickets,
+        ParseProperty.Location to place?.name,
+        ParseProperty.Address to place?.street,
+    ).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
 }
 
-/** This place as a [LocationSchema], when it has a name and a street or a city to find it by. */
-fun LdPlace.toLocationSchema(): LocationSchema? {
-    val name = name ?: return null
-    if (street == null && locality == null) return null
-    return LocationSchema(
-        name = name,
-        address = street,
-        city = locality,
-        state = region,
-        postalCode = postalCode,
-        country = country,
-        phone = telephone,
-        email = email,
-        url = url,
-    )
-}
+/** The values this place declares, each under its [ParseProperty], to lay over what its homepage was read for. */
+fun LdPlace.toPropertyMap(): PropertyMap = listOf(
+    ParseProperty.Name to name,
+    ParseProperty.Address to street,
+    ParseProperty.Phone to telephone,
+    ParseProperty.Email to email,
+).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
+
+/** The one place the JSON-LD of this page declares on its own, or null when it declares none or several. */
+fun Document.readPageLdPlace(): LdPlace? = readLdPlaces().distinctBy { it.name }.singleOrNull()
 
 /** The date and the time of day of an ISO date-time as its page states it, the time null for a date alone. */
 private fun splitDateTime(value: String): Pair<String, String?> {

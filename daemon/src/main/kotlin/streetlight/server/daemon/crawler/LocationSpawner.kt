@@ -259,6 +259,6 @@ private fun LocationEdit.withUnitOf(address: String?): LocationEdit {
 internal val searchRadius = 200.kilometers
 internal val sameVenueRadius = 150.meters
 private val houseNumber = Regex("""\b\d+[A-Za-z]?\b""")
-private val addressUnit = Regex(""",?\s*(?:#\s*|\b(?:unit|suite|ste|apt|apartment|room|rm)\b\.?\s*#?\s*)[A-Za-z]?\d[A-Za-z0-9-]*\b""", RegexOption.IGNORE_CASE)
+private val addressUnit = Regex(""",?\s*(?:#\s*|\b(?:unit|suite|ste|apt|apartment|room|rm)\b\.?\s*#?\s*)(?:[A-Za-z]?\d[A-Za-z0-9-]*|[A-Za-z])\b""", RegexOption.IGNORE_CASE)
 private const val minPlaceRank = 30
 private const val kilometersPerDegree = 111.32

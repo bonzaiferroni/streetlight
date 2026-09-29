@@ -16,11 +16,17 @@ import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
+import streetlight.server.daemon.agent.readPageLdPlace
+import streetlight.server.daemon.agent.resolveUrl
+import streetlight.server.daemon.agent.toPropertyMap
 import streetlight.server.daemon.agent.tryQuery
 import streetlight.server.utils.readImageUrl
 import streetlight.server.utils.readMetaContent
 
-/** Delivers the location the LM read from the homepage of [lead] fetched as [document], as [schema]. */
+/**
+ * Delivers the location the LM read from the homepage of [lead] fetched as [document], as [schema], with the values
+ * the place its JSON-LD declares laid over it.
+ */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocument?, schema: LmSchema?) {
     val read = schema as? LocationSchema ?: return
@@ -33,11 +39,18 @@ suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocumen
         ParseProperty.Phone to read.phone,
         ParseProperty.Email to read.email,
         ParseProperty.Hours to read.hours,
-        ParseProperty.EventsLink to read.eventsUrl?.let { document.doc.absUrl(it).ifEmpty { it } },
-        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: read.imageUrl?.let { document.doc.absUrl(it).ifEmpty { it } }),
+        ParseProperty.EventsLink to read.eventsUrl?.let { document.doc.resolveUrl(it) },
+        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: read.imageUrl?.let { document.doc.resolveUrl(it) }),
     ).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
-    val area = listOfNotNull(read.city, read.state, read.postalCode).joinToString(" ").ifEmpty { null }
-    deliverLocation(lead, location, area, document.doc.readMetaContent("og:site_name"))
+    val declared = document.doc.readPageLdPlace()
+    val declaredValues = declared?.toPropertyMap().orEmpty()
+    if (declaredValues.isNotEmpty()) tracker.declared(lead.initialUrl)
+    val area = listOfNotNull(
+        declared?.locality ?: read.city,
+        declared?.region ?: read.state,
+        declared?.postalCode ?: read.postalCode,
+    ).joinToString(" ").ifEmpty { null }
+    deliverLocation(lead, location + declaredValues, area, document.doc.readMetaContent("og:site_name"))
 }
 
 /**

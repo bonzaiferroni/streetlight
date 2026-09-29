@@ -101,7 +101,43 @@ The catalog holds older entries that do not follow this. Do not undertake a clea
 
 Confirm a version before raising it. An unverified bump is reported, not made.
 
-## Bounty
+## Bounty Mode
+
+The navigator may open a session or a request as *bounty mode*, which follows a strict workflow. The navigator makes a request, the agent does the analysis needed and composes a list of jobs, and the agent's next reply is that list.
+
+> Navigator: Bounty: Add a Foo to all Bar functions within foobar.model that want it
+>
+> Agent:
+> Bounty:
+> - [Module, backticks]
+>   - [File, bold]:
+>     - [Change 1]
+>     - [Change 2]
+> - [Module, backticks]
+>   - [etc]
+
+Once the list is presented, the navigator gives the green light: "complete" for the whole remaining list, or "step" for the next item.
+
+While the bounty is followed, each reply begins with the entire bounty list, completed items marked with 🍻, so progress can be tracked. Items that deserve attention turn up along the way; they are kept in their own lists and presented with each reply:
+
+> Reefs:
+> * Reef 1
+>
+> Questions:
+> 1. Question 1
+> 2. Question 2
+
+These lists do not count against the character limit of *fast chat*. A comment or two after them keeps the navigator in the loop on how it is going.
+
+Documentation is maintained as the work goes, following the rest of this document.
+
+### Workflow
+
+1. **Stage the Bounty.** Before any code changes, draw the map to follow: analyze the code and present the lists above.
+2. **Follow the Bounty.** Tackle each item one at a time, or the whole list. "step" finishes the next item, "complete" finishes the list. Stepping suits a bounty whose items deserve their own consideration. Each reply presents the current status of the bounty.
+3. **Aftermath.** The bounty may uncover items for a future bounty. They are taken up next, or saved at `docs/bounty/<bounty-name>.md`.
+
+### List Format
 
 A bounty list is organized by what it changes. Each module is a top item in backticks, each file it changes is a bold subitem named by its filename alone, marked (new) when the file does not yet exist or (replaced: Foo.kt) when it takes the place of another, and each change within the file is a subitem beneath it. Documentation takes a single item, however many documents it touches.
 

@@ -2,6 +2,7 @@ package streetlight.server.daemon.agent
 
 import com.fleeksoft.ksoup.Ksoup
 import kampfire.model.toUrl
+import streetlight.model.data.ParseProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -41,18 +42,17 @@ class StructuredDataTest {
     private val pageUrl = "https://venue.example/events/jazz-night".toUrl()
 
     @Test
-    fun `an event page's own event is read with its time as the page states it`() {
-        val schema = pageLdEvent(page(jazzNight).readLdEvents(), pageUrl)?.toEventSchema()
+    fun `an event page's own event declares its values with its time as the page states it`() {
+        val declared = page(jazzNight).readPageLdEvent(pageUrl)?.toPropertyMap().orEmpty()
 
-        assertEquals("Jazz Night", schema?.name)
-        assertEquals("2026-10-16", schema?.date)
-        assertEquals("20:00", schema?.startTime)
-        assertEquals("23:00", schema?.endTime)
-        assertEquals("$15", schema?.cost)
-        assertEquals("https://venue.example/jazz.jpg", schema?.imageUrl)
-        assertEquals("The Venue", schema?.locationName)
-        assertEquals("2736 Welton Street", schema?.locationAddress)
-        assertEquals("Denver", schema?.locationCity)
+        assertEquals("Jazz Night", declared[ParseProperty.Name])
+        assertEquals("2026-10-16", declared[ParseProperty.Date])
+        assertEquals("20:00", declared[ParseProperty.StartTime])
+        assertEquals("23:00", declared[ParseProperty.EndTime])
+        assertEquals("$15", declared[ParseProperty.Cost])
+        assertEquals("https://venue.example/jazz.jpg", declared[ParseProperty.Image])
+        assertEquals("The Venue", declared[ParseProperty.Location])
+        assertEquals("2736 Welton Street", declared[ParseProperty.Address])
     }
 
     @Test
@@ -87,31 +87,34 @@ class StructuredDataTest {
     }
 
     @Test
-    fun `an event with a start date but no time gives no schema`() {
+    fun `an event with a start date but no time declares its date and no start time`() {
         val dateOnly = jazzNight.replace("2026-10-16T20:00:00-06:00", "2026-10-16")
 
-        assertNull(page(dateOnly).readLdEvents().single().toEventSchema())
+        val declared = page(dateOnly).readLdEvents().single().toPropertyMap()
+
+        assertEquals("2026-10-16", declared[ParseProperty.Date])
+        assertNull(declared[ParseProperty.StartTime])
     }
 
     @Test
     fun `an end on a later date is not taken as the end time`() {
         val overnight = jazzNight.replace("2026-10-16T23:00:00-06:00", "2026-10-17T01:00:00-06:00")
 
-        assertNull(page(overnight).readLdEvents().single().toEventSchema()?.endTime)
+        assertNull(page(overnight).readLdEvents().single().toPropertyMap()[ParseProperty.EndTime])
     }
 
     @Test
     fun `a price of zero is free`() {
         val free = jazzNight.replace("\"price\": \"15\"", "\"price\": 0")
 
-        assertEquals("Free", page(free).readLdEvents().single().toEventSchema()?.cost)
+        assertEquals("Free", page(free).readLdEvents().single().toPropertyMap()[ParseProperty.Cost])
     }
 
     @Test
     fun `a price in another currency is left out`() {
         val euros = jazzNight.replace("USD", "EUR")
 
-        assertNull(page(euros).readLdEvents().single().toEventSchema()?.cost)
+        assertNull(page(euros).readLdEvents().single().toPropertyMap()[ParseProperty.Cost])
     }
 
     @Test
@@ -154,12 +157,14 @@ class StructuredDataTest {
             }
         """
 
-        val schema = page(bar).readLdPlaces().single().toLocationSchema()
+        val place = page(bar).readPageLdPlace()
+        val declared = place?.toPropertyMap().orEmpty()
 
-        assertEquals("Bar 404", schema?.name)
-        assertEquals("404 Main Street", schema?.address)
-        assertEquals("hello@bar404.example", schema?.email)
-        assertEquals("US", schema?.country)
+        assertEquals("Bar 404", declared[ParseProperty.Name])
+        assertEquals("404 Main Street", declared[ParseProperty.Address])
+        assertEquals("hello@bar404.example", declared[ParseProperty.Email])
+        assertEquals("80202", place?.postalCode)
+        assertEquals("US", place?.country)
     }
 
     @Test

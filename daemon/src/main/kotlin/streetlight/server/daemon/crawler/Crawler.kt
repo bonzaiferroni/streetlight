@@ -39,10 +39,13 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
      * is room for are marked checked and launched.
      */
     suspend fun start(): Unit = coroutineScope {
+        var noWorkLastCheck = false
         while (true) {
             val workersAvailable = workers.availablePermits
             if (workersAvailable > 0) {
-                dao.readCheckable(checkInterval - 1.hours, workersAvailable).forEach { lead ->
+                val leads = dao.readCheckable(checkInterval - 1.hours, workersAvailable)
+
+                leads.forEach { lead ->
                     workers.acquire()
                     dbWrite { dao.updateCheckedAt(lead) }
                     launch {
@@ -53,6 +56,12 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
                         }
                     }
                 }
+
+                val noWork = workers.availablePermits == maxWorkers
+                if (!noWorkLastCheck && noWork) {
+                    log.info { "Completed lead check" }
+                }
+                noWorkLastCheck = noWork
             }
             delay(1.seconds)
         }
@@ -102,5 +111,5 @@ fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient) {
 }
 
 private val checkInterval = 24.hours
-private const val maxWorkers = 4
+private const val maxWorkers = 8
 internal const val lmRetryCount = 10

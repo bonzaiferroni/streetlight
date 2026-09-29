@@ -1,6 +1,12 @@
-# Crawler Build Analytics
+# Crawler Work
 
-The workflow for tuning the crawler build by build: stage the records that want another read, run the crawler, read what it reports, check the pages by hand, and carry the lessons into the next build. It was worked out over builds V0 to V10 of the parser (2026-09-24 to 2026-09-27).
+The workflow for tuning the crawler build by build: stage the records that want another read, run the crawler, read what it reports, check the pages by hand, and carry the lessons into the next build. It was worked out over builds V0 to V24 of the parser (2026-09-24 to 2026-09-29). Read the crawler and agent package documents (`docs/packages/streetlight.server.daemon.crawler.md`, `…agent.md`) before changing either package.
+
+## Where It Stands
+
+* Build **V24** is staged: 12 location leads, 9 new and 3 restaged (Launch Pad, Muse Noraebang, Roaming Gnome) with their links, parsers and Launch Pad's location cleared. Its dumps are `logs/schema/*-before-V24.json`.
+* The crawler runs leads concurrently: up to `maxWorkers` (8) at once, taking more each second as room opens. Robots and OSM gates space requests, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`.
+* JSON-LD supplements the LM, never replaces it: every lead is read by its schema, and the values its page declares are laid over the read at resolution time. Meta-only values (such as `og:site_name`) never outrank the LM.
 
 ## Principles
 
@@ -18,7 +24,7 @@ These hold for every change a build makes. The General Model has its single home
 ## The Cycle
 
 1. **Build.** Raise `parserBuildId` in `ParseReport.kt` (e.g. `V10` → `V11`) whenever any stage changes. The navigator builds and runs; the agent does not compile.
-2. **Stage.** Reset only the records that want another read (below). Tables are never cleared wholesale.
+2. **Stage.** Reset only the records that want another read (below). Tables are never cleared wholesale unless the navigator asks for a fresh rescan. The daemon must be stopped first: a running daemon on the old build consumes the staged leads (check with `pgrep -af daemon`).
 3. **Run.** The navigator runs the crawler until the staged leads have been read.
 4. **Analyze.** Read `logs/parser/Vn/*.json`, the saved html beside them, and the events created in the run's window.
 5. **Probe.** Check what the page really holds with ksoup or Playwright in jshell. The probe is the source of truth, not the report and not the LM.
@@ -47,6 +53,10 @@ Enums are stored by ordinal:
 | `link.content` | 0 Schema, 1 OffSchema, 2 OffScope, 3 Unknown, 4 Unread |
 | `link.parse_outcome` | 0 Complete, 1 Partial, 2 Fail |
 | `parser.schema_type` | 0 EventFeed, 1 EventPage |
+| `lead.lead_type` | 0 EventPage (never stored), 1 EventFeed, 2 Location, 3 Event, 4 EventScan |
+| `location.parse_mode` | 0 None, 1 Partial, 2 Full |
+
+A `lead` row needs its `id` given (`gen_random_uuid()`); a general feed or scan also needs `name`, `geo_point` and `timezone_id`. An `EventFeed` lead is read again each day; every other lead type is read once, when its `checked_at` is null.
 
 ## Staging
 
@@ -84,11 +94,27 @@ select string_agg(slug, ', ' order by slug) from retry;
 
 A feed that is never staged is not read again within a day (`checkInterval`), so a build only touches what was staged.
 
-**A targeted stage** tests one site from scratch, as V9 did for Swallow Hill: delete its events, its links and their aliases (`link_alias` first), and its parsers, then null `checked_at`. A stored lead, such as a general feed, is staged the same way through `lead.checked_at`.
+**A targeted stage** tests chosen sites from scratch, and is the usual stage now. Dump `event`, `link`, `link_alias` and `parser` first. Then, in one transaction: pick the feeds by slug, take their origins from `events_url` (plus any origin their event pages live on, such as `ticketsqueeze.com` for Red Rocks), delete the events at those locations or whose `url` is on those origins (so venues spawned from their pages go too), delete the origins' link aliases and links, delete their parsers only when the stored schema is the problem, and null `checked_at`. A stored lead is staged the same way through `lead.checked_at`. Deleting whole events is what lets a build's improvements show; otherwise the duplicate check keeps the old ones.
+
+```sql
+create temp table feeds as select id, slug, events_url from location where slug in ('larimer-lounge-denver', 'summit-denver');
+create temp table origins as
+  select distinct regexp_replace(split_part(split_part(events_url,'://',2),'/',1),'^www\.','') as origin_id from feeds;
+delete from event where location_id in (select id from feeds)
+   or regexp_replace(split_part(split_part(url,'://',2),'/',1),'^www\.','') in (select origin_id from origins);
+delete from link_alias where link_id in (select id from link where origin_id in (select origin_id from origins));
+delete from link where origin_id in (select origin_id from origins);
+delete from parser where origin_id in ('summitdenver.com');
+update location set checked_at = null where id in (select id from feeds);
+```
+
+**Undoing a stray run.** When a daemon on the old build ran after a stage, delete what it made since the stage (the dump file's time, in local time): links and their aliases, parsers and events with `created_at` after it, then null `checked_at` on the feeds it checked.
 
 ## Reports
 
-A check writes `logs/parser/Vn/<origin>.json` only when it needs attention: it failed, a page needs work, its feed yielded nothing created, duplicate or known, or a location was spawned or failed to be. **No report means a clean check.** Beside it, `html/` holds each page that needs work as fetched (`<address>.html`) and as the LM saw it after trimming (`<address>-trim.html`). Reports are keyed by origin, so a second feed on the same origin overwrites the first's report.
+A check writes `logs/parser/Vn/<type>-<address>.json` only when it needs attention: it failed, a page needs work, its feed yielded nothing created, duplicate or known, or a location was spawned or failed to be. **No report means a clean check.** Beside it, `html/` holds each page that needs work as fetched (`<address>.html`) and as the LM saw it after trimming (`<address>-trim.html`). Reports are named for the lead's type and url (V23 on; earlier builds are named `<origin>.json`). A page that laid declared values over its read carries the note "Declared values from its JSON-LD".
+
+**Comparing builds.** Reports only cover checks that needed attention, so the fairest comparison is the events themselves: from the pre-stage dump against the table after the run, per staged location, count events, average description length, shortened descriptions (`Read more`), costs and ticket links (`links` not null).
 
 | Part | What to read |
 |---|---|
@@ -142,7 +168,9 @@ for (var el : doc.body().select(".event-item")) System.out.println(el.text());
 /exit
 ```
 
-**Playwright** shows what a scripted fetch sees: the settle, lazy loading and iframes. Its classpath is the `com.microsoft.playwright` 1.61.0 jars plus `gson-2.9.0`. A probe mirrors `fetchTextWithScripting`: the Streetlight user agent, images, media, fonts and stylesheets blocked, then wheel scrolls of 2500px until the visible text of every frame holds steady for 3s, capped at 15s. Print the body's `innerText` length, each frame's url and text length, and the text around the dates in question.
+The quickest Playwright probe is Node with the copy already installed: a script in the scratchpad that does `require('/home/starfox/projects/streetlight/benchmark/node_modules/playwright')`, run from `benchmark/`. For a saved page, abort every route and `setContent(html, { waitUntil: 'domcontentloaded' })`, or it waits on the network.
+
+**Playwright** shows what a scripted fetch sees: the settle, lazy loading and iframes. Its classpath is the `com.microsoft.playwright` 1.61.0 jars plus `gson-2.9.0`. A probe mirrors `fetchTextWithScripting`: the Streetlight user agent, images, media and fonts blocked, then wheel scrolls of 2500px until the visible text of every frame holds steady for 3s, capped at 15s. Print the body's `innerText` length, each frame's url and text length, and the text around the dates in question.
 
 A quick check of a saved page without a probe: strip scripts and tags with a regex, then count date and time matches in the text, to learn whether the dates are in the html at all or arrive by script.
 
@@ -157,19 +185,33 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 | V8 | Self-links (hash routes collapse to the feed url) are not pages; one read per url per check; the `known` count. Dazzle yielded 134 events |
 | V9 | `LocationSpawner` (OSM, 200 km fence, 150 m room rule). Swallow Hill's rooms stayed home: "Tuft Theatre at Swallow Hill Music" fuzzy-matches the venue |
 | V10 | General feeds (`GeneralEventFeed`, Westword). The listing page matched the Buell and created two shows. The article page lost six real events on location |
+| V11–V18 | Leads (`LocationLead`, `EventLead`, `EventScan`), direct LM reads (`LocationSchema`, `EventSchema`), address-first OSM search with a website tiebreak, nameless locations at an address, cost mapped into events |
+| V19–V20 | A feed schema needs a title that matches. `HtmlTrimmer` keeps `<br>`, whose removal changed the sibling order selectors were written against |
+| V21 | A fresh rescan of every feed. The JSON-LD selector never matched and `<time datetime>` with a date alone lost Squarespace times (Lions Lair to 0): both fixed |
+| V22 | JSON-LD in place: 166 ticket links and 148 costs where there were none, Red Rocks from 0 to 28. Units (`#100`, `Ste 1400`) left out of OSM searches, and a location lead created at its address when the map knows another name or none: 9 new Aurora venues. But the JSON-LD pass skipped the LM and lost descriptions where the page declared none (Larimer, Lost Lake) |
+| V23 | JSON-LD supplements the LM at resolution time: descriptions back at Larimer, Lost Lake and Globe Hall (0 to 376, 495 and 820 chars on average), Fillmore 0 to 26 events. Parallel leads, the LM told when its html was cut, and only a `Basic` fetch asked whether scripting is required |
+| V24 | A location's relative events and image urls resolved against its page (Ksoup's `absUrl` takes an attribute name, so they were stored raw). A unit of a single letter (`Suite D`) left out of map searches. Scripted fetches load stylesheets: Square Online hides its text until they load. Staged, not yet read |
 
 ## Open Leads
 
 Found and not yet acted on, each to be weighed against the General Model:
 
-* **`HtmlTrimmer` drops `<br>`** (certain gremlin). An empty element is removed, so "7 to 8 p.m.<br/>RISE Comedy" reaches the LM as "p.m.RISE Comedy". The fix keeps `br` in `keepBodyNode`.
 * **A place sharing an element with the date.** Newspaper listings put date, time and place in one `<strong>` split by `<br>`. The whole line goes to OSM and finds nothing.
-* **A time outside the event element.** Larimer Lounge reads "Sat, Sep 26" with no time, so no start.
-* **A month outside the event element.** Summit and Marquis give only the day and time ("16 | 8:00PM"); the month sits in a group header. A heading fix was rejected under the General Model.
+* **Date parts sharing a class.** Summit and Marquis hold the date in each card as `<time><p>Wed</p><p>30</p><p>Sep</p></time>`, and the weekday and month share one class, so the LM's selectors find the weekday and the date is dropped (V23). The whole `<time>` element's text would parse.
 * **A date selector on the title.** Bar 404's date selector reads the event title, and validation let it through.
 * **Load more.** Swallow Hill's feed shows 10 events behind a "load more" button; only the first page is read.
 * **Feeds of feeds.** Westword's listing links to articles that are feeds themselves. A general lead classifier was ruled out; the crawler reads kinds it knows up front.
+* **Featured content on event pages.** A sidebar of other events (a run of same-class cards) can win the description selector, as on the Aurora library's pages. A trim anchored on the declared title and description, dropping repeated card runs, is on the map but waits for a problem JSON-LD does not already solve.
+* **Meta image over the LM's image.** The page's meta image still outranks the LM's image, the one place meta outranks a read. Undecided.
+* **Locations created at an address** carry the page's name but no map id. They want `needsReview` once the review rigging is reworked.
+* **Performers** are read into `LdEvent` and wait for the model to hold them.
+* **Concurrency edges.** The same url read by two leads at once is fetched twice (spaced by its gate); the OSM `places` cache never expires; `server.createLocation` may look up a new city through the server's own OSM client, outside the crawler's gate.
 
 ## Accepted as Unread
 
 Roxy (an iframe widget that arrives late), Black Box and Squire (calendar grids), and hash-route pages. They wait until their need is seen across many origins.
+
+* **hi-dive** sits behind an automatic "verifying your request" page; a bot filter is respected, not waited out.
+* **Whispers on Havana**'s homepage holds no text beyond its name.
+* **Date runs** such as Denver Center's "Sep 11 – Oct 4": the event model holds one date.
+* **Westword**: its lists hold bare text with no links, and it is not a planned source.

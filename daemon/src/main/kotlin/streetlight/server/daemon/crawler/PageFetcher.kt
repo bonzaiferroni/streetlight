@@ -251,7 +251,7 @@ private val blockedHosts = setOf(
     "www.google.com/recaptcha", "www.gstatic.com"
 )
 
-private val blockedTypes = setOf("image", "media", "font", "stylesheet")
+private val blockedTypes = setOf("image", "media", "font")
 
 private val priceProbeScript = """
     () => {

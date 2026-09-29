@@ -14,7 +14,6 @@ import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
 import streetlight.server.daemon.agent.parseLocalDateTime
 import streetlight.server.daemon.agent.parseTimeFromText
-import streetlight.server.daemon.agent.readPageLdEvent
 import streetlight.server.utils.readImageUrl
 
 /**
@@ -81,26 +80,18 @@ internal fun costOf(text: String): Float? {
 private val dollarAmount = Regex("""\$\s?(\d+(?:\.\d{1,2})?)""")
 private val freeWord = Regex("""\bfree\b""", RegexOption.IGNORE_CASE)
 
-/**
- * The properties of the event this schema read from the page [doc] at [url], with the image, description and ticket
- * link the page's JSON-LD declares. Its declared image comes first, then its meta image.
- */
-fun EventSchema.toPropertyMap(doc: Document, url: Url): PropertyMap {
-    val declared = doc.readPageLdEvent(url)
-    return listOf(
-        ParseProperty.Name to name,
-        ParseProperty.Url to url.value,
-        ParseProperty.Image to (declared?.image ?: doc.readImageUrl()?.value ?: imageUrl),
-        ParseProperty.Description to description,
-        ParseProperty.DeclaredDescription to declared?.description,
-        ParseProperty.Tickets to declared?.tickets,
-        ParseProperty.Contact to contact,
-        ParseProperty.Cost to cost,
-        ParseProperty.AgeMin to ageMin,
-        ParseProperty.Date to date,
-        ParseProperty.StartTime to startTime,
-        ParseProperty.EndTime to endTime,
-        ParseProperty.Location to locationName,
-        ParseProperty.Address to locationAddress,
-    ).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
-}
+/** The properties of the event this schema read from the page [doc] at [url], the page's meta image first. */
+fun EventSchema.toPropertyMap(doc: Document, url: Url): PropertyMap = listOf(
+    ParseProperty.Name to name,
+    ParseProperty.Url to url.value,
+    ParseProperty.Image to (doc.readImageUrl()?.value ?: imageUrl),
+    ParseProperty.Description to description,
+    ParseProperty.Contact to contact,
+    ParseProperty.Cost to cost,
+    ParseProperty.AgeMin to ageMin,
+    ParseProperty.Date to date,
+    ParseProperty.StartTime to startTime,
+    ParseProperty.EndTime to endTime,
+    ParseProperty.Location to locationName,
+    ParseProperty.Address to locationAddress,
+).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
