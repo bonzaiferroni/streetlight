@@ -15,7 +15,7 @@ fun parseHtmlDocument(html: String, url: Url): Outcome<Document> {
     return Ok(Ksoup.parse(html, url.value))
 }
 
-private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)
+private val htmlStart = Regex("""^\s*(?:<!--[\s\S]*?-->\s*)*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)
 
 fun String.looksLikeHtml(): Boolean = htmlStart.containsMatchIn(this)
 

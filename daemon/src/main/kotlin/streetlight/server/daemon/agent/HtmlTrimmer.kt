@@ -97,6 +97,7 @@ class HtmlTrimmer {
 
                 if (tag in removableBodyTags) return false
 
+                if (tag == "br") return true
                 if (tag == "img") return hasUsefulImage(node)
 
                 hasMeaningfulContent(node)

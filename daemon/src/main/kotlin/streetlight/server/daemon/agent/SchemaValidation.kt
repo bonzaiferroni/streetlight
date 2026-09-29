@@ -11,20 +11,24 @@ import streetlight.model.data.LocationSelectorSchema
 
 object SchemaProblem {
     val Invalid = Problem("The LM schema failed validation against its page.")
-    val Incomplete = Problem("The page content is incomplete without scripting.")
+    val ScriptingRequired = Problem("The page content requires scripting.")
     val CalledOff = Problem("The page declares its event cancelled or postponed.")
 }
 
-/** Validates a feed schema from the LM against the [document] it was made from, setting any other selector that fails to null. */
+/**
+ * Validates a feed schema from the LM against the [document] it was made from: its event and title selectors must
+ * match, and any other selector that fails is set to null.
+ */
 fun EventFeedSchema.validate(document: Element): Outcome<EventFeedSchema> {
     val selector = event ?: return Problem("No event selector")
     val events = document.tryQuery(selector).toDataOr { return it }
     if (events.isEmpty()) return Problem("Event selector matched nothing: $selector")
+    val title = title.keepIfMatches(events) ?: return Problem("Title selector matched nothing: $title")
     val page = listOf(document)
     return Ok(copy(
         feedLocation = feedLocation.keepIfMatches(page),
         address = address.keepIfMatches(page),
-        title = title.keepIfMatches(events),
+        title = title,
         eventLocation = eventLocation.keepIfMatches(events),
         link = link.keepIfMatches(events),
         image = image.keepIfMatches(events),

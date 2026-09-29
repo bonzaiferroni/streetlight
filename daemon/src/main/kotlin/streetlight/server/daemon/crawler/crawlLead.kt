@@ -33,8 +33,8 @@ import streetlight.server.daemon.agent.SchemaParserText
 import kotlin.time.Instant
 
 /**
- * The document of a fetched page: asked for at [lead] on [origin], served from [servedUrl] at [fetchedAt] and
- * parsed as [doc].
+ * The document of a fetched page: asked for at [lead] on [origin], served from [servedUrl] at [fetchedAt] in
+ * [fetchMode] and parsed as [doc].
  */
 class FetchDocument(
     val lead: Lead,
@@ -42,6 +42,7 @@ class FetchDocument(
     val servedUrl: Url,
     val doc: Document,
     val fetchedAt: Instant,
+    val fetchMode: FetchMode,
 )
 
 /**
@@ -63,7 +64,7 @@ suspend fun Crawler.crawl(lead: Lead) {
 
     var document = fetchDocument(lead, origin, fetchMode)
     var schemaOutcome = document?.let { provideCrawl(lead, it) }
-    if (schemaOutcome == SchemaProblem.Incomplete && fetchMode == FetchMode.Basic) {
+    if (schemaOutcome == SchemaProblem.ScriptingRequired && fetchMode == FetchMode.Basic) {
         document = fetchDocument(lead, origin, FetchMode.Scripting)
         schemaOutcome = document?.let { provideCrawl(lead, it) }
     }
@@ -98,7 +99,7 @@ private suspend fun Crawler.fetchDocument(
     val doc = parseHtmlDocument(fetch.text, fetch.servedUrl).toDataOrNull(this::logProblem)
     tracker.fetched(lead.initialUrl, fetchMode, fetch, doc)
     if (doc == null) return null
-    return FetchDocument(lead, origin, fetch.servedUrl.normalize(), doc, fetch.fetchedAt)
+    return FetchDocument(lead, origin, fetch.servedUrl.normalize(), doc, fetch.fetchedAt, fetchMode)
 }
 
 /** The schema of [document] that its kind of [lead] wants, with a problem logged and recorded on [tracker]. */
@@ -134,6 +135,7 @@ internal suspend fun Crawler.provideFeedSchema(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
+    fetchMode = document.fetchMode,
     timeZoneId = lead.timeZoneId,
     instructions = SchemaParserText.feedSelectorsInstructions(lead),
     observer = tracker.page(lead.initialUrl),
@@ -151,6 +153,7 @@ internal suspend fun Crawler.providePageSchema(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
+    fetchMode = document.fetchMode,
     timeZoneId = lead.feed.timeZoneId,
     observer = tracker.page(lead.initialUrl),
 )
@@ -167,6 +170,7 @@ internal suspend fun Crawler.provideLocationSchema(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
+    fetchMode = document.fetchMode,
     observer = tracker.page(lead.initialUrl),
 )
 
@@ -179,6 +183,7 @@ internal suspend fun Crawler.provideEventSchema(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
+    fetchMode = document.fetchMode,
     observer = tracker.page(lead.initialUrl),
 )
 

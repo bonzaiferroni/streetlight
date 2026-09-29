@@ -34,7 +34,7 @@ suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocumen
         ParseProperty.Email to read.email,
         ParseProperty.Hours to read.hours,
         ParseProperty.EventsLink to read.eventsUrl?.let { document.doc.absUrl(it).ifEmpty { it } },
-        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: read.imageUrl),
+        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: read.imageUrl?.let { document.doc.absUrl(it).ifEmpty { it } }),
     ).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
     val area = listOfNotNull(read.city, read.state, read.postalCode).joinToString(" ").ifEmpty { null }
     deliverLocation(lead, location, area, document.doc.readMetaContent("og:site_name"))
@@ -42,8 +42,8 @@ suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocumen
 
 /**
  * Delivers the location of [lead] described by [location]: placed on the map by its name, address and [area], or by
- * the [declaredName] its page gives itself when its name finds no place, and created unless it is already stored or
- * cannot be placed.
+ * the [declaredName] its page gives itself when its name finds no place, or at its address alone, and created unless
+ * it is already stored or cannot be placed.
  */
 context(tracker: ParseTracker)
 private suspend fun Crawler.deliverLocation(
@@ -56,13 +56,34 @@ private suspend fun Crawler.deliverLocation(
     val name = location[ParseProperty.Name] ?: declaredName ?: return tracker.recordUnnamed(location)
     val address = location[ParseProperty.Address]
     spawner.readStoredAt(name, address)?.let { return tracker.recordDuplicate(location, name, it.label) }
-    val (place, placedName) = spawner.findPlace(lead.initialUrl, name, declaredName, address, area) ?: run {
-        val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
-        return tracker.recordFailed(location, name, Problem("No place on the map matches $searched"))
-    }
+    val (place, placedName) = spawner.findPlace(lead.initialUrl, name, declaredName, address, area)
+        ?: return deliverAtAddress(lead, location, name, declaredName, address, area)
     dao.location.readLocationByMapId(place.osmId)?.let { return tracker.recordDuplicate(location, placedName, it.label) }
     spawner.createFrom(place, location + (ParseProperty.Name to placedName), lead.initialUrl)
         .toDataOr { return tracker.recordFailed(location, placedName, it) }
+    tracker.recordCreated()
+}
+
+/**
+ * Delivers the location of [lead] described by [location], named [name], at its [address] in [area] when the map
+ * knows the address but not the name: stored there already, or created there with the page's details.
+ */
+context(tracker: ParseTracker)
+private suspend fun Crawler.deliverAtAddress(
+    lead: LocationLead,
+    location: PropertyMap,
+    name: String,
+    declaredName: String?,
+    address: String?,
+    area: String?,
+) {
+    val spot = address?.let { spawner.findAddress(it, area) } ?: run {
+        val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
+        return tracker.recordFailed(location, name, Problem("No place on the map matches $searched"))
+    }
+    spawner.readStored(spot, name)?.let { return tracker.recordDuplicate(location, name, it.label) }
+    spawner.createNamedAt(spot, location + (ParseProperty.Name to name), lead.initialUrl)
+        .toDataOr { return tracker.recordFailed(location, name, it) }
     tracker.recordCreated()
 }
 

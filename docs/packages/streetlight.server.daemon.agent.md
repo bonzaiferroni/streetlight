@@ -57,6 +57,8 @@ A removal is added only for content that cannot carry event information. Element
 
 Hidden content is kept, since pages hide events in modals, tabs and collapsed sections.
 
+An element with no text, image or meta content is removed, except `br`, whose removal would change the sibling order selectors are written against.
+
 | Measure | Rule |
 |---|---|
 | Attribute values | Whitespace collapsed in every value |
@@ -65,7 +67,7 @@ Hidden content is kept, since pages hide events in modals, tabs and collapsed se
 
 A run is collapsed only in the prompt copy. Selectors run against the full page, so every item in the run is still read.
 
-`KoogHtmlParserClient` cuts the trimmed html to `LmConfig.htmlCharLimit` before building the prompt, so the instructions always reach the model. A provider that truncates an oversized prompt itself may drop them.
+`KoogHtmlParserClient` cuts the trimmed html to `LmConfig.htmlCharLimit` before building the prompt, so the instructions always reach the model, and tells the model with `trimmedLengthNotice` when it did. A provider that truncates an oversized prompt itself may drop them.
 
 `HtmlTrimmer.trimHtml` returns a `TrimResult` of the html and its `TrimStats`.
 
@@ -91,7 +93,9 @@ A request to the LM asks for one shape at a time. A follow-up request asks a nar
 2. Otherwise the LM is asked for the whole schema with `EventFeedSchemaRequest` or `EventPageSchemaRequest`, and the answer is validated.
 3. When the start of the events does not parse, the LM is asked the time follow-up with `EventTimeSchemaRequest`: the month, the day and the start time, each alone.
 4. When a new page schema has no description, the LM is asked the description follow-up with `EventDescriptionSchemaRequest`, and its answer is kept only when the page reads as plausible prose through it.
-5. The result is stored for the origin, under its fetch mode, and returned. A page the LM finds incomplete marks its origin for scripting.
+5. The result is stored for the origin, under its fetch mode, and returned. A page the LM finds requires scripting marks its origin for it.
+
+Every read asks whether the page holds the expected content. Only a page fetched in `Basic` mode is also asked whether scripting is required for that content to appear, as a `BasicContentParse`; a page fetched with scripting is read as a `ScriptingContentParse`, without that question. The instructions hold `ContentObjectSlot` where the description of the parent object for the fetch goes.
 
 The request types are what the LM sees, and `EventFeedSchema` and `EventPageSchema` are what is stored. A stored schema holds what every request found, so a field such as `month` is never part of the first request.
 
@@ -113,7 +117,7 @@ A schema from the LM is validated against the page it was made from before it is
 
 | Schema | Must match | Otherwise |
 |---|---|---|
-| Feed | `event`, at least one element | Any other selector that is invalid or matches in no event is set to null |
+| Feed | `event`, at least one element, and `title` in one of them | Any other selector that is invalid or matches in no event is set to null |
 | Page | `title` a plausible field | Any other selector that is invalid or matches nothing is set to null, `description` included when it matches no plausible prose |
 
 A failed schema is not stored, and the crawler records the page as `Schema` content with a `Fail` outcome. The page test is the one a stored schema must pass to be reused. A page without a description is still read for its event data, and its url serves as the event's website, where a person can read what the parser missed.
@@ -122,7 +126,7 @@ A schema's `date` selector is kept only when, for at least half of the elements 
 
 ## LM Schemas
 
-An `LmSchema` is a class the LM is asked to fill. A `SelectorSchema` is one that holds selectors, stored and reused across reads of an origin; a page read only once is better read directly, the LM filling its values. `LocationSchema` holds a location's details read directly by `SchemaMediator.readLocation`, which asks with `LocationInstructions`, wraps the answer in `ContentParse` so an incomplete page promotes its origin to scripting, and stores nothing. Its phone and email are read only from the location's own homepage, where publishing them makes them public.
+An `LmSchema` is a class the LM is asked to fill. A `SelectorSchema` is one that holds selectors, stored and reused across reads of an origin; a page read only once is better read directly, the LM filling its values. `LocationSchema` holds a location's details read directly by `SchemaMediator.readLocation`, which asks with `LocationInstructions`, wraps the answer so a `Basic` page missing its content for want of scripting promotes its origin, and stores nothing. Its phone and email are read only from the location's own homepage, where publishing them makes them public.
 
 `StructuredData.kt` reads schema.org JSON-LD into `LdEvent` and `LdPlace` and turns them into an `EventSchema` or `LocationSchema` without the LM. Objects are found at any depth, `@graph` included. A place is an object with a name and an address object that is not an event's location. A start's time is the local time the page states, its offset ignored; an end is kept only on the start's date. A price is kept only in dollars or with no currency. A plain description becomes html paragraphs, a blank line between each and a line break within; one already holding html is kept as it is. An event's performers are read into `LdEvent` though the model does not yet hold them.
 
@@ -134,6 +138,6 @@ A selector is queried against the whole document, head included, and is expected
 
 - A field takes one element, never a join of several. A short description is preferred to one that gathers unrelated text.
 - Matches with no text, image or meta content are skipped, since the LM reads html with empty elements trimmed.
-- A meta element is read by its `content` attribute in place of its text, its html and any url attribute, so a head value such as `og:site_name` or `og:image` can fill a field. A `time` element's text is read from its `datetime` attribute when it has one. Every read of an element, parsing and checks alike, goes through `plainText`, `innerHtml` or `absoluteUrl`, which apply this.
+- A meta element is read by its `content` attribute in place of its text, its html and any url attribute, so a head value such as `og:site_name` or `og:image` can fill a field. A `time` element's text is read from its `datetime` attribute when that carries a time of day; a date alone leaves the text, which may hold the time. Every read of an element, parsing and checks alike, goes through `plainText`, `innerHtml` or `absoluteUrl`, which apply this.
 - Parsing, schema validation and stored-schema reuse all read fields through `queryElement`, so they agree on what a selector yields.
 - An event page's image is the image its JSON-LD declares for its event, then the image its meta declares for outside links (`og:image`, `twitter:image`, `image`), then the schema's `image`. A feed's image comes from its schema alone.

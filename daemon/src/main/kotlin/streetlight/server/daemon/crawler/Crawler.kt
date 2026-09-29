@@ -16,8 +16,10 @@ import streetlight.model.data.toOriginId
 import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 /**
@@ -36,12 +38,13 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
 
     suspend fun start() {
         while (true) {
+            startedAt = Clock.System.now()
             dao.readCheckable(checkInterval - 1.hours).forEach { lead ->
                 if (lead is EventFeed && lead.parseMode == ParseMode.None) return@forEach
                 checkLead(lead)
             }
             log.info { "completed lead check" }
-            delay(1.minutes)
+            delay(maxOf(1.minutes - (Clock.System.now() - startedAt), 1.seconds))
         }
     }
 

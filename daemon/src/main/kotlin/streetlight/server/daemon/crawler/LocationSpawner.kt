@@ -89,9 +89,10 @@ class LocationSpawner(
         address: String?,
         area: String?,
     ): Pair<OSMLocation, String>? {
-        val where = listOfNotNull(address, area).joinToString(", ").ifEmpty { null }
-        if (address != null) {
-            findPlace(website, listOfNotNull(address, area).joinToString(", "), name)?.let { return it to name }
+        val street = address?.let { withoutUnit(it) }
+        val where = listOfNotNull(street, area).joinToString(", ").ifEmpty { null }
+        if (street != null) {
+            findPlace(website, listOfNotNull(street, area).joinToString(", "), name)?.let { return it to name }
         }
         findPlace(website, listOfNotNull(name, where).joinToString(", "), name)?.let { return it to name }
         val declared = declaredName?.takeIf { it != name } ?: return null
@@ -113,7 +114,17 @@ class LocationSpawner(
      * filling what the page lacks and giving the address.
      */
     suspend fun createFrom(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
-        return create(details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit()))
+        val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit())
+        return create(edit.withUnitOf(details[ParseProperty.Address]))
+    }
+
+    /**
+     * The location created at the address of [place] from the page's [details], as [createFrom] creates it but with no
+     * map id, since the map names something else there or nothing.
+     */
+    suspend fun createNamedAt(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
+        val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit().copy(name = null, mapId = null))
+        return create(edit.withUnitOf(details[ParseProperty.Address]))
     }
 
     /**
@@ -122,11 +133,12 @@ class LocationSpawner(
      * own first.
      */
     suspend fun findAddress(address: String, area: String?): OSMLocation? {
-        val number = houseNumber.find(address)?.value ?: return null
-        val roadName = address.replaceFirst(number, "").split(' ', ',').maxByOrNull { it.length } ?: return null
+        val street = withoutUnit(address)
+        val number = houseNumber.find(street)?.value ?: return null
+        val roadName = street.replaceFirst(number, "").split(' ', ',').maxByOrNull { it.length } ?: return null
         delay(searchedAt + searchInterval - Clock.System.now())
         searchedAt = Clock.System.now()
-        val text = listOfNotNull(address, area).joinToString(", ")
+        val text = listOfNotNull(street, area).joinToString(", ")
         val hits = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
         return hits
             .filter { it.placeRank >= minPlaceRank && it.address.number == number }
@@ -225,9 +237,19 @@ private fun GeoPoint.boundsWithin(distance: Distance): GeoRect {
     )
 }
 
+/** This address without the unit it names, such as "#100", "Unit 148" or "Ste 1400", which the map does not know. */
+internal fun withoutUnit(address: String): String = address.replace(addressUnit, "").trim().trimEnd(',').trim()
+
+/** This edit with the unit [address] names added to its own address. */
+private fun LocationEdit.withUnitOf(address: String?): LocationEdit {
+    val unit = address?.let { addressUnit.find(it) }?.value?.trim()?.trimStart(',')?.trim() ?: return this
+    return copy(address = this.address?.let { "$it $unit" })
+}
+
 internal val searchRadius = 200.kilometers
 internal val sameVenueRadius = 150.meters
 private val searchInterval = 10.seconds
 private val houseNumber = Regex("""\b\d+[A-Za-z]?\b""")
+private val addressUnit = Regex(""",?\s*(?:#\s*|\b(?:unit|suite|ste|apt|apartment|room|rm)\b\.?\s*#?\s*)[A-Za-z]?\d[A-Za-z0-9-]*\b""", RegexOption.IGNORE_CASE)
 private const val minPlaceRank = 30
 private const val kilometersPerDegree = 111.32

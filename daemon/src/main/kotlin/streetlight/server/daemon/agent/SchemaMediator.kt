@@ -13,6 +13,7 @@ import kotlinx.datetime.toInstant
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.EventSchema
+import streetlight.model.data.FetchMode
 import streetlight.model.data.LocationSchema
 import streetlight.model.data.LocationSelectorSchema
 import streetlight.model.data.Origin
@@ -53,6 +54,7 @@ class SchemaMediator(
         url: Url,
         doc: Document,
         origin: Origin,
+        fetchMode: FetchMode,
         timeZoneId: String?,
         instructions: String = SchemaParserText.LocationFeedSelectorsInstructions,
         observer: SchemaObserver? = null,
@@ -68,10 +70,7 @@ class SchemaMediator(
         if (isUsageLimitReached) return LMProblem.UsageLimit
 
         observer?.requested(schemaRequest)
-        val content = client.readHtml<ContentParse<EventFeedSchemaRequest>>(
-            url, doc, instructions, retryCount, observer,
-        ).toDataOr { return it.alsoNoteLimit() }
-        val request = content.contentOr(origin) { return it }
+        val request = readContent<EventFeedSchemaRequest>(url, doc, origin, fetchMode, instructions, observer) { return it }
 
         val schema = request.toSchema()
         val validated = schema.validate(doc)
@@ -90,6 +89,7 @@ class SchemaMediator(
         url: Url,
         doc: Document,
         origin: Origin,
+        fetchMode: FetchMode,
         timeZoneId: String?,
         observer: SchemaObserver? = null,
     ): Outcome<EventPageSchema> {
@@ -110,10 +110,9 @@ class SchemaMediator(
         if (isUsageLimitReached) return LMProblem.UsageLimit
 
         observer?.requested(schemaRequest)
-        val content = client.readHtml<ContentParse<EventPageSchemaRequest>>(
-            url, doc, SchemaParserText.EventPageSelectorsInstructions, retryCount, observer,
-        ).toDataOr { return it.alsoNoteLimit() }
-        val request = content.contentOr(origin) { return it }
+        val request = readContent<EventPageSchemaRequest>(
+            url, doc, origin, fetchMode, SchemaParserText.EventPageSelectorsInstructions, observer,
+        ) { return it }
 
         val schema = request.toSchema()
         val validated = schema.validate(doc)
@@ -133,6 +132,7 @@ class SchemaMediator(
         url: Url,
         doc: Document,
         origin: Origin,
+        fetchMode: FetchMode,
         observer: SchemaObserver? = null,
     ): Outcome<LocationSelectorSchema> {
         dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
@@ -145,10 +145,9 @@ class SchemaMediator(
         if (isUsageLimitReached) return LMProblem.UsageLimit
 
         observer?.requested(schemaRequest)
-        val content = client.readHtml<ContentParse<LocationSchemaRequest>>(
-            url, doc, SchemaParserText.LocationSelectorsInstructions, retryCount, observer,
-        ).toDataOr { return it.alsoNoteLimit() }
-        val request = content.contentOr(origin) { return it }
+        val request = readContent<LocationSchemaRequest>(
+            url, doc, origin, fetchMode, SchemaParserText.LocationSelectorsInstructions, observer,
+        ) { return it }
 
         val schema = request.toSchema()
         val validated = schema.validate(doc)
@@ -166,14 +165,12 @@ class SchemaMediator(
         url: Url,
         doc: Document,
         origin: Origin,
+        fetchMode: FetchMode,
         observer: SchemaObserver? = null,
     ): Outcome<LocationSchema> {
         if (isUsageLimitReached) return LMProblem.UsageLimit
         observer?.requested(readRequest)
-        val content = client.readHtml<ContentParse<LocationSchema>>(
-            url, doc, SchemaParserText.LocationInstructions, retryCount, observer,
-        ).toDataOr { return it.alsoNoteLimit() }
-        return Ok(content.contentOr(origin) { return it })
+        return Ok(readContent<LocationSchema>(url, doc, origin, fetchMode, SchemaParserText.LocationInstructions, observer) { return it })
     }
 
     /**
@@ -184,14 +181,12 @@ class SchemaMediator(
         url: Url,
         doc: Document,
         origin: Origin,
+        fetchMode: FetchMode,
         observer: SchemaObserver? = null,
     ): Outcome<EventSchema> {
         if (isUsageLimitReached) return LMProblem.UsageLimit
         observer?.requested(readRequest)
-        val content = client.readHtml<ContentParse<EventSchema>>(
-            url, doc, SchemaParserText.EventInstructions, retryCount, observer,
-        ).toDataOr { return it.alsoNoteLimit() }
-        return Ok(content.contentOr(origin) { return it })
+        return Ok(readContent<EventSchema>(url, doc, origin, fetchMode, SchemaParserText.EventInstructions, observer) { return it })
     }
 
     /** The feed [schema] with the parts of its events' start, asked of the LM when the start does not already parse. */
@@ -270,14 +265,33 @@ class SchemaMediator(
     /** This problem, noting when it is the LM's usage limit. */
     private fun Problem.alsoNoteLimit(): Problem = also { if (it == LMProblem.UsageLimit) isUsageLimitReached = true }
 
-    /** The content of this parse, or the result of [onProblem]. An incomplete page marks [origin] for scripting. */
-    private suspend inline fun <T> ContentParse<T>.contentOr(origin: Origin, onProblem: (Problem) -> Nothing): T {
-        if (isIncompleteContent) dao.origin.registerIncomplete(origin.originId)
-        val found = content
-        if (!isExpectedContent || found == null) {
-            onProblem(if (isIncompleteContent) SchemaProblem.Incomplete else Problem("Document content was not the expected kind"))
+    /**
+     * The content the LM reads with [instructions] from the page [doc] at [url] on [origin], fetched in [fetchMode],
+     * or the result of [onProblem]. Only a page fetched without scripting is asked whether scripting is required, and
+     * marks [origin] for scripting when it is.
+     */
+    private suspend inline fun <reified T : Any> readContent(
+        url: Url,
+        doc: Document,
+        origin: Origin,
+        fetchMode: FetchMode,
+        instructions: String,
+        observer: SchemaObserver?,
+        onProblem: (Problem) -> Nothing,
+    ): T {
+        val prompt = instructions.replace(
+            SchemaParserText.ContentObjectSlot, SchemaParserText.contentObjectInstructions(fetchMode),
+        )
+        if (fetchMode == FetchMode.Scripting) {
+            val read = client.readHtml<ScriptingContentParse<T>>(url, doc, prompt, retryCount, observer)
+                .toDataOr { onProblem(it.alsoNoteLimit()) }
+            return read.content?.takeIf { read.isExpectedContent } ?: onProblem(notExpected)
         }
-        return found
+        val parse = client.readHtml<BasicContentParse<T>>(url, doc, prompt, retryCount, observer)
+            .toDataOr { onProblem(it.alsoNoteLimit()) }
+        if (parse.isScriptingRequired) dao.origin.registerScriptingRequired(origin.originId)
+        return parse.content?.takeIf { parse.isExpectedContent }
+            ?: onProblem(if (parse.isScriptingRequired) SchemaProblem.ScriptingRequired else notExpected)
     }
 }
 
@@ -338,6 +352,7 @@ private fun String.isDayText(): Boolean {
 
 private fun timeZoneOf(id: String?): TimeZone = id?.let { runCatching { TimeZone.of(it) }.getOrNull() } ?: TimeZone.UTC
 
+private val notExpected = Problem("Document content was not the expected kind")
 private const val schemaRequest = "schema"
 private const val timeRequest = "time"
 private const val descriptionRequest = "description"

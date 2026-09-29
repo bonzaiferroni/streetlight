@@ -16,3 +16,13 @@ val jsonPrettyConfig = Json {
 
 /** [obj] as indented JSON. */
 inline fun <reified T> prettyPrint(obj: T) = jsonPrettyConfig.encodeToString(obj)
+
+/**
+ * This JSON with `<`, `>` and `&` written as unicode escapes, so it can be written into HTML as is. The text
+ * still parses to the same value.
+ */
+fun String.sanitizeJson() = htmlSensitiveChars.replace(this) { match ->
+    "\\u" + match.value[0].code.toString(16).padStart(4, '0')
+}
+
+private val htmlSensitiveChars = Regex("[<>&]")

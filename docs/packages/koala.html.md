@@ -26,3 +26,7 @@ A caller changes the fit of a `containImage` on its root, which the content imag
 The app marks the selected button by adding `rootSwitchCss(attribute, values)` to its own stylesheet. The default style sets `color` to `--primary-fg`; a caller passes another style to change it.
 
 The setting is restored on load through the app's `HeadScriptConfig`, described in `koala.interop.md`.
+
+## Unsafe Content
+
+JSON written into a page through `unsafe { }` is passed through `sanitizeJson()` first, as `dataIsland` does. User text inside unescaped JSON can end the enclosing `script` element.

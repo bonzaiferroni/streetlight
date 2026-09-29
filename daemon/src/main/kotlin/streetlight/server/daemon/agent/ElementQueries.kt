@@ -30,7 +30,7 @@ fun Element?.plainText(): String? =
     this?.let { it.metaContent() ?: it.timeValue() ?: it.text() }?.normalizeSpace()?.takeIf { it.isNotEmpty() }
 
 /** The machine-readable date or time of this element when it is a time element that declares one, or null. */
-private fun Element.timeValue(): String? = attr("datetime").takeIf { tagName() == "time" && it.isNotBlank() }
+private fun Element.timeValue(): String? = attr("datetime").takeIf { tagName() == "time" && 'T' in it }
 
 /** The inner html of this element, or its content when it is a meta element. */
 fun Element?.innerHtml(): String? =

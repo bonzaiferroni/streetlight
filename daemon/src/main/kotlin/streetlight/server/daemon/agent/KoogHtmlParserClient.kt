@@ -60,10 +60,10 @@ class KoogHtmlParserClient(
     ): Outcome<String> {
         log.info { "Reading html: ${url.value.take(50)}" }
         val trimmed = trimmer.trimHtml(doc)
-        val content = config.htmlCharLimit?.let { limit ->
-            if (trimmed.html.length > limit) log.warn { "Truncating html from ${trimmed.html.length} to $limit chars: $url" }
-            trimmed.html.take(limit)
-        } ?: trimmed.html
+        val limit = config.htmlCharLimit?.takeIf { trimmed.html.length > it }
+        limit?.let { log.warn { "Truncating html from ${trimmed.html.length} to $it chars: $url" } }
+        val content = limit?.let { trimmed.html.take(it) } ?: trimmed.html
+        val lengthNotice = limit?.let { SchemaParserText.trimmedLengthNotice(it) } ?: ""
         observer?.trimmed(trimmed, content)
 
         val prompt = prompt(
@@ -72,7 +72,7 @@ class KoogHtmlParserClient(
         ) {
             system("You read web pages and respond with json, following the instructions that come after the page.")
 
-            user("Here is the HTML of $url:\n$content\n\n$instructions")
+            user("Here is the HTML of $url:\n$content\n$lengthNotice\n$instructions")
         }
 
         logger.info { "LM Parse: $url" }

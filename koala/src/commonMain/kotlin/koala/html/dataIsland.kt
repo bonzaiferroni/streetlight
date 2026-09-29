@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.utils.jsonConfig
+import koala.utils.sanitizeJson
 import kotlinx.html.FlowContent
 import kotlinx.html.SCRIPT
 import kotlinx.html.script
@@ -18,7 +19,7 @@ inline fun <reified T> FlowContent.dataIsland(
         block()
 
         unsafe {
-            +jsonConfig.encodeToString(data)
+            +jsonConfig.encodeToString(data).sanitizeJson()
         }
     }
 }

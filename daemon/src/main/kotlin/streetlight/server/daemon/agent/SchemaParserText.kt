@@ -1,22 +1,42 @@
 package streetlight.server.daemon.agent
 
 import streetlight.model.data.EventFeed
+import streetlight.model.data.FetchMode
 import streetlight.model.data.GeneralEventFeed
 import streetlight.model.data.LocationEventFeed
 
 //language="MD"
 object SchemaParserText {
 
-    val contentObjectInstructions = """
-The parent object has two parameters. Sometimes the page does not serve the content we were expecting.
+    /** The place in a set of instructions where [contentObjectInstructions] for the page's fetch go. */
+    const val ContentObjectSlot = "{{content-object}}"
+
+    /**
+     * Describes the parent object of a read of a page fetched in [fetchMode], asking whether scripting is required
+     * only of a page fetched without it.
+     */
+    fun contentObjectInstructions(fetchMode: FetchMode) = if (fetchMode == FetchMode.Basic) """
+The parent object has three parameters. Sometimes the page does not serve the content we were expecting.
 For example if we were expecting a feed of events but the content reflects a privacy policy or an error page,
-that is important to know. Also, sometimes the content will be incomplete because the desired content requires
-additional javascript. If you are unable to find elements that match the requested details and the page seems to
-only be partially loaded, signal that it is incomplete.
+that is important to know. The page was also fetched without running its javascript, and some pages draw their
+content with javascript, leaving only a frame or a loading message in the HTML. If the expected content is missing
+because the page's javascript has not run, signal that scripting is required.
 
 * isExpectedContent: true if the document contains the expected content, false if it does not
-* isIncompleteContent: true if the document is incomplete due to a lack of javascript processing
+* isScriptingRequired: true if the expected content is missing because the page's javascript has not run
 * content: an object with the parameters described below. Null if the document does not contain the expected content.
+""" else """
+The parent object has two parameters. Sometimes the page does not serve the content we were expecting.
+For example if we were expecting a feed of events but the content reflects a privacy policy or an error page,
+that is important to know.
+
+* isExpectedContent: true if the document contains the expected content, false if it does not
+* content: an object with the parameters described below. Null if the document does not contain the expected content.
+"""
+
+    /** Tells the LM that the HTML it read was cut short at [limit] characters. */
+    fun trimmedLengthNotice(limit: Int) = """
+The HTML above was cut short at $limit characters to fit.
 """
 
     val SelectorPreferenceInstructions = """
@@ -191,7 +211,7 @@ content should evaluate to the desired information where relevant.
 
 Each value should be a valid CSS query, except in the case of a single dot that indicates the event element.
 
-$contentObjectInstructions
+$ContentObjectSlot
 
 For the content object, determine the following:
 
@@ -241,7 +261,7 @@ content should evaluate to the desired information where relevant.
 
 Each value should be a valid CSS query.
 
-$contentObjectInstructions
+$ContentObjectSlot
 
 For the content object, determine the following:
 * title: This selector should return an element whose content is the event title.
@@ -287,7 +307,7 @@ content should evaluate to the desired information where relevant.
 
 Each value should be a valid CSS query.
 
-$contentObjectInstructions
+$ContentObjectSlot
 
 For the content object, determine the following:
 * name: This selector should return an element whose content is the name of the location, and nothing else.
@@ -318,7 +338,7 @@ $SelectorReminder
     val LocationInstructions = """
 Read the HTML above. We believe it is the homepage of a venue or location that hosts events.
 
-$contentObjectInstructions
+$ContentObjectSlot
 
 For the content object, determine the following:
 * name: name of the location, should be normal casing and appropriately capitalized
@@ -344,7 +364,7 @@ For the content object, determine the following:
 Read the HTML above. We believe it is the page of a single event.
 
 $EventDefinition
-$contentObjectInstructions
+$ContentObjectSlot
 
 For the content object, determine the following:
 * name: event name or title, should be normal casing and appropriately capitalized

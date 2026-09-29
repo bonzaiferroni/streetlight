@@ -65,6 +65,8 @@ Endpoints sit inside an `authGate` block rather than carrying a per-endpoint che
 | `authGate { }` | Required | `call.getIdentity()` |
 | `authGate(optional = true) { }` | Optional | `call.getIdentityOrNull()` |
 
+The caller's user id comes from `call.getIdentity().callerId`. A `CallerId` is only built from the session, so it proves the id is the caller's own. A `StarId` is a user id of any origin, including one read from the request, and is not proof of who is calling.
+
 A serve function opens a separate `authGate` block for each of these when it holds endpoints of both kinds. Grouping by gate rather than by endpoint keeps the authentication requirement visible at the block, where it cannot be missed by a reader skimming for it.
 
 ## Edit Permission

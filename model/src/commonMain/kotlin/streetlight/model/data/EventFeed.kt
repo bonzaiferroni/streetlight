@@ -28,7 +28,10 @@ data class LocationEventFeed(
     override val geoPoint get() = location.geoPoint
 }
 
-/** A page listing local events at many locations, such as a newspaper's calendar. */
+/**
+ * A page listing local events at many locations, such as a newspaper's calendar, checked again as an
+ * [LeadType.EventFeed] or read once as an [LeadType.EventScan].
+ */
 @Serializable
 data class GeneralEventFeed(
     val leadId: LeadId,
@@ -38,6 +41,7 @@ data class GeneralEventFeed(
     override val timeZoneId: String,
     val checkedAt: Instant?,
     val createdAt: Instant,
+    override val leadType: LeadType = LeadType.EventFeed,
 ): EventFeed {
     override val parseMode get() = ParseMode.Partial
     override val location: Location? get() = null

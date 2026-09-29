@@ -57,6 +57,9 @@ enum class LeadType {
     EventFeed,
     Location,
     Event,
+
+    /** A page listing events, read once like an event feed and not checked again. */
+    EventScan,
 }
 
 @JvmInline

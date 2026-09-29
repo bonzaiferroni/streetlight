@@ -334,7 +334,7 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
     internal fun schemaFailed(problem: Problem) {
         notes.add(problem.message)
         when (problem) {
-            SchemaProblem.Incomplete -> {
+            SchemaProblem.ScriptingRequired -> {
                 page.content = LinkContent.Unread
                 if (fetchMode == FetchMode.Scripting) page.parseOutcome = ParseOutcome.Fail
             }
