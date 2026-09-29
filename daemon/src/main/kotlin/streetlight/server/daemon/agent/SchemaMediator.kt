@@ -8,6 +8,8 @@ import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import streetlight.model.data.EventFeedSchema
@@ -17,6 +19,7 @@ import streetlight.model.data.FetchMode
 import streetlight.model.data.LocationSchema
 import streetlight.model.data.LocationSelectorSchema
 import streetlight.model.data.Origin
+import streetlight.model.data.ParserId
 import streetlight.model.data.SelectorSchema
 import streetlight.server.model.DaoFacade
 import kotlin.time.Clock
@@ -45,6 +48,7 @@ class SchemaMediator(
     private val retryCount: Int = 3,
 ) {
     private var isUsageLimitReached = false
+    private val requestMutex = Mutex()
 
     /**
      * The schema of the feed [doc] at [url] on [origin], asked of the LM with [instructions], with dates read in
@@ -59,26 +63,23 @@ class SchemaMediator(
         instructions: String = SchemaParserText.LocationFeedSelectorsInstructions,
         observer: SchemaObserver? = null,
     ): Outcome<EventFeedSchema> {
-        dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
-            val schema = parser.schema as? EventFeedSchema ?: return@forEach
-            val selector = schema.event ?: return@forEach
-            val isSuccess = doc.tryQuery(selector).toDataOrNull()?.isNotEmpty() == true
-            observer?.storedSchemaTried(schema, isSuccess)
-            dao.parser.updateResult(parser.parserId, isSuccess)
-            if (isSuccess) return Ok(schema)
+        val tried = mutableSetOf<ParserId>()
+        storedFeedSchema(doc, origin, tried, observer)?.let { return Ok(it) }
+        return requestSchema {
+            storedFeedSchema(doc, origin, tried, observer)?.let { return Ok(it) }
+            if (isUsageLimitReached) return LMProblem.UsageLimit
+
+            observer?.requested(schemaRequest)
+            val request = readContent<EventFeedSchemaRequest>(url, doc, origin, fetchMode, instructions, observer) { return it }
+
+            val schema = request.toSchema()
+            val validated = schema.validate(doc)
+            observer?.schemaCreated(schema, validated)
+            val valid = validated.toDataOr { return SchemaProblem.Invalid }
+            val refined = refineFeedStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
+            dao.parser.create(origin.originId, refined, origin.fetchMode)
+            Ok(refined)
         }
-        if (isUsageLimitReached) return LMProblem.UsageLimit
-
-        observer?.requested(schemaRequest)
-        val request = readContent<EventFeedSchemaRequest>(url, doc, origin, fetchMode, instructions, observer) { return it }
-
-        val schema = request.toSchema()
-        val validated = schema.validate(doc)
-        observer?.schemaCreated(schema, validated)
-        val valid = validated.toDataOr { return SchemaProblem.Invalid }
-        val refined = refineFeedStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
-        dao.parser.create(origin.originId, refined, origin.fetchMode)
-        return Ok(refined)
     }
 
     /**
@@ -93,35 +94,26 @@ class SchemaMediator(
         timeZoneId: String?,
         observer: SchemaObserver? = null,
     ): Outcome<EventPageSchema> {
-        dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.mapNotNull { parser ->
-            val schema = parser.schema as? EventPageSchema ?: return@mapNotNull null
-            val isSuccess = doc.queryElement(schema.title) { it.isPlausibleField() } != null
-            dao.parser.updateResult(parser.parserId, isSuccess)
-            if (!isSuccess) {
-                observer?.storedSchemaTried(schema, false)
-                return@mapNotNull null
-            }
-            val length = doc.queryElement(schema.description) { it.isPlausibleProse() }?.html()?.length ?: 0
-            length to schema
-        }.maxByOrNull { it.first }?.let { (_, schema) ->
-            observer?.storedSchemaTried(schema, true)
-            return Ok(schema)
+        val tried = mutableSetOf<ParserId>()
+        storedPageSchema(doc, origin, tried, observer)?.let { return Ok(it) }
+        return requestSchema {
+            storedPageSchema(doc, origin, tried, observer)?.let { return Ok(it) }
+            if (isUsageLimitReached) return LMProblem.UsageLimit
+
+            observer?.requested(schemaRequest)
+            val request = readContent<EventPageSchemaRequest>(
+                url, doc, origin, fetchMode, SchemaParserText.EventPageSelectorsInstructions, observer,
+            ) { return it }
+
+            val schema = request.toSchema()
+            val validated = schema.validate(doc)
+            observer?.schemaCreated(schema, validated)
+            val valid = validated.toDataOr { return SchemaProblem.Invalid }
+            val started = refinePageStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
+            val refined = refinePageDescription(url, doc, started, observer)
+            dao.parser.create(origin.originId, refined, origin.fetchMode)
+            Ok(refined)
         }
-        if (isUsageLimitReached) return LMProblem.UsageLimit
-
-        observer?.requested(schemaRequest)
-        val request = readContent<EventPageSchemaRequest>(
-            url, doc, origin, fetchMode, SchemaParserText.EventPageSelectorsInstructions, observer,
-        ) { return it }
-
-        val schema = request.toSchema()
-        val validated = schema.validate(doc)
-        observer?.schemaCreated(schema, validated)
-        val valid = validated.toDataOr { return SchemaProblem.Invalid }
-        val started = refinePageStart(url, doc, valid, timeZoneOf(timeZoneId), observer)
-        val refined = refinePageDescription(url, doc, started, observer)
-        dao.parser.create(origin.originId, refined, origin.fetchMode)
-        return Ok(refined)
     }
 
     /**
@@ -135,26 +127,24 @@ class SchemaMediator(
         fetchMode: FetchMode,
         observer: SchemaObserver? = null,
     ): Outcome<LocationSelectorSchema> {
-        dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
-            val schema = parser.schema as? LocationSelectorSchema ?: return@forEach
-            val isSuccess = doc.queryElement(schema.name) != null
-            observer?.storedSchemaTried(schema, isSuccess)
-            dao.parser.updateResult(parser.parserId, isSuccess)
-            if (isSuccess) return Ok(schema)
+        val tried = mutableSetOf<ParserId>()
+        storedLocationSchema(doc, origin, tried, observer)?.let { return Ok(it) }
+        return requestSchema {
+            storedLocationSchema(doc, origin, tried, observer)?.let { return Ok(it) }
+            if (isUsageLimitReached) return LMProblem.UsageLimit
+
+            observer?.requested(schemaRequest)
+            val request = readContent<LocationSchemaRequest>(
+                url, doc, origin, fetchMode, SchemaParserText.LocationSelectorsInstructions, observer,
+            ) { return it }
+
+            val schema = request.toSchema()
+            val validated = schema.validate(doc)
+            observer?.schemaCreated(schema, validated)
+            val valid = validated.toDataOr { return SchemaProblem.Invalid }
+            dao.parser.create(origin.originId, valid, origin.fetchMode)
+            Ok(valid)
         }
-        if (isUsageLimitReached) return LMProblem.UsageLimit
-
-        observer?.requested(schemaRequest)
-        val request = readContent<LocationSchemaRequest>(
-            url, doc, origin, fetchMode, SchemaParserText.LocationSelectorsInstructions, observer,
-        ) { return it }
-
-        val schema = request.toSchema()
-        val validated = schema.validate(doc)
-        observer?.schemaCreated(schema, validated)
-        val valid = validated.toDataOr { return SchemaProblem.Invalid }
-        dao.parser.create(origin.originId, valid, origin.fetchMode)
-        return Ok(valid)
     }
 
     /**
@@ -167,10 +157,10 @@ class SchemaMediator(
         origin: Origin,
         fetchMode: FetchMode,
         observer: SchemaObserver? = null,
-    ): Outcome<LocationSchema> {
+    ): Outcome<LocationSchema> = requestSchema {
         if (isUsageLimitReached) return LMProblem.UsageLimit
         observer?.requested(readRequest)
-        return Ok(readContent<LocationSchema>(url, doc, origin, fetchMode, SchemaParserText.LocationInstructions, observer) { return it })
+        Ok(readContent<LocationSchema>(url, doc, origin, fetchMode, SchemaParserText.LocationInstructions, observer) { return it })
     }
 
     /**
@@ -183,10 +173,10 @@ class SchemaMediator(
         origin: Origin,
         fetchMode: FetchMode,
         observer: SchemaObserver? = null,
-    ): Outcome<EventSchema> {
+    ): Outcome<EventSchema> = requestSchema {
         if (isUsageLimitReached) return LMProblem.UsageLimit
         observer?.requested(readRequest)
-        return Ok(readContent<EventSchema>(url, doc, origin, fetchMode, SchemaParserText.EventInstructions, observer) { return it })
+        Ok(readContent<EventSchema>(url, doc, origin, fetchMode, SchemaParserText.EventInstructions, observer) { return it })
     }
 
     /** The feed [schema] with the parts of its events' start, asked of the LM when the start does not already parse. */
@@ -262,6 +252,72 @@ class SchemaMediator(
         )
         return refined.takeIf { it.startsParse(page, zone) } ?: schema
     }
+    /** The result of [block], run while no other of the mediator's requests to the LM runs. */
+    private suspend inline fun <T> requestSchema(block: () -> T): T = requestMutex.withLock(action = block)
+
+    /** The first stored feed schema of [origin] whose event selector matches [doc], skipping and adding to [tried]. */
+    private suspend fun storedFeedSchema(
+        doc: Document,
+        origin: Origin,
+        tried: MutableSet<ParserId>,
+        observer: SchemaObserver?,
+    ): EventFeedSchema? {
+        dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
+            if (!tried.add(parser.parserId)) return@forEach
+            val schema = parser.schema as? EventFeedSchema ?: return@forEach
+            val selector = schema.event ?: return@forEach
+            val isSuccess = doc.tryQuery(selector).toDataOrNull()?.isNotEmpty() == true
+            observer?.storedSchemaTried(schema, isSuccess)
+            dao.parser.updateResult(parser.parserId, isSuccess)
+            if (isSuccess) return schema
+        }
+        return null
+    }
+
+    /**
+     * The stored page schema of [origin] whose title passes on [doc], the one with the longest description, skipping
+     * and adding to [tried].
+     */
+    private suspend fun storedPageSchema(
+        doc: Document,
+        origin: Origin,
+        tried: MutableSet<ParserId>,
+        observer: SchemaObserver?,
+    ): EventPageSchema? {
+        val best = dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.mapNotNull { parser ->
+            if (!tried.add(parser.parserId)) return@mapNotNull null
+            val schema = parser.schema as? EventPageSchema ?: return@mapNotNull null
+            val isSuccess = doc.queryElement(schema.title) { it.isPlausibleField() } != null
+            dao.parser.updateResult(parser.parserId, isSuccess)
+            if (!isSuccess) {
+                observer?.storedSchemaTried(schema, false)
+                return@mapNotNull null
+            }
+            val length = doc.queryElement(schema.description) { it.isPlausibleProse() }?.html()?.length ?: 0
+            length to schema
+        }.maxByOrNull { it.first }?.second ?: return null
+        observer?.storedSchemaTried(best, true)
+        return best
+    }
+
+    /** The first stored location schema of [origin] whose name matches [doc], skipping and adding to [tried]. */
+    private suspend fun storedLocationSchema(
+        doc: Document,
+        origin: Origin,
+        tried: MutableSet<ParserId>,
+        observer: SchemaObserver?,
+    ): LocationSelectorSchema? {
+        dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
+            if (!tried.add(parser.parserId)) return@forEach
+            val schema = parser.schema as? LocationSelectorSchema ?: return@forEach
+            val isSuccess = doc.queryElement(schema.name) != null
+            observer?.storedSchemaTried(schema, isSuccess)
+            dao.parser.updateResult(parser.parserId, isSuccess)
+            if (isSuccess) return schema
+        }
+        return null
+    }
+
     /** This problem, noting when it is the LM's usage limit. */
     private fun Problem.alsoNoteLimit(): Problem = also { if (it == LMProblem.UsageLimit) isUsageLimitReached = true }
 

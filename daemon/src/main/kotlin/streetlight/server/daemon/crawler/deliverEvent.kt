@@ -37,13 +37,15 @@ internal suspend fun Crawler.createEventAt(event: PropertyMap, edit: EventEdit, 
     val startsAt = located.startsAt ?: return
     val zone = located.timeZone ?: return
     val day = startsAt.toLocalDateTime(zone).date
-    val sameDay = dao.event.readEventsBetween(
-        locationId = location.locationId,
-        from = day.atStartOfDayIn(zone),
-        until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
-    )
-    sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.recordDuplicate(event, title, it.title) }
-    val created = server.createEvent(null, located, isImageRequired = false).toDataOr { return tracker.recordFailed(event, title, it) }
+    val created = dbWrite {
+        val sameDay = dao.event.readEventsBetween(
+            locationId = location.locationId,
+            from = day.atStartOfDayIn(zone),
+            until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
+        )
+        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.recordDuplicate(event, title, it.title) }
+        server.createEvent(null, located, isImageRequired = false)
+    }.toDataOr { return tracker.recordFailed(event, title, it) }
     if (located.image != null && created.image == null) tracker.imageFailed(event, title)
     tracker.recordCreated()
 }

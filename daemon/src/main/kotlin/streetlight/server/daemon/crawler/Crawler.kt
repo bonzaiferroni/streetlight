@@ -5,22 +5,21 @@ import kampfire.model.Problem
 import klutch.server.provide
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
 import streetlight.server.daemon.agent.HtmlParserClient
 import streetlight.server.daemon.agent.SchemaMediator
 import streetlight.model.data.EventFeed
 import streetlight.model.data.Lead
-import streetlight.model.data.ParseMode
-import streetlight.model.data.toOriginId
 import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
 import streetlight.server.plugins.logger
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.Instant
 
 /**
  * The reader of each feed that is due, fetching its pages with [fetcher] and asking the LM through [client] for the
@@ -30,29 +29,37 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
 
     val dao = server.dao
     val mediator = SchemaMediator(client, dao, lmRetryCount)
-    val spawner = LocationSpawner(server, server.provide<MapReferenceClient>())
+    val spawner = LocationSpawner(server, server.provide<MapReferenceClient>(), OSMGate())
     val log = KotlinLogging.logger(Crawler::class)
+    @PublishedApi internal val writeMutex = Mutex()
+    private val workers = Semaphore(maxWorkers)
 
-    var startedAt = Instant.DISTANT_PAST
-        private set
-
-    suspend fun start() {
+    /**
+     * Reads the leads due, up to [maxWorkers] at once, each in its own coroutine: every second, as many more as there
+     * is room for are marked checked and launched.
+     */
+    suspend fun start(): Unit = coroutineScope {
         while (true) {
-            startedAt = Clock.System.now()
-            dao.readCheckable(checkInterval - 1.hours).forEach { lead ->
-                if (lead is EventFeed && lead.parseMode == ParseMode.None) return@forEach
-                checkLead(lead)
+            val workersAvailable = workers.availablePermits
+            if (workersAvailable > 0) {
+                dao.readCheckable(checkInterval - 1.hours, workersAvailable).forEach { lead ->
+                    workers.acquire()
+                    dbWrite { dao.updateCheckedAt(lead) }
+                    launch {
+                        try {
+                            checkLead(lead)
+                        } finally {
+                            workers.release()
+                        }
+                    }
+                }
             }
-            log.info { "completed lead check" }
-            delay(maxOf(1.minutes - (Clock.System.now() - startedAt), 1.seconds))
+            delay(1.seconds)
         }
     }
 
-    /** Reads [lead], delivers what it finds, and records each page's outcome on its link. */
+    /** Reads [lead], already marked checked, delivers what it finds, and records each page's outcome on its link. */
     private suspend fun checkLead(lead: Lead) {
-        dao.updateCheckedAt(lead)
-
-        val originId = lead.initialUrl.toOriginId() ?: return
         val name = if (lead is EventFeed) lead.name else "${lead.leadType}: ${lead.initialUrl}"
 
         val tracker = ParseTracker(name, lead.initialUrl)
@@ -65,10 +72,16 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
                 log.error(e) { "check failed for $name" }
                 tracker.failed(e)
             }
-            tracker.records().forEach { dao.recordLink(it) }
-            if (tracker.needsReport()) tracker.write(originId)
+            dbWrite { tracker.records().forEach { dao.recordLink(it) } }
+            if (tracker.needsReport()) tracker.write(lead.leadType)
         }
     }
+
+    /**
+     * The result of [block], run while no other of the crawler's database writes runs. A block holds the reads its
+     * write depends on, never nests another, and does no slow work.
+     */
+    suspend inline fun <T> dbWrite(block: () -> T): T = writeMutex.withLock(action = block)
 
     fun logProblem(problem: Problem) {
         log.info { problem.message }
@@ -89,4 +102,5 @@ fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient) {
 }
 
 private val checkInterval = 24.hours
+private const val maxWorkers = 4
 internal const val lmRetryCount = 10

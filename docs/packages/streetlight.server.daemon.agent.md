@@ -89,6 +89,8 @@ A request to the LM asks for one shape at a time. A follow-up request asks a nar
 
 `SchemaMediator` finds the schema of a feed, an event page or a location's homepage, and is the only caller that asks the LM for one. The crawler is its only user; the server's parse endpoints are retired.
 
+`SchemaMediator` sends the LM one request at a time under its request lock. A schema request holds the lock from its second look at the stored schemas through its store, so a second page of the same origin waiting on the lock finds the first page's schema; the first look runs without the lock, and the second tries only the schemas the first did not.
+
 1. The schemas stored for the page's origin, in the `parser` table, are tried first. The first feed schema whose `event` selector matches is used, and of the page schemas whose title passes, the one with the longest description.
 2. Otherwise the LM is asked for the whole schema with `EventFeedSchemaRequest` or `EventPageSchemaRequest`, and the answer is validated.
 3. When the start of the events does not parse, the LM is asked the time follow-up with `EventTimeSchemaRequest`: the month, the day and the start time, each alone.

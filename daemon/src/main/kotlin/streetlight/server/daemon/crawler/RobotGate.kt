@@ -3,6 +3,8 @@ package streetlight.server.daemon.crawler
 import kampfire.model.Problem
 import kampfire.model.Url
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import streetlight.server.model.StreetlightAgent
 import kotlin.time.Clock
 import kotlin.time.Duration
@@ -23,8 +25,8 @@ class RobotGate(
 
     private val rules: List<Rule>
     val interval: Duration
-    var lastRead: Instant? = null
-        private set
+    private val slotMutex = Mutex()
+    private var nextOpen = Instant.DISTANT_PAST
 
     init {
         val groups = mutableMapOf<String, MutableList<Rule>>()
@@ -68,14 +70,16 @@ class RobotGate(
 
     suspend fun waitUntilOpen(url: Url) = waitUntilOpen(url.toRelativePath())
 
+    /**
+     * Whether [url] is open to the crawler, waiting first for its turn: each caller reserves the next slot, one
+     * [interval] after the last, so callers on the same origin are spaced even when they arrive together.
+     */
     suspend fun waitUntilOpen(url: String): Boolean {
         if (!isOpen(url)) return false
-
-        lastRead?.let { last ->
-            val remaining = interval - (Clock.System.now() - last)
-            if (remaining.isPositive()) delay(remaining)
+        val slot = slotMutex.withLock {
+            maxOf(Clock.System.now(), nextOpen).also { nextOpen = it + interval }
         }
-        lastRead = Clock.System.now()
+        delay(slot - Clock.System.now())
         return true
     }
 

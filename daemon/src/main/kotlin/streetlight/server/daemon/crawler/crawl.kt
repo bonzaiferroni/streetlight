@@ -47,9 +47,9 @@ class FetchDocument(
 
 /**
  * Reads [lead]: fetches it in its origin's fetch mode, finds the schema its kind of page wants, fetches it again with
- * scripting when its content is incomplete, and hands the document and schema to the service for its kind. A lead
- * that is not due, since its last read stopped it or it was already fetched this run, or that cannot be fetched or
- * given a schema, passes on only what it already carries. A lead whose page calls its event off passes on nothing.
+ * scripting when scripting is required, and hands the document and schema to the service for its kind. A lead whose
+ * last read stopped it, or that cannot be fetched or given a schema, passes on only what it already carries. A lead
+ * whose page calls its event off passes on nothing.
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawl(lead: Lead) {
@@ -58,8 +58,7 @@ suspend fun Crawler.crawl(lead: Lead) {
         tracker.skipped(lead.initialUrl, PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
         return
     }
-    if (link != null && link.fetchedAt >= startedAt) return
-    val origin = lead.initialUrl.toOriginId()?.let { dao.origin.readOrCreateOrigin(it) } ?: return
+    val origin = lead.initialUrl.toOriginId()?.let { dbWrite { dao.origin.readOrCreateOrigin(it) } } ?: return
     val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
 
     var document = fetchDocument(lead, origin, fetchMode)
@@ -69,7 +68,7 @@ suspend fun Crawler.crawl(lead: Lead) {
         schemaOutcome = document?.let { provideCrawl(lead, it) }
     }
 
-    document?.let { dao.registerFetch(it) }
+    document?.let { dbWrite { dao.registerFetch(it) } }
     if (schemaOutcome == SchemaProblem.CalledOff) return
 
     val schema = schemaOutcome?.toDataOrNull()

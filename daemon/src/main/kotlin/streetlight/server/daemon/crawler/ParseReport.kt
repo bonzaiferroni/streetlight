@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 import streetlight.server.daemon.agent.TrimStats
 import streetlight.model.data.LinkAccess
 import streetlight.model.data.LinkContent
-import streetlight.model.data.OriginId
+import streetlight.model.data.LeadType
 import streetlight.model.data.ParseOutcome
 import java.io.File
 
@@ -42,9 +42,12 @@ class ParseReport(
     val records: RecordReport,
     val failure: String? = null,
 ) {
-    /** Writes this report to `<origin>.json` in [parserLogDir], replacing the report of an earlier check. */
-    fun write(originId: OriginId) {
-        val file = parserLogDir.resolve("$originId.json")
+    /**
+     * Writes this report to `<type>-<address>.json` in [parserLogDir], named for the [leadType] and url of its lead,
+     * replacing the report of an earlier check of it.
+     */
+    fun write(leadType: LeadType, leadUrl: Url) {
+        val file = parserLogDir.resolve("$leadType-${leadUrl.toFileName()}.json")
         file.parentFile.mkdirs()
         file.writeText(reportJson.encodeToString(this))
     }

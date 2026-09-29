@@ -23,6 +23,7 @@ import streetlight.model.data.FetchMode
 import streetlight.model.data.Location
 import streetlight.model.data.LinkAccess
 import streetlight.model.data.LinkContent
+import streetlight.model.data.LeadType
 import streetlight.model.data.OriginId
 import streetlight.model.data.ParseOutcome
 import streetlight.model.data.SchemaType
@@ -209,9 +210,9 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     /** The record of each page that reached its server, the lead's own first, for its link. */
     fun records(): List<LinkRecord> = allPages().mapNotNull { it.record() }
 
-    /** Writes the report to `<origin>.json`, and saves the html of the lead's page and of each page that needs work. */
-    fun write(originId: OriginId) {
-        report().write(originId)
+    /** Writes the report of the lead of [leadType], and saves the html of the lead's page and of each page that needs work. */
+    fun write(leadType: LeadType) {
+        report().write(leadType, leadUrl)
         allPages().filter { it.url == leadUrl || it.needsWork }.forEach { it.saveHtml() }
     }
 

@@ -23,9 +23,15 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
-/** The leads due a read: the locations' own feeds first, then the stored leads, each oldest first. */
-suspend fun DaoFacade.readCheckable(interval: Duration): List<Lead> =
-    location.readCheckableFeeds(interval) + lead.readCheckable(interval)
+/**
+ * Up to [limit] leads due a read: the locations' own feeds first, then the stored leads filling what room remains,
+ * each oldest first.
+ */
+suspend fun DaoFacade.readCheckable(interval: Duration, limit: Int): List<Lead> {
+    val feeds = location.readCheckableFeeds(interval, limit)
+    val room = limit - feeds.size
+    return if (room > 0) feeds + lead.readCheckable(interval, room) else feeds
+}
 
 /** Marks [lead] as checked now. */
 suspend fun DaoFacade.updateCheckedAt(lead: Lead) {

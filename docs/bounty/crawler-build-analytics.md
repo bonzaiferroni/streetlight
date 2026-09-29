@@ -19,7 +19,7 @@ These hold for every change a build makes. The General Model has its single home
 
 1. **Build.** Raise `parserBuildId` in `ParseReport.kt` (e.g. `V10` → `V11`) whenever any stage changes. The navigator builds and runs; the agent does not compile.
 2. **Stage.** Reset only the records that want another read (below). Tables are never cleared wholesale.
-3. **Run.** The navigator runs the crawler until its pass completes ("completed feed check" in its log).
+3. **Run.** The navigator runs the crawler until the staged leads have been read.
 4. **Analyze.** Read `logs/parser/Vn/*.json`, the saved html beside them, and the events created in the run's window.
 5. **Probe.** Check what the page really holds with ksoup or Playwright in jshell. The probe is the source of truth, not the report and not the LM.
 6. **Lessons.** Sort each finding into a gremlin (the code is wrong), a reef (the domain, not yet handled), or accepted/unread by rule. Only lessons that pass the General Model become the next build.

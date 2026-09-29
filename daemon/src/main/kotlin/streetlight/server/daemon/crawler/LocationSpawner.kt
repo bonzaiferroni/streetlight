@@ -6,6 +6,7 @@ import kampfire.model.Distance
 import streetlight.model.data.toOriginId
 import streetlight.model.data.mergeLeft
 import kampfire.model.toUrl
+import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.Url
 import kampfire.model.GeoPoint
@@ -18,7 +19,8 @@ import kampfire.model.toDataOr
 import kampfire.utils.fuzzyMatches
 import kampfire.utils.similarity
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.EventFeed
@@ -30,23 +32,22 @@ import streetlight.server.db.datascope.createLocation
 import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
 import kotlin.math.cos
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.Instant
 
 /**
  * Finds the location of an event read from a feed: the distinct place its location text names, read or created, or
- * else the feed's own location, when it has one.
+ * else the feed's own location, when it has one. Its map searches wait on [gate].
  */
 class LocationSpawner(
     private val server: Server,
     private val osm: MapReferenceClient,
+    private val gate: OSMGate,
 ) {
     private val dao get() = server.dao
+    private val placesMutex = Mutex()
     private val places = mutableMapOf<Pair<String, GeoPoint>, List<OSMLocation>>()
-    private var searchedAt = Instant.DISTANT_PAST
 
     /** The location of [event], read from [lead], or null when it names no place and [lead] has no location. */
+    context(crawler: Crawler)
     suspend fun locate(event: PropertyMap, lead: EventFeed, tracker: ParseTracker): Location? {
         val feedLocation = lead.location
         val text = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() } ?: return feedLocation
@@ -55,19 +56,21 @@ class LocationSpawner(
         val place = distinctPlace(text, lead.geoPoint, hits, hasFeedLocation = feedLocation != null)
             ?: return feedLocation.also { tracker.locationFellBack(event, text) }
 
-        dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(event, text, it) } }
-        dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
-            .firstOrNull { location -> location.name?.fuzzyMatches(text) == true }
-            ?.let { return it.also { tracker.locationMatched(event, text, it) } }
+        val created = crawler.dbWrite {
+            dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(event, text, it) } }
+            dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
+                .firstOrNull { location -> location.name?.fuzzyMatches(text) == true }
+                ?.let { return it.also { tracker.locationMatched(event, text, it) } }
 
-        val edit = place.toEdit().takeIf { it.validity.isValid && it.state != null }
-            ?: return feedLocation.also { tracker.locationFellBack(event, text) }
-        val created = try {
-            server.createLocation(null, edit)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Problem("${e::class.simpleName}: ${e.message}")
+            val edit = place.toEdit().takeIf { it.validity.isValid && it.state != null }
+                ?: return feedLocation.also { tracker.locationFellBack(event, text) }
+            try {
+                server.createLocation(null, edit)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Problem("${e::class.simpleName}: ${e.message}")
+            }
         }.toDataOr {
             tracker.locationFailed(event, text, it)
             return feedLocation
@@ -113,6 +116,7 @@ class LocationSpawner(
      * The location created for [place] from the page's [details], its [website] preferred to the map's, with the map
      * filling what the page lacks and giving the address.
      */
+    context(crawler: Crawler)
     suspend fun createFrom(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
         val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit())
         return create(edit.withUnitOf(details[ParseProperty.Address]))
@@ -122,6 +126,7 @@ class LocationSpawner(
      * The location created at the address of [place] from the page's [details], as [createFrom] creates it but with no
      * map id, since the map names something else there or nothing.
      */
+    context(crawler: Crawler)
     suspend fun createNamedAt(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
         val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit().copy(name = null, mapId = null))
         return create(edit.withUnitOf(details[ParseProperty.Address]))
@@ -136,8 +141,7 @@ class LocationSpawner(
         val street = withoutUnit(address)
         val number = houseNumber.find(street)?.value ?: return null
         val roadName = street.replaceFirst(number, "").split(' ', ',').maxByOrNull { it.length } ?: return null
-        delay(searchedAt + searchInterval - Clock.System.now())
-        searchedAt = Clock.System.now()
+        gate.waitUntilOpen()
         val text = listOfNotNull(street, area).joinToString(", ")
         val hits = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
         return hits
@@ -154,27 +158,34 @@ class LocationSpawner(
      * The location created at the address of [place], with no name and no map id, since it is the address and not
      * the thing the map names there; [website] when known.
      */
+    context(crawler: Crawler)
     suspend fun createAt(place: OSMLocation, website: Url?): Outcome<Location> =
         create(place.toEdit().copy(name = null, mapId = null, website = website))
 
-    /** The location created from [edit], when it has what a location needs: a point, a city and a state. */
+    /**
+     * The location created from [edit], when it has what a location needs: a point, a city and a state. A location
+     * already stored under its map id is returned in its place.
+     */
+    context(crawler: Crawler)
     private suspend fun create(edit: LocationEdit): Outcome<Location> {
         if (edit.geoPoint == null || edit.city == null || edit.state == null) {
             return Problem("The place on the map lacks what a location needs")
         }
-        return try {
-            server.createLocation(null, edit)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Problem("${e::class.simpleName}: ${e.message}")
+        return crawler.dbWrite {
+            edit.mapId?.let { dao.location.readLocationByMapId(it) }?.let { return@dbWrite Ok(it) }
+            try {
+                server.createLocation(null, edit)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Problem("${e::class.simpleName}: ${e.message}")
+            }
         }
     }
 
     /** The place on the map found by the search [text] and named [name], preferring one on the origin of [website]. */
     private suspend fun findPlace(website: Url?, text: String, name: String): OSMLocation? {
-        delay(searchedAt + searchInterval - Clock.System.now())
-        searchedAt = Clock.System.now()
+        gate.waitUntilOpen()
         val hits = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
         val origin = website?.toOriginId()
         return hits
@@ -191,13 +202,12 @@ class LocationSpawner(
     /** The map places named [text] within [searchRadius] of [point], or null when the search failed. */
     private suspend fun search(text: String, point: GeoPoint): List<OSMLocation>? {
         val key = text.lowercase() to point
-        places[key]?.let { return it }
-        delay(searchedAt + searchInterval - Clock.System.now())
-        searchedAt = Clock.System.now()
+        placesMutex.withLock { places[key] }?.let { return it }
+        gate.waitUntilOpen()
         val hits = tryOrNull {
             osm.search(OSMQuery(amenity = text, bounds = point.boundsWithin(searchRadius)))
         } ?: return null
-        places[key] = hits
+        placesMutex.withLock { places[key] = hits }
         return hits
     }
 }
@@ -248,7 +258,6 @@ private fun LocationEdit.withUnitOf(address: String?): LocationEdit {
 
 internal val searchRadius = 200.kilometers
 internal val sameVenueRadius = 150.meters
-private val searchInterval = 10.seconds
 private val houseNumber = Regex("""\b\d+[A-Za-z]?\b""")
 private val addressUnit = Regex(""",?\s*(?:#\s*|\b(?:unit|suite|ste|apt|apartment|room|rm)\b\.?\s*#?\s*)[A-Za-z]?\d[A-Za-z0-9-]*\b""", RegexOption.IGNORE_CASE)
 private const val minPlaceRank = 30

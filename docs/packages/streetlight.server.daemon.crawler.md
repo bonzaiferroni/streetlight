@@ -14,7 +14,7 @@ The crawler, a standalone process that reads event feeds and the event pages the
 
 ## Structure
 
-`Crawler` holds what every piece of work shares: the DAO, its rooms and the run's state. It takes each feed from the database as a `Lead` and hands it to `crawlLead`. A service function is an extension of `Crawler` named for its work, such as `crawlEventFeed` and `crawlEventPage`, and keeps no state of its own; a new kind of lead is read by a new one.
+`Crawler` holds what every piece of work shares: the DAO, its rooms and the run's state. It reads a few leads at once, each in its own coroutine, taking more as room opens, and hands each to `crawl`. A service function is an extension of `Crawler` named for its work, such as `crawlEventFeed` and `crawlEventPage`, and keeps no state of its own; a new kind of lead is read by a new one.
 
 A room is a class that owns a distinct body of work and its own state, never calls back into the service functions, and is what a test replaces. `PageFetcher` fetches each page once its origin's robots gate opens, with a plain request or in the browser, and keeps the gates and the browser. `SchemaMediator` finds each page's schema and keeps the LM's usage limit. `LocationSpawner` resolves event locations and keeps its map searches. Work that branches on what a page turns out to hold stays with the service functions.
 
@@ -22,7 +22,9 @@ A service function reads as the steps of its work, each step a function of its o
 
 Data that travels between steps together is carried as one package, named for its contents. Work flows one way: each desk passes its package on, and the last desk sends it to its destination. Events end in the database through `deliverEvent`, and the tracker ends in the link records and the report when the check is filed. A room answers the desk that asks it; a desk returns nothing.
 
-A `Lead` is a page the crawler is given, with what is known of it before it is fetched: an `EventFeed`, or an `EventPage` carrying its feed and the `feedEvent` the feed showed. `crawlLead` reads every lead: it checks the lead is due, fetches its `FetchDocument` in its origin's fetch mode, finds the schema its kind wants, fetches it again with scripting when the LM finds scripting required, and hands the document and schema to the service for its kind, pairing each kind of lead with its kind of schema. A lead that is not due, since its last read stopped it or it was already fetched this run, or that cannot be fetched or given a schema, passes on only what it carries: an event page delivers its `feedEvent`.
+Shared work is paced or serialized so concurrent leads stay respectful and consistent: gates space the requests to each origin and to the map, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`, each holding the reads it depends on. A room that writes takes the `Crawler` as a context parameter for `dbWrite`.
+
+A `Lead` is a page the crawler is given, with what is known of it before it is fetched: an `EventFeed`, or an `EventPage` carrying its feed and the `feedEvent` the feed showed. `crawl` reads every lead: it checks the lead's last read did not stop it, fetches its `FetchDocument` in its origin's fetch mode, finds the schema its kind wants, fetches it again with scripting when the LM finds scripting required, and hands the document and schema to the service for its kind, pairing each kind of lead with its kind of schema. A lead whose last read stopped it, or that cannot be fetched or given a schema, passes on only what it carries: an event page delivers its `feedEvent`.
 
 A lead's schema is read from the page's JSON-LD first and asked of the LM second. An event page or event lead takes an `EventSchema` from the event whose url is the page's, or the page's only event, when it has a name and a start with its time; an event lead's also needs a place. A location lead takes a `LocationSchema` from the page's only place. Feeds are not read from JSON-LD. An event the page declares cancelled or postponed is `SchemaProblem.CalledOff`, and its lead passes on nothing, not even its `feedEvent`. `crawlEventPage` reads an `EventPageSchema` by selector and an `EventSchema` as its values. Whichever schema read the page, the image its JSON-LD declares for the event comes first, then its meta image. Its declared description is carried as `DeclaredDescription` and kept whole, whatever the source's `ParseMode`, since the page publishes it for other platforms to show; it takes the place of the read description. Its declared ticket url becomes a `Tickets` link.
 
@@ -32,7 +34,7 @@ A page is known by the url it was served from, after redirects and normalized. I
 
 ## Feed Sources
 
-Each feed is an `EventFeed`, read by the same `crawlEventFeed`. Its url arrives normalized from the DAO that builds it. `readCheckable` gives the feeds not checked within a day: the locations' own first, so their venues are stored before a general feed names them, then the general feeds.
+Each feed is an `EventFeed`, read by the same `crawlEventFeed`. Its url arrives normalized from the DAO that builds it. `readCheckable` gives the leads not checked within a day. Leads are independent of one another, and their order carries no meaning.
 
 | Source | Feed | Location of its events |
 |---|---|---|
@@ -53,12 +55,12 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 
 | Output | Path |
 |---|---|
-| Parse report | `../logs/parser/<build>/<origin>.json` |
+| Parse report | `../logs/parser/<build>/<type>-<address>.json`, named for the lead's type and url |
 | Page html | `../logs/parser/<build>/html/<address>.html`, for each page that did not succeed |
 | Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
-- `checkLocation` builds a `ParseTracker` for each location and reports the event stage to it. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the feed was read and yielded no event created, duplicated or known, or the check failed. A later check in the same build overwrites the report, and the report saves the feed's html.
-- An exception during a check is caught and reported as the check's `failure`, its link records are kept, and the crawler moves to the next feed. The location's `checked_at` stays set, so a location that keeps failing waits for its next turn.
+- `checkLead` builds a `ParseTracker` for each lead. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the lead was read and yielded no record created, duplicated or known, or the check failed. A later check of the same lead in the same build overwrites its report, and the report saves the lead's html.
+- An exception during a check is caught and reported as the check's `failure`, and its link records are kept. The lead's `checked_at` stays set, so a lead that keeps failing waits for its next turn.
 - A step that records takes its tracker as an argument, never null and never inside a package, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit), and consults it before fetching. A step computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
 - A check has one `ParseTracker`, passed as a context. It tracks each page of the check by its url, the lead's own page and any page the lead leads to, and every tracking call names the url of the page it records.
@@ -112,7 +114,7 @@ A feed's events are created only with a title, and a start date and time that is
 
 An event's title has its bracketed notes cut, such as "[SOLD OUT]". An event is a duplicate, and is not created, when an event at the location on the same local day has a title that `fuzzyMatches` its own, whether posted by the crawler or by a person and whatever its start time. Each duplicate is counted, and its pair of titles noted on its page. An event whose image cannot be stored is still created, without the image, and noted on its page, since the image is decoration and the event is the data.
 
-A source's `ParseMode` sets how much is read: `None` skips it, `Partial` shortens each description it reads, and `Full` keeps each description whole. A declared description is never shortened. An event's shortened description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
+A source's `ParseMode` sets how much is read: `None` leaves it out of `readCheckable`, `Partial` shortens each description it reads, and `Full` keeps each description whole. A declared description is never shortened. An event's shortened description is kept to 1,000 characters of markdown, respecting the venue's own writing. `shortenDescription` keeps the whole paragraphs that fit, or the first sentences when the first paragraph does not, and ends a shortened description with a `Read more` link to the event page. Shortened descriptions are counted under `shortened`.
 
 An event's date text joins its `date`, `month` and `day` selectors. When an event is read from both its feed and its page, its date and start time are taken as the first pair that parses: the page's own, the feed's date with the page's time, the page's date with the feed's time, then the feed's own.
 
@@ -128,7 +130,7 @@ An event is placed at its feed's location unless its location text clearly names
 
 Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map. A general feed has no location of its own, so the 150 m rule does not apply, and an event whose place is not found is dropped and noted on its page, marking its feed and page `Partial`.
 
-Map searches are bounded to the 200 km around the feed's point, paced to one every 10 seconds across all of the crawler's searches, and kept for the crawler's run. Each location resolved, matched, fallen back or failed is noted on its event's page, and a check that spawned a location, or failed to, is always reported.
+Map searches are bounded to the 200 km around the feed's point, paced to one every 10 seconds across all of the crawler's searches by the `OSMGate` the crawler gives its `LocationSpawner`, each search reserving the next slot so concurrent searches stay spaced, and kept for the crawler's run behind a mutex. Each location resolved, matched, fallen back or failed is noted on its event's page, and a check that spawned a location, or failed to, is always reported.
 
 ## Location Leads
 
