@@ -1,10 +1,10 @@
 # Crawler Work
 
-The workflow for tuning the crawler build by build: stage the records that want another read, run the crawler, read what it reports, check the pages by hand, and carry the lessons into the next build. It was worked out over builds V0 to V24 of the parser (2026-09-24 to 2026-09-29). Read the crawler and agent package documents (`docs/packages/streetlight.server.daemon.crawler.md`, `…agent.md`) before changing either package.
+The workflow for tuning the crawler build by build: stage the records that want another read, run the crawler, read what it reports, check the pages by hand, and carry the lessons into the next build. It was worked out over builds V0 to V25 of the parser (2026-09-24 to 2026-09-29). Read the crawler and agent package documents (`docs/packages/streetlight.server.daemon.crawler.md`, `…agent.md`) before changing either package.
 
 ## Where It Stands
 
-* Build **V24** is staged: 12 location leads, 9 new and 3 restaged (Launch Pad, Muse Noraebang, Roaming Gnome) with their links, parsers and Launch Pad's location cleared. Its dumps are `logs/schema/*-before-V24.json`.
+* Build **V25** is staged: 19 location leads, 10 new and 9 restaged on auroragov.org, with the origin's links cleared and its fetch mode back to `Basic`. Its dumps are `logs/schema/*-before-V25.json`.
 * The crawler runs leads concurrently: up to `maxWorkers` (8) at once, taking more each second as room opens. Robots and OSM gates space requests, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`.
 * JSON-LD supplements the LM, never replaces it: every lead is read by its schema, and the values its page declares are laid over the read at resolution time. Meta-only values (such as `og:site_name`) never outrank the LM.
 
@@ -190,7 +190,8 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 | V21 | A fresh rescan of every feed. The JSON-LD selector never matched and `<time datetime>` with a date alone lost Squarespace times (Lions Lair to 0): both fixed |
 | V22 | JSON-LD in place: 166 ticket links and 148 costs where there were none, Red Rocks from 0 to 28. Units (`#100`, `Ste 1400`) left out of OSM searches, and a location lead created at its address when the map knows another name or none: 9 new Aurora venues. But the JSON-LD pass skipped the LM and lost descriptions where the page declared none (Larimer, Lost Lake) |
 | V23 | JSON-LD supplements the LM at resolution time: descriptions back at Larimer, Lost Lake and Globe Hall (0 to 376, 495 and 820 chars on average), Fillmore 0 to 26 events. Parallel leads, the LM told when its html was cut, and only a `Basic` fetch asked whether scripting is required |
-| V24 | A location's relative events and image urls resolved against its page (Ksoup's `absUrl` takes an attribute name, so they were stored raw). A unit of a single letter (`Suite D`) left out of map searches. Scripted fetches load stylesheets: Square Online hides its text until they load. Staged, not yet read |
+| V24 | A location's relative events and image urls resolved against its page (Ksoup's `absUrl` takes an attribute name, so they were stored raw). A unit of a single letter (`Suite D`) left out of map searches. Scripted fetches load stylesheets: Square Online hides its text until they load. Launch Pad, Muse Noraebang and Roaming Gnome created |
+| V25 | `HtmlTrimmer` keeps `form`: ASP.NET pages wrap the whole page in one, and auroragov.org trimmed from 46,577 text chars to 95, which the LM then took for a page that needs scripting. Read in full after, but six of them failed to create on an image url holding spaces, and a UTF-8 byte order mark made Bally's "Not html" |
 
 ## Open Leads
 

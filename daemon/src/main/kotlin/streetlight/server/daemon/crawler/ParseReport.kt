@@ -14,7 +14,7 @@ import streetlight.model.data.ParseOutcome
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its reports are written to. */
-const val parserBuildId = "V24"
+const val parserBuildId = "V25"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 

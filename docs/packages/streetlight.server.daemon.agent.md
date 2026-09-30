@@ -57,6 +57,8 @@ A removal is added only for content that cannot carry event information. Element
 
 Hidden content is kept, since pages hide events in modals, tabs and collapsed sections.
 
+A `form` is kept and only its controls are removed.
+
 An element with no text, image or meta content is removed, except `br`, whose removal would change the sibling order selectors are written against.
 
 | Measure | Rule |

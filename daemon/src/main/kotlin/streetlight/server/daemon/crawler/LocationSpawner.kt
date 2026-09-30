@@ -65,7 +65,7 @@ class LocationSpawner(
             val edit = place.toEdit().takeIf { it.validity.isValid && it.state != null }
                 ?: return feedLocation.also { tracker.locationFellBack(event, text) }
             try {
-                server.createLocation(null, edit)
+                server.createLocation(null, edit, isImageRequired = false)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -174,7 +174,7 @@ class LocationSpawner(
         return crawler.dbWrite {
             edit.mapId?.let { dao.location.readLocationByMapId(it) }?.let { return@dbWrite Ok(it) }
             try {
-                server.createLocation(null, edit)
+                server.createLocation(null, edit, isImageRequired = false)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

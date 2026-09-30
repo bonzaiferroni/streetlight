@@ -184,7 +184,6 @@ class HtmlTrimmer {
             "applet",
             "canvas",
             "svg",
-            "form",
             "input",
             "button",
             "select",
