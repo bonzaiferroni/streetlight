@@ -25,7 +25,9 @@ import streetlight.model.data.LocationLead
 import streetlight.model.data.LocationSchema
 import streetlight.model.data.Origin
 import streetlight.model.data.toOriginId
+import streetlight.server.daemon.agent.FetchText
 import streetlight.server.daemon.agent.SchemaParserText
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 /**
@@ -55,9 +57,11 @@ suspend fun Crawler.crawl(lead: Lead) {
         return
     }
     val origin = lead.initialUrl.toOriginId()?.let { dbWrite { dao.origin.readOrCreateOrigin(it) } } ?: return
-    val fetchMode = dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
+    val fetchMode = if (lead.content != null) FetchMode.Scripting
+    else dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
 
-    var document = fetchDocument(lead, origin, fetchMode)
+    var document = lead.content?.let { prepareDocument(lead, it, origin, fetchMode) }
+        ?: fetchDocument(lead, origin, fetchMode)
     var schemaOutcome = document?.let { provideCrawl(lead, it) }
     if (schemaOutcome == SchemaProblem.ScriptingRequired && fetchMode == FetchMode.Basic) {
         document = fetchDocument(lead, origin, FetchMode.Scripting)
@@ -91,6 +95,27 @@ private suspend fun Crawler.fetchDocument(
         tracker.fetchFailed(lead.initialUrl, it)
         return null
     }
+    return prepareDocument(lead, fetch, origin, fetchMode)
+}
+
+context(tracker: ParseTracker)
+private fun Crawler.prepareDocument(
+    lead: Lead,
+    content: String,
+    origin: Origin,
+    fetchMode: FetchMode
+): FetchDocument? {
+    val fetch = FetchText(lead.initialUrl, content, Clock.System.now())
+    return prepareDocument(lead, fetch, origin, fetchMode)
+}
+
+context(tracker: ParseTracker)
+private fun Crawler.prepareDocument(
+    lead: Lead,
+    fetch: FetchText,
+    origin: Origin,
+    fetchMode: FetchMode,
+): FetchDocument? {
     val doc = parseHtmlDocument(fetch.text, fetch.servedUrl).toDataOrNull(this::logProblem)
     tracker.fetched(lead.initialUrl, fetchMode, fetch, doc)
     if (doc == null) return null

@@ -10,6 +10,7 @@ import kotlin.uuid.Uuid
 sealed interface Lead {
     val initialUrl: Url
     val leadType: LeadType
+    val content: String? get() = null
 }
 
 /** The page of one event, found in [feed], with the [feedEvent] the feed already showed of it. */
@@ -26,6 +27,7 @@ data class EventPage(
 data class LocationLead(
     val leadId: LeadId,
     override val initialUrl: Url,
+    override val content: String?,
     val checkedAt: Instant?,
     val createdAt: Instant,
 ) : Lead {

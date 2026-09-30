@@ -4,7 +4,7 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
-* Build **V25** is staged: 19 location leads, 10 new and 9 restaged on auroragov.org, with the origin's links cleared and its fetch mode back to `Basic`. Its dumps are `logs/schema/*-before-V25.json`.
+* Build **V25** was read. Since then, image urls have spaces encoded, crawler-created locations no longer need an image, and `looksLikeHtml` allows a byte order mark. None of this is staged yet: V26 waits on a bump and a restage of the six auroragov image failures and Bally's.
 * The crawler runs leads concurrently: up to `maxWorkers` (8) at once, taking more each second as room opens. Robots and OSM gates space requests, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`.
 * JSON-LD supplements the LM, never replaces it: every lead is read by its schema, and the values its page declares are laid over the read at resolution time. Meta-only values (such as `og:site_name`) never outrank the LM.
 
