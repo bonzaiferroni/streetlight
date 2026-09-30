@@ -22,8 +22,8 @@ import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
 
 /**
- * The facts of an entity as a grid of icon cells, with a row of [buttons] beneath. Nothing renders when both are
- * empty.
+ * The facts of an entity as a grid of icon cells, followed by a cell of [buttons] that fills the rest of its row.
+ * Nothing renders when both are empty.
  *
  * A cell with a url is a link.
  */
@@ -41,8 +41,10 @@ fun FlowContent.cellGrid(
             }
         }
         if (!buttons.isNullOrEmpty()) {
-            row(modify(CardBg, AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
-                buttons.forEach { it.block(this) }
+            row(modify(CellGrid.Buttons, CardBg, JustifyContentEnd)) {
+                row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
+                    buttons.forEach { it.block(this) }
+                }
             }
         }
     }
@@ -63,23 +65,43 @@ private fun FlowContent.cellContent(cell: EntityCell) {
 
 object CellGrid {
     val Base = Class("cell-grid")
+    val Buttons = Base.withBemElement("buttons")
     val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
     val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
-    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
+    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses)
     val LabelMod = modify(OpacityHigh)
 }
 
 //language="CSS"
 val CellGridCss get() = with(CellGrid) { """
 $Base {
+    container-type: inline-size;
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
 
     > * {
-        flex: 1;
-        min-width: var(--unit-16);
+        --cols: 1;
+        --cell-width: calc((100cqi - (var(--cols) - 1) * 2px) / var(--cols));
+        width: var(--cell-width);
+        height: calc(var(--unit) * 5);
+        min-width: 0;
+
+        @container (width >= 258px) { --cols: 2; }
+        @container (width >= 388px) { --cols: 3; }
+        @container (width >= 518px) { --cols: 4; }
+        @container (width >= 648px) { --cols: 5; }
+        @container (width >= 778px) { --cols: 6; }
+        @container (width >= 908px) { --cols: 7; }
+    }
+
+    > $Buttons {
+        flex-grow: 1;
+
+        > * {
+            width: var(--cell-width);
+        }
     }
 }
 """ }

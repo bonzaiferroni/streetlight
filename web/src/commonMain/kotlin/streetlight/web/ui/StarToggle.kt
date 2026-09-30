@@ -33,7 +33,7 @@ fun FlowContent.starToggle(
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(AlignItemsCenter, Gap2Px)) {
+    row(modify(AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
         addModifiers(mod, StarToggle.Class)
         setAttribute(Attribute.IsOn.to(isLit))
         setAttribute(StarToggle.TypeData.to(toggleType))
