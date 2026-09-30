@@ -122,7 +122,7 @@ fun OSMLocation.toEdit() = LocationEdit(
         } ?: road
     },
     hours = toHoursSchedule(),
-    city = address.city,
+    city = address.locality,
     state = address.state,
     country = address.country,
     geoPoint = toGeoPoint(),

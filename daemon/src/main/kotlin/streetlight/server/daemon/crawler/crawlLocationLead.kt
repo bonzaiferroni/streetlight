@@ -115,4 +115,3 @@ private fun parseLocation(schema: LocationSelectorSchema, doc: Document): Proper
     }?.takeIf { it.isNotEmpty() },
 ).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
 
-private const val minPlaceRank = 30

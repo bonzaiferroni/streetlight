@@ -50,7 +50,7 @@ fun OSMLocation.toMapLocation() = MapLocation(
         } ?: road
     } ?: error("address not found"),
     postCode = address.postcode,
-    city = address.city,
+    city = address.locality,
     state = address.state ?: error("state not found"),
     country = address.country ?: error("country not found"),
     geoPoint = toGeoPoint(),

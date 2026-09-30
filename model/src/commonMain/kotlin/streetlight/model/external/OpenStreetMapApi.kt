@@ -45,6 +45,8 @@ data class Address(
     val number: String? = null,
     val road: String? = null,
     val city: String? = null,
+    val town: String? = null,
+    val village: String? = null,
     val state: String? = null,
     @SerialName("ISO3166-2-lvl4")
     val iso3166Lvl4: String? = null,
@@ -52,7 +54,10 @@ data class Address(
     val country: String? = null,
     @SerialName("country_code")
     val countryCode: String? = null
-)
+) {
+    /** The city, town or village this address is in, each taken as a city. */
+    val locality get() = city ?: town ?: village
+}
 
 /** The extra tags of an OpenStreetMap place, such as its website and opening hours. */
 @Serializable
@@ -145,7 +150,7 @@ fun OSMLocation.toPlaceProto() = PlaceProto(
             "$number $road"
         } ?: road
     },
-    city = address.city,
+    city = address.locality,
     geoPoint = toGeoPoint(),
     website = extraTags?.website
 )

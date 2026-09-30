@@ -1,10 +1,10 @@
 # Crawler Work
 
-The workflow for tuning the crawler build by build: stage the records that want another read, run the crawler, read what it reports, check the pages by hand, and carry the lessons into the next build. It was worked out over builds V0 to V29 of the parser (2026-09-24 to 2026-09-29). Read the crawler and agent package documents (`docs/packages/streetlight.server.daemon.crawler.md`, `…agent.md`) before changing either package.
+The workflow for tuning the crawler build by build: stage the records that want another read, run the crawler, read what it reports, check the pages by hand, and carry the lessons into the next build. It was worked out over builds V0 to V30 of the parser (2026-09-24 to 2026-09-29). Read the crawler and agent package documents (`docs/packages/streetlight.server.daemon.crawler.md`, `…agent.md`) before changing either package.
 
 ## Where It Stands
 
-* Build **V29** is staged: the Meetup Denver general feed (`/find/us--co--denver/`), with its meetup.com links cleared so its event pages are read again. Its dumps are `logs/schema/*-before-V29.json`.
+* Build **V30** is staged: the Meetup Denver feed, with its meetup.com links cleared again, and the Plains Conservation Center location lead. Its dumps are `logs/schema/*-before-V30.json`.
 * The crawler runs leads concurrently: up to `maxWorkers` (8) at once, taking more each second as room opens. Robots and OSM gates space requests, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`.
 * JSON-LD supplements the LM, never replaces it: every lead is read by its schema, and the values its page declares are laid over the read at resolution time. Meta-only values (such as `og:site_name`) never outrank the LM.
 
@@ -195,7 +195,8 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 | V26 | Image urls with spaces encoded, crawler-created locations kept when their image fails, `looksLikeHtml` allowing a byte order mark, and `building`/`bldg` units left out of map searches. A lead may carry its page's html, sent by the browser extension, read in place of the first fetch. Calliope created from provided content; Facebook and Swallow Hill events read the same way. The six auroragov pages were restaged too |
 | V27 | Locations created at an address take only the address from the map, never the type, hours, rank or website of the business it names there (26 old rows cleared). The road's word in an address search is taken before the first comma, so a street line holding its city (Meetup) still finds its house. Meetup still unlocated: its street line held the city, state and zip, and the area added again made OSM return nothing |
 | V28 | An address is searched by its street before the first comma, with the area added once. Meetup's event landed at an unnamed location on North York Street. The Meetup Denver feed was added and read: 8 of 30 events created, 20 lost for placing by name alone, then an OSM `opening_hours` rule with a second day range after a comma threw and ended the check |
-| V29 | Events of a general feed that give an address are placed as event leads are (`LocationSpawner.place`), fenced to 200 km of the feed. JSON-LD takes the first non-virtual `location`, and its area travels as `Area`. `osmHoursToSchedule` skips a rule it cannot read rather than throwing. Staged, not yet read |
+| V29 | Events of a general feed that give an address are placed as event leads are (`LocationSpawner.place`), fenced to 200 km of the feed. JSON-LD takes the first non-virtual `location`, and its area travels as `Area`. `osmHoursToSchedule` skips a rule it cannot read rather than throwing. Meetup Denver: 14 created and 5 duplicates of 30, 12 locations spawned. The rest: suburbs given as `town`, not `city` (3), a wrong street suffix on Meetup's own page, and parks and lots below OSM rank 30 |
+| V30 | `minPlaceRank` gone: a map result is taken unless it is an area (`place`), a road (`highway`) or an administrative boundary, so parks count. A map address's town or village is its city. Place names are cleaned of bracketed notes and "parking lot" before searching. Staged, not yet read |
 
 ## Open Leads
 
