@@ -96,9 +96,11 @@ $Base {
         @container (width >= 908px) { --cols: 7; }
     }
 
-    > $Buttons {
+    > :last-child {
         flex-grow: 1;
+    }
 
+    > $Buttons {
         > * {
             width: var(--cell-width);
         }

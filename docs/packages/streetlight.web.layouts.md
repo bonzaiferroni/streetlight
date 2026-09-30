@@ -62,7 +62,7 @@ An entry shows its image with `containImage`, passing the `Image` itself so it c
 
 `cellGrid` lays out the cells of an entity, followed by one buttons cell that holds its buttons.
 
-The layout is described here so its intent survives later changes. `cellGrid` is a size container split into as many equal columns of at least 128px as fit, up to 7, stepped by `@container` rules that set `--cols`. Each cell takes one column and every row is 5 units tall. The buttons cell grows to fill the rest of its row, taking a row of its own when none is left, and holds its buttons in one column's width at its right end.
+The layout is described here so its intent survives later changes. `cellGrid` is a size container split into as many equal columns of at least 128px as fit, up to 7, stepped by `@container` rules that set `--cols`. Each cell takes one column and every row is 5 units tall. The last cell grows to fill the rest of its row. The buttons cell, when present, is last, taking a row of its own when none is left, and holds its buttons in one column's width at its right end.
 
 | Type | Holds |
 |---|---|
