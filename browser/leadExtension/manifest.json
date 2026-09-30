@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "Streetlight Leads",
+    "version": "0.1.0",
+    "description": "Sends the page in view to Streetlight as a lead.",
+    "permissions": [
+        "contextMenus"
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "service_worker": "background.js"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "lead-extension@streetlight.ing",
+            "strict_min_version": "121.0"
+        }
+    }
+}
