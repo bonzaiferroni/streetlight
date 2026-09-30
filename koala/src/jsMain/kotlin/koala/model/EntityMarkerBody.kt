@@ -36,8 +36,8 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
                 img {
                     src = thumbUrl.value
                 }
-                box(modify(MarkerStyle.ClusterCount, CardBg)) {
-                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold, NightInk, TextShadow))
+                box(modify(MarkerStyle.ClusterCount, HeavyCardBg)) {
+                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold, TextShadow))
                 }
             }
 
@@ -75,7 +75,7 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
             box(modify(MarkerStyle.Icon, BorderRadius50P, CardBg, Outline)) {
                 icon(marker.svg, modify(SmallIconHeight, PlaceSelfCenter, ColorSchemeFg))
                 box(MarkerStyle.ClusterCount) {
-                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, Bold, NightInk, TextShadow))
+                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, Bold, TextShadow))
                 }
             }
 

@@ -52,6 +52,8 @@ A dao may read a second table when that table exists only to serve the first. `S
 
 A feed whose entities come from more than one table reads them with one query per table. Each query is paged on the same keyset, the cursor's sort value then the id, and limited to `EntityCursor.DefaultLimit`. The results are merged in that order and cut to the limit. `cityEntityQuery` is the example.
 
+A query that keeps one row per group picks that row in a subquery, with `withDistinctOn`, and pages over the result with `inSubQuery`. `DISTINCT ON` is never applied to the paged query itself.
+
 ## Logging
 
 A file-private logger at the bottom of the file:
