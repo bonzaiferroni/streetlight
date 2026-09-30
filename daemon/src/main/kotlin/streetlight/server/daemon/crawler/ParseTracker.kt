@@ -318,16 +318,16 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         }
     }
 
-    override fun schemaCreated(schema: SelectorSchema, validated: Outcome<SelectorSchema>) {
+    override fun schemaCreated(schema: SelectorSchema, validatedSchema: Outcome<SelectorSchema>) {
         val report = schemaReport()
         report.source = "new"
-        when (validated) {
+        when (validatedSchema) {
             is Ok -> {
                 report.validation = "ok"
-                report.dropped = droppedFields(schema, validated.data)
-                this.schema = validated.data
+                report.dropped = droppedFields(schema, validatedSchema.data)
+                this.schema = validatedSchema.data
             }
-            is Problem -> report.validation = validated.message
+            is Problem -> report.validation = validatedSchema.message
         }
     }
 

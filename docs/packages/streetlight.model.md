@@ -41,11 +41,15 @@ A record the user edits has a `FooEdit` DTO holding the fields a form sends, and
 
 ## Leads
 
-`Lead` is the sealed type of a page the crawler is given to read, with what is known of it before it is fetched: an `EventFeed`, an `EventPage` found in a feed, carrying the `PropertyMap` the feed showed, a `LocationLead`, a url submitted as a location's page, or an `EventLead`, a url submitted as one event's page. Its `LeadType` names its kind and is stored by ordinal. A user submits a lead as a `StarLead` through `Api.Stars.CreateLead`; for now only an admin may, and only a location or event lead. `EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. A `GeneralEventFeed` carries its `LeadType`: `EventFeed` for one checked again, `EventScan` for one read once. It is distinct from the paged feeds below.
+`Lead` is the sealed type of a page the crawler is given to read, with what is known of it before it is fetched: an `EventFeed`, an `EventPage` found in a feed, carrying the `PropertyMap` the feed showed, a `LocationLead`, a url submitted as a location's page, or an `EventLead`, a url submitted as one event's page. Its `LeadType` names its kind and is stored by ordinal. A user submits a lead as a `StarLead` through `Api.Stars.CreateLead`; for now only an admin may, and only a location or event lead. A lead may carry its page's html as `content`, sent with the `StarLead`, for the crawler to read in place of a fetch. `EventFeed` is the sealed type of a page the crawler reads events from: a `LocationEventFeed`, a location's own events page, or a `GeneralEventFeed` of local events at many locations. A `GeneralEventFeed` carries its `LeadType`: `EventFeed` for one checked again, `EventScan` for one read once. It is distinct from the paged feeds below.
 
 An `LmSchema` is a class the LM is asked to fill: a `SelectorSchema` of selectors, or a direct schema of values such as `LocationSchema` and `EventSchema`.
 
 A `PropertyMap` holds the text of each `ParseProperty` read from a page, not yet parsed. A property is shared by every kind of record that has the same meaning, such as `Name` for an event's title and a location's name.
+
+## Opening Hours
+
+`osmHoursToSchedule` reads an OpenStreetMap `opening_hours` value into an `HoursSchedule`. A rule it cannot read in full is skipped whole, never half-read, and a value it cannot read at all gives `null`. It never throws.
 
 ## Feeds
 

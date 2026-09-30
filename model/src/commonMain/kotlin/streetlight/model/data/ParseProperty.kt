@@ -30,6 +30,9 @@ enum class ParseProperty {
 
     /** The url where tickets for an event are sold. */
     Tickets,
+
+    /** The city, state and postal code of the place an event takes place at, searched with its [Address]. */
+    Area,
 }
 
 /** The text of each property read from a page, not yet parsed. */

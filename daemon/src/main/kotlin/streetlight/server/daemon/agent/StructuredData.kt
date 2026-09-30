@@ -42,7 +42,10 @@ data class LdPlace(
     val region: String?,
     val postalCode: String?,
     val country: String?,
-)
+) {
+    /** The city, state and postal code of this place, joined for a map search, or null when it gives none. */
+    val area get() = listOfNotNull(locality, region, postalCode).joinToString(" ").ifEmpty { null }
+}
 
 /** The events the JSON-LD of this page declares, at any depth. */
 fun Document.readLdEvents(): List<LdEvent> = readLdObjects()
@@ -96,6 +99,7 @@ fun LdEvent.toPropertyMap(): PropertyMap {
         ParseProperty.Tickets to tickets,
         ParseProperty.Location to place?.name,
         ParseProperty.Address to place?.street,
+        ParseProperty.Area to place?.area,
     ).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
 }
 
@@ -138,7 +142,10 @@ private fun JsonElement.allObjects(): List<JsonObject> = when (this) {
 
 private fun JsonObject.toLdEvent(): LdEvent {
     val offer = this["offers"].let { (it as? JsonArray)?.firstOrNull() ?: it } as? JsonObject
-    val place = this["location"].let { (it as? JsonArray)?.firstOrNull() ?: it } as? JsonObject
+    val place = this["location"].let { location ->
+        (location as? JsonArray)?.firstOrNull { (it as? JsonObject)?.typeNames()?.contains("VirtualLocation") == false }
+            ?: location
+    } as? JsonObject
     return LdEvent(
         name = text("name"),
         url = text("url"),

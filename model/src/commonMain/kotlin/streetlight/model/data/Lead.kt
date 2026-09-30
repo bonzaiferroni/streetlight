@@ -39,18 +39,23 @@ data class LocationLead(
 data class EventLead(
     val leadId: LeadId,
     override val initialUrl: Url,
+    override val content: String?,
     val checkedAt: Instant?,
     val createdAt: Instant,
 ) : Lead {
     override val leadType get() = LeadType.Event
 }
 
-/** A lead a user submits: a [url] of a [leadType], from the galaxy [galaxyId] when there is one. */
+/**
+ * A lead a user submits: a [url] of a [leadType], from the galaxy [galaxyId] when there is one, with the page's
+ * html as [content] when the user provides it.
+ */
 @Serializable
 data class StarLead(
     val url: Url,
     val leadType: LeadType,
     val galaxyId: GalaxyId? = null,
+    val content: String? = null,
 )
 
 /** The kind of a lead, stored by ordinal. */

@@ -30,6 +30,11 @@ kotlin {
                 implementation(project(":koala"))
             }
         }
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
+        }
     }
 
     compilerOptions {

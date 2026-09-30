@@ -29,28 +29,28 @@ import streetlight.server.utils.readMetaContent
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocument?, schema: LmSchema?) {
-    val read = schema as? LocationSchema ?: return
+    val locationSchema = schema as? LocationSchema ?: return
     if (document == null) return
     tracker.read(lead.initialUrl, SchemaType.Location)
     val location = listOf(
-        ParseProperty.Name to read.name,
-        ParseProperty.Description to read.description,
-        ParseProperty.Address to read.address,
-        ParseProperty.Phone to read.phone,
-        ParseProperty.Email to read.email,
-        ParseProperty.Hours to read.hours,
-        ParseProperty.EventsLink to read.eventsUrl?.let { document.doc.resolveUrl(it) },
-        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: read.imageUrl?.let { document.doc.resolveUrl(it) }),
+        ParseProperty.Name to locationSchema.name,
+        ParseProperty.Description to locationSchema.description,
+        ParseProperty.Address to locationSchema.address,
+        ParseProperty.Phone to locationSchema.phone,
+        ParseProperty.Email to locationSchema.email,
+        ParseProperty.Hours to locationSchema.hours,
+        ParseProperty.EventsLink to locationSchema.eventsUrl?.let { document.doc.resolveUrl(it) },
+        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: locationSchema.imageUrl?.let { document.doc.resolveUrl(it) }),
     ).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
-    val declared = document.doc.readPageLdPlace()
-    val declaredValues = declared?.toPropertyMap().orEmpty()
-    if (declaredValues.isNotEmpty()) tracker.declared(lead.initialUrl)
+    val ldPlace = document.doc.readPageLdPlace()
+    val declaredLocation = ldPlace?.toPropertyMap().orEmpty()
+    if (declaredLocation.isNotEmpty()) tracker.declared(lead.initialUrl)
     val area = listOfNotNull(
-        declared?.locality ?: read.city,
-        declared?.region ?: read.state,
-        declared?.postalCode ?: read.postalCode,
+        ldPlace?.locality ?: locationSchema.city,
+        ldPlace?.region ?: locationSchema.state,
+        ldPlace?.postalCode ?: locationSchema.postalCode,
     ).joinToString(" ").ifEmpty { null }
-    deliverLocation(lead, location + declaredValues, area, document.doc.readMetaContent("og:site_name"))
+    deliverLocation(lead, location + declaredLocation, area, document.doc.readMetaContent("og:site_name"))
 }
 
 /**
@@ -90,12 +90,12 @@ private suspend fun Crawler.deliverAtAddress(
     address: String?,
     area: String?,
 ) {
-    val spot = address?.let { spawner.findAddress(it, area) } ?: run {
+    val place = address?.let { spawner.findAddress(it, area) } ?: run {
         val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
         return tracker.recordFailed(location, name, Problem("No place on the map matches $searched"))
     }
-    spawner.readStored(spot, name)?.let { return tracker.recordDuplicate(location, name, it.label) }
-    spawner.createNamedAt(spot, location + (ParseProperty.Name to name), lead.initialUrl)
+    spawner.readStored(place, name)?.let { return tracker.recordDuplicate(location, name, it.label) }
+    spawner.createNamedAt(place, location + (ParseProperty.Name to name), lead.initialUrl)
         .toDataOr { return tracker.recordFailed(location, name, it) }
     tracker.recordCreated()
 }

@@ -28,10 +28,10 @@ suspend fun Crawler.crawlEventPage(
     document: FetchDocument?,
     schema: LmSchema?,
 ) {
-    val read = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl) } }
-    val declared = document?.let { it.doc.readPageLdEvent(it.servedUrl)?.toPropertyMap() }?.takeIf { it.isNotEmpty() }
-    declared?.let { tracker.declared(lead.initialUrl) }
-    val pageEvent = if (read == null && declared == null) null else read.orEmpty() + declared.orEmpty()
+    val readEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl) } }
+    val declaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl)?.toPropertyMap() }?.takeIf { it.isNotEmpty() }
+    declaredEvent?.let { tracker.declared(lead.initialUrl) }
+    val pageEvent = if (readEvent == null && declaredEvent == null) null else readEvent.orEmpty() + declaredEvent.orEmpty()
     when {
         document == null || pageEvent == null -> {
             deliverEvent(lead.feed, lead.feedEvent, null, tracker)

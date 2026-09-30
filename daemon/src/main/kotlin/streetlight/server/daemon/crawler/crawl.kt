@@ -51,11 +51,14 @@ class FetchDocument(
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawl(lead: Lead) {
-    val link = dao.link.readLink(lead.initialUrl)
-    if (link?.stopsFeed() == true) {
-        tracker.skipped(lead.initialUrl, PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
-        return
+    if (lead.content == null) {
+        val link = dao.link.readLink(lead.initialUrl)
+        if (link?.stopsFeed() == true) {
+            tracker.skipped(lead.initialUrl, PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
+            return
+        }
     }
+
     val origin = lead.initialUrl.toOriginId()?.let { dbWrite { dao.origin.readOrCreateOrigin(it) } } ?: return
     val fetchMode = if (lead.content != null) FetchMode.Scripting
     else dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode

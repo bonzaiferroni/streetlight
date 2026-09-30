@@ -225,15 +225,17 @@ private fun parseDays(raw: String): List<DayOfWeek>? {
     return days.takeIf { it.isNotEmpty() }
 }
 
+/** The windows in [raw], such as `09:00-12:00,13:00-17:00`, or `null` when any of them is not a plain time span. */
 private fun parseTimeWindows(raw: String): List<TimeWindow>? {
     if (raw.trim().equals("off", ignoreCase = true)) return emptyList()
 
-    return raw.split(",").mapNotNull { segment ->
-        val (open, close) = segment.trim().split("-", limit = 2)
-            .takeIf { it.size == 2 } ?: return@mapNotNull null
-        TimeWindow.of(open.trim(), close.trim())
+    return raw.split(",").map { segment ->
+        val (open, close) = TIME_WINDOW_REGEX.matchEntire(segment.trim())?.destructured ?: return null
+        TimeWindow.of(open, close)
     }.takeIf { it.isNotEmpty() }
 }
+
+private val TIME_WINDOW_REGEX = Regex("""^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$""")
 
 private fun lastDayOfMonth(mm: String): String = when (mm) {
     "02" -> "28"

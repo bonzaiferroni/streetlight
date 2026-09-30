@@ -75,9 +75,9 @@ suspend fun DaoFacade.registerFetch(document: FetchDocument) {
 
 /** Records [record] on the link for its url, creating the link when missing. */
 suspend fun DaoFacade.recordLink(record: LinkRecord) {
-    val existing = link.readLink(record.url)
-    if (existing != null) {
-        link.updateLink(existing.copy(
+    val existingLink = link.readLink(record.url)
+    if (existingLink != null) {
+        link.updateLink(existingLink.copy(
             access = record.access,
             content = record.content,
             schemaType = record.schemaType,
@@ -88,13 +88,13 @@ suspend fun DaoFacade.recordLink(record: LinkRecord) {
     val originId = record.url.toOriginId() ?: return
     origin.readOrCreateOrigin(originId)
     val now = Clock.System.now()
-    val created = Link(
+    val newLink = Link(
         linkId = LinkId(Uuid.random()), originId = originId, url = record.url, schemaType = record.schemaType,
         fetchedAt = now, createdAt = now, access = record.access, content = record.content,
         parseOutcome = record.parseOutcome,
     )
-    link.createLink(created)
-    link.createAliasIgnore(LinkAlias(LinkAliasId(Uuid.random()), created.linkId, record.url, now))
+    link.createLink(newLink)
+    link.createAliasIgnore(LinkAlias(LinkAliasId(Uuid.random()), newLink.linkId, record.url, now))
 }
 
 /** Whether an event page's link calls for another read: served, and never classified or awaiting scripting. */

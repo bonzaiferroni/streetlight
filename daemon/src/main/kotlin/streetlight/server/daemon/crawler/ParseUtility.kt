@@ -35,20 +35,20 @@ fun htmlToMarkdown(html: String): Markdown? =
 fun shortenDescription(text: String, url: Url?): String {
     if (text.length <= maxDescriptionChars) return text
     val paragraphs = text.split(paragraphBreak)
-    val kept = paragraphs.fitting("\n\n").ifEmpty { paragraphs.first().split(sentenceBreak).fitting(" ") }
+    val keptText = paragraphs.fitting("\n\n").ifEmpty { paragraphs.first().split(sentenceBreak).fitting(" ") }
         .ifEmpty { text.take(maxDescriptionChars).substringBeforeLast(' ') + "…" }
-    return url?.let { "$kept\n\n[Read more]($it)" } ?: kept
+    return url?.let { "$keptText\n\n[Read more]($it)" } ?: keptText
 }
 
 /** The leading parts joined by [separator], as many as fit within [maxDescriptionChars]. */
 private fun List<String>.fitting(separator: String): String {
-    var kept = ""
+    var keptText = ""
     for (part in this) {
-        val next = if (kept.isEmpty()) part else "$kept$separator$part"
+        val next = if (keptText.isEmpty()) part else "$keptText$separator$part"
         if (next.length > maxDescriptionChars) break
-        kept = next
+        keptText = next
     }
-    return kept
+    return keptText
 }
 
 private const val maxDescriptionChars = 1000

@@ -50,15 +50,15 @@ fun sanitize(element: JsonElement, desc: SerialDescriptor): JsonElement {
 }
 
 private fun sanitizeClass(element: JsonElement, desc: SerialDescriptor): JsonElement {
-    val obj = element as? JsonObject ?: return JsonNull
+    val jsonObject = element as? JsonObject ?: return JsonNull
 
     val out = buildMap<String, JsonElement> {
         for (i in 0 until desc.elementsCount) {
             val name = desc.getElementName(i)
             val childDesc = desc.getElementDescriptor(i)
-            val childEl = obj[name] ?: continue
+            val childElement = jsonObject[name] ?: continue
 
-            val sanitizedChild = sanitize(childEl, childDesc)
+            val sanitizedChild = sanitize(childElement, childDesc)
 
             // If it failed to parse, turn it into null.
             // Nullable/optional fields will survive; non-nullable may still fail (as they should).
@@ -68,7 +68,7 @@ private fun sanitizeClass(element: JsonElement, desc: SerialDescriptor): JsonEle
 
     // Keep unknown keys as-is; decoding ignores them anyway.
     // Merge unknowns back so you can re-emit if needed.
-    val merged = obj.toMutableMap()
+    val merged = jsonObject.toMutableMap()
     merged.putAll(out)
     return JsonObject(merged)
 }
@@ -80,13 +80,13 @@ private fun sanitizeList(element: JsonElement, desc: SerialDescriptor): JsonElem
 }
 
 private fun sanitizeMap(element: JsonElement, desc: SerialDescriptor): JsonElement {
-    val obj = element as? JsonObject ?: return JsonNull
+    val jsonObject = element as? JsonObject ?: return JsonNull
     // val keyDesc = desc.getElementDescriptor(0)
     val valDesc = desc.getElementDescriptor(1)
 
     // JSON object keys are strings; if yer map key ain't a string, decoding will still be strict.
     // We'll sanitize values at least.
-    val out = obj.mapValues { (_, v) -> sanitize(v, valDesc) }
+    val out = jsonObject.mapValues { (_, v) -> sanitize(v, valDesc) }
     return JsonObject(out)
 }
 

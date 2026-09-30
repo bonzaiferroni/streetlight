@@ -4,8 +4,22 @@
     "version": "0.1.0",
     "description": "Sends the page in view to Streetlight as a lead.",
     "permissions": [
-        "contextMenus"
+        "activeTab",
+        "contextMenus",
+        "cookies",
+        "scripting"
     ],
+    "host_permissions": [
+        "*://localhost/*"
+    ],
+    "icons": {
+        "256": "icons/foxicon.png"
+    },
+    "action": {
+        "default_title": "Streetlight Leads",
+        "default_icon": "icons/foxicon.png",
+        "default_popup": "popup.html"
+    },
     "background": {
         "scripts": ["background.js"],
         "service_worker": "background.js"

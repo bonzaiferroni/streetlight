@@ -85,6 +85,10 @@ Report defects, inconsistencies, and unfinished edges in conversation. They do n
 
 An issue is written down only once it is decided that it should be, and then it goes under the `## Known Issues` heading of the document for the package that holds it. The entry is removed in the same pass as the fix.
 
+## Code Style
+
+`docs/code-style.md` states how code is written across the project, such as how variables are named. Read it before writing code, and record a style rule there when one is described.
+
 ## Testing
 
 `docs/testing.md` states how tests are written here: the kinds of test and when each is worth its cost, the plain voice test names use, and the discipline for assertions, utilities, and fakes. Read it before writing or changing a test.
