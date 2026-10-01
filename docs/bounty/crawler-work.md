@@ -4,9 +4,18 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
-* Build **V30** is staged: the Meetup Denver feed, with its meetup.com links cleared again, and the Plains Conservation Center location lead. Its dumps are `logs/schema/*-before-V30.json`.
+* Build **V33** is staged: every Meetup city feed, their feed links cleared and their events kept, with the 10 event pages whose place the map found but could not be created (no city) reset. Its dumps are `logs/schema/*-before-V33.json`. 38 Meetup town feeds were added for it (see Meetup Radius).
 * The crawler runs leads concurrently: up to `maxWorkers` (8) at once, taking more each second as room opens. Robots and OSM gates space requests, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`.
 * JSON-LD supplements the LM, never replaces it: every lead is read by its schema, and the values its page declares are laid over the read at resolution time. Meta-only values (such as `og:site_name`) never outrank the LM.
+
+## Meetup Radius
+
+Every Colorado town with a Meetup city feed (`/find/us--co--<town>/`) is added as an `EventFeed` lead, ring by ring outward from Denver (39.7392, -104.9903). A town without a feed answers 404.
+
+* **Covered to 84 km** (Estes Park), for the towns probed. 50 feeds: Denver, Aurora, Arvada, Westminster, Littleton, Golden, Parker, Boulder, Castle Rock, Longmont, Fort Collins, Colorado Springs (the first twelve, chosen before the radius); to 29.2 km, Wheat Ridge, Commerce City, Englewood, Thornton, Morrison, Broomfield, Lone Tree, Indian Hills, Kittredge, Louisville; then Lafayette, Evergreen, Brighton, Erie, Conifer, Dacono, Frederick, Fort Lupton, Firestone, Black Hawk, Idaho Springs, Bennett, Nederland, Elizabeth, Mead, Bailey, Lyons, Georgetown, Berthoud, Johnstown, Monument, Loveland, Evans, Greeley, Windsor, Woodland Park, Estes Park, and Fort Morgan (116 km, beyond the radius).
+* **No feed** inside the radius: Lakewood, Glendale, Edgewater, Sheridan, Federal Heights, Greenwood Village, Northglenn, Centennial, Highlands Ranch, Ken Caryl, Superior, Cherry Hills Village, Columbine, Foxfield, Mountain View, Lakeside, Bow Mar, Welby, Castle Pines.
+* **Complete to 29.2 km.** Beyond it, the 84 km ring holds only the towns probed on 2026-10-01; the next sweep fills it in (such as Platteville, Hudson, Keenesburg, Kiowa, Pine, Central City, Empire, Wellington, Timnath, Severance, Eaton, Palmer Lake) and reaches outward.
+* Suburban feeds mostly repeat Denver's events (Commerce City: 48 of 56 in Denver); the duplicate check absorbs them. Mountain and plains towns hold few events of their own (Bennett 0, Georgetown 1).
 
 ## Principles
 
@@ -16,7 +25,7 @@ These hold for every change a build makes. The General Model has its single home
 |---|---|
 | General Model | A change is made only when its mechanism holds for any site and its need is seen across many origins. A site that doesn't fit stays unread |
 | No data over bad data | Nothing is guessed. An event without a title or a parsed start ahead is dropped |
-| Respect layer | robots.txt, the Streetlight user agent, pacing, strikes, the page limit, and `ParseMode` on descriptions |
+| Respect layer | robots.txt, the Streetlight user agent, pacing (`Crawl-delay`, or 1 s per origin without one), strikes, the page limit, and `ParseMode` on descriptions |
 | Model-agnostic | A mistake of the LM is caught by validation, never answered with an instruction written for one model |
 | Standard measures | Scripted fetches settle with ordinary means (wheel scroll, steady text), never site tricks |
 | Low-hanging fruit | The fix that lifts many origins comes before the one that rescues a single site |
@@ -108,6 +117,8 @@ delete from parser where origin_id in ('summitdenver.com');
 update location set checked_at = null where id in (select id from feeds);
 ```
 
+**Rereading an event page.** An event page is read again only when its link's `parse_outcome` is null and its `content` is null or `Unread` (`Link.wantsRead`), so staging one nulls both.
+
 **Undoing a stray run.** When a daemon on the old build ran after a stage, delete what it made since the stage (the dump file's time, in local time): links and their aliases, parsers and events with `created_at` after it, then null `checked_at` on the feeds it checked.
 
 ## Reports
@@ -196,11 +207,17 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 | V27 | Locations created at an address take only the address from the map, never the type, hours, rank or website of the business it names there (26 old rows cleared). The road's word in an address search is taken before the first comma, so a street line holding its city (Meetup) still finds its house. Meetup still unlocated: its street line held the city, state and zip, and the area added again made OSM return nothing |
 | V28 | An address is searched by its street before the first comma, with the area added once. Meetup's event landed at an unnamed location on North York Street. The Meetup Denver feed was added and read: 8 of 30 events created, 20 lost for placing by name alone, then an OSM `opening_hours` rule with a second day range after a comma threw and ended the check |
 | V29 | Events of a general feed that give an address are placed as event leads are (`LocationSpawner.place`), fenced to 200 km of the feed. JSON-LD takes the first non-virtual `location`, and its area travels as `Area`. `osmHoursToSchedule` skips a rule it cannot read rather than throwing. Meetup Denver: 14 created and 5 duplicates of 30, 12 locations spawned. The rest: suburbs given as `town`, not `city` (3), a wrong street suffix on Meetup's own page, and parks and lots below OSM rank 30 |
-| V30 | `minPlaceRank` gone: a map result is taken unless it is an area (`place`), a road (`highway`) or an administrative boundary, so parks count. A map address's town or village is its city. Place names are cleaned of bracketed notes and "parking lot" before searching. Staged, not yet read |
+| V30 | `minPlaceRank` gone: a map result is taken unless it is an area (`place`), a road (`highway`) or an administrative boundary, so parks count. A map address's town or village is its city. Place names are cleaned of bracketed notes and "parking lot" before searching. Meetup Denver: 3 created and 19 duplicates of 30 (its events were not cleared), 8 unlocated: 3 name no place a person goes, 2 lie at a house the map lacks, and 3 are the lessons below (a suburb labeled Denver, a road named by its route, a wrong suffix) |
+| V31 | A JSON-LD image that is not absolute is dropped, not resolved: Meetup's is its stock fallback cover (`/images/fallbacks/…`), and raw it reached `provisionImageAndStore`, whose `error()` ended the Castle Rock check. The V30 run of 11 new Meetup city feeds made 70 events and 63 locations before 8 checks were cut short. V31 made 100 events and 79 locations, then Colorado Springs died on the page's meta image, relative too |
+| V32 | A meta image that is not absolute is dropped too. Follow-up map searches: a place's name with its state alone (`Region`), then its name alone when the feed's point fences it, and an address with its state alone, since Meetup labels suburbs Denver and misnames streets ("17th St." for 17th Avenue). Of several hits, one on the address's road wins. By hand, these place 8 of V31's 60 unlocated. Run: 81 created, no failed checks, 13 of 56 reread strays placed; 12 places found but not created, parks and trailheads the map gives no city (Castlewood Canyon, Lair o' the Bear, Inlet Bay Marina). **The Blue Bonnet problem**: a name alone can find the wrong place ("Blue Bonnet" found a building on Dorsey Drive), and no data is preferred over bad data |
+| V33 | A location needs only a point: no city is required to create or edit one, and a city named but not found still fails. Cityless locations stay off city feeds and city search. The slug base is the name, else the address, with its city when it has one, else the id. Staged, not yet read |
 
 ## Open Leads
 
 Found and not yet acted on, each to be weighed against the General Model:
+
+* **Roads named by their route.** "22550 CO-74" finds the house at 22550 Bear Creek Road (Lair o' the Bear), but `findAddress` wants the road to hold "CO-74" and drops it.
+* **Wrong street suffixes.** "1298 South Broadway Avenue" finds nothing; "1298 South Broadway" finds Maria Empanada. Seen twice, both on Meetup's own pages.
 
 * **A place sharing an element with the date.** Newspaper listings put date, time and place in one `<strong>` split by `<br>`. The whole line goes to OSM and finds nothing.
 * **Date parts sharing a class.** Summit and Marquis hold the date in each card as `<time><p>Wed</p><p>30</p><p>Sep</p></time>`, and the weekday and month share one class, so the LM's selectors find the weekday and the date is dropped (V23). The whole `<time>` element's text would parse.

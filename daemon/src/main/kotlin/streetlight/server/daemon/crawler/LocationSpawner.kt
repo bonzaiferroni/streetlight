@@ -57,7 +57,8 @@ class LocationSpawner(
         val address = event[ParseProperty.Address]?.trim()?.takeIf { it.isNotEmpty() }
         if (feedLocation == null && address != null) {
             val name = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() } ?: address
-            return place(name, address, event[ParseProperty.Area], null, lead.geoPoint, event, tracker)
+            val area = event[ParseProperty.Area]
+            return place(name, address, area, event[ParseProperty.Region], null, lead.geoPoint, event, tracker)
         }
         val text = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() }?.let(::cleanPlaceName) ?: return feedLocation
         if (feedLocation?.name?.fuzzyMatches(text) == true) return feedLocation
@@ -71,7 +72,7 @@ class LocationSpawner(
                 .firstOrNull { location -> location.name?.fuzzyMatches(text) == true }
                 ?.let { return it.also { tracker.locationMatched(event, text, it) } }
 
-            val edit = place.toEdit().takeIf { it.validity.isValid && it.state != null }
+            val edit = place.toEdit().takeIf { it.validity.isValid }
                 ?: return feedLocation.also { tracker.locationFellBack(event, text) }
             try {
                 server.createLocation(null, edit, isImageRequired = false)
@@ -90,8 +91,9 @@ class LocationSpawner(
 
     /**
      * The place on the map at [address] in [area] named [name], and the name that found it. The address alone is
-     * searched first, then the name with the address, then [declaredName] with it when [name] finds none. Of the
-     * places whose name matches, one whose website shares the origin of [website], when known, wins, then the closest
+     * searched first, then the name with the address, then [declaredName] with it when [name] finds none. Then [name]
+     * with its [region] alone, and with nothing else when [near] fences it. Of the places whose name matches, one whose
+     * website shares the origin of [website], when known, wins, then one on the street of [address], then the closest
      * name. A place farther than [searchRadius] from [near], when given, is not taken.
      */
     suspend fun findPlace(
@@ -100,16 +102,24 @@ class LocationSpawner(
         declaredName: String?,
         address: String?,
         area: String?,
+        region: String?,
         near: GeoPoint? = null,
     ): Pair<OSMLocation, String>? {
         val street = address?.let { withoutUnit(it).substringBefore(',').trim() }
         val where = listOfNotNull(street, area).joinToString(", ").ifEmpty { null }
         if (street != null) {
-            findPlace(website, listOfNotNull(street, area).joinToString(", "), name, near)?.let { return it to name }
+            findPlace(website, listOfNotNull(street, area).joinToString(", "), name, street, near)?.let { return it to name }
         }
-        findPlace(website, listOfNotNull(name, where).joinToString(", "), name, near)?.let { return it to name }
-        val declared = declaredName?.takeIf { it != name } ?: return null
-        return findPlace(website, listOfNotNull(declared, where).joinToString(", "), declared, near)?.let { it to declared }
+        val declared = declaredName?.takeIf { it != name }
+        val searches = listOfNotNull(
+            listOfNotNull(name, where) to name,
+            declared?.let { listOfNotNull(it, where) to it },
+            region?.let { listOf(name, it) to name },
+            near?.let { listOf(name) to name },
+        )
+        return searches.firstNotNullOfOrNull { (parts, searchedName) ->
+            findPlace(website, parts.joinToString(", "), searchedName, street, near)?.let { it to searchedName }
+        }
     }
 
     /** The location already stored at [address] whose name matches [name], found without the map. */
@@ -143,7 +153,7 @@ class LocationSpawner(
     }
 
     /**
-     * The location of the place named [givenName] at [address] in [area], for [event], its name cleaned by
+     * The location of the place named [givenName] at [address] in [area] or [region], for [event], its name cleaned by
      * [cleanPlaceName]: one stored at the address under its name; else the place its address and name find on the
      * map, stored or created, its [website] preferred to the map's; else the address alone, stored or created with no
      * name of its own. A place farther than [searchRadius] from [near], when given, is not taken. Null when none is
@@ -154,6 +164,7 @@ class LocationSpawner(
         givenName: String,
         address: String?,
         area: String?,
+        region: String?,
         website: Url?,
         near: GeoPoint?,
         event: PropertyMap,
@@ -164,8 +175,8 @@ class LocationSpawner(
             tracker.locationMatched(event, name, it)
             return it
         }
-        val (place, placedName) = findPlace(website, name, null, address, area, near)
-            ?: return placeAtAddress(address ?: return null, area, website, near, event, name, tracker)
+        val (place, placedName) = findPlace(website, name, null, address, area, region, near)
+            ?: return placeAtAddress(address ?: return null, area, region, website, near, event, name, tracker)
         readStored(place, placedName)?.let {
             tracker.locationMatched(event, name, it)
             return it
@@ -179,20 +190,21 @@ class LocationSpawner(
     }
 
     /**
-     * The location at the [address] in [area] of an event whose place, named [name], the map does not know: stored
+     * The location at the [address] in [area] or [region] of an event whose place, named [name], the map does not know: stored
      * there already, or created there with no name of its own.
      */
     context(crawler: Crawler)
     private suspend fun placeAtAddress(
         address: String,
         area: String?,
+        region: String?,
         website: Url?,
         near: GeoPoint?,
         event: PropertyMap,
         name: String,
         tracker: ParseTracker,
     ): Location? {
-        val place = findAddress(address, area, near) ?: return null
+        val place = findAddress(address, area, region, near) ?: return null
         readStoredUnnamed(place)?.let {
             tracker.locationMatched(event, name, it)
             return it
@@ -206,21 +218,22 @@ class LocationSpawner(
     }
 
     /**
-     * The place on the map at [address] in [area]: a building-level hit with the address's house number on a road
-     * that holds the longest word of its street, so that "Welton St" finds "Welton Street"; one without a name of its
-     * own first. A place farther than [searchRadius] from [near], when given, is not taken.
+     * The place on the map at [address] in [area], or in [region] alone when [area] finds none: a building-level hit
+     * with the address's house number on a road that holds the longest word of its street, so that "Welton St" finds
+     * "Welton Street"; one without a name of its own first. A place farther than [searchRadius] from [near], when
+     * given, is not taken.
      */
-    suspend fun findAddress(address: String, area: String?, near: GeoPoint? = null): OSMLocation? {
+    suspend fun findAddress(address: String, area: String?, region: String?, near: GeoPoint? = null): OSMLocation? {
         val street = withoutUnit(address).substringBefore(',').trim()
-        val number = houseNumber.find(street)?.value ?: return null
-        val roadName = street.replaceFirst(number, "").split(' ').maxByOrNull { it.length } ?: return null
-        gate.waitUntilOpen()
-        val text = listOfNotNull(street, area).joinToString(", ")
-        val foundPlaces = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
-        return foundPlaces
-            .filter { it.address.number == number && it.isNear(near) }
-            .filter { it.address.road?.contains(roadName, ignoreCase = true) == true }
-            .minByOrNull { if (it.name.isNullOrBlank()) 0 else 1 }
+        val number = houseNumberPattern.find(street)?.value ?: return null
+        val searches = listOfNotNull(listOfNotNull(street, area), region?.let { listOf(street, it) }).distinct()
+        return searches.firstNotNullOfOrNull { parts ->
+            gate.waitUntilOpen()
+            val foundPlaces = tryOrNull { osm.search(OSMQuery(query = parts.joinToString(", "))) } ?: return@firstNotNullOfOrNull null
+            foundPlaces
+                .filter { it.address.number == number && it.isNear(near) && it.isOnStreet(street) }
+                .minByOrNull { if (it.name.isNullOrBlank()) 0 else 1 }
+        }
     }
 
     /** The location already stored at the point of [place] with no name of its own. */
@@ -236,13 +249,13 @@ class LocationSpawner(
         create(place.toAddressEdit().copy(website = website))
 
     /**
-     * The location created from [edit], when it has what a location needs: a point, a city and a state. A location
-     * already stored under its map id is returned in its place.
+     * The location created from [edit], when it has a point. A location already stored under its map id is returned
+     * in its place.
      */
     context(crawler: Crawler)
     private suspend fun create(edit: LocationEdit): Outcome<Location> {
-        if (edit.geoPoint == null || edit.city == null || edit.state == null) {
-            return Problem("The place on the map lacks what a location needs")
+        if (edit.geoPoint == null) {
+            return Problem("The place on the map has no point")
         }
         return crawler.dbWrite {
             edit.mapId?.let { dao.location.readLocationByMapId(it) }?.let { return@dbWrite Ok(it) }
@@ -258,9 +271,9 @@ class LocationSpawner(
 
     /**
      * The place on the map found by the search [text] and named [name], within [searchRadius] of [near] when given,
-     * preferring one on the origin of [website].
+     * preferring one on the origin of [website], then one on [street].
      */
-    private suspend fun findPlace(website: Url?, text: String, name: String, near: GeoPoint?): OSMLocation? {
+    private suspend fun findPlace(website: Url?, text: String, name: String, street: String?, near: GeoPoint?): OSMLocation? {
         gate.waitUntilOpen()
         val foundPlaces = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
         val origin = website?.toOriginId()
@@ -271,6 +284,7 @@ class LocationSpawner(
                     val placeWebsite = place.extraTags?.website ?: place.extraTags?.contactWebsite
                     origin != null && placeWebsite?.toUrl()?.toOriginId() == origin
                 },
+                { place -> street != null && place.isOnStreet(street) },
                 { place -> place.name?.similarity(name) ?: 0.0 },
             ))
     }
@@ -339,6 +353,17 @@ internal fun cleanPlaceName(name: String): String = placePhrases
     .replace(whitespaceRun, " ").trim().trim('-', ',', ' ')
     .ifEmpty { name }
 
+/**
+ * Whether this place is on the road of [street]: its road holds the longest word of [street] after the house number,
+ * so that "Welton St" is on "Welton Street".
+ */
+private fun OSMLocation.isOnStreet(street: String): Boolean {
+    val number = houseNumberPattern.find(street)?.value
+    val roadName = (number?.let { street.replaceFirst(it, "") } ?: street).split(' ').maxByOrNull { it.length }
+        ?.takeIf { it.isNotEmpty() } ?: return false
+    return address.road?.contains(roadName, ignoreCase = true) == true
+}
+
 /** Whether this place lies within [searchRadius] of [point], or [point] is not given. */
 private fun OSMLocation.isNear(point: GeoPoint?) = point == null || toGeoPoint().distanceTo(point) <= searchRadius
 
@@ -358,7 +383,7 @@ private fun LocationEdit.withUnitOf(address: String?): LocationEdit {
 
 internal val searchRadius = 200.kilometers
 internal val sameVenueRadius = 150.meters
-private val houseNumber = Regex("""\b\d+[A-Za-z]?\b""")
+private val houseNumberPattern = Regex("""\b\d+[A-Za-z]?\b""")
 private val addressUnit = Regex(""",?\s*(?:#\s*|\b(?:unit|suite|ste|apt|apartment|room|rm|building|bldg)\b\.?\s*#?\s*)(?:[A-Za-z]?\d[A-Za-z0-9-]*|[A-Za-z])\b""", RegexOption.IGNORE_CASE)
 private val areaCategories = setOf("place", "highway")
 private val placeNote = Regex("""\([^)]*\)|\[[^\]]*]""")

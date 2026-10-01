@@ -100,6 +100,7 @@ fun LdEvent.toPropertyMap(): PropertyMap {
         ParseProperty.Location to place?.name,
         ParseProperty.Address to place?.street,
         ParseProperty.Area to place?.area,
+        ParseProperty.Region to place?.region,
     ).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
 }
 
@@ -183,12 +184,13 @@ private fun JsonObject.text(key: String): String? =
     ((this[key] as? JsonPrimitive)?.takeIf { it.isString || it.content.toDoubleOrNull() != null })?.content
         ?.trim()?.takeIf { it.isNotEmpty() }
 
+/** The first absolute image url of [element], or null when it holds none. */
 private fun imageOf(element: JsonElement?): String? = when (element) {
     is JsonPrimitive -> element.content.takeIf { element.isString }
     is JsonArray -> element.firstNotNullOfOrNull { imageOf(it) }
     is JsonObject -> element.text("url")
     else -> null
-}
+}?.takeIf { it.toUrl().isAbsolute }
 
 private fun JsonObject.typeNames(): List<String> = when (val type = this["@type"]) {
     is JsonPrimitive -> listOf(type.content)

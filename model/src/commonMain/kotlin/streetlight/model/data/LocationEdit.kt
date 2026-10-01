@@ -44,7 +44,6 @@ data class LocationEdit(
         buildSet {
             if (name.isNullOrBlank()) add(LocationProperty.Name)
             if (geoPoint == null) add(LocationProperty.GeoPoint)
-            if (city == null) add(LocationProperty.City)
         }.toValidityCheck()
     }
 
@@ -129,7 +128,7 @@ fun OSMLocation.toEdit() = LocationEdit(
     mapRank = importance?.toFloat() ?: 0f,
     mapCategory = category,
     mapType = type.snakeToTitleCase(),
-    website = extraTags?.website?.toUrl()
+    website = (extraTags?.website ?: extraTags?.contactWebsite)?.toUrl()
 )
 
 /** [toEdit], or `null` when the place lacks what a location needs. */

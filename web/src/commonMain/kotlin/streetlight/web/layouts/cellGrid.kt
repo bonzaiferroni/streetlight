@@ -41,7 +41,7 @@ fun FlowContent.cellGrid(
             }
         }
         if (!buttons.isNullOrEmpty()) {
-            row(modify(CellGrid.Buttons, CardBg, JustifyContentEnd)) {
+            row(modify(CellGrid.Buttons, CardBg, JustifyContentEnd, PrimaryFg)) {
                 row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
                     buttons.forEach { it.block(this) }
                 }
@@ -69,7 +69,7 @@ object CellGrid {
     val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
     val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
-    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses)
+    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1, TextAlignCenter)
     val LabelMod = modify(OpacityHigh)
 }
 

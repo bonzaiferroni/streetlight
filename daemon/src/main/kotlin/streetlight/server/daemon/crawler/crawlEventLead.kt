@@ -47,6 +47,7 @@ private suspend fun Crawler.placeEvent(schema: EventSchema, place: LdPlace?, eve
     val address = place?.street ?: schema.locationAddress
     val area = place?.area ?: listOfNotNull(schema.locationCity, schema.locationState, schema.locationPostalCode)
         .joinToString(" ").ifEmpty { null }
+    val region = place?.region ?: schema.locationState
     val website = (place?.url ?: schema.locationWebsite)?.toUrl()?.takeIf { it.isAbsolute }
-    return spawner.place(name, address, area, website, null, event, tracker)
+    return spawner.place(name, address, area, region, website, null, event, tracker)
 }

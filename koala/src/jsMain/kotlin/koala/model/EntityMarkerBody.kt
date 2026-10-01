@@ -43,7 +43,7 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
 
             column(modify(Gap2Px, LineHeight115, WhiteSpaceNoWrap)) {
                 label?.let {
-                    textBlock(it, Bold)
+                    textBlock(it, modify(Bold, MaxWidth(32), TextOverflowEllipses))
                 }
                 if (sublabel != null || typeLabel != null) {
                     textBlock(mod = TextSmall) {

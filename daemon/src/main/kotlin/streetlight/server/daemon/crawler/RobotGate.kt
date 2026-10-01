@@ -18,7 +18,7 @@ object RobotProblem {
 class RobotGate(
     text: String?,
     private val agent: String = "*",
-    defaultDelay: Duration = 10.seconds,
+    defaultDelay: Duration = 1.seconds,
 ) {
 
     private data class Rule(val pattern: String, val allow: Boolean)

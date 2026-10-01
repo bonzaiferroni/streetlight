@@ -33,6 +33,9 @@ enum class ParseProperty {
 
     /** The city, state and postal code of the place an event takes place at, searched with its [Address]. */
     Area,
+
+    /** The state of the place an event takes place at, searched with its name when its [Address] finds no place. */
+    Region,
 }
 
 /** The text of each property read from a page, not yet parsed. */
