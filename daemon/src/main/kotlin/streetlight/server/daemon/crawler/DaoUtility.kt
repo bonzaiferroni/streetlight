@@ -24,21 +24,24 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 /**
- * Up to [limit] leads due a read: the locations' own feeds first, then the stored leads filling what room remains,
- * each oldest first.
+ * Up to [limit] leads due a read: the locations' own feeds first, then the stored leads, then the websites of locations
+ * never read there, each filling what room remains, oldest first.
  */
 suspend fun DaoFacade.readCheckable(interval: Duration, limit: Int): List<Lead> {
     val feeds = location.readCheckableFeeds(interval, limit)
-    val room = limit - feeds.size
-    return if (room > 0) feeds + lead.readCheckable(interval, room) else feeds
+    val leads = feeds + if (feeds.size < limit) lead.readCheckable(interval, limit - feeds.size) else emptyList()
+    return leads + if (leads.size < limit) location.readCheckableWebsites(limit - leads.size) else emptyList()
 }
 
 /** Marks [lead] as checked now. */
 suspend fun DaoFacade.updateCheckedAt(lead: Lead) {
     when (lead) {
-        is LocationEventFeed -> location.updateCheckedAt(lead.location.locationId)
+        is LocationEventFeed -> location.updateCheckedFeedAt(lead.location.locationId)
         is GeneralEventFeed -> this.lead.updateCheckedAt(lead.leadId)
-        is LocationLead -> this.lead.updateCheckedAt(lead.leadId)
+        is LocationLead -> when (val locationId = lead.locationId) {
+            null -> lead.leadId?.let { this.lead.updateCheckedAt(it) }
+            else -> location.updateCheckedAt(locationId)
+        }
         is EventLead -> this.lead.updateCheckedAt(lead.leadId)
         is EventPage -> { }
     }

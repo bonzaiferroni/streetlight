@@ -10,6 +10,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventFeed
+import streetlight.model.data.GeneralEventFeed
 import streetlight.model.data.Location
 import streetlight.server.daemon.agent.parseLocalDateTime
 import streetlight.server.routes.createEvent
@@ -23,6 +24,7 @@ suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageE
     val event = mergeEvent(feedEvent, pageEvent, feed.timeZoneId) ?: return
     tracker.trackFoundRecord()
     val feedEdit = event.toEventEdit(feed.timeZoneId, feed.parseMode, tracker)
+        .let { if ((feed as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it }
     val title = feedEdit.title ?: return tracker.trackUnnamedRecord(event)
     val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(event)
     if (feedStart < Clock.System.now()) return tracker.trackPastEvent()

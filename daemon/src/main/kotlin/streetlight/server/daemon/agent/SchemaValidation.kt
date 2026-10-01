@@ -71,7 +71,7 @@ fun LocationSelectorSchema.validate(document: Element): Outcome<LocationSelector
         email = email.keepIfMatches(page),
         hours = hours.keepIfMatches(page),
         eventsLink = eventsLink.keepIfMatches(page) { it.hasAttr("href") },
-        image = image.keepIfMatches(page) { it.absoluteUrl("src") != null },
+        image = image.keepIfMatches(page) { it.imageUrl() != null },
         socialLinks = socialLinks.keepIfMatches(page) { it.hasAttr("href") },
     ))
 }

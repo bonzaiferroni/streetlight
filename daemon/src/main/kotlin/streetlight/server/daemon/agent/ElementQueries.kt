@@ -45,6 +45,15 @@ fun Element.resolveUrl(href: String): String? =
 fun Element?.absoluteUrl(attribute: String): String? =
     this?.absUrl(if (tagName() == "meta") "content" else attribute)?.normalizeSpace()?.takeIf { it.isNotEmpty() }
 
+/**
+ * The http url of this image, resolved against the page: its `src`, or its lazy-loaded source when `src` is a
+ * placeholder such as a `data:` url, or its content when it is a meta element.
+ */
+fun Element?.imageUrl(): String? =
+    imageAttributes.firstNotNullOfOrNull { attribute -> absoluteUrl(attribute)?.takeIf { it.startsWith("http") } }
+
+private val imageAttributes = listOf("src", "data-src", "data-lazy-src")
+
 private val boilerplateTags = setOf("nav", "header", "footer", "aside")
 
 private fun Element.isBoilerplate(): Boolean =

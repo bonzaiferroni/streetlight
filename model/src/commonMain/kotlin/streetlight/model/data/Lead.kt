@@ -11,6 +11,9 @@ sealed interface Lead {
     val initialUrl: Url
     val leadType: LeadType
     val content: String? get() = null
+
+    /** Whether the page may be a platform's rather than the source's, such as a page of Meetup. */
+    val isExternalOrigin: Boolean
 }
 
 /** The page of one event, found in [feed], with the [feedEvent] the feed already showed of it. */
@@ -20,6 +23,7 @@ data class EventPage(
     val feedEvent: PropertyMap?,
 ) : Lead {
     override val leadType get() = LeadType.EventPage
+    override val isExternalOrigin get() = feed.isExternalOrigin
 }
 
 /**
@@ -28,7 +32,7 @@ data class EventPage(
  */
 @Serializable
 data class LocationLead(
-    val leadId: LeadId,
+    val leadId: LeadId?,
     override val initialUrl: Url,
     override val content: String?,
     val checkedAt: Instant?,
@@ -36,6 +40,7 @@ data class LocationLead(
     val locationId: LocationId? = null,
 ) : Lead {
     override val leadType get() = LeadType.Location
+    override val isExternalOrigin get() = false
 }
 
 /** A url submitted as the page of one event, read to create the event, and its location when it is new. */
@@ -48,6 +53,7 @@ data class EventLead(
     val createdAt: Instant,
 ) : Lead {
     override val leadType get() = LeadType.Event
+    override val isExternalOrigin get() = true
 }
 
 /**

@@ -17,6 +17,7 @@ import streetlight.model.data.PropertyMap
 import streetlight.model.data.buildPropertyMap
 import streetlight.model.data.SchemaType
 import streetlight.server.daemon.agent.absoluteUrl
+import streetlight.server.daemon.agent.imageUrl
 import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.plainText
@@ -150,7 +151,7 @@ private fun LocationRead.parseLocation(doc: Document): PropertyMap = buildProper
     this[ParseProperty.Email] = email
     this[ParseProperty.Hours] = hours
     this[ParseProperty.EventsLink] = eventsUrl?.let { doc.resolveUrl(it) }
-    this[ParseProperty.Image] = doc.readImageUrl()?.value ?: imageUrl?.let { doc.resolveUrl(it) }
+    this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative = true)?.value ?: imageUrl?.let { doc.resolveUrl(it) }
 }
 
 /** The properties of the location on its homepage [doc], read by selector with [schema]. */
@@ -162,7 +163,7 @@ private fun parseLocation(schema: LocationSelectorSchema, doc: Document): Proper
     this[ParseProperty.Email] = doc.queryElement(schema.email).plainText()
     this[ParseProperty.Hours] = doc.queryElement(schema.hours).plainText()
     this[ParseProperty.EventsLink] = doc.queryElement(schema.eventsLink).absoluteUrl("href")
-    this[ParseProperty.Image] = doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")
+    this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative = true)?.value ?: doc.queryElement(schema.image).imageUrl()
     this[ParseProperty.SocialLinks] = schema.socialLinks?.let { selector ->
         doc.tryQuery(selector).toDataOrNull()?.mapNotNull { it.absoluteUrl("href") }?.distinct()?.joinToString("\n")
     }

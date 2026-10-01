@@ -49,7 +49,7 @@ fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: 
         cost = this[ParseProperty.Cost]?.let { costOf(it) },
         website = url,
         links = this[ParseProperty.Tickets]?.let { listOf(ExtraLink("Tickets", it.toUrl())) },
-        image = this[ParseProperty.Image]?.let { Image(it.toUrl()) },
+        image = this[ParseProperty.Image]?.toUrl()?.takeIf { it.isAbsolute }?.let { Image(it) },
         date = start?.date,
         startTime = start?.time,
         endTime = end,
@@ -65,8 +65,18 @@ fun PropertyMap.toLocationEdit(website: Url?): LocationEdit = LocationEdit(
     address = this[ParseProperty.Address],
     website = website,
     eventsUrl = this[ParseProperty.EventsLink]?.toUrl(),
-    image = this[ParseProperty.Image]?.let { Image(it.toUrl()) },
+    image = this[ParseProperty.Image]?.toUrl()?.takeIf { it.isAbsolute }?.let { Image(it) },
 )
+
+/** This edit with an RSVP link to its website and a note that it may be required, or this edit when it has no website. */
+fun EventEdit.withRsvp(): EventEdit {
+    val url = website ?: return this
+    val note = "This event may require that you [RSVP](${url.value})."
+    return copy(
+        links = links.orEmpty() + ExtraLink("RSVP", url),
+        description = listOfNotNull(description?.value, note).joinToString("\n\n").toMarkdown(),
+    )
+}
 
 /**
  * The cost in dollars that [text] states: 0 when it says the event is free and names no price, or its lowest dollar
@@ -81,11 +91,11 @@ internal fun costOf(text: String): Float? {
 private val dollarAmount = Regex("""\$\s?(\d+(?:\.\d{1,2})?)""")
 private val freeWord = Regex("""\bfree\b""", RegexOption.IGNORE_CASE)
 
-/** The properties of the event this schema read from the page [doc] at [url], the page's meta image first. */
+/** The properties of the event this schema read from the page [doc] at [url], an event lead's, the page's meta image first. */
 fun EventRead.parseEvent(doc: Document, url: Url): PropertyMap = buildPropertyMap {
     this[ParseProperty.Name] = name
     this[ParseProperty.Url] = url.value
-    this[ParseProperty.Image] = doc.readImageUrl()?.value ?: imageUrl
+    this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative = false)?.value ?: imageUrl
     this[ParseProperty.Description] = description
     this[ParseProperty.Contact] = contact
     this[ParseProperty.Cost] = cost

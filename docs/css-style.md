@@ -23,7 +23,7 @@ $Foo {
 
 The stylesheet refers to each class by interpolating the val, as in `$Foo`, and never by writing the selector, except for classes owned by another library. A class declared in an object is interpolated with the getter wrapped in `with(FooObject) { """ ... """ }`.
 
-A comment inside the stylesheet string is a CSS comment, `/* ... */`. A Kotlin `//` comment there is stylesheet text: the browser reads it as part of the next selector and drops that rule.
+A comment inside the stylesheet string is a CSS comment, `/* ... */`, never a Kotlin `//` comment.
 
 ## Layout of Rules
 
@@ -39,8 +39,8 @@ A rule of one or two declarations that fits on one line is written on one line. 
 
 A container sizes its direct children through a child rule in its stylesheet, as `CellGrid.Base` does with `> * { flex: 1; min-width: var(--unit-16); }`. An element is not wrapped only to size it.
 
-A flex item sized by its container has an explicit `min-width`. With `min-width: auto` it grows to fit its content.
+A flex item sized by its container has an explicit `min-width`.
 
 ## Inline Styles
 
-An inline style outranks id and class rules. Converting a class to an inline style is preceded by an analysis of the DOM structure and the stylesheets, for any rule that sets the same property on an element that carries the modifier.
+Converting a class to an inline style is preceded by an analysis of the DOM structure and the stylesheets, for any rule that sets the same property on an element that carries the modifier.

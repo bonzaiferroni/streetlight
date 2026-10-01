@@ -24,6 +24,7 @@ data class LocationEventFeed(
     override val parseMode: ParseMode,
 ): EventFeed {
     override val name get() = location.slug.toString()
+    override val isExternalOrigin get() = false
     override val timeZoneId get() = location.timezoneId
     override val geoPoint get() = location.geoPoint
 }
@@ -42,7 +43,9 @@ data class GeneralEventFeed(
     val checkedAt: Instant?,
     val createdAt: Instant,
     override val leadType: LeadType = LeadType.EventFeed,
+    val isRsvp: Boolean = false,
 ): EventFeed {
     override val parseMode get() = ParseMode.Partial
     override val location: Location? get() = null
+    override val isExternalOrigin get() = true
 }

@@ -6,6 +6,7 @@ import streetlight.model.data.buildPropertyMap
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import streetlight.server.daemon.agent.isPlausibleField
+import streetlight.server.daemon.agent.imageUrl
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.absoluteUrl
 import streetlight.server.daemon.agent.innerHtml
@@ -29,8 +30,8 @@ suspend fun Crawler.crawlEventPage(
     document: FetchDocument?,
     schema: LmSchema?,
 ) {
-    val readEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl) } }
-    val declaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl)?.toPropertyMap() }?.takeIf { it.isNotEmpty() }
+    val readEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl, !lead.isExternalOrigin) } }
+    val declaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl, !lead.isExternalOrigin)?.toPropertyMap() }?.takeIf { it.isNotEmpty() }
     declaredEvent.trackDeclaredLd(lead.initialUrl)
     val pageEvent = if (readEvent == null && declaredEvent == null) null else readEvent.orEmpty() + declaredEvent.orEmpty()
 
@@ -47,16 +48,20 @@ suspend fun Crawler.crawlEventPage(
     }
 }
 
-/** The properties of the event on the page [doc], read by [schema], found at [pageUrl], its meta image first. */
+/**
+ * The properties of the event on the page [doc], read by [schema], found at [pageUrl], its meta image first, resolved
+ * against the page when relative and [resolveIfRelative].
+ */
 private fun parsePageEvent(
     schema: EventPageSchema,
     doc: Document,
     pageUrl: Url,
+    resolveIfRelative: Boolean,
 ): PropertyMap {
     return buildPropertyMap {
         this[ParseProperty.Name] = doc.queryElement(schema.title) { it.isPlausibleField() }.plainText()
         this[ParseProperty.Url] = pageUrl.value
-        this[ParseProperty.Image] = doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")
+        this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative)?.value ?: doc.queryElement(schema.image).imageUrl()
         this[ParseProperty.Description] = doc.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml()
         this[ParseProperty.Contact] = doc.queryElement(schema.contact) { it.isPlausibleField() }.plainText()
         this[ParseProperty.Cost] = doc.queryElement(schema.cost) { it.isPlausibleField() }.plainText()

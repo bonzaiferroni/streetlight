@@ -1,6 +1,7 @@
 package streetlight.server.daemon.agent
 
 import com.fleeksoft.ksoup.nodes.Document
+import com.fleeksoft.ksoup.parser.Parser
 import kampfire.model.Url
 import kampfire.model.normalize
 import kampfire.model.toUrl
@@ -53,9 +54,13 @@ fun areaOf(city: String?, state: String?, postalCode: String?): String? =
     listOfNotNull(city, state, postalCode).joinToString(" ").ifEmpty { null }
 
 /** The events the JSON-LD of this page declares, at any depth. */
-fun Document.readLdEvents(): List<LdEvent> = readLdObjects()
+fun Document.readLdEvents(resolveIfRelative: Boolean = false): List<LdEvent> = readLdObjects()
     .filter { node -> node.typeNames().any { it in eventTypes } }
-    .map { it.toLdEvent() }
+    .map { node ->
+        node.toLdEvent().let { event ->
+            event.copy(image = event.image?.let { if (resolveIfRelative) resolveUrl(it) else it }?.takeIf { it.toUrl().isAbsolute })
+        }
+    }
 
 /** The places the JSON-LD of this page declares on their own, not as the location of an event. */
 fun Document.readLdPlaces(): List<LdPlace> {
@@ -79,7 +84,8 @@ fun pageLdEvent(events: List<LdEvent>, pageUrl: Url): LdEvent? {
 }
 
 /** The event the JSON-LD of this page at [pageUrl] declares as its own, picked as [pageLdEvent] picks it. */
-fun Document.readPageLdEvent(pageUrl: Url): LdEvent? = pageLdEvent(readLdEvents(), pageUrl)
+fun Document.readPageLdEvent(pageUrl: Url, resolveIfRelative: Boolean = false): LdEvent? =
+    pageLdEvent(readLdEvents(resolveIfRelative), pageUrl)
 
 /** Whether this event was called off or moved, so it is not to be posted as it stands. */
 val LdEvent.isCalledOff get() = status?.substringAfterLast('/') in calledOffStatuses
@@ -164,7 +170,8 @@ private fun JsonObject.toLdEvent(): LdEvent {
         currency = offer?.text("priceCurrency"),
         tickets = offer?.text("url"),
         performers = this["performer"].let { it as? JsonArray ?: listOfNotNull(it) }
-            .mapNotNull { (it as? JsonObject)?.text("name") ?: (it as? JsonPrimitive)?.takeIf { p -> p.isString }?.content },
+            .mapNotNull { (it as? JsonObject)?.text("name") ?: (it as? JsonPrimitive)?.takeIf { p -> p.isString }?.content
+                ?.decodeEntities() },
         place = place?.toLdPlace(),
     )
 }
@@ -184,18 +191,21 @@ private fun JsonObject.toLdPlace(): LdPlace {
     )
 }
 
-/** The text of the property [key], or null when it is missing, blank or not text. */
+/** The text of the property [key], its html entities decoded, or null when it is missing, blank or not text. */
 private fun JsonObject.text(key: String): String? =
     ((this[key] as? JsonPrimitive)?.takeIf { it.isString || it.content.toDoubleOrNull() != null })?.content
-        ?.trim()?.takeIf { it.isNotEmpty() }
+        ?.decodeEntities()?.trim()?.takeIf { it.isNotEmpty() }
 
-/** The first absolute image url of [element], or null when it holds none. */
+/** This text with its html entities decoded, as `&#038;` to `&`. */
+private fun String.decodeEntities(): String = Parser.unescapeEntities(this, inAttribute = false)
+
+/** The first image url of [element], or null when it holds none. */
 private fun imageOf(element: JsonElement?): String? = when (element) {
-    is JsonPrimitive -> element.content.takeIf { element.isString }
+    is JsonPrimitive -> element.content.takeIf { element.isString }?.decodeEntities()
     is JsonArray -> element.firstNotNullOfOrNull { imageOf(it) }
     is JsonObject -> element.text("url")
     else -> null
-}?.takeIf { it.toUrl().isAbsolute }
+}
 
 private fun JsonObject.typeNames(): List<String> = when (val type = this["@type"]) {
     is JsonPrimitive -> listOf(type.content)

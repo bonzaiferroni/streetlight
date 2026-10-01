@@ -51,13 +51,15 @@ fun FlowContent.cellGrid(
 }
 
 private fun FlowContent.cellContent(cell: EntityCell) {
-    icon(cell.icon, CellGrid.IconMod)
-    textBlock(mod = CellGrid.TextMod) {
-        +cell.text
-        cell.label?.let { label ->
-            span {
-                addModifiers(CellGrid.LabelMod)
-                +" $label"
+    row(CellGrid.ContentMod) {
+        icon(cell.icon, CellGrid.IconMod)
+        textBlock(mod = CellGrid.TextMod) {
+            +cell.text
+            cell.label?.let { label ->
+                span {
+                    addModifiers(CellGrid.LabelMod)
+                    +" $label"
+                }
             }
         }
     }
@@ -66,7 +68,8 @@ private fun FlowContent.cellContent(cell: EntityCell) {
 object CellGrid {
     val Base = Class("cell-grid")
     val Buttons = Base.withBemElement("buttons")
-    val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
+    val CellMod = modify(CardBg)
+    val ContentMod = modify(AlignItemsCenter, Gap(0), Padding(1))
     val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
     val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1, TextAlignCenter)
@@ -100,10 +103,8 @@ $Base {
         flex-grow: 1;
     }
 
-    > $Buttons {
-        > * {
-            width: var(--cell-width);
-        }
+    > * > * {
+        width: var(--cell-width);
     }
 }
 """ }

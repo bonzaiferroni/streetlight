@@ -4,7 +4,7 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
-* Build **V33** is staged: every Meetup city feed, their feed links cleared and their events kept, with the 10 event pages whose place the map found but could not be created (no city) reset. Its dumps are `logs/schema/*-before-V33.json`. 38 Meetup town feeds were added for it (see Meetup Radius).
+* Build **V35** is staged: the Grimm Brothers feed, and the new Eventbrite Denver lead. V34 read all 192 location websites: 623 events and 43 locations created since 09:00 on 2026-10-01, 89 locations filled, locations with a feed from 67 to 124. Dumps `logs/schema/*-before-V35.json`.
 * The crawler runs leads concurrently: up to `maxWorkers` (8) at once, taking more each second as room opens. Robots and OSM gates space requests, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`.
 * JSON-LD supplements the LM, never replaces it: every lead is read by its schema, and the values its page declares are laid over the read at resolution time. Meta-only values (such as `og:site_name`) never outrank the LM.
 
@@ -76,7 +76,7 @@ psql -At -c "select coalesce(json_agg(k), '[]') from link k" > logs/schema/link-
 psql -At -c "select coalesce(json_agg(p order by p.created_at), '[]') from parser p" > logs/schema/parser-before-Vn.json
 ```
 
-**The retry rule.** A location is staged for another read when its feed link is not a clean read (content not Schema, or outcome not Complete), when any granted link on its origin is not a clean read, or when it has no events at all. Staging a location nulls `checked_at`, deletes its feed link and its origin's parsers, and resets the outcome of its `Unread` links. Run it in one transaction (`psql -q -1 -v ON_ERROR_STOP=1 -f stage.sql`):
+**The retry rule.** A location is staged for another read when its feed link is not a clean read (content not Schema, or outcome not Complete), when any granted link on its origin is not a clean read, or when it has no events at all. Staging a location nulls `checked_feed_at`, deletes its feed link and its origin's parsers, and resets the outcome of its `Unread` links. Run it in one transaction (`psql -q -1 -v ON_ERROR_STOP=1 -f stage.sql`):
 
 ```sql
 create temp table feeds as
@@ -95,7 +95,7 @@ create temp table retry as
        or not exists (select 1 from event e where e.location_id = f.location_id);
 update link set parse_outcome = null
     where origin_id in (select origin_id from retry) and content = 4;
-update location set checked_at = null where slug in (select slug from retry);
+update location set checked_feed_at = null where slug in (select slug from retry);
 delete from parser where origin_id in (select origin_id from retry);
 delete from link where id in (select link_id from retry);
 select string_agg(slug, ', ' order by slug) from retry;
@@ -103,7 +103,7 @@ select string_agg(slug, ', ' order by slug) from retry;
 
 A feed that is never staged is not read again within a day (`checkInterval`), so a build only touches what was staged.
 
-**A targeted stage** tests chosen sites from scratch, and is the usual stage now. Dump `event`, `link`, `link_alias` and `parser` first. Then, in one transaction: pick the feeds by slug, take their origins from `events_url` (plus any origin their event pages live on, such as `ticketsqueeze.com` for Red Rocks), delete the events at those locations or whose `url` is on those origins (so venues spawned from their pages go too), delete the origins' link aliases and links, delete their parsers only when the stored schema is the problem, and null `checked_at`. A stored lead is staged the same way through `lead.checked_at`. Deleting whole events is what lets a build's improvements show; otherwise the duplicate check keeps the old ones.
+**A targeted stage** tests chosen sites from scratch, and is the usual stage now. Dump `event`, `link`, `link_alias` and `parser` first. Then, in one transaction: pick the feeds by slug, take their origins from `events_url` (plus any origin their event pages live on, such as `ticketsqueeze.com` for Red Rocks), delete the events at those locations or whose `url` is on those origins (so venues spawned from their pages go too), delete the origins' link aliases and links, delete their parsers only when the stored schema is the problem, and null `checked_at`. A stored lead is staged the same way through `lead.checked_at`, and a location's website read through `location.checked_at`. Deleting whole events is what lets a build's improvements show; otherwise the duplicate check keeps the old ones.
 
 ```sql
 create temp table feeds as select id, slug, events_url from location where slug in ('larimer-lounge-denver', 'summit-denver');
@@ -114,12 +114,12 @@ delete from event where location_id in (select id from feeds)
 delete from link_alias where link_id in (select id from link where origin_id in (select origin_id from origins));
 delete from link where origin_id in (select origin_id from origins);
 delete from parser where origin_id in ('summitdenver.com');
-update location set checked_at = null where id in (select id from feeds);
+update location set checked_feed_at = null where id in (select id from feeds);
 ```
 
 **Rereading an event page.** An event page is read again only when its link's `parse_outcome` is null and its `content` is null or `Unread` (`Link.wantsRead`), so staging one nulls both.
 
-**Undoing a stray run.** When a daemon on the old build ran after a stage, delete what it made since the stage (the dump file's time, in local time): links and their aliases, parsers and events with `created_at` after it, then null `checked_at` on the feeds it checked.
+**Undoing a stray run.** When a daemon on the old build ran after a stage, delete what it made since the stage (the dump file's time, in local time): links and their aliases, parsers and events with `created_at` after it, then null `checked_feed_at` (a location's feed) or `checked_at` (a lead) on the feeds it checked.
 
 ## Reports
 
@@ -210,7 +210,9 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 | V30 | `minPlaceRank` gone: a map result is taken unless it is an area (`place`), a road (`highway`) or an administrative boundary, so parks count. A map address's town or village is its city. Place names are cleaned of bracketed notes and "parking lot" before searching. Meetup Denver: 3 created and 19 duplicates of 30 (its events were not cleared), 8 unlocated: 3 name no place a person goes, 2 lie at a house the map lacks, and 3 are the lessons below (a suburb labeled Denver, a road named by its route, a wrong suffix) |
 | V31 | A JSON-LD image that is not absolute is dropped, not resolved: Meetup's is its stock fallback cover (`/images/fallbacks/…`), and raw it reached `provisionImageAndStore`, whose `error()` ended the Castle Rock check. The V30 run of 11 new Meetup city feeds made 70 events and 63 locations before 8 checks were cut short. V31 made 100 events and 79 locations, then Colorado Springs died on the page's meta image, relative too |
 | V32 | A meta image that is not absolute is dropped too. Follow-up map searches: a place's name with its state alone (`Region`), then its name alone when the feed's point fences it, and an address with its state alone, since Meetup labels suburbs Denver and misnames streets ("17th St." for 17th Avenue). Of several hits, one on the address's road wins. By hand, these place 8 of V31's 60 unlocated. Run: 81 created, no failed checks, 13 of 56 reread strays placed; 12 places found but not created, parks and trailheads the map gives no city (Castlewood Canyon, Lair o' the Bear, Inlet Bay Marina). **The Blue Bonnet problem**: a name alone can find the wrong place ("Blue Bonnet" found a building on Dorsey Drive), and no data is preferred over bad data |
-| V33 | A location needs only a point: no city is required to create or edit one, and a city named but not found still fails. Cityless locations stay off city feeds and city search. The slug base is the name, else the address, with its city when it has one, else the id. Staged, not yet read |
+| V33 | A location needs only a point: no city is required to create or edit one, and a city named but not found still fails. Cityless locations stay off city feeds and city search. The slug base is the name, else the address, with its city when it has one, else the id. Stopped mid-run |
+| V34 | A location lead may carry a stored location, whose gaps it fills from the page (`mergeAndUpdateLocation`), every stored value kept and hosted locations untouched. Each location with a website and no `checked_at` is read this way once, after the feeds and stored leads. Stopped mid-run to pace OSM at 2 s |
+| V35 | `lead.is_rsvp` (set on the Meetup feeds): their events carry an `RSVP` link to the event page and a note in the description that an RSVP may be required. OSM searches paced at 2 s. JSON-LD text has its html entities decoded (WordPress writes `&#038;` for `&`); 73 stored events cleaned in SQL (dump `logs/schema/event-entities-before-decode.json`). Images: `imageUrl` reads `src`, else `data-src` or `data-lazy-src` (a `data:` placeholder sank Grimm Brothers' check), and an event or location keeps only an absolute http image. `Lead.isExternalOrigin`: a relative meta or JSON-LD image is resolved against the page for a location's feed or lead, and dropped for a general feed or event lead. Eventbrite Denver added. Not yet read |
 
 ## Open Leads
 

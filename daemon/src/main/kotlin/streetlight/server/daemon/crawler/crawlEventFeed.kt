@@ -8,6 +8,7 @@ import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import streetlight.server.daemon.agent.isPlausibleProse
+import streetlight.server.daemon.agent.imageUrl
 import streetlight.server.daemon.agent.absoluteUrl
 import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.plainText
@@ -65,7 +66,7 @@ private fun Crawler.findEventElements(feed: EventFeed, document: FetchDocument, 
 private fun parseFeedEvent(element: Element, schema: EventFeedSchema): PropertyMap = buildPropertyMap {
     this[ParseProperty.Name] = element.queryElement(schema.title).plainText()
     this[ParseProperty.Url] = element.queryElement(schema.link).absoluteUrl("href")?.toUrl()?.normalize()?.value
-    this[ParseProperty.Image] = element.queryElement(schema.image).absoluteUrl("src")
+    this[ParseProperty.Image] = element.queryElement(schema.image).imageUrl()
     this[ParseProperty.Description] = element.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml()
     this[ParseProperty.Cost] = element.queryElement(schema.cost).plainText()
     this[ParseProperty.Date] = element.dateText(schema.date, schema.month, schema.day)

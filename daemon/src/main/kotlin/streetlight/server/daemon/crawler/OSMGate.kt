@@ -9,7 +9,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 /** The pacing of the crawler's searches of OpenStreetMap, one every [interval]. */
-class OSMGate(val interval: Duration = 10.seconds) {
+class OSMGate(val interval: Duration = 2.seconds) {
     private val slotMutex = Mutex()
     private var nextOpen = Instant.DISTANT_PAST
 

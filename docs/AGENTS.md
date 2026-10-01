@@ -8,7 +8,14 @@ Read this first, then `docs/package-documentation.md`.
 
 `docs/package-documentation.md` states what a package document contains, how it is written, and the style it follows. This document states when to read one and when to amend one.
 
-A package document is specification only. It states what is true of the package and gives no justification for it. It adds no explanation of what the reader can already infer, and it assumes the reader knows Kotlin, including source sets. An explanation is written only when the user asks for it to be recorded.
+A package document is specification only. It brings a reader up to speed on the package as it stands, not on the decisions that shaped it. It assumes the reader knows Kotlin, including source sets.
+
+| Content | When it belongs |
+|---|---|
+| Specification | Always |
+| Example | When it makes a specification clearer |
+| Explanation | Only when specification and example are not enough, or when the user asks for it to be recorded |
+| Justification | Never |
 
 A negative specification is valuable when it is not redundant and not more clearly stated as a positive specification.
 
