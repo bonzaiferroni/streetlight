@@ -21,9 +21,10 @@ import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
+import streetlight.server.daemon.agent.toPropertyMap
 import streetlight.server.daemon.agent.readPageLdPlace
 import streetlight.server.daemon.agent.resolveUrl
-import streetlight.server.daemon.agent.toPropertyMap
+import streetlight.server.daemon.agent.areaOf
 import streetlight.server.daemon.agent.tryQuery
 import streetlight.server.utils.readImageUrl
 import streetlight.server.db.datascope.updateLocation
@@ -37,28 +38,23 @@ context(tracker: ParseTracker)
 suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocument?, schema: LmSchema?) {
     val locationRead = schema as? LocationRead ?: return
     if (document == null) return
-    tracker.read(lead.initialUrl, SchemaType.Location)
+    tracker.trackReadUrl(lead.initialUrl, SchemaType.Location)
 
     val location = locationRead.parseLocation(document.doc)
     val ldPlace = document.doc.readPageLdPlace()
     val declaredLocation = ldPlace?.toPropertyMap().orEmpty()
-    if (declaredLocation.isNotEmpty()) tracker.declared(lead.initialUrl)
+    declaredLocation.trackDeclaredLd(lead.initialUrl)
 
     when (val locationId = lead.locationId) {
         null -> {
             val region = ldPlace?.region ?: locationRead.state
-            val area = listOfNotNull(
-                ldPlace?.locality ?: locationRead.city,
-                region,
-                ldPlace?.postalCode ?: locationRead.postalCode,
-            ).joinToString(" ").ifEmpty { null }
+            val area = areaOf(ldPlace?.locality ?: locationRead.city, region, ldPlace?.postalCode ?: locationRead.postalCode)
             deliverLocation(lead, location + declaredLocation, area, region, document.doc.readMetaContent("og:site_name"))
         }
         else -> {
             mergeAndUpdateLocation(lead, locationId, location + declaredLocation)
         }
     }
-
 }
 
 /**
@@ -67,14 +63,14 @@ suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocumen
  */
 context(tracker: ParseTracker)
 private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationId: LocationId, location: PropertyMap) {
-    tracker.recordFound()
+    tracker.trackFoundRecord()
     val name = location[ParseProperty.Name] ?: lead.initialUrl.value
     val stored = dao.location.readLocation(locationId, null)
-        ?: return tracker.recordFailed(location, name, Problem("No location is stored as $locationId"))
+        ?: return tracker.trackFailedRecord(location, name, Problem("No location is stored as $locationId"))
 
     val storedEdit = stored.toEdit()
     val edit = storedEdit.mergeLeft(location.toLocationEdit(lead.initialUrl))
-    if (edit == storedEdit) return tracker.recordDuplicate(location, name, stored.label)
+    if (edit == storedEdit) return tracker.trackDuplicateRecord(location, name, stored.label)
 
     dbWrite {
         try {
@@ -84,8 +80,8 @@ private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationI
         } catch (e: Exception) {
             Problem("${e::class.simpleName}: ${e.message}")
         }
-    }.toDataOr { return tracker.recordFailed(location, name, it) }
-    tracker.recordUpdated()
+    }.toDataOr { return tracker.trackFailedRecord(location, name, it) }
+    tracker.trackUpdatedRecord()
 }
 
 /**
@@ -101,18 +97,20 @@ private suspend fun Crawler.deliverLocation(
     region: String?,
     declaredName: String?,
 ) {
-    tracker.recordFound()
-    val name = location[ParseProperty.Name] ?: declaredName ?: return tracker.recordUnnamed(location)
+    tracker.trackFoundRecord()
+    val name = location[ParseProperty.Name] ?: declaredName ?: return tracker.trackUnnamedRecord(location)
     val address = location[ParseProperty.Address]
-    spawner.readLocationAt(name, address)?.let { return tracker.recordDuplicate(location, name, it.label) }
+
+    spawner.readLocationAt(name, address)?.let { return tracker.trackDuplicateRecord(location, name, it.label) }
+
     when (val found = spawner.findPlace(lead.initialUrl, name, declaredName, address, area, region)) {
         null -> deliverAtAddress(lead, location, name, declaredName, address, area, region)
         else -> {
             val (place, placedName) = found
-            dao.location.readLocationByMapId(place.osmId)?.let { return tracker.recordDuplicate(location, placedName, it.label) }
+            dao.location.readLocationByMapId(place.osmId)?.let { return tracker.trackDuplicateRecord(location, placedName, it.label) }
             spawner.createLocationFrom(place, location + (ParseProperty.Name to placedName), lead.initialUrl)
-                .toDataOr { return tracker.recordFailed(location, placedName, it) }
-            tracker.recordCreated()
+                .toDataOr { return tracker.trackFailedRecord(location, placedName, it) }
+            tracker.trackCreatedRecord()
         }
     }
 }
@@ -133,12 +131,14 @@ private suspend fun Crawler.deliverAtAddress(
 ) {
     val place = address?.let { spawner.findAddress(it, area, region) } ?: run {
         val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
-        return tracker.recordFailed(location, name, Problem("No place on the map matches $searched"))
+        return tracker.trackFailedRecord(location, name, Problem("No place on the map matches $searched"))
     }
-    spawner.readStoredLocation(place, name)?.let { return tracker.recordDuplicate(location, name, it.label) }
+
+    spawner.readStoredLocation(place, name)?.let { return tracker.trackDuplicateRecord(location, name, it.label) }
     spawner.createNamedLocationAt(place, location + (ParseProperty.Name to name), lead.initialUrl)
-        .toDataOr { return tracker.recordFailed(location, name, it) }
-    tracker.recordCreated()
+        .toDataOr { return tracker.trackFailedRecord(location, name, it) }
+
+    tracker.trackCreatedRecord()
 }
 
 /** The properties of the location the LM read from its homepage [doc], its links resolved against [doc]. */

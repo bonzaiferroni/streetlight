@@ -79,7 +79,7 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
                 throw e
             } catch (e: Exception) {
                 log.error(e) { "check failed for $name" }
-                tracker.failed(e)
+                tracker.trackFailedCheck(e)
             }
             dbWrite { tracker.records().forEach { dao.recordLink(it) } }
             if (tracker.needsReport()) tracker.write(lead.leadType)

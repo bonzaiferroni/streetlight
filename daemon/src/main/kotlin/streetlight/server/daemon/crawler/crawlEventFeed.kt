@@ -29,18 +29,19 @@ suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, se
     val schema = selectorSchema as? EventFeedSchema ?: return
     val elements = findEventElements(lead, document, schema) ?: return
     val feedUrls = setOf(lead.initialUrl, document.servedUrl)
+
     elements.forEach { element ->
         val feedEvent = parseFeedEvent(element, schema)
 
         val pageUrl = feedEvent[ParseProperty.Url]?.toUrl() ?: return@forEach deliverEvent(lead, feedEvent, null, tracker)
         if (pageUrl in feedUrls) return@forEach deliverEvent(lead, feedEvent, null, tracker)
-        tracker.linkFound()
+        tracker.trackFoundLink()
         if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, feedEvent, null, tracker)
         val pageLink = dao.link.readLink(pageUrl)
-        if (pageLink != null && !pageLink.wantsRead()) return@forEach tracker.pageKnown()
-        if (!tracker.canReadPage()) return@forEach tracker.pageDeferred(pageUrl)
+        if (pageLink != null && !pageLink.wantsRead()) return@forEach tracker.trackKnownPage()
+        if (!tracker.canReadPage()) return@forEach tracker.trackSkippedUrl(pageUrl, PageState.Deferred)
         if (!tracker.shouldFetch(pageUrl)) {
-            tracker.pageBenched(pageUrl)
+            tracker.trackSkippedUrl(pageUrl, PageState.Benched)
             return@forEach deliverEvent(lead, feedEvent, null, tracker)
         }
         crawl(EventPage(pageUrl, lead, feedEvent))
@@ -53,10 +54,10 @@ private fun Crawler.findEventElements(feed: EventFeed, document: FetchDocument, 
     val elements = schema.event?.let { document.doc.tryQuery(it).toDataOrNull(this::logProblem) }
     tracker.collect(feed.initialUrl, elements.orEmpty())
     if (elements.isNullOrEmpty()) {
-        tracker.noEvents(feed.initialUrl, SchemaType.EventFeed)
+        tracker.trackNoEvents(feed.initialUrl, SchemaType.EventFeed)
         return null
     }
-    tracker.read(feed.initialUrl, SchemaType.EventFeed)
+    tracker.trackReadUrl(feed.initialUrl, SchemaType.EventFeed)
     return elements
 }
 

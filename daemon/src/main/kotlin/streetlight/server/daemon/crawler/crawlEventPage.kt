@@ -11,8 +11,8 @@ import streetlight.server.daemon.agent.absoluteUrl
 import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
-import streetlight.server.daemon.agent.readPageLdEvent
 import streetlight.server.daemon.agent.toPropertyMap
+import streetlight.server.daemon.agent.readPageLdEvent
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.EventPage
 import streetlight.model.data.SchemaType
@@ -31,16 +31,17 @@ suspend fun Crawler.crawlEventPage(
 ) {
     val readEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl) } }
     val declaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl)?.toPropertyMap() }?.takeIf { it.isNotEmpty() }
-    declaredEvent?.let { tracker.declared(lead.initialUrl) }
+    declaredEvent.trackDeclaredLd(lead.initialUrl)
     val pageEvent = if (readEvent == null && declaredEvent == null) null else readEvent.orEmpty() + declaredEvent.orEmpty()
+
     when {
         document == null || pageEvent == null -> {
             deliverEvent(lead.feed, lead.feedEvent, null, tracker)
         }
         else -> {
-            tracker.read(lead.initialUrl, SchemaType.EventPage)
+            tracker.trackReadUrl(lead.initialUrl, SchemaType.EventPage)
             log.debug { "Parsed ${document.servedUrl}: description ${pageEvent[ParseProperty.Description]?.length ?: 0} chars" }
-            if (pageEvent[ParseProperty.Description] == null && pageEvent[ParseProperty.DeclaredDescription] == null) tracker.partial(lead.initialUrl, "The page had no description")
+            if (pageEvent[ParseProperty.Description] == null && pageEvent[ParseProperty.DeclaredDescription] == null) tracker.trackPartialUrl(lead.initialUrl, "The page had no description")
             deliverEvent(lead.feed, lead.feedEvent, pageEvent, tracker)
         }
     }

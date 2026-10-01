@@ -31,6 +31,8 @@ A function's name follows a verbNoun shape and names the noun it acts on.
 | Two verbs at most | `readOrCreateLocation` |
 | A conversion that only reshapes its receiver is `toFoo` | `LdPlace.toPropertyMap()` |
 | A function that reads something more is named for that work | `LocationRead.parseLocation(doc)` |
+| One kind of work takes one verb, in names and comments alike | A tracker's functions are `track…`, and its comments say "Tracks" |
+| A name after its verb follows the AdjectiveNoun shape of a type, naming what the work is about | `trackSkippedUrl`, `trackFailedRecord`, `trackDeclaredLd` |
 
 ## Branching
 
@@ -77,6 +79,6 @@ val location = locationRead.parseLocation(document.doc)
 when (val locationId = lead.locationId) { ... }
 ```
 
-A body of more stages, or one whose work is not plain from its name and contents, opens each stage with a short comment.
+A body of more stages, or one whose work is not plain from its name and contents, opens each stage with a short comment. The comment begins with a verb and names what the stage does, as `// fetch and settle schema`; the code is the description. A stage the code makes plain carries none.
 
 A unit of work that recurs across functions is a stage in each function that holds it, and is the shape a shared helper takes.

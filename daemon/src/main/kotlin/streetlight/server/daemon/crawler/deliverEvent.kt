@@ -21,12 +21,12 @@ import kotlin.time.Clock
  */
 suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageEvent: PropertyMap?, tracker: ParseTracker) {
     val event = mergeEvent(feedEvent, pageEvent, feed.timeZoneId) ?: return
-    tracker.recordFound()
+    tracker.trackFoundRecord()
     val feedEdit = event.toEventEdit(feed.timeZoneId, feed.parseMode, tracker)
-    val title = feedEdit.title ?: return tracker.recordUnnamed(event)
-    val feedStart = feedEdit.startsAt ?: return tracker.eventUnparsed(event)
-    if (feedStart < Clock.System.now()) return tracker.eventPast()
-    val location = spawner.locateEvent(event, feed, tracker) ?: return tracker.eventUnlocated(event, title)
+    val title = feedEdit.title ?: return tracker.trackUnnamedRecord(event)
+    val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(event)
+    if (feedStart < Clock.System.now()) return tracker.trackPastEvent()
+    val location = spawner.locateEvent(event, feed, tracker) ?: return tracker.trackUnlocatedEvent(event, title)
     createEventAt(event, feedEdit, location, tracker)
 }
 
@@ -37,17 +37,19 @@ internal suspend fun Crawler.createEventAt(event: PropertyMap, edit: EventEdit, 
     val startsAt = located.startsAt ?: return
     val zone = located.timeZone ?: return
     val day = startsAt.toLocalDateTime(zone).date
+
     val created = dbWrite {
         val sameDay = dao.event.readEventsBetween(
             locationId = location.locationId,
             from = day.atStartOfDayIn(zone),
             until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
         )
-        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.recordDuplicate(event, title, it.title) }
+        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.trackDuplicateRecord(event, title, it.title) }
         server.createEvent(null, located, isImageRequired = false)
-    }.toDataOr { return tracker.recordFailed(event, title, it) }
-    if (located.image != null && created.image == null) tracker.imageFailed(event, title)
-    tracker.recordCreated()
+    }.toDataOr { return tracker.trackFailedRecord(event, title, it) }
+
+    if (located.image != null && created.image == null) tracker.trackFailedImage(event, title)
+    tracker.trackCreatedRecord()
 }
 
 /** The event made of what its feed showed and what its page showed, the page's preferred, or null when neither did. */

@@ -73,18 +73,18 @@ class LocationSpawner(
         val feedLocation = lead.location
         val text = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() }?.let(::cleanPlaceName) ?: return feedLocation
         if (feedLocation?.name?.fuzzyMatches(text) == true) return feedLocation
-        val foundPlaces = searchPlaces(text, lead.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(event, text) }
+        val foundPlaces = searchPlaces(text, lead.geoPoint) ?: return feedLocation.also { tracker.trackFallbackLocation(event, text) }
         val place = distinctPlace(text, lead.geoPoint, foundPlaces, hasFeedLocation = feedLocation != null)
-            ?: return feedLocation.also { tracker.locationFellBack(event, text) }
+            ?: return feedLocation.also { tracker.trackFallbackLocation(event, text) }
 
         val location = crawler.dbWrite {
-            dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.locationMatched(event, text, it) } }
+            dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.trackMatchedLocation(event, text, it) } }
             dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
                 .firstOrNull { location -> location.name?.fuzzyMatches(text) == true }
-                ?.let { return it.also { tracker.locationMatched(event, text, it) } }
+                ?.let { return it.also { tracker.trackMatchedLocation(event, text, it) } }
 
             val edit = place.toEdit().takeIf { it.validity.isValid }
-                ?: return feedLocation.also { tracker.locationFellBack(event, text) }
+                ?: return feedLocation.also { tracker.trackFallbackLocation(event, text) }
             try {
                 server.createLocation(null, edit, isImageRequired = false)
             } catch (e: CancellationException) {
@@ -93,10 +93,10 @@ class LocationSpawner(
                 Problem("${e::class.simpleName}: ${e.message}")
             }
         }.toDataOr {
-            tracker.locationFailed(event, text, it)
+            tracker.trackFailedLocation(event, text, it)
             return feedLocation
         }
-        tracker.locationSpawned(event, text, location)
+        tracker.trackSpawnedLocation(event, text, location)
         return location
     }
 
@@ -183,7 +183,7 @@ class LocationSpawner(
     ): Location? {
         val name = cleanPlaceName(givenName)
         readLocationAt(name, address)?.let {
-            tracker.locationMatched(event, name, it)
+            tracker.trackMatchedLocation(event, name, it)
             return it
         }
         return when (val found = findPlace(website, name, null, address, area, region, near)) {
@@ -206,14 +206,14 @@ class LocationSpawner(
         tracker: ParseTracker,
     ): Location? {
         readStoredLocation(place, placedName)?.let {
-            tracker.locationMatched(event, name, it)
+            tracker.trackMatchedLocation(event, name, it)
             return it
         }
         val location = createLocationFrom(place, mapOf(ParseProperty.Name to placedName), website).toDataOr {
-            tracker.locationFailed(event, name, it)
+            tracker.trackFailedLocation(event, name, it)
             return null
         }
-        tracker.locationSpawned(event, name, location)
+        tracker.trackSpawnedLocation(event, name, location)
         return location
     }
 
@@ -234,14 +234,14 @@ class LocationSpawner(
     ): Location? {
         val place = findAddress(address, area, region, near) ?: return null
         readUnnamedLocation(place)?.let {
-            tracker.locationMatched(event, name, it)
+            tracker.trackMatchedLocation(event, name, it)
             return it
         }
         val location = createLocationAt(place, website).toDataOr {
-            tracker.locationFailed(event, name, it)
+            tracker.trackFailedLocation(event, name, it)
             return null
         }
-        tracker.locationSpawned(event, name, location)
+        tracker.trackSpawnedLocation(event, name, location)
         return location
     }
 

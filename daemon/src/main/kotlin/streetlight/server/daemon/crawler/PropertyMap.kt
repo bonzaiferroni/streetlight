@@ -33,7 +33,7 @@ fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: 
     val declared = this[ParseProperty.DeclaredDescription]?.let { htmlToMarkdown(it) }?.value
     val description = declared ?: this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.let { full ->
         if (parseMode == ParseMode.Full) return@let full
-        shortenDescription(full, url).also { if (it != full) tracker.descriptionShortened() }
+        shortenDescription(full, url).also { if (it != full) tracker.trackShortenedDescription() }
     }
     val start = dateTimeText?.let { parseLocalDateTime(it, timeZoneId) }
     val end = this[ParseProperty.EndTime]?.let { parseTimeFromText(it) }

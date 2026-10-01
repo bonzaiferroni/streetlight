@@ -50,57 +50,45 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     /** Keeps [item] for the page at [url], to draw on when the report is built, such as the feed's event elements. */
     fun collect(url: Url, item: Any) = page(url).collect(item)
 
-    /** Records the page at [url] served, whose content is unknown when [doc] is null. */
-    fun fetched(url: Url, mode: FetchMode, fetch: FetchText, doc: Document?) = page(url).fetched(mode, fetch, doc)
+    fun trackFetchedUrl(url: Url, mode: FetchMode, fetch: FetchText, doc: Document?) = page(url).trackFetched(mode, fetch, doc)
 
-    /** Records the fetch of the page at [url] as failed with [problem], striking its origin on a 4xx or 5xx. */
-    fun fetchFailed(url: Url, problem: Problem) = page(url).fetchFailed(problem)
+    /** Tracks the fetch of the page at [url] as failed with [problem], striking its origin on a 4xx or 5xx. */
+    fun trackFailedFetch(url: Url, problem: Problem) = page(url).trackFailedFetch(problem)
 
     /**
-     * Records that no schema could be found for the page at [url], for [problem], striking its origin when the schema
+     * Tracks that no schema could be found for the page at [url], for [problem], striking its origin when the schema
      * was invalid.
      */
-    fun schemaFailed(url: Url, problem: Problem) {
-        page(url).schemaFailed(problem)
+    fun trackFailedSchema(url: Url, problem: Problem) {
+        page(url).trackFailedSchema(problem)
         if (problem == SchemaProblem.Invalid) url.toOriginId()?.let { schemaStrikes[it] = (schemaStrikes[it] ?: 0) + 1 }
     }
 
-    /** Records the page at [url] read with a schema of [type] that found no events to build. */
-    fun noEvents(url: Url, type: SchemaType) = page(url).noEvents(type)
+    fun trackNoEvents(url: Url, type: SchemaType) = page(url).trackNoEvents(type)
 
-    /** Records the page at [url] as declaring values in its JSON-LD that were laid over what was read. */
-    fun declared(url: Url) {
+    fun trackDeclaredLd(url: Url) {
         page(url).notes.add("Declared values from its JSON-LD")
     }
 
-    /** Records the page at [url] read in full with a schema of [type], clearing its origin's schema strikes. */
-    fun read(url: Url, type: SchemaType) {
-        page(url).read(type)
+    /** Tracks the page at [url] read in full with a schema of [type], clearing its origin's schema strikes. */
+    fun trackReadUrl(url: Url, type: SchemaType) {
+        page(url).trackRead(type)
         url.toOriginId()?.let { schemaStrikes.remove(it) }
     }
 
-    /** Records the page at [url] as not fetched, for the reason given by [state]. */
-    fun skipped(url: Url, state: PageState, note: String? = null) = page(url).skipped(state, note)
+    fun trackSkippedUrl(url: Url, state: PageState, note: String? = null) = page(url).trackSkipped(state, note)
 
-    /** Marks the page at [url], read in full, as [ParseOutcome.Partial], keeping [note]. */
-    fun partial(url: Url, note: String) = page(url).partial(note)
+    fun trackPartialUrl(url: Url, note: String) = page(url).trackPartial(note)
 
     /** Whether the page at [url] was already read, or tried, this check. */
     fun hasPage(url: Url): Boolean = pages[url]?.isAttempted == true
 
-    /** Records an event page skipped because its link already has an outcome. */
-    fun pageKnown() {
+    fun trackKnownPage() {
         records.known++
     }
 
     /** Whether another page beyond the lead's own may be read this check. */
     fun canReadPage(): Boolean = pages.count { (url, page) -> url != leadUrl && page.isAttempted } < maxPagesPerCheck
-
-    /** Records the event page at [url] as not read, since its origin is benched. */
-    fun pageBenched(url: Url) = skipped(url, PageState.Benched)
-
-    /** Records the event page at [url] as not read, since the check reached its limit of pages. */
-    fun pageDeferred(url: Url) = skipped(url, PageState.Deferred)
 
     /**
      * Whether the page at [url] may be fetched, false once its origin is benched: by consecutive failed fetches, or by
@@ -111,90 +99,83 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         return (strikes[originId] ?: 0) < maxStrikes && (schemaStrikes[originId] ?: 0) < maxStrikes
     }
 
-    fun linkFound() {
+    fun trackFoundLink() {
         links++
     }
 
-    fun recordFound() {
+    fun trackFoundRecord() {
         records.found++
     }
 
-    /** Records an event whose start could not be parsed, marking its lead's page and its own [ParseOutcome.Partial]. */
-    fun eventUnparsed(event: PropertyMap) {
+    /** Tracks an event whose start could not be parsed, marking its lead's page and its own [ParseOutcome.Partial]. */
+    fun trackUnparsedEvent(event: PropertyMap) {
         val text = listOfNotNull(event[ParseProperty.Date], event[ParseProperty.StartTime]).joinToString(" | ").ifEmpty { "(none)" }
-        page(leadUrl).partial()
-        (pageOf(event) ?: page(leadUrl)).partial("Date text did not parse: $text")
+        page(leadUrl).trackPartial()
+        (pageOf(event) ?: page(leadUrl)).trackPartial("Date text did not parse: $text")
     }
 
-    /** Records a [record] found with no name, marking its lead's page and its own [ParseOutcome.Partial]. */
-    fun recordUnnamed(record: PropertyMap) {
+    /** Tracks a [record] found with no name, marking its lead's page and its own [ParseOutcome.Partial]. */
+    fun trackUnnamedRecord(record: PropertyMap) {
         records.unnamed++
-        page(leadUrl).partial()
-        (pageOf(record) ?: page(leadUrl)).partial("A record had no name")
+        page(leadUrl).trackPartial()
+        (pageOf(record) ?: page(leadUrl)).trackPartial("A record had no name")
     }
 
-    fun descriptionShortened() {
+    fun trackShortenedDescription() {
         records.shortened++
     }
 
     /**
-     * Records an event titled [title] dropped since its location named no place and its feed has no location of its
+     * Tracks an event titled [title] dropped since its location named no place and its feed has no location of its
      * own, marking its lead's page and its own [ParseOutcome.Partial].
      */
-    fun eventUnlocated(event: PropertyMap, title: String) {
+    fun trackUnlocatedEvent(event: PropertyMap, title: String) {
         val note = "$title had no location: ${event[ParseProperty.Location] ?: "(none)"}"
-        page(leadUrl).partial()
-        (pageOf(event) ?: page(leadUrl)).partial(note)
+        page(leadUrl).trackPartial()
+        (pageOf(event) ?: page(leadUrl)).trackPartial(note)
     }
 
-    fun eventPast() {
+    fun trackPastEvent() {
         records.past++
     }
 
-    /** Records a [record] named [name] that duplicates the record already stored as [existing]. */
-    fun recordDuplicate(record: PropertyMap, name: String, existing: String) {
+    fun trackDuplicateRecord(record: PropertyMap, name: String, existing: String) {
         records.duplicates++
         noteOn(record, "$name duplicates $existing")
     }
 
-    /** Records a [record] named [name] that could not be created, for [problem]. */
-    fun recordFailed(record: PropertyMap, name: String, problem: Problem) {
+    fun trackFailedRecord(record: PropertyMap, name: String, problem: Problem) {
         records.createFailed++
         noteOn(record, "$name could not be created: ${problem.message}")
     }
 
-    /** Records a [record] named [name] created without its image, which could not be stored. */
-    fun imageFailed(record: PropertyMap, name: String) {
+    fun trackFailedImage(record: PropertyMap, name: String) {
         noteOn(record, "$name was created without its image")
     }
 
-    fun recordCreated() {
+    fun trackCreatedRecord() {
         records.created++
     }
 
-    /** Records a stored location given what it lacked. */
-    fun recordUpdated() {
+    fun trackUpdatedRecord() {
         records.updated++
     }
 
-    /** Records the location [text] of [event] as naming the new [location]. */
-    fun locationSpawned(event: PropertyMap, text: String, location: Location) {
+    fun trackSpawnedLocation(event: PropertyMap, text: String, location: Location) {
         records.locationsSpawned++
         noteOn(event, "Location $text spawned ${location.label}")
     }
 
-    /** Records the location [text] of [event] as naming the known [location]. */
-    fun locationMatched(event: PropertyMap, text: String, location: Location) {
+    fun trackMatchedLocation(event: PropertyMap, text: String, location: Location) {
         noteOn(event, "Location $text matched ${location.label}")
     }
 
-    /** Records the location [text] of [event] as naming no distinct place. */
-    fun locationFellBack(event: PropertyMap, text: String) {
+    /** Tracks the location [text] of [event] as naming no distinct place. */
+    fun trackFallbackLocation(event: PropertyMap, text: String) {
         noteOn(event, "Location $text named no distinct place")
     }
 
-    /** Records the location [text] of [event] as naming a place that could not be created, for [problem]. */
-    fun locationFailed(event: PropertyMap, text: String, problem: Problem) {
+    fun trackFailedLocation(event: PropertyMap, text: String, problem: Problem) {
         records.locationsFailed++
         noteOn(event, "Location $text could not be created: ${problem.message}")
     }
@@ -207,8 +188,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         (page(leadUrl).isAttempted && records.created + records.updated + records.duplicates + records.known == 0) ||
         records.locationsSpawned > 0 || records.locationsFailed > 0
 
-    /** Records the check as cut short by [error]. */
-    fun failed(error: Exception) {
+    fun trackFailedCheck(error: Exception) {
         failure = "${error::class.simpleName}: ${error.message}"
     }
 
@@ -269,8 +249,8 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         items.add(item)
     }
 
-    /** Records a page served, whose content is unknown when [doc] is null. */
-    internal fun fetched(mode: FetchMode, fetch: FetchText, doc: Document?) {
+    /** Tracks a page served, whose content is unknown when [doc] is null. */
+    internal fun trackFetched(mode: FetchMode, fetch: FetchText, doc: Document?) {
         this.fetch = fetch
         fetchMode = mode
         tracker.clearStrikes(url)
@@ -291,10 +271,10 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
     }
 
     /**
-     * Records a fetch that failed with [problem], striking the page's origin on a 4xx or 5xx, and noting a problem
+     * Tracks a fetch that failed with [problem], striking the page's origin on a 4xx or 5xx, and noting a problem
      * that has no status.
      */
-    internal fun fetchFailed(problem: Problem) {
+    internal fun trackFailedFetch(problem: Problem) {
         page.state = PageState.Attempted
         if (problem == RobotProblem.Disallowed) {
             page.access = LinkAccess.RobotsBlock
@@ -336,8 +316,8 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         }
     }
 
-    /** Records that no schema could be found for the page, for [problem]. */
-    internal fun schemaFailed(problem: Problem) {
+    /** Tracks that no schema could be found for the page, for [problem]. */
+    internal fun trackFailedSchema(problem: Problem) {
         notes.add(problem.message)
         when (problem) {
             SchemaProblem.ScriptingRequired -> {
@@ -353,29 +333,29 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
         }
     }
 
-    /** Records a page read with a schema of [type] that found no events to build. */
-    internal fun noEvents(type: SchemaType) {
+    /** Tracks a page read with a schema of [type] that found no events to build. */
+    internal fun trackNoEvents(type: SchemaType) {
         schemaType = type
         page.content = LinkContent.Schema
         page.parseOutcome = ParseOutcome.Fail
         notes.add("The event selector matched nothing")
     }
 
-    /** Records a page read in full with a schema of [type]. */
-    internal fun read(type: SchemaType) {
+    /** Tracks a page read in full with a schema of [type]. */
+    internal fun trackRead(type: SchemaType) {
         schemaType = type
         page.content = LinkContent.Schema
         page.parseOutcome = ParseOutcome.Complete
     }
 
-    /** Records the page as not fetched, for the reason given by [state]. */
-    internal fun skipped(state: PageState, note: String? = null) {
+    /** Tracks the page as not fetched, for the reason given by [state]. */
+    internal fun trackSkipped(state: PageState, note: String? = null) {
         page.state = state
         note?.let { notes.add(it) }
     }
 
     /** Marks a page read in full as [ParseOutcome.Partial], keeping [note] when given. */
-    internal fun partial(note: String? = null) {
+    internal fun trackPartial(note: String? = null) {
         if (page.parseOutcome == ParseOutcome.Complete) page.parseOutcome = ParseOutcome.Partial
         note?.let { notes.add(it) }
     }
@@ -443,6 +423,12 @@ private const val maxPagesPerCheck = 30
 private val needsWorkOutcomes = setOf(ParseOutcome.Partial, ParseOutcome.Fail)
 
 private val needsWorkContent = setOf(LinkContent.OffSchema, LinkContent.OffScope, LinkContent.Unknown, LinkContent.Unread)
+
+/** Tracks the page at [pageUrl] as declaring values, when this map holds any. */
+context(tracker: ParseTracker)
+fun PropertyMap?.trackDeclaredLd(pageUrl: Url) {
+    if (!isNullOrEmpty()) tracker.trackDeclaredLd(pageUrl)
+}
 
 /** The names of the selectors set in [before] and cleared in [after]. */
 private fun droppedFields(before: SelectorSchema, after: SelectorSchema): List<String> {

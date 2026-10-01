@@ -45,8 +45,12 @@ data class LdPlace(
     val country: String?,
 ) {
     /** The city, state and postal code of this place, joined for a map search, or null when it gives none. */
-    val area get() = listOfNotNull(locality, region, postalCode).joinToString(" ").ifEmpty { null }
+    val area get() = areaOf(locality, region, postalCode)
 }
+
+/** The [city], [state] and [postalCode] of a place, joined for a map search, or null when none is given. */
+fun areaOf(city: String?, state: String?, postalCode: String?): String? =
+    listOfNotNull(city, state, postalCode).joinToString(" ").ifEmpty { null }
 
 /** The events the JSON-LD of this page declares, at any depth. */
 fun Document.readLdEvents(): List<LdEvent> = readLdObjects()

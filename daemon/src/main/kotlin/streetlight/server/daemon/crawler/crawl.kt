@@ -53,7 +53,7 @@ suspend fun Crawler.crawl(lead: Lead) {
     if (lead.content == null) {
         val link = dao.link.readLink(lead.initialUrl)
         if (link?.stopsFeed() == true) {
-            tracker.skipped(lead.initialUrl, PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
+            tracker.trackSkippedUrl(lead.initialUrl, PageState.Skipped, "Stopped by its last read: ${link.access}, ${link.content}, ${link.parseOutcome}")
             return
         }
     }
@@ -70,6 +70,7 @@ suspend fun Crawler.crawl(lead: Lead) {
         document = fetchDocument(lead, origin, FetchMode.Scripting)
         schemaOutcome = document?.let { provideSchema(lead, it) }
     }
+
     document?.let { dbWrite { dao.registerFetch(it) } }
     if (schemaOutcome == SchemaProblem.CalledOff) return
 
@@ -94,7 +95,7 @@ private suspend fun Crawler.fetchDocument(
 ): FetchDocument? {
     val fetch = fetcher.fetch(lead.initialUrl, origin, fetchMode).toDataOr {
         logProblem(it)
-        tracker.fetchFailed(lead.initialUrl, it)
+        tracker.trackFailedFetch(lead.initialUrl, it)
         return null
     }
     return prepareDocument(lead, fetch, origin, fetchMode)
@@ -119,7 +120,7 @@ private fun Crawler.prepareDocument(
     fetchMode: FetchMode,
 ): FetchDocument? {
     val doc = parseHtmlDocument(fetch.text, fetch.servedUrl).toDataOrNull(this::logProblem)
-    tracker.fetched(lead.initialUrl, fetchMode, fetch, doc)
+    tracker.trackFetchedUrl(lead.initialUrl, fetchMode, fetch, doc)
     if (doc == null) return null
     return FetchDocument(lead, origin, fetch.servedUrl.normalize(), doc, fetch.fetchedAt, fetchMode)
 }
@@ -139,7 +140,7 @@ private suspend fun Crawler.provideSchema(
 
     if (outcome is Problem) {
         logProblem(outcome)
-        tracker.schemaFailed(lead.initialUrl, outcome)
+        tracker.trackFailedSchema(lead.initialUrl, outcome)
     }
 
     return outcome

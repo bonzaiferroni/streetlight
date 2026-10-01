@@ -35,6 +35,7 @@ A class member follows the same rule. A declaration whose name already says ever
 - DTO properties
 - `Screen` entries
 - Overrides, which inherit the documentation of what they override
+- Functions whose name and parameters say everything, such as `trackSkippedUrl(url, state, note)`
 - `external` declarations, which mirror the API of their library
 
 | Part | Rule |
