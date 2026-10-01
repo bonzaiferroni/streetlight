@@ -14,9 +14,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
-import streetlight.model.data.EventSchema
+import streetlight.model.data.EventRead
 import streetlight.model.data.FetchMode
-import streetlight.model.data.LocationSchema
+import streetlight.model.data.LocationRead
 import streetlight.model.data.LocationSelectorSchema
 import streetlight.model.data.Origin
 import streetlight.model.data.ParserId
@@ -24,7 +24,6 @@ import streetlight.model.data.SelectorSchema
 import streetlight.server.model.DaoFacade
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
-import kotlin.time.Instant
 
 /** Receives what the [SchemaMediator] does for one page, around its requests to the LM. */
 interface SchemaObserver : HtmlParseObserver {
@@ -157,10 +156,10 @@ class SchemaMediator(
         origin: Origin,
         fetchMode: FetchMode,
         observer: SchemaObserver? = null,
-    ): Outcome<LocationSchema> = requestSchema {
+    ): Outcome<LocationRead> = requestSchema {
         if (isUsageLimitReached) return LMProblem.UsageLimit
         observer?.requested(readRequest)
-        Ok(readContent<LocationSchema>(url, doc, origin, fetchMode, SchemaParserText.LocationInstructions, observer) { return it })
+        Ok(readContent<LocationRead>(url, doc, origin, fetchMode, SchemaParserText.LocationInstructions, observer) { return it })
     }
 
     /**
@@ -173,10 +172,10 @@ class SchemaMediator(
         origin: Origin,
         fetchMode: FetchMode,
         observer: SchemaObserver? = null,
-    ): Outcome<EventSchema> = requestSchema {
+    ): Outcome<EventRead> = requestSchema {
         if (isUsageLimitReached) return LMProblem.UsageLimit
         observer?.requested(readRequest)
-        Ok(readContent<EventSchema>(url, doc, origin, fetchMode, SchemaParserText.EventInstructions, observer) { return it })
+        Ok(readContent<EventRead>(url, doc, origin, fetchMode, SchemaParserText.EventInstructions, observer) { return it })
     }
 
     /** The feed [schema] with the parts of its events' start, asked of the LM when the start does not already parse. */

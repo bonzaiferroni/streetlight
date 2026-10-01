@@ -2,6 +2,7 @@ package streetlight.server.daemon.crawler
 
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
+import streetlight.model.data.buildPropertyMap
 import kampfire.model.normalize
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.toDataOrNull
@@ -60,13 +61,13 @@ private fun Crawler.findEventElements(feed: EventFeed, document: FetchDocument, 
 }
 
 /** The properties of the event in [element] of a feed, read by [schema]. */
-private fun parseFeedEvent(element: Element, schema: EventFeedSchema): PropertyMap = listOf(
-    ParseProperty.Name to element.queryElement(schema.title).plainText(),
-    ParseProperty.Url to element.queryElement(schema.link).absoluteUrl("href")?.toUrl()?.normalize()?.value,
-    ParseProperty.Image to element.queryElement(schema.image).absoluteUrl("src"),
-    ParseProperty.Description to element.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
-    ParseProperty.Cost to element.queryElement(schema.cost).plainText(),
-    ParseProperty.Date to element.dateText(schema.date, schema.month, schema.day),
-    ParseProperty.StartTime to element.queryElement(schema.time).plainText(),
-    ParseProperty.Location to element.queryElement(schema.eventLocation).plainText(),
-).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
+private fun parseFeedEvent(element: Element, schema: EventFeedSchema): PropertyMap = buildPropertyMap {
+    this[ParseProperty.Name] = element.queryElement(schema.title).plainText()
+    this[ParseProperty.Url] = element.queryElement(schema.link).absoluteUrl("href")?.toUrl()?.normalize()?.value
+    this[ParseProperty.Image] = element.queryElement(schema.image).absoluteUrl("src")
+    this[ParseProperty.Description] = element.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml()
+    this[ParseProperty.Cost] = element.queryElement(schema.cost).plainText()
+    this[ParseProperty.Date] = element.dateText(schema.date, schema.month, schema.day)
+    this[ParseProperty.StartTime] = element.queryElement(schema.time).plainText()
+    this[ParseProperty.Location] = element.queryElement(schema.eventLocation).plainText()
+}

@@ -59,36 +59,13 @@ A utility class is a `Class` val declared in `LayoutCss.kt`, `DisplayCss.kt` or 
 
 ## Stylesheets
 
-A `*Css.kt` file is a hybrid Kotlin and CSS file. It declares each class it styles as a `Class` val at the top, followed by the stylesheet text as a raw string in a `val FooCss get()`, annotated `// language="CSS"`.
-
-```kotlin
-val Foo = Class("foo")
-
-// language="CSS"
-val FooCss get() = """
-$Foo {
-    display: flex;
-}
-"""
-```
-
-The stylesheet refers to each class by interpolating the val, as in `$Foo`, and never by writing the selector, except for classes owned by another library. A class declared in an object is interpolated with the getter wrapped in `with(FooObject) { """ ... """ }`.
-
-A comment inside the stylesheet string is a CSS comment, `/* ... */`. A Kotlin `//` comment there is stylesheet text: the browser reads it as part of the next selector and drops that rule.
-
-A rule of one or two declarations that fits on one line is written on one line. A family of such rules is written as consecutive lines with no blank line between them, and the property names and values on those lines are aligned in columns.
+A stylesheet declared in Kotlin is written as `docs/css-style.md` specifies.
 
 A stylesheet that serves a single component is declared in that component's file, with its classes in an object named for the component, as `CellGrid.Base` in `cellGrid.kt`.
 
 A stylesheet is served only once it is listed in `KtStyles` in `ServerResource.kt`.
 
 `KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance.
-
-## Sizing Children
-
-A container sizes its direct children through a child rule in its stylesheet, as `CellGrid.Base` does with `> * { flex: 1; min-width: var(--unit-16); }`. An element is not wrapped only to size it.
-
-A flex item sized by its container has an explicit `min-width`. With `min-width: auto` it grows to fit its content.
 
 ## Inline Style Utilities
 
@@ -105,8 +82,6 @@ A style that changes a single property value is an `InlineStyle` rather than a u
 An invoker utility is a package-level `get()` val returning a `Css` descriptor, called with the value. A value utility is a `val` bound to a descriptor and a value, such as `AlignItemsCenter`. A value utility keeps its name when it replaces a utility class, so call sites are unchanged. An invoker utility replaces a name such as `MinHeight8` with the call `MinHeight(8)`.
 
 A utility class that becomes an `InlineStyle` has its declaration and rule removed.
-
-Converting a class to an `InlineStyle` is preceded by an analysis of the DOM structure and the stylesheets, for any rule that sets the same property on an element that carries the modifier.
 
 A descriptor for a value that is a plain number is typed `Number` or `Int`. Otherwise it takes the `kotlinx.css` type for the value. Where `kotlinx.css` has no type for the property, the descriptor takes the enum of a related property whose values are all valid for it, or `String` when none fits.
 

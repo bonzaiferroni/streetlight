@@ -2,6 +2,7 @@ package streetlight.server.daemon.crawler
 
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
+import streetlight.model.data.buildPropertyMap
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import streetlight.server.daemon.agent.isPlausibleField
@@ -51,18 +52,18 @@ private fun parsePageEvent(
     doc: Document,
     pageUrl: Url,
 ): PropertyMap {
-    return listOf(
-        ParseProperty.Name to doc.queryElement(schema.title) { it.isPlausibleField() }.plainText(),
-        ParseProperty.Url to pageUrl.value,
-        ParseProperty.Image to (doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")),
-        ParseProperty.Description to doc.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml(),
-        ParseProperty.Contact to doc.queryElement(schema.contact) { it.isPlausibleField() }.plainText(),
-        ParseProperty.Cost to doc.queryElement(schema.cost) { it.isPlausibleField() }.plainText(),
-        ParseProperty.AgeMin to doc.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText(),
-        ParseProperty.Date to doc.dateText(schema.date, schema.month, schema.day) { it.isPlausibleField() },
-        ParseProperty.StartTime to doc.queryElement(schema.startTime) { it.isPlausibleField() }.plainText(),
-        ParseProperty.EndTime to doc.queryElement(schema.endTime) { it.isPlausibleField() }.plainText(),
-        ParseProperty.Location to doc.queryElement(schema.location) { it.isPlausibleField() }.plainText(),
-        ParseProperty.Address to doc.queryElement(schema.address) { it.isPlausibleField() }.plainText(),
-    ).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
+    return buildPropertyMap {
+        this[ParseProperty.Name] = doc.queryElement(schema.title) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.Url] = pageUrl.value
+        this[ParseProperty.Image] = doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")
+        this[ParseProperty.Description] = doc.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml()
+        this[ParseProperty.Contact] = doc.queryElement(schema.contact) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.Cost] = doc.queryElement(schema.cost) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.AgeMin] = doc.queryElement(schema.ageMin) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.Date] = doc.dateText(schema.date, schema.month, schema.day) { it.isPlausibleField() }
+        this[ParseProperty.StartTime] = doc.queryElement(schema.startTime) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.EndTime] = doc.queryElement(schema.endTime) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.Location] = doc.queryElement(schema.location) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.Address] = doc.queryElement(schema.address) { it.isPlausibleField() }.plainText()
+    }
 }

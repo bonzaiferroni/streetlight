@@ -4,7 +4,6 @@ import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Outcome
 import streetlight.server.daemon.agent.isCalledOff
 import streetlight.server.daemon.agent.readPageLdEvent
-import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.normalize
@@ -18,11 +17,11 @@ import streetlight.model.data.EventPage
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.FetchMode
 import streetlight.model.data.EventLead
-import streetlight.model.data.EventSchema
+import streetlight.model.data.EventRead
 import streetlight.model.data.Lead
 import streetlight.model.data.LmSchema
 import streetlight.model.data.LocationLead
-import streetlight.model.data.LocationSchema
+import streetlight.model.data.LocationRead
 import streetlight.model.data.Origin
 import streetlight.model.data.toOriginId
 import streetlight.server.daemon.agent.FetchText
@@ -63,14 +62,14 @@ suspend fun Crawler.crawl(lead: Lead) {
     val fetchMode = if (lead.content != null) FetchMode.Scripting
     else dao.origin.readFetchMode(origin.originId) ?: origin.fetchMode
 
+    // fetch and settle schema
     var document = lead.content?.let { prepareDocument(lead, it, origin, fetchMode) }
         ?: fetchDocument(lead, origin, fetchMode)
-    var schemaOutcome = document?.let { provideCrawl(lead, it) }
+    var schemaOutcome = document?.let { provideSchema(lead, it) }
     if (schemaOutcome == SchemaProblem.ScriptingRequired && fetchMode == FetchMode.Basic) {
         document = fetchDocument(lead, origin, FetchMode.Scripting)
-        schemaOutcome = document?.let { provideCrawl(lead, it) }
+        schemaOutcome = document?.let { provideSchema(lead, it) }
     }
-
     document?.let { dbWrite { dao.registerFetch(it) } }
     if (schemaOutcome == SchemaProblem.CalledOff) return
 
@@ -127,11 +126,11 @@ private fun Crawler.prepareDocument(
 
 /** The schema of [document] that its kind of [lead] wants, with a problem logged and recorded on [tracker]. */
 context(tracker: ParseTracker)
-private suspend fun Crawler.provideCrawl(
+private suspend fun Crawler.provideSchema(
     lead: Lead,
     document: FetchDocument,
 ): Outcome<LmSchema> {
-    val outcome = calledOff(lead, document) ?: when (lead) {
+    val outcome = checkCalledOff(lead, document) ?: when (lead) {
         is EventFeed -> provideFeedSchema(lead, document)
         is EventPage -> providePageSchema(lead, document)
         is LocationLead -> provideLocationSchema(lead, document)
@@ -189,7 +188,7 @@ context(tracker: ParseTracker)
 internal suspend fun Crawler.provideLocationSchema(
     lead: LocationLead,
     document: FetchDocument,
-): Outcome<LocationSchema> = mediator.readLocation(
+): Outcome<LocationRead> = mediator.readLocation(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
@@ -202,7 +201,7 @@ context(tracker: ParseTracker)
 internal suspend fun Crawler.provideEventSchema(
     lead: EventLead,
     document: FetchDocument,
-): Outcome<EventSchema> = mediator.readEvent(
+): Outcome<EventRead> = mediator.readEvent(
     url = document.servedUrl,
     doc = document.doc,
     origin = document.origin,
@@ -211,7 +210,7 @@ internal suspend fun Crawler.provideEventSchema(
 )
 
 /** [SchemaProblem.CalledOff] when the page of an event [lead] declares its event cancelled or postponed, or null. */
-private fun calledOff(lead: Lead, document: FetchDocument): Problem? =
+private fun checkCalledOff(lead: Lead, document: FetchDocument): Problem? =
     SchemaProblem.CalledOff.takeIf {
         (lead is EventPage || lead is EventLead) && document.doc.readPageLdEvent(document.servedUrl)?.isCalledOff == true
     }

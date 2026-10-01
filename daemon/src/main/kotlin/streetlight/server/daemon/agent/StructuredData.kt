@@ -11,6 +11,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
+import streetlight.model.data.buildPropertyMap
 
 /**
  * An event as a page declares it in its JSON-LD, in schema.org's terms. Its [performers] are read, ready for when the
@@ -87,30 +88,30 @@ val LdEvent.isCalledOff get() = status?.substringAfterLast('/') in calledOffStat
 fun LdEvent.toPropertyMap(): PropertyMap {
     val (date, startTime) = startDate?.let { splitDateTime(it) } ?: (null to null)
     val (endDate, endTime) = endDate?.let { splitDateTime(it) } ?: (null to null)
-    return listOf(
-        ParseProperty.Name to name,
-        ParseProperty.Date to date,
-        ParseProperty.StartTime to startTime,
-        ParseProperty.EndTime to endTime?.takeIf { endDate == date },
-        ParseProperty.Image to image,
-        ParseProperty.DeclaredDescription to description,
-        ParseProperty.Cost to price?.let { if (it.toFloatOrNull() == 0f) "Free" else "$$it" }
-            ?.takeIf { currency == null || currency == "USD" },
-        ParseProperty.Tickets to tickets,
-        ParseProperty.Location to place?.name,
-        ParseProperty.Address to place?.street,
-        ParseProperty.Area to place?.area,
-        ParseProperty.Region to place?.region,
-    ).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
+    return buildPropertyMap {
+        this[ParseProperty.Name] = name
+        this[ParseProperty.Date] = date
+        this[ParseProperty.StartTime] = startTime
+        this[ParseProperty.EndTime] = endTime?.takeIf { endDate == date }
+        this[ParseProperty.Image] = image
+        this[ParseProperty.DeclaredDescription] = description
+        this[ParseProperty.Cost] = price?.let { if (it.toFloatOrNull() == 0f) "Free" else "$$it" }
+            ?.takeIf { currency == null || currency == "USD" }
+        this[ParseProperty.Tickets] = tickets
+        this[ParseProperty.Location] = place?.name
+        this[ParseProperty.Address] = place?.street
+        this[ParseProperty.Area] = place?.area
+        this[ParseProperty.Region] = place?.region
+    }
 }
 
 /** The values this place declares, each under its [ParseProperty], to lay over what its homepage was read for. */
-fun LdPlace.toPropertyMap(): PropertyMap = listOf(
-    ParseProperty.Name to name,
-    ParseProperty.Address to street,
-    ParseProperty.Phone to telephone,
-    ParseProperty.Email to email,
-).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
+fun LdPlace.toPropertyMap(): PropertyMap = buildPropertyMap {
+    this[ParseProperty.Name] = name
+    this[ParseProperty.Address] = street
+    this[ParseProperty.Phone] = telephone
+    this[ParseProperty.Email] = email
+}
 
 /** The one place the JSON-LD of this page declares on its own, or null when it declares none or several. */
 fun Document.readPageLdPlace(): LdPlace? = readLdPlaces().distinctBy { it.name }.singleOrNull()

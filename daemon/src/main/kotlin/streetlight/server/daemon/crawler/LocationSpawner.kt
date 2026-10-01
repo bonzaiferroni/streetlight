@@ -49,20 +49,31 @@ class LocationSpawner(
 
     /**
      * The location of [event], read from [lead], or null when it names no place and [lead] has no location. An event
-     * of a feed with no location of its own that gives an address is placed by [place], near the feed.
+     * of a feed with no location of its own that gives an address is placed by [placeEvent], near the feed.
      */
     context(crawler: Crawler)
-    suspend fun locate(event: PropertyMap, lead: EventFeed, tracker: ParseTracker): Location? {
-        val feedLocation = lead.location
+    suspend fun locateEvent(event: PropertyMap, lead: EventFeed, tracker: ParseTracker): Location? {
         val address = event[ParseProperty.Address]?.trim()?.takeIf { it.isNotEmpty() }
-        if (feedLocation == null && address != null) {
-            val name = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() } ?: address
-            val area = event[ParseProperty.Area]
-            return place(name, address, area, event[ParseProperty.Region], null, lead.geoPoint, event, tracker)
+        return when {
+            lead.location == null && address != null -> {
+                val name = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() } ?: address
+                val area = event[ParseProperty.Area]
+                placeEvent(name, address, area, event[ParseProperty.Region], null, lead.geoPoint, event, tracker)
+            }
+            else -> locateDistinctPlace(event, lead, tracker)
         }
+    }
+
+    /**
+     * The location of the distinct place the location text of [event] names near the feed of [lead], or else the
+     * feed's own location.
+     */
+    context(crawler: Crawler)
+    private suspend fun locateDistinctPlace(event: PropertyMap, lead: EventFeed, tracker: ParseTracker): Location? {
+        val feedLocation = lead.location
         val text = event[ParseProperty.Location]?.trim()?.takeIf { it.isNotEmpty() }?.let(::cleanPlaceName) ?: return feedLocation
         if (feedLocation?.name?.fuzzyMatches(text) == true) return feedLocation
-        val foundPlaces = search(text, lead.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(event, text) }
+        val foundPlaces = searchPlaces(text, lead.geoPoint) ?: return feedLocation.also { tracker.locationFellBack(event, text) }
         val place = distinctPlace(text, lead.geoPoint, foundPlaces, hasFeedLocation = feedLocation != null)
             ?: return feedLocation.also { tracker.locationFellBack(event, text) }
 
@@ -108,7 +119,7 @@ class LocationSpawner(
         val street = address?.let { withoutUnit(it).substringBefore(',').trim() }
         val where = listOfNotNull(street, area).joinToString(", ").ifEmpty { null }
         if (street != null) {
-            findPlace(website, listOfNotNull(street, area).joinToString(", "), name, street, near)?.let { return it to name }
+            searchPlace(website, listOfNotNull(street, area).joinToString(", "), name, street, near)?.let { return it to name }
         }
         val declared = declaredName?.takeIf { it != name }
         val searches = listOfNotNull(
@@ -118,16 +129,16 @@ class LocationSpawner(
             near?.let { listOf(name) to name },
         )
         return searches.firstNotNullOfOrNull { (parts, searchedName) ->
-            findPlace(website, parts.joinToString(", "), searchedName, street, near)?.let { it to searchedName }
+            searchPlace(website, parts.joinToString(", "), searchedName, street, near)?.let { it to searchedName }
         }
     }
 
     /** The location already stored at [address] whose name matches [name], found without the map. */
-    suspend fun readStoredAt(name: String, address: String?): Location? =
+    suspend fun readLocationAt(name: String, address: String?): Location? =
         address?.let { dao.location.readLocationAt(null, it) }?.takeIf { it.name?.fuzzyMatches(name) == true }
 
     /** The location already stored for [place]: by its map id, or by a matching name at its point. */
-    suspend fun readStored(place: OSMLocation, name: String): Location? =
+    suspend fun readStoredLocation(place: OSMLocation, name: String): Location? =
         dao.location.readLocationByMapId(place.osmId)
             ?: dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
                 .firstOrNull { location -> location.name?.fuzzyMatches(name) == true }
@@ -137,17 +148,17 @@ class LocationSpawner(
      * filling what the page lacks and giving the address.
      */
     context(crawler: Crawler)
-    suspend fun createFrom(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
+    suspend fun createLocationFrom(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
         val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit())
         return create(edit.withUnitOf(details[ParseProperty.Address]))
     }
 
     /**
-     * The location created at the address of [place] from the page's [details], as [createFrom] creates it but with no
+     * The location created at the address of [place] from the page's [details], as [createLocationFrom] creates it but with no
      * map id, since the map names something else there or nothing.
      */
     context(crawler: Crawler)
-    suspend fun createNamedAt(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
+    suspend fun createNamedLocationAt(place: OSMLocation, details: PropertyMap, website: Url?): Outcome<Location> {
         val edit = details.toLocationEdit(website).copy(address = null).mergeLeft(place.toAddressEdit())
         return create(edit.withUnitOf(details[ParseProperty.Address]))
     }
@@ -160,7 +171,7 @@ class LocationSpawner(
      * found or created.
      */
     context(crawler: Crawler)
-    suspend fun place(
+    suspend fun placeEvent(
         givenName: String,
         address: String?,
         area: String?,
@@ -171,17 +182,34 @@ class LocationSpawner(
         tracker: ParseTracker,
     ): Location? {
         val name = cleanPlaceName(givenName)
-        readStoredAt(name, address)?.let {
+        readLocationAt(name, address)?.let {
             tracker.locationMatched(event, name, it)
             return it
         }
-        val (place, placedName) = findPlace(website, name, null, address, area, region, near)
-            ?: return placeAtAddress(address ?: return null, area, region, website, near, event, name, tracker)
-        readStored(place, placedName)?.let {
+        return when (val found = findPlace(website, name, null, address, area, region, near)) {
+            null -> address?.let { placeAtAddress(it, area, region, website, near, event, name, tracker) }
+            else -> readOrCreateLocation(found.first, found.second, website, event, name, tracker)
+        }
+    }
+
+    /**
+     * The location of [place], found on the map by [placedName], for [event] whose place is named [name]: stored
+     * already, or created from the map with [website] preferred to the map's.
+     */
+    context(crawler: Crawler)
+    private suspend fun readOrCreateLocation(
+        place: OSMLocation,
+        placedName: String,
+        website: Url?,
+        event: PropertyMap,
+        name: String,
+        tracker: ParseTracker,
+    ): Location? {
+        readStoredLocation(place, placedName)?.let {
             tracker.locationMatched(event, name, it)
             return it
         }
-        val location = createFrom(place, mapOf(ParseProperty.Name to placedName), website).toDataOr {
+        val location = createLocationFrom(place, mapOf(ParseProperty.Name to placedName), website).toDataOr {
             tracker.locationFailed(event, name, it)
             return null
         }
@@ -205,11 +233,11 @@ class LocationSpawner(
         tracker: ParseTracker,
     ): Location? {
         val place = findAddress(address, area, region, near) ?: return null
-        readStoredUnnamed(place)?.let {
+        readUnnamedLocation(place)?.let {
             tracker.locationMatched(event, name, it)
             return it
         }
-        val location = createAt(place, website).toDataOr {
+        val location = createLocationAt(place, website).toDataOr {
             tracker.locationFailed(event, name, it)
             return null
         }
@@ -237,7 +265,7 @@ class LocationSpawner(
     }
 
     /** The location already stored at the point of [place] with no name of its own. */
-    suspend fun readStoredUnnamed(place: OSMLocation): Location? =
+    suspend fun readUnnamedLocation(place: OSMLocation): Location? =
         dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius).firstOrNull { it.name.isNullOrBlank() }
 
     /**
@@ -245,7 +273,7 @@ class LocationSpawner(
      * the thing the map names there; [website] when known.
      */
     context(crawler: Crawler)
-    suspend fun createAt(place: OSMLocation, website: Url?): Outcome<Location> =
+    suspend fun createLocationAt(place: OSMLocation, website: Url?): Outcome<Location> =
         create(place.toAddressEdit().copy(website = website))
 
     /**
@@ -273,7 +301,7 @@ class LocationSpawner(
      * The place on the map found by the search [text] and named [name], within [searchRadius] of [near] when given,
      * preferring one on the origin of [website], then one on [street].
      */
-    private suspend fun findPlace(website: Url?, text: String, name: String, street: String?, near: GeoPoint?): OSMLocation? {
+    private suspend fun searchPlace(website: Url?, text: String, name: String, street: String?, near: GeoPoint?): OSMLocation? {
         gate.waitUntilOpen()
         val foundPlaces = tryOrNull { osm.search(OSMQuery(query = text)) } ?: return null
         val origin = website?.toOriginId()
@@ -290,7 +318,7 @@ class LocationSpawner(
     }
 
     /** The map places named [text] within [searchRadius] of [point], or null when the search failed. */
-    private suspend fun search(text: String, point: GeoPoint): List<OSMLocation>? {
+    private suspend fun searchPlaces(text: String, point: GeoPoint): List<OSMLocation>? {
         val key = text.lowercase() to point
         placesMutex.withLock { places[key] }?.let { return it }
         gate.waitUntilOpen()

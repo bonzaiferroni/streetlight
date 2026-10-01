@@ -2,14 +2,19 @@ package streetlight.server.daemon.crawler
 
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Problem
+import kotlinx.coroutines.CancellationException
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
+import streetlight.model.data.LocationId
 import streetlight.model.data.LocationLead
+import streetlight.model.data.mergeLeft
+import streetlight.model.data.toEdit
 import streetlight.model.data.LmSchema
-import streetlight.model.data.LocationSchema
+import streetlight.model.data.LocationRead
 import streetlight.model.data.LocationSelectorSchema
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
+import streetlight.model.data.buildPropertyMap
 import streetlight.model.data.SchemaType
 import streetlight.server.daemon.agent.absoluteUrl
 import streetlight.server.daemon.agent.innerHtml
@@ -21,37 +26,66 @@ import streetlight.server.daemon.agent.resolveUrl
 import streetlight.server.daemon.agent.toPropertyMap
 import streetlight.server.daemon.agent.tryQuery
 import streetlight.server.utils.readImageUrl
+import streetlight.server.db.datascope.updateLocation
 import streetlight.server.utils.readMetaContent
 
 /**
  * Delivers the location the LM read from the homepage of [lead] fetched as [document], as [schema], with the values
- * the place its JSON-LD declares laid over it.
+ * the place its JSON-LD declares laid over it, or fills what the stored location of [lead] lacks with it.
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocument?, schema: LmSchema?) {
-    val locationSchema = schema as? LocationSchema ?: return
+    val locationRead = schema as? LocationRead ?: return
     if (document == null) return
     tracker.read(lead.initialUrl, SchemaType.Location)
-    val location = listOf(
-        ParseProperty.Name to locationSchema.name,
-        ParseProperty.Description to locationSchema.description,
-        ParseProperty.Address to locationSchema.address,
-        ParseProperty.Phone to locationSchema.phone,
-        ParseProperty.Email to locationSchema.email,
-        ParseProperty.Hours to locationSchema.hours,
-        ParseProperty.EventsLink to locationSchema.eventsUrl?.let { document.doc.resolveUrl(it) },
-        ParseProperty.Image to (document.doc.readImageUrl()?.value ?: locationSchema.imageUrl?.let { document.doc.resolveUrl(it) }),
-    ).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
+
+    val location = locationRead.parseLocation(document.doc)
     val ldPlace = document.doc.readPageLdPlace()
     val declaredLocation = ldPlace?.toPropertyMap().orEmpty()
     if (declaredLocation.isNotEmpty()) tracker.declared(lead.initialUrl)
-    val region = ldPlace?.region ?: locationSchema.state
-    val area = listOfNotNull(
-        ldPlace?.locality ?: locationSchema.city,
-        region,
-        ldPlace?.postalCode ?: locationSchema.postalCode,
-    ).joinToString(" ").ifEmpty { null }
-    deliverLocation(lead, location + declaredLocation, area, region, document.doc.readMetaContent("og:site_name"))
+
+    when (val locationId = lead.locationId) {
+        null -> {
+            val region = ldPlace?.region ?: locationRead.state
+            val area = listOfNotNull(
+                ldPlace?.locality ?: locationRead.city,
+                region,
+                ldPlace?.postalCode ?: locationRead.postalCode,
+            ).joinToString(" ").ifEmpty { null }
+            deliverLocation(lead, location + declaredLocation, area, region, document.doc.readMetaContent("og:site_name"))
+        }
+        else -> {
+            mergeAndUpdateLocation(lead, locationId, location + declaredLocation)
+        }
+    }
+
+}
+
+/**
+ * Fills what the stored location [locationId] lacks with the [location] read from the homepage of [lead], every
+ * stored value kept. A location given nothing new is recorded as a duplicate.
+ */
+context(tracker: ParseTracker)
+private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationId: LocationId, location: PropertyMap) {
+    tracker.recordFound()
+    val name = location[ParseProperty.Name] ?: lead.initialUrl.value
+    val stored = dao.location.readLocation(locationId, null)
+        ?: return tracker.recordFailed(location, name, Problem("No location is stored as $locationId"))
+
+    val storedEdit = stored.toEdit()
+    val edit = storedEdit.mergeLeft(location.toLocationEdit(lead.initialUrl))
+    if (edit == storedEdit) return tracker.recordDuplicate(location, name, stored.label)
+
+    dbWrite {
+        try {
+            server.updateLocation(locationId, null, edit, isImageRequired = false)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Problem("${e::class.simpleName}: ${e.message}")
+        }
+    }.toDataOr { return tracker.recordFailed(location, name, it) }
+    tracker.recordUpdated()
 }
 
 /**
@@ -70,13 +104,17 @@ private suspend fun Crawler.deliverLocation(
     tracker.recordFound()
     val name = location[ParseProperty.Name] ?: declaredName ?: return tracker.recordUnnamed(location)
     val address = location[ParseProperty.Address]
-    spawner.readStoredAt(name, address)?.let { return tracker.recordDuplicate(location, name, it.label) }
-    val (place, placedName) = spawner.findPlace(lead.initialUrl, name, declaredName, address, area, region)
-        ?: return deliverAtAddress(lead, location, name, declaredName, address, area, region)
-    dao.location.readLocationByMapId(place.osmId)?.let { return tracker.recordDuplicate(location, placedName, it.label) }
-    spawner.createFrom(place, location + (ParseProperty.Name to placedName), lead.initialUrl)
-        .toDataOr { return tracker.recordFailed(location, placedName, it) }
-    tracker.recordCreated()
+    spawner.readLocationAt(name, address)?.let { return tracker.recordDuplicate(location, name, it.label) }
+    when (val found = spawner.findPlace(lead.initialUrl, name, declaredName, address, area, region)) {
+        null -> deliverAtAddress(lead, location, name, declaredName, address, area, region)
+        else -> {
+            val (place, placedName) = found
+            dao.location.readLocationByMapId(place.osmId)?.let { return tracker.recordDuplicate(location, placedName, it.label) }
+            spawner.createLocationFrom(place, location + (ParseProperty.Name to placedName), lead.initialUrl)
+                .toDataOr { return tracker.recordFailed(location, placedName, it) }
+            tracker.recordCreated()
+        }
+    }
 }
 
 /**
@@ -97,24 +135,36 @@ private suspend fun Crawler.deliverAtAddress(
         val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
         return tracker.recordFailed(location, name, Problem("No place on the map matches $searched"))
     }
-    spawner.readStored(place, name)?.let { return tracker.recordDuplicate(location, name, it.label) }
-    spawner.createNamedAt(place, location + (ParseProperty.Name to name), lead.initialUrl)
+    spawner.readStoredLocation(place, name)?.let { return tracker.recordDuplicate(location, name, it.label) }
+    spawner.createNamedLocationAt(place, location + (ParseProperty.Name to name), lead.initialUrl)
         .toDataOr { return tracker.recordFailed(location, name, it) }
     tracker.recordCreated()
 }
 
+/** The properties of the location the LM read from its homepage [doc], its links resolved against [doc]. */
+private fun LocationRead.parseLocation(doc: Document): PropertyMap = buildPropertyMap {
+    this[ParseProperty.Name] = name
+    this[ParseProperty.Description] = description
+    this[ParseProperty.Address] = address
+    this[ParseProperty.Phone] = phone
+    this[ParseProperty.Email] = email
+    this[ParseProperty.Hours] = hours
+    this[ParseProperty.EventsLink] = eventsUrl?.let { doc.resolveUrl(it) }
+    this[ParseProperty.Image] = doc.readImageUrl()?.value ?: imageUrl?.let { doc.resolveUrl(it) }
+}
+
 /** The properties of the location on its homepage [doc], read by selector with [schema]. */
-private fun parseLocation(schema: LocationSelectorSchema, doc: Document): PropertyMap = listOf(
-    ParseProperty.Name to doc.queryElement(schema.name).plainText(),
-    ParseProperty.Description to doc.queryElement(schema.description) { it.isPlausibleProse(allowsChrome = true) }.innerHtml(),
-    ParseProperty.Address to doc.queryElement(schema.address).plainText(),
-    ParseProperty.Phone to doc.queryElement(schema.phone).plainText(),
-    ParseProperty.Email to doc.queryElement(schema.email).plainText(),
-    ParseProperty.Hours to doc.queryElement(schema.hours).plainText(),
-    ParseProperty.EventsLink to doc.queryElement(schema.eventsLink).absoluteUrl("href"),
-    ParseProperty.Image to (doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")),
-    ParseProperty.SocialLinks to schema.socialLinks?.let { selector ->
+private fun parseLocation(schema: LocationSelectorSchema, doc: Document): PropertyMap = buildPropertyMap {
+    this[ParseProperty.Name] = doc.queryElement(schema.name).plainText()
+    this[ParseProperty.Description] = doc.queryElement(schema.description) { it.isPlausibleProse(allowsChrome = true) }.innerHtml()
+    this[ParseProperty.Address] = doc.queryElement(schema.address).plainText()
+    this[ParseProperty.Phone] = doc.queryElement(schema.phone).plainText()
+    this[ParseProperty.Email] = doc.queryElement(schema.email).plainText()
+    this[ParseProperty.Hours] = doc.queryElement(schema.hours).plainText()
+    this[ParseProperty.EventsLink] = doc.queryElement(schema.eventsLink).absoluteUrl("href")
+    this[ParseProperty.Image] = doc.readImageUrl()?.value ?: doc.queryElement(schema.image).absoluteUrl("src")
+    this[ParseProperty.SocialLinks] = schema.socialLinks?.let { selector ->
         doc.tryQuery(selector).toDataOrNull()?.mapNotNull { it.absoluteUrl("href") }?.distinct()?.joinToString("\n")
-    }?.takeIf { it.isNotEmpty() },
-).mapNotNull { (property, text) -> text?.let { property to it } }.toMap()
+    }
+}
 

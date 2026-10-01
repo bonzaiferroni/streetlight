@@ -22,7 +22,10 @@ data class EventPage(
     override val leadType get() = LeadType.EventPage
 }
 
-/** A url submitted as the page of a location, read to create the location it describes. */
+/**
+ * A url submitted as the page of a location, read to create the location it describes, or to fill what the stored
+ * location [locationId] lacks when given.
+ */
 @Serializable
 data class LocationLead(
     val leadId: LeadId,
@@ -30,6 +33,7 @@ data class LocationLead(
     override val content: String?,
     val checkedAt: Instant?,
     val createdAt: Instant,
+    val locationId: LocationId? = null,
 ) : Lead {
     override val leadType get() = LeadType.Location
 }

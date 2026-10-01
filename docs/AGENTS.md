@@ -87,7 +87,12 @@ An issue is written down only once it is decided that it should be, and then it 
 
 ## Code Style
 
-`docs/code-style.md` states how code is written across the project, such as how variables are named. Read it before writing code, and record a style rule there when one is described.
+Each language has its own style document, stating how code in it is written across the project. Read the relevant one before editing code in that language, and record a style rule there when one is described.
+
+| Language | Document |
+|---|---|
+| Kotlin | `docs/kotlin-style.md` |
+| CSS, including the stylesheets in `*Css.kt` files | `docs/css-style.md` |
 
 ## Testing
 

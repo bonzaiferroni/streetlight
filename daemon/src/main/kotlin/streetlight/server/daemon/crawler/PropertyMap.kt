@@ -6,12 +6,13 @@ import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.Image
 import streetlight.model.data.EventEdit
-import streetlight.model.data.EventSchema
+import streetlight.model.data.EventRead
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseMode
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
+import streetlight.model.data.buildPropertyMap
 import streetlight.server.daemon.agent.parseLocalDateTime
 import streetlight.server.daemon.agent.parseTimeFromText
 import streetlight.server.utils.readImageUrl
@@ -81,17 +82,17 @@ private val dollarAmount = Regex("""\$\s?(\d+(?:\.\d{1,2})?)""")
 private val freeWord = Regex("""\bfree\b""", RegexOption.IGNORE_CASE)
 
 /** The properties of the event this schema read from the page [doc] at [url], the page's meta image first. */
-fun EventSchema.toPropertyMap(doc: Document, url: Url): PropertyMap = listOf(
-    ParseProperty.Name to name,
-    ParseProperty.Url to url.value,
-    ParseProperty.Image to (doc.readImageUrl()?.value ?: imageUrl),
-    ParseProperty.Description to description,
-    ParseProperty.Contact to contact,
-    ParseProperty.Cost to cost,
-    ParseProperty.AgeMin to ageMin,
-    ParseProperty.Date to date,
-    ParseProperty.StartTime to startTime,
-    ParseProperty.EndTime to endTime,
-    ParseProperty.Location to locationName,
-    ParseProperty.Address to locationAddress,
-).mapNotNull { (property, text) -> text?.takeIf { it.isNotBlank() }?.let { property to it } }.toMap()
+fun EventRead.parseEvent(doc: Document, url: Url): PropertyMap = buildPropertyMap {
+    this[ParseProperty.Name] = name
+    this[ParseProperty.Url] = url.value
+    this[ParseProperty.Image] = doc.readImageUrl()?.value ?: imageUrl
+    this[ParseProperty.Description] = description
+    this[ParseProperty.Contact] = contact
+    this[ParseProperty.Cost] = cost
+    this[ParseProperty.AgeMin] = ageMin
+    this[ParseProperty.Date] = date
+    this[ParseProperty.StartTime] = startTime
+    this[ParseProperty.EndTime] = endTime
+    this[ParseProperty.Location] = locationName
+    this[ParseProperty.Address] = locationAddress
+}

@@ -26,7 +26,7 @@ suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageE
     val title = feedEdit.title ?: return tracker.recordUnnamed(event)
     val feedStart = feedEdit.startsAt ?: return tracker.eventUnparsed(event)
     if (feedStart < Clock.System.now()) return tracker.eventPast()
-    val location = spawner.locate(event, feed, tracker) ?: return tracker.eventUnlocated(event, title)
+    val location = spawner.locateEvent(event, feed, tracker) ?: return tracker.eventUnlocated(event, title)
     createEventAt(event, feedEdit, location, tracker)
 }
 

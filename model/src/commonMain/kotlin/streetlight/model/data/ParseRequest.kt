@@ -37,7 +37,7 @@ data class MultiEventParseResponse(
 
 /** The details of a location as the LM reads them from its homepage. */
 @Serializable
-data class LocationSchema(
+data class LocationRead(
     val name: String? = null,
     val description: String? = null,
     val address: String? = null,
@@ -60,7 +60,7 @@ data class LocationSchema(
  * text our own parsers read: an ISO date and 24-hour times.
  */
 @Serializable
-data class EventSchema(
+data class EventRead(
     val name: String? = null,
     val date: String? = null,
     val startTime: String? = null,

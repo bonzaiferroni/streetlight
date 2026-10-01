@@ -172,6 +172,11 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         records.created++
     }
 
+    /** Records a stored location given what it lacked. */
+    fun recordUpdated() {
+        records.updated++
+    }
+
     /** Records the location [text] of [event] as naming the new [location]. */
     fun locationSpawned(event: PropertyMap, text: String, location: Location) {
         records.locationsSpawned++
@@ -199,7 +204,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
      * that was created or already known, or a location was spawned or failed to be.
      */
     fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
-        (page(leadUrl).isAttempted && records.created + records.duplicates + records.known == 0) ||
+        (page(leadUrl).isAttempted && records.created + records.updated + records.duplicates + records.known == 0) ||
         records.locationsSpawned > 0 || records.locationsFailed > 0
 
     /** Records the check as cut short by [error]. */

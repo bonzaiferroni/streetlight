@@ -110,6 +110,7 @@ class SchemaReport {
 class RecordReport {
     var found = 0
     var created = 0
+    var updated = 0
     var past = 0
     var unnamed = 0
     var shortened = 0

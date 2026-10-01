@@ -2,7 +2,7 @@ package streetlight.server.daemon.crawler
 
 import kampfire.model.toUrl
 import streetlight.model.data.EventLead
-import streetlight.model.data.EventSchema
+import streetlight.model.data.EventRead
 import streetlight.model.data.LmSchema
 import streetlight.model.data.Location
 import streetlight.model.data.ParseMode
@@ -20,17 +20,17 @@ import kotlin.time.Clock
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, schema: LmSchema?) {
-    val eventSchema = schema as? EventSchema ?: return
+    val eventRead = schema as? EventRead ?: return
     if (document == null) return
     tracker.read(lead.initialUrl, SchemaType.EventPage)
     val ldEvent = document.doc.readPageLdEvent(document.servedUrl)
     val declaredEvent = ldEvent?.toPropertyMap().orEmpty()
     if (declaredEvent.isNotEmpty()) tracker.declared(lead.initialUrl)
-    val event = eventSchema.toPropertyMap(document.doc, lead.initialUrl) + declaredEvent
+    val event = eventRead.parseEvent(document.doc, lead.initialUrl) + declaredEvent
 
     tracker.recordFound()
     val title = event[ParseProperty.Name] ?: return tracker.recordUnnamed(event)
-    val location = placeEvent(eventSchema, ldEvent?.place, event) ?: return tracker.eventUnlocated(event, title)
+    val location = placeLeadEvent(eventRead, ldEvent?.place, event) ?: return tracker.eventUnlocated(event, title)
     val edit = event.toEventEdit(location.timezoneId, ParseMode.Partial, tracker)
     val startsAt = edit.startsAt ?: return tracker.eventUnparsed(event)
     if (startsAt < Clock.System.now()) return tracker.eventPast()
@@ -38,16 +38,16 @@ suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, sc
 }
 
 /**
- * The location of the event read as [schema] from its page, placed by [LocationSpawner.place] from its location
+ * The location of the event read as [schema] from its page, placed by [LocationSpawner.placeEvent] from its location
  * details, each detail of the [place] its JSON-LD declares preferred; or null when it names no place or none is found.
  */
 context(tracker: ParseTracker)
-private suspend fun Crawler.placeEvent(schema: EventSchema, place: LdPlace?, event: PropertyMap): Location? {
+private suspend fun Crawler.placeLeadEvent(schema: EventRead, place: LdPlace?, event: PropertyMap): Location? {
     val name = place?.name ?: schema.locationName ?: return null
     val address = place?.street ?: schema.locationAddress
     val area = place?.area ?: listOfNotNull(schema.locationCity, schema.locationState, schema.locationPostalCode)
         .joinToString(" ").ifEmpty { null }
     val region = place?.region ?: schema.locationState
     val website = (place?.url ?: schema.locationWebsite)?.toUrl()?.takeIf { it.isAbsolute }
-    return spawner.place(name, address, area, region, website, null, event, tracker)
+    return spawner.placeEvent(name, address, area, region, website, null, event, tracker)
 }
