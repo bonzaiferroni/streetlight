@@ -20,6 +20,8 @@ data class EventEdit(
     val title: String? = null,
     val locationId: LocationId? = null,
     val description: Markdown? = null,
+    val eventType: EventType? = null,
+    val eventSubtype: EventSubtype? = null,
     val contact: String? = null,
     val ageMin: Int? = null,
     val cost: Float? = null,

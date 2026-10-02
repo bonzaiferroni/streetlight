@@ -24,6 +24,8 @@ data class EventLocation(
     val eventImage: Image?,
     val title: String,
     val description: Markdown?,
+    val eventType: EventType?,
+    val eventSubtype: EventSubtype?,
     val cost: Float?,
     val status: EventStatus,
     val visibility: Int,
