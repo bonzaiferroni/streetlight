@@ -8,7 +8,7 @@ Notes for the work on classifying crawled events by `EventType` and `EventSubtyp
 * Label vectors are cached in `data/embeddings`, keyed by model and label text.
 * `EntityClassifierTest` classifies 10 observed events, one per type, from `daemon/src/test/resources/classified-events.json`. First run (2026-10-02): 9 of 10. Evening Yoga was given `Dance`, its description sharing "class" and "movement" with the Dance label while the Fitness label names neither yoga nor classes.
 * `daemon/src/main/resources/event-examples.json` holds 273 observed events labeled by type and subtype (2026-10-02, first pass): Meetup 43, Fitness 29, Youth 29, Education 25, FoodAndDrink 25, Music 24, Sports 21, Dance 18, Arts 18, Comedy 16, Church 16, Volunteer 9. Volunteer is thin in the data; more examples want a broader search or new leads.
-* Subtypes are not yet classified. Which subtypes each type can show is not yet defined.
+* Subtypes are classified on their own, from the same vector as the type, with a minimum similarity of 0.5. Which subtypes each type can show is not yet defined, and the type does not narrow the subtype.
 * Classification problems are not yet tracked on the `ParseTracker`.
 
 ## Priority
@@ -48,6 +48,7 @@ A trained layer is tied to the embedding model. Labeled examples are kept as raw
 
 ## Open Questions
 
+* A subtype is optional, and 102 of the 273 examples have none. Their vectors could form a "no subtype" centroid, so an event nearest it gets none, in place of the 0.5 threshold.
 * `EventTable` stores `eventType` and `eventSubtype` by ordinal. Once values are stored, a value added inside a group of `EventSubtype` renumbers those after it. Before the first classified event is stored, the columns want `enumerationByName`, or the enums become append-only.
 * The threshold of 0.4 is a guess. A confidence from the margin between the top two scores, or a probability from stage 3, may replace it.
 * A shortened description ends with a "Read more" link, which reaches the embedding.

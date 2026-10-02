@@ -18,12 +18,13 @@ class EntityClassifier(
     private val typeVectors: Map<EventType, Vector>,
     private val subtypeVectors: Map<EventSubtype, Vector>,
 ) {
-    /** The [event] with its type, left unset when it cannot be classified. */
+    /** The [event] with its type and subtype, each left unset when it cannot be classified. */
     suspend fun classifyEvent(event: EventEdit): EventEdit {
         val eventVector = client.embedQuery(eventInstruction, event.getEmbeddingsText()).toDataOr { return event }
 
         val eventType = readEventType(eventVector).toDataOrNull()
-        return event.copy(eventType = eventType)
+        val eventSubtype = readEventSubtype(eventVector).toDataOrNull()
+        return event.copy(eventType = eventType, eventSubtype = eventSubtype)
     }
 
     /** Reads the [EventType] whose vector is most similar to [eventVector], when it is similar enough. */
@@ -34,7 +35,17 @@ class EntityClassifier(
         if (similarity < minTypeSimilarity) return EmbeddingsProblem.NoMatch
         return Ok(eventType)
     }
+
+    /** Reads the [EventSubtype] whose vector is most similar to [eventVector], when it is similar enough. */
+    private fun readEventSubtype(eventVector: Vector): Outcome<EventSubtype> {
+        val (eventSubtype, similarity) = subtypeVectors
+            .map { (eventSubtype, subtypeVector) -> eventSubtype to eventVector.cosineSimilarity(subtypeVector) }
+            .maxBy { (_, similarity) -> similarity }
+        if (similarity < minSubtypeSimilarity) return EmbeddingsProblem.NoMatch
+        return Ok(eventSubtype)
+    }
 }
 
 internal const val eventInstruction = "Given the details of a local event, retrieve the category that best describes it"
 private const val minTypeSimilarity = 0.4
+private const val minSubtypeSimilarity = 0.5
