@@ -29,7 +29,23 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 `EmbeddingsClient` is the interface for embedding text, for classification by similarity. `KoogEmbeddingsClient` implements it against an Ollama model, `qwen3-embedding:0.6b` by default, at Ollama's default address. A caller holds the interface, so a test can stand in for it.
 
-`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient`. It reads an event's `EventType`, and its `EventSubtype` among those that fit its type when the type is known, each from the event's `PropertyMap` as an `Outcome`. A failure is an `EmbeddingsProblem`.
+`EmbeddingsClient.embed` returns a `Vector` or an `EmbeddingsProblem`; a client failure is never thrown.
+
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and the vectors of every `EventType` and `EventSubtype`. The daemon's `main` reads them with `getCachedVectors` before the crawler starts, and does not start it when any embedding fails. It reads an event's `EventType`, and its `EventSubtype` among those that fit its type when the type is known, each from the event's `PropertyMap` as an `Outcome`. A failure is an `EmbeddingsProblem`.
+
+Each `EventType` and `EventSubtype` gives a short description of itself through `getClassifierLabel()`, in `EntityClassifierLabels.kt`. A value is embedded as `<label>: <classifier label>`, such as `Concert: A live music performance or concert`.
+
+### Embeddings Cache
+
+`getCachedVectors` keeps an enum's vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git. Each file is named for the enum, one line per value in declaration order.
+
+| File | Holds |
+|---|---|
+| `<Enum>-model.txt` | The model id |
+| `<Enum>-text.txt` | The text each value was embedded from |
+| `<Enum>-vectors.csv` | Each value's vector, comma-separated |
+
+The cache is used only when its model id and every line of its text match; otherwise every value is embedded again and the files rewritten.
 
 ## Model Configuration
 

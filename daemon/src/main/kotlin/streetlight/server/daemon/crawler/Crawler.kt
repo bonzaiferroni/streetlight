@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
-import streetlight.server.daemon.agent.EmbeddingsClient
 import streetlight.server.daemon.agent.EntityClassifier
 import streetlight.server.daemon.agent.HtmlParserClient
 import streetlight.server.daemon.agent.SchemaMediator
@@ -25,19 +24,18 @@ import kotlin.time.Duration.Companion.seconds
 
 /**
  * The reader of each feed that is due, fetching its pages with [fetcher], asking the LM through [client] for the
- * schemas it needs, and classifying with embeddings from [embeddingsClient].
+ * schemas it needs, and classifying events with [classifier].
  */
 class Crawler(
     val server: Server,
     client: HtmlParserClient,
-    embeddingsClient: EmbeddingsClient,
+    val classifier: EntityClassifier,
     val fetcher: PageFetcher,
 ) {
 
     val dao = server.dao
     val mediator = SchemaMediator(client, dao, lmRetryCount)
     val spawner = LocationSpawner(server, server.provide<MapReferenceClient>(), OSMGate())
-    val classifier = EntityClassifier(embeddingsClient)
     val log = KotlinLogging.logger(Crawler::class)
     @PublishedApi internal val writeMutex = Mutex()
     private val workers = Semaphore(maxWorkers)
@@ -107,11 +105,11 @@ class Crawler(
     fun logProblem(message: String) = logProblem(Problem(message))
 }
 
-fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient, embeddingsClient: EmbeddingsClient) {
+fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient, classifier: EntityClassifier) {
     launch {
         val fetcher = PageFetcher(server.dao)
         try {
-            Crawler(server, client, embeddingsClient, fetcher).start()
+            Crawler(server, client, classifier, fetcher).start()
         } finally {
             fetcher.close()
         }
