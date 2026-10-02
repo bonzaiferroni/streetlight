@@ -78,25 +78,25 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
     }
 
     launchEffect(ViewScope::earthUnboundedOverlay) {
-        launch {
-            combine(
-                model.unboundedMarkersState.flow,
-                offsetFlow,
-                geoMap.movingViewState.flow,
-            ) { markers, offset, _ -> markers to offset }
-                .collect { (markers, offset) ->
-                    hints.entries.removeAll { (id, hint) ->
-                        if (markers.none { it.markerId == id }) {
-                            hint.element.remove()
-                            true
-                        } else false
-                    }
-                    markers.forEach { marker ->
-                        val hint = hints.getOrPut(marker.markerId) { createHint(marker) }
-                        setState(hint, offset)
-                    }
-                }
-        }
+//        launch {
+//            combine(
+//                model.unboundedMarkersState.flow,
+//                offsetFlow,
+//                geoMap.movingViewState.flow,
+//            ) { markers, offset, _ -> markers to offset }
+//                .collect { (markers, offset) ->
+//                    hints.entries.removeAll { (id, hint) ->
+//                        if (markers.none { it.markerId == id }) {
+//                            hint.element.remove()
+//                            true
+//                        } else false
+//                    }
+//                    markers.forEach { marker ->
+//                        val hint = hints.getOrPut(marker.markerId) { createHint(marker) }
+//                        setState(hint, offset)
+//                    }
+//                }
+//        }
     }
 }
 

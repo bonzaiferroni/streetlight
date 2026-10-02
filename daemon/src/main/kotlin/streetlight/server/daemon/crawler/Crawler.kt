@@ -63,7 +63,7 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
                 }
                 noWorkLastCheck = noWork
             }
-            delay(1.seconds)
+            delay(2.seconds)
         }
     }
 

@@ -38,14 +38,9 @@ class MarkerMap(
     val centerNow get() = geoMap.camera.stateNow.center
 
     val markersState = state.tapOf { it.markers }
-    val viewMarkersState = markersState.combine(geoMap.camera.movingViewState) { markers, bounds ->
-        markers?.partition { bounds.contains(it.geoPoint) }?.let {
-            PartitionedMarkers(
-                bounded = it.first,
-                unbounded = it.second
-            )
-        }
-    }
+//    val boundedMarkersState = markersState.combine(geoMap.camera.movingViewState) { markers, bounds ->
+//        markers?.filter { bounds.contains(it.geoPoint) }
+//    }
     val isMovingState = geoMap.camera.isMovingState
     val focusState = state.tapOf { it.focus }
 
@@ -113,10 +108,10 @@ data class StreetMapState(
 )
 
 /** The markers inside and outside the map view. */
-data class PartitionedMarkers(
-    val bounded: List<EntityMarker>,
-    val unbounded: List<EntityMarker>,
-)
+//data class PartitionedMarkers(
+//    val bounded: List<EntityMarker>,
+//    val unbounded: List<EntityMarker>,
+//)
 
 private fun createMarker(post: Entity): EntityMarker? = when (post) {
     is EventLocation -> EventMarker(post)

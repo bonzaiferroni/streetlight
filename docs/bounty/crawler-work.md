@@ -17,6 +17,10 @@ Every Colorado town with a Meetup city feed (`/find/us--co--<town>/`) is added a
 * **Complete to 29.2 km.** Beyond it, the 84 km ring holds only the towns probed on 2026-10-01; the next sweep fills it in (such as Platteville, Hudson, Keenesburg, Kiowa, Pine, Central City, Empire, Wellington, Timnath, Severance, Eaton, Palmer Lake) and reaches outward.
 * Suburban feeds mostly repeat Denver's events (Commerce City: 48 of 56 in Denver); the duplicate check absorbs them. Mountain and plains towns hold few events of their own (Bennett 0, Georgetown 1).
 
+## Eventbrite Radius
+
+Eventbrite's city feeds (`/d/co--<town>/all-events/`) answer for any real town, each with about 21 events near it; a town it does not know answers 404. Every town of the Meetup radius has a lead, and those Meetup lacks a page for (Lakewood, Centennial, Highlands Ranch, Northglenn, Greenwood Village, Superior, Castle Pines, Edgewater, Sheridan, Federal Heights, Ken Caryl): 61 feeds with Denver. Glendale is left out, its page holding Boulder's events. Within about 20 km a town's page mostly repeats Denver's; from about 22 km out most of its events are its own.
+
 ## Principles
 
 These hold for every change a build makes. The General Model has its single home in `docs/packages/streetlight.server.daemon.crawler.md`.
@@ -25,7 +29,7 @@ These hold for every change a build makes. The General Model has its single home
 |---|---|
 | General Model | A change is made only when its mechanism holds for any site and its need is seen across many origins. A site that doesn't fit stays unread |
 | No data over bad data | Nothing is guessed. An event without a title or a parsed start ahead is dropped |
-| Respect layer | robots.txt, the Streetlight user agent, pacing (`Crawl-delay`, or 1 s per origin without one), strikes, the page limit, and `ParseMode` on descriptions |
+| Respect layer | robots.txt, the Streetlight user agent, pacing (`Crawl-delay`, or 1 s per origin without one; a `429` or `503` is retried once after 30 s), strikes, the page limit, and `ParseMode` on descriptions |
 | Model-agnostic | A mistake of the LM is caught by validation, never answered with an instruction written for one model |
 | Standard measures | Scripted fetches settle with ordinary means (wheel scroll, steady text), never site tricks |
 | Low-hanging fruit | The fix that lifts many origins comes before the one that rescues a single site |
@@ -212,11 +216,16 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 | V32 | A meta image that is not absolute is dropped too. Follow-up map searches: a place's name with its state alone (`Region`), then its name alone when the feed's point fences it, and an address with its state alone, since Meetup labels suburbs Denver and misnames streets ("17th St." for 17th Avenue). Of several hits, one on the address's road wins. By hand, these place 8 of V31's 60 unlocated. Run: 81 created, no failed checks, 13 of 56 reread strays placed; 12 places found but not created, parks and trailheads the map gives no city (Castlewood Canyon, Lair o' the Bear, Inlet Bay Marina). **The Blue Bonnet problem**: a name alone can find the wrong place ("Blue Bonnet" found a building on Dorsey Drive), and no data is preferred over bad data |
 | V33 | A location needs only a point: no city is required to create or edit one, and a city named but not found still fails. Cityless locations stay off city feeds and city search. The slug base is the name, else the address, with its city when it has one, else the id. Stopped mid-run |
 | V34 | A location lead may carry a stored location, whose gaps it fills from the page (`mergeAndUpdateLocation`), every stored value kept and hosted locations untouched. Each location with a website and no `checked_at` is read this way once, after the feeds and stored leads. Stopped mid-run to pace OSM at 2 s |
-| V35 | `lead.is_rsvp` (set on the Meetup feeds): their events carry an `RSVP` link to the event page and a note in the description that an RSVP may be required. OSM searches paced at 2 s. JSON-LD text has its html entities decoded (WordPress writes `&#038;` for `&`); 73 stored events cleaned in SQL (dump `logs/schema/event-entities-before-decode.json`). Images: `imageUrl` reads `src`, else `data-src` or `data-lazy-src` (a `data:` placeholder sank Grimm Brothers' check), and an event or location keeps only an absolute http image. `Lead.isExternalOrigin`: a relative meta or JSON-LD image is resolved against the page for a location's feed or lead, and dropped for a general feed or event lead. Eventbrite Denver added. Not yet read |
+| V35 | `lead.is_rsvp` (set on the Meetup feeds): their events carry an `RSVP` link to the event page and a note in the description that an RSVP may be required. OSM searches paced at 2 s. JSON-LD text has its html entities decoded (WordPress writes `&#038;` for `&`); 73 stored events cleaned in SQL (dump `logs/schema/event-entities-before-decode.json`). Images: `imageUrl` reads `src`, else `data-src` or `data-lazy-src` (a `data:` placeholder sank Grimm Brothers' check), and an event or location keeps only an absolute http image. `Lead.isExternalOrigin`: a relative meta or JSON-LD image is resolved against the page for a location's feed or lead, and dropped for a general feed or event lead. Eventbrite Denver added. Run: Eventbrite 16 created of 20, a cross-source duplicate caught (Milagro's Denver Margarita Festival at Number 38) |
+| V36 | Crawled events and page-read location descriptions end with an italic note that the information was gathered automatically, linking the source; RSVP events carry the RSVP note instead. Not yet read |
 
 ## Open Leads
 
 Found and not yet acted on, each to be weighed against the General Model:
+
+* **Mark a lead checked when its check finishes.** Keep the ids of leads in flight in one in-memory set, left out of the checkable queries with `notInList`, and set `checked_at` after the check returns. A stopped run would then need no restaging. Tabled 2026-10-01.
+
+* **Eventbrite's rate limit.** A probe drew `429` after about 37 page requests 1.2 s apart. Three in a row strike the origin and bench it for the check. The first run of 61 feeds drew them; the default delay went to 2 s and the workers to 16, then to 8 s when 429s came after about 20 s. Eventbrite answers 429 with no `Retry-After` even to a lone request well after a run.
 
 * **Roads named by their route.** "22550 CO-74" finds the house at 22550 Bear Creek Road (Lair o' the Bear), but `findAddress` wants the road to hold "CO-74" and drops it.
 * **Wrong street suffixes.** "1298 South Broadway Avenue" finds nothing; "1298 South Broadway" finds Maria Empanada. Seen twice, both on Meetup's own pages.

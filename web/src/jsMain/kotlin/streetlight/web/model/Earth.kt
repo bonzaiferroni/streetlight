@@ -39,11 +39,11 @@ class Earth(
     val stateNow get() = state.now
 
     val mapState = state.tapOf { it.map }
-    val boundedMarkersState = markerMap.viewMarkersState.tapOf { it?.bounded ?: emptyList() }
-    val unboundedMarkersState = markerMap.viewMarkersState.tapOf { it?.unbounded ?: emptyList() }
-    val summaryField = boundedMarkersState.tapOf { points ->
-        points.groupingBy { it.typeLabel }.eachCount().toList()
-    }
+//    val boundedMarkersState = markerMap.boundedMarkersState
+//    val unboundedMarkersState = markerMap.viewMarkersState.tapOf { it?.unbounded ?: emptyList() }
+//    val summaryField = boundedMarkersState.tapOf { points ->
+//        points.groupingBy { it.typeLabel }.eachCount().toList()
+//    }
     val isMovingState = markerMap.isMovingState
     val focusState = markerMap.focusState.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
     val isFocusedState = focusState.tapOf { it != null }

@@ -24,7 +24,7 @@ suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageE
     val event = mergeEvent(feedEvent, pageEvent, feed.timeZoneId) ?: return
     tracker.trackFoundRecord()
     val feedEdit = event.toEventEdit(feed.timeZoneId, feed.parseMode, tracker)
-        .let { if ((feed as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it }
+        .let { if ((feed as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(feed.initialUrl) }
     val title = feedEdit.title ?: return tracker.trackUnnamedRecord(event)
     val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(event)
     if (feedStart < Clock.System.now()) return tracker.trackPastEvent()

@@ -21,6 +21,8 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy
+import org.apache.hc.core5.util.TimeValue
 import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.Problem
@@ -58,6 +60,11 @@ class PageFetcher(private val dao: DaoFacade) {
 
     private val httpClient by lazy {
         HttpClient(Apache5) {
+            engine {
+                customizeClient {
+                    setRetryStrategy(DefaultHttpRequestRetryStrategy(1, TimeValue.ofSeconds(30)))
+                }
+            }
             install(HttpRedirect) {
                 allowHttpsDowngrade = true
             }

@@ -1,5 +1,6 @@
 package streetlight.server.daemon.crawler
 
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
@@ -61,22 +62,34 @@ fun PropertyMap.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: 
 /** The edit of the location these properties describe, its homepage at [website] when known. */
 fun PropertyMap.toLocationEdit(website: Url?): LocationEdit = LocationEdit(
     name = this[ParseProperty.Name]?.takeIf { it.isNotBlank() },
-    description = this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.toMarkdown(),
+    description = this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.toMarkdown()
+        ?.let { description -> website?.let { description.withNote(sourceNote(it)) } ?: description },
     address = this[ParseProperty.Address],
     website = website,
     eventsUrl = this[ParseProperty.EventsLink]?.toUrl(),
+    extraLinks = this[ParseProperty.Menu]?.let { listOf(ExtraLink("menu", it.toUrl())) },
     image = this[ParseProperty.Image]?.toUrl()?.takeIf { it.isAbsolute }?.let { Image(it) },
 )
 
 /** This edit with an RSVP link to its website and a note that it may be required, or this edit when it has no website. */
 fun EventEdit.withRsvp(): EventEdit {
     val url = website ?: return this
-    val note = "This event may require that you [RSVP](${url.value})."
     return copy(
         links = links.orEmpty() + ExtraLink("RSVP", url),
-        description = listOfNotNull(description?.value, note).joinToString("\n\n").toMarkdown(),
+        description = description.withNote("This event may require that you [RSVP](${url.value})."),
     )
 }
+
+/** This edit with a note that it was gathered automatically, linking its website, or [sourceUrl] when it has none. */
+fun EventEdit.withSourceNote(sourceUrl: Url): EventEdit =
+    copy(description = description.withNote(sourceNote(website ?: sourceUrl)))
+
+/** This description with [note] as a paragraph of its own at its end. */
+fun Markdown?.withNote(note: String): Markdown = listOfNotNull(this?.value, note).joinToString("\n\n").toMarkdown()
+
+/** The note that a record was gathered automatically, linking its [source]. */
+fun sourceNote(source: Url) =
+    "*This information was automatically gathered, please check* [the source](${source.value}) *for updates.*"
 
 /**
  * The cost in dollars that [text] states: 0 when it says the event is free and names no price, or its lowest dollar

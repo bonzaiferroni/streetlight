@@ -45,7 +45,7 @@ A record the user edits has a `FooEdit` DTO holding the fields a form sends, and
 
 An `LmSchema` is a class the LM is asked to fill: a `SelectorSchema` of selectors, or a direct schema of values such as `LocationSchema` and `EventSchema`.
 
-A `PropertyMap` holds the text of each `ParseProperty` read from a page, not yet parsed. A property is shared by every kind of record that has the same meaning, such as `Name` for an event's title and a location's name. A `PropertyMap` is built with `buildPropertyMap`, setting each property as `this[property] = value`; a null or blank value is left out.
+A `PropertyMap` holds the text of each `ParseProperty` read from a page, not yet parsed. A property is shared by every kind of record that has the same meaning, such as `Name` for an event's title and a location's name. A `PropertyMap` is built with `buildPropertyMap`, setting each property as `this[property] = value`; a null or blank value is left out. `LocationEdit.mergeLeft` keeps the links of the left edit and adds each link of the right whose label it lacks.
 
 ## Opening Hours
 

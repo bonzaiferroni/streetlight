@@ -151,6 +151,7 @@ private fun LocationRead.parseLocation(doc: Document): PropertyMap = buildProper
     this[ParseProperty.Email] = email
     this[ParseProperty.Hours] = hours
     this[ParseProperty.EventsLink] = eventsUrl?.let { doc.resolveUrl(it) }
+    this[ParseProperty.Menu] = menuUrl?.let { doc.resolveUrl(it) }
     this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative = true)?.value ?: imageUrl?.let { doc.resolveUrl(it) }
 }
 

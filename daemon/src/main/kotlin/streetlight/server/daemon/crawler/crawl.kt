@@ -1,6 +1,7 @@
 package streetlight.server.daemon.crawler
 
 import com.fleeksoft.ksoup.nodes.Document
+import kampfire.model.Ok
 import kampfire.model.Outcome
 import streetlight.server.daemon.agent.isCalledOff
 import streetlight.server.daemon.agent.readPageLdEvent
@@ -69,6 +70,7 @@ suspend fun Crawler.crawl(lead: Lead) {
     if (schemaOutcome == SchemaProblem.ScriptingRequired && fetchMode == FetchMode.Basic) {
         document = fetchDocument(lead, origin, FetchMode.Scripting)
         schemaOutcome = document?.let { provideSchema(lead, it) }
+        if (schemaOutcome is Ok) dbWrite { dao.origin.registerScriptingRequired(origin.originId) }
     }
 
     document?.let { dbWrite { dao.registerFetch(it) } }

@@ -82,7 +82,7 @@ object LocationProperty {
     val City = "city"
 }
 
-/** This edit, with any field it lacks taken from [edit]. */
+/** This edit, with any field it lacks taken from [edit], and each link of [edit] whose label it lacks. */
 fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
     LocationEdit(
         locationId = locationId ?: edit.locationId,
@@ -103,7 +103,10 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         hours = hours ?: edit.hours,
         website = website ?: edit.website,
         eventsUrl = eventsUrl ?: edit.eventsUrl,
-        extraLinks = extraLinks ?: edit.extraLinks,
+        extraLinks = edit.extraLinks?.let { links ->
+            val labels = extraLinks.orEmpty().map { link -> link.label }
+            extraLinks.orEmpty() + links.filter { link -> link.label !in labels }
+        } ?: extraLinks,
         image = image ?: edit.image?.takeIf { it.value.isNotEmpty() },
     )
 } ?: this

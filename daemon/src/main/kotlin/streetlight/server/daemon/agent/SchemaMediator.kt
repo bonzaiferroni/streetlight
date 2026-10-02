@@ -344,7 +344,6 @@ class SchemaMediator(
         }
         val parse = client.readHtml<BasicContentParse<T>>(url, doc, prompt, retryCount, observer)
             .toDataOr { onProblem(it.alsoNoteLimit()) }
-        if (parse.isScriptingRequired) dao.origin.registerScriptingRequired(origin.originId)
         return parse.content?.takeIf { parse.isExpectedContent }
             ?: onProblem(if (parse.isScriptingRequired) SchemaProblem.ScriptingRequired else notExpected)
     }
