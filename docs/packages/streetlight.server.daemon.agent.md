@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The crawler's work with a language model: prompting, structured decoding, the schema mediator, and the HTML trimming that keeps a page within a prompt.
+The crawler's work with a language model: prompting, structured decoding, embeddings, the schema mediator, the entity classifier, and the HTML trimming that keeps a page within a prompt.
 
 ## Dependencies
 
@@ -28,6 +28,8 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 ## EmbeddingsClient
 
 `EmbeddingsClient` is the interface for embedding text, for classification by similarity. `KoogEmbeddingsClient` implements it against an Ollama model, `qwen3-embedding:0.6b` by default, at Ollama's default address. A caller holds the interface, so a test can stand in for it.
+
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient`.
 
 ## Model Configuration
 

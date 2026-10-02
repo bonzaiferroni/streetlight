@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
+import streetlight.server.daemon.agent.EmbeddingsClient
+import streetlight.server.daemon.agent.EntityClassifier
 import streetlight.server.daemon.agent.HtmlParserClient
 import streetlight.server.daemon.agent.SchemaMediator
 import streetlight.model.data.EventFeed
@@ -22,14 +24,20 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 /**
- * The reader of each feed that is due, fetching its pages with [fetcher] and asking the LM through [client] for the
- * schemas it needs.
+ * The reader of each feed that is due, fetching its pages with [fetcher], asking the LM through [client] for the
+ * schemas it needs, and classifying with embeddings from [embeddingsClient].
  */
-class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFetcher) {
+class Crawler(
+    val server: Server,
+    client: HtmlParserClient,
+    embeddingsClient: EmbeddingsClient,
+    val fetcher: PageFetcher,
+) {
 
     val dao = server.dao
     val mediator = SchemaMediator(client, dao, lmRetryCount)
     val spawner = LocationSpawner(server, server.provide<MapReferenceClient>(), OSMGate())
+    val classifier = EntityClassifier(embeddingsClient)
     val log = KotlinLogging.logger(Crawler::class)
     @PublishedApi internal val writeMutex = Mutex()
     private val workers = Semaphore(maxWorkers)
@@ -99,11 +107,11 @@ class Crawler(val server: Server, client: HtmlParserClient, val fetcher: PageFet
     fun logProblem(message: String) = logProblem(Problem(message))
 }
 
-fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient) {
+fun CoroutineScope.startCrawler(server: Server, client: HtmlParserClient, embeddingsClient: EmbeddingsClient) {
     launch {
         val fetcher = PageFetcher(server.dao)
         try {
-            Crawler(server, client, fetcher).start()
+            Crawler(server, client, embeddingsClient, fetcher).start()
         } finally {
             fetcher.close()
         }

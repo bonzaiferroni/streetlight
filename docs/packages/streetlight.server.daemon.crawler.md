@@ -10,19 +10,13 @@ The crawler, a standalone process that reads event feeds and the event pages the
 |---|---|
 | `streetlight.server.model` | `Server`, the DAO, event creation and the `MapReferenceClient` |
 | `streetlight.server.db.datascope` | Location creation |
-| `streetlight.server.daemon.agent` | Fetching, html parsing, the `SchemaMediator`, schema validation and date parsing |
+| `streetlight.server.daemon.agent` | Fetching, html parsing, the `SchemaMediator`, the `EntityClassifier`, schema validation and date parsing |
 
 ## Structure
 
-`Crawler` holds what every piece of work shares: the DAO, its rooms and the run's state. It reads a few leads at once, each in its own coroutine, taking more as room opens, and hands each to `crawl`. A service function is an extension of `Crawler` named for its work, such as `crawlEventFeed` and `crawlEventPage`, and keeps no state of its own; a new kind of lead is read by a new one.
+`Crawler` holds what every piece of work shares: the DAO, its rooms and the run's state. It reads a few leads at once, each in its own coroutine, taking more as room opens, and hands each to `crawl`.
 
-A room is a class that owns a distinct body of work and its own state, never calls back into the service functions, and is what a test replaces. `PageFetcher` fetches each page once its origin's robots gate opens, spaced by the origin's `Crawl-delay` or one second when it gives none, with a plain request or in the browser, and keeps the gates and the browser. A plain request answered `429` or `503` is sent once more, after its `Retry-After` or 30 seconds. `SchemaMediator` finds each page's schema and keeps the LM's usage limit. `LocationSpawner` resolves event locations and keeps its map searches. Work that branches on what a page turns out to hold stays with the service functions.
-
-A service function reads as the steps of its work, each step a function of its own, such as `provisionFeedSchema` and `findEventElements`. A step records its own outcome on the tracker, and the service function only routes between steps. A step that serves more than one service, such as `deliverEvent`, lives in its own file.
-
-Service functions and their steps are the desks. Data that travels between steps together is carried as one package, named for its contents. Work flows one way: each desk passes its package on, and the last desk sends it to its destination. Events end in the database through `deliverEvent`, and the tracker ends in the link records and the report when the check is filed. A room answers the desk that asks it; a desk returns nothing.
-
-Shared work is paced or serialized so concurrent leads stay respectful and consistent: gates space the requests to each origin and to the map, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`, each holding the reads it depends on. A room that writes takes the `Crawler` as a context parameter for `dbWrite`.
+Shared work is paced or serialized so concurrent leads stay respectful and consistent: gates space the requests to each origin and to the map, the LM takes one request at a time, and database writes run one at a time through `Crawler.dbWrite`, each holding the reads it depends on.
 
 A `Lead` is a page the crawler is given, with what is known of it before it is fetched: an `EventFeed`, or an `EventPage` carrying its feed and the `feedEvent` the feed showed. `crawl` reads every lead: it checks the lead's last read did not stop it, fetches its `FetchDocument` in its origin's fetch mode, finds the schema its kind wants, fetches it again with scripting when the LM finds scripting required, and hands the document and schema to the service for its kind, pairing each kind of lead with its kind of schema. A lead whose last read stopped it, or that cannot be fetched or given a schema, passes on only what it carries: an event page delivers its `feedEvent`. A lead that carries its page's `content`, such as a location or event lead sent with the html a user's browser rendered, is read from it in place of the first fetch, as a `Scripting` fetch served from its url, and does not wait on its robots gate.
 
@@ -31,6 +25,40 @@ Every lead is read by its schema, stored or asked of the LM. The values a page d
 A page is known by the url it was served from, after redirects and normalized. Its link is recorded under that url, with the url asked for as an alias. A url the page declares for itself, such as a canonical link, is not used.
 
 `crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `feedEvent` its lead carries. `deliverEvent` merges the two property maps, the page's preferred except its url and the start taken from the first pairing that parses, and creates the event from `PropertyMap.toEventEdit`. A location's properties become a `LocationEdit` through `toLocationEdit`.
+
+## Crawler Model Analogy: Office Floorplan
+
+The crawler is laid out as an office. `Crawler` is the office, with a main floor of desks and rooms off it.
+
+| Part | Is |
+|---|---|
+| Front desk | `Crawler.checkLead`, where each lead arrives |
+| Desk | A service function, an extension of `Crawler` |
+| Package | A lead, or the data that travels between desks |
+| Clipboard | The `ParseTracker`, which follows a lead along its path |
+| Room | A class that owns an encapsulated body of work, such as `SchemaMediator` or `LocationSpawner` |
+| Backroom | A class a room holds for part of its work, such as the `HtmlParserClient` behind `SchemaMediator` |
+
+A lead arrives at the front desk as a package and travels from desk to desk until it reaches a dead end or is delivered to the database.
+
+### Desks
+
+A service function is named for its work, such as `crawlEventFeed` and `crawlEventPage`, and keeps no state of its own; a new kind of lead is read by a new one.
+
+A service function reads as the steps of its work, each step a function of its own, such as `provisionFeedSchema` and `findEventElements`. A step records its own outcome on the tracker, and the service function only routes between steps. A step that serves more than one service, such as `deliverEvent`, lives in its own file.
+
+Data that travels between steps together is carried as one package, named for its contents. Work flows one way: each desk passes its package on, and the last desk sends it to its destination. Events end in the database through `deliverEvent`, and the tracker ends in the link records and the report when the check is filed. A desk returns nothing. Work that branches on what a page turns out to hold stays with the desks.
+
+### Rooms
+
+A room owns its own state, never calls back into the desks, and is what a test replaces. It answers the desk that asks it with a result. A room that writes takes the `Crawler` as a context parameter for `dbWrite`.
+
+| Room | Work |
+|---|---|
+| `PageFetcher` | Fetches each page once its origin's robots gate opens, spaced by the origin's `Crawl-delay` or one second when it gives none, with a plain request or in the browser, and keeps the gates and the browser. A plain request answered `429` or `503` is sent once more, after its `Retry-After` or 30 seconds |
+| `SchemaMediator` | Finds each page's schema and keeps the LM's usage limit |
+| `LocationSpawner` | Resolves event locations and keeps its map searches |
+| `EntityClassifier` | Classifies what the crawler reads, by embeddings from its `EmbeddingsClient` |
 
 ## Feed Sources
 

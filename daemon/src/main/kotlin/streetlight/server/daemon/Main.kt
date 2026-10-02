@@ -5,6 +5,7 @@ import klutch.server.KoinProvider
 import klutch.server.provide
 import kotlinx.coroutines.runBlocking
 import org.koin.dsl.koinApplication
+import streetlight.server.daemon.agent.KoogEmbeddingsClient
 import streetlight.server.daemon.agent.KoogHtmlParserClient
 import streetlight.server.daemon.agent.readLmConfig
 import streetlight.server.daemon.crawler.startCrawler
@@ -28,5 +29,5 @@ fun main() = runBlocking {
 
     val db = connectDb(env)
 
-    startCrawler(server, KoogHtmlParserClient(env.readLmConfig()))
+    startCrawler(server, KoogHtmlParserClient(env.readLmConfig()), KoogEmbeddingsClient())
 }
