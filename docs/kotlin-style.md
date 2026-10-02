@@ -13,12 +13,12 @@ A variable is named from its type, in whole words:
 | Case | Name | Example |
 |---|---|---|
 | The noun alone shadows nothing | The noun | A `FooBar` is `bar` |
-| The noun alone shadows another name in scope | The type's name | An `LdEvent` beside an event's `PropertyMap` is `ldEvent` |
+| The noun alone shadows another name in scope | The type's name | An `LdEvent` beside an event's `RawEntity` is `ldEvent` |
 | Several values share a type | The noun with the role each plays | `currentBar`, `lastBar`, `cachedBar` |
 
 A name never drops the type for a word that names only where the value came from, such as `declared` for an `LdEvent`, or for a role alone, such as `validated` for a schema.
 
-A `PropertyMap` is named for the record its properties describe, never with `map`: `event`, `location`, and with a role, `pageEvent`, `declaredEvent`, `declaredLocation`.
+A `RawEntity` is named `raw` followed by the entity its properties describe: `rawEvent`, `rawLocation`. A role goes between the two: `rawPageEvent`, `rawFeedEvent`, `rawDeclaredEvent`, `rawDeclaredLocation`. One that describes any entity is `rawEntity`.
 
 ## Functions
 
@@ -29,7 +29,7 @@ A function's name follows a verbNoun shape and names the noun it acts on.
 | The noun is named | `readStoredLocation`, not `readStored` |
 | The verb may come from the downstream call that does the work | `mergeAndUpdateLocation` ends in `updateLocation` |
 | Two verbs at most | `readOrCreateLocation` |
-| A conversion that only reshapes its receiver is `toFoo` | `LdPlace.toPropertyMap()` |
+| A conversion that only reshapes its receiver is `toFoo` | `LdPlace.toRawEntity()` |
 | A function that reads something more is named for that work | `LocationRead.parseLocation(doc)` |
 | One kind of work takes one verb, in names and comments alike | A tracker's functions are `track…`, and its comments say "Tracks" |
 | A name after its verb follows the AdjectiveNoun shape of a type, naming what the work is about | `trackSkippedUrl`, `trackFailedRecord`, `trackDeclaredLd` |
@@ -56,7 +56,7 @@ when (val locationId = lead.locationId) {
 A map built from values that may be missing is filled through a builder that leaves them out, not a list of pairs filtered after:
 
 ```kotlin
-buildPropertyMap {
+buildRawEntity {
     this[ParseProperty.Name] = name
     this[ParseProperty.Address] = street
 }
