@@ -25,6 +25,10 @@ The interface declares the `KClass` and `KType` overloads. `readHtml<T>` is an i
 
 A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language model in every environment.
 
+## EmbeddingsClient
+
+`EmbeddingsClient` is the interface for embedding text, for classification by similarity. `KoogEmbeddingsClient` implements it against an Ollama model, `qwen3-embedding:0.6b` by default, at Ollama's default address. A caller holds the interface, so a test can stand in for it.
+
 ## Model Configuration
 
 `LmConfig` holds the model, and the key, address and request properties needed to reach it. `Environment.readLmConfig()` builds it from these keys.
