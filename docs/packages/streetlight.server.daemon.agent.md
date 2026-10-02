@@ -29,9 +29,11 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 `EmbeddingsClient` is the interface for embedding text, for classification by similarity. `KoogEmbeddingsClient` implements it against an Ollama model, `qwen3-embedding:0.6b` by default, at Ollama's default address. A caller holds the interface, so a test can stand in for it.
 
-`EmbeddingsClient.embed` returns a `Vector` or an `EmbeddingsProblem`; a client failure is never thrown.
+`EmbeddingsClient.embed` embeds a document bare, and `embedQuery` embeds a query with an instruction describing what it searches for, in the format its model expects. A classifier label is a document and an event is a query. Each returns a `Vector` or an `EmbeddingsProblem`; a client failure is never thrown.
 
-`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and the vectors of every `EventType` and `EventSubtype`. The daemon's `main` reads them with `getCachedVectors` before the crawler starts, and does not start it when any embedding fails. It reads an event's `EventType`, and its `EventSubtype` among those that fit its type when the type is known, each from the event's `RawEntity` as an `Outcome`. A failure is an `EmbeddingsProblem`.
+`KoogEmbeddingsClient` formats a query as `Instruct: <instruction>\nQuery:<text>`, the format of Qwen3-Embedding.
+
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and the vectors of every `EventType` and `EventSubtype`. The daemon's `main` reads them with `getCachedVectors` before the crawler starts, and does not start it when any embedding fails. It reads an event's `EventType`, and its `EventSubtype` among those that fit its type when the type is known, each from the event's `EventEdit` as an `Outcome`. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has. A read takes the value whose vector has the highest cosine similarity to the event's, and returns `EmbeddingsProblem.NoMatch` when that similarity is below its minimum. A failure is an `EmbeddingsProblem`.
 
 Each `EventType` and `EventSubtype` gives a short description of itself through `getClassifierLabel()`, in `EntityClassifierLabels.kt`. A value is embedded as `<label>: <classifier label>`, such as `Concert: A live music performance or concert`.
 

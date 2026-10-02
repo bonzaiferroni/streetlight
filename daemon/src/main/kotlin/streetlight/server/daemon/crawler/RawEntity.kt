@@ -8,8 +8,6 @@ import kampfire.model.toUrl
 import koala.Image
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventRead
-import streetlight.model.data.EventSubtype
-import streetlight.model.data.EventType
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseMode
@@ -22,15 +20,9 @@ import streetlight.server.utils.readImageUrl
 
 /**
  * The edit of the event these properties describe, its start read in [timeZoneId], its description shortened unless
- * [parseMode] is [ParseMode.Full] or the page declared it, classified as [eventType] and [eventSubtype].
+ * [parseMode] is [ParseMode.Full] or the page declared it.
  */
-fun RawEntity.toEventEdit(
-    timeZoneId: String?,
-    parseMode: ParseMode,
-    eventType: EventType?,
-    eventSubtype: EventSubtype?,
-    tracker: ParseTracker,
-): EventEdit {
+fun RawEntity.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: ParseTracker): EventEdit {
     val url = this[ParseProperty.Url]?.toUrl()
     val date = this[ParseProperty.Date]
     val startTime = this[ParseProperty.StartTime]
@@ -54,8 +46,6 @@ fun RawEntity.toEventEdit(
     return EventEdit(
         title = this[ParseProperty.Name]?.withoutBracketNotes()?.takeIf { it.isNotBlank() },
         description = body?.toMarkdown(),
-        eventType = eventType,
-        eventSubtype = eventSubtype,
         contact = this[ParseProperty.Contact], // td: gather phone/email/social media separately
         cost = this[ParseProperty.Cost]?.let { costOf(it) },
         website = url,

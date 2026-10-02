@@ -35,6 +35,9 @@ class KoogEmbeddingsClient(
         log.error(e) { "Embedding failed: ${text.take(50)}" }
         EmbeddingsProblem.Unspecified
     }
+
+    override suspend fun embedQuery(instruction: String, text: String): Outcome<Vector> =
+        embed("Instruct: $instruction\nQuery:$text")
 }
 
 private val qwenEmbeddingModel = LLModel(

@@ -1,10 +1,12 @@
 package streetlight.server.daemon.agent
 
 import ai.koog.embeddings.base.Vector
+import kampfire.model.Ok
 import kampfire.model.Outcome
+import kampfire.model.toDataOr
+import streetlight.model.data.EventEdit
 import streetlight.model.data.EventSubtype
 import streetlight.model.data.EventType
-import streetlight.model.data.RawEntity
 
 /**
  * The crawler's room for classifying what it reads, by embeddings from [client] compared against the vectors of each
@@ -15,10 +17,21 @@ class EntityClassifier(
     private val typeVectors: Map<EventType, Vector>,
     private val subtypeVectors: Map<EventSubtype, Vector>,
 ) {
-    /** Reads the [EventType] of [rawEvent]. */
-    suspend fun readEventType(rawEvent: RawEntity): Outcome<EventType> = EmbeddingsProblem.Unspecified
+    /** Reads the [EventType] of [event], the most similar type when it is similar enough. */
+    suspend fun readEventType(event: EventEdit): Outcome<EventType> {
+        val eventVector = client.embedQuery(eventTypeInstruction, event.getEmbeddingsText()).toDataOr { return it }
 
-    /** Reads the [EventSubtype] of [rawEvent], among those that fit [eventType] when known. */
-    suspend fun readEventSubtype(rawEvent: RawEntity, eventType: EventType?): Outcome<EventSubtype> =
+        val (eventType, similarity) = typeVectors
+            .map { (eventType, typeVector) -> eventType to eventVector.cosineSimilarity(typeVector) }
+            .maxBy { (_, similarity) -> similarity }
+        if (similarity < minTypeSimilarity) return EmbeddingsProblem.NoMatch
+        return Ok(eventType)
+    }
+
+    /** Reads the [EventSubtype] of [event], among those that fit [eventType] when known. */
+    suspend fun readEventSubtype(event: EventEdit, eventType: EventType?): Outcome<EventSubtype> =
         EmbeddingsProblem.Unspecified
 }
+
+private const val eventTypeInstruction = "Given the details of a local event, retrieve the category that best describes it"
+private const val minTypeSimilarity = 0.4

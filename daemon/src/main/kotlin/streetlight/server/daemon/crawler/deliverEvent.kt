@@ -24,15 +24,17 @@ import kotlin.time.Clock
 suspend fun Crawler.deliverEvent(lead: EventFeed, rawFeedEvent: RawEntity?, rawPageEvent: RawEntity?, tracker: ParseTracker) {
     val rawEvent = mergeEvent(rawFeedEvent, rawPageEvent, lead.timeZoneId) ?: return
     tracker.trackFoundRecord()
-    val eventType = classifier.readEventType(rawEvent).toDataOrNull()
-    val eventSubtype = classifier.readEventSubtype(rawEvent, eventType).toDataOrNull()
-    val feedEdit = rawEvent.toEventEdit(lead.timeZoneId, lead.parseMode, eventType, eventSubtype, tracker)
-        .let { if ((lead as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(lead.initialUrl) }
-    val title = feedEdit.title ?: return tracker.trackUnnamedRecord(rawEvent)
-    val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(rawEvent)
-    if (feedStart < Clock.System.now()) return tracker.trackPastEvent()
+    val initialEvent = rawEvent.toEventEdit(lead.timeZoneId, lead.parseMode, tracker)
+    val title = initialEvent.title ?: return tracker.trackUnnamedRecord(rawEvent)
+    val startsAt = initialEvent.startsAt ?: return tracker.trackUnparsedEvent(rawEvent)
+    if (startsAt < Clock.System.now()) return tracker.trackPastEvent()
     val location = spawner.locateEvent(rawEvent, lead, tracker) ?: return tracker.trackUnlocatedEvent(rawEvent, title)
-    createEventAt(rawEvent, feedEdit, location, tracker)
+
+    val eventType = classifier.readEventType(initialEvent).toDataOrNull()
+    val eventSubtype = classifier.readEventSubtype(initialEvent, eventType).toDataOrNull()
+    val event = initialEvent.copy(eventType = eventType, eventSubtype = eventSubtype)
+        .let { if ((lead as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(lead.initialUrl) }
+    createEventAt(rawEvent, event, location, tracker)
 }
 
 /** Creates the [rawEvent] edited as [edit] at [location], unless an event there the same day already has its title. */

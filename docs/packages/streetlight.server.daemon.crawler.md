@@ -24,7 +24,11 @@ Every lead is read by its schema, stored or asked of the LM. The values a page d
 
 A page is known by the url it was served from, after redirects and normalized. Its link is recorded under that url, with the url asked for as an alias. A url the page declares for itself, such as a canonical link, is not used.
 
-`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `rawFeedEvent` its lead carries. `deliverEvent` merges the two raw events, the page's preferred except its url and the start taken from the first pairing that parses, classifies the merged event with the `EntityClassifier`, a problem leaving its type or subtype null, and creates the event from `RawEntity.toEventEdit`. A location's properties become a `LocationEdit` through `toLocationEdit`.
+`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `rawFeedEvent` its lead carries. `deliverEvent` merges the two raw events, the page's preferred except its url and the start taken from the first pairing that parses, builds its edit with `RawEntity.toEventEdit`, and checks its title, start and location. It then classifies the edit with the `EntityClassifier`, a problem leaving its type or subtype null, adds its source or RSVP note, and creates the event. The note never reaches the embedding. A location's properties become a `LocationEdit` through `toLocationEdit`.
+
+## Naming
+
+A `RawEntity` is named `raw` followed by the entity its properties describe: `rawEvent`, `rawLocation`. A role goes between the two: `rawPageEvent`, `rawFeedEvent`, `rawDeclaredEvent`, `rawDeclaredLocation`. One that describes any entity is `rawEntity`.
 
 ## Crawler Model Analogy: Office Floorplan
 
