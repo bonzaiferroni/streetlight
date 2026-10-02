@@ -2,7 +2,7 @@ package streetlight.server.daemon.crawler
 
 import kampfire.model.toUrl
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
+import streetlight.model.data.RawEntity
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.Ok
@@ -108,17 +108,17 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     }
 
     /** Tracks an event whose start could not be parsed, marking its lead's page and its own [ParseOutcome.Partial]. */
-    fun trackUnparsedEvent(event: PropertyMap) {
-        val text = listOfNotNull(event[ParseProperty.Date], event[ParseProperty.StartTime]).joinToString(" | ").ifEmpty { "(none)" }
+    fun trackUnparsedEvent(rawEvent: RawEntity) {
+        val text = listOfNotNull(rawEvent[ParseProperty.Date], rawEvent[ParseProperty.StartTime]).joinToString(" | ").ifEmpty { "(none)" }
         page(leadUrl).trackPartial()
-        (pageOf(event) ?: page(leadUrl)).trackPartial("Date text did not parse: $text")
+        (pageOf(rawEvent) ?: page(leadUrl)).trackPartial("Date text did not parse: $text")
     }
 
-    /** Tracks a [record] found with no name, marking its lead's page and its own [ParseOutcome.Partial]. */
-    fun trackUnnamedRecord(record: PropertyMap) {
+    /** Tracks a [rawEntity] found with no name, marking its lead's page and its own [ParseOutcome.Partial]. */
+    fun trackUnnamedRecord(rawEntity: RawEntity) {
         records.unnamed++
         page(leadUrl).trackPartial()
-        (pageOf(record) ?: page(leadUrl)).trackPartial("A record had no name")
+        (pageOf(rawEntity) ?: page(leadUrl)).trackPartial("A record had no name")
     }
 
     fun trackShortenedDescription() {
@@ -129,28 +129,28 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
      * Tracks an event titled [title] dropped since its location named no place and its feed has no location of its
      * own, marking its lead's page and its own [ParseOutcome.Partial].
      */
-    fun trackUnlocatedEvent(event: PropertyMap, title: String) {
-        val note = "$title had no location: ${event[ParseProperty.Location] ?: "(none)"}"
+    fun trackUnlocatedEvent(rawEvent: RawEntity, title: String) {
+        val note = "$title had no location: ${rawEvent[ParseProperty.Location] ?: "(none)"}"
         page(leadUrl).trackPartial()
-        (pageOf(event) ?: page(leadUrl)).trackPartial(note)
+        (pageOf(rawEvent) ?: page(leadUrl)).trackPartial(note)
     }
 
     fun trackPastEvent() {
         records.past++
     }
 
-    fun trackDuplicateRecord(record: PropertyMap, name: String, existing: String) {
+    fun trackDuplicateRecord(rawEntity: RawEntity, name: String, existing: String) {
         records.duplicates++
-        noteOn(record, "$name duplicates $existing")
+        noteOn(rawEntity, "$name duplicates $existing")
     }
 
-    fun trackFailedRecord(record: PropertyMap, name: String, problem: Problem) {
+    fun trackFailedRecord(rawEntity: RawEntity, name: String, problem: Problem) {
         records.createFailed++
-        noteOn(record, "$name could not be created: ${problem.message}")
+        noteOn(rawEntity, "$name could not be created: ${problem.message}")
     }
 
-    fun trackFailedImage(record: PropertyMap, name: String) {
-        noteOn(record, "$name was created without its image")
+    fun trackFailedImage(rawEntity: RawEntity, name: String) {
+        noteOn(rawEntity, "$name was created without its image")
     }
 
     fun trackCreatedRecord() {
@@ -161,23 +161,23 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         records.updated++
     }
 
-    fun trackSpawnedLocation(event: PropertyMap, text: String, location: Location) {
+    fun trackSpawnedLocation(rawEvent: RawEntity, text: String, location: Location) {
         records.locationsSpawned++
-        noteOn(event, "Location $text spawned ${location.label}")
+        noteOn(rawEvent, "Location $text spawned ${location.label}")
     }
 
-    fun trackMatchedLocation(event: PropertyMap, text: String, location: Location) {
-        noteOn(event, "Location $text matched ${location.label}")
+    fun trackMatchedLocation(rawEvent: RawEntity, text: String, location: Location) {
+        noteOn(rawEvent, "Location $text matched ${location.label}")
     }
 
-    /** Tracks the location [text] of [event] as naming no distinct place. */
-    fun trackFallbackLocation(event: PropertyMap, text: String) {
-        noteOn(event, "Location $text named no distinct place")
+    /** Tracks the location [text] of [rawEvent] as naming no distinct place. */
+    fun trackFallbackLocation(rawEvent: RawEntity, text: String) {
+        noteOn(rawEvent, "Location $text named no distinct place")
     }
 
-    fun trackFailedLocation(event: PropertyMap, text: String, problem: Problem) {
+    fun trackFailedLocation(rawEvent: RawEntity, text: String, problem: Problem) {
         records.locationsFailed++
-        noteOn(event, "Location $text could not be created: ${problem.message}")
+        noteOn(rawEvent, "Location $text could not be created: ${problem.message}")
     }
 
     /**
@@ -224,12 +224,12 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
 
     private fun allPages() = listOf(page(leadUrl)) + pages.filterKeys { it != leadUrl }.values
 
-    /** The tracker of the page [record] was read from, when it has one of its own. */
-    private fun pageOf(record: PropertyMap): PageTracker? = record[ParseProperty.Url]?.let { pages[it.toUrl()] }
+    /** The tracker of the page [rawEntity] was read from, when it has one of its own. */
+    private fun pageOf(rawEntity: RawEntity): PageTracker? = rawEntity[ParseProperty.Url]?.let { pages[it.toUrl()] }
 
-    /** Keeps [note] on the page [record] was read from, or on the lead's page. */
-    private fun noteOn(record: PropertyMap, note: String) {
-        (pageOf(record) ?: page(leadUrl)).notes.add(note)
+    /** Keeps [note] on the page [rawEntity] was read from, or on the lead's page. */
+    private fun noteOn(rawEntity: RawEntity, note: String) {
+        (pageOf(rawEntity) ?: page(leadUrl)).notes.add(note)
     }
 }
 
@@ -426,7 +426,7 @@ private val needsWorkContent = setOf(LinkContent.OffSchema, LinkContent.OffScope
 
 /** Tracks the page at [pageUrl] as declaring values, when this map holds any. */
 context(tracker: ParseTracker)
-fun PropertyMap?.trackDeclaredLd(pageUrl: Url) {
+fun RawEntity?.trackDeclaredLd(pageUrl: Url) {
     if (!isNullOrEmpty()) tracker.trackDeclaredLd(pageUrl)
 }
 

@@ -1,8 +1,8 @@
 package streetlight.server.daemon.crawler
 
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
-import streetlight.model.data.buildPropertyMap
+import streetlight.model.data.RawEntity
+import streetlight.model.data.buildRawEntity
 import kampfire.model.normalize
 import com.fleeksoft.ksoup.nodes.Element
 import kampfire.model.toDataOrNull
@@ -32,20 +32,20 @@ suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, se
     val feedUrls = setOf(lead.initialUrl, document.servedUrl)
 
     elements.forEach { element ->
-        val feedEvent = parseFeedEvent(element, schema)
+        val rawFeedEvent = parseFeedEvent(element, schema)
 
-        val pageUrl = feedEvent[ParseProperty.Url]?.toUrl() ?: return@forEach deliverEvent(lead, feedEvent, null, tracker)
-        if (pageUrl in feedUrls) return@forEach deliverEvent(lead, feedEvent, null, tracker)
+        val pageUrl = rawFeedEvent[ParseProperty.Url]?.toUrl() ?: return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
+        if (pageUrl in feedUrls) return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
         tracker.trackFoundLink()
-        if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, feedEvent, null, tracker)
+        if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
         val pageLink = dao.link.readLink(pageUrl)
         if (pageLink != null && !pageLink.wantsRead()) return@forEach tracker.trackKnownPage()
         if (!tracker.canReadPage()) return@forEach tracker.trackSkippedUrl(pageUrl, PageState.Deferred)
         if (!tracker.shouldFetch(pageUrl)) {
             tracker.trackSkippedUrl(pageUrl, PageState.Benched)
-            return@forEach deliverEvent(lead, feedEvent, null, tracker)
+            return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
         }
-        crawl(EventPage(pageUrl, lead, feedEvent))
+        crawl(EventPage(pageUrl, lead, rawFeedEvent))
     }
 }
 
@@ -63,7 +63,7 @@ private fun Crawler.findEventElements(feed: EventFeed, document: FetchDocument, 
 }
 
 /** The properties of the event in [element] of a feed, read by [schema]. */
-private fun parseFeedEvent(element: Element, schema: EventFeedSchema): PropertyMap = buildPropertyMap {
+private fun parseFeedEvent(element: Element, schema: EventFeedSchema): RawEntity = buildRawEntity {
     this[ParseProperty.Name] = element.queryElement(schema.title).plainText()
     this[ParseProperty.Url] = element.queryElement(schema.link).absoluteUrl("href")?.toUrl()?.normalize()?.value
     this[ParseProperty.Image] = element.queryElement(schema.image).imageUrl()

@@ -4,7 +4,7 @@ import ai.koog.embeddings.base.Vector
 import kampfire.model.Outcome
 import streetlight.model.data.EventSubtype
 import streetlight.model.data.EventType
-import streetlight.model.data.PropertyMap
+import streetlight.model.data.RawEntity
 
 /**
  * The crawler's room for classifying what it reads, by embeddings from [client] compared against the vectors of each
@@ -15,10 +15,10 @@ class EntityClassifier(
     private val typeVectors: Map<EventType, Vector>,
     private val subtypeVectors: Map<EventSubtype, Vector>,
 ) {
-    /** Reads the [EventType] of the [event] its properties describe. */
-    suspend fun readEventType(event: PropertyMap): Outcome<EventType> = EmbeddingsProblem.Unspecified
+    /** Reads the [EventType] of [rawEvent]. */
+    suspend fun readEventType(rawEvent: RawEntity): Outcome<EventType> = EmbeddingsProblem.Unspecified
 
-    /** Reads the [EventSubtype] of the [event] its properties describe, among those that fit [eventType] when known. */
-    suspend fun readEventSubtype(event: PropertyMap, eventType: EventType?): Outcome<EventSubtype> =
+    /** Reads the [EventSubtype] of [rawEvent], among those that fit [eventType] when known. */
+    suspend fun readEventSubtype(rawEvent: RawEntity, eventType: EventType?): Outcome<EventSubtype> =
         EmbeddingsProblem.Unspecified
 }

@@ -14,8 +14,8 @@ import streetlight.model.data.ExtraLink
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseMode
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
-import streetlight.model.data.buildPropertyMap
+import streetlight.model.data.RawEntity
+import streetlight.model.data.buildRawEntity
 import streetlight.server.daemon.agent.parseLocalDateTime
 import streetlight.server.daemon.agent.parseTimeFromText
 import streetlight.server.utils.readImageUrl
@@ -24,7 +24,7 @@ import streetlight.server.utils.readImageUrl
  * The edit of the event these properties describe, its start read in [timeZoneId], its description shortened unless
  * [parseMode] is [ParseMode.Full] or the page declared it, classified as [eventType] and [eventSubtype].
  */
-fun PropertyMap.toEventEdit(
+fun RawEntity.toEventEdit(
     timeZoneId: String?,
     parseMode: ParseMode,
     eventType: EventType?,
@@ -70,7 +70,7 @@ fun PropertyMap.toEventEdit(
 }
 
 /** The edit of the location these properties describe, its homepage at [website] when known. */
-fun PropertyMap.toLocationEdit(website: Url?): LocationEdit = LocationEdit(
+fun RawEntity.toLocationEdit(website: Url?): LocationEdit = LocationEdit(
     name = this[ParseProperty.Name]?.takeIf { it.isNotBlank() },
     description = this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.toMarkdown()
         ?.let { description -> website?.let { description.withNote(sourceNote(it)) } ?: description },
@@ -115,7 +115,7 @@ private val dollarAmount = Regex("""\$\s?(\d+(?:\.\d{1,2})?)""")
 private val freeWord = Regex("""\bfree\b""", RegexOption.IGNORE_CASE)
 
 /** The properties of the event this schema read from the page [doc] at [url], an event lead's, the page's meta image first. */
-fun EventRead.parseEvent(doc: Document, url: Url): PropertyMap = buildPropertyMap {
+fun EventRead.parseEvent(doc: Document, url: Url): RawEntity = buildRawEntity {
     this[ParseProperty.Name] = name
     this[ParseProperty.Url] = url.value
     this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative = false)?.value ?: imageUrl

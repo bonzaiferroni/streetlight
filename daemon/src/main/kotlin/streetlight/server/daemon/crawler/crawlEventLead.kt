@@ -7,10 +7,10 @@ import streetlight.model.data.LmSchema
 import streetlight.model.data.Location
 import streetlight.model.data.ParseMode
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
+import streetlight.model.data.RawEntity
 import streetlight.model.data.SchemaType
 import streetlight.server.daemon.agent.LdPlace
-import streetlight.server.daemon.agent.toPropertyMap
+import streetlight.server.daemon.agent.toRawEntity
 import streetlight.server.daemon.agent.readPageLdEvent
 import streetlight.server.daemon.agent.areaOf
 import kotlin.time.Clock
@@ -26,17 +26,17 @@ suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, sc
     tracker.trackReadUrl(lead.initialUrl, SchemaType.EventPage)
 
     val ldEvent = document.doc.readPageLdEvent(document.servedUrl, !lead.isExternalOrigin)
-    val declaredEvent = ldEvent?.toPropertyMap().orEmpty()
-    declaredEvent.trackDeclaredLd(lead.initialUrl)
-    val event = eventRead.parseEvent(document.doc, lead.initialUrl) + declaredEvent
+    val rawDeclaredEvent = ldEvent?.toRawEntity().orEmpty()
+    rawDeclaredEvent.trackDeclaredLd(lead.initialUrl)
+    val rawEvent = eventRead.parseEvent(document.doc, lead.initialUrl) + rawDeclaredEvent
 
     tracker.trackFoundRecord()
-    val title = event[ParseProperty.Name] ?: return tracker.trackUnnamedRecord(event)
-    val location = placeLeadEvent(eventRead, ldEvent?.place, event) ?: return tracker.trackUnlocatedEvent(event, title)
-    val edit = event.toEventEdit(location.timezoneId, ParseMode.Partial, null, null, tracker).withSourceNote(lead.initialUrl)
-    val startsAt = edit.startsAt ?: return tracker.trackUnparsedEvent(event)
+    val title = rawEvent[ParseProperty.Name] ?: return tracker.trackUnnamedRecord(rawEvent)
+    val location = placeLeadEvent(eventRead, ldEvent?.place, rawEvent) ?: return tracker.trackUnlocatedEvent(rawEvent, title)
+    val edit = rawEvent.toEventEdit(location.timezoneId, ParseMode.Partial, null, null, tracker).withSourceNote(lead.initialUrl)
+    val startsAt = edit.startsAt ?: return tracker.trackUnparsedEvent(rawEvent)
     if (startsAt < Clock.System.now()) return tracker.trackPastEvent()
-    createEventAt(event, edit, location, tracker)
+    createEventAt(rawEvent, edit, location, tracker)
 }
 
 /**
@@ -44,11 +44,11 @@ suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, sc
  * details, each detail of the [place] its JSON-LD declares preferred; or null when it names no place or none is found.
  */
 context(tracker: ParseTracker)
-private suspend fun Crawler.placeLeadEvent(schema: EventRead, place: LdPlace?, event: PropertyMap): Location? {
+private suspend fun Crawler.placeLeadEvent(schema: EventRead, place: LdPlace?, rawEvent: RawEntity): Location? {
     val name = place?.name ?: schema.locationName ?: return null
     val address = place?.street ?: schema.locationAddress
     val area = place?.area ?: areaOf(schema.locationCity, schema.locationState, schema.locationPostalCode)
     val region = place?.region ?: schema.locationState
     val website = (place?.url ?: schema.locationWebsite)?.toUrl()?.takeIf { it.isAbsolute }
-    return spawner.placeEvent(name, address, area, region, website, null, event, tracker)
+    return spawner.placeEvent(name, address, area, region, website, null, rawEvent, tracker)
 }

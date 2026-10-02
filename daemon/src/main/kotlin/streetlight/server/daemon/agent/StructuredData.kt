@@ -11,8 +11,8 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
-import streetlight.model.data.buildPropertyMap
+import streetlight.model.data.RawEntity
+import streetlight.model.data.buildRawEntity
 
 /**
  * An event as a page declares it in its JSON-LD, in schema.org's terms. Its [performers] are read, ready for when the
@@ -95,10 +95,10 @@ val LdEvent.isCalledOff get() = status?.substringAfterLast('/') in calledOffStat
  * the local time the page states, whatever offset it carries, and its end only on the start's date. Its description
  * is a [ParseProperty.DeclaredDescription].
  */
-fun LdEvent.toPropertyMap(): PropertyMap {
+fun LdEvent.toRawEntity(): RawEntity {
     val (date, startTime) = startDate?.let { splitDateTime(it) } ?: (null to null)
     val (endDate, endTime) = endDate?.let { splitDateTime(it) } ?: (null to null)
-    return buildPropertyMap {
+    return buildRawEntity {
         this[ParseProperty.Name] = name
         this[ParseProperty.Date] = date
         this[ParseProperty.StartTime] = startTime
@@ -116,7 +116,7 @@ fun LdEvent.toPropertyMap(): PropertyMap {
 }
 
 /** The values this place declares, each under its [ParseProperty], to lay over what its homepage was read for. */
-fun LdPlace.toPropertyMap(): PropertyMap = buildPropertyMap {
+fun LdPlace.toRawEntity(): RawEntity = buildRawEntity {
     this[ParseProperty.Name] = name
     this[ParseProperty.Address] = street
     this[ParseProperty.Phone] = telephone

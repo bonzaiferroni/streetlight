@@ -1,7 +1,7 @@
 package streetlight.server.daemon.crawler
 
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
+import streetlight.model.data.RawEntity
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import kampfire.utils.fuzzyMatches
@@ -18,25 +18,25 @@ import streetlight.server.routes.createEvent
 import kotlin.time.Clock
 
 /**
- * Delivers the event of [lead] made of what the feed showed, [feedEvent], and what its page showed, [pageEvent]:
+ * Delivers the event of [lead] made of what the feed showed, [rawFeedEvent], and what its page showed, [rawPageEvent]:
  * created at the location it names, unless it lacks a title, a start ahead, or a location, or duplicates one.
  */
-suspend fun Crawler.deliverEvent(lead: EventFeed, feedEvent: PropertyMap?, pageEvent: PropertyMap?, tracker: ParseTracker) {
-    val event = mergeEvent(feedEvent, pageEvent, lead.timeZoneId) ?: return
+suspend fun Crawler.deliverEvent(lead: EventFeed, rawFeedEvent: RawEntity?, rawPageEvent: RawEntity?, tracker: ParseTracker) {
+    val rawEvent = mergeEvent(rawFeedEvent, rawPageEvent, lead.timeZoneId) ?: return
     tracker.trackFoundRecord()
-    val eventType = classifier.readEventType(event).toDataOrNull()
-    val eventSubtype = classifier.readEventSubtype(event, eventType).toDataOrNull()
-    val feedEdit = event.toEventEdit(lead.timeZoneId, lead.parseMode, eventType, eventSubtype, tracker)
+    val eventType = classifier.readEventType(rawEvent).toDataOrNull()
+    val eventSubtype = classifier.readEventSubtype(rawEvent, eventType).toDataOrNull()
+    val feedEdit = rawEvent.toEventEdit(lead.timeZoneId, lead.parseMode, eventType, eventSubtype, tracker)
         .let { if ((lead as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(lead.initialUrl) }
-    val title = feedEdit.title ?: return tracker.trackUnnamedRecord(event)
-    val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(event)
+    val title = feedEdit.title ?: return tracker.trackUnnamedRecord(rawEvent)
+    val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(rawEvent)
     if (feedStart < Clock.System.now()) return tracker.trackPastEvent()
-    val location = spawner.locateEvent(event, lead, tracker) ?: return tracker.trackUnlocatedEvent(event, title)
-    createEventAt(event, feedEdit, location, tracker)
+    val location = spawner.locateEvent(rawEvent, lead, tracker) ?: return tracker.trackUnlocatedEvent(rawEvent, title)
+    createEventAt(rawEvent, feedEdit, location, tracker)
 }
 
-/** Creates the [event] edited as [edit] at [location], unless an event there the same day already has its title. */
-internal suspend fun Crawler.createEventAt(event: PropertyMap, edit: EventEdit, location: Location, tracker: ParseTracker) {
+/** Creates the [rawEvent] edited as [edit] at [location], unless an event there the same day already has its title. */
+internal suspend fun Crawler.createEventAt(rawEvent: RawEntity, edit: EventEdit, location: Location, tracker: ParseTracker) {
     val title = edit.title ?: return
     val located = edit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
     val startsAt = located.startsAt ?: return
@@ -49,22 +49,22 @@ internal suspend fun Crawler.createEventAt(event: PropertyMap, edit: EventEdit, 
             from = day.atStartOfDayIn(zone),
             until = day.plus(1, DateTimeUnit.DAY).atStartOfDayIn(zone),
         )
-        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.trackDuplicateRecord(event, title, it.title) }
+        sameDay.firstOrNull { it.title.fuzzyMatches(title) }?.let { return tracker.trackDuplicateRecord(rawEvent, title, it.title) }
         server.createEvent(null, located, isImageRequired = false)
-    }.toDataOr { return tracker.trackFailedRecord(event, title, it) }
+    }.toDataOr { return tracker.trackFailedRecord(rawEvent, title, it) }
 
-    if (located.image != null && created.image == null) tracker.trackFailedImage(event, title)
+    if (located.image != null && created.image == null) tracker.trackFailedImage(rawEvent, title)
     tracker.trackCreatedRecord()
 }
 
 /** The event made of what its feed showed and what its page showed, the page's preferred, or null when neither did. */
-private fun mergeEvent(feedEvent: PropertyMap?, pageEvent: PropertyMap?, timeZoneId: String): PropertyMap? {
-    if (feedEvent == null || pageEvent == null) return pageEvent ?: feedEvent
-    val (date, startTime) = startOf(pageEvent, feedEvent, timeZoneId)
+private fun mergeEvent(rawFeedEvent: RawEntity?, rawPageEvent: RawEntity?, timeZoneId: String): RawEntity? {
+    if (rawFeedEvent == null || rawPageEvent == null) return rawPageEvent ?: rawFeedEvent
+    val (date, startTime) = startOf(rawPageEvent, rawFeedEvent, timeZoneId)
     return buildMap {
-        putAll(feedEvent)
-        putAll(pageEvent)
-        feedEvent[ParseProperty.Url]?.let { put(ParseProperty.Url, it) }
+        putAll(rawFeedEvent)
+        putAll(rawPageEvent)
+        rawFeedEvent[ParseProperty.Url]?.let { put(ParseProperty.Url, it) }
         remove(ParseProperty.Date)
         remove(ParseProperty.StartTime)
         date?.let { put(ParseProperty.Date, it) }
@@ -76,11 +76,11 @@ private fun mergeEvent(feedEvent: PropertyMap?, pageEvent: PropertyMap?, timeZon
  * The date and start time text of an event, pairing the page's with the feed's: the first pair that parses in
  * [timeZoneId], the page's preferred, or the page's own when none does.
  */
-private fun startOf(page: PropertyMap, feed: PropertyMap, timeZoneId: String): Pair<String?, String?> {
-    val pageDate = page[ParseProperty.Date]
-    val pageTime = page[ParseProperty.StartTime]
-    val feedDate = feed[ParseProperty.Date]
-    val feedTime = feed[ParseProperty.StartTime]
+private fun startOf(rawPageEvent: RawEntity, rawFeedEvent: RawEntity, timeZoneId: String): Pair<String?, String?> {
+    val pageDate = rawPageEvent[ParseProperty.Date]
+    val pageTime = rawPageEvent[ParseProperty.StartTime]
+    val feedDate = rawFeedEvent[ParseProperty.Date]
+    val feedTime = rawFeedEvent[ParseProperty.StartTime]
     val pairs = listOf(
         pageDate to pageTime,
         feedDate to pageTime,

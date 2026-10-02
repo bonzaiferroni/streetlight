@@ -16,11 +16,11 @@ sealed interface Lead {
     val isExternalOrigin: Boolean
 }
 
-/** The page of one event, found in [feed], with the [feedEvent] the feed already showed of it. */
+/** The page of one event, found in [feed], with the [rawFeedEvent] the feed already showed of it. */
 data class EventPage(
     override val initialUrl: Url,
     val feed: EventFeed,
-    val feedEvent: PropertyMap?,
+    val rawFeedEvent: RawEntity?,
 ) : Lead {
     override val leadType get() = LeadType.EventPage
     override val isExternalOrigin get() = feed.isExternalOrigin

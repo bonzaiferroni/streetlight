@@ -42,4 +42,4 @@ enum class ParseProperty {
 }
 
 /** The text of each property read from a page, not yet parsed. */
-typealias PropertyMap = Map<ParseProperty, String>
+typealias RawEntity = Map<ParseProperty, String>

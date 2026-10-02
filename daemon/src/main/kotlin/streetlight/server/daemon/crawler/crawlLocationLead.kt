@@ -13,8 +13,8 @@ import streetlight.model.data.LmSchema
 import streetlight.model.data.LocationRead
 import streetlight.model.data.LocationSelectorSchema
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
-import streetlight.model.data.buildPropertyMap
+import streetlight.model.data.RawEntity
+import streetlight.model.data.buildRawEntity
 import streetlight.model.data.SchemaType
 import streetlight.server.daemon.agent.absoluteUrl
 import streetlight.server.daemon.agent.imageUrl
@@ -22,7 +22,7 @@ import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
-import streetlight.server.daemon.agent.toPropertyMap
+import streetlight.server.daemon.agent.toRawEntity
 import streetlight.server.daemon.agent.readPageLdPlace
 import streetlight.server.daemon.agent.resolveUrl
 import streetlight.server.daemon.agent.areaOf
@@ -41,37 +41,37 @@ suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocumen
     if (document == null) return
     tracker.trackReadUrl(lead.initialUrl, SchemaType.Location)
 
-    val location = locationRead.parseLocation(document.doc)
+    val rawLocation = locationRead.parseLocation(document.doc)
     val ldPlace = document.doc.readPageLdPlace()
-    val declaredLocation = ldPlace?.toPropertyMap().orEmpty()
-    declaredLocation.trackDeclaredLd(lead.initialUrl)
+    val rawDeclaredLocation = ldPlace?.toRawEntity().orEmpty()
+    rawDeclaredLocation.trackDeclaredLd(lead.initialUrl)
 
     when (val locationId = lead.locationId) {
         null -> {
             val region = ldPlace?.region ?: locationRead.state
             val area = areaOf(ldPlace?.locality ?: locationRead.city, region, ldPlace?.postalCode ?: locationRead.postalCode)
-            deliverLocation(lead, location + declaredLocation, area, region, document.doc.readMetaContent("og:site_name"))
+            deliverLocation(lead, rawLocation + rawDeclaredLocation, area, region, document.doc.readMetaContent("og:site_name"))
         }
         else -> {
-            mergeAndUpdateLocation(lead, locationId, location + declaredLocation)
+            mergeAndUpdateLocation(lead, locationId, rawLocation + rawDeclaredLocation)
         }
     }
 }
 
 /**
- * Fills what the stored location [locationId] lacks with the [location] read from the homepage of [lead], every
+ * Fills what the stored location [locationId] lacks with the [rawLocation] read from the homepage of [lead], every
  * stored value kept. A location given nothing new is recorded as a duplicate.
  */
 context(tracker: ParseTracker)
-private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationId: LocationId, location: PropertyMap) {
+private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationId: LocationId, rawLocation: RawEntity) {
     tracker.trackFoundRecord()
-    val name = location[ParseProperty.Name] ?: lead.initialUrl.value
+    val name = rawLocation[ParseProperty.Name] ?: lead.initialUrl.value
     val stored = dao.location.readLocation(locationId, null)
-        ?: return tracker.trackFailedRecord(location, name, Problem("No location is stored as $locationId"))
+        ?: return tracker.trackFailedRecord(rawLocation, name, Problem("No location is stored as $locationId"))
 
     val storedEdit = stored.toEdit()
-    val edit = storedEdit.mergeLeft(location.toLocationEdit(lead.initialUrl))
-    if (edit == storedEdit) return tracker.trackDuplicateRecord(location, name, stored.label)
+    val edit = storedEdit.mergeLeft(rawLocation.toLocationEdit(lead.initialUrl))
+    if (edit == storedEdit) return tracker.trackDuplicateRecord(rawLocation, name, stored.label)
 
     dbWrite {
         try {
@@ -81,49 +81,49 @@ private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationI
         } catch (e: Exception) {
             Problem("${e::class.simpleName}: ${e.message}")
         }
-    }.toDataOr { return tracker.trackFailedRecord(location, name, it) }
+    }.toDataOr { return tracker.trackFailedRecord(rawLocation, name, it) }
     tracker.trackUpdatedRecord()
 }
 
 /**
- * Delivers the location of [lead] described by [location]: placed on the map by its name, address and [area] or [region], or by
+ * Delivers the location of [lead] described by [rawLocation]: placed on the map by its name, address and [area] or [region], or by
  * the [declaredName] its page gives itself when its name finds no place, or at its address alone, and created unless
  * it is already stored or cannot be placed.
  */
 context(tracker: ParseTracker)
 private suspend fun Crawler.deliverLocation(
     lead: LocationLead,
-    location: PropertyMap,
+    rawLocation: RawEntity,
     area: String?,
     region: String?,
     declaredName: String?,
 ) {
     tracker.trackFoundRecord()
-    val name = location[ParseProperty.Name] ?: declaredName ?: return tracker.trackUnnamedRecord(location)
-    val address = location[ParseProperty.Address]
+    val name = rawLocation[ParseProperty.Name] ?: declaredName ?: return tracker.trackUnnamedRecord(rawLocation)
+    val address = rawLocation[ParseProperty.Address]
 
-    spawner.readLocationAt(name, address)?.let { return tracker.trackDuplicateRecord(location, name, it.label) }
+    spawner.readLocationAt(name, address)?.let { return tracker.trackDuplicateRecord(rawLocation, name, it.label) }
 
     when (val found = spawner.findPlace(lead.initialUrl, name, declaredName, address, area, region)) {
-        null -> deliverAtAddress(lead, location, name, declaredName, address, area, region)
+        null -> deliverAtAddress(lead, rawLocation, name, declaredName, address, area, region)
         else -> {
             val (place, placedName) = found
-            dao.location.readLocationByMapId(place.osmId)?.let { return tracker.trackDuplicateRecord(location, placedName, it.label) }
-            spawner.createLocationFrom(place, location + (ParseProperty.Name to placedName), lead.initialUrl)
-                .toDataOr { return tracker.trackFailedRecord(location, placedName, it) }
+            dao.location.readLocationByMapId(place.osmId)?.let { return tracker.trackDuplicateRecord(rawLocation, placedName, it.label) }
+            spawner.createLocationFrom(place, rawLocation + (ParseProperty.Name to placedName), lead.initialUrl)
+                .toDataOr { return tracker.trackFailedRecord(rawLocation, placedName, it) }
             tracker.trackCreatedRecord()
         }
     }
 }
 
 /**
- * Delivers the location of [lead] described by [location], named [name], at its [address] in [area] or [region] when the map
+ * Delivers the location of [lead] described by [rawLocation], named [name], at its [address] in [area] or [region] when the map
  * knows the address but not the name: stored there already, or created there with the page's details.
  */
 context(tracker: ParseTracker)
 private suspend fun Crawler.deliverAtAddress(
     lead: LocationLead,
-    location: PropertyMap,
+    rawLocation: RawEntity,
     name: String,
     declaredName: String?,
     address: String?,
@@ -132,18 +132,18 @@ private suspend fun Crawler.deliverAtAddress(
 ) {
     val place = address?.let { spawner.findAddress(it, area, region) } ?: run {
         val searched = listOfNotNull(name, declaredName, address, area).distinct().joinToString(" / ")
-        return tracker.trackFailedRecord(location, name, Problem("No place on the map matches $searched"))
+        return tracker.trackFailedRecord(rawLocation, name, Problem("No place on the map matches $searched"))
     }
 
-    spawner.readStoredLocation(place, name)?.let { return tracker.trackDuplicateRecord(location, name, it.label) }
-    spawner.createNamedLocationAt(place, location + (ParseProperty.Name to name), lead.initialUrl)
-        .toDataOr { return tracker.trackFailedRecord(location, name, it) }
+    spawner.readStoredLocation(place, name)?.let { return tracker.trackDuplicateRecord(rawLocation, name, it.label) }
+    spawner.createNamedLocationAt(place, rawLocation + (ParseProperty.Name to name), lead.initialUrl)
+        .toDataOr { return tracker.trackFailedRecord(rawLocation, name, it) }
 
     tracker.trackCreatedRecord()
 }
 
 /** The properties of the location the LM read from its homepage [doc], its links resolved against [doc]. */
-private fun LocationRead.parseLocation(doc: Document): PropertyMap = buildPropertyMap {
+private fun LocationRead.parseLocation(doc: Document): RawEntity = buildRawEntity {
     this[ParseProperty.Name] = name
     this[ParseProperty.Description] = description
     this[ParseProperty.Address] = address
@@ -156,7 +156,7 @@ private fun LocationRead.parseLocation(doc: Document): PropertyMap = buildProper
 }
 
 /** The properties of the location on its homepage [doc], read by selector with [schema]. */
-private fun parseLocation(schema: LocationSelectorSchema, doc: Document): PropertyMap = buildPropertyMap {
+private fun parseLocation(schema: LocationSelectorSchema, doc: Document): RawEntity = buildRawEntity {
     this[ParseProperty.Name] = doc.queryElement(schema.name).plainText()
     this[ParseProperty.Description] = doc.queryElement(schema.description) { it.isPlausibleProse(allowsChrome = true) }.innerHtml()
     this[ParseProperty.Address] = doc.queryElement(schema.address).plainText()

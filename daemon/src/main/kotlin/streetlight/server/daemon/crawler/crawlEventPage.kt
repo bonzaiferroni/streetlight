@@ -1,8 +1,8 @@
 package streetlight.server.daemon.crawler
 
 import streetlight.model.data.ParseProperty
-import streetlight.model.data.PropertyMap
-import streetlight.model.data.buildPropertyMap
+import streetlight.model.data.RawEntity
+import streetlight.model.data.buildRawEntity
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import streetlight.server.daemon.agent.isPlausibleField
@@ -12,7 +12,7 @@ import streetlight.server.daemon.agent.absoluteUrl
 import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
-import streetlight.server.daemon.agent.toPropertyMap
+import streetlight.server.daemon.agent.toRawEntity
 import streetlight.server.daemon.agent.readPageLdEvent
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.EventPage
@@ -30,20 +30,20 @@ suspend fun Crawler.crawlEventPage(
     document: FetchDocument?,
     schema: LmSchema?,
 ) {
-    val readEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl, !lead.isExternalOrigin) } }
-    val declaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl, !lead.isExternalOrigin)?.toPropertyMap() }?.takeIf { it.isNotEmpty() }
-    declaredEvent.trackDeclaredLd(lead.initialUrl)
-    val pageEvent = if (readEvent == null && declaredEvent == null) null else readEvent.orEmpty() + declaredEvent.orEmpty()
+    val rawReadEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl, !lead.isExternalOrigin) } }
+    val rawDeclaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl, !lead.isExternalOrigin)?.toRawEntity() }?.takeIf { it.isNotEmpty() }
+    rawDeclaredEvent.trackDeclaredLd(lead.initialUrl)
+    val rawPageEvent = if (rawReadEvent == null && rawDeclaredEvent == null) null else rawReadEvent.orEmpty() + rawDeclaredEvent.orEmpty()
 
     when {
-        document == null || pageEvent == null -> {
-            deliverEvent(lead.feed, lead.feedEvent, null, tracker)
+        document == null || rawPageEvent == null -> {
+            deliverEvent(lead.feed, lead.rawFeedEvent, null, tracker)
         }
         else -> {
             tracker.trackReadUrl(lead.initialUrl, SchemaType.EventPage)
-            log.debug { "Parsed ${document.servedUrl}: description ${pageEvent[ParseProperty.Description]?.length ?: 0} chars" }
-            if (pageEvent[ParseProperty.Description] == null && pageEvent[ParseProperty.DeclaredDescription] == null) tracker.trackPartialUrl(lead.initialUrl, "The page had no description")
-            deliverEvent(lead.feed, lead.feedEvent, pageEvent, tracker)
+            log.debug { "Parsed ${document.servedUrl}: description ${rawPageEvent[ParseProperty.Description]?.length ?: 0} chars" }
+            if (rawPageEvent[ParseProperty.Description] == null && rawPageEvent[ParseProperty.DeclaredDescription] == null) tracker.trackPartialUrl(lead.initialUrl, "The page had no description")
+            deliverEvent(lead.feed, lead.rawFeedEvent, rawPageEvent, tracker)
         }
     }
 }
@@ -57,8 +57,8 @@ private fun parsePageEvent(
     doc: Document,
     pageUrl: Url,
     resolveIfRelative: Boolean,
-): PropertyMap {
-    return buildPropertyMap {
+): RawEntity {
+    return buildRawEntity {
         this[ParseProperty.Name] = doc.queryElement(schema.title) { it.isPlausibleField() }.plainText()
         this[ParseProperty.Url] = pageUrl.value
         this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative)?.value ?: doc.queryElement(schema.image).imageUrl()
