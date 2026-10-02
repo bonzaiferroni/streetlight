@@ -3,7 +3,6 @@ package streetlight.server.daemon.crawler
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.RawEntity
 import kampfire.model.toDataOr
-import kampfire.model.toDataOrNull
 import kampfire.utils.fuzzyMatches
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.atStartOfDayIn
@@ -30,9 +29,7 @@ suspend fun Crawler.deliverEvent(lead: EventFeed, rawFeedEvent: RawEntity?, rawP
     if (startsAt < Clock.System.now()) return tracker.trackPastEvent()
     val location = spawner.locateEvent(rawEvent, lead, tracker) ?: return tracker.trackUnlocatedEvent(rawEvent, title)
 
-    val eventType = classifier.readEventType(initialEvent).toDataOrNull()
-    val eventSubtype = classifier.readEventSubtype(initialEvent, eventType).toDataOrNull()
-    val event = initialEvent.copy(eventType = eventType, eventSubtype = eventSubtype)
+    val event = classifier.classifyEvent(initialEvent)
         .let { if ((lead as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(lead.initialUrl) }
     createEventAt(rawEvent, event, location, tracker)
 }

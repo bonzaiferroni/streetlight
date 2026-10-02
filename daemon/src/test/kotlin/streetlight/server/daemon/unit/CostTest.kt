@@ -1,8 +1,9 @@
-package streetlight.server.daemon.crawler
+package streetlight.server.daemon.unit
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import streetlight.server.daemon.crawler.costOf
 
 class CostTest {
 

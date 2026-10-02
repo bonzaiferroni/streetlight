@@ -1,7 +1,8 @@
-package streetlight.server.daemon.crawler
+package streetlight.server.daemon.unit
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import streetlight.server.daemon.crawler.withoutUnit
 
 class AddressUnitTest {
 

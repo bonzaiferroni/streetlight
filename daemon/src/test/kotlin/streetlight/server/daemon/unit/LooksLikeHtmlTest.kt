@@ -1,8 +1,9 @@
-package streetlight.server.daemon.agent
+package streetlight.server.daemon.unit
 
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import streetlight.server.daemon.agent.looksLikeHtml
 
 class LooksLikeHtmlTest {
 

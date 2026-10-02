@@ -1,4 +1,4 @@
-package streetlight.server.daemon.crawler
+package streetlight.server.daemon.unit
 
 import kampfire.model.GeoPoint
 import streetlight.model.external.Address
@@ -6,6 +6,7 @@ import streetlight.model.external.OSMLocation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import streetlight.server.daemon.crawler.distinctPlace
 
 class LocationSpawnerTest {
 

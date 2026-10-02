@@ -1,9 +1,10 @@
-package streetlight.server.daemon.crawler
+package streetlight.server.daemon.unit
 
 import kampfire.model.toUrl
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import streetlight.server.daemon.crawler.shortenDescription
 
 class ShortenDescriptionTest {
 

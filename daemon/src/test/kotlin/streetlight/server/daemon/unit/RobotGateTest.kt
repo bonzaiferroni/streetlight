@@ -1,4 +1,4 @@
-package streetlight.server.daemon.crawler
+package streetlight.server.daemon.unit
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -7,6 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
+import streetlight.server.daemon.crawler.RobotGate
 
 class RobotGateTest {
 
