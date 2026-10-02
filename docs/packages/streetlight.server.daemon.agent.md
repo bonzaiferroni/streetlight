@@ -33,21 +33,31 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 `KoogEmbeddingsClient` formats a query as `Instruct: <instruction>\nQuery:<text>`, the format of Qwen3-Embedding.
 
-`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and the vectors of every `EventType` and `EventSubtype`. The daemon's `main` reads them with `getCachedVectors` before the crawler starts, and does not start it when any embedding fails. `classifyEvent` embeds an `EventEdit` once as a query and returns it with its `EventType` set, left unset when it cannot be classified. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has. A read takes the value whose vector has the highest cosine similarity to the event's, and returns `EmbeddingsProblem.NoMatch` when that similarity is below its minimum. A failure is an `EmbeddingsProblem`.
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and the vectors of every `EventType` and `EventSubtype`. The daemon's `main` builds it with `raiseEntityClassifier` before the crawler starts, and does not start it when any embedding fails. `classifyEvent` embeds an `EventEdit` once as a query and returns it with its `EventType` set, left unset when it cannot be classified. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has. A read takes the value whose vector has the highest cosine similarity to the event's, and returns `EmbeddingsProblem.NoMatch` when that similarity is below its minimum. A failure is an `EmbeddingsProblem`.
 
 Each `EventType` and `EventSubtype` gives a short description of itself through `getClassifierLabel()`, in `EntityClassifierLabels.kt`. A value is embedded as `<label>: <classifier label>`, such as `Concert: A live music performance or concert`.
 
+### Example Set
+
+`event-examples.json`, a resource of the daemon's main source set, holds observed events labeled by hand, for training the classifier. Each entry is a `ClassifiedEvent`: the event as an `EventEdit` without the source note the crawler adds after classification, with only the fields `getEmbeddingsText` reads, and its `EventType` and `EventSubtype`, the subtype left out when none fits. `readClassifiedEvents` reads a resource of either source set and fails when it is missing.
+
+An event is labeled with the most relevant value. `Youth` comes before every other type, then `Church`; the rest are of equal priority. Of two subtypes that fit, the one its title or description names foremost wins. The events of the classification test are never in the example set.
+
+### Centroids
+
+`raiseEntityClassifier` embeds every example as a query with `eventInstruction`, the way `classifyEvent` embeds an event, and gives each `EventType` and `EventSubtype` the average of its examples' vectors. A value with no examples keeps the vector of its classifier label.
+
 ### Embeddings Cache
 
-`getCachedVectors` keeps an enum's vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git. Each file is named for the enum, one line per value in declaration order.
+`getCachedVectors` keeps a named list of vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git: an enum's label vectors under the enum's name, and the examples' vectors as `EventExamples`. Each line holds one entry, in the order of the list.
 
 | File | Holds |
 |---|---|
-| `<Enum>-model.txt` | The model id |
-| `<Enum>-text.txt` | The text each value was embedded from |
-| `<Enum>-vectors.csv` | Each value's vector, comma-separated |
+| `<Name>-model.txt` | The model id, and the instruction on a second line when the texts are queries |
+| `<Name>-text.txt` | The text each entry was embedded from, with backslashes and line breaks escaped |
+| `<Name>-vectors.csv` | Each entry's vector, comma-separated |
 
-The cache is used only when its model id and every line of its text match; otherwise every value is embedded again and the files rewritten.
+The cache is used only when its model file and every line of its text match; otherwise every entry is embedded again and the files rewritten.
 
 ## Model Configuration
 

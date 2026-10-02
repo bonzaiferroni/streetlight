@@ -36,5 +36,5 @@ class EntityClassifier(
     }
 }
 
-private const val eventInstruction = "Given the details of a local event, retrieve the category that best describes it"
+internal const val eventInstruction = "Given the details of a local event, retrieve the category that best describes it"
 private const val minTypeSimilarity = 0.4

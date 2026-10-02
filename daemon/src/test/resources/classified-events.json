@@ -5,7 +5,8 @@
             "description": "Come play all kinds of board games at Emporium Sports Bar (fort collins location)! Emporium is open late and there's plenty of food options and a fully sta",
             "website": "https://www.meetup.com/fort-collins-retro-gaming-club/events/316753040?eventOrigin=city_events_today"
         },
-        "eventType": "Meetup"
+        "eventType": "Meetup",
+        "eventSubtype": "GameNight"
     },
     {
         "event": {
@@ -13,7 +14,8 @@
             "description": "Originally from the green rolling hills of Lancaster County, Pennsylvania, Maya de Vitry is a Nashville-based fiddler-turned-songwriter with a voice that glides effortlessly between tenderness and strength. Her earliest years in the music industry are represented by the 4 full-length albums and 2 EPs with roots-Americana trio The Stray Birds, with whom she toured year-round for 7 years throughout USA, Canada, and Europe. After this formative chapter, she launched her solo career with her 2019 album \\*Adaptations\\*, earning praise from Rolling Stone Country, NPR Music, and No Depression. Since then, she has released three more full-length albums—\\*How to Break a Fall\\* (2020), \\*Violet Light\\* (2022), and \\*The Only Moment\\* (2024); an EP, \\*Infinite\\* (2023); and multiple singles, all of which are testaments to her personal reinvention and creative growth.\n\n[Read more](https://swallowhillmusic.org/events/mayadevitry)",
             "website": "https://swallowhillmusic.org/events/mayadevitry"
         },
-        "eventType": "Music"
+        "eventType": "Music",
+        "eventSubtype": "Concert"
     },
     {
         "event": {
@@ -29,7 +31,8 @@
             "description": "**Special Instructions:** Advanced registration is required. Please bring a mat, a towel and water.",
             "website": "https://www.botanicgardens.org/programs/evening-yoga"
         },
-        "eventType": "Fitness"
+        "eventType": "Fitness",
+        "eventSubtype": "Exercise"
     },
     {
         "event": {
@@ -37,14 +40,16 @@
             "description": "Explore the fundamentals of clay sculpture in this hands-on introductory class designed for beginners. Students will learn essential techniques for building three-dimensional forms, including shaping, joining, and developing surface texture. Through guided projects and creative exploration, participants will gain confidence in working with clay while expressing their own ideas and artistic voice. This class provides a supportive and engaging environment for those new to sculpture, with a focus on process, experimentation, and foundational skills. No prior experience is necessary. Please note: This is a hands-on class and can get messy—wear old clothes or bring an apron. Glazing Techniques are not included; all pieces will be finished using cold surface techniques. Supply and firing fees are not included and will be charged separately.",
             "website": "https://apm.activecommunities.com/auroracolorado/Activity_Search/beginning-sculpture/3314?locale=en-US"
         },
-        "eventType": "Education"
+        "eventType": "Education",
+        "eventSubtype": "Class"
     },
     {
         "event": {
             "title": "Open Mic Comedy Night Hosted by Anthony Crawford — Lion's Lair",
             "website": "https://www.lionslairco.com/events/mfygphrkxwf4x6w-8f4xd-anagr-hwcnx-76jsx-etm6a-elb24-ac2y3-xnlsg-lem3n-36zth-7w5ey-34xab-dsym2-blf83-kbk6a-ph4kk-gwsjb-gdxbl-g5mym-wds79-a3jpr-csen4-e652h-fwk6f-9rkw9"
         },
-        "eventType": "Comedy"
+        "eventType": "Comedy",
+        "eventSubtype": "OpenMic"
     },
     {
         "event": {
@@ -59,7 +64,8 @@
             "title": "Denver Nuggets vs. Indiana Pacers",
             "website": "https://www.ticketmaster.com/denver-nuggets-vs-indiana-pacers-denver-colorado-12-27-2026/event/1E00650BB75BB82D?camefrom=CFC_KSE_RneQapXQUUWeAN6fMjvaWg"
         },
-        "eventType": "Sports"
+        "eventType": "Sports",
+        "eventSubtype": "SportsMatch"
     },
     {
         "event": {

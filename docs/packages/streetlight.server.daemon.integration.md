@@ -9,7 +9,7 @@ Integration tests for the daemon, in the test source set. Each runs real collabo
 | Package | Provides |
 |---|---|
 | `streetlight.server.daemon.agent` | The classifier and its embeddings client |
-| `streetlight.server.daemon` | `getCachedVectors` |
+| `streetlight.server.daemon` | `raiseEntityClassifier` |
 | `kotlin.test` | Assertions |
 
 `docs/testing.md` states how tests are written.
@@ -24,4 +24,4 @@ A test raises the resources it needs once per run, in a `lazy` of its companion.
 
 ## Classification
 
-`EntityClassifierTest` classifies each event of the test resource `classified-events.json` and expects every one to be given its type. Each entry is a `ClassifiedEvent`: an observed event, as an `EventEdit` without the source note the crawler adds after classification, and the `EventType` a person gave it. `readClassifiedEvents` reads a resource and fails when it is missing.
+`EntityClassifierTest` classifies each event of the test resource `classified-events.json` and expects every one to be given its type. Each entry is a `ClassifiedEvent`, in the format of the example set described in `streetlight.server.daemon.agent`.

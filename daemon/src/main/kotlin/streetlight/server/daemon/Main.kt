@@ -6,11 +6,7 @@ import klutch.server.provide
 import kampfire.model.toDataOr
 import kotlinx.coroutines.runBlocking
 import org.koin.dsl.koinApplication
-import streetlight.model.data.EventSubtype
-import streetlight.model.data.EventType
-import streetlight.server.daemon.agent.EntityClassifier
 import streetlight.server.daemon.agent.KoogEmbeddingsClient
-import streetlight.server.daemon.agent.getClassifierLabel
 import streetlight.server.daemon.agent.KoogHtmlParserClient
 import streetlight.server.daemon.agent.readLmConfig
 import streetlight.server.daemon.crawler.startCrawler
@@ -34,12 +30,8 @@ fun main() = runBlocking {
 
     val db = connectDb(env)
 
-    val embeddingsClient = KoogEmbeddingsClient()
-    val typeVectors = embeddingsClient.getCachedVectors(EventType.entries) { it.getClassifierLabel() }
-        .toDataOr { error("Unable to embed event types: ${it.message}") }
-    val subtypeVectors = embeddingsClient.getCachedVectors(EventSubtype.entries) { it.getClassifierLabel() }
-        .toDataOr { error("Unable to embed event subtypes: ${it.message}") }
-    val classifier = EntityClassifier(embeddingsClient, typeVectors, subtypeVectors)
+    val classifier = KoogEmbeddingsClient().raiseEntityClassifier()
+        .toDataOr { error("Unable to raise the classifier: ${it.message}") }
 
     // startCrawler(server, KoogHtmlParserClient(env.readLmConfig()), classifier)
 }

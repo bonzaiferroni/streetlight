@@ -79,27 +79,54 @@ enum class EventType(label: String? = null): Labeled {
     Dance,
     Sports,
     Volunteer,
-    Youth;
+    Youth,
+    Arts,
+    FoodAndDrink("Food & Drink");
 
     override val label = label ?: name
 }
 
 enum class EventSubtype(label: String? = null): Labeled {
-    Concert,
+    // Meetup
     Picnic,
     Potluck,
+    Networking,
+    BookClub("Book Club"),
+    Trivia,
+    GameNight("Game Night"),
+
+    // Music
+    Concert,
+    OpenMic("Open Mic"),
+    StreetPerformance("Street Performance"),
+    DJSet("DJ Set"),
+
+    // Fitness
     Hike,
     Exercise,
+    Meditation,
+
+    // Education
     Class,
-    StreetPerformance("Street Performance"),
-    OpenMic("Open Mic"),
-    Trivia,
+    Lecture,
+
+    // Sports
+    SportsMatch("Sports Match"),
+    PickupGame("Pickup Game"),
+
+    // Arts
     Theater,
     Film,
     ArtExhibition("Art Exhibition"),
-    Networking,
-    BookClub("Book Club"),
-    Fundraiser;
+
+    // Volunteer
+    Fundraiser,
+
+    // Food & Drink
+    FoodTruck("Food Truck"),
+
+    // General
+    Festival;
 
     override val label = label ?: name
 }
