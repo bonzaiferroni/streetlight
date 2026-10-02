@@ -24,7 +24,7 @@ Every lead is read by its schema, stored or asked of the LM. The values a page d
 
 A page is known by the url it was served from, after redirects and normalized. Its link is recorded under that url, with the url asked for as an alias. A url the page declares for itself, such as a canonical link, is not used.
 
-`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `feedEvent` its lead carries. `deliverEvent` merges the two property maps, the page's preferred except its url and the start taken from the first pairing that parses, and creates the event from `PropertyMap.toEventEdit`. A location's properties become a `LocationEdit` through `toLocationEdit`.
+`crawlEventFeed` sends each event of its feed on: to its page as an `EventPage` lead, or straight to `deliverEvent` when it has no page worth reading. `crawlEventPage` delivers its event with the `feedEvent` its lead carries. `deliverEvent` merges the two property maps, the page's preferred except its url and the start taken from the first pairing that parses, classifies the merged event with the `EntityClassifier`, a problem leaving its type or subtype null, and creates the event from `PropertyMap.toEventEdit`. A location's properties become a `LocationEdit` through `toLocationEdit`.
 
 ## Crawler Model Analogy: Office Floorplan
 

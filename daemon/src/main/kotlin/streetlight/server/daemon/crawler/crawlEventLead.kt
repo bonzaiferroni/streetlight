@@ -33,7 +33,7 @@ suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, sc
     tracker.trackFoundRecord()
     val title = event[ParseProperty.Name] ?: return tracker.trackUnnamedRecord(event)
     val location = placeLeadEvent(eventRead, ldEvent?.place, event) ?: return tracker.trackUnlocatedEvent(event, title)
-    val edit = event.toEventEdit(location.timezoneId, ParseMode.Partial, tracker).withSourceNote(lead.initialUrl)
+    val edit = event.toEventEdit(location.timezoneId, ParseMode.Partial, null, null, tracker).withSourceNote(lead.initialUrl)
     val startsAt = edit.startsAt ?: return tracker.trackUnparsedEvent(event)
     if (startsAt < Clock.System.now()) return tracker.trackPastEvent()
     createEventAt(event, edit, location, tracker)

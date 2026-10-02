@@ -3,6 +3,7 @@ package streetlight.server.daemon.crawler
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.PropertyMap
 import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import kampfire.utils.fuzzyMatches
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.atStartOfDayIn
@@ -17,18 +18,20 @@ import streetlight.server.routes.createEvent
 import kotlin.time.Clock
 
 /**
- * Delivers the event of [feed] made of what the feed showed, [feedEvent], and what its page showed, [pageEvent]:
+ * Delivers the event of [lead] made of what the feed showed, [feedEvent], and what its page showed, [pageEvent]:
  * created at the location it names, unless it lacks a title, a start ahead, or a location, or duplicates one.
  */
-suspend fun Crawler.deliverEvent(feed: EventFeed, feedEvent: PropertyMap?, pageEvent: PropertyMap?, tracker: ParseTracker) {
-    val event = mergeEvent(feedEvent, pageEvent, feed.timeZoneId) ?: return
+suspend fun Crawler.deliverEvent(lead: EventFeed, feedEvent: PropertyMap?, pageEvent: PropertyMap?, tracker: ParseTracker) {
+    val event = mergeEvent(feedEvent, pageEvent, lead.timeZoneId) ?: return
     tracker.trackFoundRecord()
-    val feedEdit = event.toEventEdit(feed.timeZoneId, feed.parseMode, tracker)
-        .let { if ((feed as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(feed.initialUrl) }
+    val eventType = classifier.readEventType(event).toDataOrNull()
+    val eventSubtype = classifier.readEventSubtype(event, eventType).toDataOrNull()
+    val feedEdit = event.toEventEdit(lead.timeZoneId, lead.parseMode, eventType, eventSubtype, tracker)
+        .let { if ((lead as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(lead.initialUrl) }
     val title = feedEdit.title ?: return tracker.trackUnnamedRecord(event)
     val feedStart = feedEdit.startsAt ?: return tracker.trackUnparsedEvent(event)
     if (feedStart < Clock.System.now()) return tracker.trackPastEvent()
-    val location = spawner.locateEvent(event, feed, tracker) ?: return tracker.trackUnlocatedEvent(event, title)
+    val location = spawner.locateEvent(event, lead, tracker) ?: return tracker.trackUnlocatedEvent(event, title)
     createEventAt(event, feedEdit, location, tracker)
 }
 

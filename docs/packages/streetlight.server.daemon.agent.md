@@ -29,7 +29,7 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 `EmbeddingsClient` is the interface for embedding text, for classification by similarity. `KoogEmbeddingsClient` implements it against an Ollama model, `qwen3-embedding:0.6b` by default, at Ollama's default address. A caller holds the interface, so a test can stand in for it.
 
-`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient`.
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient`. It reads an event's `EventType`, and its `EventSubtype` among those that fit its type when the type is known, each from the event's `PropertyMap` as an `Outcome`. A failure is an `EmbeddingsProblem`.
 
 ## Model Configuration
 
