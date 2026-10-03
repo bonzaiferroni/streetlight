@@ -33,5 +33,5 @@ fun main() = runBlocking {
     val classifier = KoogEmbeddingsClient().raiseEntityClassifier()
         .toDataOr { error("Unable to raise the classifier: ${it.message}") }
 
-    // startCrawler(server, KoogHtmlParserClient(env.readLmConfig()), classifier)
+    startCrawler(server, KoogHtmlParserClient(env.readLmConfig()), classifier)
 }

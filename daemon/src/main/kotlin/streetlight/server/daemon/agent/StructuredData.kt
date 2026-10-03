@@ -15,10 +15,11 @@ import streetlight.model.data.RawEntity
 import streetlight.model.data.buildRawEntity
 
 /**
- * An event as a page declares it in its JSON-LD, in schema.org's terms. Its [performers] are read, ready for when the
- * model holds them.
+ * An event as a page declares it in its JSON-LD, in schema.org's terms. Its [type] is its most specific event type,
+ * null for a plain `Event`. Its [performers] are read, ready for when the model holds them.
  */
 data class LdEvent(
+    val type: String?,
     val name: String?,
     val url: String?,
     val startDate: String?,
@@ -112,6 +113,7 @@ fun LdEvent.toRawEntity(): RawEntity {
         this[ParseProperty.Address] = place?.street
         this[ParseProperty.Area] = place?.area
         this[ParseProperty.Region] = place?.region
+        this[ParseProperty.DeclaredType] = type
     }
 }
 
@@ -159,6 +161,7 @@ private fun JsonObject.toLdEvent(): LdEvent {
             ?: location
     } as? JsonObject
     return LdEvent(
+        type = typeNames().firstOrNull { it in eventTypes && it != "Event" },
         name = text("name"),
         url = text("url"),
         startDate = text("startDate"),

@@ -23,7 +23,7 @@ fun EventFeedSchema.validate(document: Element): Outcome<EventFeedSchema> {
     val selector = event ?: return Problem("No event selector")
     val events = document.tryQuery(selector).toDataOr { return it }
     if (events.isEmpty()) return Problem("Event selector matched nothing: $selector")
-    val title = title.keepIfMatches(events) ?: return Problem("Title selector matched nothing: $title")
+    val title = title.keepIfMatches(events) { it.isPlausibleTitle() } ?: return Problem("Title selector matched nothing: $title")
     val page = listOf(document)
     return Ok(copy(
         feedLocation = feedLocation.keepIfMatches(page),
@@ -41,7 +41,7 @@ fun EventFeedSchema.validate(document: Element): Outcome<EventFeedSchema> {
 
 /** Validates a page schema from the LM against the [document] it was made from, setting any other selector that fails to null. */
 fun EventPageSchema.validate(document: Element): Outcome<EventPageSchema> {
-    if (document.queryElement(title) { it.isPlausibleField() } == null) return Problem("Title selector does not match: $title")
+    if (document.queryElement(title) { it.isPlausibleTitle() } == null) return Problem("Title selector does not match: $title")
     val page = listOf(document)
     return Ok(copy(
         description = description.keepIfMatches(page) { it.isPlausibleProse() },

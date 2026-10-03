@@ -6,6 +6,7 @@ import kampfire.model.toHttpProblem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import streetlight.server.daemon.agent.EventClassification
 import streetlight.server.daemon.agent.TrimStats
 import streetlight.model.data.LinkAccess
 import streetlight.model.data.LinkContent
@@ -14,7 +15,7 @@ import streetlight.model.data.ParseOutcome
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its reports are written to. */
-const val parserBuildId = "V36"
+const val parserBuildId = "V37"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
@@ -66,6 +67,7 @@ class PageReport(val url: String) {
     var trim: TrimStats? = null
     val lm = mutableListOf<LmReport>()
     var schema: SchemaReport? = null
+    val classifications = mutableListOf<EventClassification>()
 }
 
 /** The fetch of a page, with [textChars] the visible text of the parsed body. */
@@ -119,6 +121,8 @@ class RecordReport {
     var createFailed = 0
     var locationsSpawned = 0
     var locationsFailed = 0
+    var classified = 0
+    var unclassified = 0
 }
 
 /**

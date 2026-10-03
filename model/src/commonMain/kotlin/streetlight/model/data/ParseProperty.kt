@@ -39,6 +39,9 @@ enum class ParseProperty {
 
     /** The state of the place an event takes place at, searched with its name when its [Address] finds no place. */
     Region,
+
+    /** The schema.org type a page declares for an event, such as `MusicEvent`, when it is more specific than `Event`. */
+    DeclaredType,
 }
 
 /** The text of each property read from a page, not yet parsed. */

@@ -91,7 +91,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Page html | `../logs/parser/<build>/html/<address>.html`, for each page that did not succeed |
 | Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
-- `checkLead` builds a `ParseTracker` for each lead. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the lead was read and yielded no record created, duplicated or known, or the check failed. A later check of the same lead in the same build overwrites its report, and the report saves the lead's html.
+- `checkLead` builds a `ParseTracker` for each lead. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the lead was read and yielded no record created, duplicated or known, a location was spawned or failed to be, an event was classified, or the check failed. A later check of the same lead in the same build overwrites its report, and the report saves the lead's html.
 - An exception during a check is caught and reported as the check's `failure`, and its link records are kept. The lead's `checked_at` stays set, so a lead that keeps failing waits for its next turn.
 - A step that records takes its tracker as an argument, never null and never inside a package, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit), and consults it before fetching. A step computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
@@ -106,7 +106,8 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Trim | The page's trim stats, once for every request made of it |
 | LM | Model, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Records | Counts of the records found, created, past, unnamed, shortened, duplicate, known and failed, and of locations spawned and failed. What became of each record is a note on the page it was read from, or on the lead's page |
+| Classification | Each event's `EventClassification`, on the page it was read from: its best type, runner-up and best subtype with their similarities, and whether each was given |
+| Records | Counts of the records found, created, past, unnamed, shortened, duplicate, known and failed, of locations spawned and failed, and of events classified and unclassified. What became of each record is a note on the page it was read from, or on the lead's page |
 
 A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
 

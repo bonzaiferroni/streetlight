@@ -12,6 +12,7 @@ import kampfire.model.Url
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.jsonObject
+import streetlight.server.daemon.agent.EventClassification
 import streetlight.server.daemon.agent.FetchText
 import streetlight.server.daemon.agent.SchemaObserver
 import streetlight.server.daemon.agent.SchemaProblem
@@ -135,6 +136,12 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         (pageOf(rawEvent) ?: page(leadUrl)).trackPartial(note)
     }
 
+    /** Tracks the [classification] of [rawEvent] on the page it was read from, counted by whether its type passed. */
+    fun trackClassifiedEvent(rawEvent: RawEntity, classification: EventClassification) {
+        if (classification.typeAccepted) records.classified++ else records.unclassified++
+        (pageOf(rawEvent) ?: page(leadUrl)).trackClassification(classification)
+    }
+
     fun trackPastEvent() {
         records.past++
     }
@@ -182,11 +189,12 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
 
     /**
      * Whether the check needs a report: it failed, some page needs work, its feed was read and yielded no event
-     * that was created or already known, or a location was spawned or failed to be.
+     * that was created or already known, a location was spawned or failed to be, or an event was classified.
      */
     fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
         (page(leadUrl).isAttempted && records.created + records.updated + records.duplicates + records.known == 0) ||
-        records.locationsSpawned > 0 || records.locationsFailed > 0
+        records.locationsSpawned > 0 || records.locationsFailed > 0 ||
+        records.classified + records.unclassified > 0
 
     fun trackFailedCheck(error: Exception) {
         failure = "${error::class.simpleName}: ${error.message}"
@@ -390,6 +398,10 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
             this.millis = millis
             this.attempts = attempts
         }
+    }
+
+    internal fun trackClassification(classification: EventClassification) {
+        page.classifications.add(classification)
     }
 
     internal fun report(): PageReport {

@@ -6,6 +6,7 @@ import streetlight.model.data.buildRawEntity
 import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Url
 import streetlight.server.daemon.agent.isPlausibleField
+import streetlight.server.daemon.agent.isPlausibleTitle
 import streetlight.server.daemon.agent.imageUrl
 import streetlight.server.daemon.agent.isPlausibleProse
 import streetlight.server.daemon.agent.absoluteUrl
@@ -59,7 +60,7 @@ private fun parsePageEvent(
     resolveIfRelative: Boolean,
 ): RawEntity {
     return buildRawEntity {
-        this[ParseProperty.Name] = doc.queryElement(schema.title) { it.isPlausibleField() }.plainText()
+        this[ParseProperty.Name] = doc.queryElement(schema.title) { it.isPlausibleTitle() }.plainText()
         this[ParseProperty.Url] = pageUrl.value
         this[ParseProperty.Image] = doc.readImageUrl(resolveIfRelative)?.value ?: doc.queryElement(schema.image).imageUrl()
         this[ParseProperty.Description] = doc.queryElement(schema.description) { it.isPlausibleProse() }.innerHtml()

@@ -19,7 +19,6 @@ interface EmbeddingsClient {
 
 object EmbeddingsProblem {
     val Unspecified = Problem("Unspecified embeddings error.")
-    val NoMatch = Problem("No classification was similar enough.")
 }
 
 /** The text this value is embedded from: its label and the description [getClassifierLabel] gives it. */

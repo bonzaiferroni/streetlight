@@ -25,3 +25,5 @@ A test raises the resources it needs once per run, in a `lazy` of its companion.
 ## Classification
 
 `EntityClassifierTest` classifies each event of the test resource `classified-events.json` and expects every one to be given its type. Each entry is a `ClassifiedEvent`, in the format of the example set described in `streetlight.server.daemon.agent`.
+
+`event-evaluation.json`, a test resource, is the evaluation set: observed events annotated from their full descriptions, held out from the example set, so a change to the classifier is scored against events it was not built from. It is not yet read by a test.

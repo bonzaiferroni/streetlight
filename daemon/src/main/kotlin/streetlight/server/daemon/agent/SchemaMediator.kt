@@ -286,7 +286,7 @@ class SchemaMediator(
         val best = dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.mapNotNull { parser ->
             if (!triedIds.add(parser.parserId)) return@mapNotNull null
             val schema = parser.schema as? EventPageSchema ?: return@mapNotNull null
-            val isSuccess = doc.queryElement(schema.title) { it.isPlausibleField() } != null
+            val isSuccess = doc.queryElement(schema.title) { it.isPlausibleTitle() } != null
             dao.parser.updateResult(parser.parserId, isSuccess)
             if (!isSuccess) {
                 observer?.storedSchemaTried(schema, false)

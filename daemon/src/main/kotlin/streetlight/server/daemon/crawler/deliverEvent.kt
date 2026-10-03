@@ -29,7 +29,9 @@ suspend fun Crawler.deliverEvent(lead: EventFeed, rawFeedEvent: RawEntity?, rawP
     if (startsAt < Clock.System.now()) return tracker.trackPastEvent()
     val location = spawner.locateEvent(rawEvent, lead, tracker) ?: return tracker.trackUnlocatedEvent(rawEvent, title)
 
-    val event = classifier.classifyEvent(initialEvent)
+    val event = classifier.classifyEvent(initialEvent, rawEvent[ParseProperty.DeclaredType]) {
+        tracker.trackClassifiedEvent(rawEvent, it)
+    }
         .let { if ((lead as? GeneralEventFeed)?.isRsvp == true) it.withRsvp() else it.withSourceNote(lead.initialUrl) }
     createEventAt(rawEvent, event, location, tracker)
 }

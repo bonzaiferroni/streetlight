@@ -1,10 +1,7 @@
 package streetlight.server.daemon.agent
 
 import ai.koog.embeddings.base.Vector
-import kampfire.model.Ok
-import kampfire.model.Outcome
 import kampfire.model.toDataOr
-import kampfire.model.toDataOrNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventSubtype
 import streetlight.model.data.EventType
@@ -18,33 +15,47 @@ class EntityClassifier(
     private val typeVectors: Map<EventType, Vector>,
     private val subtypeVectors: Map<EventSubtype, Vector>,
 ) {
-    /** The [event] with its type and subtype, each left unset when it cannot be classified. */
-    suspend fun classifyEvent(event: EventEdit): EventEdit {
-        val eventVector = client.embedQuery(eventInstruction, event.getEmbeddingsText()).toDataOr { return event }
+    /**
+     * The [event] with its type and subtype, each left unset when it is not similar enough, read with the schema.org
+     * [declaredType] its page gave it, when it gave one. [onClassified] is given the classification, whatever passed.
+     */
+    suspend fun classifyEvent(
+        event: EventEdit,
+        declaredType: String? = null,
+        onClassified: (EventClassification) -> Unit = {},
+    ): EventEdit {
+        val eventVector = client.embedQuery(eventInstruction, event.getEmbeddingsText(declaredType))
+            .toDataOr { return event }
 
-        val eventType = readEventType(eventVector).toDataOrNull()
-        val eventSubtype = readEventSubtype(eventVector).toDataOrNull()
-        return event.copy(eventType = eventType, eventSubtype = eventSubtype)
-    }
+        val typeRanking = rankBySimilarity(eventVector, typeVectors)
+        val (eventType, typeSimilarity) = typeRanking.first()
+        val runnerUp = typeRanking.getOrNull(1)
+        val (eventSubtype, subtypeSimilarity) = rankBySimilarity(eventVector, subtypeVectors).first()
+        val classification = EventClassification(
+            title = event.title,
+            declaredType = declaredType,
+            eventType = eventType,
+            typeSimilarity = typeSimilarity,
+            runnerUpType = runnerUp?.first,
+            runnerUpSimilarity = runnerUp?.second,
+            eventSubtype = eventSubtype,
+            subtypeSimilarity = subtypeSimilarity,
+            typeAccepted = typeSimilarity >= minTypeSimilarity,
+            subtypeAccepted = subtypeSimilarity >= minSubtypeSimilarity,
+        )
+        onClassified(classification)
 
-    /** Reads the [EventType] whose vector is most similar to [eventVector], when it is similar enough. */
-    private fun readEventType(eventVector: Vector): Outcome<EventType> {
-        val (eventType, similarity) = typeVectors
-            .map { (eventType, typeVector) -> eventType to eventVector.cosineSimilarity(typeVector) }
-            .maxBy { (_, similarity) -> similarity }
-        if (similarity < minTypeSimilarity) return EmbeddingsProblem.NoMatch
-        return Ok(eventType)
-    }
-
-    /** Reads the [EventSubtype] whose vector is most similar to [eventVector], when it is similar enough. */
-    private fun readEventSubtype(eventVector: Vector): Outcome<EventSubtype> {
-        val (eventSubtype, similarity) = subtypeVectors
-            .map { (eventSubtype, subtypeVector) -> eventSubtype to eventVector.cosineSimilarity(subtypeVector) }
-            .maxBy { (_, similarity) -> similarity }
-        if (similarity < minSubtypeSimilarity) return EmbeddingsProblem.NoMatch
-        return Ok(eventSubtype)
+        return event.copy(
+            eventType = eventType.takeIf { classification.typeAccepted },
+            eventSubtype = eventSubtype.takeIf { classification.subtypeAccepted },
+        )
     }
 }
+
+/** Each of [vectors] with its cosine similarity to [eventVector], the most similar first. */
+private fun <T> rankBySimilarity(eventVector: Vector, vectors: Map<T, Vector>): List<Pair<T, Double>> = vectors
+    .map { (value, vector) -> value to eventVector.cosineSimilarity(vector) }
+    .sortedByDescending { (_, similarity) -> similarity }
 
 internal const val eventInstruction = "Given the details of a local event, retrieve the category that best describes it"
 private const val minTypeSimilarity = 0.4

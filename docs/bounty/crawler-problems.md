@@ -22,3 +22,6 @@ Crawler  Completed lead check
 -fetcher fetching url: https://www.cannonballcreekbrewing.com/calendarn:run
 -fetcher fetching url: https://ww
 
+mpleName saved 3 remote images: 7961fe2d-60b3-48bb-8eee-d9ba179d0a1d
+mpleName creating event: Get ready to feel the fire! 🔥 The ultimate P!NK experience is coming to The Studio, and you don't want to miss it. Join us for a night of powerhouse vocals, high-octane energy, and all the hits that define a generation. What makes this night extra special? You get to enjoy Glitter in the Air under the open sky! There is nothing like hearing your favorite anthems like "So What" or "Just Give Me a Reason" in an outdoor venue. Feel the breeze, grab a drink, and sing your heart out as the stars come out to play. 🌟 ✨ When: October 2nd ✨ Where: Studio@Mainstreet Outdoor Stage✨ Tickets: https://studiomainstreet.ticketspice.com/glitter-in-the-air-a-tribute-to-pnk Come as you are, let your voice—and glitter—fill the air!
+-fetcher fetching url with scripting: https://www.eventbrite.com/e/jordan-landing-adult-spooky-creature-so

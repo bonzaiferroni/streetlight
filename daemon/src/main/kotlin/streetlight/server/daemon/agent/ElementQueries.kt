@@ -54,6 +54,8 @@ fun Element?.imageUrl(): String? =
 
 private val imageAttributes = listOf("src", "data-src", "data-lazy-src")
 
+private const val maxTitleChars = 150
+
 private val boilerplateTags = setOf("nav", "header", "footer", "aside")
 
 private fun Element.isBoilerplate(): Boolean =
@@ -78,4 +80,10 @@ fun Element?.isPlausibleProse(allowsChrome: Boolean = false): Boolean {
 fun Element?.isPlausibleField(): Boolean {
     val element = this ?: return false
     return !element.isBoilerplate()
+}
+
+/** Whether this element is a plausible field short enough to be a title. */
+fun Element?.isPlausibleTitle(): Boolean {
+    val element = this ?: return false
+    return element.isPlausibleField() && (element.metaContent() ?: element.text()).normalizeSpace().length <= maxTitleChars
 }
