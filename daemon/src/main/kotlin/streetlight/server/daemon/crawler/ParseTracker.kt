@@ -136,9 +136,9 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         (pageOf(rawEvent) ?: page(leadUrl)).trackPartial(note)
     }
 
-    /** Tracks the [classification] of [rawEvent] on the page it was read from, counted by whether its type passed. */
+    /** Tracks the [classification] of [rawEvent] on the page it was read from. */
     fun trackClassifiedEvent(rawEvent: RawEntity, classification: EventClassification) {
-        if (classification.typeAccepted) records.classified++ else records.unclassified++
+        records.classified++
         (pageOf(rawEvent) ?: page(leadUrl)).trackClassification(classification)
     }
 
@@ -194,7 +194,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
     fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
         (page(leadUrl).isAttempted && records.created + records.updated + records.duplicates + records.known == 0) ||
         records.locationsSpawned > 0 || records.locationsFailed > 0 ||
-        records.classified + records.unclassified > 0
+        records.classified > 0
 
     fun trackFailedCheck(error: Exception) {
         failure = "${error::class.simpleName}: ${error.message}"

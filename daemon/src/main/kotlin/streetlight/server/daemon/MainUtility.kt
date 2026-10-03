@@ -1,54 +1,31 @@
 package streetlight.server.daemon
 
 import ai.koog.embeddings.base.Vector
-import kampfire.model.Labeled
 import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
-import streetlight.model.data.EventSubtype
-import streetlight.model.data.EventType
 import streetlight.server.daemon.agent.EmbeddingsClient
 import streetlight.server.daemon.agent.EntityClassifier
 import streetlight.server.daemon.agent.eventInstruction
-import streetlight.server.daemon.agent.getClassifierLabel
 import streetlight.server.daemon.agent.getEmbeddingsText
-import streetlight.server.daemon.agent.readClassifiedEvents
-import streetlight.server.daemon.agent.toClassifierText
+import streetlight.server.daemon.agent.readEventEdits
+import streetlight.server.daemon.agent.toFeatures
+import streetlight.server.daemon.agent.trainTagModels
 import java.io.File
-import kotlin.enums.EnumEntries
 
 /**
- * The [EntityClassifier] comparing events against the centroid of each value's examples, or the value's label where it
- * has none, or the first problem.
+ * The [EntityClassifier] deciding each tag by a regression trained on the examples, their vectors centered on the
+ * examples' average, or the first problem.
  */
 suspend fun EmbeddingsClient.raiseEntityClassifier(): Outcome<EntityClassifier> {
-    val typeLabelVectors = getCachedVectors(EventType.entries) { it.getClassifierLabel() }.toDataOr { return it }
-    val subtypeLabelVectors = getCachedVectors(EventSubtype.entries) { it.getClassifierLabel() }.toDataOr { return it }
-    val examples = readClassifiedEvents("event-examples.json")
-    val exampleTexts = examples.map { it.event.getEmbeddingsText() }
+    val examples = readEventEdits("event-examples.json")
+    val exampleTexts = examples.map { it.getEmbeddingsText() }
     val exampleVectors = getCachedVectors("EventExamples", exampleTexts, eventInstruction).toDataOr { return it }
 
-    val classifiedVectors = examples.zip(exampleVectors)
-    val typeCentroids = classifiedVectors
-        .groupBy({ (example, _) -> example.eventType }, { (_, vector) -> vector })
-        .mapValues { (_, vectors) -> vectors.toCentroid() }
-    val subtypeCentroids = classifiedVectors
-        .mapNotNull { (example, vector) -> example.eventSubtype?.let { it to vector } }
-        .groupBy({ (eventSubtype, _) -> eventSubtype }, { (_, vector) -> vector })
-        .mapValues { (_, vectors) -> vectors.toCentroid() }
+    val center = exampleVectors.toCentroid().values.toDoubleArray()
+    val tagModels = trainTagModels(exampleVectors.map { it.toFeatures(center) }, examples.map { it.tags })
 
-    return Ok(EntityClassifier(this, typeLabelVectors + typeCentroids, subtypeLabelVectors + subtypeCentroids))
-}
-
-/** The vector of each of [entries], embedded from its label and the description [getClassifierLabel] gives it. */
-suspend fun <E> EmbeddingsClient.getCachedVectors(
-    entries: EnumEntries<E>,
-    getClassifierLabel: (E) -> String,
-): Outcome<Map<E, Vector>> where E : Enum<E>, E : Labeled {
-    val name = entries.first().declaringJavaClass.simpleName
-    val texts = entries.map { it.toClassifierText(getClassifierLabel) }
-    val vectors = getCachedVectors(name, texts).toDataOr { return it }
-    return Ok(entries.zip(vectors).toMap())
+    return Ok(EntityClassifier(this, center, tagModels))
 }
 
 /**

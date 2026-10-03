@@ -29,27 +29,27 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 `EmbeddingsClient` is the interface for embedding text, for classification by similarity. `KoogEmbeddingsClient` implements it against an Ollama model, `qwen3-embedding:0.6b` by default, at Ollama's default address. A caller holds the interface, so a test can stand in for it.
 
-`EmbeddingsClient.embed` embeds a document bare, and `embedQuery` embeds a query with an instruction describing what it searches for, in the format its model expects. A classifier label is a document and an event is a query. Each returns a `Vector` or an `EmbeddingsProblem`; a client failure is never thrown.
+`EmbeddingsClient.embed` embeds a document bare, and `embedQuery` embeds a query with an instruction describing what it searches for, in the format its model expects. An event is a query. Each returns a `Vector` or an `EmbeddingsProblem`; a client failure is never thrown.
 
 `KoogEmbeddingsClient` formats a query as `Instruct: <instruction>\nQuery:<text>`, the format of Qwen3-Embedding.
 
-`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and the vectors of every `EventType` and `EventSubtype`. The daemon's `main` builds it with `raiseEntityClassifier` before the crawler starts, and does not start it when any embedding fails. `classifyEvent` embeds an `EventEdit` once as a query and returns it with its `EventType` and `EventSubtype` set, each read on its own from the same vector and left unset when it cannot be classified. A subtype is optional, so its minimum similarity is higher than a type's. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has, led by a `Category` line when its page declares a schema.org event type, its words split apart, as `Category: Music Event`. Each value is ranked by the cosine similarity of its vector to the event's, and the most similar is given when its similarity reaches its minimum. `classifyEvent` passes an `EventClassification` to its caller, holding the best type, the runner-up type and the best subtype with their similarities and whether each was given, so a value that fell short is still seen. An event whose embedding fails is returned unclassified, with no `EventClassification`.
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient`, the center of the examples' vectors and a `TagModel` for each tag. The daemon's `main` builds it with `raiseEntityClassifier` before the crawler starts, and does not start it when any embedding fails. `classifyEvent` embeds an `EventEdit` once as a query, and `readTags` gives every tag whose model finds a probability of at least 0.7; an event may get several tags or none. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has, led by a `Category` line when its page declares a schema.org event type, its words split apart, as `Category: Music Event`. `classifyEvent` passes an `EventClassification` to its caller, holding the five likeliest tags with their probabilities and the tags given. An event whose embedding fails is returned untagged, with no `EventClassification`.
 
-Each `EventType` and `EventSubtype` gives a short description of itself through `getClassifierLabel()`, in `EntityClassifierLabels.kt`. A value is embedded as `<label>: <classifier label>`, such as `Concert: A live music performance or concert`.
+Each `EventTag` gives a short description of itself through `getClassifierLabel()`, in `TagAnnotation.kt`, which also holds, as a comment above each tag, the rule for annotating events with it. The descriptions are the guide to annotating the example and evaluation sets; the regression does not read them. A description names what the tag covers and never what it excludes; exclusions belong in the comment.
 
 ### Example Set
 
-`event-examples.json`, a resource of the daemon's main source set, holds observed events labeled by hand, for training the classifier. Each entry is a `ClassifiedEvent`: the event as an `EventEdit` without the source note the crawler adds after classification, with only the fields `getEmbeddingsText` reads, and its `EventType` and `EventSubtype`, the subtype left out when none fits. `readClassifiedEvents` reads a resource of either source set and fails when it is missing.
+`event-examples.json`, a resource of the daemon's main source set, holds observed events labeled by hand, for training the classifier. Each entry is an `EventEdit` without the source note the crawler adds after classification, holding the fields `getEmbeddingsText` reads and its `tags`. A tag present is a yes and a tag absent is a no, so an entry is annotated against every tag, by the rules in `TagAnnotation.kt`. `readEventEdits` reads a resource of either source set and fails when it is missing.
 
-An event is labeled with the most relevant value. `Youth` comes before every other type, then `Church`; the rest are of equal priority. Of two subtypes that fit, the one its title or description names foremost wins. The events of the classification test are never in the example set.
+The events of the evaluation set are never in the example set.
 
-### Centroids
+### Tag Models
 
-`raiseEntityClassifier` embeds every example as a query with `eventInstruction`, the way `classifyEvent` embeds an event, and gives each `EventType` and `EventSubtype` the average of its examples' vectors. A value with no examples keeps the vector of its classifier label.
+`raiseEntityClassifier` embeds every example as a query with `eventInstruction`, the way `classifyEvent` embeds an event. Every vector is centered on the average of the examples' vectors and scaled to unit length, in `toFeatures`. `trainTagModels` trains a logistic regression for each tag that at least two examples carry and some do not, by gradient descent, each class weighted by the inverse of its share and the weights regularized. A tag with fewer than two examples has no model and is never given. The models are trained at every start, from the cached vectors.
 
 ### Embeddings Cache
 
-`getCachedVectors` keeps a named list of vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git: an enum's label vectors under the enum's name, and the examples' vectors as `EventExamples`. Each line holds one entry, in the order of the list.
+`getCachedVectors` keeps a named list of vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git: the examples' vectors as `EventExamples`, and the evaluation set's as `EventEvaluation`. Each line holds one entry, in the order of the list.
 
 | File | Holds |
 |---|---|

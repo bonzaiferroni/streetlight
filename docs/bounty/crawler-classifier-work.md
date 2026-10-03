@@ -8,11 +8,32 @@ Decided 2026-10-03: the type/subtype pair gives way to tags. An event has zero, 
 
 Broad and narrow is a distinction of the UI: choosing a broad tag puts its narrow tags first among the next filter's options, without hiding the others, since an event can join any tags (Sports and Picnic, Sports and Film). Classification uses the hierarchy only where it is shown to help.
 
-The evaluation set, and the example set after it, take the shape `[{ "event": <EventEdit>, "tags": ["Film", "Festival"] }]`. A tag present is a yes and a tag absent is a no, so every entry is annotated against every tag; adding or renaming a tag takes a pass over the file. The set aims at 20 to 50 events carrying each tag.
+The evaluation set and the example set are each a `List<EventEdit>`, the gold tags in each edit's `tags`: `[{ "title": …, "description": …, "tags": ["Film", "Festival"] }]`. A test clears an event's tags before classifying it and compares the result against them. A tag present is a yes and a tag absent is a no, so every entry is annotated against every tag; adding or renaming a tag takes a pass over the file. The set aims at 20 to 50 events carrying each tag; the observed data will fall short for some tags, and those are noted here as they are found, for the navigator to find leads for.
 
 The reason: an event is rarely described by two labels, and a forced single choice puts a film festival under Festival or Film but not both, so a search for either misses it.
 
 ## Where It Stands
+
+* **Shape changed (2026-10-03):** `Event`, `EventEdit` and `EventLocation` carry `tags: List<EventTag>`, stored in the `tags` int-array column with a GIN index. `ClassifiedEvent`, `classified-events.json` and the happy-path test are retired.
+* **Regression per tag (2026-10-03):** each tag with at least two examples gets a logistic regression on the centered, unit-length vectors, trained at startup by gradient descent (400 iterations, rate 2.0, C = 1, balanced class weights). A tag is given at probability 0.7 or more. `EntityClassifierEvaluationTest` scores it on the evaluation set: the Kotlin port measured 0.720, every tag matching the prototype, and the floor is 0.715, so any degradation fails.
+
+### Rule Comparison
+
+Prototyped in a scratch Python script (numpy, scikit-learn) on the same embeddings, hyperparameters chosen by 5-fold cross-validation on the example set, then scored once on the evaluation set. Macro F0.5 averages the tags present in the evaluation set; micro pools every decision.
+
+| Rule | Chosen by CV | Eval macro F0.5 | Eval micro P / R |
+|---|---|---|---|
+| Centroid, cosine threshold | threshold 0.81 | 0.544 | 0.50 / 0.56 |
+| Centered centroid, threshold | threshold 0.475 | 0.639 | 0.74 / 0.52 |
+| kNN, centered | k = 3, 40% of votes | 0.666 | 0.80 / 0.65 |
+| Logistic regression per tag, centered | C = 1, probability 0.7 | 0.720 | 0.82 / 0.66 |
+
+Plain gradient descent with the settings above reproduced the scikit-learn result (0.720), so the Kotlin port follows it.
+
+Weakest tags under regression: Picnic, Potluck, Karaoke and Community Outreach score 0 (two to five examples each, or none of their evaluation events found); then Fundraiser 0.41, LGBTQ 0.51, Theater 0.54, Festival 0.55, Volunteer 0.56, Hike 0.59, Church 0.61 (recall 0.35). Strongest: Sports 0.98, Books & Writing and Games & Trivia 0.96, Food Truck, Pickup Game and Sports Match 0.94, Film 0.93. Recall is the general weakness (0.66 pooled), which fits the 0.7 threshold and the rule preferring missed information.
+
+
+The notes below the shape change describe the type/subtype prototype.
 
 * `EntityClassifier.classifyEvent` embeds an `EventEdit` once with `qwen3-embedding:0.6b` through Ollama, as a query with `eventInstruction`, and ranks every type and subtype by cosine similarity to its vector. The best of each is given when it reaches its minimum (type 0.4, subtype 0.5). `deliverEvent` classifies after its guards and before the source or RSVP note. `crawlEventLead` does not classify.
 * `raiseEntityClassifier` (`MainUtility.kt`) builds each value's vector as the centroid of its examples, falling back to the vector of its classifier label for a value with no examples (today Picnic, Potluck and StreetPerformance). With every type having examples, the type labels no longer steer classification; only the examples do.
@@ -23,6 +44,8 @@ The reason: an event is rarely described by two labels, and a forced single choi
 * Every classification is reported on its page in the parse report (`classifications[]`), with the best type, runner-up and best subtype and their similarities. A check that classified anything writes its report. `records` counts `classified` and `unclassified`.
 
 ## V37 Results
+
+`logs/schema/event-classification-V37.json` preserves the prototype's result: every V37 event (2,334) with its id, slug, title, url, location slug and start, and its `event_type` and `event_subtype` by name, mapped from the ordinals of the two enums as they stood in V37. The scores of each classification are in the V37 parse reports.
 
 Build V37 was a full rescan (2026-10-02). From 1,947 classifications in its reports, read mid-run:
 
@@ -50,7 +73,7 @@ One type and one subtype per event, the most relevant value. The description car
 
 * `Youth` comes first: it names who the event is for. `Church` comes next. The other types have roughly equal priority.
 * Subtypes have roughly equal priority. When an event fits two, such as a picnic that is a potluck, the one its title or description names foremost wins.
-* Priority lives in how examples are labeled. A centroid cannot learn a priority rule, which shows as Youth→Education in leave-one-out. If it wants code, its home is `EntityClassifierLabels.kt`, as a tie-break toward the higher type when scores are close.
+* Priority lives in how examples are labeled. A centroid cannot learn a priority rule, which shows as Youth→Education in leave-one-out. If it wants code, its home is `TagAnnotation.kt`, as a tie-break toward the higher type when scores are close.
 
 ## Abstaining
 
@@ -89,9 +112,29 @@ When labels matter (fallbacks, or blending), a richer label naming a few typical
 
 ## Evaluation Set
 
-`daemon/src/test/resources/event-evaluation.json` holds 181 V37 events (2026-10-03, first pass, awaiting the navigator's review), annotated from their full descriptions and held out from the example set: Music 32, Meetup 30, Arts 20, Education 18, Fitness 14, FoodAndDrink 13, Church 11, Youth 11, Comedy 9, Sports 9, Dance 8, Volunteer 6. Sampled by the classifier's V37 type, half from margins under 0.03, then topped up by keyword for Arts, Volunteer and FoodAndDrink. Events too unclear to label were skipped; the format requires a type, so no event is annotated as having none.
+`daemon/src/test/resources/event-evaluation.json` holds 307 V37 events in the tag shape (2026-10-03, first pass), annotated against every `EventTag` from the rules in `TagAnnotation.kt`, and held out from the example set. 181 were converted from the earlier type/subtype set (seeded from type and subtype, then reviewed against every tag); 126 were added to top up thin tags. Events too unclear to annotate were skipped. No entry has zero tags yet.
 
-Judgment calls to review: Common Flame activities (Drumming Circle, UUSC meetings) as Church by priority; meditation, sound baths and retreats as Fitness / Meditation; Puppy Kindergarten as Education / Class; orchestral film scores (The Nightmare Before Christmas) as Music / Concert; David Sedaris as Comedy; a women's conference about calling and truth as Church / Lecture.
+Events carrying each tag:
+
+* 20 or more: Music 71, Meetup 47, Education 43, Concert 42, Arts 36, Health & Fitness 32, Food & Drink 27, Holiday 26, Class 25, Sports 22, Books & Writing 20.
+* 10 to 19: Nature 19, Games & Trivia 19, Lecture 18, Kids & Family 18, Church 16, Exercise 16, Sports Match 16, Film 14, Crafting 14, Dance 14, Festival 13, Comedy 13, Networking 13, Theater 12, Volunteer 12, DJ Set 11, Singles 10.
+* Under 10, wanting leads: Fundraiser 9, Wellness 9, Watch Party 9, Food Truck 8, LGBTQ 7, Market 7, Hike 7, Pets 6, Tasting 6, Tech 5, Potluck 5, Karaoke 5, Pickup Game 4, Picnic 2, Community Outreach 1, Open Mic 1 (the pool's open mics are mostly copies of one event).
+* None in V37: Art Exhibition, Cleanup, Street Performance.
+
+The V37 pool is shared with the example set, and an event is used in only one of them, so the thin tags are thin for both until new leads bring more.
+
+## Example Set
+
+`daemon/src/main/resources/event-examples.json` holds 355 events in the tag shape (2026-10-03, first pass): the 273 type/subtype examples, seeded and reviewed against every tag, and 82 added from the rest of the V37 pool. It shares no event with the evaluation set. Some additions are deliberate negatives: bands whose names hold a tag's word (Snarky Puppy, Campground – By The Campfire, First Church of the Last Days) carry Music alone.
+
+Events carrying each tag:
+
+* 20 or more: Education 67, Meetup 58, Music 56, Class 48, Health & Fitness 46, Arts 44, Food & Drink 32, Concert 31, Kids & Family 29, Holiday 24, Books & Writing 24, Exercise 24, Sports 24, Dance 23, Games & Trivia 22.
+* 10 to 19: Comedy 19, Wellness 19, Nature 19, Lecture 18, Church 17, Crafting 15, Sports Match 15, Networking 14, Volunteer 14, Festival 13, DJ Set 13, Theater 12, Hike 12, Film 10, Food Truck 10, Fundraiser 10.
+* Under 10, wanting leads: LGBTQ 9, Tasting 9, Pickup Game 8, Watch Party 7, Tech 6, Politics 5, Pets 5, Art Exhibition 4, Market 4, Open Mic 4, Singles 2, Cleanup 1, Karaoke 1, Community Outreach 1.
+* None: Picnic, Potluck, Street Performance. A tag with no examples falls back to its description in `TagAnnotation.kt`.
+
+The V37 pool is spent for the thin tags; more examples wait on new leads.
 
 ## Next
 

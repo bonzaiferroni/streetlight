@@ -1,7 +1,6 @@
 package streetlight.server.daemon.agent
 
 import ai.koog.embeddings.base.Vector
-import kampfire.model.Labeled
 import kampfire.model.Outcome
 import kampfire.model.Problem
 
@@ -20,7 +19,3 @@ interface EmbeddingsClient {
 object EmbeddingsProblem {
     val Unspecified = Problem("Unspecified embeddings error.")
 }
-
-/** The text this value is embedded from: its label and the description [getClassifierLabel] gives it. */
-fun <E> E.toClassifierText(getClassifierLabel: (E) -> String) where E : Enum<E>, E : Labeled =
-    "$label: ${getClassifierLabel(this)}"

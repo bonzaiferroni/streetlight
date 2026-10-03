@@ -3,21 +3,20 @@ package streetlight.server.daemon.agent
 import ai.koog.embeddings.base.Vector
 import kampfire.model.toDataOr
 import streetlight.model.data.EventEdit
-import streetlight.model.data.EventSubtype
-import streetlight.model.data.EventType
+import streetlight.model.data.EventTag
 
 /**
- * The crawler's room for classifying what it reads, by embeddings from [client] compared against the vectors of each
- * type, [typeVectors], and of each subtype, [subtypeVectors].
+ * The crawler's room for classifying what it reads, by embeddings from [client], centered on [center], and the model
+ * of each tag, [tagModels].
  */
 class EntityClassifier(
     private val client: EmbeddingsClient,
-    private val typeVectors: Map<EventType, Vector>,
-    private val subtypeVectors: Map<EventSubtype, Vector>,
+    private val center: DoubleArray,
+    private val tagModels: Map<EventTag, TagModel>,
 ) {
     /**
-     * The [event] with its type and subtype, each left unset when it is not similar enough, read with the schema.org
-     * [declaredType] its page gave it, when it gave one. [onClassified] is given the classification, whatever passed.
+     * The [event] with the tags it is given, read with the schema.org [declaredType] its page gave it, when it gave
+     * one. [onClassified] is given the classification.
      */
     suspend fun classifyEvent(
         event: EventEdit,
@@ -27,36 +26,30 @@ class EntityClassifier(
         val eventVector = client.embedQuery(eventInstruction, event.getEmbeddingsText(declaredType))
             .toDataOr { return event }
 
-        val typeRanking = rankBySimilarity(eventVector, typeVectors)
-        val (eventType, typeSimilarity) = typeRanking.first()
-        val runnerUp = typeRanking.getOrNull(1)
-        val (eventSubtype, subtypeSimilarity) = rankBySimilarity(eventVector, subtypeVectors).first()
-        val classification = EventClassification(
-            title = event.title,
-            declaredType = declaredType,
-            eventType = eventType,
-            typeSimilarity = typeSimilarity,
-            runnerUpType = runnerUp?.first,
-            runnerUpSimilarity = runnerUp?.second,
-            eventSubtype = eventSubtype,
-            subtypeSimilarity = subtypeSimilarity,
-            typeAccepted = typeSimilarity >= minTypeSimilarity,
-            subtypeAccepted = subtypeSimilarity >= minSubtypeSimilarity,
-        )
+        val classification = readTags(eventVector, event.title, declaredType)
         onClassified(classification)
 
-        return event.copy(
-            eventType = eventType.takeIf { classification.typeAccepted },
-            eventSubtype = eventSubtype.takeIf { classification.subtypeAccepted },
+        return event.copy(tags = classification.tags)
+    }
+
+    /**
+     * The classification of the event of [eventVector], titled [title] and read with [declaredType]: each tag whose
+     * probability reaches the minimum is given.
+     */
+    internal fun readTags(eventVector: Vector, title: String? = null, declaredType: String? = null): EventClassification {
+        val features = eventVector.toFeatures(center)
+        val rankedTags = tagModels
+            .map { (tag, model) -> RankedTag(tag, model.readProbability(features)) }
+            .sortedByDescending { it.probability }
+        return EventClassification(
+            title = title,
+            declaredType = declaredType,
+            rankedTags = rankedTags.take(reportedTagCount),
+            tags = rankedTags.filter { it.probability >= minProbability }.map { it.tag },
         )
     }
 }
 
-/** Each of [vectors] with its cosine similarity to [eventVector], the most similar first. */
-private fun <T> rankBySimilarity(eventVector: Vector, vectors: Map<T, Vector>): List<Pair<T, Double>> = vectors
-    .map { (value, vector) -> value to eventVector.cosineSimilarity(vector) }
-    .sortedByDescending { (_, similarity) -> similarity }
-
 internal const val eventInstruction = "Given the details of a local event, retrieve the category that best describes it"
-private const val minTypeSimilarity = 0.4
-private const val minSubtypeSimilarity = 0.5
+private const val reportedTagCount = 5
+private const val minProbability = 0.7

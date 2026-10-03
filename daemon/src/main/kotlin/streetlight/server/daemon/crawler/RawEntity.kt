@@ -87,6 +87,13 @@ fun EventEdit.withSourceNote(sourceUrl: Url): EventEdit =
 /** This description with [note] as a paragraph of its own at its end. */
 fun Markdown?.withNote(note: String): Markdown = listOfNotNull(this?.value, note).joinToString("\n\n").toMarkdown()
 
+/** This description without the source or RSVP note [withNote] added at its end, or null when nothing else remains. */
+fun Markdown.withoutNote(): Markdown? {
+    val start = noteOpenings.mapNotNull { opening -> value.lastIndexOf(opening).takeIf { it >= 0 } }.minOrNull()
+        ?: return this
+    return value.take(start).replace(trailingSpace, "").takeIf { it.isNotEmpty() }?.toMarkdown()
+}
+
 /** The note that a record was gathered automatically, linking its [source]. */
 fun sourceNote(source: Url) =
     "*This information was automatically gathered, please check* [the source](${source.value}) *for updates.*"
@@ -119,3 +126,6 @@ fun EventRead.parseEvent(doc: Document, url: Url): RawEntity = buildRawEntity {
     this[ParseProperty.Location] = locationName
     this[ParseProperty.Address] = locationAddress
 }
+
+private val noteOpenings = listOf("*This information was automatically gathered", "This event may require that you [RSVP]")
+private val trailingSpace = Regex("""(\s|\\n)+$""")

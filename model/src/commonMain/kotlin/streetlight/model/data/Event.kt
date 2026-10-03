@@ -24,8 +24,7 @@ data class Event(
     val host: Username?,
     val title: String,
     val description: Markdown?,
-    val eventType: EventType?,
-    val eventSubtype: EventSubtype?,
+    val tags: List<EventTag>,
     val status: EventStatus,
     val contact: String?,
     val ageMin: Int?,
@@ -67,66 +66,4 @@ enum class EventStatus(override val label: String): Labeled {
     Live("Live"),
     OnBreak("On Break"),
     Finished("Finished"),
-}
-
-enum class EventType(label: String? = null): Labeled {
-    Meetup,
-    Music,
-    Church,
-    Fitness,
-    Education,
-    Comedy,
-    Dance,
-    Sports,
-    Volunteer,
-    Youth,
-    Arts,
-    FoodAndDrink("Food & Drink");
-
-    override val label = label ?: name
-}
-
-enum class EventSubtype(label: String? = null): Labeled {
-    // Meetup
-    Picnic,
-    Potluck,
-    Networking,
-    BookClub("Book Club"),
-    Trivia,
-    GameNight("Game Night"),
-
-    // Music
-    Concert,
-    OpenMic("Open Mic"),
-    StreetPerformance("Street Performance"),
-    DJSet("DJ Set"),
-
-    // Fitness
-    Hike,
-    Exercise,
-    Meditation,
-
-    // Education
-    Class,
-    Lecture,
-
-    // Sports
-    SportsMatch("Sports Match"),
-    PickupGame("Pickup Game"),
-
-    // Arts
-    Theater,
-    Film,
-    ArtExhibition("Art Exhibition"),
-
-    // Volunteer
-    Fundraiser,
-
-    // Food & Drink
-    FoodTruck("Food Truck"),
-
-    // General
-    Festival;
-
-    override val label = label ?: name
 }

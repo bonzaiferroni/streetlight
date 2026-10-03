@@ -4,6 +4,7 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
+* Build **V38** (staged after the tag backfill): events carry tags from the per-tag regression. Every stored V37 event is tagged by `./gradlew :daemon:backfillTags`, which classifies it from its stored fields with the source note removed. The stage deletes Studio@Mainstreet's events, links and the `tockify.com` parser, and nulls every `checked_feed_at` and lead `checked_at`, keeping links and the other events: known pages are skipped and pages deferred past the 30-page limit are read, so the counts of created and known events show what V37's first pass left. Dumps `logs/schema/*-before-V38.json`.
 * Build **V37** is staged as a full rescan for classification (2026-10-02): every event, link and link alias deleted, every location's `checked_feed_at` and every lead's `checked_at` nulled. Parsers and location website reads (`location.checked_at`) kept. Each classified event writes its check's report. Dumps `logs/schema/*-before-V37.json`.
 * Since V37 started: titles are capped at 150 characters (`isPlausibleTitle`), after a `tockify.com` page schema took the description as the title for Studio@Mainstreet (8 events with paragraph titles). Leads are read in the order of their random ids, so Meetup and Eventbrite interleave. The 9 Meetup leads checked before a mid-run stop were unchecked. The V38 bump stages Studio@Mainstreet: its events, links, and the `tockify.com` parser.
 * Build **V35** is staged: the Grimm Brothers feed, and the new Eventbrite Denver lead. V34 read all 192 location websites: 623 events and 43 locations created since 09:00 on 2026-10-01, 89 locations filled, locations with a feed from 67 to 124. Dumps `logs/schema/*-before-V35.json`.
@@ -139,8 +140,8 @@ A check writes `logs/parser/Vn/<type>-<address>.json` only when it needs attenti
 | `trim` | The page's trim stats, once per page |
 | `lm[]` | Each request (`schema`, `time`, `description`), its cap cut, token counts and the raw `response`: the first place to look when a schema is odd |
 | `schema` | `source` (new or stored), `validation`, `dropped` fields, `eventCount`, `fieldFill` (how many events each selector filled) |
-| `classifications[]` | Each event's classification on the page it was read from: `eventType`, `typeSimilarity`, `runnerUpType`, `runnerUpSimilarity`, `eventSubtype`, `subtypeSimilarity`, `typeAccepted`, `subtypeAccepted`, and its `declaredType`. Every classified event writes its check's report |
-| `records` | The counts: `found`, `created`, `past`, `unnamed`, `shortened`, `duplicates`, `known`, `createFailed`, `locationsSpawned`, `locationsFailed`, `classified`, `unclassified`. Each record's story (unparsed dates, duplicate titles, failures, location outcomes) is a note on its page |
+| `classifications[]` | Each event's classification on the page it was read from: `rankedTags` (the five most similar tags, each with its `similarity`), the `tags` given, and its `declaredType`. Every classified event writes its check's report |
+| `records` | The counts: `found`, `created`, `past`, `unnamed`, `shortened`, `duplicates`, `known`, `createFailed`, `locationsSpawned`, `locationsFailed`, `classified`. Each record's story (unparsed dates, duplicate titles, failures, location outcomes) is a note on its page |
 | `failure` | An exception that cut the check short |
 
 The summary pass over a build:
@@ -154,7 +155,7 @@ for f in sorted(glob.glob('*.json')):
     print(f"{f[:-5][:24]:24} {fd.get('content')} {fd.get('parseOutcome')} ev={s.get('eventCount')} "
           f"pages={dict(Counter(p['state'] for p in d['pages']))} "
           f"found={e['found']} created={e['created']} past={e['past']} dup={e['duplicates']} "
-          f"known={e.get('known', 0)} cls={e.get('classified', 0)}/{e.get('unclassified', 0)} "
+          f"known={e.get('known', 0)} cls={e.get('classified', 0)} "
           f"notes={len(fd.get('notes', []))} fail={d.get('failure')!r}")
 EOF
 ```

@@ -9,7 +9,7 @@ Integration tests for the daemon, in the test source set. Each runs real collabo
 | Package | Provides |
 |---|---|
 | `streetlight.server.daemon.agent` | The classifier and its embeddings client |
-| `streetlight.server.daemon` | `raiseEntityClassifier` |
+| `streetlight.server.daemon` | `raiseEntityClassifier` and `getCachedVectors` |
 | `kotlin.test` | Assertions |
 
 `docs/testing.md` states how tests are written.
@@ -18,12 +18,8 @@ Integration tests for the daemon, in the test source set. Each runs real collabo
 
 A test raises the resources it needs once per run, in a `lazy` of its companion. A resource that cannot be raised throws an error naming what must be running, rather than skipping the test or letting it fail on an assertion.
 
-| Test | Needs |
-|---|---|
-| `EntityClassifierTest` | Ollama at its default address, with the default embeddings model pulled |
-
 ## Classification
 
-`EntityClassifierTest` classifies each event of the test resource `classified-events.json` and expects every one to be given its type. Each entry is a `ClassifiedEvent`, in the format of the example set described in `streetlight.server.daemon.agent`.
+`event-evaluation.json`, a test resource, is the evaluation set: observed events annotated from their full descriptions, held out from the example set, so a change to the classifier is scored against events it was not built from. It is in the format of the example set described in `streetlight.server.daemon.agent`.
 
-`event-evaluation.json`, a test resource, is the evaluation set: observed events annotated from their full descriptions, held out from the example set, so a change to the classifier is scored against events it was not built from. It is not yet read by a test.
+`EntityClassifierEvaluationTest` classifies each event of the evaluation set with its tags cleared, through `readTags` on vectors cached as `EventEvaluation`, and prints the precision, recall and F0.5 of each tag the set holds. It asserts the average F0.5 across those tags is at least the floor the current example set and pipeline reach, so a change that lowers it fails; the floor is raised as they improve. It needs Ollama at its default address with the default embeddings model.
