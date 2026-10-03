@@ -156,10 +156,6 @@ $Label {
 }
 
 $ClusterMember {
-    $Body {
-        opacity: 0;
-    }
-    
     &$Root {
         pointer-events: none;
     }

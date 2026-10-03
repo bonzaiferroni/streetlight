@@ -52,7 +52,7 @@ interface EntityMarker: PointMarker {
 interface ThumbMarker: EntityMarker {
     val thumbUrl: Url
     val sublabel: String? get() = null
-    override val bodySize: LinearDimension get() = 48.px
+    override val bodySize: LinearDimension get() = 44.px
 }
 
 /** An [EntityMarker] drawn as an icon with its label. */

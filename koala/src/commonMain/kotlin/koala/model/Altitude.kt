@@ -25,13 +25,14 @@ fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
 val AltitudeCss get() = with(GeoMapKey) { """
     
 /* diminished visibility for markers just below altitude */
+${MarkerStyle.ClusterMember} ${MarkerStyle.Base},
 $Window${Altitude.Raincloud}  ${MarkerStyle.Base}${Altitude.Kite},
 $Window${Altitude.Airplane}   ${MarkerStyle.Base}${Altitude.Raincloud},
 $Window${Altitude.Satellite}  ${MarkerStyle.Base}${Altitude.Airplane},
 $Window${Altitude.Astronaut}  ${MarkerStyle.Base}${Altitude.Satellite},
 $Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Astronaut} {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.65);
     animation: twinkle 2.4s ease-in-out infinite;
