@@ -29,6 +29,8 @@ object MarkerStyle {
     val MarkerSvg = Property<Asset>("marker-svg", true)
     val MarkerBearing = Property<Angle>("marker-bearing", true)
     val MarkerBorder = Property<Rgb>("marker-border", true)
+
+    val LabelMod = modify(Bold, MaxWidth(24), TextOverflowEllipses, TextShadow)
 }
 
 // language="CSS"

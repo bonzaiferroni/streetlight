@@ -57,7 +57,7 @@ data class EventMarker(
     override val thumbUrl get() = event.image.thumb ?: SiteImage.placeholderTh
     override val light get() = rgb(240, 100, 180 )
     override val geoPoint get() = event.geoPoint
-    override val typeLabel get() = MarkerType.Event.label
+    override val typeLabel get() = event.tags?.firstOrNull()?.label ?: MarkerType.Event.label
     override val themeColor get() = ThemeColor.Accent.cssValue
 }
 

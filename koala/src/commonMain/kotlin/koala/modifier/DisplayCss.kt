@@ -33,6 +33,7 @@ val AccentFg = Class("accent-fg")
 val Primary = Class("primary")
 val Editor = Class("editor")
 val PrimaryFg = Class("primary-fg")
+val PrimaryLightFg = Class("primary-light-fg")
 /** Text in a gradient from the accent to the primary foreground, left to right. */
 val AccentPrimaryGradientFg = Class("accent-primary-gradient-fg")
 val WhiteFg = Class("white-fg")

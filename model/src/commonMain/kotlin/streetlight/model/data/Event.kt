@@ -24,7 +24,7 @@ data class Event(
     val host: Username?,
     val title: String,
     val description: Markdown?,
-    val tags: List<EventTag>,
+    val tags: List<EventTag>?,
     val status: EventStatus,
     val contact: String?,
     val ageMin: Int?,

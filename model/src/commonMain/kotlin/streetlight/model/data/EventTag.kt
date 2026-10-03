@@ -26,7 +26,7 @@ enum class EventTag(label: String? = null): Labeled {
     LGBTQ,
     Tech,
     Pets,
-    WatchParty("Watch Party"),
+    WatchParty("Watch Party"), // replace with Party
 
     // Music
     Concert,

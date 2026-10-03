@@ -146,6 +146,7 @@ body {
 
     --primary-button: rgb(var(--primary));
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
+    --primary-light-fg: color-mix(in srgb, rgb(var(--primary)) 25%, rgb(var(--ink)));
     --primary-bg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--paper)));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .4) 50%, var(--card-bg));
