@@ -42,11 +42,3 @@ kotlin {
 tasks.test {
     useJUnitPlatform()
 }
-
-tasks.register<JavaExec>("backfillTags") {
-    group = "application"
-    description = "Gives tags to every stored event without any, by the classifier"
-    mainClass.set("streetlight.server.daemon.tools.BackfillTagsKt")
-    classpath = sourceSets["main"].runtimeClasspath
-    workingDir = projectDir
-}

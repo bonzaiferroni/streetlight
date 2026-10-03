@@ -3,6 +3,7 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.GeoPoint
+import kampfire.model.Url
 import koala.Image
 import koala.html.AppRoute
 import koala.model.MarkerId
@@ -26,6 +27,7 @@ sealed interface Entity {
     val image: Image? get() = null
     val sublabel: String? get() = null
     val body: Markdown? get() = null
+    val url: Url? get() = null
     val links: List<ExtraLink>? get() = null
     val createdAt: Instant? get() = null
 }

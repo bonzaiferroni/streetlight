@@ -48,6 +48,7 @@ fun DIV.configureFeedRow(
     val colorScheme = entity.toThemeColor()
     val flair = entity.toFlair()
     val postRoute = entity.toRoute()
+    val headingUrl = entity.url?.value ?: postRoute?.toRelativePath()
     val heading = entity.label
     val buttons = entityButtonsOf(entity, true)
     val description = entity.body
@@ -67,7 +68,7 @@ fun DIV.configureFeedRow(
             containImage(image, modify(FeedRow.Feature, Size100P))
         }
         column(modify(FeedRow.Text, Gap(0), JustifyContentCenter, TextShadow, MarginTop(1))) {
-            navigationIfNotNull(postRoute) {
+            navigationIfNotNull(headingUrl) {
                 heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
             }
             postLine(entity, isUniverse)
@@ -117,14 +118,15 @@ fun FlowContent.flairBadge(flair: Svg) {
 fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     when (isUniverse) {
         true -> {
-            column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
-                markdown(entity.body ?: "yer description".toMarkdown(), modify(MaxHeight(8), FadeBottom, LineHeight115))
+            entity.body?.let {
+                column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
+                    markdown(it, modify(MaxHeight(4), FadeBottom, LineHeight115))
+                }
             }
         }
         else -> {
             val username = entity.post?.username ?: entity.username
             val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
-            val galaxy = entity.post?.galaxy
 
             column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
                 textBlock {
@@ -143,14 +145,6 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
                     }
                     +" "
                     span((Clock.System.now() - postedAt).toAgoFormat())
-                }
-                galaxy?.let {
-                    textBlock {
-                        +"to "
-                        navigation(GalaxyRoute(it.slug)) {
-                            span(it.name)
-                        }
-                    }
                 }
             }
         }

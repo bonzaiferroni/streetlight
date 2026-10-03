@@ -20,7 +20,7 @@ data class EventLocation(
     val eventSlug: Slug,
     val locationSlug: Slug,
     val host: Username,
-    val url: Url?,
+    override val url: Url?,
     val eventImage: Image?,
     val title: String,
     val description: Markdown?,

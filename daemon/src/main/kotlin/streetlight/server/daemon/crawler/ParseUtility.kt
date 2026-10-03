@@ -19,6 +19,7 @@ private val htmlConverter = FlexmarkHtmlConverter.builder(
         .set(FlexmarkHtmlConverter.OUTPUT_ATTRIBUTES_ID, false)
         .set(FlexmarkHtmlConverter.TYPOGRAPHIC_SMARTS, false)
         .set(FlexmarkHtmlConverter.WRAP_AUTO_LINKS, false)
+        .set(FlexmarkHtmlConverter.SKIP_CHAR_ESCAPE, true)
 ).build()
 
 fun htmlToMarkdown(html: String): Markdown? =

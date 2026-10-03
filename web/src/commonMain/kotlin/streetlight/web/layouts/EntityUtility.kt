@@ -89,7 +89,7 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
     }
     is EventLocation -> eventCells(startsAt, cost, url, locationName)
     is EventPost -> event.toCells()
-    is Event -> eventCells(startsAt, cost, website, null)
+    is Event -> eventCells(startsAt, cost, url, null)
     is Galaxy -> buildList {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
@@ -106,7 +106,7 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
 fun eventCells(startsAt: Instant?, cost: Float?, purchaseUrl: Url?, locationName: String?) = buildList {
     startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
     cost?.let { add(costCell(it, purchaseUrl)) }
-    locationName?.let { add(EntityCell(SvgFile.MapPin, it, null)) }
+    locationName?.let { add(EntityCell(SvgFile.MapPin, it, null, themeColor = ThemeColor.Location)) }
 }
 
 /** The cells of a location: its [mapType], [city], and [eventCount] when it has events. */

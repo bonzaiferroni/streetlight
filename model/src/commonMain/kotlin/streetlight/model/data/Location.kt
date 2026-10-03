@@ -36,7 +36,7 @@ data class Location(
     val mapType: String?,
     val resources: Set<ResourceType>,
     val hours: HoursSchedule?,
-    val website: Url?,
+    override val url: Url?,
     val starCount: Int?,
     val eventCount: Int,
     val isLit: Boolean,
@@ -60,7 +60,7 @@ data class Location(
 
     override val links by lazy {
         buildList {
-            website?.let {
+            url?.let {
                 add(ExtraLink("website", it))
             }
             eventsUrl?.let {
@@ -111,7 +111,7 @@ fun Location.toEdit() = LocationEdit(
     mapType = mapType,
     resources = resources,
     hours = hours,
-    website = website,
+    website = url,
     eventsUrl = eventsUrl,
     extraLinks = extraLinks,
     image = image,

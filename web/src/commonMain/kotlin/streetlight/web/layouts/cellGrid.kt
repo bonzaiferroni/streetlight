@@ -36,8 +36,18 @@ fun FlowContent.cellGrid(
     div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, mod)) {
         cells?.forEach { cell ->
             when (val url = cell.url) {
-                null -> row(CellGrid.CellMod) { cellContent(cell) }
-                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) { cellContent(cell) }
+                null -> row(CellGrid.CellMod) {
+                    cell.themeColor?.let {
+                        setStyle(Css.ColorScheme.of(it.cssValue))
+                    }
+                    cellContent(cell)
+                }
+                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) {
+                    cell.themeColor?.let {
+                        setStyle(Css.ColorScheme.of(it.cssValue))
+                    }
+                    cellContent(cell)
+                }
             }
         }
         if (!buttons.isNullOrEmpty()) {
@@ -156,6 +166,7 @@ data class EntityCell(
     val text: String,
     val url: Url?,
     val label: String? = null,
+    val themeColor: ThemeColor? = null
 )
 
 data class EntityButton(

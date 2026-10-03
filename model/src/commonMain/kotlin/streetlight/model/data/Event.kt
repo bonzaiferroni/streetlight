@@ -31,7 +31,7 @@ data class Event(
     val cost: Float?,
     val visibility: Int?,
     override val links: List<ExtraLink>?,
-    val website: Url?,
+    override val url: Url?,
     override val image: Image?,
     val streamUrl: String?,
     val timeZoneId: String,
