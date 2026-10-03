@@ -137,6 +137,7 @@ $SideBorder { border-left: var(--ghost-border); border-right: var(--ghost-border
 /* Color */
 $AccentFg        { color:            var(--accent-fg); }
 $PrimaryFg       { color:            var(--primary-fg); }
+$PrimaryLightFg  { color:            var(--primary-light-fg); }
 $WhiteFg         { color:            var(--white-fg); }
 $SystemFg        { color:            var(--system-fg); }
 $ErrorFg         { color:            var(--error-fg); }

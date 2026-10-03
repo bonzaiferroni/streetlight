@@ -27,7 +27,7 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
 
     with(marker) {
         // td: declare border radius in stylesheet
-        val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter)) {
+        val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, TextShadow)) {
             themeColor?.let {
                 setStyle(Css.ColorScheme.of(it))
             }
@@ -37,11 +37,11 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
                     src = thumbUrl.value
                 }
                 box(modify(MarkerStyle.ClusterCount, HeavyCardBg)) {
-                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold, TextShadow))
+                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold))
                 }
             }
 
-            column(modify(Gap2Px, LineHeight115, WhiteSpaceNoWrap)) {
+            column(modify(Gap0, LineHeight115, WhiteSpaceNoWrap)) {
                 label?.let {
                     textBlock(it, MarkerStyle.LabelMod)
                 }
@@ -72,9 +72,9 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
                 setStyle(Css.ColorScheme.of(it))
             }
 
-            box(modify(MarkerStyle.Icon, BorderRadius50P, CardBg, Outline)) {
+            box(modify(MarkerStyle.Icon)) {
                 icon(marker.svg, modify(SmallIconHeight, PlaceSelfCenter, ColorSchemeFg))
-                box(MarkerStyle.ClusterCount) {
+                box(modify(MarkerStyle.ClusterCount, BorderRadius50P, CardBg, Outline)) {
                     clusterElement = textBlock(mod = modify(PlaceSelfCenter, Bold, TextShadow))
                 }
             }

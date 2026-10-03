@@ -8,6 +8,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
 import streetlight.model.data.ExtraLink
@@ -65,7 +66,7 @@ fun DIV.configureFeedRow(
         navigationIfNotNull(postRoute, modify(FeedRow.Image, OverflowClip, MoonShadow)) {
             containImage(image, modify(FeedRow.Feature, Size100P))
         }
-        column(modify(FeedRow.Text, Gap(0), JustifyContentCenter, TextShadow)) {
+        column(modify(FeedRow.Text, Gap(0), JustifyContentCenter, TextShadow, MarginTop(1))) {
             navigationIfNotNull(postRoute) {
                 heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
             }
@@ -114,33 +115,42 @@ fun FlowContent.flairBadge(flair: Svg) {
 
 /** Who posted [entity] and when, and to which galaxy when [isUniverse]. */
 fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
-    val username = entity.post?.username ?: entity.username ?: return
-    val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
-    val galaxy = entity.post?.galaxy?.takeIf { isUniverse }
-
-    column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
-        textBlock {
-            +"posted by "
-            when (username) {
-                null -> {
-                    span("Someone", Bold)
-                }
-                else -> {
-                    button {
-                        setPopoverTarget(PopoverId.StarMenu)
-                        setAttribute(Attribute.Username.to(username))
-                        span(username.value, PrimaryFg)
-                    }
-                }
+    when (isUniverse) {
+        true -> {
+            column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
+                markdown(entity.body ?: "yer description".toMarkdown(), modify(MaxHeight(8), FadeBottom, LineHeight115))
             }
-            +" "
-            span((Clock.System.now() - postedAt).toAgoFormat())
         }
-        galaxy?.let {
-            textBlock {
-                +"to "
-                navigation(GalaxyRoute(it.slug)) {
-                    span(it.name)
+        else -> {
+            val username = entity.post?.username ?: entity.username
+            val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
+            val galaxy = entity.post?.galaxy
+
+            column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
+                textBlock {
+                    +"posted by "
+                    when (username) {
+                        null -> {
+                            span("Someone", Bold)
+                        }
+                        else -> {
+                            button {
+                                setPopoverTarget(PopoverId.StarMenu)
+                                setAttribute(Attribute.Username.to(username))
+                                span(username.value, PrimaryFg)
+                            }
+                        }
+                    }
+                    +" "
+                    span((Clock.System.now() - postedAt).toAgoFormat())
+                }
+                galaxy?.let {
+                    textBlock {
+                        +"to "
+                        navigation(GalaxyRoute(it.slug)) {
+                            span(it.name)
+                        }
+                    }
                 }
             }
         }
