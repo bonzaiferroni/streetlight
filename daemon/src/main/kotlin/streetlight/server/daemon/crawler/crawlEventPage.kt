@@ -32,9 +32,9 @@ suspend fun Crawler.crawlEventPage(
     schema: LmSchema?,
 ) {
     val rawReadEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl, !lead.isExternalOrigin) } }
-    val rawDeclaredEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl, !lead.isExternalOrigin)?.toRawEntity() }?.takeIf { it.isNotEmpty() }
-    rawDeclaredEvent.trackDeclaredLd(lead.initialUrl)
-    val rawPageEvent = if (rawReadEvent == null && rawDeclaredEvent == null) null else rawReadEvent.orEmpty() + rawDeclaredEvent.orEmpty()
+    val rawLdEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl, !lead.isExternalOrigin)?.toRawEntity() }?.takeIf { it.isNotEmpty() }
+    rawLdEvent.trackLdValues(lead.initialUrl)
+    val rawPageEvent = if (rawReadEvent == null && rawLdEvent == null) null else rawReadEvent.orEmpty() + rawLdEvent.orEmpty()
 
     when {
         document == null || rawPageEvent == null -> {
@@ -43,7 +43,7 @@ suspend fun Crawler.crawlEventPage(
         else -> {
             tracker.trackReadUrl(lead.initialUrl, SchemaType.EventPage)
             log.debug { "Parsed ${document.servedUrl}: description ${rawPageEvent[ParseProperty.Description]?.length ?: 0} chars" }
-            if (rawPageEvent[ParseProperty.Description] == null && rawPageEvent[ParseProperty.DeclaredDescription] == null) tracker.trackPartialUrl(lead.initialUrl, "The page had no description")
+            if (rawPageEvent[ParseProperty.Description] == null && rawPageEvent[ParseProperty.LdDescription] == null) tracker.trackPartialUrl(lead.initialUrl, "The page had no description")
             deliverEvent(lead.feed, lead.rawFeedEvent, rawPageEvent, tracker)
         }
     }

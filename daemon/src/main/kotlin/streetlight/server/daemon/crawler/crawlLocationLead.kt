@@ -43,17 +43,17 @@ suspend fun Crawler.crawlLocationLead(lead: LocationLead, document: FetchDocumen
 
     val rawLocation = locationRead.parseLocation(document.doc)
     val ldPlace = document.doc.readPageLdPlace()
-    val rawDeclaredLocation = ldPlace?.toRawEntity().orEmpty()
-    rawDeclaredLocation.trackDeclaredLd(lead.initialUrl)
+    val rawLdLocation = ldPlace?.toRawEntity().orEmpty()
+    rawLdLocation.trackLdValues(lead.initialUrl)
 
     when (val locationId = lead.locationId) {
         null -> {
             val region = ldPlace?.region ?: locationRead.state
             val area = areaOf(ldPlace?.locality ?: locationRead.city, region, ldPlace?.postalCode ?: locationRead.postalCode)
-            deliverLocation(lead, rawLocation + rawDeclaredLocation, area, region, document.doc.readMetaContent("og:site_name"))
+            deliverLocation(lead, rawLocation + rawLdLocation, area, region, document.doc.readMetaContent("og:site_name"))
         }
         else -> {
-            mergeAndUpdateLocation(lead, locationId, rawLocation + rawDeclaredLocation)
+            mergeAndUpdateLocation(lead, locationId, rawLocation + rawLdLocation)
         }
     }
 }

@@ -67,7 +67,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
 
     fun trackNoEvents(url: Url, type: SchemaType) = page(url).trackNoEvents(type)
 
-    fun trackDeclaredLd(url: Url) {
+    fun trackLdValues(url: Url) {
         page(url).notes.add("Declared values from its JSON-LD")
     }
 
@@ -438,8 +438,8 @@ private val needsWorkContent = setOf(LinkContent.OffSchema, LinkContent.OffScope
 
 /** Tracks the page at [pageUrl] as declaring values, when this map holds any. */
 context(tracker: ParseTracker)
-fun RawEntity?.trackDeclaredLd(pageUrl: Url) {
-    if (!isNullOrEmpty()) tracker.trackDeclaredLd(pageUrl)
+fun RawEntity?.trackLdValues(pageUrl: Url) {
+    if (!isNullOrEmpty()) tracker.trackLdValues(pageUrl)
 }
 
 /** The names of the selectors set in [before] and cleared in [after]. */

@@ -15,35 +15,35 @@ class EntityClassifier(
     private val tagModels: Map<EventTag, TagModel>,
 ) {
     /**
-     * The [event] with the tags it is given, read with the schema.org [declaredType] its page gave it, when it gave
+     * The [event] with the tags it is given, read with the schema.org [ldType] its page gave it, when it gave
      * one. [onClassified] is given the classification.
      */
     suspend fun classifyEvent(
         event: EventEdit,
-        declaredType: String? = null,
+        ldType: String? = null,
         onClassified: (EventClassification) -> Unit = {},
     ): EventEdit {
-        val eventVector = client.embedQuery(eventInstruction, event.getEmbeddingsText(declaredType))
+        val eventVector = client.embedQuery(eventInstruction, event.getEmbeddingsText(ldType))
             .toDataOr { return event }
 
-        val classification = readTags(eventVector, event.title, declaredType)
+        val classification = readTags(eventVector, event.title, ldType)
         onClassified(classification)
 
         return event.copy(tags = classification.tags)
     }
 
     /**
-     * The classification of the event of [eventVector], titled [title] and read with [declaredType]: each tag whose
+     * The classification of the event of [eventVector], titled [title] and read with [ldType]: each tag whose
      * probability reaches the minimum is given.
      */
-    internal fun readTags(eventVector: Vector, title: String? = null, declaredType: String? = null): EventClassification {
+    internal fun readTags(eventVector: Vector, title: String? = null, ldType: String? = null): EventClassification {
         val features = eventVector.toFeatures(center)
         val rankedTags = tagModels
             .map { (tag, model) -> RankedTag(tag, model.readProbability(features)) }
             .sortedByDescending { it.probability }
         return EventClassification(
             title = title,
-            declaredType = declaredType,
+            ldType = ldType,
             rankedTags = rankedTags.take(reportedTagCount),
             tags = rankedTags.filter { it.probability >= minProbability }.map { it.tag },
         )

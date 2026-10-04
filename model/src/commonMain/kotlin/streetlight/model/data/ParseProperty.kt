@@ -26,7 +26,7 @@ enum class ParseProperty {
     SocialLinks,
 
     /** The description a page declares for other platforms to show, as html, kept whole. */
-    DeclaredDescription,
+    LdDescription,
 
     /** The url where tickets for an event are sold. */
     Tickets,
@@ -41,7 +41,7 @@ enum class ParseProperty {
     Region,
 
     /** The schema.org type a page declares for an event, such as `MusicEvent`, when it is more specific than `Event`. */
-    DeclaredType,
+    LdType,
 }
 
 /** The text of each property read from a page, not yet parsed. */

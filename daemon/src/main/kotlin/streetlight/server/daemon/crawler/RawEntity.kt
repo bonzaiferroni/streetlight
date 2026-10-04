@@ -31,8 +31,8 @@ fun RawEntity.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: Pa
         .joinToString(" ")
         .takeIf { it.isNotBlank() }
 
-    val declared = this[ParseProperty.DeclaredDescription]?.let { htmlToMarkdown(it) }?.value
-    val description = declared ?: this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.let { full ->
+    val ldDescription = this[ParseProperty.LdDescription]?.let { htmlToMarkdown(it) }?.value
+    val description = ldDescription ?: this[ParseProperty.Description]?.let { htmlToMarkdown(it) }?.value?.let { full ->
         if (parseMode == ParseMode.Full) return@let full
         shortenDescription(full, url).also { if (it != full) tracker.trackShortenedDescription() }
     }

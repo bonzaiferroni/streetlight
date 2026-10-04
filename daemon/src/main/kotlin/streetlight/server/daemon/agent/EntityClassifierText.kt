@@ -4,10 +4,10 @@ import streetlight.model.data.EventEdit
 
 /**
  * The text this event is embedded from: a `<label>: <value>` line for each field it has that describes it, and for the
- * schema.org [declaredType] its page gave it, its words split apart.
+ * schema.org [ldType] its page gave it, its words split apart.
  */
-fun EventEdit.getEmbeddingsText(declaredType: String? = null): String = listOfNotNull(
-    declaredType?.let { "Category: ${it.replace(camelBoundary, " ")}" },
+fun EventEdit.getEmbeddingsText(ldType: String? = null): String = listOfNotNull(
+    ldType?.let { "Category: ${it.replace(camelBoundary, " ")}" },
     title?.let { "Title: $it" },
     description?.let { "Description: ${it.value}" },
     website?.let { "Website: ${it.value}" },

@@ -40,7 +40,7 @@ The notes below the shape change describe the type/subtype prototype.
 * Label and example vectors are cached in `data/embeddings` (`EventType-*`, `EventSubtype-*`, `EventExamples-*`), keyed by model, instruction and text.
 * `daemon/src/main/resources/event-examples.json` holds 273 observed events labeled by type and subtype (2026-10-02, first pass, labeled by title and a glance at the description): Meetup 43, Fitness 29, Youth 29, Education 25, FoodAndDrink 25, Music 24, Sports 21, Arts 18, Dance 18, Church 16, Comedy 16, Volunteer 9.
 * `EntityClassifierTest` classifies the 10 held-out events of `daemon/src/test/resources/classified-events.json` and requires all 10. Green with centroids.
-* A page's schema.org event type, when more specific than `Event`, reaches the embedding as a `Category` line (`ParseProperty.DeclaredType`). In the saved pages of builds V30 to V36, about 320 JSON-LD blocks declared one against 5,559 plain `Event`. The examples were embedded without it.
+* A page's schema.org event type, when more specific than `Event`, reaches the embedding as a `Category` line (`ParseProperty.LdType`). In the saved pages of builds V30 to V36, about 320 JSON-LD blocks declared one against 5,559 plain `Event`. The examples were embedded without it.
 * Every classification is reported on its page in the parse report (`classifications[]`), with the best type, runner-up and best subtype and their similarities. A check that classified anything writes its report. `records` counts `classified` and `unclassified`.
 
 ## V37 Results

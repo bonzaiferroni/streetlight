@@ -51,16 +51,16 @@ class StructuredDataTest {
 
     @Test
     fun `an event page's own event declares its values with its time as the page states it`() {
-        val rawDeclaredEvent = page(jazzNight).readPageLdEvent(pageUrl)?.toRawEntity().orEmpty()
+        val rawLdEvent = page(jazzNight).readPageLdEvent(pageUrl)?.toRawEntity().orEmpty()
 
-        assertEquals("Jazz Night", rawDeclaredEvent[ParseProperty.Name])
-        assertEquals("2026-10-16", rawDeclaredEvent[ParseProperty.Date])
-        assertEquals("20:00", rawDeclaredEvent[ParseProperty.StartTime])
-        assertEquals("23:00", rawDeclaredEvent[ParseProperty.EndTime])
-        assertEquals("$15", rawDeclaredEvent[ParseProperty.Cost])
-        assertEquals("https://venue.example/jazz.jpg", rawDeclaredEvent[ParseProperty.Image])
-        assertEquals("The Venue", rawDeclaredEvent[ParseProperty.Location])
-        assertEquals("2736 Welton Street", rawDeclaredEvent[ParseProperty.Address])
+        assertEquals("Jazz Night", rawLdEvent[ParseProperty.Name])
+        assertEquals("2026-10-16", rawLdEvent[ParseProperty.Date])
+        assertEquals("20:00", rawLdEvent[ParseProperty.StartTime])
+        assertEquals("23:00", rawLdEvent[ParseProperty.EndTime])
+        assertEquals("$15", rawLdEvent[ParseProperty.Cost])
+        assertEquals("https://venue.example/jazz.jpg", rawLdEvent[ParseProperty.Image])
+        assertEquals("The Venue", rawLdEvent[ParseProperty.Location])
+        assertEquals("2736 Welton Street", rawLdEvent[ParseProperty.Address])
     }
 
     @Test
@@ -98,10 +98,10 @@ class StructuredDataTest {
     fun `an event with a start date but no time declares its date and no start time`() {
         val dateOnly = jazzNight.replace("2026-10-16T20:00:00-06:00", "2026-10-16")
 
-        val rawDeclaredEvent = page(dateOnly).readLdEvents().single().toRawEntity()
+        val rawLdEvent = page(dateOnly).readLdEvents().single().toRawEntity()
 
-        assertEquals("2026-10-16", rawDeclaredEvent[ParseProperty.Date])
-        assertNull(rawDeclaredEvent[ParseProperty.StartTime])
+        assertEquals("2026-10-16", rawLdEvent[ParseProperty.Date])
+        assertNull(rawLdEvent[ParseProperty.StartTime])
     }
 
     @Test
@@ -166,11 +166,11 @@ class StructuredDataTest {
         """
 
         val place = page(bar).readPageLdPlace()
-        val rawDeclaredLocation = place?.toRawEntity().orEmpty()
+        val rawLdLocation = place?.toRawEntity().orEmpty()
 
-        assertEquals("Bar 404", rawDeclaredLocation[ParseProperty.Name])
-        assertEquals("404 Main Street", rawDeclaredLocation[ParseProperty.Address])
-        assertEquals("hello@bar404.example", rawDeclaredLocation[ParseProperty.Email])
+        assertEquals("Bar 404", rawLdLocation[ParseProperty.Name])
+        assertEquals("404 Main Street", rawLdLocation[ParseProperty.Address])
+        assertEquals("hello@bar404.example", rawLdLocation[ParseProperty.Email])
         assertEquals("80202", place?.postalCode)
         assertEquals("US", place?.country)
     }

@@ -88,13 +88,18 @@ fun pageLdEvent(events: List<LdEvent>, pageUrl: Url): LdEvent? {
 fun Document.readPageLdEvent(pageUrl: Url, resolveIfRelative: Boolean = false): LdEvent? =
     pageLdEvent(readLdEvents(resolveIfRelative), pageUrl)
 
+/** The events the JSON-LD of this feed page declares, by their absolute url normalized, resolved as [readLdEvents] resolves. */
+fun Document.readFeedLdEvents(resolveIfRelative: Boolean = false): Map<Url, LdEvent> = readLdEvents(resolveIfRelative)
+    .mapNotNull { event -> event.url?.toUrl()?.takeIf { it.isAbsolute }?.normalize()?.let { it to event } }
+    .toMap()
+
 /** Whether this event was called off or moved, so it is not to be posted as it stands. */
 val LdEvent.isCalledOff get() = status?.substringAfterLast('/') in calledOffStatuses
 
 /**
  * The values this event declares, each under its [ParseProperty], to lay over what the page was read for. Its start is
  * the local time the page states, whatever offset it carries, and its end only on the start's date. Its description
- * is a [ParseProperty.DeclaredDescription].
+ * is a [ParseProperty.LdDescription].
  */
 fun LdEvent.toRawEntity(): RawEntity {
     val (date, startTime) = startDate?.let { splitDateTime(it) } ?: (null to null)
@@ -105,7 +110,7 @@ fun LdEvent.toRawEntity(): RawEntity {
         this[ParseProperty.StartTime] = startTime
         this[ParseProperty.EndTime] = endTime?.takeIf { endDate == date }
         this[ParseProperty.Image] = image
-        this[ParseProperty.DeclaredDescription] = description
+        this[ParseProperty.LdDescription] = description
         this[ParseProperty.Cost] = price?.let { if (it.toFloatOrNull() == 0f) "Free" else "$$it" }
             ?.takeIf { currency == null || currency == "USD" }
         this[ParseProperty.Tickets] = tickets
@@ -113,7 +118,7 @@ fun LdEvent.toRawEntity(): RawEntity {
         this[ParseProperty.Address] = place?.street
         this[ParseProperty.Area] = place?.area
         this[ParseProperty.Region] = place?.region
-        this[ParseProperty.DeclaredType] = type
+        this[ParseProperty.LdType] = type
     }
 }
 

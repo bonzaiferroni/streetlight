@@ -26,9 +26,9 @@ suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, sc
     tracker.trackReadUrl(lead.initialUrl, SchemaType.EventPage)
 
     val ldEvent = document.doc.readPageLdEvent(document.servedUrl, !lead.isExternalOrigin)
-    val rawDeclaredEvent = ldEvent?.toRawEntity().orEmpty()
-    rawDeclaredEvent.trackDeclaredLd(lead.initialUrl)
-    val rawEvent = eventRead.parseEvent(document.doc, lead.initialUrl) + rawDeclaredEvent
+    val rawLdEvent = ldEvent?.toRawEntity().orEmpty()
+    rawLdEvent.trackLdValues(lead.initialUrl)
+    val rawEvent = eventRead.parseEvent(document.doc, lead.initialUrl) + rawLdEvent
 
     tracker.trackFoundRecord()
     val title = rawEvent[ParseProperty.Name] ?: return tracker.trackUnnamedRecord(rawEvent)

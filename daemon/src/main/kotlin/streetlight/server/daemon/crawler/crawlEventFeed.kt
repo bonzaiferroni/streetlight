@@ -15,6 +15,8 @@ import streetlight.server.daemon.agent.innerHtml
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
 import streetlight.server.daemon.agent.tryQuery
+import streetlight.server.daemon.agent.readFeedLdEvents
+import streetlight.server.daemon.agent.toRawEntity
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventFeed
 import streetlight.model.data.EventPage
@@ -22,8 +24,8 @@ import streetlight.model.data.SchemaType
 import streetlight.model.data.LmSchema
 
 /**
- * Delivers the events [selectorSchema] finds in the [lead] fetched as [document], each merged with its event page when it
- * links to one worth reading.
+ * Delivers the events [selectorSchema] finds in the [lead] fetched as [document], each with the values the feed's JSON-LD
+ * declares for its link laid over it, and merged with its event page when it links to one worth reading.
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, selectorSchema: LmSchema?) {
@@ -31,22 +33,30 @@ suspend fun Crawler.crawlEventFeed(lead: EventFeed, document: FetchDocument?, se
     val schema = selectorSchema as? EventFeedSchema ?: return
     val elements = findEventElements(lead, document, schema) ?: return
     val feedUrls = setOf(lead.initialUrl, document.servedUrl)
+    val ldEvents = document.doc.readFeedLdEvents(resolveIfRelative = true)
+    var isLdUsed = false
 
     elements.forEach { element ->
-        val rawFeedEvent = parseFeedEvent(element, schema)
+        val rawSchemaEvent = parseFeedEvent(element, schema)
+        val rawLdEvent = rawSchemaEvent[ParseProperty.Url]?.let { ldEvents[it.toUrl()] }?.toRawEntity()
+        if (!isLdUsed && !rawLdEvent.isNullOrEmpty()) {
+            isLdUsed = true
+            rawLdEvent.trackLdValues(lead.initialUrl)
+        }
+        val rawEvent = rawSchemaEvent + rawLdEvent.orEmpty()
 
-        val pageUrl = rawFeedEvent[ParseProperty.Url]?.toUrl() ?: return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
-        if (pageUrl in feedUrls) return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
+        val pageUrl = rawEvent[ParseProperty.Url]?.toUrl() ?: return@forEach deliverEvent(lead, rawEvent, null, tracker)
+        if (pageUrl in feedUrls) return@forEach deliverEvent(lead, rawEvent, null, tracker)
         tracker.trackFoundLink()
-        if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
+        if (tracker.hasPage(pageUrl)) return@forEach deliverEvent(lead, rawEvent, null, tracker)
         val pageLink = dao.link.readLink(pageUrl)
         if (pageLink != null && !pageLink.wantsRead()) return@forEach tracker.trackKnownPage()
         if (!tracker.canReadPage()) return@forEach tracker.trackSkippedUrl(pageUrl, PageState.Deferred)
         if (!tracker.shouldFetch(pageUrl)) {
             tracker.trackSkippedUrl(pageUrl, PageState.Benched)
-            return@forEach deliverEvent(lead, rawFeedEvent, null, tracker)
+            return@forEach deliverEvent(lead, rawEvent, null, tracker)
         }
-        crawl(EventPage(pageUrl, lead, rawFeedEvent))
+        crawl(EventPage(pageUrl, lead, rawEvent))
     }
 }
 

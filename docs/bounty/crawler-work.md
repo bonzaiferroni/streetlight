@@ -4,7 +4,7 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
-* Build **V39** (2026-10-04): a stored feed schema is reused only when its `link`, when it has one, matches among its events. V38's stored Eventbrite feed schema kept matching its events while its hashed link class had changed, so 61 of 65 feeds followed no event pages and every record was dropped for want of a date. The stage nulls `checked_at` on the 61 Eventbrite leads. Dumps `logs/schema/lead-before-V39.json`.
+* Build **V39** (2026-10-04): a stored feed schema is reused only when its `link`, when it has one, matches among its events. V38's stored Eventbrite feed schema kept matching its events while its hashed link class had changed, so 61 of 65 feeds followed no event pages and every record was dropped for want of a date. V39 also lays a feed's declared events over its records, matched by url. The stage nulls `checked_at` on the 61 Eventbrite leads. Dumps `logs/schema/lead-before-V39.json`.
 * The **Luma Denver** (2026-10-03) and **AllEvents Denver** leads are added, then 56 more AllEvents towns (see AllEvents Radius), with Denver's geo point. Luma's first read yielded nothing: its cards carry no date or link (see Open Leads). AllEvents (`Crawl-delay: 10`) holds dates in its Basic text and declares 96 events in JSON-LD.
 * Build **V38** (staged after the tag backfill): events carry tags from the per-tag regression. The stage deletes Studio@Mainstreet's events, links and the `tockify.com` parser, and nulls every `checked_feed_at` and lead `checked_at`, keeping links and the other events: known pages are skipped and pages deferred past the 30-page limit are read, so the counts of created and known events show what V37's first pass left. Dumps `logs/schema/*-before-V38.json`.
 * Build **V37** is staged as a full rescan for classification (2026-10-02): every event, link and link alias deleted, every location's `checked_feed_at` and every lead's `checked_at` nulled. Parsers and location website reads (`location.checked_at`) kept. Each classified event writes its check's report. Dumps `logs/schema/*-before-V37.json`.
@@ -149,7 +149,7 @@ A check writes `logs/parser/Vn/<type>-<address>.json` only when it needs attenti
 | `trim` | The page's trim stats, once per page |
 | `lm[]` | Each request (`schema`, `time`, `description`), its cap cut, token counts and the raw `response`: the first place to look when a schema is odd |
 | `schema` | `source` (new or stored), `validation`, `dropped` fields, `eventCount`, `fieldFill` (how many events each selector filled) |
-| `classifications[]` | Each event's classification on the page it was read from: `rankedTags` (the five most similar tags, each with its `similarity`), the `tags` given, and its `declaredType`. Every classified event writes its check's report |
+| `classifications[]` | Each event's classification on the page it was read from: `rankedTags` (the five most similar tags, each with its `similarity`), the `tags` given, and its `ldType`. Every classified event writes its check's report |
 | `records` | The counts: `found`, `created`, `past`, `unnamed`, `shortened`, `duplicates`, `known`, `createFailed`, `locationsSpawned`, `locationsFailed`, `classified`. Each record's story (unparsed dates, duplicate titles, failures, location outcomes) is a note on its page |
 | `failure` | An exception that cut the check short |
 
@@ -237,7 +237,7 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 
 Found and not yet acted on, each to be weighed against the General Model:
 
-* **Declared events on feeds.** Feed pages declare their events in JSON-LD: Eventbrite as one `ItemList` (20, `startDate` date only), Meetup as bare arrays across 7 blocks (51), Luma as one `ItemList` (10), AllEvents as an array (77) and an `ItemList` (19). Each declared event carries its page `url`. `pageLdEvent` keeps only a page's own event, so a feed gets none of them. The path: in `crawlEventFeed`, match each record to the declared event of the same normalized `url` and lay it over `rawFeedEvent`, which `EventPage` carries on and the early `deliverEvent` paths use. A date-only declared date never overrules a read with a time. Perhaps enough to create an event without its page.
+* **Declared events on feeds.** Taken up in V39: a feed's declared events are laid over its records by url. Feeds declare them as an `ItemList` (Eventbrite, Luma, AllEvents) or bare arrays (Meetup, AllEvents); Eventbrite's `startDate` is a date alone. Records without a link (Luma) take none, and declared events without a card stay unread.
 * **Luma.** Its Basic cards hold title and venue but no date, and their link is an empty overlay anchor (`a.event-link`, `&nbsp;`) the LM leaves null, so the declared events cannot be matched by url. Its scripted render puts the date in a heading above each day's cards, outside the event element, and shows fewer events (5 against 16). The LM answered `isScriptingRequired: false`.
 
 * **Mark a lead checked when its check finishes.** Keep the ids of leads in flight in one in-memory set, left out of the checkable queries with `notInList`, and set `checked_at` after the check returns. A stopped run would then need no restaging. Tabled 2026-10-01.
