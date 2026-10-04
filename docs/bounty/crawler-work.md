@@ -4,6 +4,7 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
+* The **Luma Denver** (2026-10-03) and **AllEvents Denver** leads are added, then 56 more AllEvents towns (see AllEvents Radius), with Denver's geo point. Luma's first read yielded nothing: its cards carry no date or link (see Open Leads). AllEvents (`Crawl-delay: 10`) holds dates in its Basic text and declares 96 events in JSON-LD.
 * Build **V38** (staged after the tag backfill): events carry tags from the per-tag regression. The stage deletes Studio@Mainstreet's events, links and the `tockify.com` parser, and nulls every `checked_feed_at` and lead `checked_at`, keeping links and the other events: known pages are skipped and pages deferred past the 30-page limit are read, so the counts of created and known events show what V37's first pass left. Dumps `logs/schema/*-before-V38.json`.
 * Build **V37** is staged as a full rescan for classification (2026-10-02): every event, link and link alias deleted, every location's `checked_feed_at` and every lead's `checked_at` nulled. Parsers and location website reads (`location.checked_at`) kept. Each classified event writes its check's report. Dumps `logs/schema/*-before-V37.json`.
 * Since V37 started: titles are capped at 150 characters (`isPlausibleTitle`), after a `tockify.com` page schema took the description as the title for Studio@Mainstreet (8 events with paragraph titles). Leads are read in the order of their random ids, so Meetup and Eventbrite interleave. The 9 Meetup leads checked before a mid-run stop were unchecked. The V38 bump stages Studio@Mainstreet: its events, links, and the `tockify.com` parser.
@@ -23,6 +24,13 @@ Every Colorado town with a Meetup city feed (`/find/us--co--<town>/`) is added a
 ## Eventbrite Radius
 
 Eventbrite's city feeds (`/d/co--<town>/all-events/`) answer for any real town, each with about 21 events near it; a town it does not know answers 404. Every town of the Meetup radius has a lead, and those Meetup lacks a page for (Lakewood, Centennial, Highlands Ranch, Northglenn, Greenwood Village, Superior, Castle Pines, Edgewater, Sheridan, Federal Heights, Ken Caryl): 61 feeds with Denver. Glendale is left out, its page holding Boulder's events. Within about 20 km a town's page mostly repeats Denver's; from about 22 km out most of its events are its own.
+
+## AllEvents Radius
+
+AllEvents' city feeds are `allevents.in/<town>`, or `allevents.in/<town>-co` when the name belongs to a town elsewhere (Louisville answers for Kentucky, Brighton for England). A slug it does not know redirects to `/events`. Every town of the Meetup and Eventbrite radius was probed (2026-10-03, `Crawl-delay: 10`): 56 feeds with events have leads, 57 with Denver. Each takes its town's geo point from its Eventbrite or Meetup lead; Cherry Hills Village, Columbine, Foxfield and Glendale, which have neither, take theirs from OSM.
+
+* **No events:** Indian Hills, Dacono, Federal Heights, Bow Mar, Welby, Black Hawk.
+* **No feed:** Lone Tree, Sheridan, Mountain View, Lakeside, Castle Pines.
 
 ## Principles
 
@@ -227,6 +235,9 @@ A quick check of a saved page without a probe: strip scripts and tags with a reg
 ## Open Leads
 
 Found and not yet acted on, each to be weighed against the General Model:
+
+* **Declared events on feeds.** Feed pages declare their events in JSON-LD: Eventbrite as one `ItemList` (20, `startDate` date only), Meetup as bare arrays across 7 blocks (51), Luma as one `ItemList` (10), AllEvents as an array (77) and an `ItemList` (19). Each declared event carries its page `url`. `pageLdEvent` keeps only a page's own event, so a feed gets none of them. The path: in `crawlEventFeed`, match each record to the declared event of the same normalized `url` and lay it over `rawFeedEvent`, which `EventPage` carries on and the early `deliverEvent` paths use. A date-only declared date never overrules a read with a time. Perhaps enough to create an event without its page.
+* **Luma.** Its Basic cards hold title and venue but no date, and their link is an empty overlay anchor (`a.event-link`, `&nbsp;`) the LM leaves null, so the declared events cannot be matched by url. Its scripted render puts the date in a heading above each day's cards, outside the event element, and shows fewer events (5 against 16). The LM answered `isScriptingRequired: false`.
 
 * **Mark a lead checked when its check finishes.** Keep the ids of leads in flight in one in-memory set, left out of the checkable queries with `notInList`, and set `checked_at` after the check returns. A stopped run would then need no restaging. Tabled 2026-10-01.
 

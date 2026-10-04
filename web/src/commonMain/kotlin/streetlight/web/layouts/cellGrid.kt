@@ -50,13 +50,13 @@ fun FlowContent.cellGrid(
                 }
             }
         }
-        if (!buttons.isNullOrEmpty()) {
-            row(modify(CellGrid.Buttons, CardBg, JustifyContentEnd, PrimaryLightFg)) {
-                row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
-                    buttons.forEach { it.block(this) }
-                }
-            }
-        }
+//        if (!buttons.isNullOrEmpty()) {
+//            row(modify(CellGrid.Buttons, CardBg, JustifyContentEnd, PrimaryLightFg)) {
+//                row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
+//                    buttons.forEach { it.block(this) }
+//                }
+//            }
+//        }
     }
 }
 
