@@ -97,7 +97,7 @@ private val fluffParams = setOf(
     "fbclid", "gclid", "gbraid", "wbraid", "dclid", "msclkid",
     "yclid", "twclid", "ttclid", "igshid", "igsh", "mkt_tok",
     "s_kwcid", "cmpid", "campaignid", "spm", "scm",
-    "ref", "ref_src", "ref_url", "referrer", "source",
+    "ref", "ref_src", "ref_url", "referrer", "source", "aff",
     "ei", "ved", "usg", "sca_esv",
 )
 

@@ -30,4 +30,4 @@ A test observes the same property production code returns. A fake returns it, an
 
 ## Url
 
-`Url.normalize` gives the one form every link to the same page shares, so urls compare by identity rather than spelling. A url is normalized where it enters a comparison or a store, such as where a DAO builds a crawler's feed, not at each place it is read.
+A url is normalized with `Url.normalize` where it enters a comparison or a store, such as where a DAO builds a crawler's feed, not at each place it is read.

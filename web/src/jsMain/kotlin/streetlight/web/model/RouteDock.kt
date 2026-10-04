@@ -15,7 +15,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.LocationRoute
-import streetlight.model.ui.PostMapRoute
+import streetlight.model.ui.EventsMapRoute
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarConfigRoute
 import streetlight.model.ui.StarDashRoute
@@ -88,7 +88,7 @@ private data class RouteDockMerge(
 private fun stateOf(route: AppRoute): RouteDockState? {
     return when (route) {
         // universe
-        is HomeRoute -> universeStateOf(PostMapRoute())
+        is HomeRoute -> universeStateOf(EventsMapRoute())
         is GalaxyListRoute -> universeStateOf(GalaxyMapRoute(null))
         is CityListRoute -> universeStateOf(CityMapRoute(null))
 
@@ -111,14 +111,14 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         is LocationRoute -> RouteDockState(listOf(route))
 
         // earth
-        is PostMapRoute -> RouteDockState(
+        is EventsMapRoute -> RouteDockState(
             mainRoutes = listOf(route, GalaxyMapRoute(null), CityMapRoute(null)),
             title = route.title,
             leftRoutes = listOf(HomeRoute),
         )
         is GalaxyMapRoute -> when (val slug = route.slug) {
             null -> RouteDockState(
-                mainRoutes = listOf(PostMapRoute(), route, CityMapRoute(null)),
+                mainRoutes = listOf(EventsMapRoute(), route, CityMapRoute(null)),
                 title = "Streetlight",
                 leftRoutes = listOf(HomeRoute),
             )
@@ -129,7 +129,7 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         }
         is CityMapRoute -> when (val slug = route.slug) {
             null -> RouteDockState(
-                mainRoutes = listOf(PostMapRoute(), GalaxyMapRoute(null), route),
+                mainRoutes = listOf(EventsMapRoute(), GalaxyMapRoute(null), route),
                 title = "Streetlight",
                 leftRoutes = listOf(HomeRoute),
             )

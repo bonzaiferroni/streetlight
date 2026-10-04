@@ -2,7 +2,10 @@ package streetlight.model.ui
 
 import kampfire.api.Slug
 import kampfire.api.toSlug
-import koala.html.SegmentParse
+import koala.html.PathParse
+import koala.html.buildRelativePath
+import koala.html.getAll
+import streetlight.model.data.EventTag
 
 /** A route of the earth view, showing one of its layers. */
 sealed interface EarthRoute: StreetlightRoute {
@@ -11,35 +14,63 @@ sealed interface EarthRoute: StreetlightRoute {
 }
 
 data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
+    companion object {
+        val nodes = listOf(EARTH_NODE, GALAXY_NODE)
+    }
+
     override val title get() = "Galaxy Map"
     override val label get() = "Galaxy"
     override val layer get() = EarthLayer.Galaxy
 
-    override fun toRelativePath() = "/earth/galaxy/${slug?.toString() ?: ""}"
+    // override fun toRelativePath() = "/$EARTH_NODE/$GALAXY_NODE/${slug?.toString() ?: ""}"
+    override fun toRelativePath() = buildRelativePath(nodes, slug)
 }
 
-data class CityMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
+data object CityMapRoute: EarthRoute {
+    val nodes = listOf(EARTH_NODE, CITIES_NODE)
+
     override val title get() = "City Map"
-    override val label get() = "City"
     override val layer get() = EarthLayer.City
 
-    override fun toRelativePath() = "/earth/city/${slug?.toString() ?: ""}"
+    override fun toRelativePath() = buildRelativePath(nodes)
 }
 
-data class PostMapRoute(override val title: String = "Earth"): EarthRoute {
-    override val layer get() = EarthLayer.Post
-    override val label get() = "Post"
-    override fun toRelativePath() = "/earth"
+data class EventsMapRoute(val citySlug: Slug?, val tags: List<EventTag>?): EarthRoute {
+    companion object {
+        val nodes = listOf(EARTH_NODE)
+    }
+
+    override val layer get() = EarthLayer.Events
+    override val label get() = "Events"
+    override val title get() = "Earth"
+    override fun toRelativePath() = buildRelativePath(nodes) {
+        citySlug?.let {
+            append(CITY_PARAM, it.value)
+        }
+        tags?.let {
+            appendAll(TAG_PARAM, tags.map { it.name })
+        }
+    }
 }
 
-/** Reads an earth route from its path: `/earth`, `/earth/galaxy/{slug}`, or `/earth/city/{slug}`. */
-val parseEarthRoute = SegmentParse(listOf("city", "galaxy")) { segments ->
-    when (segments.getOrNull(1)) {
-        "city" -> CityMapRoute(segments.takeSegment(2)?.toSlug())
-        "galaxy" -> GalaxyMapRoute(segments.takeSegment(2)?.toSlug())
-        else -> PostMapRoute(segments.takeSegment(2) ?: "Earth")
+/** Reads an earth route from its path: `/earth`, `/earth/galaxy/{slug}`, or `/earth/cities`. */
+val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, parameters ->
+    when (nodes.getOrNull(1)) {
+        CITIES_NODE -> CityMapRoute
+        GALAXY_NODE -> GalaxyMapRoute(nodes.takeSegment(2)?.toSlug())
+        else -> {
+            val tags = parameters.getAll(TAG_PARAM) { name -> EventTag.entries.firstOrNull { it.name == name } }
+            EventsMapRoute(parameters[CITY_PARAM]?.toSlug(), tags)
+        }
     }
 }
 
 /** The path segment at [index], or `null` when it is missing or blank. */
 fun List<String>.takeSegment(index: Int) = getOrNull(index)?.takeIf { it.isNotBlank() }
+
+private const val EARTH_NODE = "earth"
+private const val GALAXY_NODE = "galaxy"
+private const val CITIES_NODE = "cities"
+
+private const val TAG_PARAM = "tag"
+private const val CITY_PARAM = "city"

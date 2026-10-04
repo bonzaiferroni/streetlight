@@ -6,7 +6,7 @@ Each package should have a document that describes the specifications and concep
 
 ## Documentation Content
 
-A package document provides an outline for working with code in a particular package. 
+A package document provides an outline for working with code in a particular package. The code is the primary documentation, and a document carries only specification the code does not make plain.
 
 Include:
 
@@ -19,6 +19,7 @@ Include:
 Exclude:
 
 - Type signatures and property lists
+- The behavior of a single declaration whose name and code make its intent clear
 - History, deprecations, or planned changes
 - Exceptions to the convention
 - Justification or explanation that does not add clarity to the specification.

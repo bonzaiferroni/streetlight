@@ -25,7 +25,6 @@ import web.html.HTMLElement
 import web.pointer.CLICK
 import web.pointer.PointerEvent
 import web.url.URL
-import web.window.Window
 import web.window.WindowTarget
 import web.window._blank
 import web.window.window
@@ -41,7 +40,7 @@ class Portal(
     initialRoute: AppRoute,
     val screens: List<AppScreen>,
 ) {
-    private val state = storeOf(PortalState(queryRoute() ?: routeOf(window.location.pathname) ?: initialRoute))
+    private val state = storeOf(PortalState(queryRoute() ?: routeOf(URL(window.location.href)) ?: initialRoute))
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -56,11 +55,10 @@ class Portal(
     private var isWrecked = false
 
     var sitePath
-        get() = window.location.pathname
+        get() = window.location.run { pathname + search }
         set(value: String) {
-            if (window.location.pathname == value) return
-            val href = "${window.location.origin}$value${window.location.search}"
-            history.pushState(null, "", href)
+            if (sitePath == value) return
+            history.pushState(null, "", value)
         }
 
     init {
@@ -69,10 +67,7 @@ class Portal(
         history.scrollRestoration = ScrollRestoration.manual
 
         fun handleRoute(href: String, isClick: Boolean) {
-            val href = window.prefixContext(href)
-            val sitePath = if (href.startsWith("/")) href else URL(href).pathname
-
-            val route = routeOf(sitePath) ?: return
+            val route = routeOf(URL(href, window.location.href)) ?: return
             if (route == stateNow.route) {
                 if (isClick) {
                     refresh()
@@ -99,9 +94,9 @@ class Portal(
                 window.location.reload()
                 return@addEventListener
             }
-            val isSuccess = goBack(window.location.pathname)
+            val isSuccess = goBack(sitePath)
             if (!isSuccess) {
-                handleRoute(window.location.pathname, false)
+                handleRoute(window.location.href, false)
             }
         })
     }
@@ -159,12 +154,12 @@ class Portal(
         document.body.setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
     }
 
-    private fun routeOf(hashPath: String): AppRoute? {
-        return AppRoute.routeOf(hashPath, screens)
+    private fun routeOf(url: URL): AppRoute? {
+        return AppRoute.routeOf(url.pathname, url.search.removePrefix("?"), screens)
     }
 
     private fun queryRoute(): AppRoute? {
-        return document.queryAttribute(Attribute.RoutePath)?.let { routeOf(it) }
+        return document.queryAttribute(Attribute.RoutePath)?.let { routeOf(URL(it, window.location.href)) }
     }
 }
 
@@ -182,9 +177,3 @@ private data class Navigation(
     val route: AppRoute,
     val initialScrollY: Double,
 )
-
-private fun Window.prefixContext(href: String): String {
-    if ('/' in href) return href
-    val base = location.pathname.substringBeforeLast('/')
-    return "$base/$href"
-}

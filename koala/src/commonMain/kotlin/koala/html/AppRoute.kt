@@ -5,6 +5,8 @@ import kampfire.api.Username
 import kampfire.api.toSlug
 import kampfire.api.toUsername
 import kampfire.model.Labeled
+import io.ktor.http.Parameters
+import io.ktor.http.parseQueryString
 import kotlin.uuid.Uuid
 
 /** A place in the app, with the [screen] that renders it and the path that reaches it. */
@@ -19,16 +21,16 @@ interface AppRoute: Labeled {
 
     companion object {
         /**
-         * The route [sitePath] leads to, parsed by the [AppScreen] whose path root it starts with, or `null`
-         * when none matches.
+         * The route [path] and its raw [query] lead to, parsed by the [AppScreen] whose path root it starts with,
+         * or `null` when none matches.
          */
-        fun routeOf(sitePath: String, screens: List<AppScreen>): AppRoute? {
-            val fragment = sitePath.dropStart('/')
-            val segments = fragment.split('/')
-            val root = segments[0].lowercase()
-            val screen = screens.firstOrNull { it.pathRoot == root } ?: return null
+        fun routeOf(path: String, query: String, screens: List<AppScreen>): AppRoute? {
+            val pathNodes = path.dropStart('/').split('/')
+            val parameters = parseQueryString(query)
+            val rootNode = pathNodes[0].lowercase()
+            val screen = screens.firstOrNull { it.pathRoot == rootNode } ?: return null
 
-            val idArg = segments.getOrNull(1)
+            val idArg = pathNodes.getOrNull(1)
             return when (val parse = screen.routeParse) {
                 is StaticParse -> parse.block()
                 is UuidParse -> idArg?.let { parse.block(Uuid.parse(it)) }
@@ -36,7 +38,7 @@ interface AppRoute: Labeled {
                 is SlugOrNullParse -> parse.block(idArg?.toSlug())
                 is SlugParse -> idArg?.let { parse.block(idArg.toSlug()) }
                 is UsernameParse -> idArg?.let { parse.block(idArg.toUsername()) }
-                is SegmentParse -> parse.block(segments)
+                is PathParse -> parse.block(pathNodes, parameters)
             }
         }
     }
@@ -94,7 +96,7 @@ data class UsernameParse(
 ): RouteParse
 
 /** A route read from all its path segments, reachable under each of [roots]. */
-data class SegmentParse(
+data class PathParse(
     val roots: List<String>,
-    val block: (List<String>) -> AppRoute
+    val block: (List<String>, Parameters) -> AppRoute
 ): RouteParse

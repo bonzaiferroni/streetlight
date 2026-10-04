@@ -17,8 +17,8 @@ import streetlight.model.ui.EarthMap
 import streetlight.model.ui.EarthRoute
 import streetlight.model.ui.GalaxyMap
 import streetlight.model.ui.GalaxyMapRoute
-import streetlight.model.ui.PostMap
-import streetlight.model.ui.PostMapRoute
+import streetlight.model.ui.EventsMap
+import streetlight.model.ui.EventsMapRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -74,10 +74,10 @@ class Earth(
 
     private suspend fun collectRoute(route: EarthRoute) {
         val map = createMap(route) ?: return
-        cache.setMapContext(route is PostMapRoute)
+        cache.setMapContext(route is EventsMapRoute)
         state.set { copy(map = map) }
         delay(100.milliseconds)
-        showAll()
+        // showAll()
     }
 
     private suspend fun createMap(route: EarthRoute): EarthMap? {
@@ -118,14 +118,14 @@ class Earth(
                 }
             }
 
-            is PostMapRoute -> {
+            is EventsMapRoute -> {
                 markerMap.filterPoints {
                     when (it) {
                         is LocationMarker, is EventMarker, is MediaMarker -> true
                         else -> false
                     }
                 }
-                PostMap(route.title)
+                EventsMap(route.title)
             }
         }
     }

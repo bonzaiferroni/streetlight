@@ -17,13 +17,13 @@ data class CityMap(val city: City?): EarthMap {
     override val title get() = city?.name ?: "Cities"
     override val layer get() = EarthLayer.City
 }
-data class PostMap(override val title: String): EarthMap {
-    override val layer get() = EarthLayer.Post
+data class EventsMap(override val title: String): EarthMap {
+    override val layer get() = EarthLayer.Events
 }
 
 /** The layers of the earth view. */
 enum class EarthLayer {
-    Post,
+    Events,
     Galaxy,
     City,
 }
