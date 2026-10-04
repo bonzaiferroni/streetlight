@@ -5,6 +5,7 @@ import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import streetlight.model.data.EventFeedSchema
 import streetlight.model.data.EventPageSchema
 import streetlight.model.data.LocationSelectorSchema
@@ -37,6 +38,12 @@ fun EventFeedSchema.validate(document: Element): Outcome<EventFeedSchema> {
         date = date?.takeIf { readsAsDate(events, it) },
         time = time.keepIfMatches(events),
     ))
+}
+
+/** Whether this stored feed schema finds events in [document], with its link, when it has one, matching among them. */
+fun EventFeedSchema.isReusableOn(document: Element): Boolean {
+    val events = event?.let { document.tryQuery(it).toDataOrNull() }.orEmpty()
+    return events.isNotEmpty() && (link == null || link.keepIfMatches(events) != null)
 }
 
 /** Validates a page schema from the LM against the [document] it was made from, setting any other selector that fails to null. */

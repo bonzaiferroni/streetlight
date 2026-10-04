@@ -254,7 +254,7 @@ class SchemaMediator(
     /** The result of [block], run while no other of the mediator's requests to the LM runs. */
     private suspend inline fun <T> requestSchema(block: () -> T): T = requestMutex.withLock(action = block)
 
-    /** The first stored feed schema of [origin] whose event selector matches [doc], skipping and adding to [triedIds]. */
+    /** The first stored feed schema of [origin] reusable on [doc], skipping and adding to [triedIds]. */
     private suspend fun storedFeedSchema(
         doc: Document,
         origin: Origin,
@@ -264,8 +264,7 @@ class SchemaMediator(
         dao.parser.read(origin.originId).sortedByDescending { it.lastSuccessAt }.forEach { parser ->
             if (!triedIds.add(parser.parserId)) return@forEach
             val schema = parser.schema as? EventFeedSchema ?: return@forEach
-            val selector = schema.event ?: return@forEach
-            val isSuccess = doc.tryQuery(selector).toDataOrNull()?.isNotEmpty() == true
+            val isSuccess = schema.isReusableOn(doc)
             observer?.storedSchemaTried(schema, isSuccess)
             dao.parser.updateResult(parser.parserId, isSuccess)
             if (isSuccess) return schema
