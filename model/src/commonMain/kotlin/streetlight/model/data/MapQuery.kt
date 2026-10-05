@@ -15,19 +15,19 @@ data class MapQuery(
 /** Writes [query] as the parameters of its endpoint. */
 context(builder: PathBuilder)
 fun <T: MapEndpoint> T.writeMapQuery(query: MapQuery) {
-    builder.writeParam(view, query.view)
-    builder.writeParam(seen, query.seen)
+    builder.writeParam(viewParam, query.view)
+    builder.writeParam(seenParam, query.seen)
     if (query.cursor != EntityCursor.Lean.Default) {
-        builder.writeParam(recordId, query.cursor.recordId)
-        builder.writeParam(score, query.cursor.postLean)
+        builder.writeParam(recordIdParam, query.cursor.recordId)
+        builder.writeParam(scoreParam, query.cursor.postLean)
     }
 }
 
 interface MapEndpoint {
-    val view: EndpointParam<GeoRect?>
-    val seen: EndpointParam<List<GeoRect>?>
-    val recordId: EndpointParam<Uuid>
-    val score: EndpointParam<Int>
+    val viewParam: EndpointParam<GeoRect?>
+    val seenParam: EndpointParam<List<GeoRect>?>
+    val recordIdParam: EndpointParam<Uuid>
+    val scoreParam: EndpointParam<Int>
 
     companion object {
         const val ViewParam = "view"

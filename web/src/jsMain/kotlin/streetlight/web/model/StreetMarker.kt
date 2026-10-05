@@ -9,6 +9,7 @@ import koala.model.IconMarker
 import koala.model.ThumbMarker
 import kotlinx.css.rgb
 import streetlight.model.data.City
+import streetlight.model.data.Entity
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
@@ -21,6 +22,10 @@ import streetlight.web.layouts.ThemeColor
 //     override val label: String
 //     override val zIndex get() = 1
 // }
+
+interface EntityMarker {
+    val entity: Entity
+}
 
 enum class MarkerType(
     label: String? = null,
@@ -37,7 +42,7 @@ enum class MarkerType(
 
 data class LocationMarker(
     val location: Location,
-): IconMarker {
+): IconMarker, EntityMarker {
     override val markerId get() = location.markerId
     override val label get() = location.label
     // override val sublabel get() = location.mapType
@@ -47,31 +52,7 @@ data class LocationMarker(
     override val typeLabel get() = location.mapType ?: MarkerType.Location.label
     override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin
     override val themeColor get() = ThemeColor.Location.cssValue
-}
-
-interface GroupMarker
-
-data class EmptyGroupMarker(
-    val cluster: EventGroup
-): IconMarker, GroupMarker {
-    override val markerId get() = cluster.locationId.toString()
-    override val label get() = cluster.label
-    override val geoPoint get() = cluster.geoPoint
-    override val typeLabel get() = cluster.tag?.label ?: MarkerType.Event.label
-    override val svg get() = SvgFile.MapPin
-    override val themeColor get() = ThemeColor.Location.cssValue
-}
-
-data class EventGroupMarker(
-    val cluster: EventGroup
-): ThumbMarker, GroupMarker {
-    override val markerId get() = cluster.locationId.toString()
-    override val label get() = cluster.label
-    override val sublabel get() = cluster.startsAt?.toFutureFormat()
-    override val thumbUrl get() = cluster.image.thumb ?: SiteImage.placeholderTh
-    override val geoPoint get() = cluster.geoPoint
-    override val typeLabel get() = cluster.tag?.label ?: MarkerType.Event.label
-    override val themeColor get() = ThemeColor.Accent.cssValue
+    override val entity get() = location
 }
 
 data class EventMarker(
@@ -121,6 +102,6 @@ data class GalaxyMarker(
 }
 
 fun EventGroup.toMarker() = when (eventCount) {
-    0 -> EmptyGroupMarker(this)
-    else -> EventGroupMarker(this)
+    0 -> LocationInflateMarker(this)
+    else -> EventInflateMarker(this)
 }

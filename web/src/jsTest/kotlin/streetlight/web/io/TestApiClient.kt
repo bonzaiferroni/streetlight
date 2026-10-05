@@ -6,6 +6,7 @@ class TestApiClient(
     override val city: CityClient = TestCityClient(),
     override val content: ContentClient = TestContentClient(),
     override val doc: DocClient = TestDocClient(),
+    override val earth: EarthClient = TestEarthClient(),
     override val event: EventClient = TestEventClient(),
     override val feedback: FeedbackClient = TestFeedbackClient(),
     override val galaxy: GalaxyClient = TestGalaxyClient(),

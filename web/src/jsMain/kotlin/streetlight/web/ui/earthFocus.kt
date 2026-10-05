@@ -10,7 +10,7 @@ import koala.html.heading3
 import koala.html.heading4
 import koala.html.navigationIfNotNull
 import koala.model.ClusterFocus
-import koala.model.EntityMarker
+import koala.model.StaticMarker
 import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.css.pct
@@ -27,7 +27,7 @@ import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
 import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
-import streetlight.web.model.GroupMarker
+import streetlight.web.model.InflateMarker
 import streetlight.web.model.LocationMarker
 
 fun ViewScope.earthFocus(model: Earth) {
@@ -37,14 +37,14 @@ fun ViewScope.earthFocus(model: Earth) {
         when (focus) {
             is ClusterFocus -> column(FeedSection.FeedColumnMod) {
                 focus.members.forEach { marker ->
-                    val marker = marker as? EntityMarker ?: return@forEach
+                    val marker = marker as? StaticMarker ?: return@forEach
                     markerRow(marker)
                 }
             }
 
             is MarkerFocus -> {
                 when (focus.marker) {
-                    is GroupMarker -> textBlock("loading")
+                    is InflateMarker -> textBlock("loading")
                     else -> markerRow(focus.marker)
                 }
             }

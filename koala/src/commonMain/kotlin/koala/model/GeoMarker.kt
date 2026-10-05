@@ -43,20 +43,20 @@ interface TravelMarker: PointMarker {
 }
 
 /** A marker for an entity, with its type and theme color. */
-interface EntityMarker: PointMarker {
+interface StaticMarker: PointMarker {
     val typeLabel: String? get() = null
     val themeColor: String? get() = null
 }
 
-/** An [EntityMarker] drawn as a thumbnail with its label and sublabel. */
-interface ThumbMarker: EntityMarker {
+/** An [StaticMarker] drawn as a thumbnail with its label and sublabel. */
+interface ThumbMarker: StaticMarker {
     val thumbUrl: Url
     val sublabel: String? get() = null
     override val bodySize: LinearDimension get() = 40.px
 }
 
-/** An [EntityMarker] drawn as an icon with its label. */
-interface IconMarker: EntityMarker {
+/** An [StaticMarker] drawn as an icon with its label. */
+interface IconMarker: StaticMarker {
     val svg: Svg
     override val bodySize: LinearDimension get() = 32.px
 }

@@ -4,7 +4,7 @@ import kampfire.model.Point
 import koala.modifier.*
 import koala.dom.*
 import koala.external.maplibregl
-import koala.model.EntityMarker
+import koala.model.StaticMarker
 import koala.model.GeoCamera
 import koala.model.GeoCameraController
 import koala.model.IconMarker
@@ -33,7 +33,7 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
 
     val hints = mutableMapOf<MarkerId, MarkerHint>()
 
-    fun createHint(marker: EntityMarker) = element.append {
+    fun createHint(marker: StaticMarker) = element.append {
         when (marker) {
             is ThumbMarker -> image(marker.thumbUrl, modify(
                 BorderRadius50P, LargeIconHeight, Aspect1, PointerEventsAuto, FadeIn, OpacityHalf
@@ -101,6 +101,6 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
 }
 
 private data class MarkerHint(
-    val marker: EntityMarker,
+    val marker: StaticMarker,
     val element: HTMLElement,
 )

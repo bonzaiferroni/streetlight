@@ -45,6 +45,49 @@ A galaxy's slug is written by `createGalaxy` and by no other function. `updateGa
 
 `Foo` is the name of the concept the function writes. A `Record`, `Row`, or `Edit` suffix on the parameter type is not part of it.
 
+## Query Layers
+
+A read is composed by chaining its layers in this order: join, select, where, order, limit, map. A layer that a read can add, such as the caller's star, has one utility for each layer it touches.
+
+A table file holds the table, its row transforms, and the utilities that define its relationship to other tables, such as `joinWith`. A layer utility for a single read is declared beside the DAO that uses it.
+
+```kotlin
+LocationTable.joinWith(EventTable) { EventTable.startsAt.greaterEq(now) }
+    .joinEventStar(callerId)
+    .selectWith(EventLocationAspect.columns, LocationAspect.columns) {
+        selectEventStar(callerId)
+    }
+    .where { LocationTable.id.inList(locationIds) }
+    .whereAfterEvent(cursor)
+    .orderByEvent(cursor)
+    .limit(EntityCursor.DefaultLimit)
+    .map { it.toEventLocation() }
+```
+
+### Join
+
+A common join between two tables is declared as `FooTable.joinWith(table: BarTable, additionalConstraint)` in `FooTable.kt`, with the join type and key columns fixed. A layer's join is `ColumnSet.joinFoo(...)`. A join that has nothing to contribute, such as a star without a caller, is skipped.
+
+### Select
+
+A read selects with `selectWith`, passing its column lists and adding its layers' columns in the block with `SelectBuilder.selectFoo(...)`. Each expression is selected once, however many lists name it. A layer whose join was skipped adds no columns.
+
+### Where
+
+The read's own condition is `where`. A layer's condition is `Query.whereFoo(...)`, added with `andWhere`, such as `whereAfterFoo(cursor)` for the rows after a cursor. A condition with nothing to filter, such as a cursor on its first page, adds nothing.
+
+### Order
+
+A cursor's order is `Query.orderByFoo(cursor)`, matching the condition of `whereAfterFoo`. It ends on an id, so rows with the same sort value keep their order between pages.
+
+### Limit
+
+A paged read is limited to `EntityCursor.DefaultLimit`.
+
+### Map
+
+`ResultRow.toFoo()` reads a row into its DTO. It reads a layer's columns with `getOrNull`, so it reads a row with or without the layer.
+
 ## Column Types
 
 | Kotlin | Column |

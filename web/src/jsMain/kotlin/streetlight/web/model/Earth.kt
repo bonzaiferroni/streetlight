@@ -3,15 +3,18 @@ package streetlight.web.model
 import kampfire.model.reactIn
 import kampfire.model.toDataOr
 import koala.utils.launch
-import koala.model.EntityMarker
+import koala.model.StaticMarker
 import koala.model.GeoFocus
 import koala.model.MarkerFocus
 import koala.model.Portal
 import kampfire.model.tapOf
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import streetlight.model.data.Entity
+import streetlight.model.data.LocationId
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.EarthMap
@@ -40,16 +43,13 @@ class Earth(
     val stateNow get() = state.now
 
     val mapState = state.tapOf { it.map }
-//    val boundedMarkersState = markerMap.boundedMarkersState
-//    val unboundedMarkersState = markerMap.viewMarkersState.tapOf { it?.unbounded ?: emptyList() }
-//    val summaryField = boundedMarkersState.tapOf { points ->
-//        points.groupingBy { it.typeLabel }.eachCount().toList()
-//    }
     val isMovingState = markerMap.isMovingState
-    val focusState = markerMap.focusState.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
+    val focusState = state.tapOf { it.focusEntities }
     val isFocusedState = focusState.tapOf { it != null }
 
     val cache = EarthCache(scope, api, markerMap, toaster)
+
+    private var inflateFocusJob: Job? = null
 
     init {
         scope.launch("Earth > routeFlowOf") {
@@ -59,20 +59,13 @@ class Earth(
                 }
             }
         }
-        scope.launch("Earth > focus galaxy") {
-            markerMap.focusState.flow.collect {
-                it?.toGalaxy()?.let { galaxy ->
-                    portal.go(GalaxyMapRoute(galaxy.slug))
-                }
-            }
-        }
 
-        focusState.reactIn(scope) { focus ->
-            val groupMarker = focus as? MarkerFocus
+        markerMap.focusState.reactIn(scope) { focus ->
+            inflateFocus(focus)
         }
     }
 
-    fun setFocus(marker: EntityMarker) = markerMap.setFocus(marker)
+    fun setFocus(marker: StaticMarker) = markerMap.setFocus(marker)
 
     /** Frames every marker. */
     fun showAll() = markerMap.showAll()
@@ -124,11 +117,44 @@ class Earth(
         }
     }
 
-    private fun GeoFocus.toGalaxy() = ((this as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy
+    private fun inflateFocus(focus: GeoFocus?) {
+        inflateFocusJob?.cancel()
+        if (focus == null) {
+            state.set { copy(isInflatingFocus = false, focusEntities = null) }
+            return
+        }
+
+        val inflateIds = mutableListOf<LocationId>()
+        val focusEntities = mutableListOf<Entity>()
+        focus.getMarkers().forEach { marker ->
+            when (marker) {
+                is InflateMarker -> {
+                    inflateIds.add(marker.group.locationId)
+                }
+                is EntityMarker -> {
+                    focusEntities.add(marker.entity)
+                }
+            }
+        }
+        if (focusEntities.isNotEmpty()) {
+            state.set { copy(focusEntities = focusEntities.toList()) }
+        }
+
+        if (inflateIds.isEmpty()) return
+
+        inflateFocusJob = scope.launch {
+            state.set { copy(isInflatingFocus = true) }
+            val feed = api.earth.inflate(inflateIds).toDataOr(toaster) { return@launch }
+            focusEntities.addAll(feed.entities)
+            state.set { copy(isInflatingFocus = false, focusEntities = focusEntities)}
+        }
+    }
 }
 
 data class EarthMapState(
     val map: EarthMap?,
+    val focusEntities: List<Entity>? = null,
+    val isInflatingFocus: Boolean = false,
 )
 
 // val maps: List<EarthMap> = emptyList(),

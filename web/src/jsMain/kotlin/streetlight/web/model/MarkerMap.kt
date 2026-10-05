@@ -3,14 +3,12 @@
 package streetlight.web.model
 
 import kampfire.model.getContainingBounds
-import koala.model.EntityMarker
+import koala.model.StaticMarker
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
-import kampfire.model.combine
 import kampfire.model.tapOf
 import kampfire.model.storeOf
-import koala.model.MarkerId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -60,18 +58,18 @@ class MarkerMap(
     }
 
     /** Keeps the markers that match [predicate]. */
-    fun filterPoints(predicate: (EntityMarker) -> Boolean) {
+    fun filterPoints(predicate: (StaticMarker) -> Boolean) {
         stateNow.markers?.filter(predicate)?.let {
             setMarkers(it)
         }
     }
 
-    private fun setMarkers(markers: List<EntityMarker>) {
+    private fun setMarkers(markers: List<StaticMarker>) {
         markerLayer.setPoints(markers)
         state.set { copy(markers = markers, focus = focus.takeIf { f -> markers.any { it.markerId == f?.markerId } }) }
     }
 
-    private fun createAndSetMarkers(entities: List<Entity>, markers: List<EntityMarker> = emptyList()) {
+    private fun createAndSetMarkers(entities: List<Entity>, markers: List<StaticMarker> = emptyList()) {
         val markers = markers.toMutableList()
         entities.forEach { entity ->
             if (markers.any { it.markerId == entity.markerId }) return@forEach
@@ -82,7 +80,7 @@ class MarkerMap(
     }
 
     /** Focuses [marker] and pans to it. */
-    fun setFocus(marker: EntityMarker) {
+    fun setFocus(marker: StaticMarker) {
         val focus = MarkerFocus(marker)
         geoMap.setFocus(focus)
         geoMap.camera.panMap(marker.geoPoint)
@@ -100,7 +98,7 @@ class MarkerMap(
 }
 
 data class StreetMapState(
-    val markers: List<EntityMarker>? = null,
+    val markers: List<StaticMarker>? = null,
     val focus: GeoFocus? = null,
 )
 
@@ -110,7 +108,7 @@ data class StreetMapState(
 //    val unbounded: List<EntityMarker>,
 //)
 
-private fun createMarker(post: Entity): EntityMarker? = when (post) {
+private fun createMarker(post: Entity): StaticMarker? = when (post) {
     is EventLocation -> EventMarker(post)
     is EventPost -> EventMarker(post.event)
     is Event -> null
@@ -124,4 +122,4 @@ private fun createMarker(post: Entity): EntityMarker? = when (post) {
     is Star -> null
 }
 
-private fun createMap(posts: List<Entity>): List<EntityMarker> = posts.mapNotNull { createMarker(it) }
+private fun createMap(posts: List<Entity>): List<StaticMarker> = posts.mapNotNull { createMarker(it) }
