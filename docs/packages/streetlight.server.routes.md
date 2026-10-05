@@ -56,6 +56,10 @@ fun ApiScope.serveFoo() {
 }
 ```
 
+## Parameter Readers
+
+A reader that builds a value from the parameters of an endpoint interface, such as `readTimeCursor()` on `TimeCursorEndpoint` or `mapQuery()` on `MapEndpoint`, is a `context(context: RoutingContext)` extension on that interface in `CursorEndpointUtility.kt`, so any serve function can call it.
+
 ## Authentication
 
 Endpoints sit inside an `authGate` block rather than carrying a per-endpoint check.

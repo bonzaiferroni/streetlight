@@ -4,6 +4,7 @@ import koala.SvgFile
 import koala.html.AppRoute
 import kampfire.model.Url
 import koala.model.Doc
+import streetlight.model.data.EventGroup
 import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
@@ -49,6 +50,7 @@ fun Entity.toRoute(): AppRoute? = when (this) {
     is Media -> route
     is CustomEntity -> route
     is Star -> StarRoute(username)
+    is EventGroup -> null
 }
 
 fun Entity.toThemeColor(): ThemeColor = when (this) {
@@ -67,6 +69,7 @@ fun Entity.toThemeColor(): ThemeColor = when (this) {
         else -> ThemeColor.Primary
     }
     is Star -> ThemeColor.Primary
+    is EventGroup -> ThemeColor.Location
 }
 
 fun Entity.toFlair(): FlairIcon = when (this) {
@@ -100,6 +103,7 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
     is Media -> null
     is CustomEntity -> null
     is Star -> null
+    is EventGroup -> null
 }
 
 /** The cells of an event: its date, time, cost linking to [purchaseUrl], and [locationName]. */
@@ -147,6 +151,7 @@ fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton>? = wh
     is Media -> null
     is CustomEntity -> null
     is Star -> null
+    is EventGroup -> null
 }
 
 /** A second route shown under the title, such as the location of an event post. */

@@ -15,7 +15,7 @@ import streetlight.model.data.EntityCursor
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
-/** Loads the posts of each settled map view, so a view already covered by a completed query is not asked again. */
+/** Loads the events of each settled map view, so a view already covered by a completed query is not asked again. */
 class EarthCache(
     private val scope: CoroutineScope,
     private val api: ApiClient,
@@ -28,28 +28,39 @@ class EarthCache(
     private val camera get() = markerMap.geoMap.camera
 
     init {
-        scope.launch("Earth > post query") {
+        scope.launch("Earth > event query") {
             camera.settledViewState.flow.debounce(500.milliseconds).collect {
-                queryView(it)
+                queryEvents(it)
             }
         }
     }
 
-    /** Starts over for a new map; only a map with [isQueriedMap] loads posts by view. */
+    /** Starts over for a new map; only a map with [isQueriedMap] loads events by view. */
     fun setMapContext(isQueriedMap: Boolean) {
         this.isQueriedMap = isQueriedMap
         queries.clear()
-        queryView() // td: resolve redundant query
+        // queryPosts()
     }
 
-    private fun queryView(view: GeoRect? = null) {
+    private fun queryPosts(view: GeoRect? = null) {
         if (!isQueriedMap) return
         scope.launch {
             println("querying map")
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
             val feed = api.post.readMapPosts(query).toDataOr(toaster) { return@launch }
-            queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Lean, feed.isCompleted)
+            queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
+            markerMap.addPoints(feed.entities)
+        }
+    }
+
+    private fun queryEvents(view: GeoRect? = null) {
+        if (!isQueriedMap) return
+        scope.launch {
+            val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
+            val query = getQuery(queriedView) ?: return@launch
+            val feed = api.earth.readMapEntities(query).toDataOr(toaster) { return@launch }
+            queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
             markerMap.addPoints(feed.entities)
         }
     }
@@ -63,15 +74,15 @@ class EarthCache(
             .sortedByDescending { it.overlapArea(view) }
             .take(MAX_VIEWED)
 
-        val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.postLean })
-            ?: EntityCursor.Lean.Default
+        val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.score })
+            ?: EntityCursor.Score.Default
         return MapQuery(view, seen, query)
     }
 }
 
-/** Where the post query of one view left off. */
+/** Where the query of one view left off. */
 data class MapCursor(
-    val cursor: EntityCursor.Lean?,
+    val cursor: EntityCursor.Score?,
     val isComplete: Boolean
 )
 

@@ -59,4 +59,6 @@ These serve functions live here rather than in `streetlight.server.routes`:
 
 A daemon is a background worker on an interval, named `FooDaemon`. It is launched from the configure function of the concern it serves, so that the thing it depends on is installed before it starts, as `configureDatabases` launches `TableDaemon` after `initDb`.
 
+A daemon with work on more than one interval runs a loop for each, launched together from `start()`. Each loop runs its work once at startup, then after each interval. `TableDaemon` counts upcoming events every fifteen minutes, and updates map priorities daily, since cursors over `mapPriority` rely on a stable sort.
+
 `configureTransit` launches the GTFS load in the application's own scope, so stopping the application cancels it. Startup work belongs in a configure function rather than a serve function.

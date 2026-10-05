@@ -23,9 +23,9 @@ interface TimeCursorEndpoint: CursorEndpoint {
     val recordAtParam: EndpointParam<Instant>
 }
 
-/** An endpoint that pages its feed with an [EntityCursor.Lean]. */
-interface LeanCursorEndpoint: CursorEndpoint {
-    val leanParam: EndpointParam<Int>
+/** An endpoint that pages its feed with an [EntityCursor.Score]. */
+interface ScoreCursorEndpoint: CursorEndpoint {
+    val scoreParam: EndpointParam<Double>
 }
 
 /** An endpoint that pages its feed with an [EntityCursor.Mark]. */
@@ -42,10 +42,10 @@ fun PathBuilder.writeTimeCursor(endpoint: TimeCursorEndpoint, cursor: EntityCurs
 }
 
 /** Writes the parts of [cursor] as the parameters of [endpoint], or nothing when it is `null`. */
-fun PathBuilder.writeLeanCursor(endpoint: LeanCursorEndpoint, cursor: EntityCursor.Lean?) {
+fun PathBuilder.writeScoreCursor(endpoint: ScoreCursorEndpoint, cursor: EntityCursor.Score?) {
     if (cursor == null) return
     writeBaseCursor(endpoint, cursor)
-    cursor.postLean?.let { writeParam(endpoint.leanParam, it) }
+    cursor.score?.let { writeParam(endpoint.scoreParam, it) }
 }
 
 /** Writes the parts of [cursor] as the parameters of [endpoint], or nothing when it is `null`. */
@@ -63,11 +63,11 @@ private fun PathBuilder.writeBaseCursor(endpoint: CursorEndpoint, cursor: Entity
 
 /** Writes the parts of [cursor], of any kind, as the parameters of [endpoint], or nothing when it is `null`. */
 fun <T> PathBuilder.writeCursor(endpoint: T, cursor: EntityCursor?)
-        where T: TimeCursorEndpoint, T: LeanCursorEndpoint, T: MarkCursorEndpoint {
+        where T: TimeCursorEndpoint, T: ScoreCursorEndpoint, T: MarkCursorEndpoint {
     when (cursor) {
         null -> return
         is EntityCursor.Time -> writeTimeCursor(endpoint, cursor)
-        is EntityCursor.Lean -> writeLeanCursor(endpoint, cursor)
+        is EntityCursor.Score -> writeScoreCursor(endpoint, cursor)
         is EntityCursor.Mark -> writeMarkCursor(endpoint, cursor)
     }
 }

@@ -137,16 +137,16 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val viewParam = geoRectOf(MapEndpoint.ViewParam)
             override val seenParam = geoRectArrayOf(MapEndpoint.SeenParam)
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
-            override val scoreParam = intParamOf(MapEndpoint.ScoreParam)
+            override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
         }
 
-        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint, LeanCursorEndpoint, MarkCursorEndpoint {
+        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint, ScoreCursorEndpoint, MarkCursorEndpoint {
             val galaxyId = tableIdParamOf("galaxyId") { GalaxyId(it) }
             override val recordIdParam = uuidParamOf("recordId")
             override val markIdParam = uuidParamOf("markId")
             override val countParam = intParamOf("count")
             override val directionParam = enumParamOf<SortDirection>("direction")
-            override val leanParam = intParamOf("lean")
+            override val scoreParam = doubleParamOf("score")
             override val recordAtParam = instantParamOf("recordAt")
         }
     }
@@ -183,13 +183,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadContent: GetByIdEndpoint<Slug, CityContent>(this)
         object UpdateCity: PostEndpoint<CityEdit, City>(this)
 
-        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint, LeanCursorEndpoint, MarkCursorEndpoint {
+        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint, ScoreCursorEndpoint, MarkCursorEndpoint {
             val cityId = tableIdParamOf("cityId") { CityId(it) }
             override val recordIdParam = uuidParamOf("recordId")
             override val markIdParam = uuidParamOf("markId")
             override val countParam = intParamOf("count")
             override val directionParam = enumParamOf<SortDirection>("direction")
-            override val leanParam = intParamOf("lean")
+            override val scoreParam = doubleParamOf("score")
             override val recordAtParam = instantParamOf("recordAt")
         }
 
@@ -212,7 +212,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val viewParam = geoRectOf(MapEndpoint.ViewParam)
             override val seenParam = geoRectArrayOf(MapEndpoint.SeenParam)
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
-            override val scoreParam = intParamOf(MapEndpoint.ScoreParam)
+            override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
         }
         object Inflate: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint {
             val locationIdsParam = listParamOf("locationIds", { LocationId(Uuid.parse(it)) }) { it.toString() }

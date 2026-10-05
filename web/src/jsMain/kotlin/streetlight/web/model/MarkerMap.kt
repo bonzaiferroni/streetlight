@@ -12,6 +12,7 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
+import streetlight.model.data.EventGroup
 import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
@@ -119,6 +120,7 @@ private fun createMarker(post: Entity): StaticMarker? = when (post) {
     is City -> CityMarker(post)
     is Galaxy -> GalaxyMarker(post)
     is CustomEntity -> null
+    is EventGroup -> if (post.startsAt != null) EventInflateMarker(post) else LocationInflateMarker(post)
     is Star -> null
 }
 

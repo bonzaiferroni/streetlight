@@ -20,7 +20,7 @@ The older utilities take a wide set of arguments and build a whole query, which 
 * `tables/GalaxyPostAspect.kt`: `query`, `queryCursor`, `joinCaller`, `joinCursor`, `afterCursor`, `orderByCursor`, and `getColumns`
 * `services/GalaxyQuery.kt`: `galaxyQuery`
 * `services/CityEntityQuery.kt`: `cityEntityQuery` and `pageBy`
-* `services/PostTableDao.kt`: `readOrderedPosts`
+* `services/PostTableDao.kt`: `readOrderedPosts`, and `readBoundedPosts`, which could share the view filter of `EarthDao`'s `whereInView`
 * `tables/StarIdTable.kt`: `getConstraint`, once nothing uses it
 
 ## Open Questions

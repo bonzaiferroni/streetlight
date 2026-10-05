@@ -50,6 +50,12 @@ abstract class Endpoint<SentType, ReturnType>(
         toString = { it.toString() }
     )
 
+    fun doubleParamOf(key: String) = EndpointParam(
+        key = key,
+        toValue = { it.toDouble() },
+        toString = { it.toString() }
+    )
+
     /** Declares an enum query parameter, written as the entry's ordinal. */
     inline fun <reified T : Enum<T>> enumParamOf(key: String) = EndpointParam(
         key = key,

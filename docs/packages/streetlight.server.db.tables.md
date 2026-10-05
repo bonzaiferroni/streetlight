@@ -45,6 +45,10 @@ A galaxy's slug is written by `createGalaxy` and by no other function. `updateGa
 
 `Foo` is the name of the concept the function writes. A `Record`, `Row`, or `Edit` suffix on the parameter type is not part of it.
 
+## Aspects
+
+A DTO whose columns do not map cleanly from one table is read through `object FooAspect` in `FooAspect.kt`, patterned after a table: it holds the DTO's columns as `columns`, and any derived source, such as a subquery alias and its columns, as vals. `ResultRow.toFoo()` and the aspect's `joinWith` are declared below the object.
+
 ## Query Layers
 
 A read is composed by chaining its layers in this order: join, select, where, order, limit, map. A layer that a read can add, such as the caller's star, has one utility for each layer it touches.
@@ -105,6 +109,8 @@ An aggregate that must be current on every read is kept live.
 | Other | A private DAO function run in the transaction of the write, as `updatePostMarkCount` |
 
 An aggregate that depends on the time, such as a count of upcoming events, is kept by `TableDaemon` in `streetlight.server.plugins`. Each is an `updateFoo` DAO function that takes `now` and writes one `UPDATE` over the table, touching only rows whose value changed. An aggregate that reads another is run after it.
+
+An aggregate whose logic is more than one `UPDATE` can carry, such as `location.map_priority`, is computed in `TableDaemon` from one DAO read and written per row by a DAO function.
 
 `CounterTrigger` fires on insert, on delete, and on a change of the foreign key. Its `countFilter` is written against `NEW`, and is applied to `OLD` for a row leaving the count. A change to a column the filter reads does not move the count.
 

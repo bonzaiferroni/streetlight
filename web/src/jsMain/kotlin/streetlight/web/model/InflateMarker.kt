@@ -29,7 +29,7 @@ data class EventInflateMarker(
     override val markerId get() = group.locationId.toString()
     override val label get() = group.label
     override val sublabel get() = group.startsAt?.toFutureFormat()
-    override val thumbUrl get() = group.image.thumb ?: SiteImage.placeholderTh
+    override val thumbUrl get() = group.image?.thumb ?: SiteImage.placeholderTh
     override val geoPoint get() = group.geoPoint
     override val typeLabel get() = group.tag?.label ?: MarkerType.Event.label
     override val themeColor get() = ThemeColor.Accent.cssValue

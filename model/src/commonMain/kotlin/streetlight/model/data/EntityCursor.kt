@@ -27,13 +27,13 @@ sealed interface EntityCursor {
     ) : EntityCursor
 
     @Serializable
-    data class Lean(
+    data class Score(
         override val direction: SortDirection,
         override val recordId: Uuid? = null,
-        val postLean: Int? = null,
+        val score: Double? = null,
     ) : EntityCursor {
         companion object  {
-            val Default get() = Lean(SortDirection.Descending)
+            val Default get() = Score(SortDirection.Descending)
         }
     }
 
