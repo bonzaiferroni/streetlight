@@ -90,7 +90,7 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         // universe
         is HomeRoute -> universeStateOf(EventsMapRoute())
         is GalaxyListRoute -> universeStateOf(GalaxyMapRoute(null))
-        is CityListRoute -> universeStateOf(CityMapRoute(null))
+        is CityListRoute -> universeStateOf(CityMapRoute)
 
         // galaxy
         is GalaxyRoute -> RouteDockState(
@@ -99,7 +99,7 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         )
 
         // city
-        is CityRoute -> RouteDockState(listOf(route, CityMapRoute(route.slug)))
+        is CityRoute -> RouteDockState(listOf(route, CityMapRoute))
 
         // star
         is StarRoute -> RouteDockState(listOf(route), title = route.username.value)
@@ -112,13 +112,13 @@ private fun stateOf(route: AppRoute): RouteDockState? {
 
         // earth
         is EventsMapRoute -> RouteDockState(
-            mainRoutes = listOf(route, GalaxyMapRoute(null), CityMapRoute(null)),
+            mainRoutes = listOf(route, GalaxyMapRoute(null), CityMapRoute),
             title = route.title,
             leftRoutes = listOf(HomeRoute),
         )
         is GalaxyMapRoute -> when (val slug = route.slug) {
             null -> RouteDockState(
-                mainRoutes = listOf(EventsMapRoute(), route, CityMapRoute(null)),
+                mainRoutes = listOf(EventsMapRoute(), route, CityMapRoute),
                 title = "Streetlight",
                 leftRoutes = listOf(HomeRoute),
             )
@@ -127,17 +127,11 @@ private fun stateOf(route: AppRoute): RouteDockState? {
                 leftRoutes = listOf(GalaxyMapRoute(null)),
             )
         }
-        is CityMapRoute -> when (val slug = route.slug) {
-            null -> RouteDockState(
-                mainRoutes = listOf(EventsMapRoute(), GalaxyMapRoute(null), route),
-                title = "Streetlight",
-                leftRoutes = listOf(HomeRoute),
-            )
-            else -> RouteDockState(
-                mainRoutes = listOf(CityRoute(slug), route),
-                leftRoutes = listOf(CityMapRoute(null)),
-            )
-        }
+        is CityMapRoute -> RouteDockState(
+            mainRoutes = listOf(EventsMapRoute(), GalaxyMapRoute(null), route),
+            title = "Streetlight",
+            leftRoutes = listOf(HomeRoute),
+        )
 
         else -> null
     }

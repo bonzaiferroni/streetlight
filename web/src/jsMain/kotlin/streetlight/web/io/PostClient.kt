@@ -29,7 +29,7 @@ class BrowserPostClient(private val client: FetchClient): PostClient {
             writeCursor(Api.Posts.ReadFeed, cursor)
         }
     override suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
-    override suspend fun readMapPosts(query: MapQuery) = client.getApi(Api.Posts.ReadMapQuery) { writeMapQuery(query) }
+    override suspend fun readMapPosts(query: MapQuery) = client.getApi(Api.Posts.ReadMapQuery) { it.writeMapQuery(query) }
     override suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
     override suspend fun updateMark(update: MarkUpdate) = client.postApi(Api.Galaxies.UpdateMark, update)
     override fun connectSpiritVision() = client.connectSocket(Api.Posts.SpiritVision)

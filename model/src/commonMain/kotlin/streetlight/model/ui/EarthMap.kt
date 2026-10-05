@@ -13,8 +13,8 @@ data class GalaxyMap(val galaxy: Galaxy?): EarthMap {
     override val title get() = galaxy?.name ?: "Galaxies"
     override val layer get() = EarthLayer.Galaxy
 }
-data class CityMap(val city: City?): EarthMap {
-    override val title get() = city?.name ?: "Cities"
+data object CityMap: EarthMap {
+    override val title get() = "Cities"
     override val layer get() = EarthLayer.City
 }
 data class EventsMap(override val title: String): EarthMap {

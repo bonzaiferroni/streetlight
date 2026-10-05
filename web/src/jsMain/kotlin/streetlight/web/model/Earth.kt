@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.reactIn
 import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.EntityMarker
@@ -65,6 +66,10 @@ class Earth(
                 }
             }
         }
+
+        focusState.reactIn(scope) { focus ->
+            val groupMarker = focus as? MarkerFocus
+        }
     }
 
     fun setFocus(marker: EntityMarker) = markerMap.setFocus(marker)
@@ -102,20 +107,9 @@ class Earth(
             }
 
             is CityMapRoute -> {
-                when (val slug = route.slug) {
-                    null -> {
-                        val cities = api.city.readTopCities().toDataOr(toaster) { return null }
-                        markerMap.setPoints(cities)
-                        CityMap(null)
-                    }
-                    else -> {
-                        val city = api.city.readCity(slug).toDataOr(toaster) { return null }
-
-                        val posts = api.city.readCityPosts(slug).toDataOr(toaster) { return null }
-                        markerMap.setPoints(posts)
-                        CityMap(city)
-                    }
-                }
+                val cities = api.city.readTopCities().toDataOr(toaster) { return null }
+                markerMap.setPoints(cities)
+                CityMap
             }
 
             is EventsMapRoute -> {

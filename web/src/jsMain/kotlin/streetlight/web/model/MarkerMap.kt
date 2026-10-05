@@ -10,6 +10,7 @@ import koala.model.MarkerFocus
 import kampfire.model.combine
 import kampfire.model.tapOf
 import kampfire.model.storeOf
+import koala.model.MarkerId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -37,10 +38,6 @@ class MarkerMap(
     val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
     val centerNow get() = geoMap.camera.stateNow.center
 
-    val markersState = state.tapOf { it.markers }
-//    val boundedMarkersState = markersState.combine(geoMap.camera.movingViewState) { markers, bounds ->
-//        markers?.filter { bounds.contains(it.geoPoint) }
-//    }
     val isMovingState = geoMap.camera.isMovingState
     val focusState = state.tapOf { it.focus }
 

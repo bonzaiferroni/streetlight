@@ -18,7 +18,7 @@ fun ViewScope.earthMenu(model: Earth) {
     model.mapState.reactIn(contentScope) { map ->
         when (map) {
             is GalaxyMap -> map.galaxy?.let { dock.mergeState(GalaxyMapRoute(it.slug), RouteDockState(title = it.name)) }
-            is CityMap -> map.city?.let { dock.mergeState(CityMapRoute(it.slug), RouteDockState(title = it.name)) }
+            is CityMap -> dock.mergeState(CityMapRoute, RouteDockState(title = "Cities"))
             is EventsMap, null -> Unit
         }
     }

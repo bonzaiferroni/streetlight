@@ -12,6 +12,7 @@ import streetlight.model.data.City
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
+import streetlight.model.data.EventGroup
 import streetlight.model.data.Media
 import streetlight.web.layouts.ThemeColor
 
@@ -46,6 +47,31 @@ data class LocationMarker(
     override val typeLabel get() = location.mapType ?: MarkerType.Location.label
     override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin
     override val themeColor get() = ThemeColor.Location.cssValue
+}
+
+interface GroupMarker
+
+data class EmptyGroupMarker(
+    val cluster: EventGroup
+): IconMarker, GroupMarker {
+    override val markerId get() = cluster.locationId.toString()
+    override val label get() = cluster.label
+    override val geoPoint get() = cluster.geoPoint
+    override val typeLabel get() = cluster.tag?.label ?: MarkerType.Event.label
+    override val svg get() = SvgFile.MapPin
+    override val themeColor get() = ThemeColor.Location.cssValue
+}
+
+data class EventGroupMarker(
+    val cluster: EventGroup
+): ThumbMarker, GroupMarker {
+    override val markerId get() = cluster.locationId.toString()
+    override val label get() = cluster.label
+    override val sublabel get() = cluster.startsAt?.toFutureFormat()
+    override val thumbUrl get() = cluster.image.thumb ?: SiteImage.placeholderTh
+    override val geoPoint get() = cluster.geoPoint
+    override val typeLabel get() = cluster.tag?.label ?: MarkerType.Event.label
+    override val themeColor get() = ThemeColor.Accent.cssValue
 }
 
 data class EventMarker(
@@ -92,4 +118,9 @@ data class GalaxyMarker(
     override val geoPoint get() = galaxy.geoPoint
     override val typeLabel get() = MarkerType.Galaxy.label
     override val themeColor get() = ThemeColor.Galaxy.cssValue
+}
+
+fun EventGroup.toMarker() = when (eventCount) {
+    0 -> EmptyGroupMarker(this)
+    else -> EventGroupMarker(this)
 }

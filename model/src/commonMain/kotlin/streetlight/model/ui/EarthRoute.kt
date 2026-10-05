@@ -35,7 +35,7 @@ data object CityMapRoute: EarthRoute {
     override fun toRelativePath() = buildRelativePath(nodes)
 }
 
-data class EventsMapRoute(val citySlug: Slug?, val tags: List<EventTag>?): EarthRoute {
+data class EventsMapRoute(val citySlug: Slug? = null, val tags: List<EventTag>? = null): EarthRoute {
     companion object {
         val nodes = listOf(EARTH_NODE)
     }

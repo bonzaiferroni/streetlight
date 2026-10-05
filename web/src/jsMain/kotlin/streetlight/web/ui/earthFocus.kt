@@ -27,6 +27,7 @@ import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
 import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
+import streetlight.web.model.GroupMarker
 import streetlight.web.model.LocationMarker
 
 fun ViewScope.earthFocus(model: Earth) {
@@ -41,7 +42,12 @@ fun ViewScope.earthFocus(model: Earth) {
                 }
             }
 
-            is MarkerFocus -> markerRow(focus.marker)
+            is MarkerFocus -> {
+                when (focus.marker) {
+                    is GroupMarker -> textBlock("loading")
+                    else -> markerRow(focus.marker)
+                }
+            }
             null -> return@flowBlock
         }
     }

@@ -192,5 +192,5 @@ const val MAPLIBRE_TILE_SIZE = 512.0
 
 internal class PointCluster(
     val principalId: MarkerId,
-    val markerIds: Set<MarkerId>
+    val markerIds: Set<MarkerId>,
 )
