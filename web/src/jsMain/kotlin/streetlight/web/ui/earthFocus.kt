@@ -31,24 +31,21 @@ import streetlight.web.model.InflateMarker
 import streetlight.web.model.LocationMarker
 
 fun ViewScope.earthFocus(model: Earth) {
-    flowBlock(model.focusState,
-        modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight(100.pct), PointerEventsAuto, ZenBg, BlurBackdrop)
-    ) { focus ->
-        when (focus) {
-            is ClusterFocus -> column(FeedSection.FeedColumnMod) {
-                focus.members.forEach { marker ->
-                    val marker = marker as? StaticMarker ?: return@forEach
-                    markerRow(marker)
+    flowBlock(model.isInflatingState) { isInflating ->
+        when (isInflating) {
+            true -> textBlock("loading")
+            else -> {
+                flowBlock(model.focusEntitiesState,
+                    modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight(100.pct), PointerEventsAuto, ZenBg, BlurBackdrop)
+                ) { entitiesOrNull ->
+                    val entities = entitiesOrNull ?: return@flowBlock
+                    column(FeedSection.FeedColumnMod) {
+                        entities.forEach { entity ->
+                            feedRow(entity, true)
+                        }
+                    }
                 }
             }
-
-            is MarkerFocus -> {
-                when (focus.marker) {
-                    is InflateMarker -> textBlock("loading")
-                    else -> markerRow(focus.marker)
-                }
-            }
-            null -> return@flowBlock
         }
     }
 }

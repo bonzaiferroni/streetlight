@@ -5,7 +5,6 @@ import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.StaticMarker
 import koala.model.GeoFocus
-import koala.model.MarkerFocus
 import koala.model.Portal
 import kampfire.model.tapOf
 import kampfire.model.storeOf
@@ -44,8 +43,9 @@ class Earth(
 
     val mapState = state.tapOf { it.map }
     val isMovingState = markerMap.isMovingState
-    val focusState = state.tapOf { it.focusEntities }
-    val isFocusedState = focusState.tapOf { it != null }
+    val focusEntitiesState = state.tapOf { it.focusEntities }
+    val isFocusedState = focusEntitiesState.tapOf { it != null }
+    val isInflatingState = state.tapOf { it.isInflatingFocus }
 
     val cache = EarthCache(scope, api, markerMap, toaster)
 
@@ -136,11 +136,13 @@ class Earth(
                 }
             }
         }
-        if (focusEntities.isNotEmpty()) {
-            state.set { copy(focusEntities = focusEntities.toList()) }
-        }
 
-        if (inflateIds.isEmpty()) return
+        if (inflateIds.isEmpty()) {
+            if (focusEntities.isNotEmpty()) {
+                state.set { copy(focusEntities = focusEntities) }
+            }
+            return
+        }
 
         inflateFocusJob = scope.launch {
             state.set { copy(isInflatingFocus = true) }

@@ -11,7 +11,7 @@ import streetlight.web.model.Earth
 import streetlight.web.model.RouteDockState
 
 fun ViewScope.earthMenu(model: Earth) {
-    model.focusState.reactIn(contentScope) { focus ->
+    model.focusEntitiesState.reactIn(contentScope) { focus ->
         dock.setVisible(focus == null)
     }
 
