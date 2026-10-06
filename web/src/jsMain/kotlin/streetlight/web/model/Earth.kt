@@ -107,13 +107,7 @@ class Earth(
             }
 
             is EventsMapRoute -> {
-                markerMap.filterPoints {
-                    false
-//                    when (it) {
-//                        is LocationMarker, is EventMarker, is MediaMarker -> true
-//                        else -> false
-//                    }
-                }
+                markerMap.filterPoints { false }
                 EventsMap(route.title)
             }
         }
