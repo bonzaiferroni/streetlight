@@ -15,7 +15,7 @@ fun main() {
 }
 
 fun initElement(element: HTMLElement) {
-    findAndInitGeoMap(element)
+    // findAndInitGeoMap(element)
     queryAndInitLotties(element)
     findAndInitTabs(element)
 }

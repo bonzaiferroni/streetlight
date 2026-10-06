@@ -9,6 +9,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
+import kotlinx.css.pct
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
 import streetlight.model.data.ExtraLink
@@ -67,7 +68,7 @@ fun DIV.configureFeedRow(
         navigationIfNotNull(postRoute, modify(FeedRow.Image, OverflowClip, MoonShadow)) {
             containImage(image, modify(FeedRow.Feature, Size100P))
         }
-        column(modify(FeedRow.Text, Gap(0), JustifyContentCenter, TextShadow, MarginTop(1))) {
+        column(modify(FeedRow.Text, Gap(0), TextShadow)) {
             navigationIfNotNull(headingUrl) {
                 heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
             }
@@ -120,7 +121,7 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
         true -> {
             entity.body?.let {
                 column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
-                    markdown(it, modify(MaxHeight(4), FadeBottom, LineHeight115))
+                    markdown(it, modify(LineHeight115))
                 }
             }
         }

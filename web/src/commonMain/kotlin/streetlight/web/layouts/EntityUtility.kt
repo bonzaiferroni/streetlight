@@ -90,7 +90,7 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
-    is EventLocation -> eventCells(startsAt, cost, url, locationName)
+    is EventLocation -> eventCells(startsAt, cost, url, locationLabel)
     is EventPost -> event.toCells()
     is Event -> eventCells(startsAt, cost, url, null)
     is Galaxy -> buildList {

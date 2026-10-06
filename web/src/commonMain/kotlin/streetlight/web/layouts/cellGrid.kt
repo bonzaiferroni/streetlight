@@ -114,7 +114,8 @@ $Base {
     }
 
     > * > * {
-        width: var(--cell-width);
+        flex: 1;
+        min-width: 0;
     }
 }
 """ }
