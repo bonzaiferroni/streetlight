@@ -3,6 +3,8 @@
 package koala.external
 
 import kotlinx.js.JsPlainObject
+import web.gl.Float32List
+import web.gl.WebGL2RenderingContext
 import web.html.HTMLElement
 
 external interface Evented {
@@ -65,6 +67,7 @@ external object maplibregl {
         fun addLayer(layer: dynamic, layerId: dynamic)
         fun addLayer(layer: dynamic)
         fun removeLayer(id: String)
+        fun triggerRepaint()
 
         fun project(point: LngLat): Point
 
@@ -153,6 +156,24 @@ external object maplibregl {
 }
 
 typealias Listener = (dynamic) -> Unit
+
+external interface CustomLayerInterface {
+    val id: String
+    val type: String /* "custom" */
+    val renderingMode: String? /* "2d" | "3d" */
+    fun onAdd(map: maplibregl.Map, gl: WebGL2RenderingContext)
+    fun onRemove(map: maplibregl.Map, gl: WebGL2RenderingContext)
+    fun prerender(gl: WebGL2RenderingContext, options: CustomRenderMethodInput)
+    fun render(gl: WebGL2RenderingContext, options: CustomRenderMethodInput)
+}
+
+external interface CustomRenderMethodInput {
+    val defaultProjectionData: ProjectionData
+}
+
+external interface ProjectionData {
+    val mainMatrix: Float32List
+}
 
 //fun maplibregl.Marker.on(type: String, listener: () -> Unit): Subscription {
 //    return this.on(type, maplibregl.Listener(listener))

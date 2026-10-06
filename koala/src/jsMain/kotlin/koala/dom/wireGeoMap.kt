@@ -9,6 +9,7 @@ import koala.external.maplibregl.Point
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.GeoRender
+import koala.model.LightLayer
 import koala.modifier.isModified
 import kotlinx.coroutines.CoroutineScope
 import web.animations.requestAnimationFrame
@@ -66,8 +67,9 @@ fun ViewScope.wireMapContext(
     val appScope = app.get<CoroutineScope>()
     val mapWindow = document.getElementOrNullById(GeoMapKey.Window) ?: findAndInitGeoMap(mount) ?: error("geomap window not found")
     val jsMap: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
+    val lightLayer: LightLayer = mapWindow.asDynamic().lightLayer ?: error("geomap light layer not found")
     val cameraController = GeoCameraController(jsMap, mapWindow, camera, appScope)
-    val geoRender = GeoRender(mapWindow, jsMap, camera, appScope, geoMap)
+    val geoRender = GeoRender(mapWindow, jsMap, lightLayer, camera, appScope, geoMap)
     app.koin.declare(geoRender)
     app.koin.declare(cameraController)
 

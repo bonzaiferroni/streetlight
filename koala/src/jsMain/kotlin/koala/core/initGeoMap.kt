@@ -15,6 +15,7 @@ import koala.external.MapTerrain
 import koala.external.maplibregl
 import koala.modifier.Attribute
 import koala.html.GeoMapKey
+import koala.model.LightLayer
 import kotlinx.browser.localStorage
 import web.html.HTMLElement
 
@@ -82,6 +83,9 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
 
     window.asDynamic().widget = widget
 
+    val lightLayer = LightLayer()
+    window.asDynamic().lightLayer = lightLayer
+
     widget.on("load") {
 
         val layers = widget.getStyle().layers.orEmpty()
@@ -136,6 +140,8 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
         } else {
             widget.addLayer(layer)
         }
+
+        widget.addLayer(lightLayer)
     }
 
     widget.on("moveend") {

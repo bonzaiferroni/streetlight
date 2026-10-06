@@ -29,3 +29,7 @@ Code that wraps launching builds on `koala.utils.launch` so that the telemetry i
 `DropWhileBusy` launches a block only when its previous launch has finished. A launch requested while one is active is dropped and returns `null`. The previous launch is never cancelled.
 
 An action that must not run twice at once owns one instance. Two actions never share an instance.
+
+## Shaders
+
+A WebGL shader is written in GLSL ES 3.00 as a string in the Kotlin file of the layer that compiles it, marked `// language="GLSL"`. A layer drawn into the map implements `CustomLayerInterface` and is added to the map in `initGeoMap`.

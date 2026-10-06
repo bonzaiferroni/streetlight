@@ -14,6 +14,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class GeoRender(
     private val windowElement: HTMLElement,
     private val jsMap: maplibregl.Map,
+    private val lightLayer: LightLayer,
     private val camera: GeoCamera,
     private val scope: CoroutineScope,
     private val geoMap: GeoMap,
@@ -44,6 +45,7 @@ class GeoRender(
                             ?: GeoLayerAdapter(
                                 layer = layer,
                                 jsMap = jsMap,
+                                lightLayer = lightLayer,
                                 scope = CoroutineScope(scope.coroutineContext + SupervisorJob()),
                                 onFocus = ::setFocus
                             )

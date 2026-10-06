@@ -18,6 +18,7 @@ internal class PointMarkerElement(
     val element: HTMLDivElement,
     val base: HTMLDivElement,
     val body: PointMarkerBody,
+    val light: LightHandle,
 ) {
     var planarPoint = planarPoint
         private set
@@ -29,6 +30,9 @@ internal class PointMarkerElement(
 
     var isVisible = false
         private set
+
+    private var isClusterMember = false
+    private var isAttached = false
 
     val isFocused get() = element.isModified(Focus)
 
@@ -55,6 +59,7 @@ internal class PointMarkerElement(
         } else {
             jsMarker.setLngLat(destination)
         }
+        light.move(position)
         this.position = position
     }
 
@@ -65,27 +70,40 @@ internal class PointMarkerElement(
     fun setIsVisible(value: Boolean, widget: maplibregl.Map) {
         if (isVisible == value) return
         isVisible = value
-        if (isVisible) {
+        updateAttachment(widget)
+    }
+
+    fun setCluster(cluster: PointCluster?, widget: maplibregl.Map) {
+        isClusterMember = cluster != null && cluster.principalId != marker.markerId
+
+        when {
+            cluster == null -> {
+                element.unmodify(MarkerStyle.ClusterPrincipal)
+                element.unmodify(MarkerStyle.ClusterMember)
+            }
+            isClusterMember -> {
+                element.modify(MarkerStyle.ClusterMember)
+                element.unmodify(MarkerStyle.ClusterPrincipal)
+            }
+            else -> {
+                element.modify(MarkerStyle.ClusterPrincipal)
+                element.unmodify(MarkerStyle.ClusterMember)
+                body.clusterElement?.textContent = cluster.markerIds.size.toString()
+            }
+        }
+
+        updateAttachment(widget)
+    }
+
+    /** Attaches the marker to [widget] while it is in view and not a cluster member, detaching it otherwise. */
+    private fun updateAttachment(widget: maplibregl.Map) {
+        val shouldAttach = isVisible && !isClusterMember
+        if (isAttached == shouldAttach) return
+        isAttached = shouldAttach
+        if (isAttached) {
             jsMarker.addTo(widget)
         } else {
             jsMarker.remove()
-        }
-    }
-
-    fun setCluster(cluster: PointCluster?) {
-        if (cluster == null) {
-            element.unmodify(MarkerStyle.ClusterPrincipal)
-            element.unmodify(MarkerStyle.ClusterMember)
-            return
-        }
-
-        if (cluster.principalId == marker.markerId) {
-            element.modify(MarkerStyle.ClusterPrincipal)
-            element.unmodify(MarkerStyle.ClusterMember)
-            body.clusterElement?.textContent = cluster.markerIds.size.toString()
-        } else {
-            element.modify(MarkerStyle.ClusterMember)
-            element.unmodify(MarkerStyle.ClusterPrincipal)
         }
     }
 
@@ -99,10 +117,11 @@ internal class PointMarkerElement(
 
     fun dispose() {
         jsMarker.remove()
+        light.dispose()
     }
 }
 
-internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointMarkerElement {
+internal fun PointMarker.toPointRender(pixelPoint: Point, lightLayer: LightLayer, focusEntity: () -> Unit): PointMarkerElement {
     val element = document.createDiv()
     element.modify(MarkerStyle.Root)
 
@@ -117,10 +136,10 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
 
     var baseElement: HTMLDivElement? = null
     var renderBody: PointMarkerBody? = null
+    val delay = provideDelay()
 
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine
-            val delay = provideDelay()
             element.setStyle(MarkerStyle.TwinkleDelay.of(delay.s))
             element.setStyle(MarkerStyle.BodySize.of(bodySize))
 
@@ -148,6 +167,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
         element = element,
         base = baseElement!!,
         body = renderBody!!,
+        light = lightLayer.allocate(geoPoint, -delay, 1f),
     )
 
     val onElementClick = onFocus?.let {

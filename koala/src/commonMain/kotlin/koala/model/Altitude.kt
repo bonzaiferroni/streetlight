@@ -34,9 +34,6 @@ $Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Astronaut} {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.65);
-    animation: twinkle 2.4s ease-in-out infinite;
-    animation-delay: var(--twinkle-delay);
     pointer-events: none;
     
     > * {

@@ -14,6 +14,7 @@ import kotlin.math.pow
 internal class GeoLayerAdapter(
     val layer: GeoLayer,
     val jsMap: maplibregl.Map,
+    val lightLayer: LightLayer,
     val scope: CoroutineScope,
     val onFocus: (GeoFocus?) -> Unit
 ) {
@@ -51,7 +52,7 @@ internal class GeoLayerAdapter(
             val render = pointRenders[marker.markerId]?.also { render ->
                 // update render
                 render.update(marker, planarPoint)
-            } ?: marker.toPointRender(planarPoint) {
+            } ?: marker.toPointRender(planarPoint, lightLayer) {
                 val focus = pointClusters[marker.markerId]?.markerIds?.mapNotNull {
                     pointRenders[it]?.marker
                 }?.let{ ClusterFocus(marker, it) } ?: MarkerFocus(marker)
@@ -117,7 +118,7 @@ internal class GeoLayerAdapter(
     private fun applyClusters(clusters: Map<MarkerId, PointCluster?>) {
         clusters.forEach { (markerId, cluster) ->
             val render = pointRenders[markerId] ?: return@forEach
-            render.setCluster(cluster)
+            render.setCluster(cluster, jsMap)
         }
     }
 
