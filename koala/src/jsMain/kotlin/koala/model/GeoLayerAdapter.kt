@@ -11,7 +11,7 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
 
-internal class GeoLayerRender(
+internal class GeoLayerAdapter(
     val layer: GeoLayer,
     val jsMap: maplibregl.Map,
     val scope: CoroutineScope,

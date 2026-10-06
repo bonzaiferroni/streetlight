@@ -18,7 +18,7 @@ class GeoRender(
     private val scope: CoroutineScope,
     private val geoMap: GeoMap,
 ) {
-    private var layerRenders: List<GeoLayerRender> = emptyList()
+    private var layerRenders: List<GeoLayerAdapter> = emptyList()
     private var focusRender: PointMarkerElement? = null
 
     init {
@@ -41,7 +41,7 @@ class GeoRender(
                     }
                     layerRenders = layers.map { layer ->
                         layerRenders.firstOrNull { it.layer.layerId == layer.layerId }
-                            ?: GeoLayerRender(
+                            ?: GeoLayerAdapter(
                                 layer = layer,
                                 jsMap = jsMap,
                                 scope = CoroutineScope(scope.coroutineContext + SupervisorJob()),

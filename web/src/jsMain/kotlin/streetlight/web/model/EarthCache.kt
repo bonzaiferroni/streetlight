@@ -70,7 +70,7 @@ class EarthCache(
         if (containing.values.any { it.isComplete }) return null
 
         val seen = queries.keys
-            .filter { it !in containing.keys && it.overlapArea(view) > 0.0 }
+            .filter { it !in containing.keys && queries.getValue(it).isComplete && it.overlapArea(view) > 0.0 }
             .sortedByDescending { it.overlapArea(view) }
             .take(MAX_VIEWED)
 
