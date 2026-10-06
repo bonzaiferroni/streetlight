@@ -75,23 +75,6 @@ internal class PointMarkerElement(
 
     fun setCluster(cluster: PointCluster?, widget: maplibregl.Map) {
         isClusterMember = cluster != null && cluster.principalId != marker.markerId
-
-        when {
-            cluster == null -> {
-                element.unmodify(MarkerStyle.ClusterPrincipal)
-                element.unmodify(MarkerStyle.ClusterMember)
-            }
-            isClusterMember -> {
-                element.modify(MarkerStyle.ClusterMember)
-                element.unmodify(MarkerStyle.ClusterPrincipal)
-            }
-            else -> {
-                element.modify(MarkerStyle.ClusterPrincipal)
-                element.unmodify(MarkerStyle.ClusterMember)
-                body.clusterElement?.textContent = cluster.markerIds.size.toString()
-            }
-        }
-
         updateAttachment(widget)
     }
 

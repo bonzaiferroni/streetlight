@@ -17,10 +17,6 @@ object MarkerStyle {
     val Icon = Class("marker-icon")
     val Body = Class("marker-body")
     val Label = Class("marker-label")
-    val ClusterCount = Class("marker-cluster-count")
-
-    val ClusterPrincipal = Class("cluster-principal")
-    val ClusterMember = Class("cluster-member")
     val MarkerGlow = Class("marker-glow")
 
     val BodySize = Property<LinearDimension>("body-size", true)
@@ -153,28 +149,6 @@ $Label {
     white-space: nowrap;
 
     transition: var(--transition-opacity);
-}
-
-$ClusterMember {
-    &$Root {
-        pointer-events: none;
-    }
-}
-
-$ClusterCount {
-    opacity: 0;
-    
-    transition: var(--transition-opacity);
-}
-
-$ClusterPrincipal {
-    $ClusterCount {
-        opacity: 1;
-    }
-    
-    ${IconStyle.Icon} {
-        opacity: 0;
-    }
 }
 
 $MarkerGlow::before {

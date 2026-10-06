@@ -13,7 +13,6 @@ import web.html.HTMLElement
 
 internal class EntityMarkerBody(
     override val element: HTMLElement,
-    override val clusterElement: HTMLElement,
 ): PointMarkerBody {
     override val labelElement: HTMLElement? get() = null
 
@@ -23,8 +22,6 @@ internal class EntityMarkerBody(
 }
 
 internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarkerBody {
-    var clusterElement: HTMLElement? = null
-
     with(marker) {
         // td: declare border radius in stylesheet
         val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, TextShadow)) {
@@ -35,9 +32,6 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
             box(MarkerStyle.Thumb) {
                 img {
                     src = thumbUrl.value
-                }
-                box(modify(MarkerStyle.ClusterCount, HeavyCardBg)) {
-                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold))
                 }
             }
 
@@ -59,13 +53,11 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
             }
         }
 
-        return EntityMarkerBody(element, clusterElement!!)
+        return EntityMarkerBody(element)
     }
 }
 
 internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBody {
-    var clusterElement: HTMLElement? = null
-
     with(marker) {
         val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, BorderRadius3, WhiteSpaceNoWrap)) {
             themeColor?.let {
@@ -74,9 +66,6 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
 
             box(modify(MarkerStyle.Icon)) {
                 icon(marker.svg, modify(SmallIconHeight, PlaceSelfCenter, ColorSchemeFg))
-                box(modify(MarkerStyle.ClusterCount, BorderRadius50P, CardBg, Outline)) {
-                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, Bold, TextShadow))
-                }
             }
 
             label?.let {
@@ -84,6 +73,6 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
             }
         }
 
-        return EntityMarkerBody(element, clusterElement!!)
+        return EntityMarkerBody(element)
     }
 }

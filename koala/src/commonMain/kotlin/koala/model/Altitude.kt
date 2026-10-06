@@ -25,7 +25,6 @@ fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
 val AltitudeCss get() = with(GeoMapKey) { """
     
 /* diminished visibility for markers just below altitude */
-${MarkerStyle.ClusterMember} ${MarkerStyle.Base},
 $Window${Altitude.Raincloud}  ${MarkerStyle.Base}${Altitude.Kite},
 $Window${Altitude.Airplane}   ${MarkerStyle.Base}${Altitude.Raincloud},
 $Window${Altitude.Satellite}  ${MarkerStyle.Base}${Altitude.Airplane},
