@@ -174,6 +174,7 @@ object FeedRow {
     val Cells = Base.withBemElement("cells")
 
     val ToggleExpand = Base.withBemModifier("expand-row")
+    val Featured = Base.withBemModifier("featured")
 }
 
 //language="CSS"
@@ -239,8 +240,11 @@ ${Mode.selector(FeedMode.Grid)} $Feed {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 
     > :not($Base) { grid-column: 1 / -1; }
+}
 
-    $Base { padding: 0 0 var(--unit); }
+/* a featured entry takes the Grid layout in any feed */
+${Mode.selector(FeedMode.Grid)} $Feed $Base, $Featured {
+    padding: 0 0 var(--unit);
 
     $Content {
         grid-template-columns: 0 1fr auto 0;

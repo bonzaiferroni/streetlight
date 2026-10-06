@@ -16,7 +16,9 @@ import streetlight.model.data.Entity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ThemeColor
+import streetlight.web.layouts.FeedRow
 import streetlight.web.layouts.FeedSection
+import streetlight.web.layouts.configureFeedRow
 import streetlight.web.layouts.cellGrid
 import streetlight.web.layouts.toCells
 import streetlight.web.layouts.entityButtonsOf
@@ -33,8 +35,11 @@ fun ViewScope.earthFocus(model: Earth) {
     ) { entitiesOrNull ->
         val entities = entitiesOrNull ?: return@flowBlock
         column(FeedSection.FeedColumnMod) {
-            entities.forEach { entity ->
-                feedRow(entity, true)
+            entities.forEachIndexed { index, entity ->
+                when (index) {
+                    0 -> div(FeedRow.Featured) { configureFeedRow(entity, true) }
+                    else -> feedRow(entity, true)
+                }
             }
         }
     }

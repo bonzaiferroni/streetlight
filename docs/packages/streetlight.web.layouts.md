@@ -40,7 +40,9 @@ The more button toggles the expanded content of a `feedRow`. Only a component wi
 
 ### Feed Modes
 
-A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRow.Mode`. A feed opts in with the `FeedRow.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedProtoCss` alone places it.
+A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRow.Mode`. A feed opts in with the `FeedRow.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedRowCss` alone places it.
+
+An entry marked `FeedRow.Featured` takes the `Grid` entry layout in any feed or mode, sharing the `Grid` rules.
 
 The feed mode is a root switch, as specified in `koala.interop.md`.
 
