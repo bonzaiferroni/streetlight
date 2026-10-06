@@ -213,11 +213,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
             override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
         }
-        object Inflate: GetEndpoint<List<Entity>>(this), TimeCursorEndpoint {
+        object Inflate: GetEndpoint<List<Entity>>(this) {
             val locationIdParam = tableIdParamOf("locationId") { LocationId(it) }
-            override val recordIdParam = uuidParamOf("recordId")
-            override val recordAtParam = instantParamOf("recordAt")
-            override val defaultDirection = SortDirection.Ascending
         }
     }
 

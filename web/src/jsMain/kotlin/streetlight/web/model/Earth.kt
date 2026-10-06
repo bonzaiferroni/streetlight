@@ -48,6 +48,7 @@ class Earth(
     val isInflatingState = state.tapOf { it.isInflatingFocus }
 
     val cache = EarthCache(scope, api, markerMap, toaster)
+    val isQueryingState = cache.isQueryingState
 
     private var inflateFocusJob: Job? = null
 

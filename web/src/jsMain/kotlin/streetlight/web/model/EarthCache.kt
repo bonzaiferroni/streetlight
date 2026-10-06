@@ -3,6 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoRect
+import kampfire.model.storeOf
 import kampfire.model.toDataOr
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +27,8 @@ class EarthCache(
 
     private val queries = mutableMapOf<GeoRect, MapCursor>()
     private val camera get() = markerMap.geoMap.camera
+
+    val isQueryingState = storeOf(false)
 
     init {
         scope.launch("Earth > event query") {
@@ -59,9 +62,11 @@ class EarthCache(
         scope.launch {
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
+            isQueryingState.set { true }
             val feed = api.earth.readMapEntities(query).toDataOr(toaster) { return@launch }
             queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
             markerMap.addPoints(feed.entities)
+            isQueryingState.set { false }
         }
     }
 
@@ -83,7 +88,7 @@ class EarthCache(
 /** Where the query of one view left off. */
 data class MapCursor(
     val cursor: EntityCursor.Score?,
-    val isComplete: Boolean
+    val isComplete: Boolean,
 )
 
 /** The most overlapping views a query lists as already seen. */
