@@ -15,7 +15,7 @@ interface InflateMarker {
 data class LocationInflateMarker(
     override val group: EventGroup
 ): IconMarker, InflateMarker {
-    override val markerId get() = group.locationId.toString()
+    override val markerId = group.locationId.toString()
     override val label get() = group.label
     override val geoPoint get() = group.geoPoint
     override val typeLabel get() = group.tag?.label ?: MarkerType.Event.label
@@ -26,7 +26,7 @@ data class LocationInflateMarker(
 data class EventInflateMarker(
     override val group: EventGroup
 ): ThumbMarker, InflateMarker {
-    override val markerId get() = group.locationId.toString()
+    override val markerId = group.locationId.toString()
     override val label get() = group.label
     override val sublabel get() = group.startsAt?.toFutureFormat()
     override val thumbUrl get() = group.image?.thumb ?: SiteImage.placeholderTh

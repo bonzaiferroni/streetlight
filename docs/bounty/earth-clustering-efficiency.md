@@ -12,11 +12,9 @@ The code is in `koala/src/jsMain/kotlin/koala/model/GeoLayerRender.kt` and `Poin
 
 ## Findings
 
-### Clustering is O(n²)
+### Clustering is O(n²) — pardoned
 
-`defineClusters` compares every loaded marker with every other, visible or not. `setBounds` runs it at each whole zoom step during a zoom and again when the map settles.
-
-Suggestion: bucket points into a grid whose cells are one cluster radius wide, and compare each point only with the points in its own and the 8 neighboring cells. Roughly O(n), contained in `defineClusters`.
+`defineClusters` compares every loaded marker with every other. Measured over a session of zooming over Denver: 63 runs, median 2.3ms, max 9ms, about 180ms in all. It does not break a frame and is not worth changing.
 
 ### Hidden cluster members may still render
 
@@ -26,7 +24,9 @@ Suggestion: detach cluster members from the map, as `setIsVisible` does for mark
 
 ### Stale render removal is O(n²)
 
-`setPoints` checks each existing render against the incoming markers with `markers.any { ... }`, on every query page.
+`setPoints` checks each existing render against the incoming markers with `markers.any { ... }`, on every query page. The cost was a `markerId` getter that formats a Uuid on each read: median 14ms and max 39ms per run. Storing `markerId` on `InflateMarker` brought it to a max of 1ms.
+
+The model entities (`EventGroup`, `Location`, `Event`, `Media`, `Galaxy`) still format `markerId` on each read, and `MarkerMap.createAndSetMarkers` reads it in an O(n²) loop.
 
 Suggestion: build a set of the incoming marker ids and check against it.
 
@@ -38,4 +38,4 @@ Suggestion: keep each render's current cluster and skip the update when it is un
 
 ## Order
 
-Profile first. Scripting time points to the clustering and removal findings; rendering time points to hidden members and style rewrites.
+Profiling with `koala.bench.markAndMeasure` put the main cost in MapLibre repositioning HTML markers each frame and the layout that follows. Hidden cluster members come next.
