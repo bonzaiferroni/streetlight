@@ -9,9 +9,6 @@ import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading4
 import koala.html.navigationIfNotNull
-import koala.model.ClusterFocus
-import koala.model.StaticMarker
-import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.css.pct
 import kotlinx.html.hr

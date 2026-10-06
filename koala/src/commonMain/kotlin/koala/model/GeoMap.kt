@@ -40,11 +40,11 @@ class GeoMap(
 
     // fun setFocus(value: PointMarker?) = state.set { it.copy(focus = value?.let { marker -> MarkerFocus(marker)} ) }
 
-    fun setFocus(value: GeoFocus?) = state.update { it.copy(focus = value) }
+    fun setFocus(value: PointMarker?) = state.update { it.copy(focus = value) }
 }
 
 /** The focused marker of the map, if any. */
 data class GeoMapState(
-    val focus: GeoFocus? = null
+    val focus: PointMarker? = null
 )
 

@@ -4,11 +4,10 @@ package streetlight.web.model
 
 import kampfire.model.getContainingBounds
 import koala.model.StaticMarker
-import koala.model.GeoFocus
 import koala.model.GeoMap
-import koala.model.MarkerFocus
 import kampfire.model.tapOf
 import kampfire.model.storeOf
+import koala.model.PointMarker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -81,9 +80,8 @@ class MarkerMap(
     }
 
     /** Focuses [marker] and pans to it. */
-    fun setFocus(marker: StaticMarker) {
-        val focus = MarkerFocus(marker)
-        geoMap.setFocus(focus)
+    fun setFocus(marker: PointMarker) {
+        geoMap.setFocus(marker)
         geoMap.camera.panMap(marker.geoPoint)
         state.set { copy(focus = focus)}
     }
@@ -100,7 +98,7 @@ class MarkerMap(
 
 data class StreetMapState(
     val markers: List<StaticMarker>? = null,
-    val focus: GeoFocus? = null,
+    val focus: PointMarker? = null,
 )
 
 /** The markers inside and outside the map view. */

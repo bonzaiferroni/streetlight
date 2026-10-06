@@ -15,7 +15,7 @@ internal class GeoLayerAdapter(
     val widget: maplibregl.Map,
     val lightLayer: LightLayer,
     val scope: CoroutineScope,
-    val onFocus: (GeoFocus?) -> Unit
+    val onFocus: (PointMarker?) -> Unit
 ) {
     var pointRenders: Map<MarkerId, PointMarkerElement> = emptyMap()
         private set
@@ -51,9 +51,7 @@ internal class GeoLayerAdapter(
                     // update render
                     render.update(marker, planarPoint)
                 } ?: marker.toPointRender(planarPoint, lightLayer) {
-                    val focus = pointRenders[marker.markerId]?.let(::clusterOf)
-                        ?.let { ClusterFocus(marker, it) } ?: MarkerFocus(marker)
-                    onFocus(focus)
+                    onFocus(marker)
                 }
                 pointBuffer[marker.markerId] = render
             }
@@ -99,12 +97,6 @@ internal class GeoLayerAdapter(
         val refLatitude = refLatitudeNow ?: return
         val clusterRadiusMetersSq = clusterRadiusMetersOf(zoom, refLatitude, clusterRadiusPx).let { it * it }
         pointRenders.values.forEach { it.setClusterRadius(clusterRadiusMetersSq) }
-    }
-
-    /** The markers that [clusterHead] stands for, or `null` when it stands only for itself. */
-    private fun clusterOf(clusterHead: PointMarkerElement): List<PointMarker>? {
-        val markers = pointRenders.values.filter { it.getClusterHead() == clusterHead }.map { it.marker }
-        return markers.takeIf { it.size > 1 }
     }
 
     fun setLines(markers: List<LineMarker>) {

@@ -13,7 +13,6 @@ import koala.Image
 import koala.model.DocId
 import koala.model.DocTableItem
 import streetlight.model.data.*
-import kotlin.uuid.Uuid
 import streetlight.model.data.Feedback as FeedbackDto
 
 /**
@@ -214,8 +213,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
             override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
         }
-        object Inflate: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint {
-            val locationIdsParam = listParamOf("locationIds", { LocationId(Uuid.parse(it)) }) { it.toString() }
+        object Inflate: GetEndpoint<List<Entity>>(this), TimeCursorEndpoint {
+            val locationIdParam = tableIdParamOf("locationId") { LocationId(it) }
             override val recordIdParam = uuidParamOf("recordId")
             override val recordAtParam = instantParamOf("recordAt")
             override val defaultDirection = SortDirection.Ascending

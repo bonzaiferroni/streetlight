@@ -4,10 +4,10 @@ import kampfire.model.reactIn
 import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.StaticMarker
-import koala.model.GeoFocus
 import koala.model.Portal
 import kampfire.model.tapOf
 import kampfire.model.storeOf
+import koala.model.PointMarker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -118,38 +118,24 @@ class Earth(
         }
     }
 
-    private fun inflateFocus(focus: GeoFocus?) {
+    private fun inflateFocus(marker: PointMarker?) {
         inflateFocusJob?.cancel()
-        if (focus == null) {
+        if (marker == null) {
             state.set { copy(isInflatingFocus = false, focusEntities = null) }
             return
         }
 
-        val inflateIds = mutableListOf<LocationId>()
-        val focusEntities = mutableListOf<Entity>()
-        focus.getMarkers().forEach { marker ->
-            when (marker) {
-                is InflateMarker -> {
-                    inflateIds.add(marker.group.locationId)
-                }
-                is EntityMarker -> {
-                    focusEntities.add(marker.entity)
+        when (marker) {
+            is InflateMarker -> {
+                inflateFocusJob = scope.launch {
+                    state.set { copy(isInflatingFocus = true) }
+                    val entities = api.earth.inflate(marker.group.locationId).toDataOr(toaster) { return@launch }
+                    state.set { copy(isInflatingFocus = false, focusEntities = entities)}
                 }
             }
-        }
-
-        if (inflateIds.isEmpty()) {
-            if (focusEntities.isNotEmpty()) {
-                state.set { copy(focusEntities = focusEntities) }
+            is EntityMarker -> {
+                state.set { copy(isInflatingFocus = false, focusEntities = listOf(marker.entity)) }
             }
-            return
-        }
-
-        inflateFocusJob = scope.launch {
-            state.set { copy(isInflatingFocus = true) }
-            val feed = api.earth.inflate(inflateIds).toDataOr(toaster) { return@launch }
-            focusEntities.addAll(feed.entities)
-            state.set { copy(isInflatingFocus = false, focusEntities = focusEntities)}
         }
     }
 }

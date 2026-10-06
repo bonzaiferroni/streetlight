@@ -66,12 +66,8 @@ class GeoRender(
     }
 
     /** Focuses the marker of [focus], or clears the focus when it is `null`. */
-    fun setFocus(focus: GeoFocus?) {
-        val markerId = when (focus) {
-            is MarkerFocus -> focus.marker.markerId
-            is ClusterFocus -> focus.principal.markerId
-            else -> null
-        }
+    fun setFocus(focus: PointMarker?) {
+        val markerId = focus?.markerId
 
         val render = markerId?.let { markerId ->
             layerRenders.firstNotNullOfOrNull { render ->
