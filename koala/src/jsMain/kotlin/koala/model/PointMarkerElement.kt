@@ -31,7 +31,12 @@ internal class PointMarkerElement(
     var isVisible = false
         private set
 
-    private var isClusterMember = false
+    var clusterSuperior: PointMarkerElement? = null
+        private set
+    private var clusterSuperiorDistanceSq = Double.POSITIVE_INFINITY
+
+    var isClusterMember = false
+        private set
     private var isAttached = false
 
     val isFocused get() = element.isModified(Focus)
@@ -74,10 +79,24 @@ internal class PointMarkerElement(
         updateAttachment()
     }
 
+    /** Sets the nearest marker of higher priority, [clusterSuperiorDistanceSq] away in square meters. */
+    fun setClusterSuperior(clusterSuperior: PointMarkerElement?, clusterSuperiorDistanceSq: Double) {
+        this.clusterSuperior = clusterSuperior
+        this.clusterSuperiorDistanceSq = clusterSuperiorDistanceSq
+    }
+
+    /** Clusters this marker into its [clusterSuperior] while it is within the cluster radius, [radiusSq] in square meters. */
     context(widget: maplibregl.Map)
-    fun setCluster(cluster: PointCluster?) {
-        isClusterMember = cluster != null && cluster.principalId != marker.markerId
+    fun setClusterRadius(radiusSq: Double) {
+        isClusterMember = clusterSuperiorDistanceSq <= radiusSq
         updateAttachment()
+    }
+
+    /** Finds the shown marker this one is clustered into, following [clusterSuperior] past the markers it is clustered with. */
+    fun getClusterHead(): PointMarkerElement {
+        var render = this
+        while (render.isClusterMember) render = render.clusterSuperior ?: break
+        return render
     }
 
     /** Attaches the marker to [widget] while it is in view and not a cluster member, detaching it otherwise. */

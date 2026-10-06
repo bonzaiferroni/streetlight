@@ -7,7 +7,6 @@ import kampfire.model.toPlanarPoint
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
 
@@ -22,8 +21,6 @@ internal class GeoLayerAdapter(
         private set
     var lineRenders: Map<MarkerId, LineRender> = emptyMap()
         private set
-
-    private var pointClusters: Map<MarkerId, PointCluster?> = emptyMap()
 
     private var refLatitudeNow: Double? = null
     private var view: GeoRect? = null
@@ -54,13 +51,11 @@ internal class GeoLayerAdapter(
                     // update render
                     render.update(marker, planarPoint)
                 } ?: marker.toPointRender(planarPoint, lightLayer) {
-                    val focus = pointClusters[marker.markerId]?.markerIds?.mapNotNull {
-                        pointRenders[it]?.marker
-                    }?.let{ ClusterFocus(marker, it) } ?: MarkerFocus(marker)
+                    val focus = pointRenders[marker.markerId]?.let(::clusterOf)
+                        ?.let { ClusterFocus(marker, it) } ?: MarkerFocus(marker)
                     onFocus(focus)
                 }
                 pointBuffer[marker.markerId] = render
-                cullOutsideBounds(render)
             }
 
             // remove cached points not in list
@@ -72,58 +67,44 @@ internal class GeoLayerAdapter(
 
             pointRenders = pointBuffer
 
-            clusterPoints()
+            assignClusterSuperiors()
+            applyClusterRadius()
+            pointRenders.values.forEach { cullOutsideBounds(it) }
+        }
+    }
+
+    /** Gives each point the nearest point of higher priority, its cluster superior. */
+    private fun assignClusterSuperiors() {
+        if (layer.config.clusterRadiusPx == null) return
+        val renders = pointRenders.values.toList()
+
+        renders.forEachIndexed { index, render ->
+            var clusterSuperior: PointMarkerElement? = null
+            var clusterSuperiorDistanceSq = Double.POSITIVE_INFINITY
+            for (superiorIndex in 0 until index) {
+                val candidate = renders[superiorIndex]
+                val distanceSq = render.planarPoint.distanceSquaredTo(candidate.planarPoint)
+                if (distanceSq >= clusterSuperiorDistanceSq) continue
+                clusterSuperior = candidate
+                clusterSuperiorDistanceSq = distanceSq
+            }
+            render.setClusterSuperior(clusterSuperior, clusterSuperiorDistanceSq)
         }
     }
 
     context(widget: maplibregl.Map)
-    private fun clusterPoints() {
+    private fun applyClusterRadius() {
         val clusterRadiusPx = layer.config.clusterRadiusPx ?: return
         val zoom = zoomNow ?: return
         val refLatitude = refLatitudeNow ?: return
         val clusterRadiusMetersSq = clusterRadiusMetersOf(zoom, refLatitude, clusterRadiusPx).let { it * it }
-        pointClusters = defineClusters(clusterRadiusMetersSq)
-        applyClusters(pointClusters)
+        pointRenders.values.forEach { it.setClusterRadius(clusterRadiusMetersSq) }
     }
 
-    private fun defineClusters(clusterRadiusMetersSq: Double): Map<MarkerId, PointCluster?> {
-        val clusters = mutableMapOf<MarkerId, PointCluster?>()
-        val clustered = mutableSetOf<MarkerId>()
-        val currentSet = mutableSetOf<MarkerId>()
-
-        pointRenders.forEach { (markerId, render) ->
-            if (markerId in clustered) return@forEach
-
-            pointRenders.forEach { (otherId, otherRender) ->
-                if (otherId == markerId || otherId in clustered) return@forEach
-                val distanceSq = render.planarPoint.distanceSquaredTo(otherRender.planarPoint)
-                if (distanceSq > clusterRadiusMetersSq) return@forEach
-                currentSet.add(otherId)
-            }
-
-            when (currentSet.isEmpty()) {
-                true -> clusters[markerId] = null
-                else -> {
-                    currentSet.add(markerId)
-                    val cluster = PointCluster(markerId, currentSet.toSet())
-                    clustered.addAll(currentSet)
-                    currentSet.forEach {
-                        clusters[it] = cluster
-                    }
-                    currentSet.clear()
-                }
-            }
-        }
-
-        return clusters
-    }
-
-    context(widget: maplibregl.Map)
-    private fun applyClusters(clusters: Map<MarkerId, PointCluster?>) {
-        clusters.forEach { (markerId, cluster) ->
-            val render = pointRenders[markerId] ?: return@forEach
-            render.setCluster(cluster)
-        }
+    /** The markers that [clusterHead] stands for, or `null` when it stands only for itself. */
+    private fun clusterOf(clusterHead: PointMarkerElement): List<PointMarker>? {
+        val markers = pointRenders.values.filter { it.getClusterHead() == clusterHead }.map { it.marker }
+        return markers.takeIf { it.size > 1 }
     }
 
     fun setLines(markers: List<LineMarker>) {
@@ -154,20 +135,12 @@ internal class GeoLayerAdapter(
 
     context(widget: maplibregl.Map)
     internal fun setBounds(bounds: GeoRect, zoom: Float, isMoving: Boolean) {
-        val isClusterReady = !isMoving && zoom != zoomNow || abs((zoomNow ?: 0f) - zoom) >= 1
-
         view = bounds
         isMovingNow = isMoving
-        if (isClusterReady) {
-            zoomNow = zoom
-        }
+        zoomNow = zoom
 
-        if (isClusterReady) clusterPoints()
-
-        // set marker visibility
-        pointRenders.forEach {
-            cullOutsideBounds(it.value)
-        }
+        applyClusterRadius()
+        pointRenders.values.forEach { cullOutsideBounds(it) }
     }
 
     internal fun dispose() {
@@ -196,8 +169,3 @@ fun clusterRadiusMetersOf(zoom: Float, refLatitude: Double, pixelRadius: Int): D
 }
 
 const val MAPLIBRE_TILE_SIZE = 512.0
-
-internal class PointCluster(
-    val principalId: MarkerId,
-    val markerIds: Set<MarkerId>,
-)

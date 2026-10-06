@@ -12,9 +12,11 @@ The code is in `koala/src/jsMain/kotlin/koala/model/GeoLayerRender.kt` and `Poin
 
 ## Findings
 
-### Clustering is O(n²) — pardoned
+### Clustering by superior
 
-`defineClusters` compares every loaded marker with every other. Measured over a session of zooming over Denver: 63 runs, median 2.3ms, max 9ms, about 180ms in all. It does not break a frame and is not worth changing.
+The greedy pass made markers swap as the zoom changed: an absorbed marker could not absorb others, so whether a marker showed depended on whether its neighbor did. Each marker now yields to its cluster superior, the nearest marker of higher priority, and is a cluster member while the superior is within the cluster radius. Zooming in only reveals markers.
+
+Cluster superiors are assigned when points are set, comparing each marker with those before it, O(n²). A zoom applies the radius with one comparison per marker.
 
 ### Hidden cluster members may still render
 
