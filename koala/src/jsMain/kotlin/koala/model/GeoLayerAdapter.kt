@@ -13,7 +13,7 @@ import kotlin.math.pow
 
 internal class GeoLayerAdapter(
     val layer: GeoLayer,
-    val jsMap: maplibregl.Map,
+    val widget: maplibregl.Map,
     val lightLayer: LightLayer,
     val scope: CoroutineScope,
     val onFocus: (GeoFocus?) -> Unit
@@ -41,39 +41,42 @@ internal class GeoLayerAdapter(
     }
 
     fun setPoints(markers: List<PointMarker>) {
-        val pointBuffer = mutableMapOf<MarkerId, PointMarkerElement>()
-        val refLatitude = markers.sumOf { it.geoPoint.lat } / markers.size
-        refLatitudeNow = refLatitude
+        with(widget) {
+            val pointBuffer = mutableMapOf<MarkerId, PointMarkerElement>()
+            val refLatitude = markers.sumOf { it.geoPoint.lat } / markers.size
+            refLatitudeNow = refLatitude
 
-        // add or update points
-        markers.forEach { marker ->
-            val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
+            // add or update points
+            markers.forEach { marker ->
+                val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
 
-            val render = pointRenders[marker.markerId]?.also { render ->
-                // update render
-                render.update(marker, planarPoint)
-            } ?: marker.toPointRender(planarPoint, lightLayer) {
-                val focus = pointClusters[marker.markerId]?.markerIds?.mapNotNull {
-                    pointRenders[it]?.marker
-                }?.let{ ClusterFocus(marker, it) } ?: MarkerFocus(marker)
-                onFocus(focus)
+                val render = pointRenders[marker.markerId]?.also { render ->
+                    // update render
+                    render.update(marker, planarPoint)
+                } ?: marker.toPointRender(planarPoint, lightLayer) {
+                    val focus = pointClusters[marker.markerId]?.markerIds?.mapNotNull {
+                        pointRenders[it]?.marker
+                    }?.let{ ClusterFocus(marker, it) } ?: MarkerFocus(marker)
+                    onFocus(focus)
+                }
+                pointBuffer[marker.markerId] = render
+                cullOutsideBounds(render)
             }
-            pointBuffer[marker.markerId] = render
-            cullOutsideBounds(render)
+
+            // remove cached points not in list
+            pointRenders.forEach { (key, render) ->
+                if (markers.any { it.markerId == key }) return@forEach
+                if (render.isFocused) onFocus(null)
+                render.dispose()
+            }
+
+            pointRenders = pointBuffer
+
+            clusterPoints()
         }
-
-        // remove cached points not in list
-        pointRenders.forEach { (key, render) ->
-            if (markers.any { it.markerId == key }) return@forEach
-            if (render.isFocused) onFocus(null)
-            render.dispose()
-        }
-
-        pointRenders = pointBuffer
-
-        clusterPoints()
     }
 
+    context(widget: maplibregl.Map)
     private fun clusterPoints() {
         val clusterRadiusPx = layer.config.clusterRadiusPx ?: return
         val zoom = zoomNow ?: return
@@ -115,10 +118,11 @@ internal class GeoLayerAdapter(
         return clusters
     }
 
+    context(widget: maplibregl.Map)
     private fun applyClusters(clusters: Map<MarkerId, PointCluster?>) {
         clusters.forEach { (markerId, cluster) ->
             val render = pointRenders[markerId] ?: return@forEach
-            render.setCluster(cluster, jsMap)
+            render.setCluster(cluster)
         }
     }
 
@@ -126,17 +130,17 @@ internal class GeoLayerAdapter(
         val lineBuffer = mutableMapOf<MarkerId, LineRender>()
 
         markers.forEach { line ->
-            val render = lineRenders[line.markerId] ?: line.toLineRender(jsMap).also { render ->
-                jsMap.addSource(line.markerId, render.mapSource)
-                jsMap.addLayer(render.layerSpecification)
+            val render = lineRenders[line.markerId] ?: line.toLineRender(widget).also { render ->
+                widget.addSource(line.markerId, render.mapSource)
+                widget.addLayer(render.layerSpecification)
             }
             lineBuffer[line.markerId] = render
         }
 
         lineRenders.forEach { (key, render) ->
             if (markers.any { it.markerId == key}) return@forEach
-            jsMap.removeLayer(render.marker.markerId)
-            jsMap.removeSource(render.marker.markerId)
+            widget.removeLayer(render.marker.markerId)
+            widget.removeSource(render.marker.markerId)
         }
 
         lineRenders = lineBuffer
@@ -148,6 +152,7 @@ internal class GeoLayerAdapter(
 //        console.log("moved to ${movement.position}")
 //    }
 
+    context(widget: maplibregl.Map)
     internal fun setBounds(bounds: GeoRect, zoom: Float, isMoving: Boolean) {
         val isClusterReady = !isMoving && zoom != zoomNow || abs((zoomNow ?: 0f) - zoom) >= 1
 
@@ -176,10 +181,11 @@ internal class GeoLayerAdapter(
         }
     }
 
+    context(widget: maplibregl.Map)
     private fun cullOutsideBounds(render: PointMarkerElement) {
         val bounds = view ?: return
         val isVisible = bounds.contains(render.position)
-        render.setIsVisible(isVisible, jsMap)
+        render.setIsVisible(isVisible)
     }
 }
 

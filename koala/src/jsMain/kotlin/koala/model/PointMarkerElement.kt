@@ -67,19 +67,22 @@ internal class PointMarkerElement(
         jsMarker.setOpacity(opacity.toString())
     }
 
-    fun setIsVisible(value: Boolean, widget: maplibregl.Map) {
+    context(widget: maplibregl.Map)
+    fun setIsVisible(value: Boolean) {
         if (isVisible == value) return
         isVisible = value
-        updateAttachment(widget)
+        updateAttachment()
     }
 
-    fun setCluster(cluster: PointCluster?, widget: maplibregl.Map) {
+    context(widget: maplibregl.Map)
+    fun setCluster(cluster: PointCluster?) {
         isClusterMember = cluster != null && cluster.principalId != marker.markerId
-        updateAttachment(widget)
+        updateAttachment()
     }
 
     /** Attaches the marker to [widget] while it is in view and not a cluster member, detaching it otherwise. */
-    private fun updateAttachment(widget: maplibregl.Map) {
+    context(widget: maplibregl.Map)
+    private fun updateAttachment() {
         val shouldAttach = isVisible && !isClusterMember
         if (isAttached == shouldAttach) return
         isAttached = shouldAttach

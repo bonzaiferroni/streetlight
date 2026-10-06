@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.milliseconds
 /** Draws the map's layers and keeps the focused marker marked, clearing the focus on a click of the map itself. */
 class GeoRender(
     private val windowElement: HTMLElement,
-    private val jsMap: maplibregl.Map,
+    private val widget: maplibregl.Map,
     private val lightLayer: LightLayer,
     private val camera: GeoCamera,
     private val scope: CoroutineScope,
@@ -29,7 +29,7 @@ class GeoRender(
         }
 
         scope.launch {
-            while (!jsMap.loaded()) {
+            while (!widget.loaded()) {
                 delay(10.milliseconds)
             }
 
@@ -44,7 +44,7 @@ class GeoRender(
                         layerRenders.firstOrNull { it.layer.layerId == layer.layerId }
                             ?: GeoLayerAdapter(
                                 layer = layer,
-                                jsMap = jsMap,
+                                widget = widget,
                                 lightLayer = lightLayer,
                                 scope = CoroutineScope(scope.coroutineContext + SupervisorJob()),
                                 onFocus = ::setFocus
@@ -98,7 +98,9 @@ class GeoRender(
         val bounds = bounds.scaleBy(1.2f)
         // set marker visibility
         layerRenders.forEach { layer ->
-            layer.setBounds(bounds, zoom, isMoving)
+            with(widget) {
+                layer.setBounds(bounds, zoom, isMoving)
+            }
         }
     }
 }
