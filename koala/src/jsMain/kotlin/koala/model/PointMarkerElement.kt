@@ -6,7 +6,6 @@ import koala.modifier.*
 import koala.dom.*
 import koala.external.MarkerOptions
 import koala.external.maplibregl
-import kotlinx.css.properties.s
 import kotlinx.html.js.div
 import web.dom.document
 import web.html.HTMLDivElement
@@ -17,7 +16,6 @@ internal class PointMarkerElement(
     planarPoint: Point,
     val element: HTMLDivElement,
     val base: HTMLDivElement,
-    val body: PointMarkerBody,
     val light: LightHandle,
 ) {
     var planarPoint = planarPoint
@@ -49,7 +47,6 @@ internal class PointMarkerElement(
         marker.opacity?.let {
             setOpacity(it)
         }
-        body.update(marker)
     }
 
     private fun move(position: GeoPoint) {
@@ -129,28 +126,21 @@ internal fun PointMarker.toPointElement(planarPoint: Point, lightLayer: LightLay
     )
 
     var baseElement: HTMLDivElement? = null
-    var renderBody: PointMarkerBody? = null
     val delay = provideDelay()
 
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine
-            element.setStyle(MarkerStyle.TwinkleDelay.of(delay.s))
             element.setStyle(MarkerStyle.BodySize.of(bodySize))
 
             zIndex?.let {
                 element.setStyle(Css.ZIndex.of(it))
             }
 
-            val modifiers = modify(mod, MarkerStyle.Base, altitude?.cssClass)
+            val modifiers = modify(mod, MarkerStyle.Base)
 
             addModifiers(modifiers)
 
-            renderBody = when (val marker = this@toPointElement) {
-                is TravelMarker -> configureIconMarker(marker)
-                is ThumbMarker -> configureThumbMarker(marker)
-                is IconMarker -> configureIconMarker(marker)
-                else -> error("unrecognized PointMarker")
-            }
+            configureBody()
         }.asWeb()
     }
 
@@ -160,7 +150,6 @@ internal fun PointMarker.toPointElement(planarPoint: Point, lightLayer: LightLay
         planarPoint = planarPoint,
         element = element,
         base = baseElement!!,
-        body = renderBody!!,
         light = lightLayer.allocate(geoPoint, -delay, 1f),
     )
 

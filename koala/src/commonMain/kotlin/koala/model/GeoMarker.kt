@@ -7,6 +7,7 @@ import koala.modifier.*
 import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
+import kotlinx.html.DIV
 
 typealias MarkerId = String
 
@@ -14,7 +15,6 @@ typealias MarkerId = String
 sealed interface GeoMarker {
     val markerId: MarkerId
     val label: String? get() = null
-    val altitude: Altitude? get() = null
 }
 
 /**
@@ -32,6 +32,7 @@ interface PointMarker: GeoMarker {
 
     val bodySize: LinearDimension
     val subpixelPositioning: Boolean get() = false
+    val configureBody: DIV.() -> Unit
 }
 
 /** A moving marker drawn as [icon], turned to its [bearing]. */
@@ -53,12 +54,14 @@ interface ThumbMarker: StaticMarker {
     val thumbUrl: Url
     val sublabel: String? get() = null
     override val bodySize: LinearDimension get() = 40.px
+    override val configureBody: DIV.() -> Unit get() = { configureThumbMarker(this@ThumbMarker) }
 }
 
 /** An [StaticMarker] drawn as an icon with its label. */
 interface IconMarker: StaticMarker {
     val svg: Svg
     override val bodySize: LinearDimension get() = 32.px
+    override val configureBody: DIV.() -> Unit get() = { configureIconMarker(this@IconMarker) }
 }
 
 /** A marker moved to [position]. */

@@ -3,10 +3,8 @@ package koala.model
 import koala.Asset
 import koala.modifier.*
 import koala.html.IconStyle
-import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.properties.Angle
-import kotlinx.css.properties.Time
 
 object MarkerStyle {
     val Root = Class("map-marker")
@@ -17,11 +15,8 @@ object MarkerStyle {
     val Icon = Class("marker-icon")
     val Body = Class("marker-body")
     val Label = Class("marker-label")
-    val MarkerGlow = Class("marker-glow")
 
     val BodySize = Property<LinearDimension>("body-size", true)
-    val TwinkleDelay = Property<Time>("twinkle-delay", true)
-    val MarkerLight = Property<Color>("marker-light", true)
     val MarkerSvg = Property<Asset>("marker-svg", true)
     val MarkerBearing = Property<Angle>("marker-bearing", true)
     val MarkerBorder = Property<Rgb>("marker-border", true)
@@ -149,43 +144,6 @@ $Label {
     white-space: nowrap;
 
     transition: var(--transition-opacity);
-}
-
-$MarkerGlow::before {
-    content: "";
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-    width: 6rem;
-    height: 6rem;
-
-    transform: translate(-50%, -50%) scale(1);
-    border-radius: 50%;
-
-    pointer-events: none;
-    mix-blend-mode: screen;
-
-    opacity: 0.5;
-
-    background: radial-gradient(
-            circle at center,
-            rgba(var($MarkerLight), 0.35) 0%,
-            rgba(var($MarkerLight), 0.18) 12%,
-            rgba(var($MarkerLight), 0.08) 24%,
-            rgba(var($MarkerLight), 0) 70%
-    );
-
-    transition: var(--transition-opacity), var(--transition-transform);
-
-    animation: twinkle-scale 2.4s ease-in-out infinite;
-    animation-delay: var($TwinkleDelay, 0s);
-}
-
-/* brighter + slightly larger when focused */
-$MarkerGlow$Focus::before {
-    opacity: 0.75;
-    transform: translate(-50%, -50%) scale(1.05);
 }
 
 """ }

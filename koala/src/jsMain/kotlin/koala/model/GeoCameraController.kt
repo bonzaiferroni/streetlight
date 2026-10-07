@@ -1,9 +1,7 @@
 package koala.model
 
 import koala.utils.launch
-import koala.modifier.modify
 import koala.dom.onView
-import koala.modifier.unmodify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kampfire.model.GeoRect
@@ -12,14 +10,13 @@ import kotlinx.coroutines.delay
 import web.html.HTMLElement
 import kotlin.time.Duration.Companion.milliseconds
 
-/** Connects the MapLibre map to its [camera]: carries out pans and reports the map's position and altitude back. */
+/** Connects the MapLibre map to its [camera]: carries out pans and reports the map's position back. */
 class GeoCameraController(
     val jsMap: maplibregl.Map,
     val windowElement: HTMLElement,
     val camera: GeoCamera,
     val scope: CoroutineScope,
 ) {
-    private var altitudeNow: Altitude? = null
     private var pendingBounds: GeoRect? = null
     // private var boundsNow: GeoBounds? = null
 
@@ -58,11 +55,6 @@ class GeoCameraController(
                 jsMap.fitBounds(bounds.toLngLatBounds())
             }
 
-            setAltitude(jsMap.getZoom())
-            jsMap.on("zoom") {
-                setAltitude(jsMap.getZoom())
-            }
-
             relayBounds(false)
             jsMap.on("move") {
                 relayBounds(true)
@@ -72,21 +64,6 @@ class GeoCameraController(
                 relayBounds(false)
             }
         }
-    }
-
-    /** Sets the altitude classes of the map window for [zoom]. */
-    fun setAltitude(zoom: Double) {
-        val altitude = altitudeOf(zoom)
-        if (altitude == altitudeNow) return
-
-        Altitude.entries.forEach {
-            when (zoom < it.zoom) {
-                true -> windowElement.modify(it.cssClass)
-                else -> windowElement.unmodify(it.cssClass)
-            }
-        }
-        
-        altitudeNow = altitude
     }
 
     /** Fits the map to [bounds], or holds them until the map has a size. */

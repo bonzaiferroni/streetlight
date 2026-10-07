@@ -8,7 +8,6 @@ import koala.SvgFile
 import koala.model.LineMarker
 import koala.model.MarkerId
 import koala.external.VehiclePosition
-import koala.model.Altitude
 import koala.model.GeoMap
 import koala.model.TravelMarker
 import koala.model.dedup
@@ -18,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.html.DIV
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.AreaTransitState
 import streetlight.model.data.TransitRouteId
@@ -170,7 +170,7 @@ data class VehicleMarker(
         VehicleType.LightRail -> SvgFile.Train
         VehicleType.Train -> SvgFile.Train
     }
-    override val altitude get() = Altitude.Raincloud
+    override val configureBody: DIV.() -> Unit get() = { }
 }
 
 /** The marker of this vehicle, fading with the age of its position, or `null` without an id or position. */
