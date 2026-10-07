@@ -53,7 +53,7 @@ interface StaticMarker: PointMarker {
 interface ThumbMarker: StaticMarker {
     val thumbUrl: Url
     val sublabel: String? get() = null
-    override val bodySize: LinearDimension get() = 40.px
+    override val bodySize: LinearDimension get() = 48.px
     override val configureBody: DIV.() -> Unit get() = { configureThumbMarker(this@ThumbMarker) }
 }
 

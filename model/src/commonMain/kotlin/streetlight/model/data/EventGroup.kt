@@ -11,6 +11,7 @@ import kotlin.time.Instant
 data class EventGroup(
     val locationId: LocationId,
     override val label: String,
+    val locationName: String?,
     override val image: Image?,
     override val geoPoint: GeoPoint,
     val eventCount: Int,

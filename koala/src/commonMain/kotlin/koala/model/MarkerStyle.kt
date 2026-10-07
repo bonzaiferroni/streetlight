@@ -66,17 +66,13 @@ $Base {
     &:hover {
         opacity: 1 !important;
     }
-    
-    p {
-        font-size: 1rem;
-    }
 }
 
 $Body {
     transform: translate(calc(var($BodySize) / -2), calc(var($BodySize) / -2));
     opacity: 1;
     transition: var(--transition-opacity);
-    font-size: var(--paragraph-size);
+    font-size: 1rem;
     
    @starting-style {
         opacity: 0;

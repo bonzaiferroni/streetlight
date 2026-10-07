@@ -5,8 +5,10 @@ import koala.SiteImage
 import koala.SvgFile
 import koala.model.IconMarker
 import koala.model.ThumbMarker
+import kotlinx.html.DIV
 import streetlight.model.data.EventGroup
 import streetlight.web.layouts.ThemeColor
+import streetlight.web.ui.configureEventMarkerBody
 
 interface InflateMarker {
     val group: EventGroup
@@ -33,4 +35,5 @@ data class EventInflateMarker(
     override val geoPoint get() = group.geoPoint
     override val typeLabel get() = group.tag?.label ?: MarkerType.Event.label
     override val themeColor get() = ThemeColor.Accent.cssValue
+    override val configureBody: DIV.() -> Unit get() = { configureEventMarkerBody(this@EventInflateMarker, group.locationName) }
 }

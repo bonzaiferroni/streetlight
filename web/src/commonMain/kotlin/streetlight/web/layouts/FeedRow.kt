@@ -275,7 +275,10 @@ $minimal {
     --row-height: calc(var(--unit) * 8);
     padding: 0;
 
-    $Content { grid-template-areas: "image text badge"; }
+    $Content {
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "image text badge";
+    }
 
     $Cells, $ExpandedContent, $MoreButton { display: none; }
 }

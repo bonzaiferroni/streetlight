@@ -8,6 +8,7 @@ import koala.SvgFile
 import koala.model.IconMarker
 import koala.model.ThumbMarker
 import kotlinx.css.rgb
+import kotlinx.html.DIV
 import streetlight.model.data.City
 import streetlight.model.data.Entity
 import streetlight.model.data.EventLocation
@@ -16,6 +17,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.EventGroup
 import streetlight.model.data.Media
 import streetlight.web.layouts.ThemeColor
+import streetlight.web.ui.configureEventMarkerBody
 
 // interface StreetMarker: ThumbMarker {
 //     val markerType: MarkerType
@@ -66,6 +68,7 @@ data class EventMarker(
     override val geoPoint get() = event.geoPoint
     override val typeLabel get() = event.tags?.firstOrNull()?.label ?: MarkerType.Event.label
     override val themeColor get() = ThemeColor.Accent.cssValue
+    override val configureBody: DIV.() -> Unit get() = { configureEventMarkerBody(this@EventMarker, event.locationName) }
 }
 
 data class MediaMarker(
