@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.toMarkdown
 import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoRect
@@ -20,7 +21,7 @@ data class Galaxy(
     val slug: Slug,
     val name: String,
     val tagline: String?,
-    val description: Markdown?,
+    override val description: Markdown?,
     val city: String?,
     override val geoPoint: GeoPoint,
     val geoRect: GeoRect,
@@ -41,7 +42,7 @@ data class Galaxy(
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
     override val label get() = name
     override val sublabel get() = tagline
-    override val body get() = description
+    override val body get() = description ?: tagline?.toMarkdown() ?: addedBodyOf(createdAt)
     override val markerId get() = galaxyId.toString()
 }
 

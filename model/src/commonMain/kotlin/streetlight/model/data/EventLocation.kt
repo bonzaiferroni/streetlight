@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.toMarkdown
 import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
@@ -23,7 +24,7 @@ data class EventLocation(
     override val url: Url?,
     val eventImage: Image?,
     val title: String,
-    val description: Markdown?,
+    override val description: Markdown?,
     val tags: List<EventTag>?,
     val cost: Float?,
     val status: EventStatus,
@@ -61,7 +62,7 @@ data class EventLocation(
 
     override val label get() = title
     override val sublabel get() = locationLabel
-    override val body get() = description
+    override val body get() = description ?: addressLine?.takeIf { it.isNotEmpty() }?.toMarkdown() ?: addedBodyOf(createdAt)
     override val markerId get() = eventId.toString()
 
     /** The location's name, or its address, or a placeholder. */

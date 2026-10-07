@@ -2,6 +2,8 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.api.Username
+import kampfire.api.toMarkdown
+import kabinet.utils.toAgoFormat
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Image
@@ -26,7 +28,9 @@ sealed interface Entity {
     val heading: String get() = label
     val image: Image? get() = null
     val sublabel: String? get() = null
-    val body: Markdown? get() = null
+    /** A summary of the entity, built from its other properties when it has no [description]. */
+    val body: Markdown
+    val description: Markdown? get() = null
     val url: Url? get() = null
     val links: List<ExtraLink>? get() = null
     val createdAt: Instant? get() = null
@@ -42,7 +46,8 @@ data class CustomEntity(
     override val heading: String = label,
     override val image: Image? = null,
     override val sublabel: String? = null,
-    override val body: Markdown? = null,
+    override val description: Markdown? = null,
+    override val body: Markdown = description ?: label.toMarkdown(),
     val route: AppRoute? = null,
     override val links: List<ExtraLink>? = null,
     override val createdAt: Instant? = null,
@@ -68,3 +73,6 @@ data class EntityFeed(
         return curatorStatusOf(postId, galaxyMarks, (tallies ?: return null)[postId])
     }
 }
+
+/** A body that tells when an entity was added at [createdAt]. */
+fun addedBodyOf(createdAt: Instant) = "Added ${createdAt.toAgoFormat()}".toMarkdown()

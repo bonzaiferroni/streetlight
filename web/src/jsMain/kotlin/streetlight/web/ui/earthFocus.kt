@@ -16,7 +16,7 @@ import streetlight.model.data.Entity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ThemeColor
-import streetlight.web.layouts.FeedRow
+import streetlight.web.layouts.FeedRowStyle
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.configureFeedRow
 import streetlight.web.layouts.cellGrid
@@ -37,8 +37,8 @@ fun ViewScope.earthFocus(model: Earth) {
         column(FeedSection.FeedColumnMod) {
             entities.forEachIndexed { index, entity ->
                 when (index) {
-                    0 -> div(FeedRow.Featured) { configureFeedRow(entity, true) }
-                    else -> feedRow(entity, true)
+                    0 -> div(FeedRowStyle.Featured) { configureFeedRow(entity) }
+                    else -> feedRow(entity)
                 }
             }
         }
@@ -55,8 +55,8 @@ fun ViewScope.earthFocus(model: Earth) {
 
 private fun ViewScope.markerRow(marker: PointMarker) {
     when (marker) {
-        is EventMarker -> feedRow(marker.event, true)
-        is LocationMarker -> feedRow(marker.location, true)
+        is EventMarker -> feedRow(marker.event)
+        is LocationMarker -> feedRow(marker.location)
         is CityMarker -> focusPanel(
             post = marker.city,
             route = CityRoute(marker.city.slug),
@@ -103,7 +103,7 @@ private fun ViewScope.focusPanel(
             } else {
                 hr { }
             }
-            post.body?.let {
+            post.description?.let {
                 markdown(it, Padding(1))
             }
         }

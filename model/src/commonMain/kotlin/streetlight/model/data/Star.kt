@@ -1,5 +1,7 @@
 package streetlight.model.data
 
+import kampfire.api.toMarkdown
+import kabinet.utils.toAgoFormat
 import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.AccountType
@@ -19,7 +21,7 @@ data class Star(
     val roles: Set<UserRole>,
     val name: String?,
     val tagline: String?,
-    val description: Markdown?,
+    override val description: Markdown?,
     val scoutLevel: Int,
     override val image: Image?,
     val design: PageDesign?,
@@ -30,7 +32,7 @@ data class Star(
 
     override val label get() = username.value
     override val sublabel get() = tagline
-    override val body get() = description
+    override val body get() = description ?: tagline?.toMarkdown() ?: "Joined ${createdAt.toAgoFormat()}".toMarkdown()
     override val geoPoint get() = null
     override val markerId get() = null
 }

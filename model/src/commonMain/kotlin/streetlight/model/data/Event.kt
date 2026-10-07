@@ -1,5 +1,8 @@
 package streetlight.model.data
 
+import kampfire.api.toMarkdown
+import kabinet.utils.toAgoFormat
+import kotlin.time.Clock
 import androidx.compose.runtime.Stable
 import kampfire.api.Markdown
 import kampfire.api.Slug
@@ -23,7 +26,7 @@ data class Event(
     val slug: Slug,
     val host: Username?,
     val title: String,
-    val description: Markdown?,
+    override val description: Markdown?,
     val tags: List<EventTag>?,
     val status: EventStatus,
     val contact: String?,
@@ -46,6 +49,7 @@ data class Event(
     val isFree get() = cost == 0f
 
     override val label get() = title
+    override val body get() = description ?: startsAt?.let { startsAtBodyOf(it) } ?: addedBodyOf(createdAt)
     override val geoPoint get() = null
     override val markerId get() = eventId.toString()
 
@@ -67,3 +71,9 @@ enum class EventStatus(override val label: String): Labeled {
     OnBreak("On Break"),
     Finished("Finished"),
 }
+
+/** A body that tells when an event starts, or started, at [startsAt]. */
+private fun startsAtBodyOf(startsAt: Instant) = when (startsAt > Clock.System.now()) {
+    true -> "Starts ${startsAt.toAgoFormat()}"
+    false -> "Started ${startsAt.toAgoFormat()}"
+}.toMarkdown()

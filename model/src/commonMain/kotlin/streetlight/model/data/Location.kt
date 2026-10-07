@@ -26,7 +26,7 @@ data class Location(
     val scout: Username?,
     val host: Username?,
     override val name: String?,
-    val description: Markdown?,
+    override val description: Markdown?,
     override val address: String?,
     override val city: String?,
     val state: String?,
@@ -56,7 +56,7 @@ data class Location(
         null -> city
         else -> address
     }
-    override val body get() = description
+    override val body get() = description ?: addressLine?.takeIf { it.isNotEmpty() }?.toMarkdown() ?: addedBodyOf(createdAt)
 
     override val links by lazy {
         buildList {

@@ -11,7 +11,7 @@ fun FlowContent.cityListShell(content: CityListContent) {
     mainBody("cityListShell.kt") {
         column(FeedSection.FeedColumnMod) {
             content.cities.forEach { city ->
-                feedRow(city, true)
+                feedRow(city)
             }
         }
     }

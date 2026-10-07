@@ -26,7 +26,7 @@ fun FlowContent.entityHeader(
     image = image,
     subtitle = entity.sublabel,
     colorScheme = entity.toThemeColor(),
-    description = entity.body,
+    description = entity.description,
     cells = cells,
     buttons = entityButtonsOf(entity, false),
     links = entity.links,

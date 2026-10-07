@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
@@ -37,7 +38,7 @@ class LocationEditor(
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
     val nameField = editField.mutableTapOf({ it.name ?: "" }) { copy(name = it) }
     val addressField = editField.mutableTapOf({ it.address ?: "" }) { copy(address = it) }
-    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it.takeIf(Markdown::isNotBlank)) }
     val cityField = editField.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
     val eventsUrlField = editField.mutableTapOf({ it.eventsUrl?.value ?: "" }) { copy(eventsUrl = it.toUrl()) }
     val validityField = editField.tapOf { it.validity }

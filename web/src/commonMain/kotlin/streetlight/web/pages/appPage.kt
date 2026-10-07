@@ -12,7 +12,7 @@ import streetlight.model.data.PageTheme
 import koala.interop.HeadScriptConfig
 import koala.interop.RootSwitch
 import streetlight.web.layouts.FeedMode
-import streetlight.web.layouts.FeedRow
+import streetlight.web.layouts.FeedRowStyle
 
 /** An app page for [screen], with the head that supports the map, and the body of [appBody]. */
 fun HTML.appPage(

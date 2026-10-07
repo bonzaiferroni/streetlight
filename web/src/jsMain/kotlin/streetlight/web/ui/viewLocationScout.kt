@@ -44,7 +44,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
                 }
                 LocationScoutStage.Review -> column {
                     model.stateNow.location?.let {
-                        feedRow(it, true)
+                        feedRow(it)
                     } ?: postRow(editor.editNow, star.username)
 
                     column(AlignItemsEnd) {

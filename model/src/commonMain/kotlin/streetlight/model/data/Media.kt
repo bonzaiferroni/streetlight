@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.toMarkdown
 import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
@@ -32,7 +33,8 @@ data class Media(
 ): Entity, RouteContent, DesignContent {
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
-    override val body get() = text
+    override val description get() = text
+    override val body get() = text ?: subtitle?.toMarkdown() ?: addedBodyOf(createdAt)
     override val links get() = link?.let { listOf(ExtraLink("link", it)) }
     override val markerId get() = mediaId.toString()
 }

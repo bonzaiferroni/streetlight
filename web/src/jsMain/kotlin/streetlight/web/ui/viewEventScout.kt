@@ -56,7 +56,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
                 }
                 EventScoutStage.Post -> formBodyProto {
                     model.stateNow.event?.let {
-                        feedRow(it, true)
+                        feedRow(it)
                     } ?: run {
                         val location = locationScout.stateNow.location ?: error("location not found")
                         postRow(editor.editNow, location, star.username)

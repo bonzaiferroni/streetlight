@@ -2,6 +2,7 @@
 
 package streetlight.web.model
 
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.api.toSlug
 import kampfire.model.Url
@@ -52,9 +53,9 @@ class GalaxyEditor(
     val validityField = editState.tapOf { it.validity }
     val citiesField = state.tapOf { it.cities }
     val cityField = state.mutableTapOf({ it.city }) { copy(city = it) }
-    val descriptionField = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val descriptionField = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it.takeIf(Markdown::isNotBlank)) }
     val taglineField = editState.mutableTapOf({ it.tagline ?: "" }) { copy(tagline = it) }
-    val postGuideField = editState.mutableTapOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it) }
+    val postGuideField = editState.mutableTapOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it.takeIf(Markdown::isNotBlank)) }
     val reviewCountField = editState.mutableTapOf({ it.reviewCount?.toString() ?: "" }) { copy(reviewCount = it.toIntOrNull()) }
     val permissionField = editState.mutableTapOf({ it.postPermission }) { copy(postPermission = it) }
     val marksState = editState.mutableTapOf({ it.marks }) { copy(marks = it) }

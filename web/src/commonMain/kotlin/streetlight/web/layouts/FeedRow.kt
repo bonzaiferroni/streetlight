@@ -23,27 +23,25 @@ import kotlin.time.Clock
 /**
  * An entity in a feed. Its layout follows the page's [FeedMode].
  *
- * [isUniverse] shows the galaxy each post was made to. A [curator] replaces the flair badge with its marks.
+ * A [curator] replaces the flair badge with its marks.
  */
 fun FlowContent.feedRow(
     entity: Entity,
-    isUniverse: Boolean,
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
 ) {
     div() {
-        configureFeedRow(entity, isUniverse, curator, cells)
+        configureFeedRow(entity, curator, cells)
     }
 }
 
 /** Renders a [feedRow] into this div. */
 fun DIV.configureFeedRow(
     entity: Entity,
-    isUniverse: Boolean,
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
 ) {
-    addModifiers(FeedRow.Base)
+    addModifiers(modify(FeedRowStyle.Base, ZenBg))
 
     val image = entity.image // td: make placeholder depend on post type
     val colorScheme = entity.toThemeColor()
@@ -52,7 +50,7 @@ fun DIV.configureFeedRow(
     val headingUrl = entity.url?.value ?: postRoute?.toRelativePath()
     val heading = entity.label
     val buttons = entityButtonsOf(entity, true)
-    val description = entity.body
+    val description = entity.description
     val links = entity.links
 
     entity.post?.postId?.let {
@@ -63,24 +61,24 @@ fun DIV.configureFeedRow(
     }
 
     // each child takes a grid area, placed by FeedMode
-    div(FeedRow.Content) {
+    div(FeedRowStyle.Content) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
-        navigationIfNotNull(postRoute, modify(FeedRow.Image, OverflowClip, MoonShadow)) {
-            containImage(image, modify(FeedRow.Feature, Size100P))
+        navigationIfNotNull(postRoute, modify(FeedRowStyle.Image, OverflowClip, MoonShadow)) {
+            containImage(image, modify(FeedRowStyle.Feature, Size100P))
         }
-        column(modify(FeedRow.Text, Gap(0), TextShadow)) {
+        column(modify(FeedRowStyle.Text, Gap(0), TextShadow, OverflowHidden)) {
             navigationIfNotNull(headingUrl) {
-                heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
+                heading4(heading, modify(LineHeight115, SingleLine, Bold))
             }
-            postLine(entity, isUniverse)
+            markdown(entity.body, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
         }
-        div(FeedRow.Badge) {
+        div(FeedRowStyle.Badge) {
             when (curator) {
                 null -> flairBadge(flair.small)
                 else -> curatorBadge(curator)
             }
         }
-        cellGrid(cells, buttons, modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline))
+        cellGrid(cells, buttons, modify(FeedRowStyle.Cells, BorderRadius2, OverflowClip, Outline))
     }
 
     entityBody(description, links, limit = 1000)
@@ -94,12 +92,12 @@ fun FlowContent.entityBody(
     limit: Int? = null,
 ) {
     if (description == null && links == null && editRoute == null) return
-    div(modify(FeedRow.ExpandedContent, Padding(2), Gap(2))) {
+    div(modify(FeedRowStyle.ExpandedContent, Padding(2), Gap(2))) {
         description?.let {
-            markdown(it, FeedRow.ExpandedBody, limit = limit)
+            markdown(it, FeedRowStyle.ExpandedBody, limit = limit)
         }
         if (links != null || editRoute != null) {
-            div(FeedRow.ExpandedLinks) {
+            div(FeedRowStyle.ExpandedLinks) {
                 links?.forEach { link ->
                     btn(link.label, link.url, Zen)
                 }
@@ -112,24 +110,22 @@ fun FlowContent.entityBody(
 }
 
 fun FlowContent.flairBadge(flair: Svg) {
-    icon(flair, modify(FeedRow.Flair, ColorSchemeFg, OpacityLow))
+    icon(flair, modify(FeedRowStyle.Flair, ColorSchemeFg, OpacityLow))
 }
 
 /** Who posted [entity] and when, and to which galaxy when [isUniverse]. */
 fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     when (isUniverse) {
         true -> {
-            entity.body?.let {
-                column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
-                    markdown(it, modify(LineHeight115, FadeBottom))
-                }
+            column(modify(MarginTop(2.px), TextSmall, OpacityHigh, Gap(0))) {
+                markdown(entity.body, modify(LineHeight115, FadeBottom))
             }
         }
         else -> {
             val username = entity.post?.username ?: entity.username
             val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
 
-            column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
+            column(modify(MarginTop(2.px), TextSmall, OpacityHigh, Gap(0))) {
                 textBlock {
                     +"posted by "
                     when (username) {
@@ -155,7 +151,7 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
 /** The layouts of a feed row, chosen by the viewer with a root switch. */
 enum class FeedMode { Minimal, Row, Grid }
 
-object FeedRow {
+object FeedRowStyle {
     // a site-wide setting, held on the root element
     val Mode = enumAttributeOf<FeedMode>("feed-mode")
     val Feed = Class("feed")
@@ -167,7 +163,6 @@ object FeedRow {
     val Badge = Base.withBemElement("badge")
     val Flair = Base.withBemElement("flair")
     val Feature = Base.withBemElement("feature")
-    val PostLine = Base.withBemElement("post-line")
     val MoreButton = Base.withBemElement("more-button")
     val ExpandedContent = Base.withBemElement("expanded-content")
     val ExpandedLinks = Base.withBemElement("expanded-links")
@@ -178,17 +173,19 @@ object FeedRow {
     val Featured = Base.withBemModifier("featured")
 }
 
-//language="CSS"
-val FeedRowCss get() = with(FeedRow) { """
+val FeedRowCss get() = with(FeedRowStyle) {
+    val grid = "${Mode.selector(FeedMode.Grid)} $Feed $Base, $Featured"
+    val minimal = "${Mode.selector(FeedMode.Minimal)} $Feed $Base"
+    //language="CSS"
+    """
     
 $Base {
+    --row-height: calc(var(--unit) * 10);
     display: grid;
-    gap: 0;
     grid-template-rows: auto 1fr;
     container-type: inline-size;
     padding: 2px;
-    background: var(--zen-bg);
-    
+
     &:not($ToggleExpand) {
         $ExpandedContent {
             display: none;
@@ -204,8 +201,7 @@ $Content {
         "cells cells cells";
     align-items: center;
     gap: var(--unit);
-    align-self: start;
-    
+
     @container (min-width: 960px) {
         grid-template-columns: auto 1fr auto calc(50% - var(--unit) / 2);
         grid-template-areas: "image text badge cells";
@@ -214,27 +210,27 @@ $Content {
 
 $Image {
     grid-area: image;
-    width: calc(var(--unit) * 10);
-    height: calc(var(--unit) * 10);
+    width: var(--row-height);
+    aspect-ratio: 1;
     border: var(--outline-low);
     border-radius: var(--unit);
 }
 
+/* the fade has fixed stops, so only text that reaches the clip fades */
 $Text {
+    --clip: var(--row-height);
     grid-area: text;
-    text-align: center;
-    max-height: calc(var(--unit) * 10);
-    overflow: hidden;
+    align-self: start;
+    max-height: var(--clip);
+    mask-image: linear-gradient(to bottom, black calc(var(--clip) - 1rem), transparent var(--clip));
 }
 
 /* the thumbnail is cut to match a cover fit, which hides the backdrop */
 $Image $Feature { object-fit: cover; }
 
-$PostLine { gap: 0; }
-
 $Badge { grid-area: badge; }
 
-$Flair { width: calc(var(--unit) * 10); }
+$Flair { width: var(--row-height); }
 
 $Cells { grid-area: cells; }
 
@@ -245,10 +241,16 @@ ${Mode.selector(FeedMode.Grid)} $Feed {
     > :not($Base) { grid-column: 1 / -1; }
 }
 
+/* Grid and Minimal drop the frame of Row */
+$grid, $minimal {
+    $Image { border: none; border-radius: 0; }
+}
+
 /* a featured entry takes the Grid layout in any feed */
-${Mode.selector(FeedMode.Grid)} $Feed $Base, $Featured {
+$grid {
     padding: 0 0 var(--unit);
 
+    /* the zero-width outer columns and the gap inset the text and cells from the edges */
     $Content {
         grid-template-columns: 0 1fr auto 0;
         grid-template-areas:
@@ -259,44 +261,21 @@ ${Mode.selector(FeedMode.Grid)} $Feed $Base, $Featured {
 
     $Image {
         width: auto;
-        height: auto;
         aspect-ratio: 3 / 2;
-        border: none;
-        border-radius: 0;
     }
 
     $Image $Feature { object-fit: contain; }
 
-    $Text { text-align: start; }
-
     $ExpandedContent, $MoreButton { display: none; }
 }
 
-$Featured $Text { max-height: calc(var(--unit) * 24); }
+$Featured $Text { --clip: calc(var(--unit) * 24); }
 
-${Mode.selector(FeedMode.Minimal)} $Feed {
-    $Base { padding: 0; }
+$minimal {
+    --row-height: calc(var(--unit) * 8);
+    padding: 0;
 
-    $Content {
-        grid-template-columns: auto 1fr auto;
-        grid-template-areas: "image text badge";
-    }
-
-    $Image {
-        width: calc(var(--unit) * 8);
-        height: calc(var(--unit) * 8);
-        border: none;
-        border-radius: 0;
-    }
-
-    $Text { text-align: start; }
-
-    $Flair { width: calc(var(--unit) * 8); }
-
-    $PostLine { flex-direction: row; }
-
-    /* a trailing space would collapse at the end of the line, so the space is non-breaking */
-    $PostLine > :first-child::after { content: "\00a0"; }
+    $Content { grid-template-areas: "image text badge"; }
 
     $Cells, $ExpandedContent, $MoreButton { display: none; }
 }

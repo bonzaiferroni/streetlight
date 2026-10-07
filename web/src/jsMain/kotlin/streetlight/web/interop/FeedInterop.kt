@@ -72,7 +72,7 @@ fun morePosts(element: HTMLElement) {
 fun AppendScope.appendFeed(feed: EntityFeed) {
     feed.entities.forEach { post ->
         val curator = feed.curatorOf(post)
-        feedRow(post, true, curator)
+        feedRow(post, curator)
     }
     feed.nextCursor?.let {
         button("more") {

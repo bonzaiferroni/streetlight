@@ -1557,7 +1557,7 @@
                 "icon-image": [
                     "step",
                     ["zoom"],
-                    "circle-11",
+                    "circle_11",
                     9,
                     ""
                 ],

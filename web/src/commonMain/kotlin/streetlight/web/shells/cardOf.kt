@@ -36,5 +36,5 @@ fun FlowContent.cardOf(
 ) {
     val route = post.event.eventRoute
     val thumbUrl = post.image?.thumb ?: SiteImage.placeholderTh
-    cardOf(route, post.label, thumbUrl, post.body?.value, mod)
+    cardOf(route, post.label, thumbUrl, post.body.value, mod)
 }

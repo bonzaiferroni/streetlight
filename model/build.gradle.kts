@@ -28,6 +28,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.ktor.http)
                 api(project(":kampfire"))
+                implementation(project(":kabinet"))
                 implementation(project(":koala"))
             }
         }

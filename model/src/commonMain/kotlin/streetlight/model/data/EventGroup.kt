@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import koala.Image
 import kotlinx.serialization.Serializable
@@ -18,7 +19,14 @@ data class EventGroup(
     val mapPriority: Double?,
 ): Entity {
     override val markerId get() = locationId.toString()
+    override val body get() = (tag?.label ?: upcomingEventsOf(eventCount)).toMarkdown()
 
     /** The value an [EntityCursor.Score] pages by. */
     val score get() = mapPriority
+}
+
+/** The count of upcoming events, as a body reads it. */
+private fun upcomingEventsOf(eventCount: Int) = when (eventCount) {
+    1 -> "1 upcoming event"
+    else -> "$eventCount upcoming events"
 }

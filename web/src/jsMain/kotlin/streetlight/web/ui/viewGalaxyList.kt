@@ -14,7 +14,7 @@ fun ViewScope.viewGalaxyList() {
                 dataBlock(api.galaxy::readUserGalaxies) { galaxies ->
                     column {
                         galaxies.forEach {
-                            feedRow(it, true)
+                            feedRow(it)
                         }
                     }
                 }
@@ -23,7 +23,7 @@ fun ViewScope.viewGalaxyList() {
                 dataBlock(api.galaxy::readTopGalaxies) { galaxies ->
                     column {
                         galaxies.forEach {
-                            feedRow(it, true)
+                            feedRow(it)
                         }
                     }
                 }

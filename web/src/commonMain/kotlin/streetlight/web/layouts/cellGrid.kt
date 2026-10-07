@@ -156,8 +156,8 @@ fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar, count.toMetricStri
 
 /** Expands and collapses the body of the feed row around it. */
 fun FlowContent.moreButton() {
-    icon(SvgFile.Info, modify(CellGrid.ButtonIconMod, FeedRow.MoreButton)) {
-        onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
+    icon(SvgFile.Info, modify(CellGrid.ButtonIconMod, FeedRowStyle.MoreButton)) {
+        onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRowStyle.Base, FeedRowStyle.ToggleExpand)
     }
 }
 

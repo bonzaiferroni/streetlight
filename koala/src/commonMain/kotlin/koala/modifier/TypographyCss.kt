@@ -1,3 +1,5 @@
+@file:Suppress("CssInvalidHtmlTagReference")
+
 package koala.modifier
 
 val Prose = Class("prose")
@@ -13,8 +15,8 @@ val TypographyCss get() = """
     --heading-3-weight: 300;
     --heading-4-size: 1.6rem;
     --heading-4-weight: 300;
-    --heading-5-size: 1.1rem;
-    --heading-5-weight: 500;
+    --heading-5-size: 1.3rem;
+    --heading-5-weight: 400;
     --heading-6-size: .9rem;
     --heading-6-weight: 400;
     --paragraph-size: 1.1rem;
@@ -42,7 +44,7 @@ h2 {
 }
 
 h2$Bold {
-    font-weight: var(--heading-4-weight);
+    font-weight: 300;
 }
 
 h3 {
@@ -51,13 +53,12 @@ h3 {
 }
 
 h3$Bold {
-    font-weight: var(--heading-4-weight);
+    font-weight: 300;
 }
 
 h4 {
     font-size: var(--heading-4-size);
     font-weight: var(--heading-4-weight);
-    text-transform: uppercase;
 }
 
 h5 {

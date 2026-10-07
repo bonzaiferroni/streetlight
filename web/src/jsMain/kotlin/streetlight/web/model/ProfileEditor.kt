@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
 import koala.dom.MessageStore
@@ -26,7 +27,7 @@ class ProfileEditor(
 
     val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
-    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it.takeIf(Markdown::isNotBlank)) }
     val taglineField = editField.mutableTapOf({ it.tagline ?: "" }) { copy(tagline = it) }
 
     val messages = MessageStore()

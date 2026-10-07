@@ -11,7 +11,7 @@ fun FlowContent.largePostCard(
 ) {
     val title = entity.label
     val subtitle = entity.toSubtitle()
-    val description = entity.body
+    val description = entity.description
     val links = entity.links
     val image = entity.image
     val postRoute = entity.toRoute()

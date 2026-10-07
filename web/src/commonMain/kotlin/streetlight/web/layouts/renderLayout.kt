@@ -67,7 +67,7 @@ fun FlowContent.renderEvents(content: DesignContent) {
     when (content) {
         is LocationContent -> layoutFeed {
             content.events.forEach {
-                feedRow(it, true)
+                feedRow(it)
             }
         }
         else -> error("not events content")

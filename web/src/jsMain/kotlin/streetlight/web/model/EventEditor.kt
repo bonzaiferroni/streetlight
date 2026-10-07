@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
@@ -40,7 +41,7 @@ class EventEditor(
     val endTimeState = editState.mutableTapOf({ it.endTime }) { copy(endTime = it) }
     val dateState = editState.mutableTapOf({ it.date }) { copy(date = it) }
     val startsAtState = editState.tapOf { it.startsAt }
-    val descriptionState = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val descriptionState = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it.takeIf(Markdown::isNotBlank)) }
     val titleState = editState.mutableTapOf({ it.title ?: "" }) { copy(title = it) }
     val urlState = editState.mutableTapOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
     val isFreeState = editState.mutableTapOf({ it.isFree }) { copy(cost = if (it) 0f else null) }

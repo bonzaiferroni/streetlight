@@ -1,6 +1,7 @@
 package streetlight.web.layouts
 
 import kampfire.api.Username
+import kampfire.api.toMarkdown
 import kotlinx.html.FlowContent
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.EventEdit
@@ -19,12 +20,12 @@ fun FlowContent.postRow(edit: LocationEdit, username: Username) {
             geoPoint = edit.geoPoint,
             username = username,
             image = edit.image,
-            body = edit.description,
+            description = edit.description,
+            body = edit.description ?: edit.addressLine?.takeIf { it.isNotEmpty() }?.toMarkdown() ?: edit.label.toMarkdown(),
             links = edit.links,
             createdAt = Clock.System.now(),
             recordType = RecordType.Location,
         ),
-        isUniverse = false,
         cells = locationCells(edit.mapType, edit.city, 0),
     )
 }
@@ -37,12 +38,12 @@ fun FlowContent.postRow(event: EventEdit, location: Location, username: Username
             geoPoint = location.geoPoint,
             username = username,
             image = event.image,
-            body = event.description,
+            description = event.description,
+            body = event.description ?: location.label.toMarkdown(),
             links = event.displayedLinks,
             createdAt = Clock.System.now(),
             recordType = RecordType.Event,
         ),
-        isUniverse = false,
         cells = eventCells(event.startsAt, event.cost, event.website, location.name),
     )
 }

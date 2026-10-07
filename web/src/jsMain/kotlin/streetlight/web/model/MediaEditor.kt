@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.api.Slug
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
 import koala.dom.MessageStore
@@ -35,7 +36,7 @@ class MediaEditor(
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
     val titleField = editField.mutableTapOf({ it.title ?: "" }) { copy(title = it) }
     val subtitleField = editField.mutableTapOf({ it.subtitle ?: "" }) { copy(subtitle = it) }
-    val textField = editField.mutableTapOf({ it.text ?: "".toMarkdown() }) { copy(text = it) }
+    val textField = editField.mutableTapOf({ it.text ?: "".toMarkdown() }) { copy(text = it.takeIf(Markdown::isNotBlank)) }
 
     val message = MessageStore()
     val imageEditor = ImageEditor(imageField, api)

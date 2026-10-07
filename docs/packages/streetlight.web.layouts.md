@@ -34,29 +34,27 @@ An entity supplies its content as data, such as an `EntityCell`. The component t
 
 `feedRow` renders any `Entity` as one row. It is built around a post, which displays every property the row has, and it is the row for every other entity type, which display the properties they hold.
 
-`isUniverse` is `true` when the row is not inside a galaxy's own feed. The post line then names the galaxy the post belongs to.
-
 The more button toggles the expanded content of a `feedRow`. Only a component with collapsed content shows it.
 
 ### Feed Modes
 
-A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRow.Mode`. A feed opts in with the `FeedRow.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedRowCss` alone places it.
+A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRowStyle.Mode`. A feed opts in with the `FeedRowStyle.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedRowCss` alone places it.
 
-An entry marked `FeedRow.Featured` takes the `Grid` entry layout in any feed or mode, sharing the `Grid` rules.
+An entry marked `FeedRowStyle.Featured` takes the `Grid` entry layout in any feed or mode, sharing the `Grid` rules.
 
-The text of an entry is clipped at 10 units in every mode, and at 24 units in a featured entry.
+An entry's size is set by `--row-height` on `FeedRowStyle.Base`: 10 units, and 8 in `Minimal`. The square image, the flair and the clip of the text all read it, so a mode changes the size of its entries by setting it alone. A featured entry clips its text at 24 units. Text that reaches the clip fades over its last rem; shorter text does not fade. Text is left-aligned in every mode, and starts at the top of its area.
 
 The feed mode is a root switch, as specified in `koala.interop.md`.
 
-The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A modifier that differs by mode lives in the CSS, not on the element, including the direction and gap of `PostLine`. A spacing modifier such as `Gap(n)` renders as an inline style, which no stylesheet rule overrides, so a spacing that differs by mode is never set with one.
+The children of `FeedRowStyle.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A property that differs by mode lives in the CSS, not on the element. A spacing modifier such as `Gap(n)` renders as an inline style, which no stylesheet rule overrides, so a spacing that differs by mode is never set with one.
 
 The table records each mode's intended layout in more detail than a specification usually holds. The modes are finely engineered, and the detail preserves the intent so a later tweak keeps to it. Keep it when amending.
 
 | Mode | Feed | Entry |
 |---|---|---|
-| `Row` | One column | Thumbnail, centered text and badge in a row, cells below; one row from 960px with the cells as its right half |
-| `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2, contained over its backdrop, with no padding, left-aligned text and badge below, then cells. The expanded content and more button are hidden |
-| `Minimal` | One column | One row with no padding: an 8-unit square image, left-aligned text, and the flair badge at the same height. The postline is on one line, its parts separated by a non-breaking space. Cells, expanded content and more button are hidden |
+| `Row` | One column | Thumbnail, text and badge in a row, cells below; one row from 960px with the cells as its right half |
+| `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2, contained over its backdrop, with no padding, text and badge below, then cells. The expanded content and more button are hidden |
+| `Minimal` | One column | One row with no padding: an 8-unit square image, text clipped to the same height, and the flair badge. Cells, expanded content and more button are hidden |
 
 In `Grid`, a child of the mount that is not an entry, such as the more button, spans the full width.
 

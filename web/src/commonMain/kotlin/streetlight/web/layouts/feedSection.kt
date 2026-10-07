@@ -36,7 +36,7 @@ fun FlowContent.feedSection(
             filigree(Flex1) {
                 heading2("Posts", SectionHeadingMod)
             }
-            rootSwitch(FeedRow.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
+            rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
         }
 
         feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
@@ -54,7 +54,7 @@ fun FlowContent.feedSection(
             // td: message when empty
             feed.entities.forEach { entity ->
                 val curator = feed.curatorOf(entity)
-                feedRow(entity, galaxyId == null, curator)
+                feedRow(entity, curator)
             }
 
             feed.nextCursor?.let {
@@ -71,7 +71,7 @@ fun FlowContent.feedSection(
 fun FlowContent.layoutFeed(
     block: FlowContent.() -> Unit
 ) {
-    column(FeedSection.MountId, modify(FeedRow.Feed, FeedSection.FeedColumnMod)) {
+    column(FeedSection.MountId, modify(FeedRowStyle.Feed, FeedSection.FeedColumnMod)) {
         block()
     }
 }
@@ -97,5 +97,5 @@ fun FeedMode.toSvg() = when (this) {
 
 // language="CSS"
 val FeedSectionCss get() = """
-${rootSwitchCss(FeedRow.Mode, FeedMode.entries)}
+${rootSwitchCss(FeedRowStyle.Mode, FeedMode.entries)}
 """

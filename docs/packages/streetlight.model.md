@@ -33,7 +33,9 @@ A DTO lists its id first, then its non-nullable properties, its nullable propert
 
 ## Entities
 
-`Entity` is a sealed interface for content shown in a feed, a header, or anywhere else an entity appears. Its members name general content: `label`, `sublabel`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val body get() = description`, and leaves a member it does not hold at its default.
+`Entity` is a sealed interface for content shown in a feed, a header, or anywhere else an entity appears. Its members name general content: `label`, `sublabel`, `description`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val sublabel get() = tagline`, and leaves a member it does not hold at its default.
+
+`body` is required. It is the entity's `description` when there is one, and otherwise a summary built from its other properties, such as an address line or when it was added. A view that shows the entity's own description, such as a page header, reads `description`; a view that always wants a line of text reads `body`.
 
 ## Edits
 
