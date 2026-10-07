@@ -121,7 +121,7 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
         true -> {
             entity.body?.let {
                 column(modify(FeedRow.PostLine, MarginTop(2.px), TextSmall, OpacityHigh)) {
-                    markdown(it, modify(LineHeight115))
+                    markdown(it, modify(LineHeight115, FadeBottom))
                 }
             }
         }
@@ -223,6 +223,8 @@ $Image {
 $Text {
     grid-area: text;
     text-align: center;
+    max-height: calc(var(--unit) * 10);
+    overflow: hidden;
 }
 
 /* the thumbnail is cut to match a cover fit, which hides the backdrop */
@@ -269,6 +271,8 @@ ${Mode.selector(FeedMode.Grid)} $Feed $Base, $Featured {
 
     $ExpandedContent, $MoreButton { display: none; }
 }
+
+$Featured $Text { max-height: calc(var(--unit) * 24); }
 
 ${Mode.selector(FeedMode.Minimal)} $Feed {
     $Base { padding: 0; }

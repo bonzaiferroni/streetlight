@@ -44,6 +44,8 @@ A feed is laid out by `FeedMode`, a site-wide setting held on the root element a
 
 An entry marked `FeedRow.Featured` takes the `Grid` entry layout in any feed or mode, sharing the `Grid` rules.
 
+The text of an entry is clipped at 10 units in every mode, and at 24 units in a featured entry.
+
 The feed mode is a root switch, as specified in `koala.interop.md`.
 
 The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A modifier that differs by mode lives in the CSS, not on the element, including the direction and gap of `PostLine`. A spacing modifier such as `Gap(n)` renders as an inline style, which no stylesheet rule overrides, so a spacing that differs by mode is never set with one.
