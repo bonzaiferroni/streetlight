@@ -52,7 +52,7 @@ class EarthCache(
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
             val feed = api.post.readMapPosts(query).toDataOr(toaster) { return@launch }
-            queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
+            queries[query.view] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
             markerMap.addPoints(feed.entities)
         }
     }
@@ -67,31 +67,34 @@ class EarthCache(
                 isQueryingState.set { false }
                 return@launch
             }
-            queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
+            queries[query.view] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
             markerMap.addPoints(feed.entities)
             isQueryingState.set { false }
         }
     }
 
+    /** The query for [view], reaching past it by [OVERSCAN], or `null` when [view] is already covered. */
     private fun getQuery(view: GeoRect): MapQuery? {
         if (isCovered(view)) return null
-        val containing = queries.filterKeys { it.contains(view) }
+        val queriedRect = view.scaleBy(OVERSCAN)
+        val containing = queries.filterKeys { it.contains(queriedRect) }
 
         val seen = queries.keys
-            .filter { it !in containing.keys && queries.getValue(it).isComplete && it.overlapArea(view) > 0.0 }
-            .sortedByDescending { it.overlapArea(view) }
+            .filter { it !in containing.keys && queries.getValue(it).isComplete && it.overlapArea(queriedRect) > 0.0 }
+            .sortedByDescending { it.overlapArea(queriedRect) }
             .take(MAX_VIEWED)
 
         val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.score })
             ?: EntityCursor.Score.Default
-        return MapQuery(view, seen, query)
+        return MapQuery(queriedRect, seen, query)
     }
 
-    /** Whether the queries together cover [view], counting an incomplete one only when it is at least as wide. */
+    /** Whether the queries together cover [view], counting an incomplete one only when it was queried at this zoom or closer. */
     private fun isCovered(view: GeoRect): Boolean {
+        val maxIncompleteWidth = view.width * OVERSCAN * (1 + WIDTH_TOLERANCE)
         var uncovered = listOf(view)
         queries.forEach { (rect, cursor) ->
-            if (!cursor.isComplete && rect.width < view.width) return@forEach
+            if (!cursor.isComplete && rect.width > maxIncompleteWidth) return@forEach
             uncovered = uncovered.flatMap { it.subtract(rect) }
             if (uncovered.isEmpty()) return true
         }
@@ -107,3 +110,9 @@ data class MapCursor(
 
 /** The most overlapping views a query lists as already seen. */
 const val MAX_VIEWED = 8
+
+/** The factor by which a query reaches past its view, so small pans stay covered. */
+private const val OVERSCAN = 1.5f
+
+/** The relative difference in width still read as the same zoom. */
+private const val WIDTH_TOLERANCE = 1e-6

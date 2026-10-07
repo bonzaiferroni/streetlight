@@ -48,6 +48,7 @@ sealed interface EntityCursor {
 
     companion object {
         val DefaultLimit = 30
+        val MapLimit = 100
         val Default = Time(SortDirection.Descending)
     }
 }

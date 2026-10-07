@@ -13,9 +13,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.Entity
-import streetlight.model.data.LocationId
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.CityRoute
 import streetlight.model.ui.EarthMap
 import streetlight.model.ui.EarthRoute
 import streetlight.model.ui.GalaxyMap
@@ -62,7 +62,7 @@ class Earth(
         }
 
         markerMap.focusState.reactIn(scope) { focus ->
-            inflateFocus(focus)
+            reactToFocus(focus)
         }
     }
 
@@ -116,7 +116,7 @@ class Earth(
         }
     }
 
-    private fun inflateFocus(marker: PointMarker?) {
+    private fun reactToFocus(marker: PointMarker?) {
         inflateFocusJob?.cancel()
         if (marker == null) {
             state.set { copy(isInflatingFocus = false, focusEntities = null) }
@@ -124,6 +124,10 @@ class Earth(
         }
 
         when (marker) {
+            is CityMarker -> {
+                markerMap.geoMap.setFocus(null)
+                portal.go(CityRoute(marker.city.slug))
+            }
             is InflateMarker -> {
                 inflateFocusJob = scope.launch {
                     state.set { copy(isInflatingFocus = true) }

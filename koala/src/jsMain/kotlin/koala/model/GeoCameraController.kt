@@ -6,10 +6,10 @@ import koala.dom.onView
 import koala.modifier.unmodify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
+import kampfire.model.GeoRect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import web.html.HTMLElement
-import web.timers.setTimeout
 import kotlin.time.Duration.Companion.milliseconds
 
 /** Connects the MapLibre map to its [camera]: carries out pans and reports the map's position and altitude back. */
@@ -20,6 +20,7 @@ class GeoCameraController(
     val scope: CoroutineScope,
 ) {
     private var altitudeNow: Altitude? = null
+    private var pendingBounds: GeoRect? = null
     // private var boundsNow: GeoBounds? = null
 
     init {
@@ -47,20 +48,14 @@ class GeoCameraController(
                 }
             }
 
-            var baseElement: HTMLElement? = null
             launch("collect pan bounds") {
-                camera.panBoundsFlow.collect { bounds ->
-                    // td: find better solution (adds delay if map window was moved)
-                    val base = windowElement.parentElement?.parentElement
-                    if (base == baseElement) {
-                        jsMap.fitBounds(bounds.toLngLatBounds())
-                        return@collect
-                    }
-                    setTimeout({
-                        baseElement = base
-                        jsMap.fitBounds(bounds.toLngLatBounds())
-                    }, 100)
-                }
+                camera.panBoundsFlow.collect(::fitBounds)
+            }
+
+            jsMap.on("resize") {
+                val bounds = pendingBounds ?: return@on
+                pendingBounds = null
+                jsMap.fitBounds(bounds.toLngLatBounds())
             }
 
             setAltitude(jsMap.getZoom())
@@ -92,6 +87,17 @@ class GeoCameraController(
         }
         
         altitudeNow = altitude
+    }
+
+    /** Fits the map to [bounds], or holds them until the map has a size. */
+    private fun fitBounds(bounds: GeoRect) {
+        val container = jsMap.getContainer()
+        if (container.clientWidth == 0 || container.clientHeight == 0) {
+            pendingBounds = bounds
+            return
+        }
+        jsMap.resize()
+        jsMap.fitBounds(bounds.toLngLatBounds())
     }
 
     /** Reports the map's center, bounds and zoom to the camera. */
