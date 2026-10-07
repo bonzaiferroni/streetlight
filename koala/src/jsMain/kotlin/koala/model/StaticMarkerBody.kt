@@ -11,7 +11,7 @@ import koala.html.span
 import kotlinx.html.js.img
 import web.html.HTMLElement
 
-internal class EntityMarkerBody(
+internal class StaticMarkerBody(
     override val element: HTMLElement,
 ): PointMarkerBody {
     override val labelElement: HTMLElement? get() = null
@@ -21,7 +21,7 @@ internal class EntityMarkerBody(
     }
 }
 
-internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarkerBody {
+internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): StaticMarkerBody {
     with(marker) {
         // td: declare border radius in stylesheet
         val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, TextShadow)) {
@@ -53,11 +53,11 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
             }
         }
 
-        return EntityMarkerBody(element)
+        return StaticMarkerBody(element)
     }
 }
 
-internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBody {
+internal fun AppendScope.configureIconMarker(marker: IconMarker): StaticMarkerBody {
     with(marker) {
         val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, BorderRadius3, WhiteSpaceNoWrap)) {
             themeColor?.let {
@@ -73,6 +73,6 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
             }
         }
 
-        return EntityMarkerBody(element)
+        return StaticMarkerBody(element)
     }
 }
