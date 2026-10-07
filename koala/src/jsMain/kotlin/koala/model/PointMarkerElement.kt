@@ -28,15 +28,12 @@ internal class PointMarkerElement(
     var position = marker.geoPoint
         private set
 
-    var isVisible = false
+    var isInBounds = false
         private set
 
-    var clusterSuperior: PointMarkerElement? = null
-        private set
-    private var clusterSuperiorDistanceSq = Double.POSITIVE_INFINITY
+    private var revealZoom = Float.NEGATIVE_INFINITY
 
-    var isClusterMember = false
-        private set
+    private var isRevealed = true
     private var isAttached = false
 
     val isFocused get() = element.isModified(Focus)
@@ -73,36 +70,28 @@ internal class PointMarkerElement(
     }
 
     context(widget: maplibregl.Map)
-    fun setIsVisible(value: Boolean) {
-        if (isVisible == value) return
-        isVisible = value
+    fun setIsInBounds(value: Boolean) {
+        if (isInBounds == value) return
+        isInBounds = value
         updateAttachment()
     }
 
-    /** Sets the nearest marker of higher priority, [clusterSuperiorDistanceSq] away in square meters. */
-    fun setClusterSuperior(clusterSuperior: PointMarkerElement?, clusterSuperiorDistanceSq: Double) {
-        this.clusterSuperior = clusterSuperior
-        this.clusterSuperiorDistanceSq = clusterSuperiorDistanceSq
+    /** Sets the zoom from which this marker is shown rather than clustered. */
+    fun setRevealZoom(revealZoom: Float) {
+        this.revealZoom = revealZoom
     }
 
-    /** Clusters this marker into its [clusterSuperior] while it is within the cluster radius, [radiusSq] in square meters. */
+    /** Reveals this marker while [zoom] is at or above its reveal zoom. */
     context(widget: maplibregl.Map)
-    fun setClusterRadius(radiusSq: Double) {
-        isClusterMember = clusterSuperiorDistanceSq <= radiusSq
+    fun setZoom(zoom: Float) {
+        isRevealed = zoom >= revealZoom
         updateAttachment()
     }
 
-    /** Finds the shown marker this one is clustered into, following [clusterSuperior] past the markers it is clustered with. */
-    fun getClusterHead(): PointMarkerElement {
-        var render = this
-        while (render.isClusterMember) render = render.clusterSuperior ?: break
-        return render
-    }
-
-    /** Attaches the marker to [widget] while it is in view and not a cluster member, detaching it otherwise. */
+    /** Attaches the marker to [widget] while it is in bounds and revealed, detaching it otherwise. */
     context(widget: maplibregl.Map)
     private fun updateAttachment() {
-        val shouldAttach = isVisible && !isClusterMember
+        val shouldAttach = isInBounds && isRevealed
         if (isAttached == shouldAttach) return
         isAttached = shouldAttach
         if (isAttached) {
@@ -126,7 +115,7 @@ internal class PointMarkerElement(
     }
 }
 
-internal fun PointMarker.toPointRender(pixelPoint: Point, lightLayer: LightLayer, focusEntity: () -> Unit): PointMarkerElement {
+internal fun PointMarker.toPointElement(planarPoint: Point, lightLayer: LightLayer, focusEntity: () -> Unit): PointMarkerElement {
     val element = document.createDiv()
     element.modify(MarkerStyle.Root)
 
@@ -156,7 +145,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, lightLayer: LightLayer
 
             addModifiers(modifiers)
 
-            renderBody = when (val marker = this@toPointRender) {
+            renderBody = when (val marker = this@toPointElement) {
                 is TravelMarker -> configureIconMarker(marker)
                 is ThumbMarker -> configureThumbMarker(marker)
                 is IconMarker -> configureIconMarker(marker)
@@ -168,7 +157,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, lightLayer: LightLayer
     val view = PointMarkerElement(
         jsMarker = jsMarker,
         marker = this,
-        planarPoint = pixelPoint,
+        planarPoint = planarPoint,
         element = element,
         base = baseElement!!,
         body = renderBody!!,

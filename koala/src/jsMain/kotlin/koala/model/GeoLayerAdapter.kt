@@ -17,7 +17,7 @@ internal class GeoLayerAdapter(
     val scope: CoroutineScope,
     val onFocus: (PointMarker?) -> Unit
 ) {
-    var pointRenders: Map<MarkerId, PointMarkerElement> = emptyMap()
+    var pointElements: Map<MarkerId, PointMarkerElement> = emptyMap()
         private set
     var lineRenders: Map<MarkerId, LineRender> = emptyMap()
         private set
@@ -47,56 +47,61 @@ internal class GeoLayerAdapter(
             markers.forEach { marker ->
                 val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
 
-                val render = pointRenders[marker.markerId]?.also { render ->
-                    // update render
-                    render.update(marker, planarPoint)
-                } ?: marker.toPointRender(planarPoint, lightLayer) {
+                val element = pointElements[marker.markerId]?.also { element ->
+                    // update element
+                    element.update(marker, planarPoint)
+                } ?: marker.toPointElement(planarPoint, lightLayer) {
                     onFocus(marker)
                 }
-                pointBuffer[marker.markerId] = render
+                pointBuffer[marker.markerId] = element
             }
 
             // remove cached points not in list
-            pointRenders.forEach { (key, render) ->
+            pointElements.forEach { (key, element) ->
                 if (markers.any { it.markerId == key }) return@forEach
-                if (render.isFocused) onFocus(null)
-                render.dispose()
+                if (element.isFocused) onFocus(null)
+                element.dispose()
             }
 
-            pointRenders = pointBuffer
+            pointElements = pointBuffer
 
-            assignClusterSuperiors()
-            applyClusterRadius()
-            pointRenders.values.forEach { cullOutsideBounds(it) }
+            assignRevealZooms()
+            applyZoom()
+            pointElements.values.forEach { cullOutsideBounds(it) }
         }
     }
 
-    /** Gives each point the nearest point of higher priority, its cluster superior. */
-    private fun assignClusterSuperiors() {
-        if (layer.config.clusterRadiusPx == null) return
-        val renders = pointRenders.values.toList()
+    /**
+     * Gives each point the zoom where it is revealed, stepping in from [CLUSTER_ZOOM_MIN].
+     *
+     * Each step keeps the points already revealed and reveals, in priority order, those farther than the cluster radius from every revealed point.
+     */
+    private fun assignRevealZooms() {
+        val clusterRadiusPx = layer.config.clusterRadiusPx ?: return
+        val refLatitude = refLatitudeNow ?: return
+        val hiddenElements = pointElements.values.toMutableList()
+        val revealedElements = mutableListOf<PointMarkerElement>()
 
-        renders.forEachIndexed { index, render ->
-            var clusterSuperior: PointMarkerElement? = null
-            var clusterSuperiorDistanceSq = Double.POSITIVE_INFINITY
-            for (superiorIndex in 0 until index) {
-                val candidate = renders[superiorIndex]
-                val distanceSq = render.planarPoint.distanceSquaredTo(candidate.planarPoint)
-                if (distanceSq >= clusterSuperiorDistanceSq) continue
-                clusterSuperior = candidate
-                clusterSuperiorDistanceSq = distanceSq
+        var zoom = CLUSTER_ZOOM_MIN
+        while (hiddenElements.isNotEmpty() && zoom <= CLUSTER_ZOOM_MAX) {
+            val clusterRadiusMetersSq = clusterRadiusMetersOf(zoom, refLatitude, clusterRadiusPx).let { it * it }
+            hiddenElements.removeAll { element ->
+                val isCovered = revealedElements.any { element.planarPoint.distanceSquaredTo(it.planarPoint) <= clusterRadiusMetersSq }
+                if (isCovered) return@removeAll false
+                element.setRevealZoom(zoom)
+                revealedElements.add(element)
+                true
             }
-            render.setClusterSuperior(clusterSuperior, clusterSuperiorDistanceSq)
+            zoom += CLUSTER_ZOOM_STEP
         }
+
+        hiddenElements.forEach { it.setRevealZoom(Float.POSITIVE_INFINITY) }
     }
 
     context(widget: maplibregl.Map)
-    private fun applyClusterRadius() {
-        val clusterRadiusPx = layer.config.clusterRadiusPx ?: return
+    private fun applyZoom() {
         val zoom = zoomNow ?: return
-        val refLatitude = refLatitudeNow ?: return
-        val clusterRadiusMetersSq = clusterRadiusMetersOf(zoom, refLatitude, clusterRadiusPx).let { it * it }
-        pointRenders.values.forEach { it.setClusterRadius(clusterRadiusMetersSq) }
+        pointElements.values.forEach { it.setZoom(zoom) }
     }
 
     fun setLines(markers: List<LineMarker>) {
@@ -120,7 +125,7 @@ internal class GeoLayerAdapter(
     }
 
 //    fun moveEntity(movement: MarkerMovement) {
-//        val view = pointRenders[movement.markerId] ?: return
+//        val view = pointElements[movement.markerId] ?: return
 //        view.move(movement.position)
 //        console.log("moved to ${movement.position}")
 //    }
@@ -131,13 +136,13 @@ internal class GeoLayerAdapter(
         isMovingNow = isMoving
         zoomNow = zoom
 
-        applyClusterRadius()
-        pointRenders.values.forEach { cullOutsideBounds(it) }
+        applyZoom()
+        pointElements.values.forEach { cullOutsideBounds(it) }
     }
 
     internal fun dispose() {
         job.cancel()
-        pointRenders.forEach {
+        pointElements.forEach {
             it.value.dispose()
         }
 
@@ -147,10 +152,10 @@ internal class GeoLayerAdapter(
     }
 
     context(widget: maplibregl.Map)
-    private fun cullOutsideBounds(render: PointMarkerElement) {
+    private fun cullOutsideBounds(element: PointMarkerElement) {
         val bounds = view ?: return
-        val isVisible = bounds.contains(render.position)
-        render.setIsVisible(isVisible)
+        val isInBounds = bounds.contains(element.position)
+        element.setIsInBounds(isInBounds)
     }
 }
 
@@ -161,3 +166,7 @@ fun clusterRadiusMetersOf(zoom: Float, refLatitude: Double, pixelRadius: Int): D
 }
 
 const val MAPLIBRE_TILE_SIZE = 512.0
+
+private const val CLUSTER_ZOOM_MIN = 0f
+private const val CLUSTER_ZOOM_MAX = 22f
+private const val CLUSTER_ZOOM_STEP = 0.5f

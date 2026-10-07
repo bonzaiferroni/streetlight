@@ -71,7 +71,7 @@ class GeoRender(
 
         val render = markerId?.let { markerId ->
             layerRenders.firstNotNullOfOrNull { render ->
-                render.pointRenders[markerId]
+                render.pointElements[markerId]
             }
         }
 
