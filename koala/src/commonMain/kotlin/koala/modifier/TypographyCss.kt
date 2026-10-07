@@ -61,6 +61,10 @@ h4 {
     font-weight: var(--heading-4-weight);
 }
 
+h4$Bold {
+    font-weight: 400;
+}
+
 h5 {
     font-size: var(--heading-5-size);
     font-weight: var(--heading-5-weight);

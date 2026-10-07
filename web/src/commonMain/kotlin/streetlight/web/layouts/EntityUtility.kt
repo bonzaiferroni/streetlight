@@ -90,7 +90,7 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
-    is EventLocation -> eventCells(startsAt, cost, url, locationLabel)
+    is EventLocation -> eventCells(startsAt, cost, url, locationLabel, locationRoute)
     is EventPost -> event.toCells()
     is Event -> eventCells(startsAt, cost, url, null)
     is Galaxy -> buildList {
@@ -106,11 +106,20 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
     is EventGroup -> null
 }
 
-/** The cells of an event: its date, time, cost linking to [purchaseUrl], and [locationName]. */
-fun eventCells(startsAt: Instant?, cost: Float?, purchaseUrl: Url?, locationName: String?) = buildList {
+/** The cells of an event: its date, time, cost linking to [purchaseUrl], and [locationName] linking to [locationRoute]. */
+fun eventCells(
+    startsAt: Instant?,
+    cost: Float?,
+    purchaseUrl: Url?,
+    locationName: String?,
+    locationRoute: AppRoute? = null,
+) = buildList {
     startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
     cost?.let { add(costCell(it, purchaseUrl)) }
-    locationName?.let { add(EntityCell(SvgFile.MapPin, it, null, themeColor = ThemeColor.Location)) }
+    locationName?.let {
+        val locationUrl = locationRoute?.let { route -> Url(route.toRelativePath()) }
+        add(EntityCell(SvgFile.MapPin, it, locationUrl, themeColor = ThemeColor.Location))
+    }
 }
 
 /** The cells of a location: its [mapType], [city], and [eventCount] when it has events. */

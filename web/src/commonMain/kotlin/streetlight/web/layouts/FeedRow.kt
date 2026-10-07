@@ -210,6 +210,7 @@ $Content {
 
 $Image {
     grid-area: image;
+    align-self: start;
     width: var(--row-height);
     aspect-ratio: 1;
     border: var(--outline-low);
