@@ -63,7 +63,10 @@ class EarthCache(
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
             isQueryingState.set { true }
-            val feed = api.earth.readMapEntities(query).toDataOr(toaster) { return@launch }
+            val feed = api.earth.readMapEntities(query).toDataOr(toaster) {
+                isQueryingState.set { false }
+                return@launch
+            }
             queries[queriedView] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
             markerMap.addPoints(feed.entities)
             isQueryingState.set { false }
@@ -71,8 +74,8 @@ class EarthCache(
     }
 
     private fun getQuery(view: GeoRect): MapQuery? {
+        if (isCovered(view)) return null
         val containing = queries.filterKeys { it.contains(view) }
-        if (containing.values.any { it.isComplete }) return null
 
         val seen = queries.keys
             .filter { it !in containing.keys && queries.getValue(it).isComplete && it.overlapArea(view) > 0.0 }
@@ -82,6 +85,17 @@ class EarthCache(
         val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.score })
             ?: EntityCursor.Score.Default
         return MapQuery(view, seen, query)
+    }
+
+    /** Whether the queries together cover [view], counting an incomplete one only when it is at least as wide. */
+    private fun isCovered(view: GeoRect): Boolean {
+        var uncovered = listOf(view)
+        queries.forEach { (rect, cursor) ->
+            if (!cursor.isComplete && rect.width < view.width) return@forEach
+            uncovered = uncovered.flatMap { it.subtract(rect) }
+            if (uncovered.isEmpty()) return true
+        }
+        return false
     }
 }
 

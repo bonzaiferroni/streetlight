@@ -34,6 +34,20 @@ data class GeoRect(
         maxOf(0.0, minOf(east, other.east) - maxOf(west, other.west)) *
                 maxOf(0.0, minOf(north, other.north) - maxOf(south, other.south))
 
+    /** The parts of this rectangle outside [other], as at most four rectangles. */
+    fun subtract(other: GeoRect): List<GeoRect> {
+        if (overlapArea(other) == 0.0) return listOf(this)
+        val innerWest = maxOf(west, other.west)
+        val innerEast = minOf(east, other.east)
+
+        return buildList {
+            if (west < other.west) add(GeoRect(sw, GeoPoint(other.west, north)))
+            if (east > other.east) add(GeoRect(GeoPoint(other.east, south), ne))
+            if (south < other.south) add(GeoRect(GeoPoint(innerWest, south), GeoPoint(innerEast, other.south)))
+            if (north > other.north) add(GeoRect(GeoPoint(innerWest, other.north), GeoPoint(innerEast, north)))
+        }
+    }
+
     /** The rectangle scaled by [factor] around its center. */
     fun scaleBy(factor: Float): GeoRect {
         val center = center
