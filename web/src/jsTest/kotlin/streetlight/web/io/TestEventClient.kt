@@ -29,6 +29,7 @@ class TestEventClient: EventClient {
     override suspend fun readEventId(eventId: EventId): Outcome<Event> = TODO()
     override suspend fun readEventSlug(slug: Slug): Outcome<EventLocation> = TODO()
     override suspend fun readEventFeed(): Outcome<List<Event>> = TODO()
+    override suspend fun readUpcomingFeed(cursor: EntityCursor.Time?): Outcome<EntityFeed> = TODO()
     override suspend fun createEvent(event: EventEdit): Outcome<Event> = TODO()
     override suspend fun updateEvent(event: EventEdit): Outcome<Event> = TODO()
     override suspend fun readEventUpdaterContent(slug: Slug): Outcome<EventUpdaterContent> = TODO()

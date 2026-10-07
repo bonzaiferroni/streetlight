@@ -42,6 +42,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this)
         object ReadLights: GetEndpoint<List<EventId>>(this)
         object ReadSlug: GetByIdEndpoint<Slug, EventLocation>(this)
+
+        /** The upcoming events, soonest first. */
+        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint {
+            override val recordIdParam = uuidParamOf("recordId")
+            override val recordAtParam = instantParamOf("recordAt")
+            override val defaultDirection get() = SortDirection.Ascending
+        }
     }
 
     object Locations: GetByIdEndpoint<LocationId, Location>(this) {

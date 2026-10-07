@@ -15,7 +15,8 @@ import streetlight.web.ui.AppAttribute
  * The posts section of a page: a heading with the [FeedMode] switch, the mark filters of a galaxy, and the feed
  * with a button for more.
  *
- * [galaxyId] or [cityId] names the feed the more button reads from.
+ * The feed's source picks the heading and the reader of the more button, and [galaxyId] or [cityId] names the
+ * feed it reads.
  */
 fun FlowContent.feedSection(
     feed: EntityFeed,
@@ -23,6 +24,7 @@ fun FlowContent.feedSection(
     cityId: CityId? = null,
 ) {
     section {
+        setAttribute(AppAttribute.FeedSource.to(feed.source))
         galaxyId?.let {
             setAttribute(AppAttribute.GalaxyId.to(it))
         }
@@ -34,7 +36,7 @@ fun FlowContent.feedSection(
         row(AlignItemsCenter) {
             div(FeedSection.SwitchWidth)
             filigree(Flex1) {
-                heading2("Posts", SectionHeadingMod)
+                heading2(feed.source.heading, SectionHeadingMod)
             }
             rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
         }
@@ -87,6 +89,12 @@ object FeedSection {
     val MorePosts = JsSignature("morePosts")
 
     val SwitchWidth = Width(12)
+}
+
+/** The heading of a feed from this source. */
+val FeedSource.heading get() = when (this) {
+    FeedSource.Events -> "Events"
+    FeedSource.Posts, FeedSource.City -> "Posts"
 }
 
 fun FeedMode.toSvg() = when (this) {

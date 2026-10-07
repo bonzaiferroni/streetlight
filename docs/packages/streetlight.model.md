@@ -56,3 +56,7 @@ A `RawEntity` holds the text of each `ParseProperty` read from a page, not yet p
 ## Feeds
 
 An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; a city feed takes it from the location or event.
+
+An `EntityFeed` names its `FeedSource`, the feed its next page is read from: `Posts`, `City`, or `Events`. A feed section reads its heading and the reader of its more button from it.
+
+The home feed is the caller's posts, or for a visitor, the upcoming events from `Api.Events.ReadFeed`, soonest first. An event feed pages from `EntityCursor.Upcoming` and takes its `recordId` from the event.

@@ -16,6 +16,7 @@ import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.EntityCursor
+import streetlight.model.data.FeedSource
 import streetlight.web.layouts.FeedSection
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.RouteView
@@ -48,14 +49,14 @@ fun sortByMark(element: HTMLElement) {
 /** Appends the next page of the feed and removes the more button [element]. */
 fun morePosts(element: HTMLElement) {
     val nextCursor = element.requireAttribute(FeedSection.NextCursor)
-    val galaxyId = element.getClosestAttribute(AppAttribute.GalaxyId)
-    val cityId = element.getClosestAttribute(AppAttribute.CityId)
+    val source = element.requireClosestAttribute(AppAttribute.FeedSource)
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
-        val outcome = when (cityId) {
-            null -> api.post.readPosts(galaxyId, nextCursor)
-            else -> api.city.readCityFeed(cityId, nextCursor)
+        val outcome = when (source) {
+            FeedSource.Posts -> api.post.readPosts(element.getClosestAttribute(AppAttribute.GalaxyId), nextCursor)
+            FeedSource.City -> api.city.readCityFeed(element.requireClosestAttribute(AppAttribute.CityId), nextCursor)
+            FeedSource.Events -> api.event.readUpcomingFeed(nextCursor as? EntityCursor.Time)
         }
         val feed = outcome.toDataOr(toaster) {
             element.unmodify(OpacityHigh)

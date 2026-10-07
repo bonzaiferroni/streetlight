@@ -2,7 +2,9 @@ package streetlight.web.ui
 
 import koala.modifier.stringAttributeOf
 import koala.modifier.idAttributeOf
+import koala.modifier.enumAttributeOf
 import streetlight.model.data.CityId
+import streetlight.model.data.FeedSource
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.MarkId
 import streetlight.model.data.PostId
@@ -13,6 +15,7 @@ object AppAttribute {
     val CityId = idAttributeOf("city-id") { CityId(it) }
     val PostId = idAttributeOf("post-id") { PostId(it) }
     val MarkId = idAttributeOf("mark-id") { MarkId(it) }
+    val FeedSource = enumAttributeOf<FeedSource>("feed-source")
 
     val GalaxyName = stringAttributeOf("galaxy-name")
 }

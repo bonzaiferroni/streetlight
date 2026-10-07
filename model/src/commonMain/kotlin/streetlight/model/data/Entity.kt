@@ -54,13 +54,18 @@ data class CustomEntity(
     val recordType: RecordType? = null,
 ): Entity
 
-/** A page of a feed, with the marks and tallies of its posts and the cursor of the next page. */
+/**
+ * A page of a feed, with the marks and tallies of its posts and the cursor of the next page.
+ *
+ * [source] names the feed the next page is read from.
+ */
 @Serializable
 data class EntityFeed(
     val entities: List<Entity>,
     val marks: Map<GalaxyId, List<GalaxyMark>>? = null,
     val tallies: Map<PostId, List<MarkTally>>? = null,
     val nextCursor: EntityCursor? = null,
+    val source: FeedSource = FeedSource.Posts,
 ) {
     /** True when this is the last page. */
     val isCompleted get() = nextCursor == null
@@ -76,3 +81,7 @@ data class EntityFeed(
 
 /** A body that tells when an entity was added at [createdAt]. */
 fun addedBodyOf(createdAt: Instant) = "Added ${createdAt.toAgoFormat()}".toMarkdown()
+
+/** The feed an [EntityFeed] pages through. */
+@Serializable
+enum class FeedSource { Posts, City, Events }

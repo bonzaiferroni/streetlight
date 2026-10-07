@@ -50,5 +50,6 @@ sealed interface EntityCursor {
         val DefaultLimit = 30
         val MapLimit = 100
         val Default = Time(SortDirection.Descending)
+        val Upcoming = Time(SortDirection.Ascending)
     }
 }
