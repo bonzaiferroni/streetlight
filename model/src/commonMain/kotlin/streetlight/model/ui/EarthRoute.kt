@@ -3,6 +3,7 @@ package streetlight.model.ui
 import kampfire.api.Slug
 import kampfire.api.toSlug
 import kampfire.model.GeoPoint
+import kampfire.model.GeoRect
 import koala.html.PathParse
 import koala.html.buildRelativePath
 import koala.html.getAll
@@ -10,8 +11,9 @@ import streetlight.model.data.EventTag
 
 /** A route of the earth view, showing one of its layers. */
 sealed interface EarthRoute: StreetlightRoute {
-    override val screen get() = Screen.Earth
     val layer: EarthLayer
+    override val screen get() = Screen.Earth
+    val bounds: GeoRect? get() = null
 }
 
 data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
@@ -36,7 +38,7 @@ data object CityMapRoute: EarthRoute {
 }
 
 data class EventsMapRoute(
-    val geoPoint: GeoPoint? = null,
+    override val bounds: GeoRect? = null,
     val tags: List<EventTag>? = null,
 ): EarthRoute {
     companion object {
@@ -46,8 +48,8 @@ data class EventsMapRoute(
     override val layer get() = EarthLayer.Events
     override val title get() = "Events"
     override fun toRelativePath() = buildRelativePath(nodes) {
-        geoPoint?.let {
-            append(GEO_POINT_NODE, it.toString())
+        bounds?.let {
+            append(RECT_NODE, it.toString())
         }
         tags?.let {
             appendAll(TAG_PARAM, tags.map { it.name })
@@ -62,7 +64,7 @@ val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, param
         GALAXY_NODE -> GalaxyMapRoute(nodes.takeSegment(2)?.toSlug())
         else -> {
             val tags = parameters.getAll(TAG_PARAM) { name -> EventTag.entries.firstOrNull { it.name == name } }
-            EventsMapRoute(parameters[GEO_POINT_NODE]?.let { GeoPoint.of(it) } , tags)
+            EventsMapRoute(parameters[RECT_NODE]?.let { GeoRect.of(it) } , tags)
         }
     }
 }
@@ -75,4 +77,4 @@ private const val GALAXY_NODE = "galaxy"
 private const val CITIES_NODE = "cities"
 
 private const val TAG_PARAM = "tag"
-private const val GEO_POINT_NODE = "geoPoint"
+private const val RECT_NODE = "rect"

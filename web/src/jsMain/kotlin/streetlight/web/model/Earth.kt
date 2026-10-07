@@ -73,6 +73,9 @@ class Earth(
 
     private suspend fun collectRoute(route: EarthRoute) {
         val map = createMap(route) ?: return
+        route.bounds?.let {
+            markerMap.geoMap.camera.panMap(it)
+        }
         cache.setMapContext(route is EventsMapRoute)
         state.set { copy(map = map) }
         delay(100.milliseconds)
