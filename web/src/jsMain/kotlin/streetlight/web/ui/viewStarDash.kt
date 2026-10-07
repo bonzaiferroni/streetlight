@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.html.LabeledRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.model.RouteDockState
 import koala.modifier.*
@@ -29,7 +30,7 @@ fun ViewScope.viewStarDash(star: Star) {
         }
     }
 
-    dock.mergeState(StarDashRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
+    dock.mergeState(StarDashRoute, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewStarDashRoute() {

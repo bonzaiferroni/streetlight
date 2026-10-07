@@ -27,6 +27,10 @@ The app marks the selected button by adding `rootSwitchCss(attribute, values)` t
 
 The setting is restored on load through the app's `HeadScriptConfig`, described in `koala.interop.md`.
 
+## Route Labels
+
+An `AppRoute` carries no label. A link that shows a route as text takes a `LabeledRoute`, which pairs the route with the label of that link and defaults it to the route's `title`. Two links to one route may label it differently while the route stays equal to the one parsed from the path.
+
 ## Unsafe Content
 
 JSON written into a page through `unsafe { }` is passed through `sanitizeJson()` first, as `dataIsland` does. User text inside unescaped JSON can end the enclosing `script` element.

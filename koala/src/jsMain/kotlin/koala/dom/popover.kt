@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.modifier.*
-import koala.html.AppRoute
+import koala.html.LabeledRoute
 import koala.html.Id
 import koala.html.Popover
 import koala.html.configurePopover
@@ -68,12 +68,12 @@ fun AppendScope.popoverOption(label: String, mod: Modifier? = null, onClick: () 
 /** An entry of a popover for [option]. */
 fun AppendScope.popoverOption(option: MenuAction) = popoverOption(option.label, option.mod, option.onClick)
 
-/** An entry of a popover that navigates to [route]. */
-fun AppendScope.popoverOption(route: AppRoute, label: String = route.label, mod: Modifier? = null) =
-    navigation(route, mod = modify(mod, Padding(1), MinWidth(16))) {
-        textBlock(label, modify(TextAlignCenter, Width(100.pct)))
+/** An entry of a popover that navigates to the route of [labeledRoute]. */
+fun AppendScope.popoverOption(labeledRoute: LabeledRoute, mod: Modifier? = null) =
+    navigation(labeledRoute.route, mod = modify(mod, Padding(1), MinWidth(16))) {
+        textBlock(labeledRoute.label, modify(TextAlignCenter, Width(100.pct)))
     }
 
 /** An entry of a popover for [option]. */
 fun AppendScope.popoverOption(option: MenuRoute) =
-    popoverOption(option.route, option.label, option.mod)
+    popoverOption(option.labeledRoute, option.mod)

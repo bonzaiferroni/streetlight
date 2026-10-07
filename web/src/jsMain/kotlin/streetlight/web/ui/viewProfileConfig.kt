@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.html.LabeledRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.model.RouteDockState
 import koala.modifier.*
@@ -31,7 +32,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
         formSubmit("Save", model::submit, model.messages)
     }
 
-    dock.mergeState(ProfileConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
+    dock.mergeState(ProfileConfigRoute, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewProfileConfigRoute() {

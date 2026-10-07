@@ -50,9 +50,9 @@ fun ViewScope.viewRouteDock() {
             flowBlock(model.mainRoutes, Magic) { mainRoutes ->
                 val routes = mainRoutes ?: return@flowBlock
                 row(modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
-                    routes.forEach { route ->
-                        this@flowBlock.navigation(route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +route.label }
-                            .asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+                    routes.forEach { labeledRoute ->
+                        this@flowBlock.navigation(labeledRoute.route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +labeledRoute.label }
+                            .asWeb().flowModifier(isRouteNow(labeledRoute.route), RouteDockStyle.RouteNow, contentScope)
                     }
                 }
             }

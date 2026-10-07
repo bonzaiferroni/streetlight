@@ -2,7 +2,7 @@ package koala.dom
 
 import kampfire.model.Labeled
 import koala.modifier.*
-import koala.html.AppRoute
+import koala.html.LabeledRoute
 
 /** An entry in a menu. */
 sealed interface MenuOption: Labeled
@@ -10,12 +10,13 @@ sealed interface MenuOption: Labeled
 /** A menu entry that only labels the entries after it. */
 data class MenuLabel(override val label: String): MenuOption
 
-/** A menu entry that navigates to [route]. */
+/** A menu entry that navigates to the route of [labeledRoute]. */
 data class MenuRoute(
-    val route: AppRoute,
-    override val label: String = route.label,
+    val labeledRoute: LabeledRoute,
     val mod: Modifier? = null,
-): MenuOption
+): MenuOption {
+    override val label get() = labeledRoute.label
+}
 
 /** A menu entry that runs [onClick]. */
 data class MenuAction(

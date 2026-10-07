@@ -2,6 +2,7 @@ package streetlight.model.ui
 
 import kampfire.api.Slug
 import kampfire.api.toSlug
+import kampfire.model.GeoPoint
 import koala.html.PathParse
 import koala.html.buildRelativePath
 import koala.html.getAll
@@ -18,8 +19,7 @@ data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
         val nodes = listOf(EARTH_NODE, GALAXY_NODE)
     }
 
-    override val title get() = "Galaxy Map"
-    override val label get() = "Galaxy"
+    override val title get() = "Galaxies"
     override val layer get() = EarthLayer.Galaxy
 
     // override fun toRelativePath() = "/$EARTH_NODE/$GALAXY_NODE/${slug?.toString() ?: ""}"
@@ -29,23 +29,25 @@ data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
 data object CityMapRoute: EarthRoute {
     val nodes = listOf(EARTH_NODE, CITIES_NODE)
 
-    override val title get() = "City Map"
+    override val title get() = "Cities"
     override val layer get() = EarthLayer.City
 
     override fun toRelativePath() = buildRelativePath(nodes)
 }
 
-data class EventsMapRoute(val citySlug: Slug? = null, val tags: List<EventTag>? = null): EarthRoute {
+data class EventsMapRoute(
+    val geoPoint: GeoPoint? = null,
+    val tags: List<EventTag>? = null,
+): EarthRoute {
     companion object {
         val nodes = listOf(EARTH_NODE)
     }
 
     override val layer get() = EarthLayer.Events
-    override val label get() = "Events"
-    override val title get() = "Earth"
+    override val title get() = "Events"
     override fun toRelativePath() = buildRelativePath(nodes) {
-        citySlug?.let {
-            append(CITY_PARAM, it.value)
+        geoPoint?.let {
+            append(GEO_POINT_NODE, it.toString())
         }
         tags?.let {
             appendAll(TAG_PARAM, tags.map { it.name })
@@ -60,7 +62,7 @@ val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, param
         GALAXY_NODE -> GalaxyMapRoute(nodes.takeSegment(2)?.toSlug())
         else -> {
             val tags = parameters.getAll(TAG_PARAM) { name -> EventTag.entries.firstOrNull { it.name == name } }
-            EventsMapRoute(parameters[CITY_PARAM]?.toSlug(), tags)
+            EventsMapRoute(parameters[GEO_POINT_NODE]?.let { GeoPoint.of(it) } , tags)
         }
     }
 }
@@ -73,4 +75,4 @@ private const val GALAXY_NODE = "galaxy"
 private const val CITIES_NODE = "cities"
 
 private const val TAG_PARAM = "tag"
-private const val CITY_PARAM = "city"
+private const val GEO_POINT_NODE = "geoPoint"

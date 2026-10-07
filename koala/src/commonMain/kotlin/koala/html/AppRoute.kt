@@ -4,20 +4,18 @@ import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.api.toSlug
 import kampfire.api.toUsername
-import kampfire.model.Labeled
 import io.ktor.http.Parameters
 import io.ktor.http.parseQueryString
 import kotlin.uuid.Uuid
 
 /** A place in the app, with the [screen] that renders it and the path that reaches it. */
-interface AppRoute: Labeled {
+interface AppRoute {
     val screen: AppScreen
     val origin: String
     fun toRelativePath() = basePath
     fun toAbsolutePath() = "$origin${toRelativePath()}"
     val title: String // td initialize as screen title
     val basePath get() = screen.pathBase
-    override val label get() = title
 
     companion object {
         /**

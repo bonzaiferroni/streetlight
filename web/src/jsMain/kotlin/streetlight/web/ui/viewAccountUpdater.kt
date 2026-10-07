@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.html.LabeledRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.model.RouteDockState
 import kampfire.model.AccountType
@@ -31,7 +32,7 @@ fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
         }
     }
 
-    dock.mergeState(StarConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
+    dock.mergeState(StarConfigRoute, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewStarConfigRoute() {

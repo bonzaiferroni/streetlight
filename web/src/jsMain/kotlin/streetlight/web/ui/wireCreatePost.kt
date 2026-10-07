@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Slug
 import koala.dom.*
+import koala.html.LabeledRoute
 import koala.modifier.Attribute
 import koala.modifier.getAttribute
 import streetlight.model.ui.EventScoutRoute
@@ -17,9 +18,9 @@ fun ViewScope.wireCreatePost() {
     ) { value ->
         val slug = value.takeIf { it.value.isNotEmpty() }
         column(PopoverMenuMod.Column) {
-            popoverOption(EventScoutRoute(slug), "Post Event")
-            popoverOption(LocationScoutRoute(slug), "Post Location")
-            popoverOption(MediaForgeRoute(slug), "Post Media")
+            popoverOption(LabeledRoute(EventScoutRoute(slug), "Post Event"))
+            popoverOption(LabeledRoute(LocationScoutRoute(slug), "Post Location"))
+            popoverOption(LabeledRoute(MediaForgeRoute(slug), "Post Media"))
         }
     }
 }
