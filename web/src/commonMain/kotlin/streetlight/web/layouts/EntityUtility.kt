@@ -8,6 +8,7 @@ import streetlight.model.data.EventGroup
 import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
+import streetlight.model.data.EventTag
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Galaxy
@@ -90,9 +91,9 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
-    is EventLocation -> eventCells(startsAt, cost, url, locationLabel, locationRoute)
+    is EventLocation -> eventCells(startsAt, cost, url, tags, locationLabel, locationRoute)
     is EventPost -> event.toCells()
-    is Event -> eventCells(startsAt, cost, url, null)
+    is Event -> eventCells(startsAt, cost, url, tags, null)
     is Galaxy -> buildList {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
@@ -106,16 +107,21 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
     is EventGroup -> null
 }
 
-/** The cells of an event: its date, time, cost linking to [purchaseUrl], and [locationName] linking to [locationRoute]. */
+/**
+ * The cells of an event: its date, time, cost linking to [purchaseUrl], the first of its [tags], and [locationName]
+ * linking to [locationRoute].
+ */
 fun eventCells(
     startsAt: Instant?,
     cost: Float?,
     purchaseUrl: Url?,
+    tags: List<EventTag>?,
     locationName: String?,
     locationRoute: AppRoute? = null,
 ) = buildList {
     startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
     cost?.let { add(costCell(it, purchaseUrl)) }
+    tags?.firstOrNull()?.let { add(EntityCell(SvgFile.Label, it.label, null)) }
     locationName?.let {
         val locationUrl = locationRoute?.let { route -> Url(route.toRelativePath()) }
         add(EntityCell(SvgFile.MapPin, it, locationUrl, themeColor = ThemeColor.Location))

@@ -33,3 +33,9 @@ An action that must not run twice at once owns one instance. Two actions never s
 ## Shaders
 
 A WebGL shader is written in GLSL ES 3.00 as a string in the Kotlin file of the layer that compiles it, marked `// language="GLSL"`. A layer drawn into the map implements `CustomLayerInterface` and is added to the map in `initGeoMap`.
+
+## Icons
+
+`SvgFile` declares the site's icons, each an SVG file in `www/svg` named in kebab case. An icon is taken from Tabler as the SVG it offers and saved in two variants: `foo.svg` with a `stroke-width` of 2, and `foo-large.svg` with a `stroke-width` of 1, so its lines keep a similar weight at either size. Each variant is declared in `SvgFile` in alphabetical order, as `Foo` and `FooLarge`.
+
+An icon from an outside source is listed in `docs/sources` under that source, its variants together as `foo-*.svg`, for attribution.

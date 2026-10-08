@@ -60,6 +60,8 @@ object SvgFile : FileSet<Svg>() {
     val Home = add("home.svg")
     val HomeLarge = add("home-large.svg")
     val Info = add("info.svg")
+    val Label = add("label.svg")
+    val LabelLarge = add("label-large.svg")
     val LayoutGrid = add("layout-grid.svg")
     val LayoutMinimal = add("layout-minimal.svg")
     val LayoutRow = add("layout-row.svg")
