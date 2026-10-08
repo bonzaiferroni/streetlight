@@ -189,14 +189,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadContent: GetByIdEndpoint<Slug, CityContent>(this)
         object UpdateCity: PostEndpoint<CityEdit, City>(this)
 
-        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint, ScoreCursorEndpoint, MarkCursorEndpoint {
+        /** The upcoming events of a city, soonest first. */
+        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint {
             val cityId = tableIdParamOf("cityId") { CityId(it) }
             override val recordIdParam = uuidParamOf("recordId")
-            override val markIdParam = uuidParamOf("markId")
-            override val countParam = intParamOf("count")
-            override val directionParam = enumParamOf<SortDirection>("direction")
-            override val scoreParam = doubleParamOf("score")
             override val recordAtParam = instantParamOf("recordAt")
+            override val defaultDirection get() = SortDirection.Ascending
         }
 
         object Search: GetEndpoint<List<City>>(this) {

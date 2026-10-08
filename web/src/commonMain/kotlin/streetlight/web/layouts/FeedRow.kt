@@ -68,7 +68,7 @@ fun DIV.configureFeedRow(
         }
         column(modify(FeedRowStyle.Text, Gap(0), TextShadow, OverflowHidden)) {
             navigationIfNotNull(headingUrl) {
-                heading4(heading, modify(LineHeight115, SingleLine, Bold))
+                heading5(heading, modify(LineHeight115, SingleLine, Bold))
             }
             markdown(entity.body, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
         }
@@ -231,7 +231,8 @@ $Image $Feature { object-fit: cover; }
 
 $Badge { grid-area: badge; }
 
-$Flair { width: var(--row-height); }
+/* a block, so the badge holds no line box below the icon */
+$Flair { display: block; width: var(--row-height); }
 
 $Cells { grid-area: cells; }
 

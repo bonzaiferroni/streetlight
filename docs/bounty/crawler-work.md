@@ -4,7 +4,14 @@ The workflow for tuning the crawler build by build: stage the records that want 
 
 ## Where It Stands
 
+* Build **V43** (2026-10-08): the location guards match stored names both ways (`matchesBothWays` at 0.8): the nearby check in `locateDistinctPlace`, `readLocationAt`, `readStoredLocation` and `readNamedLocation`. A one-way match let a short name take a longer one holding it ("Downtown Denver" scored 1.0 against "Embassy Suites by Hilton Denver Downtown…"). The city's words are dropped from both names before the match, never from the stored name ("Levitt Pavilion Denver" scored 0.73 against "Levitt Pavilion" without it). The weekly location review joins the cycle; the first review is next. Not yet run.
+* Build **V42** (2026-10-08): addresses are expanded (`expandAddress`: `E` to `East`, `Ave` to `Avenue`) whenever a location is created or updated, and before `readLocationsAt` compares them, which returns every location at an address for the caller to pick the one whose name matches. The Town Center at Aurora twins came from the map giving each mall building its own point, farther apart than `sameVenueRadius`, while the page wrote "14200 E Alameda Ave". In SQL (2026-10-08): 15 stored addresses expanded; at each address shared after it, the unnamed locations were merged into the one named location, or into the oldest unnamed when none had a name, for 29 locations merged, 12 duplicate events deleted and 29 moved. Addresses with two or more named locations were left (7301 South Santa Fe Drive, 3498 East 112th Avenue). Dumps `logs/schema/location-before-V42.json`, `event-address-merge-before-V42.json`. Not yet run.
+* Build **V41** (2026-10-08): an event placed by its address alone takes a stored location near that point whose name matches its place (`readNamedLocation`) before an unnamed one. Before it, `placeAtAddress` passed over a named venue at the point and created an unnamed twin when the address differed in form ("1338 1st St" for Meow Wolf Denver's "1338 1st Street"): 41 unnamed locations sit within 15 m of a named one. The 41 twins were merged in SQL (2026-10-08): 13 of their 69 events duplicated a same-day event at the named venue and were deleted, the other 56 moved, the twins deleted. Dump `logs/schema/location-twins-before-merge.json`. Not yet run.
+* Build **V40** (2026-10-08): an event's title is cut of trailing segments naming its location or city (`cleanLocationName`, both ways at 0.5, lowered from 0.6 after "Marquis Theater" missed "Marquis") before the duplicate check, after Songkick's " @ Venue" titles slipped past it (Doja Cat, Sex Pistols, Jungle Giants). The stage deletes the 6 Songkick events that duplicate another source's (Doja Cat, Sex Pistols, Jungle Giants, Deslondes, Ecca Vandal, Pouya) with their links, and nulls the Songkick lead's `checked_at`; they should come back as duplicates. Dump `logs/schema/songkick-dupes-before-V40.json`. Not yet run.
 * Build **V39** (2026-10-04): a stored feed schema is reused only when its `link`, when it has one, matches among its events. V38's stored Eventbrite feed schema kept matching its events while its hashed link class had changed, so 61 of 65 feeds followed no event pages and every record was dropped for want of a date. V39 also lays a feed's declared events over its records, matched by url. Eventbrite's card links carry `?aff=ebdssbdestsearch` and its declared urls do not, so none matched until `aff` joined the fluff params `normalize` drops (mid-run, 2026-10-04); Eventbrite pages already linked with `aff` are read again under their new url, and the duplicate check absorbs their events. The stage nulls `checked_at` on the 61 Eventbrite leads. A second stage nulls `checked_at` on the 51 Meetup and 57 AllEvents leads, keeping their links, so they are read beside Eventbrite and gather only pages not yet read. Dumps `logs/schema/lead-before-V39.json` and `lead-meetup-allevents-before-V39.json`.
+* **V39 first run** (2026-10-04, 09:20–15:44, 226 reports): 3,445 found, 883 created, 1,214 duplicates, 3,091 known, 230 locations spawned, 2,097 classified. AllEvents 335 created, Meetup 125, Eventbrite 40 (408 known): the stored-schema check held. Luma 0. One failed check (see Open Leads, null bytes). 33 feeds found events and created none, most sinking as unparsed dates, which the records did not count until `unparsed` and `unlocated` joined `RecordReport` (2026-10-07, build unchanged); page notes are deduplicated, so they undercount too. A second V39 run (2026-10-07 overnight) reads the Dice lead and the daily feeds; analyze both, then the zero-yield feeds (Bethany 111, stem.adams12 171, Denver Zoo 58, z2ent 33, Bar 404 85 unnamed).
+* The **Songkick Denver** lead is added (2026-10-08, `Crawl-delay: 10`), Denver's point: 50 cards a page, each with a full `<time datetime>` start, and 51 `MusicEvent`s declared with address and geo. Only page 1 of 19 is read (see Load more).
+* The **Dice Denver** lead was read once on V39 (2026-10-07) and removed (2026-10-08) with its links and parsers (dump `logs/schema/dice-before-burial.json`): its feed schema read all 30 cards, but its event pages answered `502` after 8 reads and the origin was benched. Taken as a site that does not want crawling.
 * The **Luma Denver** (2026-10-03) and **AllEvents Denver** leads are added, then 56 more AllEvents towns (see AllEvents Radius), with Denver's geo point. Luma's first read yielded nothing: its cards carry no date or link (see Open Leads). AllEvents (`Crawl-delay: 10`) holds dates in its Basic text and declares 96 events in JSON-LD.
 * Build **V38** (staged after the tag backfill): events carry tags from the per-tag regression. The stage deletes Studio@Mainstreet's events, links and the `tockify.com` parser, and nulls every `checked_feed_at` and lead `checked_at`, keeping links and the other events: known pages are skipped and pages deferred past the 30-page limit are read, so the counts of created and known events show what V37's first pass left. Dumps `logs/schema/*-before-V38.json`.
 * Build **V37** is staged as a full rescan for classification (2026-10-02): every event, link and link alias deleted, every location's `checked_feed_at` and every lead's `checked_at` nulled. Parsers and location website reads (`location.checked_at`) kept. Each classified event writes its check's report. Dumps `logs/schema/*-before-V37.json`.
@@ -54,6 +61,35 @@ These hold for every change a build makes. The General Model has its single home
 4. **Analyze.** Read `logs/parser/Vn/*.json`, the saved html beside them, and the events created in the run's window.
 5. **Probe.** Check what the page really holds with ksoup or Playwright in jshell. The probe is the source of truth, not the report and not the LM.
 6. **Lessons.** Sort each finding into a gremlin (the code is wrong), a reef (the domain, not yet handled), or accepted/unread by rule. Only lessons that pass the General Model become the next build.
+
+**Weekly location review.** Once a week, the locations created since the last review are checked, and the agent presents a list of candidates for the navigator to confirm before anything changes. The location guards lean toward duplicates, which this review finds easily, over false matches, which nothing reveals.
+
+| Check | Finds | Signal |
+|---|---|---|
+| Echoed events | Twins | The same event (a fuzzy title, the same local day) at two locations within about 1 km |
+| Shared website | Twins, or a chain to confirm | Two locations whose website is on the same domain |
+| Shared address | Twins, or tenants of one building | Two or more locations at the same expanded address |
+| Similar names nearby | Twin candidates | Names that `fuzzyMatches` one-way within 500 m |
+| False locations | Places a person cannot go | A name that is a city, neighborhood or region ("Downtown Denver"), or says nothing ("Online event", "TBA") |
+| Empty locations | Leftovers | An unnamed location with no events |
+| Generic or mangled names | Names users cannot read | A name that is a kind of place alone ("Public Library", "Building") or broken ("Festival Park ... Castle Rock"); the review gives the full name |
+| Event dupes at one location | Missed duplicates | Two events on the same local day at one location whose titles name the same show ("Cheekface @ Marquis Theater", "Cheekface w/ special guest waitress") |
+| Far-flung locations | Wrong map hits | A location farther than 200 km from the feed that made it, or outside Colorado |
+| Cityless locations | Events users cannot find | A location with no city, kept off city feeds and search; the review gives it one where the map missed it |
+
+The review opens with the crawl since the last review, from the reports and the events table:
+
+* **Builds:** a bullet per build since the last review, one line each; the Build History holds the rest.
+* **Yield:** events and locations created, per source (the general feeds by name, location feeds together).
+* **Biggest misses:** the largest buckets of loss (`unparsed`, `unnamed`, `unlocated`) and the feeds that hold most of each.
+* **Failures:** failed checks, origins benched by strikes, and leads that yielded nothing.
+* **Sources:** leads added or removed since the last review.
+
+A confirmed twin is merged in SQL into the older location (or the named one): its events moved, same-day duplicates dropped, the twin deleted. A false location is deleted with its events placed elsewhere or dropped. Each review keeps its files in `logs/review/<date>/`: `candidates.md` (the list presented, with the navigator's rulings), `location-before.json` and `event-before.json` (dumped before any change), and `applied.sql` (what was run). Its date and a one-line outcome are recorded below.
+
+**Reviews:**
+
+* **2026-10-08** (first, every location): 14 twins merged, 21 duplicate events deleted, 14 false or mangled names removed, 3 empty wrong locations deleted, Blue FCU Arena named. Cityless locations lie outside any town; a reverse lookup gives only the county.
 
 ## Environment
 
@@ -150,7 +186,7 @@ A check writes `logs/parser/Vn/<type>-<address>.json` only when it needs attenti
 | `lm[]` | Each request (`schema`, `time`, `description`), its cap cut, token counts and the raw `response`: the first place to look when a schema is odd |
 | `schema` | `source` (new or stored), `validation`, `dropped` fields, `eventCount`, `fieldFill` (how many events each selector filled) |
 | `classifications[]` | Each event's classification on the page it was read from: `rankedTags` (the five most similar tags, each with its `similarity`), the `tags` given, and its `ldType`. Every classified event writes its check's report |
-| `records` | The counts: `found`, `created`, `past`, `unnamed`, `shortened`, `duplicates`, `known`, `createFailed`, `locationsSpawned`, `locationsFailed`, `classified`. Each record's story (unparsed dates, duplicate titles, failures, location outcomes) is a note on its page |
+| `records` | The counts: `found`, `created`, `past`, `unnamed`, `unparsed`, `unlocated`, `shortened`, `duplicates`, `known`, `createFailed`, `locationsSpawned`, `locationsFailed`, `classified`. Each record's story (unparsed dates, duplicate titles, failures, location outcomes) is a note on its page |
 | `failure` | An exception that cut the check short |
 
 The summary pass over a build:
@@ -247,6 +283,8 @@ Found and not yet acted on, each to be weighed against the General Model:
 * **Roads named by their route.** "22550 CO-74" finds the house at 22550 Bear Creek Road (Lair o' the Bear), but `findAddress` wants the road to hold "CO-74" and drops it.
 * **Wrong street suffixes.** "1298 South Broadway Avenue" finds nothing; "1298 South Broadway" finds Maria Empanada. Seen twice, both on Meetup's own pages.
 
+* **Null bytes.** Broadmoor World Arena's location read threw `invalid byte sequence for encoding "UTF8": 0x00` on its database write (V39). Nothing strips `\u0000` from page text before it is stored.
+* **Venue suffixes on titles.** Taken up in V40 at 0.5 both ways; site-name suffixes ("— Home") remain. Titles often end in their venue after a separator ("Doja Cat @ Ball Arena", "The Gong Show — Lion's Lair", "… | Boulder Theater"), or the site name ("— Home"), and such titles miss `fuzzyMatches` against the same show from another source. Dropping the trailing segment after ` @ `, ` | `, ` - `, ` – ` or ` — ` while it matches the location's name or city both ways (`similarity` in each direction) changed 396 of 5,442 stored titles cleanly and found 8 missed duplicates, all real (2026-10-08). Taking the first segment instead broke titles ("CLASS | FLOW & RESTORATIVE YOGA" to "CLASS") and merged distinct events. The page's `og:site_name` would cover "— Home".
 * **A place sharing an element with the date.** Newspaper listings put date, time and place in one `<strong>` split by `<br>`. The whole line goes to OSM and finds nothing.
 * **Date parts sharing a class.** Summit and Marquis hold the date in each card as `<time><p>Wed</p><p>30</p><p>Sep</p></time>`, and the weekday and month share one class, so the LM's selectors find the weekday and the date is dropped (V23). The whole `<time>` element's text would parse.
 * **A date selector on the title.** Bar 404's date selector reads the event title, and validation let it through.
@@ -264,5 +302,6 @@ Roxy (an iframe widget that arrives late), Black Box and Squire (calendar grids)
 
 * **hi-dive** sits behind an automatic "verifying your request" page; a bot filter is respected, not waited out.
 * **Whispers on Havana**'s homepage holds no text beyond its name.
+* **movementgyms.com**: a calendar grid whose day headings and event columns are parallel rows, paired only by position.
 * **Date runs** such as Denver Center's "Sep 11 – Oct 4": the event model holds one date.
 * **Westword**: its lists hold bare text with no links, and it is not a planned source.

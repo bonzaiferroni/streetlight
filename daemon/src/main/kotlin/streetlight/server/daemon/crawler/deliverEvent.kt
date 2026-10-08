@@ -36,10 +36,13 @@ suspend fun Crawler.deliverEvent(lead: EventFeed, rawFeedEvent: RawEntity?, rawP
     createEventAt(rawEvent, event, location, tracker)
 }
 
-/** Creates the [rawEvent] edited as [edit] at [location], unless an event there the same day already has its title. */
+/**
+ * Creates the [rawEvent] edited as [edit] at [location], its title cleaned of the location's name and city, unless an
+ * event there the same day already has its title.
+ */
 internal suspend fun Crawler.createEventAt(rawEvent: RawEntity, edit: EventEdit, location: Location, tracker: ParseTracker) {
-    val title = edit.title ?: return
-    val located = edit.copy(locationId = location.locationId, timeZoneId = location.timezoneId)
+    val title = edit.title?.cleanLocationName(location.name, location.city, threshold = locationNameThreshold) ?: return
+    val located = edit.copy(title = title, locationId = location.locationId, timeZoneId = location.timezoneId)
     val startsAt = located.startsAt ?: return
     val zone = located.timeZone ?: return
     val day = startsAt.toLocalDateTime(zone).date
@@ -57,6 +60,8 @@ internal suspend fun Crawler.createEventAt(rawEvent: RawEntity, edit: EventEdit,
     if (located.image != null && created.image == null) tracker.trackFailedImage(rawEvent, title)
     tracker.trackCreatedRecord()
 }
+
+private const val locationNameThreshold = 0.5
 
 /** The event made of what its feed showed and what its page showed, the page's preferred, or null when neither did. */
 private fun mergeEvent(rawFeedEvent: RawEntity?, rawPageEvent: RawEntity?, timeZoneId: String): RawEntity? {

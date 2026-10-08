@@ -4,6 +4,7 @@ import streetlight.model.data.ParseProperty
 import streetlight.model.data.RawEntity
 import kampfire.model.Distance
 import streetlight.model.data.toOriginId
+import streetlight.model.utils.expandAddress
 import streetlight.model.data.mergeLeft
 import kampfire.model.toUrl
 import kampfire.model.Ok
@@ -80,7 +81,7 @@ class LocationSpawner(
         val location = crawler.dbWrite {
             dao.location.readLocationByMapId(place.osmId)?.let { return it.also { tracker.trackMatchedLocation(rawEvent, text, it) } }
             dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
-                .firstOrNull { location -> location.name?.fuzzyMatches(text) == true }
+                .firstOrNull { location -> location.matchesName(text) }
                 ?.let { return it.also { tracker.trackMatchedLocation(rawEvent, text, it) } }
 
             val edit = place.toEdit().takeIf { it.validity.isValid }
@@ -133,15 +134,15 @@ class LocationSpawner(
         }
     }
 
-    /** The location already stored at [address] whose name matches [name], found without the map. */
+    /** The location already stored at [address], expanded, whose name matches [name], found without the map. */
     suspend fun readLocationAt(name: String, address: String?): Location? =
-        address?.let { dao.location.readLocationAt(null, it) }?.takeIf { it.name?.fuzzyMatches(name) == true }
+        address?.let { dao.location.readLocationsAt(null, it.expandAddress()) }?.firstOrNull { it.matchesName(name) }
 
     /** The location already stored for [place]: by its map id, or by a matching name at its point. */
     suspend fun readStoredLocation(place: OSMLocation, name: String): Location? =
         dao.location.readLocationByMapId(place.osmId)
             ?: dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius)
-                .firstOrNull { location -> location.name?.fuzzyMatches(name) == true }
+                .firstOrNull { location -> location.matchesName(name) }
 
     /**
      * The location created for [place] from the page's [rawLocation], its [website] preferred to the map's, with the map
@@ -219,7 +220,7 @@ class LocationSpawner(
 
     /**
      * The location at the [address] in [area] or [region] of an event whose place, named [name], the map does not know: stored
-     * there already, or created there with no name of its own.
+     * there already under that name or none, or created there with no name of its own.
      */
     context(crawler: Crawler)
     private suspend fun placeAtAddress(
@@ -233,7 +234,7 @@ class LocationSpawner(
         tracker: ParseTracker,
     ): Location? {
         val place = findAddress(address, area, region, near) ?: return null
-        readUnnamedLocation(place)?.let {
+        (readNamedLocation(place, name) ?: readUnnamedLocation(place))?.let {
             tracker.trackMatchedLocation(rawEvent, name, it)
             return it
         }
@@ -263,6 +264,10 @@ class LocationSpawner(
                 .minByOrNull { if (it.name.isNullOrBlank()) 0 else 1 }
         }
     }
+
+    /** The location already stored at the point of [place] with a name that matches [name]. */
+    suspend fun readNamedLocation(place: OSMLocation, name: String): Location? =
+        dao.location.readNearbyLocations(place.toGeoPoint(), sameVenueRadius).firstOrNull { it.matchesName(name) }
 
     /** The location already stored at the point of [place] with no name of its own. */
     suspend fun readUnnamedLocation(place: OSMLocation): Location? =
@@ -409,8 +414,20 @@ private fun LocationEdit.withUnitOf(address: String?): LocationEdit {
     return copy(address = this.address?.let { "$it $unit" })
 }
 
+/**
+ * Whether this location's name and [name] match both ways once the words of the location's city are dropped from each,
+ * so that "Levitt Pavilion Denver" matches "Levitt Pavilion". A name of the city alone matches nothing.
+ */
+private fun Location.matchesName(name: String): Boolean {
+    val locationName = this.name ?: return false
+    val cityWords = city?.let { Regex("""\b${Regex.escape(it)}\b""", RegexOption.IGNORE_CASE) }
+    val withoutCity = { text: String -> cityWords?.let { text.replace(it, " ") } ?: text }
+    return withoutCity(locationName).matchesBothWays(withoutCity(name), sameNameThreshold)
+}
+
 internal val searchRadius = 200.kilometers
 internal val sameVenueRadius = 150.meters
+private const val sameNameThreshold = 0.8
 private val houseNumberPattern = Regex("""\b\d+[A-Za-z]?\b""")
 private val addressUnit = Regex(""",?\s*(?:#\s*|\b(?:unit|suite|ste|apt|apartment|room|rm|building|bldg)\b\.?\s*#?\s*)(?:[A-Za-z]?\d[A-Za-z0-9-]*|[A-Za-z])\b""", RegexOption.IGNORE_CASE)
 private val areaCategories = setOf("place", "highway")

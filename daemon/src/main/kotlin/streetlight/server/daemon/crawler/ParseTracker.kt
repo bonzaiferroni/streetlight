@@ -110,6 +110,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
 
     /** Tracks an event whose start could not be parsed, marking its lead's page and its own [ParseOutcome.Partial]. */
     fun trackUnparsedEvent(rawEvent: RawEntity) {
+        records.unparsed++
         val text = listOfNotNull(rawEvent[ParseProperty.Date], rawEvent[ParseProperty.StartTime]).joinToString(" | ").ifEmpty { "(none)" }
         page(leadUrl).trackPartial()
         (pageOf(rawEvent) ?: page(leadUrl)).trackPartial("Date text did not parse: $text")
@@ -131,6 +132,7 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
      * own, marking its lead's page and its own [ParseOutcome.Partial].
      */
     fun trackUnlocatedEvent(rawEvent: RawEntity, title: String) {
+        records.unlocated++
         val note = "$title had no location: ${rawEvent[ParseProperty.Location] ?: "(none)"}"
         page(leadUrl).trackPartial()
         (pageOf(rawEvent) ?: page(leadUrl)).trackPartial(note)

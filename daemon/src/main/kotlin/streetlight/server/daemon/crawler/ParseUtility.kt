@@ -7,6 +7,7 @@ import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.Url
 import kampfire.model.toUrl
+import kampfire.utils.similarity
 import streetlight.server.daemon.agent.plainText
 import streetlight.server.daemon.agent.queryElement
 import streetlight.model.data.OriginId
@@ -61,6 +62,39 @@ fun String.withoutBracketNotes(): String = replace(bracketNote, " ").replace(whi
 
 private val bracketNote = Regex("""\[[^\]]*]""")
 private val whitespaceRun = Regex("""\s+""")
+
+/**
+ * This title without its trailing segments that name one of [places], such as " @ Ball Arena". A segment follows a
+ * separator such as " @ " or " | ", and names a place when their words match at [threshold] or more both ways.
+ */
+fun String.cleanLocationName(vararg places: String?, threshold: Double): String {
+    val names = places.filterNotNull()
+    var title = this
+    while (true) {
+        val separator = titleSeparator.findAll(title).lastOrNull() ?: return title
+        val segment = title.substring(separator.range.last + 1)
+        if (names.none { segment.matchesBothWays(it, threshold) }) return title
+        title = title.substring(0, separator.range.first)
+    }
+}
+
+/**
+ * Whether this text and [other] name the same thing, each word of either matching a word of the other well enough that
+ * both averages reach [threshold]. Unlike [kampfire.utils.fuzzyMatches], a text held inside a longer one does not match it.
+ */
+internal fun String.matchesBothWays(other: String, threshold: Double): Boolean =
+    minOf(wordCoverage(other), other.wordCoverage(this)) >= threshold
+
+/** The average, over the words of this text, of each word's [similarity] to its closest word in [other]. */
+private fun String.wordCoverage(other: String): Double {
+    val words = split(nonWordRun).filter { it.isNotEmpty() }
+    val otherWords = other.split(nonWordRun).filter { it.isNotEmpty() }
+    if (words.isEmpty() || otherWords.isEmpty()) return 0.0
+    return words.sumOf { word -> otherWords.maxOf { word.similarity(it) } } / words.size
+}
+
+private val titleSeparator = Regex("""\s+[@|\-–—]\s+""")
+private val nonWordRun = Regex("""[^\p{L}\p{N}]+""")
 
 /**
  * The text of the date parts matched in this element by [selectors], each passing [test], joined in order with

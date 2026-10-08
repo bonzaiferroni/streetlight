@@ -60,7 +60,7 @@ fun FlowContent.feedSection(
             }
 
             feed.nextCursor?.let {
-                button("more") {
+                button("more", modify(Zen)) {
                     setAttribute(FeedSection.NextCursor.to(it))
                     onClick = FeedSection.MorePosts.invokeJs(ThisElement)
                 }
@@ -93,8 +93,8 @@ object FeedSection {
 
 /** The heading of a feed from this source. */
 val FeedSource.heading get() = when (this) {
-    FeedSource.Events -> "Events"
-    FeedSource.Posts, FeedSource.City -> "Posts"
+    FeedSource.Events, FeedSource.City -> "Events"
+    FeedSource.Posts -> "Posts"
 }
 
 fun FeedMode.toSvg() = when (this) {

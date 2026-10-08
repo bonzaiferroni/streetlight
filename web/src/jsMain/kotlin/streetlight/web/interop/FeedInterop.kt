@@ -55,7 +55,7 @@ fun morePosts(element: HTMLElement) {
         element.modify(OpacityHigh)
         val outcome = when (source) {
             FeedSource.Posts -> api.post.readPosts(element.getClosestAttribute(AppAttribute.GalaxyId), nextCursor)
-            FeedSource.City -> api.city.readCityFeed(element.requireClosestAttribute(AppAttribute.CityId), nextCursor)
+            FeedSource.City -> api.city.readCityFeed(element.requireClosestAttribute(AppAttribute.CityId), nextCursor as? EntityCursor.Time)
             FeedSource.Events -> api.event.readUpcomingFeed(nextCursor as? EntityCursor.Time)
         }
         val feed = outcome.toDataOr(toaster) {

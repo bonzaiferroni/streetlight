@@ -51,12 +51,14 @@ A `RawEntity` holds the text of each `ParseProperty` read from a page, not yet p
 
 ## Opening Hours
 
+`expandAddress` spells out the USPS abbreviations of an address's street line: its suffix (`Ave` to `Avenue`) and its direction (`E` to `East`), before the street name or after it. Every other word is kept as written, so a leading "St." of a name stays, a single-letter street keeps its name ("100 E Street"), and a unit and the part after the first comma are untouched. An expanded address expands to itself. Every stored address is expanded when its location is created or updated, and an address is expanded before it is compared with stored ones.
+
 `osmHoursToSchedule` reads an OpenStreetMap `opening_hours` value into an `HoursSchedule`. A rule it cannot read in full is skipped whole, never half-read, and a value it cannot read at all gives `null`. It never throws.
 
 ## Feeds
 
-An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; a city feed takes it from the location or event.
+An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; an event feed takes it from the event.
 
 An `EntityFeed` names its `FeedSource`, the feed its next page is read from: `Posts`, `City`, or `Events`. A feed section reads its heading and the reader of its more button from it.
 
-The home feed is the caller's posts, or for a visitor, the upcoming events from `Api.Events.ReadFeed`, soonest first. An event feed pages from `EntityCursor.Upcoming` and takes its `recordId` from the event.
+The home feed is the caller's posts, or for a visitor, the upcoming events from `Api.Events.ReadFeed`. A city feed is the upcoming events of the city, without its locations, from `Api.Cities.ReadFeed`. Both list events soonest first and page from `EntityCursor.Upcoming`.

@@ -15,7 +15,7 @@ import streetlight.model.data.ParseOutcome
 import java.io.File
 
 /** The build of the parse pipeline, naming the folder its reports are written to. */
-const val parserBuildId = "V39"
+const val parserBuildId = "V43"
 
 val parserLogDir = File("../logs/parser/$parserBuildId")
 
@@ -115,6 +115,8 @@ class RecordReport {
     var updated = 0
     var past = 0
     var unnamed = 0
+    var unparsed = 0
+    var unlocated = 0
     var shortened = 0
     var duplicates = 0
     var known = 0
