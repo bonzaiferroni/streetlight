@@ -53,6 +53,7 @@ fun viewApp() {
                     wireCuratorMenu()
                     wireCreatePost()
                     wirePostMenu()
+                    wireTagFilterMenu()
                     wireMessageDialog()
                     wireGalaxyMenu()
                     wireFps()

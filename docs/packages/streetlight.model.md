@@ -62,3 +62,5 @@ An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value a
 An `EntityFeed` names its `FeedSource`, the feed its next page is read from: `Posts`, `City`, or `Events`. A feed section reads its heading and the reader of its more button from it.
 
 The home feed is the caller's posts, or for a visitor, the upcoming events from `Api.Events.ReadFeed`. A city feed is the upcoming events of the city, without its locations, from `Api.Cities.ReadFeed`. Both list events soonest first and page from `EntityCursor.Upcoming`.
+
+A cursor's `tag`, the ordinal of an `EventTag`, filters its feed to entities carrying that tag, and the next cursor of a feed keeps it. An endpoint takes a tag only when it declares a `tagParam`; `Api.Events.ReadFeed` and `Api.Cities.ReadFeed` do, and the posts feed does not.

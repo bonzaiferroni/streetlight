@@ -10,11 +10,13 @@ import kotlin.uuid.Uuid
 /**
  * An endpoint that pages its feed with an [EntityCursor].
  *
- * The cursor's direction is read from [directionParam], or fixed at [defaultDirection] without one.
+ * The cursor's direction is read from [directionParam], or fixed at [defaultDirection] without one. Its tag is read
+ * from [tagParam], and an endpoint without one is not filtered by tag.
  */
 interface CursorEndpoint {
     val recordIdParam: EndpointParam<Uuid>
     val directionParam: EndpointParam<SortDirection>? get() = null
+    val tagParam: EndpointParam<Int>? get() = null
     val defaultDirection: SortDirection get() = SortDirection.Descending
 }
 
@@ -59,6 +61,7 @@ fun PathBuilder.writeMarkCursor(endpoint: MarkCursorEndpoint, cursor: EntityCurs
 private fun PathBuilder.writeBaseCursor(endpoint: CursorEndpoint, cursor: EntityCursor) {
     cursor.recordId?.let { writeParam(endpoint.recordIdParam, it) }
     endpoint.directionParam?.let { writeParam(it, cursor.direction) }
+    endpoint.tagParam?.let { param -> cursor.tag?.let { writeParam(param, it) } }
 }
 
 /** Writes the parts of [cursor], of any kind, as the parameters of [endpoint], or nothing when it is `null`. */

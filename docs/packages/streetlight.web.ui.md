@@ -178,6 +178,17 @@ The function that does a submit's work calls `deliverSending()` on its messenger
 
 A value the entity holds but the header shows differently is a parameter defaulted to the entity's own, as `cells` and `image`.
 
+## Popover Menus
+
+A popover menu is one popover shared by every button that opens it, and is built in two parts.
+
+| Part | Source set | Does |
+|---|---|---|
+| Button, as `FlowContent.postMenu` | `commonMain` | Targets the menu's `PopoverId` with `setPopoverTarget` and sets the menu's data on itself as attributes |
+| Wire, as `ViewScope.wirePostMenu` | `jsMain` | Calls `popoverMenu` with the id, a transform that reads the attributes of the button that opened it into a value, and the content built for that value |
+
+An object named for the menu, as `PostMenu`, holds its `PopoverId` and the attributes its button sets. The wire is called once from the root view in `viewApp`. Content that calls the server reaches it through the `ViewScope`'s `api`, inside a `launchEffect`. A menu whose content needs no data passes a transform that returns `Unit`. A menu opened from inside a feed section, as `TagFilterMenu`, reads the section's `FeedSource`, `GalaxyId` and `CityId` from the button's closest attributes rather than setting its own, and replaces the feed's rows through `readFeed` and `appendFeed`.
+
 ## Services
 
 `appModule` is the Koin module holding every browser-side service. `AppContainer` wraps the resulting Koin instance and is reached through `ViewScope.app`.
@@ -225,7 +236,7 @@ A view model receives the store as a `Messenger` parameter rather than holding o
 
 ## App Overlay
 
-`appOverlay` (`streetlight.web.pages`) is a fixed layer above the route content. `helmBar` sits at its top and the route dock at its bottom. The overlay passes no pointer events, so a child that takes input carries `PointerEventsAuto`.
+`appOverlay` (`streetlight.web.pages`) is a fixed layer above the route content. `helmBar` sits at its top and the route dock at its bottom. The overlay passes no pointer events, so a child that takes input sets `pointer-events: auto`, with `PointerEventsAuto` or, when it changes with a state such as the route dock's `Hidden`, in its stylesheet.
 
 ## Route Dock
 

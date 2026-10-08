@@ -10,6 +10,7 @@ import kotlinx.html.onClick
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 import streetlight.web.ui.AppAttribute
+import streetlight.web.ui.tagFilterMenu
 
 /**
  * The posts section of a page: a heading with the [FeedMode] switch, the mark filters of a galaxy, and the feed
@@ -39,6 +40,13 @@ fun FlowContent.feedSection(
                 heading2(feed.source.heading, SectionHeadingMod)
             }
             rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
+        }
+
+        // td: filter posts by tag
+        if (feed.source != FeedSource.Posts) {
+            row(AlignItemsCenter) {
+                tagFilterMenu()
+            }
         }
 
         feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->

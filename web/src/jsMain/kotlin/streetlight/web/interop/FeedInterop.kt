@@ -3,6 +3,7 @@ package streetlight.web.interop
 import kampfire.model.toDataOr
 import koala.modifier.OpacityHigh
 import koala.dom.AppendScope
+import koala.dom.AppFacade
 import koala.dom.append
 import koala.dom.button
 import koala.dom.clear
@@ -14,7 +15,9 @@ import koala.modifier.setAttribute
 import koala.interop.ThisElement
 import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
+import streetlight.model.data.CityId
 import streetlight.model.data.EntityFeed
+import streetlight.model.data.GalaxyId
 import streetlight.model.data.EntityCursor
 import streetlight.model.data.FeedSource
 import streetlight.web.layouts.FeedSection
@@ -53,12 +56,9 @@ fun morePosts(element: HTMLElement) {
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
-        val outcome = when (source) {
-            FeedSource.Posts -> api.post.readPosts(element.getClosestAttribute(AppAttribute.GalaxyId), nextCursor)
-            FeedSource.City -> api.city.readCityFeed(element.requireClosestAttribute(AppAttribute.CityId), nextCursor as? EntityCursor.Time)
-            FeedSource.Events -> api.event.readUpcomingFeed(nextCursor as? EntityCursor.Time)
-        }
-        val feed = outcome.toDataOr(toaster) {
+        val galaxyId = element.getClosestAttribute(AppAttribute.GalaxyId)
+        val cityId = element.getClosestAttribute(AppAttribute.CityId)
+        val feed = readFeed(source, galaxyId, cityId, nextCursor).toDataOr(toaster) {
             element.unmodify(OpacityHigh)
             return@launchEffect
         }
@@ -68,6 +68,14 @@ fun morePosts(element: HTMLElement) {
         }
     }
 }
+
+/** The page at [cursor] of the feed from [source], read for [galaxyId] or [cityId] when the source needs one. */
+suspend fun AppFacade.readFeed(source: FeedSource, galaxyId: GalaxyId?, cityId: CityId?, cursor: EntityCursor) =
+    when (source) {
+        FeedSource.Posts -> api.post.readPosts(galaxyId, cursor)
+        FeedSource.City -> api.city.readCityFeed(cityId ?: error("city feed without a city"), cursor as? EntityCursor.Time)
+        FeedSource.Events -> api.event.readUpcomingFeed(cursor as? EntityCursor.Time)
+    }
 
 /** Appends the rows of [feed], and a more button when it continues. */
 fun AppendScope.appendFeed(feed: EntityFeed) {

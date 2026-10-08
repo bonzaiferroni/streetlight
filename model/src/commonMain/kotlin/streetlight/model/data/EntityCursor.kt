@@ -12,18 +12,21 @@ enum class SortDirection { Ascending, Descending }
  * Pages an [EntityFeed]: the sort value and [recordId] of the last entity on a page, so the next page starts
  * after it.
  *
- * It pages any table keyed by a [Uuid].
+ * It pages any table keyed by a [Uuid]. A [tag], the ordinal of an [EventTag], filters the feed to entities with that
+ * tag.
  */
 @Serializable
 sealed interface EntityCursor {
     val recordId: Uuid?
     val direction: SortDirection
+    val tag: Int?
 
     @Serializable
     data class Time(
         override val direction: SortDirection,
         override val recordId: Uuid? = null,
         val recordAt: Instant? = null,
+        override val tag: Int? = null,
     ) : EntityCursor
 
     @Serializable
@@ -31,6 +34,7 @@ sealed interface EntityCursor {
         override val direction: SortDirection,
         override val recordId: Uuid? = null,
         val score: Double? = null,
+        override val tag: Int? = null,
     ) : EntityCursor {
         companion object  {
             val Default get() = Score(SortDirection.Descending)
@@ -42,6 +46,7 @@ sealed interface EntityCursor {
         val markId: MarkId,
         override val recordId: Uuid? = null,
         val count: Int? = null,
+        override val tag: Int? = null,
     ) : EntityCursor {
         override val direction get() = SortDirection.Descending
     }
