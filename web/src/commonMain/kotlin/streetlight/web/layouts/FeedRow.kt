@@ -181,6 +181,7 @@ val FeedRowCss get() = with(FeedRowStyle) {
     
 $Base {
     --row-height: calc(var(--unit) * 10);
+    --text-inset: calc(var(--unit) / 2);
     display: grid;
     grid-template-rows: auto 1fr;
     container-type: inline-size;
@@ -217,13 +218,15 @@ $Image {
     border-radius: var(--unit);
 }
 
-/* the fade has fixed stops, so only text that reaches the clip fades */
+/* the fade has fixed stops, so only text that reaches the clip fades; it ends at the inset */
 $Text {
     --clip: var(--row-height);
+    --fade-end: calc(var(--clip) - var(--text-inset));
     grid-area: text;
     align-self: start;
     max-height: var(--clip);
-    mask-image: linear-gradient(to bottom, black calc(var(--clip) - 1rem), transparent var(--clip));
+    padding-block: var(--text-inset);
+    mask-image: linear-gradient(to bottom, black calc(var(--fade-end) - 1rem), transparent var(--fade-end));
 }
 
 /* the thumbnail is cut to match a cover fit, which hides the backdrop */
@@ -243,13 +246,14 @@ ${Mode.selector(FeedMode.Grid)} $Feed {
     > :not($Base) { grid-column: 1 / -1; }
 }
 
-/* Grid and Minimal drop the frame of Row */
+/* Grid and Minimal drop the border of Row */
 $grid, $minimal {
-    $Image { border: none; border-radius: 0; }
+    $Image { border: none; }
 }
 
 /* a featured entry takes the Grid layout in any feed */
 $grid {
+    --text-inset: 0px;
     padding: 0 0 var(--unit);
 
     /* the zero-width outer columns and the gap inset the text and cells from the edges */
@@ -264,6 +268,7 @@ $grid {
     $Image {
         width: auto;
         aspect-ratio: 3 / 2;
+        border-radius: 0;
     }
 
     $Image $Feature { object-fit: contain; }
@@ -275,7 +280,6 @@ $Featured $Text { --clip: calc(var(--unit) * 24); }
 
 $minimal {
     --row-height: calc(var(--unit) * 8);
-    padding: 0;
 
     $Content {
         grid-template-columns: auto 1fr auto;

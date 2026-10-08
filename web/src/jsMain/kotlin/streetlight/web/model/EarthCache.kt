@@ -38,11 +38,11 @@ class EarthCache(
         }
     }
 
-    /** Starts over for a new map; only a map with [isQueriedMap] loads events by view. */
+    /** Starts over for a new map, querying its first settled view; only a map with [isQueriedMap] loads events by view. */
     fun setMapContext(isQueriedMap: Boolean) {
         this.isQueriedMap = isQueriedMap
         queries.clear()
-        // queryPosts()
+        queryEvents()
     }
 
     private fun queryPosts(view: GeoRect? = null) {
@@ -62,8 +62,11 @@ class EarthCache(
         scope.launch {
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
+            // held as incomplete while in flight, so an overlapping view at this zoom is not queried again
+            queries[query.view] = MapCursor(null, false)
             isQueryingState.set { true }
             val feed = api.earth.readMapEntities(query).toDataOr(toaster) {
+                queries.remove(query.view)
                 isQueryingState.set { false }
                 return@launch
             }

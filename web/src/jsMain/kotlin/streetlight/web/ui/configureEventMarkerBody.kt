@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.html.ListStyleGlyph
 import koala.html.bulletsOf
-import koala.html.row
+import koala.html.span
 import koala.html.textBlock
 import koala.model.ThumbMarker
 import koala.model.markerBodyRow
@@ -21,7 +21,6 @@ import koala.modifier.TextOverflowEllipses
 import koala.modifier.TextSmall
 import koala.modifier.invoke
 import koala.modifier.modify
-import kotlinx.css.em
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.web.layouts.ThemeColor
@@ -35,18 +34,14 @@ internal fun DIV.configureEventMarkerBody(marker: ThumbMarker, locationName: Str
                 markerLabel()
                 val lines = buildList<FlowContent.() -> Unit> {
                     if (typeLabel != null || sublabel != null) add {
-                        row(Css.Gap.of(0.25.em)) {
-                            typeLabel?.let {
-                                textBlock(it, modify(ColorSchemeFg, Bold))
-                            }
-                            sublabel?.let {
-                                if (typeLabel != null) separator()
-                                textBlock(it, OpacityHigh)
-                            }
+                        textBlock {
+                            typeLabel?.let { span(it, modify(ColorSchemeFg, Bold)) }
+                            if (typeLabel != null && sublabel != null) span(" · ", OpacityHalf)
+                            sublabel?.let { span(it, OpacityHigh) }
                         }
                     }
                     locationName?.let {
-                        add { textBlock(it, modify(LocationScheme, ColorSchemeFg, Bold, MaxWidth(24), TextOverflowEllipses)) }
+                        add { textBlock(it, modify(LocationScheme, ColorSchemeFg, Bold, MaxWidth(28), TextOverflowEllipses)) }
                     }
                 }
                 if (lines.isNotEmpty()) bulletsOf(modify(PaddingLeft(2), TextSmall, LineHeight115, ListStyleGlyph("›")), *lines.toTypedArray())
@@ -56,5 +51,3 @@ internal fun DIV.configureEventMarkerBody(marker: ThumbMarker, locationName: Str
 }
 
 private val LocationScheme = Css.ColorScheme.of(ThemeColor.Location.cssValue)
-
-private fun DIV.separator() = textBlock("·", OpacityHalf)
