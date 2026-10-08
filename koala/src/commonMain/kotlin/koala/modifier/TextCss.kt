@@ -7,8 +7,8 @@ val TextSmall = Class("text-small")
 val TextLarge = Class("text-large")
 
 // Line Height
-val LineHeight1 = Class("line-height-1")
-val LineHeight115 = Class("line-height-1-15")
+val LineHeight1 = Css.LineHeight.of(1)
+val LineHeight115 = Css.LineHeight.of(1.15)
 val ParagraphLineHeight = Class("paragraph-line-height")
 
 // Misc
@@ -37,8 +37,6 @@ $TextSmall { font-size:   var(--text-small) !important; }
 $TextLarge { font-size:   var(--text-large) !important; }
 
 /* Line Height */
-$LineHeight1         { line-height: 1; }
-$LineHeight115       { line-height: 1.15; }
 $ParagraphLineHeight { line-height: var(--paragraph-line-height); }
 
 /* Misc */

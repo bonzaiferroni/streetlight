@@ -3,6 +3,7 @@
 package koala.html
 
 import koala.modifier.Class
+import koala.modifier.Css
 import koala.modifier.Modifier
 import koala.modifier.Prose
 import koala.modifier.addModifiers
@@ -62,6 +63,9 @@ object ListKey {
 val ListStyleDisc = Class("list-style-disc")
 val ListStylePlus = Class("list-style-plus")
 val ListStyleMinus = Class("list-style-minus")
+
+/** A list marker of [glyph], followed by a space. */
+fun ListStyleGlyph(glyph: String) = Css.ListStyleType.of(glyph)
 
 // language="CSS"
 val ListingCss get() = """

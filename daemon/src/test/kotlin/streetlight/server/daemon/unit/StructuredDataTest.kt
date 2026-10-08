@@ -133,6 +133,13 @@ class StructuredDataTest {
     }
 
     @Test
+    fun `a description whose newlines are escaped twice becomes paragraphs`() {
+        val described = jazzNight.replace("\"name\": \"Jazz Night\",", "\"name\": \"Jazz Night\", \"description\": \"Doors at 7.\\\\n\\\\nTwo sets.\\\\nNo cover.\",")
+
+        assertEquals("<p>Doors at 7.</p><p>Two sets.<br>No cover.</p>", page(described).readLdEvents().single().description)
+    }
+
+    @Test
     fun `a description holding html is kept as it is`() {
         val described = jazzNight.replace("\"name\": \"Jazz Night\",", "\"name\": \"Jazz Night\", \"description\": \"<p>Doors at <b>7</b>.</p>\",")
 

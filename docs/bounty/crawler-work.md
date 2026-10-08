@@ -62,7 +62,7 @@ These hold for every change a build makes. The General Model has its single home
 5. **Probe.** Check what the page really holds with ksoup or Playwright in jshell. The probe is the source of truth, not the report and not the LM.
 6. **Lessons.** Sort each finding into a gremlin (the code is wrong), a reef (the domain, not yet handled), or accepted/unread by rule. Only lessons that pass the General Model become the next build.
 
-**Weekly location review.** Once a week, the locations created since the last review are checked, and the agent presents a list of candidates for the navigator to confirm before anything changes. The location guards lean toward duplicates, which this review finds easily, over false matches, which nothing reveals.
+**Weekly location review.** Every Thursday, the locations created since the last review are checked, and the agent presents a list of candidates for the navigator to confirm before anything changes. The location guards lean toward duplicates, which this review finds easily, over false matches, which nothing reveals.
 
 | Check | Finds | Signal |
 |---|---|---|

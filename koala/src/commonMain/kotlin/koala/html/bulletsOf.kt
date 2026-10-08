@@ -5,7 +5,7 @@ import kotlinx.html.FlowContent
 
 /** A bulleted list of [content]. */
 fun FlowContent.bulletsOf(mod: Modifier? = null, vararg content: String) {
-    ulist(modify(mod, Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight), ListAxis.Column) {
+    ulist(modify(Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight, mod), ListAxis.Column) {
         content.forEach { text ->
             listItem(text)
         }
@@ -22,7 +22,7 @@ fun FlowContent.bulletsOf(mod: Modifier, content: List<String>) {
 
 /** A bulleted list with an item built by each of [contents]. */
 fun FlowContent.bulletsOf(mod: Modifier? = null, vararg contents: FlowContent.() -> Unit) {
-    ulist(modify(mod, Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight), ListAxis.Column) {
+    ulist(modify(Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight, mod), ListAxis.Column) {
         contents.forEach { element ->
             listItem {
                 element()

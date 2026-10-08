@@ -1,13 +1,15 @@
 package koala.model
 
 import kampfire.model.GeoRect
-import koala.dom.onClick
+import koala.dom.onEvent
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import web.html.HTMLElement
+import web.pointer.CLICK
+import web.pointer.PointerEvent
 import kotlin.time.Duration.Companion.milliseconds
 
 /** Draws the map's layers and keeps the focused marker marked, clearing the focus on a click of the map itself. */
@@ -24,7 +26,7 @@ class GeoRender(
 
     init {
         val element = windowElement.querySelector(".maplibregl-canvas") ?: error("canvas not found")
-        element.onClick {
+        element.onEvent(PointerEvent.CLICK) {
             setFocus(null)
         }
 

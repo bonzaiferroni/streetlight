@@ -172,7 +172,7 @@ private fun JsonObject.toLdEvent(): LdEvent {
         startDate = text("startDate"),
         endDate = text("endDate"),
         image = imageOf(this["image"]),
-        description = text("description")?.let { proseHtml(it) },
+        description = text("description")?.replace("\\n", "\n")?.let { proseHtml(it) },
         status = text("eventStatus"),
         price = offer?.text("price") ?: offer?.text("lowPrice"),
         currency = offer?.text("priceCurrency"),
