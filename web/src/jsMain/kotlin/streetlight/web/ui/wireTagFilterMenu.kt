@@ -1,62 +1,29 @@
 package streetlight.web.ui
 
-import kampfire.model.toDataOr
 import koala.dom.*
 import koala.modifier.*
-import streetlight.model.data.CityId
-import streetlight.model.data.EntityCursor
 import streetlight.model.data.EventTag
-import streetlight.model.data.FeedSource
-import streetlight.model.data.GalaxyId
-import streetlight.web.interop.appendFeed
-import streetlight.web.interop.readFeed
-import streetlight.web.layouts.FeedSection
+import streetlight.web.interop.filterFeedByTag
 import web.dom.document
-import web.html.HTMLElement
 
 /**
- * The menu of tags a feed can be filtered by. A tag replaces the feed with its events that carry it, and labels the
- * button that opened the menu and the heading of its feed.
+ * The menu of tags a feed can be filtered by, read for the feed holding the button that opened it. A tag replaces
+ * the feed with its events that carry it, and "All" clears it; the button of the tag in effect is set apart.
  */
 fun ViewScope.wireTagFilterMenu() {
-    popoverMenu(TagFilterMenu.PopoverId, {
-        TagFilterArgs(
-            invoker = it,
-            source = it.getClosestAttribute(AppAttribute.FeedSource) ?: return@popoverMenu null,
-            galaxyId = it.getClosestAttribute(AppAttribute.GalaxyId),
-            cityId = it.getClosestAttribute(AppAttribute.CityId),
-        )
-    }) { (invoker, source, galaxyId, cityId) ->
+    popoverMenu(TagFilterMenu.PopoverId, { it }) { invoker ->
+        fun filterBy(tag: EventTag?) {
+            document.requireElement(TagFilterMenu.PopoverId).closePopover()
+            filterFeedByTag(invoker, tag)
+        }
+        val selected = invoker.getAttribute(TagFilterMenu.Tag)
+        // the selected button drops Zen for the default button style
+        fun modOf(label: String?) = Zen.takeIf { label != selected }
         row(modify(FlexWrap, Gap(1))) {
+            button("All", mod = modOf(null), onClick = { filterBy(null) })
             EventTag.entries.forEach { tag ->
-                button(tag.label, mod = Zen, onClick = {
-                    document.requireElement(TagFilterMenu.PopoverId).closePopover()
-                    invoker.setAttribute(TagFilterMenu.Tag, tag.label)
-                    invoker.closest(AppAttribute.FeedSource.selector)?.querySelector(FeedSection.Heading.selector)
-                        ?.setAttribute(TagFilterMenu.Tag, tag.label)
-                    val mount = document.requireElement(FeedSection.MountId)
-                    launchEffect("filter feed by tag") {
-                        mount.modify(OpacityHigh)
-                        val cursor = EntityCursor.Upcoming.copy(tag = tag.ordinal)
-                        val feed = readFeed(source, galaxyId, cityId, cursor).toDataOr(toaster) {
-                            mount.unmodify(OpacityHigh)
-                            return@launchEffect
-                        }
-                        mount.unmodify(OpacityHigh)
-                        mount.clear()
-                        mount.append {
-                            appendFeed(feed)
-                        }
-                    }
-                })
+                button(tag.label, mod = modOf(tag.label), onClick = { filterBy(tag) })
             }
         }
     }
 }
-
-private data class TagFilterArgs(
-    val invoker: HTMLElement,
-    val source: FeedSource,
-    val galaxyId: GalaxyId?,
-    val cityId: CityId?,
-)

@@ -4,6 +4,7 @@ import koala.dom.ViewScope
 import koala.interop.KtFunction
 import streetlight.web.layouts.FeedSection
 import streetlight.web.ui.StarToggle
+import streetlight.web.ui.TagFilterMenu
 
 /** The app's functions callable from HTML event handlers. */
 fun ViewScope.appGlobalFunctions() = listOf(
@@ -12,4 +13,5 @@ fun ViewScope.appGlobalFunctions() = listOf(
     KtFunction(AppFun.UpdateMark, this::queryAndUpdateMark),
     KtFunction(FeedSection.SortByMark, ::sortByMark),
     KtFunction(FeedSection.MorePosts, ::morePosts),
+    KtFunction(TagFilterMenu.ClearTag, ::clearFeedTag),
 )

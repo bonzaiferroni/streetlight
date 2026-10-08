@@ -10,7 +10,6 @@ import kotlinx.html.onClick
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 import streetlight.web.ui.AppAttribute
-import streetlight.web.ui.TagFilterMenu
 import streetlight.web.ui.tagFilterMenu
 
 /**
@@ -38,7 +37,7 @@ fun FlowContent.feedSection(
         row(AlignItemsCenter) {
             div(FeedSection.SwitchWidth)
             filigree(Flex1) {
-                heading2(feed.source.heading, modify(SectionHeadingMod, FeedSection.Heading))
+                heading2(feed.source.heading, SectionHeadingMod)
             }
             rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
         }
@@ -89,7 +88,6 @@ fun FlowContent.layoutFeed(
 
 object FeedSection {
     val MountId = Id("feed-layout")
-    val Heading = Class("feed-heading")
 
     val Attribute = slugAttributeOf("feed-slug")
     val FeedColumnMod = modify(Gap2Px, MoonShadow)
@@ -116,6 +114,4 @@ fun FeedMode.toSvg() = when (this) {
 // language="CSS"
 val FeedSectionCss get() = """
 ${rootSwitchCss(FeedRowStyle.Mode, FeedMode.entries)}
-
-${FeedSection.Heading}${TagFilterMenu.Tag.selector}::after { content: ": " attr(${TagFilterMenu.Tag.identifier}); }
 """

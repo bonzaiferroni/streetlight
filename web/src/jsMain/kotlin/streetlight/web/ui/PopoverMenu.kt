@@ -44,15 +44,17 @@ fun <T> ViewScope.popoverMenu(
 
     element.addEventListener("toggle", { event ->
         val toggle = event.asDynamic()
-        val invoker = toggle.source as? HTMLElement ?: return@addEventListener
+        // a close by script or light dismiss has no source
+        val invoker = toggle.source as? HTMLElement
         if (toggle.newState == "open") {
+            if (invoker == null) return@addEventListener
             currentInvoker?.removeStyle(Css.AnchorName)
             currentInvoker = invoker
             invoker.modify(Css.AnchorName.of(anchor))
             state.set(transform(invoker) ?: defaultValue ?: error("popover menu content not found"))
         } else {
             state.set(null)
-            if (invoker !== currentInvoker) {
+            if (invoker != null && invoker !== currentInvoker) {
                 element.asDynamic().showPopover(json("source" to invoker))
             }
         }

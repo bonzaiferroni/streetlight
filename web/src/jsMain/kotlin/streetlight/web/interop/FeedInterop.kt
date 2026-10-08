@@ -13,16 +13,19 @@ import koala.modifier.requireClosestAttribute
 import koala.modifier.unmodify
 import koala.modifier.setAttribute
 import koala.interop.ThisElement
+import koala.modifier.getAttribute
 import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
 import streetlight.model.data.CityId
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.EntityCursor
+import streetlight.model.data.EventTag
 import streetlight.model.data.FeedSource
 import streetlight.web.layouts.FeedSection
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.RouteView
+import streetlight.web.ui.TagFilterMenu
 import streetlight.web.ui.api
 import streetlight.web.ui.feedRow
 import streetlight.web.ui.requireElement
@@ -68,6 +71,40 @@ fun morePosts(element: HTMLElement) {
         }
     }
 }
+
+/**
+ * Replaces the feed holding [element] with its first page carrying [tag], or with no tag filter without one, and
+ * labels the feed's tag button with it.
+ */
+fun filterFeedByTag(element: HTMLElement, tag: EventTag?) {
+    val section = element.closest(AppAttribute.FeedSource.selector) ?: error("element is not in a feed section")
+    val source = section.requireAttribute(AppAttribute.FeedSource)
+    val galaxyId = section.getAttribute(AppAttribute.GalaxyId)
+    val cityId = section.getAttribute(AppAttribute.CityId)
+    section.querySelector(TagFilterMenu.Button.selector)?.let { button ->
+        when (tag) {
+            null -> button.removeAttribute(TagFilterMenu.Tag.identifier)
+            else -> button.setAttribute(TagFilterMenu.Tag, tag.label)
+        }
+    }
+    val mount = document.requireElement(FeedSection.MountId)
+    RouteView.activeScope.launchEffect("filter feed by tag") {
+        mount.modify(OpacityHigh)
+        val cursor = EntityCursor.Upcoming.copy(tag = tag?.ordinal)
+        val feed = readFeed(source, galaxyId, cityId, cursor).toDataOr(toaster) {
+            mount.unmodify(OpacityHigh)
+            return@launchEffect
+        }
+        mount.unmodify(OpacityHigh)
+        mount.clear()
+        mount.append {
+            appendFeed(feed)
+        }
+    }
+}
+
+/** Clears the tag filter of the feed holding [element]. */
+fun clearFeedTag(element: HTMLElement) = filterFeedByTag(element, null)
 
 /** The page at [cursor] of the feed from [source], read for [galaxyId] or [cityId] when the source needs one. */
 suspend fun AppFacade.readFeed(source: FeedSource, galaxyId: GalaxyId?, cityId: CityId?, cursor: EntityCursor) =
