@@ -16,6 +16,10 @@ The browser-side DSL that builds and manages the DOM: views, blocks that render 
 | `web` (Kotlin wrappers) | DOM types |
 | `kotlinx.coroutines` | View lifecycles |
 
+## Interactive Components
+
+The `ViewScope` variant of an interactive component builds its element through the `configureFoo` functions of its `koala.html` variant and adds the `MutableTap` binding, as specified in `koala.html`.
+
 ## Fixed Elements
 
 A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, because a `filter` on an ancestor makes the block, not the viewport, the containing block for a fixed element.

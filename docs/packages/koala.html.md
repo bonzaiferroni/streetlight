@@ -13,6 +13,10 @@ Server-renderable components declared on `FlowContent`.
 | `koala.interop` | `KoalaFun` for markup that calls the browser |
 | `kampfire.model` | Shared model types |
 
+## Interactive Components
+
+An interactive component, such as `textField` or `searchField`, has two variants under one name: a `FlowContent` function in `koala.html` for markup rendered without the bundle, and a `ViewScope` function in `koala.dom` that takes a `MutableTap` and binds the element to it. The structure and modifiers both share are set by `configureFoo` functions in `koala.html`, one per element, which both variants call; the `koala.dom` variant adds only the binding.
+
 ## Images
 
 An image component takes the `Image`, not a URL of one size, so it renders the image's source set. A new image component configures its `img` with `configureImage`.

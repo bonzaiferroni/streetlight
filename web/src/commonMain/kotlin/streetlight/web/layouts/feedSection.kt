@@ -49,7 +49,7 @@ fun FlowContent.feedSection(
                 row(AlignItemsCenter) {
                     tagFilterMenu()
                 }
-                textField(placeholder = "search", textMod = FeedSection.Search) {
+                searchField(textMod = FeedSection.Search) {
                     onInput = FeedSection.SearchFeed.invokeJs(ThisElement)
                 }
             }

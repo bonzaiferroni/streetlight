@@ -55,6 +55,7 @@ val MagicCss get() = with (MagicStyle) { """
     --transition-height: height var(--magic-interval) var(--magic-easing);
     --transition-width: width var(--magic-interval) var(--magic-easing);
     --transition-color: color var(--magic-interval) var(--magic-easing);
+    --transition-outline-color: outline-color var(--magic-interval) var(--magic-easing);
     --transition-box-shadow: box-shadow var(--magic-interval) var(--magic-easing);
     --transition-visibility: visibility var(--magic-interval) var(--magic-easing);
     --transition-background: background var(--magic-interval) var(--magic-easing);

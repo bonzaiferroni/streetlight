@@ -98,6 +98,7 @@ object SvgFile : FileSet<Svg>() {
     val RulerMeasure = add("ruler-measure.svg")
     val Satellite = add("satellite.svg")
     val Search = add("search.svg")
+    val SearchLarge = add("search-large.svg")
     val ShootingStar = add("shooting-star.svg")
     val SignOut = add("sign-out.svg")
     val Someone = add("someone.svg")
