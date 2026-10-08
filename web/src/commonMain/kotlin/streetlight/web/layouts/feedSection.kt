@@ -7,14 +7,15 @@ import koala.interop.JsSignature
 import koala.interop.ThisElement
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
+import kotlinx.html.onInput
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.tagFilterMenu
 
 /**
- * The posts section of a page: a heading with the [FeedMode] switch, the mark filters of a galaxy, and the feed
- * with a button for more.
+ * The posts section of a page: a heading with the [FeedMode] switch, a tag filter and search field for an event feed,
+ * the mark filters of a galaxy, and the feed with a button for more.
  *
  * The feed's source picks the heading and the reader of the more button, and [galaxyId] or [cityId] names the
  * feed it reads.
@@ -42,10 +43,15 @@ fun FlowContent.feedSection(
             rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
         }
 
-        // td: filter posts by tag
+        // td: filter and search posts
         if (feed.source != FeedSource.Posts) {
-            row(AlignItemsCenter) {
-                tagFilterMenu()
+            row(modify(AlignItemsCenter, JustifyContentSpaceBetween)) {
+                row(AlignItemsCenter) {
+                    tagFilterMenu()
+                }
+                textField(placeholder = "search", textMod = FeedSection.Search) {
+                    onInput = FeedSection.SearchFeed.invokeJs(ThisElement)
+                }
             }
         }
 
@@ -88,6 +94,7 @@ fun FlowContent.layoutFeed(
 
 object FeedSection {
     val MountId = Id("feed-layout")
+    val Search = Class("feed-search")
 
     val Attribute = slugAttributeOf("feed-slug")
     val FeedColumnMod = modify(Gap2Px, MoonShadow)
@@ -95,6 +102,7 @@ object FeedSection {
 
     val SortByMark = JsSignature("sortByMark")
     val MorePosts = JsSignature("morePosts")
+    val SearchFeed = JsSignature("searchFeed")
 
     val SwitchWidth = Width(12)
 }

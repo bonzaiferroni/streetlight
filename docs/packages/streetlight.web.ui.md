@@ -189,6 +189,10 @@ A popover menu is one popover shared by every button that opens it, and is built
 
 An object named for the menu, as `PostMenu`, holds its `PopoverId` and the attributes its button sets. The wire is called once from the root view in `viewApp`. Content that calls the server reaches it through the `ViewScope`'s `api`, inside a `launchEffect`. A menu whose content needs no data passes a transform that returns `Unit`. A menu opened from inside a feed section, as `TagFilterMenu`, passes the invoker as its value and reads the section's `FeedSource`, `GalaxyId` and `CityId` from it rather than setting its own; `filterFeedByTag` does this, and serves the menu and the dom-agnostic clear button alike through `clearFeedTag`. A menu shows its state as an attribute on the element that displays it, and its stylesheet shows it with `attr()` in the `content` of a pseudo-element and selects on the attribute's presence, as `TagFilterMenu.Tag` does on the tag button.
 
+## Interop From Markup
+
+Markup rendered without the bundle calls into it through a global function: a `JsSignature` named in the markup's object, as `FeedSection.MorePosts`, set as an event handler with `invokeJs(ThisElement)`, and a `KtFunction` of the same signature registered in `appGlobalFunctions`. The function receives the element and reads what it needs from it and its closest attributes. A text field passes its input the same way, as an `onInput` handler; the function reads the element's `value` and debounces on its own, as `searchFeed` does.
+
 ## Services
 
 `appModule` is the Koin module holding every browser-side service. `AppContainer` wraps the resulting Koin instance and is reached through `ViewScope.app`.

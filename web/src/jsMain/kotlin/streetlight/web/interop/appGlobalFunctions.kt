@@ -14,4 +14,5 @@ fun ViewScope.appGlobalFunctions() = listOf(
     KtFunction(FeedSection.SortByMark, ::sortByMark),
     KtFunction(FeedSection.MorePosts, ::morePosts),
     KtFunction(TagFilterMenu.ClearTag, ::clearFeedTag),
+    KtFunction(FeedSection.SearchFeed, ::searchFeed),
 )

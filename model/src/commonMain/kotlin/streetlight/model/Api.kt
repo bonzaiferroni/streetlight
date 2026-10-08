@@ -49,6 +49,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val recordAtParam = instantParamOf("recordAt")
             override val defaultDirection get() = SortDirection.Ascending
             override val tagParam = intParamOf("tag")
+            override val searchParam = stringParamOf("search")
         }
     }
 
@@ -197,6 +198,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val recordAtParam = instantParamOf("recordAt")
             override val defaultDirection get() = SortDirection.Ascending
             override val tagParam = intParamOf("tag")
+            override val searchParam = stringParamOf("search")
         }
 
         object Search: GetEndpoint<List<City>>(this) {

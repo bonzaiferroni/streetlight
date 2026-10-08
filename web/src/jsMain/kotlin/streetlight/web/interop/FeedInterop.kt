@@ -32,6 +32,12 @@ import streetlight.web.ui.requireElement
 import streetlight.web.ui.toaster
 import web.dom.document
 import web.html.HTMLElement
+import web.html.HTMLInputElement
+import web.dom.Element
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 
 /** Replaces the feed with the galaxy's posts sorted by the mark on [element]. */
 fun sortByMark(element: HTMLElement) {
@@ -72,25 +78,42 @@ fun morePosts(element: HTMLElement) {
     }
 }
 
-/**
- * Replaces the feed holding [element] with its first page carrying [tag], or with no tag filter without one, and
- * labels the feed's tag button with it.
- */
+/** Labels the tag button of the feed holding [element] with [tag], or clears it, and reads the feed again. */
 fun filterFeedByTag(element: HTMLElement, tag: EventTag?) {
-    val section = element.closest(AppAttribute.FeedSource.selector) ?: error("element is not in a feed section")
-    val source = section.requireAttribute(AppAttribute.FeedSource)
-    val galaxyId = section.getAttribute(AppAttribute.GalaxyId)
-    val cityId = section.getAttribute(AppAttribute.CityId)
+    val section = element.feedSection()
     section.querySelector(TagFilterMenu.Button.selector)?.let { button ->
         when (tag) {
             null -> button.removeAttribute(TagFilterMenu.Tag.identifier)
             else -> button.setAttribute(TagFilterMenu.Tag, tag.label)
         }
     }
+    refreshFeed(section)
+}
+
+/** Clears the tag filter of the feed holding [element]. */
+fun clearFeedTag(element: HTMLElement) = filterFeedByTag(element, null)
+
+/** Reads the feed holding the search field [element] again once its text has rested for [SEARCH_DEBOUNCE]. */
+fun searchFeed(element: HTMLElement) = refreshFeed(element.feedSection(), SEARCH_DEBOUNCE)
+
+/**
+ * Replaces the rows of the feed [section] with its first page, filtered by the tag on its tag button and the text
+ * of its search field, after [wait]. A newer read cancels one still waiting or loading.
+ */
+private fun refreshFeed(section: Element, wait: Duration = Duration.ZERO) {
+    val source = section.requireAttribute(AppAttribute.FeedSource)
+    val galaxyId = section.getAttribute(AppAttribute.GalaxyId)
+    val cityId = section.getAttribute(AppAttribute.CityId)
+    val tagLabel = section.querySelector(TagFilterMenu.Button.selector)?.getAttribute(TagFilterMenu.Tag)
+    val tag = EventTag.entries.firstOrNull { it.label == tagLabel }
+    val search = (section.querySelector(FeedSection.Search.selector) as? HTMLInputElement)?.value
+        ?.trim()?.takeIf { it.isNotEmpty() }
     val mount = document.requireElement(FeedSection.MountId)
-    RouteView.activeScope.launchEffect("filter feed by tag") {
+    refreshJob?.cancel()
+    refreshJob = RouteView.activeScope.launchEffect("refresh feed") {
+        delay(wait)
         mount.modify(OpacityHigh)
-        val cursor = EntityCursor.Upcoming.copy(tag = tag?.ordinal)
+        val cursor = EntityCursor.Upcoming.copy(tag = tag?.ordinal, search = search)
         val feed = readFeed(source, galaxyId, cityId, cursor).toDataOr(toaster) {
             mount.unmodify(OpacityHigh)
             return@launchEffect
@@ -103,8 +126,11 @@ fun filterFeedByTag(element: HTMLElement, tag: EventTag?) {
     }
 }
 
-/** Clears the tag filter of the feed holding [element]. */
-fun clearFeedTag(element: HTMLElement) = filterFeedByTag(element, null)
+private var refreshJob: Job? = null
+
+private val SEARCH_DEBOUNCE = 500.milliseconds
+
+private fun Element.feedSection() = closest(AppAttribute.FeedSource.selector) ?: error("element is not in a feed section")
 
 /** The page at [cursor] of the feed from [source], read for [galaxyId] or [cityId] when the source needs one. */
 suspend fun AppFacade.readFeed(source: FeedSource, galaxyId: GalaxyId?, cityId: CityId?, cursor: EntityCursor) =
