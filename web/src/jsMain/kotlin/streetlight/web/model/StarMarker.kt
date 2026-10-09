@@ -7,7 +7,8 @@ import koala.model.TravelMarker
 /** The marker of the viewer's own location. */
 data class StarMarker(
     override val geoPoint: GeoPoint,
+    override val bearing: Float? = null,
 ): TravelMarker {
     override val markerId get() = "star"
-    override val icon get() = SvgFile.CurrentLocation
+    override val icon get() = SvgFile.NavigationFilled
 }

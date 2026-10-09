@@ -9,9 +9,11 @@ import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import koala.model.GeoMap
 import koala.model.readCurrentLocation
+import koala.model.streamCompassHeading
 import koala.model.streamCurrentLocation
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import web.events.EventHandler
 import web.events.addHandler
 import web.navigator.navigator
@@ -41,19 +43,31 @@ class StarLocator(
             status.changeEvent.addHandler(EventHandler { readPermission(status) })
         }
 
-        startPointState.reactIn(scope) { point ->
-            starLocationLayer.setPoints(listOfNotNull(point?.let { StarMarker(it) }))
+        state.reactIn(scope) { starState ->
+            val marker = starState.starPoint?.let { StarMarker(it, starState.bearing) }
+            starLocationLayer.setPoints(listOfNotNull(marker))
         }
     }
 
     /**
-     * Follows the device's location until cancelled, or until access to it is lost, which it reports to [messenger].
+     * Follows the device's location and bearing until cancelled, or until access to the location is lost, which it
+     * reports to [messenger].
+     *
+     * The bearing is the compass heading where the device has one, and the heading of travel otherwise.
      */
-    suspend fun trackLocation(messenger: Messenger) {
-        streamCurrentLocation().collect { outcome ->
-            val point = outcome.toDataOr(messenger) { return@collect }
-            state.set { copy(starPoint = point) }
+    suspend fun trackLocation(messenger: Messenger) = coroutineScope {
+        var compassHeading: Float? = null
+        val compassJob = launch("StarLocator > compass") {
+            streamCompassHeading().collect { heading ->
+                compassHeading = heading
+                state.set { copy(bearing = heading) }
+            }
         }
+        streamCurrentLocation().collect { outcome ->
+            val fix = outcome.toDataOr(messenger) { return@collect }
+            state.set { copy(starPoint = fix.point, bearing = compassHeading ?: fix.heading ?: bearing) }
+        }
+        compassJob.cancel()
     }
 
     /** Reads the location when [status] grants access to it, and forgets it otherwise. */
@@ -70,5 +84,6 @@ class StarLocator(
 }
 
 data class StarLocatorState(
-    val starPoint: GeoPoint? = null
+    val starPoint: GeoPoint? = null,
+    val bearing: Float? = null,
 )

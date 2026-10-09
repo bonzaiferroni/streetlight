@@ -89,6 +89,7 @@ object SvgFile : FileSet<Svg>() {
     val MessageSmall = add("message-small.svg")
     val Minus = add("minus.svg")
     val Moon = add("moon.svg")
+    val NavigationFilled = add("navigation-filled.svg")
     val PanelLeft = add("panel-left.svg")
     val PanelRight = add("panel-right.svg")
     val Plus = add("plus.svg")

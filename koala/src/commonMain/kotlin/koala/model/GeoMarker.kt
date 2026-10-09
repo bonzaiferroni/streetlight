@@ -35,10 +35,15 @@ interface PointMarker: GeoMarker {
     val configureBody: DIV.() -> Unit
 }
 
-/** A moving marker drawn as [icon], turned to its [bearing]. */
+/**
+ * A moving marker drawn as [icon], turned to its [bearing] in degrees clockwise from north.
+ *
+ * Its icon is drawn pointing up. [MarkerStyle.Bearing] in its [mod] turns it; a marker without it stays upright.
+ */
 interface TravelMarker: PointMarker {
     val icon: Svg
     val bearing: Float? get() = null
+    override val mod: Modifier? get() = MarkerStyle.Bearing
     override val bodySize: LinearDimension get() = 24.px
     override val subpixelPositioning get() = true
     override val configureBody: DIV.() -> Unit get() = { configureTravelMarker(this@TravelMarker) }

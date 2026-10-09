@@ -46,9 +46,11 @@ fun DIV.configureIconMarker(marker: IconMarker) {
     }
 }
 
-/** Draws [marker] as its icon. */
+/** Draws [marker] as its icon, centered on its point. */
 fun DIV.configureTravelMarker(marker: TravelMarker) {
-    icon(marker.icon)
+    box(modify(MarkerStyle.Body, MarkerStyle.Travel)) {
+        icon(marker.icon)
+    }
 }
 
 context(marker: StaticMarker)

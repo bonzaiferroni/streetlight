@@ -13,6 +13,12 @@ import web.geolocation.GeolocationPositionError
 import web.geolocation.getCurrentPosition
 import web.navigator.navigator
 
+/** A fix of the device's location, with its [heading] of travel in degrees clockwise from north while it moves. */
+data class LocationFix(
+    val point: GeoPoint,
+    val heading: Float?,
+)
+
 /** The problems of reading the device's location. */
 object LocationProblem {
     val Unavailable = Problem("Your location is unavailable")
@@ -31,14 +37,14 @@ suspend fun readCurrentLocation(): Outcome<GeoPoint> {
 }
 
 /**
- * The device's location each time it moves.
+ * A fix of the device's location each time it moves.
  *
  * Losing access to the location ends the flow with a [Problem]. A position the browser could not fix is skipped.
  */
-fun streamCurrentLocation(): Flow<Outcome<GeoPoint>> = callbackFlow {
+fun streamCurrentLocation(): Flow<Outcome<LocationFix>> = callbackFlow {
     val geolocation = navigator.geolocation
     val watchId = geolocation.watchPositionWithCallbacks(
-        successCallback = { trySend(Ok(it.toGeoPoint())) },
+        successCallback = { trySend(Ok(it.toLocationFix())) },
         errorCallback = { error ->
             if (error.code == GeolocationPositionError.PERMISSION_DENIED) {
                 trySend(LocationProblem.Unavailable)
@@ -50,3 +56,6 @@ fun streamCurrentLocation(): Flow<Outcome<GeoPoint>> = callbackFlow {
 }
 
 private fun GeolocationPosition.toGeoPoint() = GeoPoint(coords.longitude, coords.latitude)
+
+private fun GeolocationPosition.toLocationFix() =
+    LocationFix(toGeoPoint(), coords.heading?.takeIf { !it.isNaN() }?.toFloat())

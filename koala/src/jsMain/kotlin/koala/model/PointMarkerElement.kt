@@ -6,6 +6,7 @@ import koala.modifier.*
 import koala.dom.*
 import koala.external.MarkerOptions
 import koala.external.maplibregl
+import kotlinx.css.properties.deg
 import kotlinx.html.js.div
 import web.dom.document
 import web.html.HTMLDivElement
@@ -33,11 +34,13 @@ internal class PointMarkerElement(
 
     private var isRevealed = true
     private var isAttached = false
+    private var turnedBearing = 0f
 
     val isFocused get() = element.isModified(Focus)
 
     init {
         jsMarker.setLngLat(marker.geoPoint.toLngLat())
+        (marker as? TravelMarker)?.bearing?.let { setBearing(it) }
     }
 
     fun update(marker: PointMarker, planarPoint: Point) {
@@ -47,6 +50,13 @@ internal class PointMarkerElement(
         marker.opacity?.let {
             setOpacity(it)
         }
+        (marker as? TravelMarker)?.bearing?.let { setBearing(it) }
+    }
+
+    /** Turns the marker to [bearing] the shorter way round, so its transition never spins the long way. */
+    private fun setBearing(bearing: Float) {
+        turnedBearing += (bearing - turnedBearing + 180).mod(360f) - 180
+        base.setStyle(MarkerStyle.MarkerBearing.of(turnedBearing.deg))
     }
 
     private fun move(position: GeoPoint) {

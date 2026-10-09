@@ -68,6 +68,12 @@ $Base {
     }
 }
 
+/* Turns the marker to its bearing, its icon drawn pointing up */
+$Base$Bearing {
+    rotate: var($MarkerBearing);
+    transition: var(--transition-transform), rotate 1000ms ease-out;
+}
+
 $Body {
     transform: translate(calc(var($BodySize) / -2), calc(var($BodySize) / -2));
     opacity: 1;
@@ -80,30 +86,10 @@ $Body {
 }
 
 $Travel {
-    position: relative;
+    display: grid;
+    place-items: center;
     width: var($BodySize);
     height: var($BodySize);
-
-    background-image: var($MarkerSvg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: transparent; 
-}
-
-$Bearing {
-    width: calc(var($BodySize) + 16px);
-    height: calc(var($BodySize) + 16px);
-
-    transform: translate(-50%, -50%) rotate(var($MarkerBearing));
-
-    background-image: url(/www/svg/bus-direction.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: transparent; 
-
-    transition: transform 1000ms ease-out;
 }
 
 $Thumb {
