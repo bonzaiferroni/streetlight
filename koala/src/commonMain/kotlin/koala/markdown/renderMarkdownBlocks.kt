@@ -42,20 +42,18 @@ fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {
 
 /** Renders [heading], centered, in a [filigree] when it asks for one. */
 fun FlowContent.renderHeading(heading: MarkdownHeading) {
-    val containerMod = modify(MarginTop(4))
-    val headingMod = modify(TextAlignCenter)
     val block: FlowContent.() -> Unit = {
         when (heading.level) {
-            1 -> heading1(mod = headingMod) { renderMarkdownSpans(heading.spans) }
-            2 -> heading2(mod = headingMod) { renderMarkdownSpans(heading.spans) }
-            3 -> heading3(mod = headingMod) { renderMarkdownSpans(heading.spans) }
-            4 -> heading4(mod = headingMod) { renderMarkdownSpans(heading.spans) }
-            5 -> heading5(mod = headingMod) { renderMarkdownSpans(heading.spans) }
-            6 -> heading6(mod = headingMod) { renderMarkdownSpans(heading.spans) }
+            1 -> heading1 { renderMarkdownSpans(heading.spans) }
+            2 -> heading2 { renderMarkdownSpans(heading.spans) }
+            3 -> heading3 { renderMarkdownSpans(heading.spans) }
+            4 -> heading4 { renderMarkdownSpans(heading.spans) }
+            5 -> heading5 { renderMarkdownSpans(heading.spans) }
+            6 -> heading6 { renderMarkdownSpans(heading.spans) }
             else -> error("invalid markdown")
         }
     }
-    if (heading.filigree) filigree(containerMod, block = block) else div(containerMod, block)
+    if (heading.filigree) filigree(MarkdownStyle.Heading, block = block) else div(MarkdownStyle.Heading, block)
 }
 
 /** Renders [block] as a paragraph, with its first inline image floated beside it. */

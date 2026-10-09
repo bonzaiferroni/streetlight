@@ -7,6 +7,7 @@ import koala.model.EditorStyle
 object MarkdownStyle {
     val Container = Class("md")
     val Block = Container.withBemElement("block")
+    val Heading = Container.withBemElement("heading")
     val Paragraph = Container.withBemElement("paragraph")
     val UnorderedList = Container.withBemElement("unordered-list")
     val OrderedList = Container.withBemElement("ordered-list")
@@ -45,6 +46,12 @@ $FloatLeft {
 
 $Block > * + * {
     margin-top: var(--unit-2);
+}
+
+/* after the block spacing, so a heading's wider margin wins */
+$Heading {
+    margin-top: var(--unit-4);
+    text-align: center;
 }
 
 $OrderedList {

@@ -5,6 +5,7 @@ import koala.Svg
 import koala.modifier.*
 import kotlinx.css.px
 import koala.html.*
+import koala.markdown.MarkdownStyle
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kampfire.api.Markdown
@@ -227,6 +228,13 @@ $Text {
     max-height: var(--clip);
     padding-block: var(--text-inset);
     mask-image: linear-gradient(to bottom, black calc(var(--fade-end) - 1rem), transparent var(--fade-end));
+}
+
+/* the body sets its blocks close and its headings at its size, a step heavier than its text */
+$Text ${MarkdownStyle.Container} {
+    :is(h1, h2, h3, h4, h5, h6) { font-size: inherit; font-weight: 500; }
+
+    ${MarkdownStyle.Block} > * { margin-top: 0; }
 }
 
 /* the thumbnail is cut to match a cover fit, which hides the backdrop */
