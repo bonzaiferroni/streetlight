@@ -1,6 +1,7 @@
+@file:OptIn(FlowPreview::class)
+
 package streetlight.web.model
 
-import kampfire.model.mutableTapOf
 import kampfire.model.reactIn
 import kampfire.model.toDataOr
 import koala.utils.launch
@@ -10,8 +11,10 @@ import kampfire.model.tapOf
 import kampfire.model.storeOf
 import koala.model.PointMarker
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.Entity
 import streetlight.model.data.EventTag
@@ -26,6 +29,7 @@ import streetlight.model.ui.EventsMap
 import streetlight.model.ui.EventsMapRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * The model of the map screens: it loads the markers of each [EarthRoute] and follows a focus on a galaxy to its
@@ -48,13 +52,15 @@ class Earth(
     val focusEntitiesState = state.tapOf { it.focusEntities }
     val isFocusedState = focusEntitiesState.tapOf { it != null }
     val isInflatingState = state.tapOf { it.isInflatingFocus }
-    val searchTextState = state.mutableTapOf({ it.searchText }) { copy(searchText = it) }
-    val tagState = state.tapOf { it.tag }
+
+    val tagState = portal.routeState.tapOf { (it as? EventsMapRoute)?.tag }
+    val searchTextState = storeOf((portal.stateNow.route as? EventsMapRoute)?.searchText.orEmpty())
 
     val cache = EarthCache(scope, api, markerMap, toaster)
     val isQueryingState = cache.isQueryingState
 
     private var inflateFocusJob: Job? = null
+    private var issuedRoute: EventsMapRoute? = null
 
     init {
         scope.launch("Earth > routeFlowOf") {
@@ -68,6 +74,12 @@ class Earth(
         markerMap.focusState.reactIn(scope) { focus ->
             reactToFocus(focus)
         }
+
+        scope.launch("Earth > search") {
+            searchTextState.flow.debounce(1.seconds).collect {
+                goToSearch()
+            }
+        }
     }
 
     fun setFocus(marker: StaticMarker) = markerMap.setFocus(marker)
@@ -80,8 +92,14 @@ class Earth(
         route.bounds?.let {
             markerMap.geoMap.camera.panMap(it)
         }
-        cache.setMapContext(route is EventsMapRoute, (route as? EventsMapRoute)?.tag)
         state.set { copy(map = map) }
+        when (route) {
+            is EventsMapRoute -> {
+                cache.setMapContext(true, route.tag, route.searchText)
+                showAllWhenNoneInView()
+            }
+            else -> cache.setMapContext(false)
+        }
         delay(100.milliseconds)
         // showAll()
     }
@@ -115,10 +133,39 @@ class Earth(
 
             is EventsMapRoute -> {
                 markerMap.filterPoints { false }
-                state.set { copy(tag = route.tag) }
+                if (route != issuedRoute) {
+                    searchTextState.set(route.searchText.orEmpty())
+                }
                 EventsMap(route.title)
             }
         }
+    }
+
+    /** Shows the events carrying [tag], or those of every tag without one. */
+    fun setTag(tag: EventTag?) {
+        val current = portal.stateNow.route as? EventsMapRoute ?: return
+        if (current.tag == tag) return
+        go(EventsMapRoute(null, tag, current.searchText), true)
+    }
+
+    /** Navigates to the events matching the search text, unless the current route already carries it. */
+    private fun goToSearch() {
+        val current = portal.stateNow.route as? EventsMapRoute ?: return
+        val search = searchTextState.now.trim().takeIf { it.isNotEmpty() }
+        if (current.searchText == search) return
+        go(EventsMapRoute(null, current.tag, search), false)
+    }
+
+    private fun go(route: EventsMapRoute, appendToBackstack: Boolean) {
+        issuedRoute = route
+        portal.go(route, appendToBackstack)
+    }
+
+    /** Frames every marker when there are markers and none of them is in view. */
+    private fun showAllWhenNoneInView() {
+        val markers = markerMap.stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
+        val view = markerMap.geoMap.camera.stateNow.view
+        if (markers.none { view.contains(it.geoPoint) }) showAll()
     }
 
     private fun reactToFocus(marker: PointMarker?) {
@@ -136,7 +183,9 @@ class Earth(
             is InflateMarker -> {
                 inflateFocusJob = scope.launch {
                     state.set { copy(isInflatingFocus = true) }
-                    val entities = api.earth.inflate(marker.group.locationId, stateNow.tag).toDataOr(toaster) { return@launch }
+                    val route = portal.stateNow.route as? EventsMapRoute
+                    val entities = api.earth.inflate(marker.group.locationId, route?.tag, route?.searchText)
+                        .toDataOr(toaster) { return@launch }
                     state.set { copy(isInflatingFocus = false, focusEntities = entities)}
                 }
             }
@@ -151,8 +200,7 @@ data class EarthMapState(
     val map: EarthMap?,
     val focusEntities: List<Entity>? = null,
     val isInflatingFocus: Boolean = false,
-    val tag: EventTag? = null,
-    val searchText: String = "",
 )
+
 
 // val maps: List<EarthMap> = emptyList(),

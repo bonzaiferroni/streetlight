@@ -55,7 +55,7 @@ A derived source that a read filters, such as by tag, is built by a function on 
 
 A read is composed by chaining its layers in this order: join, select, where, order, limit, map. A layer that a read can add, such as the caller's star, has one utility for each layer it touches.
 
-A table file holds the table, its row transforms, and the utilities that define its relationship to other tables, such as `joinWith`. A layer utility for a single read is declared beside the DAO that uses it.
+A table file holds the table, its row transforms, and the utilities that define its relationship to other tables, such as `joinWith`. A layer utility for a single read is declared beside the DAO that uses it. A layer that an aspect's derived source uses is declared in the aspect file, and DAOs that share it import it from there.
 
 ```kotlin
 LocationTable.joinWith(EventTable) { EventTable.startsAt.greaterEq(now) }

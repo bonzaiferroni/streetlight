@@ -26,6 +26,7 @@ class EarthCache(
 ) {
     var isQueriedMap = false
     private var tag: EventTag? = null
+    private var searchText: String? = null
 
     private val queries = mutableMapOf<GeoRect, MapCursor>()
     private val camera get() = markerMap.geoMap.camera
@@ -41,15 +42,18 @@ class EarthCache(
     }
 
     /**
-     * Starts over for a new map, querying its first settled view; only a map with [isQueriedMap] loads events by view.
+     * Starts over for a new map, returning once its first query has landed; only a map with [isQueriedMap] loads
+     * events by view.
      *
-     * Its events are limited to those carrying [tag] when given.
+     * Its events are limited to those carrying [tag] and matching [searchText] when given. A search first queries the
+     * whole earth, then each view it has not covered.
      */
-    fun setMapContext(isQueriedMap: Boolean, tag: EventTag? = null) {
+    suspend fun setMapContext(isQueriedMap: Boolean, tag: EventTag? = null, searchText: String? = null) {
         this.isQueriedMap = isQueriedMap
         this.tag = tag
+        this.searchText = searchText
         queries.clear()
-        queryEvents()
+        if (isQueriedMap) query()
     }
 
     private fun queryPosts(view: GeoRect? = null) {
@@ -64,29 +68,36 @@ class EarthCache(
         }
     }
 
-    private fun queryEvents(view: GeoRect? = null) {
+    private fun queryEvents(view: GeoRect) {
         if (!isQueriedMap) return
-        scope.launch {
-            val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
-            val query = getQuery(queriedView) ?: return@launch
-            // held as incomplete while in flight, so an overlapping view at this zoom is not queried again
-            queries[query.view] = MapCursor(null, false)
-            isQueryingState.set { true }
-            val feed = api.earth.readMapEntities(query).toDataOr(toaster) {
-                queries.remove(query.view)
-                isQueryingState.set { false }
-                return@launch
-            }
-            queries[query.view] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
-            markerMap.addPoints(feed.entities)
-            isQueryingState.set { false }
-        }
+        scope.launch { query(view) }
     }
 
-    /** The query for [view], reaching past it by [OVERSCAN], or `null` when [view] is already covered. */
+    /** Queries [view], or the first settled view without one, and adds its events to the map. */
+    private suspend fun query(view: GeoRect? = null) {
+        val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
+        val query = getQuery(queriedView) ?: return
+        // held as incomplete while in flight, so an overlapping view at this zoom is not queried again
+        queries[query.view] = MapCursor(null, false)
+        isQueryingState.set { true }
+        val feed = api.earth.readMapEntities(query).toDataOr(toaster) {
+            queries.remove(query.view)
+            isQueryingState.set { false }
+            return
+        }
+        queries[query.view] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
+        markerMap.addPoints(feed.entities)
+        isQueryingState.set { false }
+    }
+
+    /**
+     * The query for [view], reaching past it by [OVERSCAN], or `null` when [view] is already covered.
+     *
+     * The first query of a search reaches the whole earth.
+     */
     private fun getQuery(view: GeoRect): MapQuery? {
         if (isCovered(view)) return null
-        val queriedRect = view.scaleBy(OVERSCAN)
+        val queriedRect = if (searchText != null && queries.isEmpty()) GeoRect.World else view.scaleBy(OVERSCAN)
         val containing = queries.filterKeys { it.contains(queriedRect) }
 
         val seen = queries.keys
@@ -95,7 +106,7 @@ class EarthCache(
             .take(MAX_VIEWED)
 
         val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.score })
-            ?: EntityCursor.Score.Default.copy(tag = tag?.ordinal)
+            ?: EntityCursor.Score.Default.copy(tag = tag?.ordinal, search = searchText)
         return MapQuery(queriedRect, seen, query)
     }
 

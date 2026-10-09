@@ -70,7 +70,7 @@ A state parameter is a `Tap` for a read and a `MutableTap` for a read and write.
 
 `Screen` is an enum in `streetlight.model.ui`. Each entry holds a `RouteParse` that turns a URL into a `StreetlightRoute`, and an optional path root taken from the entry name when absent.
 
-`Portal` (`koala.model`) holds the current route as `PortalState`. It builds the route from the address bar on load and on browser navigation, and it intercepts clicks on local anchors. Code that holds a reference to `Portal` navigates with `Portal.go(route)`.
+`Portal` (`koala.model`) holds the current route as `PortalState`. It builds the route from the address bar on load and on browser navigation, and it intercepts clicks on local anchors. Code that holds a reference to `Portal` navigates with `Portal.go(route)`. With `appendToBackstack = false`, the route takes the place of the current one in the backstack and in the browser's history.
 
 `viewPortal` is a `flowBlock` over `Portal.screenState`. It renders the selected `Screen` inside a `RouteScope` built from the current `PortalState`, mapping each `Screen` to its route function in a single `when`. A screen with no branch falls to the catch-all rather than failing.
 

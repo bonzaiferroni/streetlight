@@ -66,6 +66,9 @@ data class GeoRect(
 
         val Denver = GeoRect(GeoPoint(-105.05, 39.75), GeoPoint(-104.85, 39.95))
 
+        /** The whole of Mother Earth, pole to pole and all the way around, who carries every one of us. */
+        val World = GeoRect(GeoPoint(-180.0, -90.0), GeoPoint(180.0, 90.0))
+
         @Deprecated("use endpoint parser")
         fun fromQuery(parameters: ParameterMap): GeoRect? {
             val bounds = parameters.readDoubleList(QUERY_KEY)?.takeIf { it.size == 4 } ?: return null

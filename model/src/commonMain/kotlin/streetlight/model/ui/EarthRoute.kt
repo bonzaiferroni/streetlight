@@ -38,6 +38,7 @@ data object CityMapRoute: EarthRoute {
 data class EventsMapRoute(
     override val bounds: GeoRect? = null,
     val tag: EventTag? = null,
+    val searchText: String? = null,
 ): EarthRoute {
     companion object {
         val nodes = listOf(EARTH_NODE)
@@ -52,6 +53,9 @@ data class EventsMapRoute(
         tag?.let {
             append(TAG_PARAM, tag.name)
         }
+        searchText?.let {
+            append(SEARCH_PARAM, it)
+        }
     }
 }
 
@@ -63,7 +67,8 @@ val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, param
         else -> {
             val tag = parameters[TAG_PARAM]?.let { EventTag.valueOf(it) }
             val rect = parameters[RECT_NODE]?.let { GeoRect.of(it) }
-            EventsMapRoute(rect, tag)
+            val searchText = parameters[SEARCH_PARAM]?.trim()?.takeIf { it.isNotEmpty() }
+            EventsMapRoute(rect, tag, searchText)
         }
     }
 }
@@ -76,4 +81,5 @@ private const val GALAXY_NODE = "galaxy"
 private const val CITIES_NODE = "cities"
 
 private const val TAG_PARAM = "tag"
+private const val SEARCH_PARAM = "search"
 private const val RECT_NODE = "rect"

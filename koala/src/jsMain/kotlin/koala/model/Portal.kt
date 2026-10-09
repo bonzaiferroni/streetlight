@@ -54,12 +54,7 @@ class Portal(
     private var backstack: List<Navigation> = emptyList()
     private var isWrecked = false
 
-    var sitePath
-        get() = window.location.run { pathname + search }
-        set(value: String) {
-            if (sitePath == value) return
-            history.pushState(null, "", value)
-        }
+    val sitePath get() = window.location.run { pathname + search }
 
     init {
         // hack to keep scroll from jumping on back press
@@ -108,10 +103,18 @@ class Portal(
         return if (emitDistinct) base.distinctUntilChanged() else base
     }
 
-    /** Navigates to [route], remembering the current one and its scroll position. */
-    fun go(route: AppRoute) {
+    /**
+     * Navigates to [route], remembering the current one and its scroll position.
+     *
+     * Without [appendToBackstack], [route] takes the place of the current one, in the backstack and in the browser's
+     * history.
+     */
+    fun go(route: AppRoute, appendToBackstack: Boolean = true) {
         val navigation = Navigation(route, 0.0)
-        go(navigation, backstack + Navigation(stateNow.route, window.scrollY))
+        when (appendToBackstack) {
+            true -> go(navigation, backstack + Navigation(stateNow.route, window.scrollY))
+            false -> go(navigation, backstack, false)
+        }
     }
 
     /** Returns to the last route, or to the latest one at [sitePath], returning whether there was one. */
@@ -138,7 +141,7 @@ class Portal(
         isWrecked = true
     }
 
-    private fun go(navigation: Navigation, backstack: List<Navigation>) {
+    private fun go(navigation: Navigation, backstack: List<Navigation>, appendToBackstack: Boolean = true) {
         val route = navigation.route
         console.log("setting route: ${route.screen}")
         this.backstack = backstack
@@ -149,9 +152,17 @@ class Portal(
             isInitialRoute = false,
             refreshedAt = Clock.System.now()
         )}
-        sitePath = route.toRelativePath()
+        setSitePath(route.toRelativePath(), appendToBackstack)
 
         document.body.setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
+    }
+
+    private fun setSitePath(value: String, appendToBackstack: Boolean) {
+        if (sitePath == value) return
+        when (appendToBackstack) {
+            true -> history.pushState(null, "", value)
+            false -> history.replaceState(null, "", value)
+        }
     }
 
     private fun routeOf(url: URL): AppRoute? {

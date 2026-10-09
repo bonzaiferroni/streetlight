@@ -4,7 +4,6 @@ import koala.SvgFile
 import koala.dom.*
 import koala.modifier.*
 import streetlight.model.data.EventTag
-import streetlight.model.ui.EventsMapRoute
 import streetlight.web.model.Earth
 import web.html.HTMLDivElement
 
@@ -26,7 +25,7 @@ fun ViewScope.earthControls(model: Earth) {
     popover(EarthStyle.TagMenuId) { popover ->
         fun setTag(tag: EventTag?) {
             popover.close()
-            portal.go(EventsMapRoute(null, tag))
+            model.setTag(tag)
         }
 
         flowBlock(model.tagState) { stateTag ->

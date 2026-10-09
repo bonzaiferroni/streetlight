@@ -46,6 +46,12 @@ A model holds one `Store` of a single state class, and exposes lenses onto it.
 
 A control binds to the narrowest lens that covers it, so editing one field leaves the rest of the state untouched.
 
+### Route Filters
+
+A filter a route carries, such as the tag of `EventsMapRoute`, is read from the route as a lens on `Portal.routeState`. A control that sets it calls a model method, which navigates with the new value.
+
+A filter edited faster than the route, such as search text behind a debounce, keeps its own `Store`, seeded from the current route. The model navigates when the debounced value differs from the route's, replacing the current route rather than appending to the backstack. It copies a route's value into the store only when the route is not the one it last issued, as on a back navigation, so a route that lands while the viewer types does not overwrite the field.
+
 ## Messages
 
 A method that reports to the user takes a `Messenger` parameter. The view decides where the message appears, the model decides what it says. `streetlight.web.ui` states the conventions the messages follow.
