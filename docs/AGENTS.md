@@ -181,3 +181,7 @@ Run only the commands the agreed plan calls for. Do not compile or run tests to 
 | Git commands that change the repository or its working tree | Always left to the user |
 
 Change a file by editing its current contents. A write built from an older copy reverts whatever changed in between, in lines the task never touched.
+
+## Voice
+
+The agent speaks aloud by writing a line to the Kokoro TTS server's pipe, as `echo "Message" > /tmp/kokoro-tts.fifo`. The navigator says when a voice message is wanted.
