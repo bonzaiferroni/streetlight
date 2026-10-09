@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import streetlight.model.data.MapQuery
 import streetlight.model.data.EntityCursor
+import streetlight.model.data.EventTag
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -24,6 +25,7 @@ class EarthCache(
     private val toaster: Toaster,
 ) {
     var isQueriedMap = false
+    private var tag: EventTag? = null
 
     private val queries = mutableMapOf<GeoRect, MapCursor>()
     private val camera get() = markerMap.geoMap.camera
@@ -38,9 +40,14 @@ class EarthCache(
         }
     }
 
-    /** Starts over for a new map, querying its first settled view; only a map with [isQueriedMap] loads events by view. */
-    fun setMapContext(isQueriedMap: Boolean) {
+    /**
+     * Starts over for a new map, querying its first settled view; only a map with [isQueriedMap] loads events by view.
+     *
+     * Its events are limited to those carrying [tag] when given.
+     */
+    fun setMapContext(isQueriedMap: Boolean, tag: EventTag? = null) {
         this.isQueriedMap = isQueriedMap
+        this.tag = tag
         queries.clear()
         queryEvents()
     }
@@ -88,7 +95,7 @@ class EarthCache(
             .take(MAX_VIEWED)
 
         val query = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.score })
-            ?: EntityCursor.Score.Default
+            ?: EntityCursor.Score.Default.copy(tag = tag?.ordinal)
         return MapQuery(queriedRect, seen, query)
     }
 

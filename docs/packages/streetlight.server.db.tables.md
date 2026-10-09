@@ -49,6 +49,8 @@ A galaxy's slug is written by `createGalaxy` and by no other function. `updateGa
 
 A DTO whose columns do not map cleanly from one table is read through `object FooAspect` in `FooAspect.kt`, patterned after a table: it holds the DTO's columns as `columns`, and any derived source, such as a subquery alias and its columns, as vals. `ResultRow.toFoo()` and the aspect's `joinWith` are declared below the object.
 
+A derived source that a read filters, such as by tag, is built by a function on the aspect, `fooOf(filter)`, under one fixed alias. The aspect's column vals are read from its unfiltered instance and match any instance by the alias. The aspect's `joinWith` takes the filter and passes it to the function.
+
 ## Query Layers
 
 A read is composed by chaining its layers in this order: join, select, where, order, limit, map. A layer that a read can add, such as the caller's star, has one utility for each layer it touches.

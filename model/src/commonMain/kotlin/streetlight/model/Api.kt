@@ -221,9 +221,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val seenParam = geoRectArrayOf(MapEndpoint.SeenParam)
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
             override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
+            override val tagParam = intParamOf(MapEndpoint.TagParam)
         }
         object Inflate: GetEndpoint<List<Entity>>(this) {
             val locationIdParam = tableIdParamOf("locationId") { LocationId(it) }
+            val tagParam = intParamOf("tag")
         }
     }
 

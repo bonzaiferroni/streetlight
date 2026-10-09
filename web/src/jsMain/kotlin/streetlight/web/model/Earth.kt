@@ -80,7 +80,7 @@ class Earth(
         route.bounds?.let {
             markerMap.geoMap.camera.panMap(it)
         }
-        cache.setMapContext(route is EventsMapRoute)
+        cache.setMapContext(route is EventsMapRoute, (route as? EventsMapRoute)?.tag)
         state.set { copy(map = map) }
         delay(100.milliseconds)
         // showAll()
@@ -136,7 +136,7 @@ class Earth(
             is InflateMarker -> {
                 inflateFocusJob = scope.launch {
                     state.set { copy(isInflatingFocus = true) }
-                    val entities = api.earth.inflate(marker.group.locationId).toDataOr(toaster) { return@launch }
+                    val entities = api.earth.inflate(marker.group.locationId, stateNow.tag).toDataOr(toaster) { return@launch }
                     state.set { copy(isInflatingFocus = false, focusEntities = entities)}
                 }
             }
