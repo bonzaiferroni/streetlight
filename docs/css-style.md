@@ -45,6 +45,8 @@ A container sizes its direct children through a child rule in its stylesheet, as
 
 A flex item sized by its container has an explicit `min-width`.
 
+A default that a modifier on the child may override is written with the container in `:where()`, as `:where($Container) > input`, so the rule has no more specificity than its element selector and a modifier's class wins.
+
 ## Inline Styles
 
 Converting a class to an inline style is preceded by an analysis of the DOM structure and the stylesheets, for any rule that sets the same property on an element that carries the modifier.

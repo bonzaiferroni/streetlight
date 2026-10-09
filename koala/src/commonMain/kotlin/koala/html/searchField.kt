@@ -4,7 +4,11 @@ import koala.SvgFile
 import koala.modifier.*
 import kotlinx.html.*
 
-/** A text input for a search: a pill holding a search icon before its text, showing [placeholder] while empty. */
+/**
+ * A text input for a search: a pill holding a search icon before its text, showing [placeholder] while empty.
+ *
+ * The input grows with its text from a default minimum width to a default maximum, which [textMod] may override.
+ */
 fun FlowContent.searchField(
     mod: Modifier? = null,
     textMod: Modifier? = null,
@@ -51,8 +55,6 @@ $Container {
     &:focus-within { outline-color: rgb(var(--primary)); }
 
     > input {
-        flex: 1;
-        min-width: 0;
         padding: 0;
         border: none;
         outline: none;
@@ -60,6 +62,15 @@ $Container {
         color: inherit;
         font: inherit;
     }
+}
+
+/* the default range of the input's width, at no specificity so a modifier overrides it */
+:where($Container) > input {
+    field-sizing: content;
+    min-width: 8ch;
+    max-width: 24ch;
+
+    @supports not (field-sizing: content) { width: 16ch; }
 }
 
 $DayTheme $Container { background: var(--zen-button-day); }
