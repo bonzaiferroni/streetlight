@@ -46,6 +46,11 @@ fun DIV.configureIconMarker(marker: IconMarker) {
     }
 }
 
+/** Draws [marker] as its icon. */
+fun DIV.configureTravelMarker(marker: TravelMarker) {
+    icon(marker.icon)
+}
+
 context(marker: StaticMarker)
 fun DIV.markerBodyRow(content: DIV.() -> Unit) {
     row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, TextShadow, WhiteSpaceNoWrap)) {

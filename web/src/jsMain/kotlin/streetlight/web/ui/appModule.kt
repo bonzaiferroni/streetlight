@@ -56,6 +56,7 @@ val appModule = module {
     single { GeoMap(get(), get()) }
     single { TransitMap(get(), get(), get(), get()) }
     single { MarkerMap(get(), get()) }
+    single(createdAtStart = true) { StarLocator(get(), get())}
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
 }

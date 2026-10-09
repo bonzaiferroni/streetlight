@@ -41,6 +41,7 @@ interface TravelMarker: PointMarker {
     val bearing: Float? get() = null
     override val bodySize: LinearDimension get() = 24.px
     override val subpixelPositioning get() = true
+    override val configureBody: DIV.() -> Unit get() = { configureTravelMarker(this@TravelMarker) }
 }
 
 /** A marker for an entity, with its type and theme color. */

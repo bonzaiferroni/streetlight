@@ -40,8 +40,8 @@ internal class GeoLayerAdapter(
     fun setPoints(markers: List<PointMarker>) {
         with(widget) {
             val pointBuffer = mutableMapOf<MarkerId, PointMarkerElement>()
-            val refLatitude = markers.sumOf { it.geoPoint.lat } / markers.size
-            refLatitudeNow = refLatitude
+            if (markers.isNotEmpty()) refLatitudeNow = markers.sumOf { it.geoPoint.lat } / markers.size
+            val refLatitude = refLatitudeNow ?: 0.0
 
             // add or update points
             markers.forEach { marker ->
