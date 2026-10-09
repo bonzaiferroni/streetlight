@@ -48,9 +48,9 @@ A control binds to the narrowest lens that covers it, so editing one field leave
 
 ### Route Filters
 
-A filter a route carries, such as the tag of `EventsMapRoute`, is read from the route as a lens on `Portal.routeState`. A control that sets it calls a model method, which navigates with the new value.
+A filter a route carries, such as the tag of `EventsMapRoute`, is read from the route as a lens on `Portal.routeState`. A control that sets it calls a model method, which navigates with the new value. A filter change replaces the current route rather than appending to the backstack.
 
-A filter edited faster than the route, such as search text behind a debounce, keeps its own `Store`, seeded from the current route. The model navigates when the debounced value differs from the route's, replacing the current route rather than appending to the backstack. It copies a route's value into the store only when the route is not the one it last issued, as on a back navigation, so a route that lands while the viewer types does not overwrite the field.
+A filter edited faster than the route, such as search text behind a debounce, keeps its own `Store`, seeded from the current route. The model navigates when the debounced value differs from the route's. It copies a route's value into the store only when the route is not the one it last issued, as on a back navigation, so a route that lands while the viewer types does not overwrite the field.
 
 ## Messages
 

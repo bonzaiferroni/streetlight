@@ -100,8 +100,6 @@ class Earth(
             }
             else -> cache.setMapContext(false)
         }
-        delay(100.milliseconds)
-        // showAll()
     }
 
     private suspend fun createMap(route: EarthRoute): EarthMap? {
@@ -145,7 +143,7 @@ class Earth(
     fun setTag(tag: EventTag?) {
         val current = portal.stateNow.route as? EventsMapRoute ?: return
         if (current.tag == tag) return
-        go(EventsMapRoute(null, tag, current.searchText), true)
+        go(EventsMapRoute(null, tag, current.searchText))
     }
 
     /** Navigates to the events matching the search text, unless the current route already carries it. */
@@ -153,12 +151,13 @@ class Earth(
         val current = portal.stateNow.route as? EventsMapRoute ?: return
         val search = searchTextState.now.trim().takeIf { it.isNotEmpty() }
         if (current.searchText == search) return
-        go(EventsMapRoute(null, current.tag, search), false)
+        go(EventsMapRoute(null, current.tag, search))
     }
 
-    private fun go(route: EventsMapRoute, appendToBackstack: Boolean) {
+    /** Replaces the current route with [route], as a change of filter that the backstack does not keep. */
+    private fun go(route: EventsMapRoute) {
         issuedRoute = route
-        portal.go(route, appendToBackstack)
+        portal.go(route, false)
     }
 
     /** Frames every marker when there are markers and none of them is in view. */
