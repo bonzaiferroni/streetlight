@@ -7,7 +7,6 @@ import koala.SiteImage
 import koala.SvgFile
 import koala.model.IconMarker
 import koala.model.ThumbMarker
-import kotlinx.css.rgb
 import kotlinx.html.DIV
 import streetlight.model.data.City
 import streetlight.model.data.Entity
@@ -17,6 +16,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.EventGroup
 import streetlight.model.data.Media
 import streetlight.web.layouts.ThemeColor
+import streetlight.web.layouts.light
 import streetlight.web.ui.configureEventMarkerBody
 
 // interface StreetMarker: ThumbMarker {
@@ -50,7 +50,7 @@ data class LocationMarker(
     // override val sublabel get() = location.mapType
     override val geoPoint get() = location.geoPoint
     // override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
-    override val light get() = rgb(180, 240, 100)
+    override val light get() = ThemeColor.Location.light
     override val typeLabel get() = location.mapType ?: MarkerType.Location.label
     override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin
     override val themeColor get() = ThemeColor.Location.cssValue
@@ -64,7 +64,7 @@ data class EventMarker(
     override val label get() = event.label
     override val sublabel get() = event.startsAt?.toFutureFormat()
     override val thumbUrl get() = event.image.thumb ?: SiteImage.placeholderTh
-    override val light get() = rgb(240, 100, 180 )
+    override val light get() = ThemeColor.Accent.light
     override val geoPoint get() = event.geoPoint
     override val typeLabel get() = event.tags?.firstOrNull()?.label ?: MarkerType.Event.label
     override val themeColor get() = ThemeColor.Accent.cssValue
@@ -80,6 +80,7 @@ data class MediaMarker(
     override val thumbUrl get() = media.image?.thumb ?: SiteImage.placeholderTh
     override val markerId get() = media.markerId
     override val themeColor get() = ThemeColor.Media.cssValue
+    override val light get() = ThemeColor.Media.light
 }
 
 data class CityMarker(
@@ -91,6 +92,7 @@ data class CityMarker(
     override val geoPoint get() = city.geoPoint
     override val typeLabel get() = MarkerType.City.label
     override val themeColor get() = ThemeColor.City.cssValue
+    override val light get() = ThemeColor.City.light
 }
 
 data class GalaxyMarker(
@@ -102,6 +104,7 @@ data class GalaxyMarker(
     override val geoPoint get() = galaxy.geoPoint
     override val typeLabel get() = MarkerType.Galaxy.label
     override val themeColor get() = ThemeColor.Galaxy.cssValue
+    override val light get() = ThemeColor.Galaxy.light
 }
 
 fun EventGroup.toMarker() = when (eventCount) {

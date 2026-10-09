@@ -6,6 +6,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Rgb(val red: Int, val green: Int, val blue: Int) {
     override fun toString() = "${red.coerceIn(0, 255)}, ${green.coerceIn(0, 255)}, ${blue.coerceIn(0, 255)}"
+
+    companion object {
+        val White = Rgb(255, 255, 255)
+    }
+}
+
+/** The color [amount] of the way toward [other], from 0 for this color to 1 for [other]. */
+fun Rgb.mix(other: Rgb, amount: Float): Rgb {
+    fun Int.toward(target: Int) = (this + (target - this) * amount).toInt().coerceIn(0, 255)
+    return Rgb(red.toward(other.red), green.toward(other.green), blue.toward(other.blue))
 }
 
 /** The color with each channel scaled by [factor]. */

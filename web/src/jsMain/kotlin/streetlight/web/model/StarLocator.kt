@@ -53,7 +53,8 @@ class StarLocator(
      * Follows the device's location and bearing until cancelled, or until access to the location is lost, which it
      * reports to [messenger].
      *
-     * The bearing is the compass heading where the device has one, and the heading of travel otherwise.
+     * The bearing is the compass heading where the device has one, and the heading of travel otherwise. It is
+     * cleared when tracking ends.
      */
     suspend fun trackLocation(messenger: Messenger) = coroutineScope {
         var compassHeading: Float? = null
@@ -63,11 +64,15 @@ class StarLocator(
                 state.set { copy(bearing = heading) }
             }
         }
-        streamCurrentLocation().collect { outcome ->
-            val fix = outcome.toDataOr(messenger) { return@collect }
-            state.set { copy(starPoint = fix.point, bearing = compassHeading ?: fix.heading ?: bearing) }
+        try {
+            streamCurrentLocation().collect { outcome ->
+                val fix = outcome.toDataOr(messenger) { return@collect }
+                state.set { copy(starPoint = fix.point, bearing = compassHeading ?: fix.heading ?: bearing) }
+            }
+        } finally {
+            compassJob.cancel()
+            state.set { copy(bearing = null) }
         }
-        compassJob.cancel()
     }
 
     /** Reads the location when [status] grants access to it, and forgets it otherwise. */

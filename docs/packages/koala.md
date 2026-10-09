@@ -44,4 +44,6 @@ An icon from an outside source is listed in `docs/sources` under that source, it
 
 A marker's body is the indicator that rests on its point, centered on it, such as the thumb of a `ThumbMarker`, the icon of an `IconMarker` or the whole of a `TravelMarker`. The marker's base sits on the point at zero size, with `BodySize` set inline from `bodySize`. `MarkerStyle.Body` shifts its element up and left by half of `BodySize`, so a body of that size, leading the element, is centered on the point, and anything after it, such as a label, trails to its right.
 
+A marker with a `light` shows a light of that color in the light layer beneath it; a marker without one shows none.
+
 A `TravelMarker` draws its icon pointing up and turns to its `bearing`, in degrees clockwise from north. The turn is the `rotate` of the marker's base, set from the inline `MarkerBearing` property and enabled by `MarkerStyle.Bearing`, which a travel marker carries in its `mod` by default. A marker whose icon should stay upright leaves the class out of its `mod`.

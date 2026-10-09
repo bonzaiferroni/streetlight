@@ -26,7 +26,7 @@ val ThemeCss get() = with(Koala) { """
     --outline-mid-fg: rgba(var(--ink), .5);
     --outline-low: 2px solid var(--outline-low-fg);
     
-    --gray: 60, 62, 64;
+    --gray: $gray;
     --gray-fg: rgb(var(--gray));
     --gray-bg: color-mix(in srgb, var(--gray-fg) 50%, var(--paper-bg));
     
@@ -54,32 +54,32 @@ val ThemeCss get() = with(Koala) { """
     --accent: $accent;
     
     
-    --red: 255, 99, 132;
+    --red: $red;
     --red-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     --danger-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     --danger-bg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--paper)));
     --error-bg: color-mix(in srgb, rgb(var(--red)) 25%, rgb(var(--paper)));
     --error-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     
-    --sea-green: 58, 200, 158; 
+    --sea-green: $seaGreen;
     --sea-green-fg: color-mix(in srgb, rgb(var(--sea-green)) 50%, rgb(var(--ink)));
 
-    --green: 99, 255, 132;
+    --green: $green;
     --green-fg: color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--ink)));
     --valid-bg: color-mix(in srgb, rgb(var(--green)) 33%, rgb(var(--paper)));
     --valid-fg: color-mix(in srgb, rgb(var(--green)) 75%, rgb(var(--ink)));
     --success-bg : color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--paper)));
     
-    --yellow: 255, 240, 32;
+    --yellow: $yellow;
     --yellow-fg: color-mix(in srgb, rgb(var(--yellow)) 25%, rgb(var(--ink)));
     --required-bg: color-mix(in srgb, rgb(var(--yellow)) 33%, rgb(var(--paper)));
     --caution-fg: color-mix(in srgb, rgb(var(--yellow)) 75%, rgb(var(--ink)));
     
-    --gold: 200, 178, 87;
+    --gold: $gold;
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     --lamp-bg: color-mix(in srgb, rgb(var(--gold)) 50%, rgb(var(--paper)));
     
-    --purple: 158, 87, 200;
+    --purple: $purple;
     --selection-overlay: rgba(var(--purple), .2);
     --system-bg: color-mix(in srgb, rgb(var(--purple)) 50%, var(--void-bg));
     --system-fg: color-mix(in srgb, rgb(var(--purple)) 50%, rgb(var(--ink)));

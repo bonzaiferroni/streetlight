@@ -13,6 +13,13 @@ data class KoalaTheme(
     val void: Rgb = Rgb(24, 31, 31),
     val accent: Rgb = rgbOf("#EC2E6A"),  // Rgb(200, 87, 178)
     val primary: Rgb = rgbOf("#1abcc8"), // Rgb(58, 158, 200)
+    val gray: Rgb = Rgb(60, 62, 64),
+    val red: Rgb = Rgb(255, 99, 132),
+    val seaGreen: Rgb = Rgb(58, 200, 158),
+    val green: Rgb = Rgb(99, 255, 132),
+    val yellow: Rgb = Rgb(255, 240, 32),
+    val gold: Rgb = Rgb(200, 178, 87),
+    val purple: Rgb = Rgb(158, 87, 200),
 
     val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 39), 50, 0),
     val beta: Glow = Glow(Rgb(88, 164, 255), GlowPosition(82, 20, 39), 50, 0),

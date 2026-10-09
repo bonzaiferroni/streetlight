@@ -6,6 +6,7 @@ import kampfire.model.GeoPoint
 import koala.external.CustomLayerInterface
 import koala.external.CustomRenderMethodInput
 import koala.external.maplibregl
+import koala.modifier.Rgb
 import web.gl.WebGL2RenderingContext
 import web.gl.WebGL2RenderingContext.Companion.ARRAY_BUFFER
 import web.gl.WebGL2RenderingContext.Companion.BLEND
@@ -50,10 +51,13 @@ class LightLayer : CustomLayerInterface {
     /** The seconds since the layer was created, the clock the shader animates by. */
     internal val time get() = ((performance.now() - startTime) / 1000).toFloat()
 
-    /** Adds a light at [position], [phase] seconds into its twinkle, at [opacity]. */
-    internal fun allocate(position: GeoPoint, phase: Float, opacity: Float): LightHandle {
+    /** Adds a light of [color] at [position], [phase] seconds into its twinkle, at [opacity]. */
+    internal fun allocate(position: GeoPoint, phase: Float, opacity: Float, color: Rgb): LightHandle {
         val slot = freeSlots.removeFirstOrNull() ?: lightCount++.also { ensureCapacity(lightCount) }
         val offset = slot * FLOATS_PER_LIGHT
+        data[offset + RED] = color.red / 255f
+        data[offset + GREEN] = color.green / 255f
+        data[offset + BLUE] = color.blue / 255f
         data[offset + PHASE] = phase
         data[offset + FROM_OPACITY] = opacity
         data[offset + TO_OPACITY] = opacity
@@ -119,6 +123,8 @@ class LightLayer : CustomLayerInterface {
         gl.vertexAttribPointer(PHASE_ATTRIBUTE, 1, FLOAT, false, stride, PHASE * Float.SIZE_BYTES)
         gl.enableVertexAttribArray(FADE_ATTRIBUTE)
         gl.vertexAttribPointer(FADE_ATTRIBUTE, 3, FLOAT, false, stride, FROM_OPACITY * Float.SIZE_BYTES)
+        gl.enableVertexAttribArray(COLOR_ATTRIBUTE)
+        gl.vertexAttribPointer(COLOR_ATTRIBUTE, 3, FLOAT, false, stride, RED * Float.SIZE_BYTES)
         gl.bindVertexArray(null)
         this.buffer = buffer
         this.vertexArray = vertexArray
@@ -180,17 +186,21 @@ private fun mercatorXOf(lng: Double) = (180 + lng) / 360
 private fun mercatorYOf(lat: Double) = (180 - (180 / PI * ln(tan(PI / 4 + lat * PI / 360)))) / 360
 
 private const val INITIAL_CAPACITY = 256
-private const val FLOATS_PER_LIGHT = 6
+private const val FLOATS_PER_LIGHT = 9
 private const val X = 0
 private const val Y = 1
 private const val PHASE = 2
 private const val FROM_OPACITY = 3
 private const val TO_OPACITY = 4
 private const val CHANGED_AT = 5
+private const val RED = 6
+private const val GREEN = 7
+private const val BLUE = 8
 
 private const val POSITION_ATTRIBUTE = 0
 private const val PHASE_ATTRIBUTE = 1
 private const val FADE_ATTRIBUTE = 2
+private const val COLOR_ATTRIBUTE = 3
 
 private const val LIGHT_SIZE_PX = 8.0
 private const val FADE_SECONDS = 0.3f
@@ -204,8 +214,10 @@ uniform float u_pointSize;
 layout(location = $POSITION_ATTRIBUTE) in vec2 a_position;
 layout(location = $PHASE_ATTRIBUTE) in float a_phase;
 layout(location = $FADE_ATTRIBUTE) in vec3 a_fade; // from opacity, to opacity, changed at
+layout(location = $COLOR_ATTRIBUTE) in vec3 a_color;
 
 out float v_alpha;
+out vec3 v_color;
 
 const float TWINKLE_SECONDS = 2.4;
 const float FADE_SECONDS = $FADE_SECONDS;
@@ -218,6 +230,7 @@ void main() {
     float twinkle = 0.4 - 0.2 * cos(TAU * (u_time + a_phase) / TWINKLE_SECONDS);
     float fade = mix(a_fade.x, a_fade.y, clamp((u_time - a_fade.z) / FADE_SECONDS, 0.0, 1.0));
     v_alpha = twinkle * fade;
+    v_color = a_color;
 }
 """
 
@@ -226,11 +239,12 @@ private const val LIGHT_FRAGMENT_SHADER = """#version 300 es
 precision mediump float;
 
 in float v_alpha;
+in vec3 v_color;
 out vec4 fragColor;
 
 void main() {
     float edge = 1.0 - smoothstep(0.4, 0.5, length(gl_PointCoord - 0.5));
     float alpha = v_alpha * edge;
-    fragColor = vec4(vec3(alpha), alpha);
+    fragColor = vec4(v_color * alpha, alpha);
 }
 """

@@ -65,7 +65,7 @@ A stylesheet that serves a single component is declared in that component's file
 
 A stylesheet is served only once it is listed in `KtStyles` in `ServerResource.kt`.
 
-`KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance.
+`KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance. A base color in `ThemeCss`, such as `--green`, is written from an `Rgb` in `KoalaTheme`, never as literal channels, so Kotlin code can read the same color. Its `-fg` and `-bg` variants are mixed from it in CSS.
 
 ## Inline Style Utilities
 

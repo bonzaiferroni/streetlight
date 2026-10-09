@@ -17,7 +17,7 @@ internal class PointMarkerElement(
     planarPoint: Point,
     val element: HTMLDivElement,
     val base: HTMLDivElement,
-    val light: LightHandle,
+    val light: LightHandle?,
 ) {
     var planarPoint = planarPoint
         private set
@@ -68,7 +68,7 @@ internal class PointMarkerElement(
         } else {
             jsMarker.setLngLat(destination)
         }
-        light.move(position)
+        light?.move(position)
         this.position = position
     }
 
@@ -118,7 +118,7 @@ internal class PointMarkerElement(
 
     fun dispose() {
         jsMarker.remove()
-        light.dispose()
+        light?.dispose()
     }
 }
 
@@ -160,7 +160,7 @@ internal fun PointMarker.toPointElement(planarPoint: Point, lightLayer: LightLay
         planarPoint = planarPoint,
         element = element,
         base = baseElement!!,
-        light = lightLayer.allocate(geoPoint, -delay, 1f),
+        light = light?.let { lightLayer.allocate(geoPoint, -delay, 1f, it) },
     )
 
     val onElementClick = onFocus?.let {

@@ -4,7 +4,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Svg
 import koala.modifier.*
-import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
 import kotlinx.html.DIV
@@ -20,13 +19,14 @@ sealed interface GeoMarker {
 /**
  * A marker at a single point, drawn as an element of [bodySize].
  *
- * [onFocus] wraps the focus of the marker when it is clicked, and [light] adds a glow of that color.
+ * [onFocus] wraps the focus of the marker when it is clicked. A marker with a [light] shows a light of that color in
+ * the light layer beneath it, and one without shows none.
  */
 interface PointMarker: GeoMarker {
     val geoPoint: GeoPoint
     val mod: Modifier? get() = null
     val onFocus: OnFocus? get() = null
-    val light: Color? get() = null
+    val light: Rgb? get() = null
     val opacity: Float? get() = null
     val zIndex: Int? get() = null
 
