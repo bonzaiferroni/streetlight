@@ -1,76 +1,78 @@
 package streetlight.model.data
 
 import kampfire.model.Labeled
+import koala.SvgFile
+import koala.SvgPack
 
 
-enum class EventTag(label: String? = null): Labeled {
+enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     // Broad
-    Meetup,
-    Music,
-    Church,
-    HealthAndFitness("Health & Fitness"),
-    Education,
-    Sports,
-    Volunteer,
-    KidsAndFamily("Kids & Family"),
-    Arts,
-    FoodAndDrink("Food & Drink"),
+    Meetup(SvgFile.Social),
+    Music(SvgFile.Music),
+    Church(SvgFile.BuildingChurch),
+    HealthAndFitness(SvgFile.Heartbeat, "Health & Fitness"),
+    Education(SvgFile.School),
+    Sports(SvgFile.Trophy),
+    Volunteer(SvgFile.HeartHandshake),
+    KidsAndFamily(SvgFile.MoodKid, "Kids & Family"),
+    Arts(SvgFile.Palette),
+    FoodAndDrink(SvgFile.ToolsKitchen, "Food & Drink"),
 
     // Meetup
-    Picnic,
-    Potluck,
-    Networking,
-    BooksAndWriting("Books & Writing"),
-    GamesAndTrivia("Games & Trivia"),
-    Singles,
-    LGBTQ,
-    Tech,
-    Pets,
-    WatchParty("Watch Party"), // replace with Party
+    Picnic(SvgFile.Basket),
+    Potluck(SvgFile.Soup),
+    Networking(SvgFile.Affiliate),
+    BooksAndWriting(SvgFile.Book, "Books & Writing"),
+    GamesAndTrivia(SvgFile.Dice, "Games & Trivia"),
+    Singles(SvgFile.Hearts),
+    LGBTQ(SvgFile.Rainbow),
+    Tech(SvgFile.DeviceLaptop),
+    Pets(SvgFile.Paw),
+    WatchParty(SvgFile.DeviceTv, "Watch Party"), // replace with Party
 
     // Music
-    Concert,
-    OpenMic("Open Mic"),
-    StreetPerformance("Street Performance"),
-    DJSet("DJ Set"),
-    Karaoke,
-    Dance,
+    Concert(SvgFile.Ticket),
+    OpenMic(SvgFile.Microphone, "Open Mic"),
+    StreetPerformance(SvgFile.GuitarPick, "Street Performance"),
+    DJSet(SvgFile.Vinyl, "DJ Set"),
+    Karaoke(SvgFile.MicrophoneHandheld),
+    Dance(SvgFile.Shoe),
 
     // Health & Fitness
-    Hike,
-    Nature,
-    Exercise,
-    Wellness,
+    Hike(SvgFile.Trekking),
+    Nature(SvgFile.Leaf),
+    Exercise(SvgFile.Barbell),
+    Wellness(SvgFile.Yoga),
 
     // Education
-    Class,
-    Crafting,
-    Lecture,
+    Class(SvgFile.Chalkboard),
+    Crafting(SvgFile.NeedleThread),
+    Lecture(SvgFile.Presentation),
 
     // Sports
-    SportsMatch("Sports Match"),
-    PickupGame("Pickup Game"),
+    SportsMatch(SvgFile.Scoreboard, "Sports Match"),
+    PickupGame(SvgFile.BallBasketball, "Pickup Game"),
 
     // Arts
-    Theater,
-    Film,
-    ArtExhibition("Art Exhibition"),
-    Comedy,
+    Theater(SvgFile.MasksTheater),
+    Film(SvgFile.Movie),
+    ArtExhibition(SvgFile.Frame, "Art Exhibition"),
+    Comedy(SvgFile.MoodCrazyHappy),
 
     // Volunteer
-    Fundraiser,
-    Cleanup,
-    CommunityOutreach("Community Outreach"),
+    Fundraiser(SvgFile.PigMoney),
+    Cleanup(SvgFile.Recycle),
+    CommunityOutreach(SvgFile.Speakerphone, "Community Outreach"),
 
     // Food & Drink
-    FoodTruck("Food Truck"),
-    Tasting,
+    FoodTruck(SvgFile.Truck, "Food Truck"),
+    Tasting(SvgFile.GlassFull),
 
     // General
-    Festival,
-    Holiday,
-    Market,
-    Politics;
+    Festival(SvgFile.Confetti),
+    Holiday(SvgFile.Gift),
+    Market(SvgFile.BuildingStore),
+    Politics(SvgFile.BuildingBank);
 
     override val label = label ?: name
 }
