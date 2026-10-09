@@ -162,6 +162,20 @@ A failed schema is not stored, and the crawler records the page as `Schema` cont
 
 A schema's `date` selector is kept only when, for at least half of the elements it reads, its text is a date: a month name, or numbers such as 9/26. A selector that reads a title or a day alone is dropped, which leaves the start to the time follow-up.
 
+## Time Parsing
+
+`ParseTimeUtility.kt` reads a start from text. `parseTimeRange` reads the first time of day and, when a separator such as "–", "to" or "until" joins it to a second, the end of its range. A time is a number with a meridiem, such as "8 pm", or an hour and minutes, such as "8:00".
+
+| Time | Read as |
+|---|---|
+| With a meridiem | Its meridiem |
+| Hour 0, 13 or later, or zero-padded | The 24-hour clock |
+| A range side without a meridiem, the other side with one | The other side's meridiem, flipped when it would put the start after the end |
+| Any other time, in text that states no meridiem | The 24-hour clock |
+| Any other time, in text that states a meridiem | Unread, such as 6:30 in "Doors 6:30, show 7:30 p.m." |
+
+An event's end is read from the range of its start text, or else from its own `endTime` text, whose range gives its end.
+
 ## LM Schemas
 
 An `LmSchema` is a class the LM is asked to fill. A `SelectorSchema` is one that holds selectors, stored and reused across reads of an origin; a page read only once is better read directly, the LM filling its values. `LocationSchema` holds a location's details read directly by `SchemaMediator.readLocation`, which asks with `LocationInstructions`, wraps the answer so a `Basic` page missing its content for want of scripting promotes its origin, and stores nothing. Its phone and email are read only from the location's own homepage, where publishing them makes them public.

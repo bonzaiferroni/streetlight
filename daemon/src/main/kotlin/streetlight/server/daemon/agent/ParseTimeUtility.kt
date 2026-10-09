@@ -94,6 +94,8 @@ private val timePattern = Regex(
     RegexOption.IGNORE_CASE,
 )
 
+private val rangeSeparator = Regex("""\s*(?:[-–—]|to|until|till|through|thru)\s*""")
+
 /** Replaces each run of whitespace, including Unicode spaces, with a single space. */
 private fun String.normalizeSpaces() = replace(unicodeSpace, " ")
 
@@ -106,23 +108,74 @@ private val wordPattern = Regex("""[a-z]+""")
 /** Whether this text names a month, such as "Sep" or "September". */
 internal fun String.hasMonthName(): Boolean = wordPattern.findAll(normalizeSpaces().lowercase()).any { it.value in monthNames }
 
-fun parseTimeFromText(text: String): LocalTime? =
-    timePattern.find(text.normalizeSpaces().lowercase())?.let { match ->
-        val meridiem = match.groupValues[3].takeIf { it.isNotEmpty() }
-        val hour = (match.groupValues[1].takeIf { it.isNotEmpty() }
-            ?: match.groupValues[4]).toIntOrNull() ?: return null
-        val minute = (match.groupValues[2].takeIf { it.isNotEmpty() }
-            ?: match.groupValues[5].takeIf { it.isNotEmpty() }
-            ?: "0").toIntOrNull() ?: return null
+/** A span of the day read from text, its [end] given only when the text states one. */
+data class TimeRange(val start: LocalTime, val end: LocalTime?)
 
+/** A time of day as written, its [meridiem] `'a'` or `'p'` when stated. */
+private data class TimeToken(val hour: Int, val minute: Int, val meridiem: Char?, val isZeroPadded: Boolean, val range: IntRange) {
+    /** Whether this token could be either half of the day. */
+    val isAmbiguous get() = meridiem == null && hour in 1..12 && !isZeroPadded
+
+    fun toLocalTime(meridiem: Char? = this.meridiem): LocalTime {
         val adjusted = when {
-            meridiem == "p" && hour < 12 -> hour + 12
-            meridiem == "a" && hour == 12 -> 0
+            meridiem == 'p' && hour < 12 -> hour + 12
+            meridiem == 'a' && hour == 12 -> 0
             else -> hour
         }
-        if (adjusted !in 0..23 || minute !in 0..59) return null
-        LocalTime(adjusted, minute)
+        return LocalTime(adjusted, minute)
     }
+
+    /** The time this token states, or null when it is ambiguous in text where [hasMeridiem]. */
+    fun resolve(hasMeridiem: Boolean): LocalTime? = if (isAmbiguous && hasMeridiem) null else toLocalTime()
+}
+
+private fun Char.flipped() = if (this == 'a') 'p' else 'a'
+
+private fun MatchResult.toTimeToken(): TimeToken? {
+    val hourText = groupValues[1].ifEmpty { groupValues[4] }
+    val hour = hourText.toIntOrNull() ?: return null
+    val minute = groupValues[2].ifEmpty { groupValues[5] }.ifEmpty { "0" }.toIntOrNull() ?: return null
+    if (hour !in 0..23 || minute !in 0..59) return null
+    val meridiem = groupValues[3].firstOrNull()
+    return TimeToken(hour, minute, meridiem, hourText.length == 2 && hourText[0] == '0', range)
+}
+
+/**
+ * Reads the first time of day in [text], with the end of the range it opens.
+ *
+ * A time without a meridiem borrows one from the other side of its range, flipped when it would put the start
+ * after the end. Otherwise it is read on the 24-hour clock, unless it could be either half of the day and the text
+ * states a meridiem elsewhere, which leaves it unread.
+ */
+fun parseTimeRange(text: String): TimeRange? {
+    val lower = text.normalizeSpaces().lowercase()
+    val tokens = timePattern.findAll(lower).mapNotNull { it.toTimeToken() }.toList()
+    val first = tokens.firstOrNull() ?: return null
+    val second = tokens.getOrNull(1)
+        ?.takeIf { rangeSeparator.matches(lower.substring(first.range.last + 1, it.range.first)) }
+    val hasMeridiem = tokens.any { it.meridiem != null }
+
+    if (second == null) return first.resolve(hasMeridiem)?.let { TimeRange(it, null) }
+
+    return when {
+        first.isAmbiguous && second.meridiem != null -> {
+            val end = second.toLocalTime()
+            val start = first.toLocalTime(second.meridiem).takeIf { it <= end }
+                ?: first.toLocalTime(second.meridiem.flipped())
+            TimeRange(start, end)
+        }
+        second.isAmbiguous && first.meridiem != null -> {
+            val start = first.toLocalTime()
+            val end = second.toLocalTime(first.meridiem).takeIf { it >= start }
+                ?: second.toLocalTime(first.meridiem.flipped())
+            TimeRange(start, end)
+        }
+        else -> TimeRange(first.resolve(hasMeridiem) ?: return null, second.resolve(hasMeridiem))
+    }
+}
+
+/** The start of the first time of day in [text], read by [parseTimeRange]. */
+fun parseTimeFromText(text: String): LocalTime? = parseTimeRange(text)?.start
 
 fun parseDateFromText(text: String, now: Instant, zone: TimeZone): LocalDate? {
     val lower = text.normalizeSpaces().lowercase()

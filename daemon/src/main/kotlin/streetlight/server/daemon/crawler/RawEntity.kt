@@ -15,7 +15,7 @@ import streetlight.model.data.ParseProperty
 import streetlight.model.data.RawEntity
 import streetlight.model.data.buildRawEntity
 import streetlight.server.daemon.agent.parseLocalDateTime
-import streetlight.server.daemon.agent.parseTimeFromText
+import streetlight.server.daemon.agent.parseTimeRange
 import streetlight.server.utils.readImageUrl
 
 /**
@@ -37,7 +37,9 @@ fun RawEntity.toEventEdit(timeZoneId: String?, parseMode: ParseMode, tracker: Pa
         shortenDescription(full, url).also { if (it != full) tracker.trackShortenedDescription() }
     }
     val start = dateTimeText?.let { parseLocalDateTime(it, timeZoneId) }
-    val end = this[ParseProperty.EndTime]?.let { parseTimeFromText(it) }
+    val end = dateTimeText?.let { parseTimeRange(it)?.end }
+        ?: this[ParseProperty.EndTime]?.takeIf { it != startTime && it != date }
+            ?.let { parseTimeRange(it) }?.let { it.end ?: it.start }
 
     val body = listOfNotNull(
         description,
