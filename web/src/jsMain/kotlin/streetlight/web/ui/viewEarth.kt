@@ -39,10 +39,10 @@ fun ViewScope.viewEarthRoute() {
 }
 
 fun ViewScope.earthHeader(model: Earth) {
-    flowBlock(model.mapState, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
+    flowBlock(model.mapState, modify(EarthStyle.Header, Magic)) { map ->
         if (map == null) return@flowBlock
         column(Gap0) {
-            column(modify(Height(8), EarthStyle.MapTitle, JustifyContentCenter)) {
+            column(modify(Height(8), EarthStyle.MapTitle, EarthStyle.MoveDimmer, JustifyContentCenter)) {
                 filigree {
                     heading3(map.title)
                 }

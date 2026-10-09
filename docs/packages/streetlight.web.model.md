@@ -54,7 +54,7 @@ A filter edited faster than the route, such as search text behind a debounce, ke
 
 ## Messages
 
-A method that reports to the user takes a `Messenger` parameter. The view decides where the message appears, the model decides what it says. `streetlight.web.ui` states the conventions the messages follow.
+A method that reports to the user takes a `Messenger` parameter. The view decides where the message appears, the model decides what it says. Without an obvious place in the view for the message, the model reports through its injected `Toaster` instead. `streetlight.web.ui` states the conventions the messages follow.
 
 ## Editing
 

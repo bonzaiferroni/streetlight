@@ -56,7 +56,7 @@ fun FlowContent.popoverCard(
 
 /** Makes a click on this button hide the popover with [id]. */
 fun BUTTON.closePopoverOnClick(id: Id) {
-    setPopoverTarget(id, "hide")
+    setPopoverTarget(id, action = "hide")
 }
 
 /** Makes a click on this link hide the popover with [id]. */

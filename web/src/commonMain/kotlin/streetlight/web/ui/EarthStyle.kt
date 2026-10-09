@@ -8,6 +8,7 @@ import koala.html.Id
 object EarthStyle {
     val Container = Id("earth")
     val TagMenuId = Id("earth-tag-menu")
+    val ConfigMenuId = Id("earth-config-menu")
     val ViewMapButtonMod = modify(PositionSticky, Css.Top(1), JustifySelfCenter, AlignSelfStart, ZIndex1)
     val IsMoving = Class("is-moving")
     val MoveDimmer = Class("move-dimmer")

@@ -2,7 +2,9 @@
 
 package streetlight.web.model
 
+import kampfire.model.GeoPoint
 import kampfire.model.reactIn
+import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.StaticMarker
@@ -10,6 +12,7 @@ import koala.model.Portal
 import kampfire.model.tapOf
 import kampfire.model.storeOf
 import koala.model.PointMarker
+import koala.model.readCurrentLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -144,6 +147,17 @@ class Earth(
         val current = portal.stateNow.route as? EventsMapRoute ?: return
         if (current.tag == tag) return
         go(EventsMapRoute(null, tag, current.searchText))
+    }
+
+    /** Pans the map to the device's current location, or reports that it is unavailable. */
+    fun panToCurrentLocation() {
+        scope.launch("Earth > current location") {
+            val point = readCurrentLocation() ?: run {
+                toaster.toast("Your location is unavailable", UIMessageType.Error)
+                return@launch
+            }
+            markerMap.geoMap.camera.panMap(point)
+        }
     }
 
     /** Navigates to the events matching the search text, unless the current route already carries it. */

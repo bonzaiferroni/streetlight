@@ -30,6 +30,8 @@ object SvgFile : FileSet<Svg>() {
     val CityLarge = add("city-large.svg")
     val Clock = add("clock.svg")
     val Crosshairs = add("crosshairs.svg")
+    val CurrentLocation = add("current-location.svg")
+    val CurrentLocationLarge = add("current-location-large.svg")
     val Dashboard = add("dashboard.svg")
     val Database = add("database.svg")
     val DatabaseArrow = add("database-arrow.svg")

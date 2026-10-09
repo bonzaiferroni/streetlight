@@ -117,8 +117,11 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?
 }
 
 /** Makes a click on this element act on the popover with [id]: toggle it, or [action] when given. */
-fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, action: String? = null) {
+fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, addAnchor: Boolean = false, action: String? = null) {
     setAttribute(Attribute.PopoverTarget, id.identifier)
+    if (addAnchor) {
+        addModifiers(Css.AnchorName.of(id.toPositionAnchor()))
+    }
     action?.let {
         setAttribute(Attribute.PopoverTargetAction, it)
     }
