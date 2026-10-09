@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-mushroom">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.7;0 0" dur="2.5s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M20 11.1c0 -4.474 -3.582 -8.1 -8 -8.1s-8 3.626 -8 8.1a.9 .9 0 0 0 .9 .9h14.2a.9 .9 0 0 0 .9 -.9"/>
+    </g>
+    <path d="M10 12v7a2 2 0 1 0 4 0v-7">
+        <animate attributeName="d" values="M10 12v7a2 2 0 1 0 4 0v-7;M10 11.3v7.7a2 2 0 1 0 4 0v-7.7;M10 12v7a2 2 0 1 0 4 0v-7" dur="2.5s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+</svg>

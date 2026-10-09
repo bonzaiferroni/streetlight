@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-heading">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M7 12h10">
+        <animate attributeName="d" values="M7 12h10;M7 11h10;M7 12h10;M7 13h10;M7 12h10" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+    </path>
+    <path d="M7 5v14"/>
+    <path d="M17 5v14"/>
+    <path d="M15 19h4"/>
+    <path d="M15 5h4"/>
+    <path d="M5 19h4"/>
+    <path d="M5 5h4"/>
+</svg>

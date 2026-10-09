@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-roller-skating">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M6 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    <path d="M14 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 8 17" to="360 8 17" dur="1.5s" repeatCount="indefinite"/>
+        <path d="M7.2 17h1.6"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 16 17" to="360 16 17" dur="1.5s" repeatCount="indefinite"/>
+        <path d="M15.2 17h1.6"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.5;0 0" dur="1.5s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M5.905 5h3.418a1 1 0 0 1 .928 .629l1.143 2.856a3 3 0 0 0 2.207 1.83l4.717 .926a2.084 2.084 0 0 1 1.682 2.045v.714a1 1 0 0 1 -1 1h-13.895a1 1 0 0 1 -1 -1.1l.8 -8a1 1 0 0 1 1 -.9"/>
+    </g>
+</svg>

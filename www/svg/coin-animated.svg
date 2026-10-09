@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-coin">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g transform="translate(12 12)">
+        <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;0.15 1;1 1" dur="3s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <g transform="translate(-12 -12)">
+                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+                <path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1"/>
+                <path d="M12 7v10"/>
+            </g>
+        </g>
+    </g>
+</svg>

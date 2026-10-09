@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-rotate-clockwise">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 12 12;360 12 12;360 12 12" keyTimes="0;0.75;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5"/>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-glass-champagne">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M9 21h6"/>
+    <path d="M12 16v5"/>
+    <path d="M8 5a4 2 0 1 0 8 0a4 2 0 1 0 -8 0"/>
+    <path d="M8 5c0 6.075 1.79 11 4 11s4 -4.925 4 -11"/>
+    <circle cx="11.2" cy="13.5" r="0.6" fill="currentColor" stroke="none" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 -6" keyTimes="0;0.6;1" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0;0" keyTimes="0;0.12;0.6;1" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="12.7" cy="12.5" r="0.5" fill="currentColor" stroke="none" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -5;0 -5" keyTimes="0;0.45;0.95;1" dur="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.45;0.55;0.95;1" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+</svg>

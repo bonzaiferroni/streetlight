@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-scooter">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M16 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    <path d="M4 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 18 17" to="360 18 17" dur="1.5s" repeatCount="indefinite"/>
+        <path d="M17.2 17h1.6"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 6 17" to="360 6 17" dur="1.5s" repeatCount="indefinite"/>
+        <path d="M5.2 17h1.6"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.4;0 0" dur="1.5s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M8 17h5a6 6 0 0 1 5 -5v-5a2 2 0 0 0 -2 -2h-1"/>
+    </g>
+</svg>

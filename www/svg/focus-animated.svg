@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-focus-2">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M11.5 12a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/>
+    <path d="M5 12a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0.8;0 0" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M12 3l0 2"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0.8 0;0 0" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 12l2 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.8;0 0" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M12 19l0 2"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;-0.8 0;0 0" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M19 12l2 0"/>
+    </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-yoga">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M4 20h4l1.5 -3"/>
+    <path d="M17 20l-1 -5h-5l1 -7"/>
+    <path d="M10.007 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    <path d="M4 10L8 9L12 8L16 9.5L20 11">
+        <animate attributeName="d" values="M4 10L8 9L12 8L16 9.5L20 11;M4 8.6L8 8.3L12 8L16 8.7L20 9.4;M4 10L8 9L12 8L16 9.5L20 11" dur="4s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+</svg>

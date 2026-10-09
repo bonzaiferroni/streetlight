@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-building-carousel">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M6 12a6 6 0 1 0 12 0a6 6 0 1 0 -12 0"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -1;0 0;0 0;0 0;0 0" dur="5s" repeatCount="indefinite" keyTimes="0;0.2;0.4;0.6;0.8;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 8a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -1;0 0;0 0;0 0" dur="5s" repeatCount="indefinite" keyTimes="0;0.2;0.4;0.6;0.8;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M10 4a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 0;0 -1;0 0;0 0" dur="5s" repeatCount="indefinite" keyTimes="0;0.2;0.4;0.6;0.8;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M17 8a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 0;0 0;0 -1;0 0" dur="5s" repeatCount="indefinite" keyTimes="0;0.2;0.4;0.6;0.8;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 16a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 0;0 0;0 0;0 -1;0 0" dur="5s" repeatCount="indefinite" keyTimes="0;0.167;0.333;0.5;0.667;0.833;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M17 16a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <path d="M8 22l4 -10l4 10"/>
+</svg>

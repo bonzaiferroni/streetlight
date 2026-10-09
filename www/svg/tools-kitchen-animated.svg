@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-tools-kitchen-2">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 12 21;4 12 21;0 12 21;-4 12 21;0 12 21" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+        <path d="M19 3v12h-5c-.023 -3.681 .184 -7.406 5 -12m0 12v6h-1v-3m-10 -14v17m-3 -17v3a3 3 0 1 0 6 0v-3"/>
+    </g>
+</svg>

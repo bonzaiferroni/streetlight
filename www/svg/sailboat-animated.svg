@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-sailboat">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <clipPath id="sailboat-clip"><rect x="1.5" y="17" width="21" height="6"/></clipPath>
+    <g clip-path="url(#sailboat-clip)">
+        <g>
+            <animateTransform attributeName="transform" type="translate" from="0 0" to="-8 0" dur="4s" repeatCount="indefinite"/>
+            <path d="M-6 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1"/>
+        </g>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 12 18;-4 12 18;0 12 18;4 12 18;0 12 18" dur="4s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+        <path d="M4 18l-1 -3h18l-1 3"/>
+        <path d="M11 12h7l-7 -9v9"/>
+        <path d="M8 7l-2 5"/>
+    </g>
+</svg>
