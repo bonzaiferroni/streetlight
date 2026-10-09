@@ -2,7 +2,6 @@
 
 package streetlight.web.model
 
-import kampfire.model.GeoPoint
 import kampfire.model.reactIn
 import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
@@ -16,7 +15,7 @@ import koala.model.readCurrentLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.Entity
@@ -31,7 +30,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.EventsMap
 import streetlight.model.ui.EventsMapRoute
 import streetlight.web.io.ApiClient
-import kotlin.time.Duration.Companion.milliseconds
+import streetlight.web.utils.localStoreOf
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -44,7 +43,8 @@ class Earth(
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
-    private val markerMap: MarkerMap
+    private val markerMap: MarkerMap,
+    private val starLocator: StarLocator,
 ) {
     private val state = storeOf(EarthMapState(initialMap))
     val stateFlow = state.flow
@@ -58,6 +58,8 @@ class Earth(
 
     val tagState = portal.routeState.tapOf { (it as? EventsMapRoute)?.tag }
     val searchTextState = storeOf((portal.stateNow.route as? EventsMapRoute)?.searchText.orEmpty())
+    val trackLocationState = localStoreOf(scope, "track-location", false)
+    val isLocatingState = storeOf(false)
 
     val cache = EarthCache(scope, api, markerMap, toaster)
     val isQueryingState = cache.isQueryingState
@@ -76,6 +78,14 @@ class Earth(
 
         markerMap.focusState.reactIn(scope) { focus ->
             reactToFocus(focus)
+        }
+
+        scope.launch("Earth > track location") {
+            trackLocationState.flow.collectLatest { isTracking ->
+                if (!isTracking) return@collectLatest
+                starLocator.trackLocation(toaster)
+                trackLocationState.set(false)
+            }
         }
 
         scope.launch("Earth > search") {
@@ -150,12 +160,14 @@ class Earth(
     }
 
     /** Pans the map to the device's current location, or reports that it is unavailable. */
-    fun panToCurrentLocation() {
+    fun locateStar() {
+        isLocatingState.set(true)
         scope.launch("Earth > current location") {
-            val point = readCurrentLocation() ?: run {
-                toaster.toast("Your location is unavailable", UIMessageType.Error)
+            val point = readCurrentLocation().toDataOr(toaster) {
+                isLocatingState.set(false)
                 return@launch
             }
+            isLocatingState.set(false)
             markerMap.geoMap.camera.panMap(point)
         }
     }

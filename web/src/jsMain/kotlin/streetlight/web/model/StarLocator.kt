@@ -1,11 +1,15 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import kampfire.model.Messenger
 import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
+import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import koala.model.GeoMap
 import koala.model.readCurrentLocation
+import koala.model.streamCurrentLocation
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import web.events.EventHandler
@@ -42,6 +46,16 @@ class StarLocator(
         }
     }
 
+    /**
+     * Follows the device's location until cancelled, or until access to it is lost, which it reports to [messenger].
+     */
+    suspend fun trackLocation(messenger: Messenger) {
+        streamCurrentLocation().collect { outcome ->
+            val point = outcome.toDataOr(messenger) { return@collect }
+            state.set { copy(starPoint = point) }
+        }
+    }
+
     /** Reads the location when [status] grants access to it, and forgets it otherwise. */
     private fun readPermission(status: PermissionStatus) {
         if (status.state != PermissionState.granted) {
@@ -49,7 +63,7 @@ class StarLocator(
             return
         }
         scope.launch("StarLocator > location") {
-            val point = readCurrentLocation()
+            val point = readCurrentLocation().toDataOrNull()
             state.set { copy(starPoint = point) }
         }
     }

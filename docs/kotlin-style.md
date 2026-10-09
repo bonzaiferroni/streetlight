@@ -34,6 +34,10 @@ A function's name follows a verbNoun shape and names the noun it acts on.
 | One kind of work takes one verb, in names and comments alike | A tracker's functions are `track…`, and its comments say "Tracks" |
 | A name after its verb follows the AdjectiveNoun shape of a type, naming what the work is about | `trackSkippedUrl`, `trackFailedRecord`, `trackLdValues` |
 
+## Outcomes
+
+A function whose failure the caller must report returns an `Outcome`, as `Ok` with its data or a `Problem` whose message is written for the user. The caller unwraps it with `toDataOr(messenger)`, which delivers the problem's message. A problem is declared once, as a property of a `FooProblem` object.
+
 ## Branching
 
 An early return ends a chain of behavior:
