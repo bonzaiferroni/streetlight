@@ -52,7 +52,7 @@ fun ViewScope.blockMenu(
         name?.let {
             textBlock("add to $name", modify(TextSmall, TextUppercase, OpacityHalf))
         }
-        editorIconButton(if (name == null) SvgFile.PlusAbove else SvgFile.Plus) {
+        editorIconButton(if (name == null) SvgFile.PlusAbove.small else SvgFile.Plus.small) {
             setPopoverTarget(popoverId)
         }
     }

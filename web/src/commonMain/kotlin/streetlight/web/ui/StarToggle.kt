@@ -27,8 +27,8 @@ fun FlowContent.starToggle(
     isLit: Boolean,
     uuid: Uuid,
     starCount: Int?,
-    unlitSvg: Svg = SvgFile.Star,
-    litSvg: Svg = SvgFile.StarFilled,
+    unlitSvg: Svg = SvgFile.Star.small,
+    litSvg: Svg = SvgFile.Star.filled,
     signature: JsSignature = StarToggle.ToggleAny,
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
@@ -56,11 +56,11 @@ fun FlowContent.starToggle(galaxy: Galaxy) {
 }
 
 fun FlowContent.starToggle(event: EventLocation) {
-    starToggle(ToggleType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
+    starToggle(ToggleType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus.small, SvgFile.CalendarMinus.small)
 }
 
 fun FlowContent.starToggle(event: Event) {
-    starToggle(ToggleType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
+    starToggle(ToggleType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus.small, SvgFile.CalendarMinus.small)
 }
 
 fun FlowContent.starToggle(location: Location) {

@@ -81,7 +81,7 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
                 row(modify(AlignItemsCenter, ZenBg, BorderRadius2, Padding(1))) {
                     textField(nameState, "name", Flex1)
                     dropMenu(leanState)
-                    button(SvgFile.X, {
+                    button(SvgFile.X.small, {
                         model.removeMark(markId)
                     })
                 }

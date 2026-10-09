@@ -46,7 +46,7 @@ fun ViewScope.containerBuilder(blocksField: MutableTap<List<LayoutBlock>>) {
 }
 
 fun ViewScope.blockZone(onBlock: (LayoutBlock) -> Unit) {
-    button(SvgFile.Plus, {
+    button(SvgFile.Plus.small, {
         onBlock(TextBlock("My Text"))
     })
 }
@@ -84,15 +84,15 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
                         } else {
                             row(modify(AlignItemsCenter, Height(5))) {
                                 textBlock(tabName, Flex1)
-                                button(SvgFile.Edit, { isEditingField.toggle() })
-                                button(SvgFile.Minus, {
+                                button(SvgFile.Edit.filled, { isEditingField.toggle() })
+                                button(SvgFile.Minus.small, {
                                     tabsField.set { copy(tabs = tabs.filter { it.name != tabName }) }
                                 })
                             }
                         }
                     }
                 }
-                button(SvgFile.Plus, {
+                button(SvgFile.Plus.small, {
                     val newTab = TabContent("new tab", emptyList())
                     tabsField.set { copy(tabs = tabs + newTab) }
                 })

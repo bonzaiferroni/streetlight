@@ -121,9 +121,9 @@ $Base {
 """ }
 
 /** The time of day [startsAt]. */
-fun startsAtCell(startsAt: Instant) = EntityCell(SvgFile.Clock, startsAt.toTimeFormat(), null)
+fun startsAtCell(startsAt: Instant) = EntityCell(SvgFile.Clock.small, startsAt.toTimeFormat(), null)
 
-fun dateCell(startsAt: Instant) = EntityCell(SvgFile.Calendar, startsAt.toFutureFormat(), null)
+fun dateCell(startsAt: Instant) = EntityCell(SvgFile.Calendar.small, startsAt.toFutureFormat(), null)
 
 fun FlowContent.exampleStartsAtCell() {
 //    cell {
@@ -141,22 +141,22 @@ fun costCell(cost: Float, purchaseUrl: Url?): EntityCell {
         0f -> "FREE"
         else -> "$${cost.format(2, true)}"
     }
-    return EntityCell(SvgFile.TicketSmall, costText, ticketsUrl)
+    return EntityCell(SvgFile.Ticket.small, costText, ticketsUrl)
 }
 
 fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.value ?: "Guest", null)
 
-fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFormat(), null)
+fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock.small, postedAt.toAgoFormat(), null)
 
-fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
+fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link.small, link.label, link.url)
 
-fun locationCountCell(count: Int) = EntityCell(SvgFile.MapPin, count.toMetricString(), null, "locations")
+fun locationCountCell(count: Int) = EntityCell(SvgFile.MapPin.small, count.toMetricString(), null, "locations")
 
-fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar, count.toMetricString(), null, "events")
+fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar.small, count.toMetricString(), null, "events")
 
 /** Expands and collapses the body of the feed row around it. */
 fun FlowContent.moreButton() {
-    icon(SvgFile.Info, modify(CellGrid.ButtonIconMod, FeedRowStyle.MoreButton)) {
+    icon(SvgFile.Info.small, modify(CellGrid.ButtonIconMod, FeedRowStyle.MoreButton)) {
         onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRowStyle.Base, FeedRowStyle.ToggleExpand)
     }
 }

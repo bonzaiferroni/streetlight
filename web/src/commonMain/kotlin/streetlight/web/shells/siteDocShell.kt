@@ -90,7 +90,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
             node.previous?.let {
                 navigation(SiteDocRoute(it.docId)) {
                     row(modify(LargeIconHeight, AlignItemsCenter)) {
-                        icon(SvgFile.ArrowLeft, AlignSelfStretch)
+                        icon(SvgFile.ArrowLeft.large, AlignSelfStretch)
                         textBlock(it.label)
                     }
                 }
@@ -100,7 +100,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
                 navigation(SiteDocRoute(it.docId)) {
                     row(modify(LargeIconHeight, AlignItemsCenter)) {
                         textBlock(it.label)
-                        icon(SvgFile.ArrowRight, AlignSelfStretch)
+                        icon(SvgFile.ArrowRight.large, AlignSelfStretch)
                     }
                 }
             }

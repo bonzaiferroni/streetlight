@@ -55,20 +55,20 @@ fun FlowContent.siteMenuSidebar() {
 }
 
 fun FlowContent.siteMenuItems() {
-    item("Earth", GalaxyMapRoute(null), SvgFile.Earth)
-    item("Galaxies", GalaxyListRoute, SvgFile.Satellite)
-    item("Cities", CityListRoute, SvgFile.CityLarge)
+    item("Earth", GalaxyMapRoute(null), SvgFile.Earth.large)
+    item("Galaxies", GalaxyListRoute, SvgFile.Satellite.large)
+    item("Cities", CityListRoute, SvgFile.City.large)
     // radio
     label("meta")
-    item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
-    item("Contribute", ContributeRoute, SvgFile.HeartHandshake) // td
-    item("Status", SiteMonitorRoute, SvgFile.ChartLarge) // td
-    item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
+    item("Help & Feedback", FrontDeskRoute, SvgFile.Question.large)
+    item("Contribute", ContributeRoute, SvgFile.HeartHandshake.large) // td
+    item("Status", SiteMonitorRoute, SvgFile.Chart.large) // td
+    item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed.large)
     label("config")
-    item("Settings", SiteConfigRoute, SvgFile.GearLarge)
+    item("Settings", SiteConfigRoute, SvgFile.Gear.large)
     row(modify(SiteHelm.rowMod, ThemeToggle)) {
         onClick = KoalaFun.toggleRootModifier.invokeJs(DayTheme)
-        icon(SvgFile.Sun, HelmBar.IconMod)
+        icon(SvgFile.Sun.large, HelmBar.IconMod)
         textBlock("Theme")
     }
 }
@@ -119,7 +119,7 @@ ${SiteHelm.PopoverClass} {
 }
 
 $DayTheme $ThemeToggle ${IconStyle.Icon} {
-    ${Css.MaskUrl.of(SvgFile.Moon)} !important;
+    ${Css.MaskUrl.of(SvgFile.Moon.large)} !important;
 }
 
 ${generateScreenSelectors(highlightedScreens)} {

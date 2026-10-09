@@ -38,7 +38,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
 
                     card(controlMod) {
                         textBlock(comment.replyCount.toString())
-                        icon(SvgFile.MessagePlus)
+                        icon(SvgFile.MessagePlus.large)
                     }
                 }
             }

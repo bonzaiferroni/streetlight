@@ -45,13 +45,13 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                         "Group Chat"
                     }
                     row(modify(Flex1, JustifyContentEnd)) {
-                        button(SvgFile.ArrowLeft, { model.openChat(null) }, Height(5))
+                        button(SvgFile.ArrowLeft.large, { model.openChat(null) }, Height(5))
                     }
                     column(modify(Gap0, AlignItemsCenter)) {
                         heading5(title, SingleLine)
                         textBlock(chat.createdAt.toHourAndMinutesFormat(), modify(TextSmall, OpacityHigh))
                     }
-                    val icon = if (model.isArchiveState.now) SvgFile.DatabaseMinus else SvgFile.DatabasePlus
+                    val icon = if (model.isArchiveState.now) SvgFile.DatabaseMinus.large else SvgFile.DatabasePlus.large
                     row(modify(Flex1, JustifyContentStart)) {
                         button(icon, model::toggleArchive, Height(5))
                     }
@@ -108,9 +108,9 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
             }
         }
         row(modify(Height(7), JustifyContentCenter, Padding(1))) {
-            button(SvgFile.MailLarge, { model.setIsArchive(false) }, Height100Pct)
+            button(SvgFile.Mail.large, { model.setIsArchive(false) }, Height100Pct)
                 .flowModifier(model.isArchiveState.tapOf { !it }, PrimaryFg, contentScope)
-            button(SvgFile.Database, { model.setIsArchive(true) }, Height100Pct)
+            button(SvgFile.Database.large, { model.setIsArchive(true) }, Height100Pct)
                 .flowModifier(model.isArchiveState, PrimaryFg, contentScope)
         }
     }

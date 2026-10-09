@@ -40,13 +40,13 @@ fun ViewScope.earthHeaderLegacy(model: Earth) {
         //             logo()
         //         }
         //         else -> row(modify(AlignItemsCenter)) {
-        //             icon(SvgFile.ArrowLeft, iconMod).onClick {
+        //             icon(SvgFile.ArrowLeft.large, iconMod).onClick {
         //                 portal.go(GalaxyMapRoute(null))
         //             }
         //             heading3(map.title, modify(LineHeight115, SingleLine, Bold))
         //         }
         //     }
         // }
-        icon(SvgFile.GearLarge, iconMod).onClick { portal.go(HomeRoute) }
+        icon(SvgFile.Gear.large, iconMod).onClick { portal.go(HomeRoute) }
     }
 }

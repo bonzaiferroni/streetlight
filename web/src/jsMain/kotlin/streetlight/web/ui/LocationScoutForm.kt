@@ -51,7 +51,7 @@ private fun ViewScope.searchItem(
     address: String?,
     city: String?,
 ) = row(AlignItemsCenter) {
-    icon(SvgFile.MapPinLarge, modify(Height(5), ColorSchemeFg))
+    icon(SvgFile.MapPin.large, modify(Height(5), ColorSchemeFg))
     column(modify(Flex1, Gap0)) {
         textBlock(name ?: "a location", Bold)
         spacer(modify(Height2Px, InkGradientBg))
@@ -60,7 +60,7 @@ private fun ViewScope.searchItem(
         }
     }
     city?.let {
-        icon(SvgFile.City, modify(Height(3), ColorSchemeFg))
+        icon(SvgFile.City.small, modify(Height(3), ColorSchemeFg))
         textBlock(it, modify(OpacityHigh, Width(16)))
     }
 }

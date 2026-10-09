@@ -220,11 +220,11 @@ class CommentView(
                         }
                     }
                     spacer(Flex1)
-                    icon(SvgFile.EyeMinus, modify(Height(5), OpacityHigh)).onClickElement {
+                    icon(SvgFile.EyeMinus.large, modify(Height(5), OpacityHigh)).onClickElement {
                         val isHidden = rootBlock.toggle(Hide)
                         val svg = when (isHidden) {
-                            true -> SvgFile.EyePlus
-                            else -> SvgFile.EyeMinus
+                            true -> SvgFile.EyePlus.large
+                            else -> SvgFile.EyeMinus.large
                         }
                         it.setStyle(Css.MaskUrl.of(svg))
                     }

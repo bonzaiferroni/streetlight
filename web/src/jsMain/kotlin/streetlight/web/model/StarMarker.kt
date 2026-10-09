@@ -10,5 +10,5 @@ data class StarMarker(
     override val bearing: Float? = null,
 ): TravelMarker {
     override val markerId get() = if (bearing != null) "star-heading" else "star"
-    override val icon get() = if (bearing != null) SvgFile.NavigationFilled else SvgFile.CurrentLocation
+    override val icon get() = if (bearing != null) SvgFile.Navigation.filled else SvgFile.CurrentLocation.small
 }

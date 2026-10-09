@@ -66,9 +66,9 @@ private fun ViewScope.starPanel(star: Star) {
         }
 
         // calendar route goes here
-        routeItem(StarDashRoute, "Dashboard", SvgFile.Dashboard)
-        routeItem(StarConfigRoute, "Account", SvgFile.User)
-        routeItem(InboxRoute, "Inbox", SvgFile.MailLarge)
+        routeItem(StarDashRoute, "Dashboard", SvgFile.Dashboard.large)
+        routeItem(StarConfigRoute, "Account", SvgFile.User.large)
+        routeItem(InboxRoute, "Inbox", SvgFile.Mail.large)
 
         button({
             toggleRootModifierWithTransition(AppOverlay.RevealRightPanel.identifier)
@@ -77,7 +77,7 @@ private fun ViewScope.starPanel(star: Star) {
 
             row(RowMod) {
                 textBlock("Pin menu")
-                icon(SvgFile.PanelRight, HelmBar.IconMod)
+                icon(SvgFile.PanelRight.large, HelmBar.IconMod)
             }
         }
 
@@ -86,7 +86,7 @@ private fun ViewScope.starPanel(star: Star) {
 
             row(RowMod) {
                 textBlock("Sign out", WhiteSpaceNoWrap)
-                icon(SvgFile.SignOut, HelmBar.IconMod)
+                icon(SvgFile.SignOut.large, HelmBar.IconMod)
             }
         }
     }
@@ -127,7 +127,7 @@ private fun ViewScope.someonePanel() {
 //
 //                    row(RowMod + Width32) {
 //                        textBlock("Using Streetlight while signed-out", modify(TextAlignRight))
-//                        icon(SvgFile.Info, HelmBarKey.IconMod)
+//                        icon(SvgFile.Info.small, HelmBarKey.IconMod)
 //                    }
 //                }
 //

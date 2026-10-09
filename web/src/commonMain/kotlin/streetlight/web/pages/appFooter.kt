@@ -46,7 +46,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
             navigation(sourceUrlOf(sourcePath)) {
                 column(Gap0) {
                     filigree {
-                        icon(SvgFile.Github, Height(4))
+                        icon(SvgFile.Github.large, Height(4))
                     }
                     textBlock("source code for this content")
                 }

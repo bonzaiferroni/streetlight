@@ -121,17 +121,17 @@ fun eventCells(
 ) = buildList {
     startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
     cost?.let { add(costCell(it, purchaseUrl)) }
-    tags?.firstOrNull()?.let { add(EntityCell(SvgFile.Label, it.label, null)) }
+    tags?.firstOrNull()?.let { add(EntityCell(SvgFile.Label.small, it.label, null)) }
     locationName?.let {
         val locationUrl = locationRoute?.let { route -> Url(route.toRelativePath()) }
-        add(EntityCell(SvgFile.MapPin, it, locationUrl, themeColor = ThemeColor.Location))
+        add(EntityCell(SvgFile.MapPin.small, it, locationUrl, themeColor = ThemeColor.Location))
     }
 }
 
 /** The cells of a location: its [mapType], [city], and [eventCount] when it has events. */
 fun locationCells(mapType: String?, city: String?, eventCount: Int) = buildList {
-    add(EntityCell(SvgFile.MapPin, mapType ?: "Location", null))
-    city?.let { add(EntityCell(SvgFile.City, it, null)) }
+    add(EntityCell(SvgFile.MapPin.small, mapType ?: "Location", null))
+    city?.let { add(EntityCell(SvgFile.City.small, it, null)) }
     if (eventCount > 0) add(eventCountCell(eventCount))
 }
 

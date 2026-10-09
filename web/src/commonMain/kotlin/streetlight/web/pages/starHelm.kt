@@ -16,7 +16,7 @@ fun FlowContent.starHelmPopover() {
     popover(StarHelm.PopoverId, StarHelm.PopoverClass) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
             setId(StarHelm.StarBarHelm)
-            button(SvgFile.LoaderSmall, modify(Height(5), FadeLoop)) {
+            button(SvgFile.Loader.small, modify(Height(5), FadeLoop)) {
                 onClick = StarHelm.ClosePopover.block
             }
         }

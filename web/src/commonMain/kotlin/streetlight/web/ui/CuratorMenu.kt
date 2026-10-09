@@ -75,7 +75,7 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
             }
         }
         column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
-            icon(SvgFile.ChevronUp, Height(3)) {
+            icon(SvgFile.ChevronUp.small, Height(3)) {
                 configMarkIndicator(upMark)
             }
             button(modify(Height(3), MinWidth(6), FlexColumn, JustifyContentCenter, VoidBg, BorderRadiusPill, PointerEventsAuto, Outline)) {
@@ -84,7 +84,7 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
                     configurePostLeanText(curator)
                 }
             }
-            icon(SvgFile.ChevronDown, Height(3)) {
+            icon(SvgFile.ChevronDown.small, Height(3)) {
                 configMarkIndicator(downMark)
             }
         }
@@ -124,7 +124,7 @@ fun FlowContent.multiBadge(curator: CuratorStatus) {
         column(modify(Width(10), BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
             icon(SvgFile.Flame, modify(Height(2), OpacityLow))
             textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
-            icon(SvgFile.ArrowsSort, modify(Height(2), OpacityLow))
+            icon(SvgFile.ArrowsSort.small, modify(Height(2), OpacityLow))
         }
     }
 }
@@ -134,7 +134,7 @@ fun FlowContent.singleBadge(curator: CuratorStatus) {
         column(modify(Width(10), BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
             icon(SvgFile.Flame, modify(Height(2), OpacityLow))
             textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
-            icon(SvgFile.ChevronUp, modify(Height(2), OpacityLow))
+            icon(SvgFile.ChevronUp.small, modify(Height(2), OpacityLow))
         }
     }
 }

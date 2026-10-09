@@ -75,15 +75,15 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                             } else {
                                 row(modify(AlignItemsCenter, Height(5))) {
                                     textBlock(tabName, Flex1)
-                                    button(SvgFile.Edit, { isEditingField.toggle() })
-                                    button(SvgFile.Minus, {
+                                    button(SvgFile.Edit.filled, { isEditingField.toggle() })
+                                    button(SvgFile.Minus.small, {
                                         editor.removeContainer(containerId)
                                     })
                                 }
                             }
                         }
                     }
-                    button(SvgFile.Plus, {
+                    button(SvgFile.Plus.small, {
                         editor.addContainer(TabContent("new tab", emptyList()))
                     })
                 }

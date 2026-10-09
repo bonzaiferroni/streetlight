@@ -28,11 +28,11 @@ fun ViewScope.editorSandbox() {
     val isSwyg = storeOf(false)
     column {
         row(JustifyContentEnd) {
-            button(SvgFile.Magic, {
+            button(SvgFile.Magic.filled, {
                 textState.set { Markdown("$value!") }
             })
-            button(SvgFile.Eye, isSwyg::toggle)
-            button(SvgFile.Edit, isEditingState::toggle)
+            button(SvgFile.Eye.large, isSwyg::toggle)
+            button(SvgFile.Edit.filled, isEditingState::toggle)
         }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {

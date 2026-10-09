@@ -18,7 +18,7 @@ fun ViewScope.earthControls(model: Earth) {
             button(mod = buttonMod) {
                 setPopoverTarget(EarthStyle.TagMenuId, true)
                 row(modify(AlignItemsCenter, Gap0)) {
-                    icon(SvgFile.Label)
+                    icon(SvgFile.Label.small)
                     flowBlock(model.tagState, modify(MarginLeft(1))) { tag ->
                         when (tag) {
                             null -> textBlock("filter by type", buttonTextMod)
@@ -28,7 +28,7 @@ fun ViewScope.earthControls(model: Earth) {
                 }
             }
             spacer(Flex1)
-            button(SvgFile.GearSmall, mod = iconButtonMod) {
+            button(SvgFile.Gear.small, mod = iconButtonMod) {
                 setPopoverTarget(EarthStyle.ConfigMenuId, true)
             }
             searchField(model.searchTextState, modify(PointerEventsAuto, BlurBackdrop, EarthStyle.MoveDimmer))
@@ -38,7 +38,7 @@ fun ViewScope.earthControls(model: Earth) {
             button(model::locateStar, buttonMod) {
                 row(AlignItemsCenter) {
                     textBlock("find me", buttonTextMod)
-                    icon(SvgFile.CurrentLocation).flowModifier(model.isLocatingState, SpinLoop, contentScope)
+                    icon(SvgFile.CurrentLocation.small).flowModifier(model.isLocatingState, SpinLoop, contentScope)
                 }
             }
         }

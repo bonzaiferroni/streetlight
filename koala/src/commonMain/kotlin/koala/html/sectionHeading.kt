@@ -18,7 +18,7 @@ fun FlowContent.sectionHeading(
         row(modify(Flex1, JustifyContentCenter)) {
             labelContent()
         }
-//        icon(SvgFile.EyeClosed, modify(OpacitySome, Height4))
+//        icon(SvgFile.EyeClosed.large, modify(OpacitySome, Height4))
     }
 }
 

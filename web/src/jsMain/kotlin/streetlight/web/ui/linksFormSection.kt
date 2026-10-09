@@ -35,7 +35,7 @@ fun ViewScope.linksFormSection(linksState: MutableTap<List<ExtraLink>>) {
                         val urlState = storeOf(link.url.value)
                         textField(labelState, "label")
                         textField(urlState, "url", Flex1)
-                        button(SvgFile.Check, {
+                        button(SvgFile.Check.small, {
                             val label = labelState.now.takeIf { it.isNotEmpty() } ?: return@button
                             val url = urlState.now.takeIf { it.isNotBlank() }?.toValidAbsoluteUrlOrNull() ?: return@button
                             linksState.replaceAt(index, ExtraLink(label, url))
@@ -44,8 +44,8 @@ fun ViewScope.linksFormSection(linksState: MutableTap<List<ExtraLink>>) {
                         textBlock(link.label)
                         textBlock(link.url.value, InkDimFg)
                         spacer(Flex1)
-                        button(SvgFile.Edit, isEditingState::toggle)
-                        button(SvgFile.Trash, onClick = { linksState.removeAt(index) })
+                        button(SvgFile.Edit.filled, isEditingState::toggle)
+                        button(SvgFile.Trash.small, onClick = { linksState.removeAt(index) })
                     }
                 }
             }

@@ -31,8 +31,8 @@ ${ImageChooserKey.Placeholder}::before {
     inset: 0;
 
     background: var(--gray-fg);     /* SVG color */
-    mask: url("/www/svg/image-placeholder.svg") no-repeat center / 2rem;
-    -webkit-mask: url("/www/svg/image-placeholder.svg") no-repeat center / 2rem;
+    mask: url("/www/svg/image-placeholder-small.svg") no-repeat center / 2rem;
+    -webkit-mask: url("/www/svg/image-placeholder-small.svg") no-repeat center / 2rem;
 
     pointer-events: none;
 }

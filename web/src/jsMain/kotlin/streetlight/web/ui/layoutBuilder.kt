@@ -73,7 +73,7 @@ fun ViewScope.editorRow(
                         blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
                         hr(modify(SystemFg, Flex1))
                         isEditingState?.let { state ->
-                            editorIconButton(SvgFile.Edit, { state.toggle() }).also {
+                            editorIconButton(SvgFile.Edit.filled, { state.toggle() }).also {
                                 it.flowModifier(state, AccentFg, contentScope)
                             }
                         }
@@ -92,9 +92,9 @@ fun ViewScope.editorRow(
                     }
 
                     row(modify(Flex1, AlignItemsCenter)) {
-                        editorIconButton(SvgFile.Trash, { editor.removeFromLayout() })
+                        editorIconButton(SvgFile.Trash.small, { editor.removeFromLayout() })
                         hr(modify(SystemFg, Flex1))
-                        editorIconButton(SvgFile.ArrowsSort, { editor.model.startMove(editor.blockId) })
+                        editorIconButton(SvgFile.ArrowsSort.small, { editor.model.startMove(editor.blockId) })
                     }
                 }
             }

@@ -19,7 +19,7 @@ fun FlowContent.postMenu(postId: PostId, username: Username?) {
         setPopoverTarget(PostMenu.PopoverId)
         setAttribute(PostMenu.PostId.to(postId))
         setAttribute(Attribute.Username.to(username))
-        icon(SvgFile.Dots, SmallIconHeight)
+        icon(SvgFile.Dots.small, SmallIconHeight)
     }
 }
 

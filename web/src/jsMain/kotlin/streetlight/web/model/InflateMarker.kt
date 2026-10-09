@@ -22,7 +22,7 @@ data class LocationInflateMarker(
     override val label get() = group.label
     override val geoPoint get() = group.geoPoint
     override val typeLabel get() = group.tag?.label ?: MarkerType.Event.label
-    override val svg get() = SvgFile.MapPin
+    override val svg get() = SvgFile.MapPin.small
     override val themeColor get() = ThemeColor.Location.cssValue
     override val light get() = ThemeColor.Location.light
 }

@@ -69,7 +69,7 @@ inline fun <reified State> ViewScope.stageBlock(
                     selectElement(value)
                 }
                 if (value.ordinal < entries.size - 1) {
-                    icon(SvgFile.ArrowRight, modify(SmallIconHeight, InkDimFg))
+                    icon(SvgFile.ArrowRight.large, modify(SmallIconHeight, InkDimFg))
                 }
             }
         }

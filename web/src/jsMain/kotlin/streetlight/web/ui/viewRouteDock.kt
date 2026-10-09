@@ -71,8 +71,8 @@ fun ViewScope.viewRouteDock() {
 }
 
 private fun iconOf(route: AppRoute) = when(route) {
-    is EarthRoute -> SvgFile.Earth
-    is HomeRoute -> SvgFile.Home
-    is CityConfigRoute, is GalaxyConfigRoute, is LocationConfigRoute, is ProfileConfigRoute, is StarConfigRoute -> SvgFile.GearSmall
+    is EarthRoute -> SvgFile.Earth.large
+    is HomeRoute -> SvgFile.Home.small
+    is CityConfigRoute, is GalaxyConfigRoute, is LocationConfigRoute, is ProfileConfigRoute, is StarConfigRoute -> SvgFile.Gear.small
     else -> error("no dock icon for route: $route")
 }

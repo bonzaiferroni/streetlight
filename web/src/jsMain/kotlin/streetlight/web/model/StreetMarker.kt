@@ -52,7 +52,7 @@ data class LocationMarker(
     // override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
     override val light get() = ThemeColor.Location.light
     override val typeLabel get() = location.mapType ?: MarkerType.Location.label
-    override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin
+    override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin.small
     override val themeColor get() = ThemeColor.Location.cssValue
     override val entity get() = location
 }
@@ -88,7 +88,7 @@ data class CityMarker(
 ): IconMarker {
     override val label get() = "${city.name}, ${city.state}"
     override val markerId get() = city.markerId
-    override val svg get() = SvgFile.City
+    override val svg get() = SvgFile.City.small
     override val geoPoint get() = city.geoPoint
     override val typeLabel get() = MarkerType.City.label
     override val themeColor get() = ThemeColor.City.cssValue

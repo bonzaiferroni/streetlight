@@ -114,9 +114,9 @@ val FeedSource.heading get() = when (this) {
 }
 
 fun FeedMode.toSvg() = when (this) {
-    FeedMode.Minimal -> SvgFile.LayoutMinimal
-    FeedMode.Row -> SvgFile.LayoutRow
-    FeedMode.Grid -> SvgFile.LayoutGrid
+    FeedMode.Minimal -> SvgFile.LayoutMinimal.small
+    FeedMode.Row -> SvgFile.LayoutRow.small
+    FeedMode.Grid -> SvgFile.LayoutGrid.small
 }
 
 // language="CSS"

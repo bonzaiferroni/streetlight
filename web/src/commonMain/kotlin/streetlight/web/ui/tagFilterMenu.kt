@@ -17,11 +17,11 @@ import kotlinx.html.onClick
 fun FlowContent.tagFilterMenu() {
     button(modify(TagFilterMenu.Button, AlignSelfCenter, DisplayFlex, AlignItemsCenter, Gap(1))) {
         setPopoverTarget(TagFilterMenu.PopoverId)
-        icon(SvgFile.Label, SmallIconHeight)
+        icon(SvgFile.Label.small, SmallIconHeight)
     }
     button(modify(TagFilterMenu.Clear, AlignSelfCenter)) {
         onClick = TagFilterMenu.ClearTag.invokeJs(ThisElement)
-        icon(SvgFile.X, SmallIconHeight)
+        icon(SvgFile.X.small, SmallIconHeight)
     }
 }
 

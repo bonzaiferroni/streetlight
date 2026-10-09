@@ -7,8 +7,8 @@ import streetlight.model.data.PostType
 /** The icon badge of an entity type. */
 enum class FlairIcon(val small: Svg) {
     Default(SvgFile.FlameLarge),
-    Event(SvgFile.CalendarLarge),
-    Location(SvgFile.MapPinLarge),
+    Event(SvgFile.Calendar.large),
+    Location(SvgFile.MapPin.large),
     Media(SvgFile.FlameLarge),
 }
 

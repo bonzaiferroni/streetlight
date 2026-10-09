@@ -64,6 +64,9 @@ data class Svg(override val url: Url): Asset {
     override fun toString() = url.value
 }
 
+/** The [Svg] of [label], at `label.svg`. */
+fun svgOf(label: String) = Svg("$svgPath$label.svg".toUrl())
+
 const val cssPath = "/www/css/"
 const val jsPath = "/www/js/"
 const val lottiePath = "/www/lottie/"

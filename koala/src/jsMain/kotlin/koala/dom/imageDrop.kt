@@ -23,7 +23,7 @@ fun ViewScope.imageDrop(
                 onClick = {
                     field.set(null)
                 }) {
-                icon(SvgFile.X)
+                icon(SvgFile.X.small)
             }
         }
     } else {
