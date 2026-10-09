@@ -8,7 +8,10 @@ import koala.dom.flowBlock
 import koala.dom.popoverCard
 import koala.dom.popoverRaw
 import koala.html.Id
+import web.events.addEventListener
 import web.html.HTMLElement
+import web.popover.TOGGLE
+import web.popover.ToggleEvent
 import kotlin.js.json
 
 object PopoverMenuMod {
@@ -42,7 +45,7 @@ fun <T> ViewScope.popoverMenu(
 
     val anchor = popoverId.toPositionAnchor()
 
-    element.addEventListener("toggle", { event ->
+    element.addEventListener(ToggleEvent.TOGGLE, { event ->
         val toggle = event.asDynamic()
         // a close by script or light dismiss has no source
         val invoker = toggle.source as? HTMLElement

@@ -9,6 +9,7 @@ import kotlinx.css.pct
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.dom.Element
+import web.html.HTMLDivElement
 import web.html.HTMLElement
 
 /** A [popover] with no card, holding what [config] builds. */
@@ -17,9 +18,14 @@ fun AppendScope.popoverRaw(
     mod: Modifier = Padding(1),
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
-    config: DIV.() -> Unit = {}
-) = div {
-    configurePopover(id, mod, anchor, isManual, config)
+    config: DIV.(PopoverHandle) -> Unit = {}
+): HTMLDivElement {
+    lateinit var element: HTMLDivElement
+
+    element = div {
+        configurePopover(id, mod, anchor, isManual) { config(PopoverHandle { element.closePopover() }) }
+    }.asWeb()
+    return element
 }
 
 /** A popover with [id], positioned against [anchor], holding a card of what [content] builds. */
@@ -28,10 +34,10 @@ fun AppendScope.popover(
     mod: Modifier? = null,
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
-    content: DIV.() -> Unit = {}
-) = popoverRaw(id, Padding(1), anchor, isManual) {
+    content: DIV.(PopoverHandle) -> Unit = {}
+) = popoverRaw(id, Padding(1), anchor, isManual) { close ->
     popoverCard(mod) {
-        content()
+        content(close)
     }
 }
 
@@ -42,6 +48,8 @@ fun AppendScope.popoverCard(
 ) = card(Popover.CardMod.append(mod)) {
     content()
 }
+
+value class PopoverHandle(val close: () -> Unit)
 
 /** Shows this popover. */
 fun Element.revealPopover() = asDynamic().showPopover()

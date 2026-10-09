@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.mutableTapOf
 import kampfire.model.reactIn
 import kampfire.model.toDataOr
 import koala.utils.launch
@@ -13,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.Entity
+import streetlight.model.data.EventTag
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.CityRoute
@@ -46,6 +48,8 @@ class Earth(
     val focusEntitiesState = state.tapOf { it.focusEntities }
     val isFocusedState = focusEntitiesState.tapOf { it != null }
     val isInflatingState = state.tapOf { it.isInflatingFocus }
+    val searchTextState = state.mutableTapOf({ it.searchText }) { copy(searchText = it) }
+    val tagState = state.tapOf { it.tag }
 
     val cache = EarthCache(scope, api, markerMap, toaster)
     val isQueryingState = cache.isQueryingState
@@ -111,6 +115,7 @@ class Earth(
 
             is EventsMapRoute -> {
                 markerMap.filterPoints { false }
+                state.set { copy(tag = route.tag) }
                 EventsMap(route.title)
             }
         }
@@ -146,6 +151,8 @@ data class EarthMapState(
     val map: EarthMap?,
     val focusEntities: List<Entity>? = null,
     val isInflatingFocus: Boolean = false,
+    val tag: EventTag? = null,
+    val searchText: String = "",
 )
 
 // val maps: List<EarthMap> = emptyList(),

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import koala.html.filigree
@@ -10,10 +11,9 @@ import web.dom.document
 
 fun ViewScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P, PositionRelative)) {
-        val cameraController = geoMapMount(mod = EarthStyle.Map)
+        geoMapMount(mod = EarthStyle.Map)
         column(modify(Gap0, PointerEventsNone)) {
             div(modify(EarthStyle.Grid, Flex1, MinHeight(0))) {
-                earthUnboundedOverlay(model, cameraController)
                 earthHeader(model)
                 earthMenu(model)
                 earthFocus(model)
@@ -41,11 +41,13 @@ fun ViewScope.viewEarthRoute() {
 fun ViewScope.earthHeader(model: Earth) {
     flowBlock(model.mapState, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
         if (map == null) return@flowBlock
-        column(modify(Height(8), EarthStyle.MapTitle, JustifyContentCenter)) {
-            filigree {
-                heading3(map.title)
+        column(Gap0) {
+            column(modify(Height(8), EarthStyle.MapTitle, JustifyContentCenter)) {
+                filigree {
+                    heading3(map.title)
+                }
             }
-            // button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
+            earthControls(model)
         }
     }
 }

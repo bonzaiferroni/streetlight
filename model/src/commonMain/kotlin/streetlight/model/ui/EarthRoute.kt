@@ -2,11 +2,9 @@ package streetlight.model.ui
 
 import kampfire.api.Slug
 import kampfire.api.toSlug
-import kampfire.model.GeoPoint
 import kampfire.model.GeoRect
 import koala.html.PathParse
 import koala.html.buildRelativePath
-import koala.html.getAll
 import streetlight.model.data.EventTag
 
 /** A route of the earth view, showing one of its layers. */
@@ -39,7 +37,7 @@ data object CityMapRoute: EarthRoute {
 
 data class EventsMapRoute(
     override val bounds: GeoRect? = null,
-    val tags: List<EventTag>? = null,
+    val tag: EventTag? = null,
 ): EarthRoute {
     companion object {
         val nodes = listOf(EARTH_NODE)
@@ -51,8 +49,8 @@ data class EventsMapRoute(
         bounds?.let {
             append(RECT_NODE, it.toString())
         }
-        tags?.let {
-            appendAll(TAG_PARAM, tags.map { it.name })
+        tag?.let {
+            append(TAG_PARAM, tag.name)
         }
     }
 }
@@ -63,8 +61,9 @@ val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, param
         CITIES_NODE -> CityMapRoute
         GALAXY_NODE -> GalaxyMapRoute(nodes.takeSegment(2)?.toSlug())
         else -> {
-            val tags = parameters.getAll(TAG_PARAM) { name -> EventTag.entries.firstOrNull { it.name == name } }
-            EventsMapRoute(parameters[RECT_NODE]?.let { GeoRect.of(it) } , tags)
+            val tag = parameters[TAG_PARAM]?.let { EventTag.valueOf(it) }
+            val rect = parameters[RECT_NODE]?.let { GeoRect.of(it) }
+            EventsMapRoute(rect, tag)
         }
     }
 }

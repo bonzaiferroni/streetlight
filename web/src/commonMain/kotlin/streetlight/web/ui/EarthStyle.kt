@@ -1,3 +1,5 @@
+@file:Suppress("CssInvalidMediaFeature")
+
 package streetlight.web.ui
 
 import koala.modifier.*
@@ -5,6 +7,7 @@ import koala.html.Id
 
 object EarthStyle {
     val Container = Id("earth")
+    val TagMenuId = Id("earth-tag-menu")
     val ViewMapButtonMod = modify(PositionSticky, Css.Top(1), JustifySelfCenter, AlignSelfStart, ZIndex1)
     val IsMoving = Class("is-moving")
     val MoveDimmer = Class("move-dimmer")

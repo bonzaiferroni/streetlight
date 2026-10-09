@@ -10,9 +10,9 @@ import kotlinx.html.js.onInputFunction
 import web.html.HTMLElement
 import web.html.HTMLInputElement
 
-/** A [koala.html.searchField] bound to [field]. */
+/** A [searchField] bound to [state]. */
 fun ViewScope.searchField(
-    field: MutableTap<String>,
+    state: MutableTap<String>,
     mod: Modifier? = null,
     textMod: Modifier? = null,
     placeholder: String = "search",
@@ -23,17 +23,17 @@ fun ViewScope.searchField(
     val parent = box {
         configureSearchFieldContainer(mod)
         element = input {
-            configureSearchFieldInput(textMod, placeholder, field.now)
+            configureSearchFieldInput(textMod, placeholder, state.now)
             onInputFunction = {
                 val value = (it.target as HTMLInputElement).value
-                if (value != field.now) field.set(value)
+                if (value != state.now) state.set(value)
             }
             block?.invoke(this)
         }.asWeb()
     }
 
     launchEffect(ViewScope::searchField) {
-        field.flow.collect { value ->
+        state.flow.collect { value ->
             if (element.value != value) element.value = value
         }
     }
