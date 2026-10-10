@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-building-church">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 21l18 0"/>
+    <path d="M10 21v-4a2 2 0 0 1 4 0v4"/>
+    <path d="M10 21V17C10 15.9 10.9 15 12 15">
+        <animate attributeName="d" values="M10 21V17C10 15.9 10.9 15 12 15;M10 21V17C10 15.9 10.9 15 12 15;M14 21V17C14 16.33 14 15.67 14 15;M14 21V17C14 16.33 14 15.67 14 15;M10 21V17C10 15.9 10.9 15 12 15;M10 21V17C10 15.9 10.9 15 12 15" keyTimes="0;0.15;0.6;0.8;0.801;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.6;0.8;0.801;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M6 21v-7m-2 2l8 -8l8 8m-2 -2v7"/>
+    <g transform="translate(12 5.5)">
+        <g>
+            <animateTransform attributeName="transform" type="scale" values="1;1.12;1" keyTimes="0;0.5;1" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <g transform="translate(-12 -5.5)">
+                <path d="M10 5l4 0"/>
+                <path d="M12 3l0 5"/>
+            </g>
+        </g>
+    </g>
+</svg>

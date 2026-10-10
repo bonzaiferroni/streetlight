@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-outline icon-tabler-trekking">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M10.8 6a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+    <path d="M9.8 4.4h4.2M10.8 4.4v-.9a1 .8 0 0 1 2 0v.9"/>
+    <path d="M7 21l2 -4"/>
+    <path d="M13 21Q13.15 16.79 10 14l1 -6"/>
+    <path d="M8.9 13.27l-.727 -.488a2 2 0 0 1 -.831 -2.15l.28 -1.117a2 2 0 0 1 1.939 -1.515h.1"/>
+    <path d="M11 8Q13.15 11.85 17 14"/>
+    <path d="M17 12v9M16 20h2"/>
+</svg>

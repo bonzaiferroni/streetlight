@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-outline icon-tabler-yoga">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M4 20Q7.71 20.26 9.5 17"/>
+    <path d="M17 20Q15.92 15.2 11 15l1 -7"/>
+    <path d="M4 10l4 -1l4 -1l4 1.5l4 1.5"/>
+    <path d="M10.007 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+</svg>

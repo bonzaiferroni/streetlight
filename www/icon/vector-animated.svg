@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-vector">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M5 7l0 10"/>
+    <path d="M19 7l0 10"/>
+    <path d="M7 5l10 0"/>
+    <path d="M7 19l10 0"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 5 5;90 5 5;90 5 5" keyTimes="0;0.25;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 4a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -2"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 19 5;0 19 5;90 19 5;90 19 5" keyTimes="0;0.25;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M17 4a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -2"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 19 19;0 19 19;90 19 19;90 19 19" keyTimes="0;0.5;0.75;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M17 18a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -2"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 5 19;0 5 19;90 5 19" keyTimes="0;0.75;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 18a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -2"/>
+    </g>
+</svg>

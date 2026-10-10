@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-ship">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <clipPath id="ship-clip"><rect x="1.5" y="17" width="21" height="6"/></clipPath>
+    <g clip-path="url(#ship-clip)">
+        <g>
+            <animateTransform attributeName="transform" type="translate" from="0 0" to="-8 0" dur="4s" repeatCount="indefinite"/>
+            <path d="M-6 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1"/>
+        </g>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 12 17;-3 12 17;0 12 17;3 12 17;0 12 17" dur="4s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+        <path d="M4 18l-1 -5h18l-2 4"/>
+        <path d="M5 13v-6h8l4 6"/>
+        <path d="M7 7v-4h-1"/>
+    </g>
+</svg>

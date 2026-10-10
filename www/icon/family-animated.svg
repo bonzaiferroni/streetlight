@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-family">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M11 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/>
+    <path d="M21 21v-2a4 4 0 0 0 -4 -4h-4A4 4 0 0 0 11.502 15.291"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.8;0 0;0 -0.4;0 0;0 0" keyTimes="0;0.15;0.3;0.42;0.54;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M4.333 11.667a2.667 2.667 0 1 0 5.333 0a2.667 2.667 0 1 0 -5.333 0"/>
+        <path d="M3 21v-1.333a2.667 2.667 0 0 1 2.667 -2.667h2.667a2.667 2.667 0 0 1 2.667 2.667v1.333"/>
+    </g>
+</svg>

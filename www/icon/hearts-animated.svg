@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-hearts">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g transform="translate(11 12)">
+        <g>
+            <animateTransform attributeName="transform" type="scale" values="1;1.08;1;1.056;1;1" keyTimes="0;0.12;0.24;0.36;0.48;1" dur="1.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <g transform="translate(-11 -12)">
+                <path d="M14.017 18l-2.017 2l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 0 1 8.153 5.784"/>
+            </g>
+        </g>
+    </g>
+    <g transform="translate(16.2 15.5)">
+        <g>
+            <animateTransform attributeName="transform" type="scale" values="1;1;1.15;1;1.105;1;1" keyTimes="0;0.4;0.52;0.64;0.76;0.88;1" dur="1.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <g transform="translate(-16.2 -15.5)">
+                <path d="M15.99 20l4.197 -4.223a2.81 2.81 0 0 0 0 -3.948a2.747 2.747 0 0 0 -3.91 -.007l-.28 .282l-.279 -.283a2.747 2.747 0 0 0 -3.91 -.007a2.81 2.81 0 0 0 -.007 3.948l4.182 4.238l.007 0"/>
+            </g>
+        </g>
+    </g>
+</svg>

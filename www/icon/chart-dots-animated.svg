@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-chart-dots">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 3v18h18"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0.707;0 1;0 0.707;0 0;0 -0.707;0 -1;0 -0.707;0 0" dur="4s" repeatCount="indefinite"/>
+        <path d="M7 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0.108;0 -0.241;0 -0.844;0 -1.346;0 -1.455;0 -1.105;0 -0.503;0 0" dur="4s" repeatCount="indefinite"/>
+        <path d="M17 7a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0.561;0 1.325;0 1.847;0 1.819;0 1.258;0 0.493;0 -0.028;0 0" dur="4s" repeatCount="indefinite"/>
+        <path d="M12 15a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+    </g>
+    <path d="M10.28 10.536L12.72 13.464">
+        <animate attributeName="d" values="M10.28 10.536L12.72 13.464;M10.299 11.228L12.701 14.04;M10.24 11.569L12.76 14.756;M10.147 11.345L12.853 15.208;M10.078 10.685L12.922 15.134;M10.063 9.987L12.937 14.564;M10.11 9.664L12.89 13.83;M10.199 9.894L12.801 13.371;M10.28 10.536L12.72 13.464" dur="4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M15.06 13.304L17.94 8.696">
+        <animate attributeName="d" values="M15.06 13.304L17.94 8.696;M15.018 13.839L17.982 8.83;M14.926 14.553L18.074 8.532;M14.847 15.035L18.153 7.968;M14.817 14.993L18.183 7.479;M14.846 14.446L18.154 7.357;M14.924 13.719L18.076 7.668;M15.016 13.25L17.984 8.22;M15.06 13.304L17.94 8.696" dur="4s" repeatCount="indefinite"/>
+    </path>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-comet">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0.8 0.8;0 0" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M15.5 18.5l-3 1.5l.5 -3.5l-2 -2l3 -.5l1.5 -3l1.5 3l3 .5l-2 2l.5 3.5l-3 -1.5"/>
+    </g>
+    <path d="M4 4l7 7">
+        <animate attributeName="d" values="M4 4l7 7;M4 4l7.8 7.8;M4 4l7 7" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M9 4l3.5 3.5">
+        <animate attributeName="d" values="M9 4l3.5 3.5;M9 4l4.3 4.3;M9 4l3.5 3.5" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M4 9l3.5 3.5">
+        <animate attributeName="d" values="M4 9l3.5 3.5;M4 9l4.3 4.3;M4 9l3.5 3.5" dur="2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+</svg>

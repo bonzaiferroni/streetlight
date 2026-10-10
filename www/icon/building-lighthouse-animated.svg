@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-building-lighthouse">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M12 3l2 3l2 15h-8l2 -15l2 -3"/>
+    <path d="M8 9l8 0"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;-0.6 0;0 0;0 0" dur="3s" repeatCount="indefinite" keyTimes="0;0.333;0.667;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 11l2 -2l-2 -2">
+            <animate attributeName="opacity" values="1;0.15;1;1" dur="3s" repeatCount="indefinite" keyTimes="0;0.333;0.667;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        </path>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 0;0.6 0;0 0" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M21 11l-2 -2l2 -2">
+            <animate attributeName="opacity" values="1;1;1;0.15;1" dur="3s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        </path>
+    </g>
+</svg>

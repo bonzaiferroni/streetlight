@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-needle-thread">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 21c-.667 -.667 3.262 -6.236 11.785 -16.709a3.5 3.5 0 1 1 5.078 4.791c-10.575 8.612 -16.196 12.585 -16.863 11.918"/>
+    <path d="M17.5 6.5l-1 1"/>
+    <path d="M2 12C2 13.5 4.346 14.86 5.739 15.425" pathLength="1" stroke-dasharray="1 1.1">
+        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.3;0.344;0.345;0.66;0.709;1" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M10.25 16.808C12.637 17.285 14.944 17.268 16 16C18.161 13.406 10 9 10 5C10 4 10.5 3 12 3C13.5 3 14.667 4.333 17 7" pathLength="1" stroke-dasharray="1 1.1">
+        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.344;0.583;0.584;0.709;0.98;1" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M19.5 9.5l1.5 1.5" pathLength="1" stroke-dasharray="1 1.1">
+        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.583;0.6;0.601;0.98;1" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+</svg>

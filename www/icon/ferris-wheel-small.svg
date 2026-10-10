@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-ferris-wheel">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M12 10l-4 11m4 -11l4 11m-10 0h12"/>
+    <path d="M5 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+    <path d="M12 3v14m-7 -7h14m-12 -5l10 10m0 -10l-10 10"/>
+    <path d="M18 10.6h2v1.6h-2l0 -1.6"/>
+    <path d="M11 17.6h2v1.6h-2l0 -1.6"/>
+    <path d="M4 10.6h2v1.6h-2l0 -1.6"/>
+    <path d="M11 3.6h2v1.6h-2l0 -1.6"/>
+</svg>

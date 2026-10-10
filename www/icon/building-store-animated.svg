@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icons-tabler-animated icon-tabler-building-store">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 21l18 0"/>
+    <path d="M3 7h18l-2 -4h-14l-2 4"/>
+    <g transform="translate(0 7)">
+        <g>
+            <animateTransform attributeName="transform" type="skewX" values="0;0;-18;6;-1.5;0;0" keyTimes="0;0.05;0.17;0.29;0.39;0.45;1" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path transform="translate(0 -7)" d="M15 7v1a3 3 0 0 0 6 0v-1"/>
+        </g>
+    </g>
+    <g transform="translate(0 7)">
+        <g>
+            <animateTransform attributeName="transform" type="skewX" values="0;0;-18;6;-1.5;0;0" keyTimes="0;0.17;0.29;0.41;0.51;0.57;1" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path transform="translate(0 -7)" d="M9 7v1a3 3 0 0 0 6 0v-1"/>
+        </g>
+    </g>
+    <g transform="translate(0 7)">
+        <g>
+            <animateTransform attributeName="transform" type="skewX" values="0;0;-18;6;-1.5;0;0" keyTimes="0;0.29;0.41;0.53;0.63;0.69;1" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path transform="translate(0 -7)" d="M3 7v1a3 3 0 0 0 6 0v-1"/>
+        </g>
+    </g>
+    <path d="M5 21l0 -10.15"/>
+    <path d="M19 21l0 -10.15"/>
+    <path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4"/>
+</svg>

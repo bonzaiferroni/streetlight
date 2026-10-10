@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-dance">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 8 21;5 8 21;0 8 21;-4 8 21;0 8 21" dur="2s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+        <path d="M12.5 4a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"/>
+        <path d="M13.5 7l-1.5 6"/>
+        <path d="M12 13Q8.57 16.28 8 21"/>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 12 13;-6 12 13;0 12 13;2 12 13;0 12 13" dur="2s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+            <path d="M12 13Q14.49 16.16 18.5 16.5"/>
+        </g>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 13.3 8;-14 13.3 8;0 13.3 8;10 13.3 8;0 13.3 8" dur="2s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+            <path d="M13.3 8l3.7 -2.5"/>
+        </g>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 13.3 8;14 13.3 8;0 13.3 8;-12 13.3 8;0 13.3 8" dur="2s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34;0.33 0.66 0.67 1.00;0.33 0.00 0.67 0.34"/>
+            <path d="M13.3 8l-4.3 1.5"/>
+        </g>
+    </g>
+</svg>

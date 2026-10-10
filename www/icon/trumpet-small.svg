@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-trumpet">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 10h11"/>
+    <path d="M6 10v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1 -1v-3"/>
+    <path d="M14 10l6 -4v8l-6 -4"/>
+    <path d="M3 9v2"/>
+    <path d="M8 10v-3m-.8 0h1.6"/>
+    <path d="M10 10v-3m-.8 0h1.6"/>
+    <path d="M12 10v-3m-.8 0h1.6"/>
+</svg>

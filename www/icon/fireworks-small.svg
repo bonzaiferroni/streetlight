@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-fireworks">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M11.6 21Q11.935 16.048 13.679 11.255"/>
+    <path d="M16.9 9Q18.4 9 19.9 10.2"/>
+    <path d="M21.462 11.449v.01"/>
+    <path d="M16.197 10.697Q17.258 11.758 18.318 14.018"/>
+    <path d="M19.168 15.829v.01"/>
+    <path d="M12.1 9Q10.6 9 9.1 10.2"/>
+    <path d="M12.803 7.303Q11.742 6.242 10.682 6.382"/>
+    <path d="M8.699 6.642v.01"/>
+    <path d="M14.5 6.6Q14.5 5.1 14.5 4.8"/>
+    <path d="M14.5 2.8v.01"/>
+    <path d="M16.197 7.303Q17.258 6.242 18.318 6.382"/>
+    <path d="M20.301 6.642v.01"/>
+    <path d="M10.4 21Q9.259 17.868 6.91 17.013"/>
+    <path d="M6.25 17.799Q6.675 18.535 7.1 19.871"/>
+    <path d="M7.615 21.491v.01"/>
+    <path d="M4.75 17.799Q4.325 18.535 3.9 19.871"/>
+    <path d="M3.385 21.491v.01"/>
+    <path d="M4 16.5Q3.15 16.5 2.3 17.1"/>
+    <path d="M0.911 18.08v.01"/>
+    <path d="M4.75 15.201Q4.325 14.465 3.9 14.329"/>
+    <path d="M2.281 13.81v.01"/>
+    <path d="M6.25 15.201Q6.675 14.465 7.1 14.329"/>
+</svg>

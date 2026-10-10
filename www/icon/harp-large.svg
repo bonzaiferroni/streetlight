@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-harp">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M7 20v-15"/>
+    <path d="M7 5q5 -3 11 2"/>
+    <path d="M18 7l-9 13"/>
+    <path d="M5.5 20.5h5"/>
+    <path d="M9.5 4.61q0 7.034 0 14.068"/>
+    <path d="M11.5 4.501q0 5.644 0 11.288"/>
+    <path d="M13.5 4.928q0 3.986 0 7.972"/>
+    <path d="M15.5 5.84q0 2.086 0 4.172"/>
+</svg>
