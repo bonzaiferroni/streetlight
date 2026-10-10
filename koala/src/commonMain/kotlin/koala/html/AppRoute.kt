@@ -17,6 +17,9 @@ interface AppRoute {
     val title: String // td initialize as screen title
     val basePath get() = screen.pathBase
 
+    /** The identity of the view this route shows: a change between routes with one key keeps the view. */
+    val screenKey: Any get() = this
+
     companion object {
         /**
          * The route [path] and its raw [query] lead to, parsed by the [AppScreen] whose path root it starts with,
@@ -30,11 +33,11 @@ interface AppRoute {
 
             val idArg = pathNodes.getOrNull(1)
             return when (val parse = screen.routeParse) {
-                is StaticParse -> parse.block()
+                is StaticParse -> parse.block(parameters)
                 is UuidParse -> idArg?.let { parse.block(Uuid.parse(it)) }
                 is IdParse -> idArg?.let { parse.block(it) }
                 is SlugOrNullParse -> parse.block(idArg?.toSlug())
-                is SlugParse -> idArg?.let { parse.block(idArg.toSlug()) }
+                is SlugParse -> idArg?.let { parse.block(parameters, idArg.toSlug()) }
                 is UsernameParse -> idArg?.let { parse.block(idArg.toUsername()) }
                 is PathParse -> parse.block(pathNodes, parameters)
             }
@@ -52,7 +55,6 @@ interface AppScreen {
     val routeParse: RouteParse
     val screenId: String
     val hasShell: Boolean
-    val retainWithinScreen: Boolean
     // td: add title
 }
 
@@ -63,9 +65,9 @@ sealed interface RouteParse {
     val label: String get() = "id"
 }
 
-/** A route with no argument. */
+/** A route with no argument, built with its query parameters in reach. */
 data class StaticParse(
-    val block: () -> AppRoute
+    val block: Parameters.() -> AppRoute
 ): RouteParse
 
 /** A route with a [Uuid] argument. */
@@ -85,7 +87,7 @@ data class SlugOrNullParse(
 
 /** A route with a [Slug] argument. */
 data class SlugParse(
-    val block: (Slug) -> AppRoute
+    val block: Parameters.(Slug) -> AppRoute
 ): RouteParse
 
 /** A route with a [Username] argument. */

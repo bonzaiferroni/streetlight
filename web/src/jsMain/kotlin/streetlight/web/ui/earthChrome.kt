@@ -47,6 +47,6 @@ fun ViewScope.earthHeaderLegacy(model: Earth) {
         //         }
         //     }
         // }
-        icon(SvgFile.Gear.large, iconMod).onClick { portal.go(HomeRoute) }
+        icon(SvgFile.Gear.large, iconMod).onClick { portal.go(HomeRoute()) }
     }
 }

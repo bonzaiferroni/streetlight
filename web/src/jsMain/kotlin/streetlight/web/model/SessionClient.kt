@@ -77,7 +77,7 @@ class SessionClient(
             api.user.logout()
             inflator.clear()
             dataCache.clear()
-            portal.go(HomeRoute)
+            portal.go(HomeRoute())
             state.set { copy(star = null, signedOutAt = Clock.System.now()) }
         }
     }

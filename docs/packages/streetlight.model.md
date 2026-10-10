@@ -61,8 +61,16 @@ A `RawEntity` holds the text of each `ParseProperty` read from a page, not yet p
 
 An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; an event feed takes it from the event.
 
-An `EntityFeed` names its `FeedSource`, the feed its next page is read from: `Posts`, `City`, or `Events`. A feed section reads its heading and the reader of its more button from it.
+An `EntityFeed` names its `FeedSource`, the feed its next page is read from: a `FeedType` shown in a `FeedContext`. A context is where a feed is shown, `Home`, `City`, `Location`, `Galaxy` or `Star`, carrying the id its reads need, and it lists the types it offers. A feed section reads its heading from the type, and every further page, filter and sort is read through `Api.Feeds.Read` with a `FeedRequest` of the source and a cursor. The server answers a type the context does not offer as a bad request. A feed no section pages, such as the map's, has no source.
 
-The home feed is the caller's posts, or for a visitor, the upcoming events from `Api.Events.ReadFeed`. A city feed is the upcoming events of the city, without its locations, from `Api.Cities.ReadFeed`. Both list events soonest first and page from `EntityCursor.Upcoming`.
+| Context | Types |
+|---|---|
+| `Home` | `Events`, `Media`, everyone's, and `GalaxyPosts`, the posts of the galaxies the caller follows |
+| `City(cityId)` | `Events`, `Locations`, those with a name |
+| `Location(locationId)` | `Events`, from 6 hours ago so an event under way still shows |
+| `Galaxy(galaxyId)` | `Posts` |
+| `Star(username)` | `Media`, the star's own |
 
-A cursor's `tag`, the ordinal of an `EventTag`, filters its feed to entities carrying that tag, and its `search` to entities whose name or location name holds the text in any case. The next cursor of a feed keeps both. An endpoint takes them only when it declares a `tagParam` or `searchParam`; `Api.Events.ReadFeed` and `Api.Cities.ReadFeed` declare both, and the posts feed neither.
+The home page shows the type its route names, and by default shows a caller the `GalaxyPosts` feed and a visitor the `Events` feed. A visitor is not offered `GalaxyPosts`, as the feed's `types` state. `Locations` and `Media` list newest first and page from `EntityCursor.Default` by creation time. An `Events` feed lists upcoming events soonest first and pages from `EntityCursor.Upcoming`; a city's holds the city's events, without its locations.
+
+A cursor's `tag`, the ordinal of an `EventTag`, filters its feed to entities carrying that tag, and its `search` to entities whose name or location name holds the text in any case. The next cursor of a feed keeps both. An `Events` feed honors them, and the other types ignore them. The map's endpoint takes them as its `tagParam` and `searchParam`.

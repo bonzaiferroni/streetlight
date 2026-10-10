@@ -20,8 +20,6 @@ import koala.model.DocTableItem
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
-import streetlight.model.writeCursor
-import streetlight.model.writeTimeCursor
 import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
@@ -31,7 +29,6 @@ interface EventClient {
     suspend fun readEventId(eventId: EventId): Outcome<Event>
     suspend fun readEventSlug(slug: Slug): Outcome<EventLocation>
     suspend fun readEventFeed(): Outcome<List<Event>>
-    suspend fun readUpcomingFeed(cursor: EntityCursor.Time?): Outcome<EntityFeed>
     suspend fun createEvent(event: EventEdit): Outcome<Event>
     suspend fun updateEvent(event: EventEdit): Outcome<Event>
     suspend fun readEventUpdaterContent(slug: Slug): Outcome<EventUpdaterContent>
@@ -47,8 +44,6 @@ class BrowserEventClient(private val client: FetchClient): EventClient {
     override suspend fun readEventId(eventId: EventId) = client.getApi(Api.Events.ReadId, eventId)
     override suspend fun readEventSlug(slug: Slug) = client.getApi(Api.Events.ReadSlug, slug)
     override suspend fun readEventFeed() = client.getApi(Api.Events)
-    override suspend fun readUpcomingFeed(cursor: EntityCursor.Time?) =
-        client.getApi(Api.Events.ReadFeed) { writeTimeCursor(it, cursor) }
     override suspend fun createEvent(event: EventEdit) = client.postApi(Api.Events.CreateEvent, event)
     override suspend fun updateEvent(event: EventEdit) = client.postApi(Api.Events.UpdateEvent, event)
     override suspend fun readEventUpdaterContent(slug: Slug) = client.getApi(Api.Events.ReadUpdaterContent, slug)

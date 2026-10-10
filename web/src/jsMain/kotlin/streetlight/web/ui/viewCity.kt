@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.toDataOrNull
 import kampfire.model.reactIn
 import koala.dom.*
 import koala.html.withLabel
@@ -17,6 +18,10 @@ fun ViewScope.viewCity(content: CityContent) {
     }
 
     applyTheme(null)
+
+    followFeedRoute<CityRoute>({ CityRoute(content.city.slug, it) }) { route ->
+        api.city.readCityContent(route.slug, route.feed).toDataOrNull(toaster) { it.feed }
+    }
 
     // any signed-in user may edit a city
     val slug = content.city.slug

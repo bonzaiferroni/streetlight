@@ -20,12 +20,11 @@ import koala.model.DocTableItem
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
-import streetlight.model.writeCursor
 import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
 class TestContentClient: ContentClient {
-    override suspend fun readHomeContent(): Outcome<HomeContent> = TODO()
+    override suspend fun readHomeContent(feed: FeedType?): Outcome<HomeContent> = TODO()
     override suspend fun readCityListContent(): Outcome<CityListContent> = TODO()
 }

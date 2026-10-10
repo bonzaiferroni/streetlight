@@ -15,6 +15,7 @@ import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyListRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.FeedRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.EventsMapRoute
@@ -41,7 +42,8 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     val isVisibleState: Tap<Boolean> = visible
 
     init {
-        portal.routeState.reactIn(scope) { route ->
+        portal.routeState.reactIn(scope) { portalRoute ->
+            val route = portalRoute.dockRoute
             state.set { stateOf(route) }
             stateRoute = route
             visible.set(true)
@@ -52,9 +54,9 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
 
     /** Sets the non-null parts of [merge] on the dock of [route]. */
     fun mergeState(route: AppRoute, merge: RouteDockState) {
-        when (route) {
+        when (route.dockRoute) {
             stateRoute -> applyMerge(merge)
-            else -> pending = RouteDockMerge(route, merge)
+            else -> pending = RouteDockMerge(route.dockRoute, merge)
         }
     }
 
@@ -97,7 +99,7 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         // galaxy
         is GalaxyRoute -> RouteDockState(
             mainRoutes = listOf(route.withLabel("Feed"), GalaxyMapRoute(route.slug).withLabel()),
-            leftRoutes = listOf(HomeRoute),
+            leftRoutes = listOf(HomeRoute()),
         )
 
         // city
@@ -116,13 +118,13 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         is EventsMapRoute -> RouteDockState(
             mainRoutes = listOf(route.withLabel(), GalaxyMapRoute(null).withLabel(), CityMapRoute.withLabel()),
             title = route.title,
-            leftRoutes = listOf(HomeRoute),
+            leftRoutes = listOf(HomeRoute()),
         )
         is GalaxyMapRoute -> when (val slug = route.slug) {
             null -> RouteDockState(
                 mainRoutes = listOf(EventsMapRoute().withLabel(), route.withLabel(), CityMapRoute.withLabel()),
                 title = "Streetlight",
-                leftRoutes = listOf(HomeRoute),
+                leftRoutes = listOf(HomeRoute()),
             )
             else -> RouteDockState(
                 mainRoutes = listOf(GalaxyRoute(slug).withLabel("Feed"), route.withLabel()),
@@ -132,7 +134,7 @@ private fun stateOf(route: AppRoute): RouteDockState? {
         is CityMapRoute -> RouteDockState(
             mainRoutes = listOf(EventsMapRoute().withLabel(), GalaxyMapRoute(null).withLabel(), route.withLabel()),
             title = "Streetlight",
-            leftRoutes = listOf(HomeRoute),
+            leftRoutes = listOf(HomeRoute()),
         )
 
         else -> null
@@ -140,7 +142,10 @@ private fun stateOf(route: AppRoute): RouteDockState? {
 }
 
 private fun universeStateOf(mapRoute: AppRoute) = RouteDockState(
-    mainRoutes = listOf(HomeRoute.withLabel(), GalaxyListRoute.withLabel(), CityListRoute.withLabel()),
+    mainRoutes = listOf(HomeRoute().withLabel(), GalaxyListRoute.withLabel(), CityListRoute.withLabel()),
     title = "Streetlight",
     rightRoutes = listOf(mapRoute),
 )
+
+/** This route as the dock knows it: a feed route showing its default feed, so it is one route whichever feed it shows. */
+internal val AppRoute.dockRoute get() = (this as? FeedRoute)?.defaultFeedRoute ?: this

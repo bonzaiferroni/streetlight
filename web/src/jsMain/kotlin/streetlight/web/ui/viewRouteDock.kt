@@ -16,6 +16,7 @@ import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarConfigRoute
+import streetlight.web.model.dockRoute
 import streetlight.web.pages.AppOverlay
 
 fun ViewScope.wireRouteDock() {
@@ -26,7 +27,7 @@ fun ViewScope.wireRouteDock() {
 
 fun ViewScope.viewRouteDock() {
     val model = dock
-    fun isRouteNow(route: AppRoute) = portal.routeState.tapOf { it == route }
+    fun isRouteNow(route: AppRoute) = portal.routeState.tapOf { it.dockRoute == route }
 
     column(modify(RouteDockStyle.Container, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
         flowBlock(model.titleState, modify(Magic, Height(3))) { title ->

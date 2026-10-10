@@ -34,6 +34,7 @@ fun HttpStatusCode.toProblem() = this.value.toHttpProblem()
 
 /** The [HttpProblem] for this status code, or a generic one naming it. */
 fun Int.toHttpProblem() = when (this) {
+    400 -> HttpProblem.BadRequest
     401 -> HttpProblem.NotAuthorized
     429 -> HttpProblem.TooManyRequests
     409 -> HttpProblem.Conflict

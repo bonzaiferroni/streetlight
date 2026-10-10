@@ -19,6 +19,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.Entity
+import streetlight.model.data.EntityCursor
+import streetlight.model.data.FeedContext
+import streetlight.model.data.FeedType
+import streetlight.model.data.FeedRequest
+import streetlight.model.data.FeedSource
 import streetlight.model.data.EventTag
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
@@ -129,7 +134,8 @@ class Earth(
                     else -> {
                         val galaxy = api.galaxy.readGalaxy(slug).toDataOr(toaster) { return null }
 
-                        val feed = api.post.readPosts(galaxy.galaxyId).toDataOr(toaster) { return null }
+                        val source = FeedSource(FeedContext.Galaxy(galaxy.galaxyId), FeedType.Posts)
+                        val feed = api.feed.readFeed(FeedRequest(source, EntityCursor.Default)).toDataOr(toaster) { return null }
                         markerMap.setPoints(feed.entities)
                         GalaxyMap(galaxy)
                     }

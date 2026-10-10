@@ -14,7 +14,9 @@ import koala.html.SlugParse
 import koala.html.StaticParse
 import koala.html.UsernameParse
 import koala.html.UuidParse
+import io.ktor.http.Parameters
 import koala.model.DocId
+import streetlight.model.data.FeedType
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 import streetlight.model.data.RecordId
@@ -27,16 +29,15 @@ import kotlin.uuid.Uuid
 /**
  * The screens of the app, each with the parse that turns its path into a route.
  *
- * A screen with a shell is rendered by the server on the initial load. A screen that retains within itself keeps
- * its view as its route changes.
+ * A screen with a shell is rendered by the server on the initial load. A route keeps its screen's view across a
+ * change to another route with its [AppRoute.screenKey].
  */
 enum class Screen(
     override val routeParse: RouteParse,
     pathRoot: String? = null,
     override val hasShell: Boolean = false,
-    override val retainWithinScreen: Boolean = false,
 ): AppScreen {
-    Home(StaticParse { HomeRoute }, "", true),
+    Home(StaticParse { HomeRoute(readFeedType()) }, "", true),
     MediaUpdate(UuidParse { MediaUpdateRoute(it.toRecordId()) }),
     Sandbox(StaticParse { SandboxRoute }),
     Chat(StaticParse { ChatRoute }),
@@ -84,10 +85,10 @@ enum class Screen(
     Talk(UuidParse { TalkRoute(GalaxyId(it)) }),
 
     // earth
-    Earth(parseEarthRoute, retainWithinScreen = true),
+    Earth(parseEarthRoute),
 
     // city
-    City(SlugParse { CityRoute(it) }),
+    City(SlugParse { CityRoute(it, readFeedType()) }),
     CityConfig(SlugParse { CityConfigRoute(it) }),
     CityList(StaticParse { CityListRoute }, "cities", true),
 
@@ -133,10 +134,31 @@ interface StringIdRoute: StreetlightRoute {
     override fun toRelativePath() = toIdSitePath(id)
 }
 
+/** A route whose page holds a feed, showing the [feed] type its viewer chose, or its default when `null`. */
+interface FeedRoute: StreetlightRoute {
+    val feed: FeedType?
+
+    /** This route showing its default feed. */
+    val defaultFeedRoute: StreetlightRoute
+
+    // a change of feed is a change within the view
+    override val screenKey get() = defaultFeedRoute
+}
+
+/** The feed type these parameters name, or `null` when they name none or one that is unknown. */
+fun Parameters.readFeedType(): FeedType? = this[FEED_PARAM]?.let { name -> FeedType.entries.firstOrNull { it.name == name } }
+
+/** This path with [feed] as its feed parameter, or as it is when [feed] is `null`. */
+fun String.withFeedParam(feed: FeedType?) = feed?.let { "$this?$FEED_PARAM=${it.name}" } ?: this
+
+private const val FEED_PARAM = "feed"
+
 // singletons
-object HomeRoute: StreetlightRoute {
+data class HomeRoute(override val feed: FeedType? = null): FeedRoute {
     override val screen get() = Screen.Home
     override val title get() = "Home"
+    override val defaultFeedRoute get() = copy(feed = null)
+    override fun toRelativePath() = basePath.withFeedParam(feed)
 }
 
 object ErrorRoute: StreetlightRoute {

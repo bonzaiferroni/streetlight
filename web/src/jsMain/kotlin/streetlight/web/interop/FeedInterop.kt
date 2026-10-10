@@ -15,15 +15,14 @@ import koala.modifier.setAttribute
 import koala.interop.ThisElement
 import koala.modifier.Zen
 import koala.modifier.getAttribute
-import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
-import streetlight.model.data.CityId
 import streetlight.model.data.EntityFeed
-import streetlight.model.data.GalaxyId
 import streetlight.model.data.EntityCursor
 import streetlight.model.data.EventTag
+import streetlight.model.data.FeedRequest
 import streetlight.model.data.FeedSource
 import streetlight.web.layouts.FeedSection
+import streetlight.web.layouts.toCells
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.RouteView
 import streetlight.web.ui.TagFilterMenu
@@ -40,14 +39,14 @@ import kotlin.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Job
 
-/** Replaces the feed with the galaxy's posts sorted by the mark on [element]. */
+/** Replaces the feed with its posts sorted by the mark on [element]. */
 fun sortByMark(element: HTMLElement) {
     val markId = element.requireAttribute(AppAttribute.MarkId)
-    val galaxyId = element.requireClosestAttribute(AppAttribute.GalaxyId)
+    val source = element.requireClosestAttribute(AppAttribute.FeedSource)
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         mount.modify(OpacityHigh)
-        val feed = api.post.readPosts(galaxyId, EntityCursor.Mark(markId)).toDataOr(toaster) {
+        val feed = readFeed(source, EntityCursor.Mark(markId)).toDataOr(toaster) {
             mount.unmodify(OpacityHigh)
             return@launchEffect
         }
@@ -66,9 +65,7 @@ fun morePosts(element: HTMLElement) {
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
-        val galaxyId = element.getClosestAttribute(AppAttribute.GalaxyId)
-        val cityId = element.getClosestAttribute(AppAttribute.CityId)
-        val feed = readFeed(source, galaxyId, cityId, nextCursor).toDataOr(toaster) {
+        val feed = readFeed(source, nextCursor).toDataOr(toaster) {
             element.unmodify(OpacityHigh)
             return@launchEffect
         }
@@ -103,8 +100,6 @@ fun searchFeed(element: HTMLElement) = refreshFeed(element.feedSection(), SEARCH
  */
 private fun refreshFeed(section: Element, wait: Duration = Duration.ZERO) {
     val source = section.requireAttribute(AppAttribute.FeedSource)
-    val galaxyId = section.getAttribute(AppAttribute.GalaxyId)
-    val cityId = section.getAttribute(AppAttribute.CityId)
     val tagLabel = section.querySelector(TagFilterMenu.Button.selector)?.getAttribute(TagFilterMenu.Tag)
     val tag = EventTag.entries.firstOrNull { it.label == tagLabel }
     val search = (section.querySelector(FeedSection.Search.selector) as? HTMLInputElement)?.value
@@ -115,7 +110,7 @@ private fun refreshFeed(section: Element, wait: Duration = Duration.ZERO) {
         delay(wait)
         mount.modify(OpacityHigh)
         val cursor = EntityCursor.Upcoming.copy(tag = tag?.ordinal, search = search)
-        val feed = readFeed(source, galaxyId, cityId, cursor).toDataOr(toaster) {
+        val feed = readFeed(source, cursor).toDataOr(toaster) {
             mount.unmodify(OpacityHigh)
             return@launchEffect
         }
@@ -133,19 +128,13 @@ private val SEARCH_DEBOUNCE = 500.milliseconds
 
 private fun Element.feedSection() = closest(AppAttribute.FeedSource.selector) ?: error("element is not in a feed section")
 
-/** The page at [cursor] of the feed from [source], read for [galaxyId] or [cityId] when the source needs one. */
-suspend fun AppFacade.readFeed(source: FeedSource, galaxyId: GalaxyId?, cityId: CityId?, cursor: EntityCursor) =
-    when (source) {
-        FeedSource.Posts -> api.post.readPosts(galaxyId, cursor)
-        FeedSource.City -> api.city.readCityFeed(cityId ?: error("city feed without a city"), cursor as? EntityCursor.Time)
-        FeedSource.Events -> api.event.readUpcomingFeed(cursor as? EntityCursor.Time)
-    }
+/** The page at [cursor] of the feed from [source]. */
+suspend fun AppFacade.readFeed(source: FeedSource, cursor: EntityCursor) = api.feed.readFeed(FeedRequest(source, cursor))
 
 /** Appends the rows of [feed], and a more button when it continues. */
 fun AppendScope.appendFeed(feed: EntityFeed) {
-    feed.entities.forEach { post ->
-        val curator = feed.curatorOf(post)
-        feedRow(post, curator)
+    feed.entities.forEach { entity ->
+        feedRow(entity, feed.curatorOf(entity), entity.toCells(feed.source?.context))
     }
     feed.nextCursor?.let {
         button("more", mod = Zen) {

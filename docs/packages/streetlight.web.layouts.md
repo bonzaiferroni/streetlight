@@ -42,6 +42,10 @@ The heading links to the entity's source when it has one, and to its page otherw
 
 The feed carries only what a row shows. The dialog reads the whole entity when it opens, through `Api.Entities.Read`, by the `EntityRef` its opener carries as the `EntityDialog` attributes. Location, media and event entities, and the posts of each, have a ref; a post's dialog shows the record it shares.
 
+## Feed Sections
+
+`feedSection` shows a feed under its heading, the name of its type. A menu of the types its context offers sits left of the heading, the `FeedMode` switch right of it, each the same width so the heading stays centered. The menu shows even for a single type, telling the viewer what the feed holds; the type shown is marked in the primary color. When the caller passes `typeRoute`, each type links to the route that shows it, and the page is read again for it. Each row's cells are read for the feed's context, so an event in a location's own feed leaves out its location. The types offered come from the feed, which the server limits by viewer, as it keeps the posts of followed galaxies from a visitor, and otherwise from the context.
+
 ## Feed Rows
 
 `feedRow` renders any `Entity` as one row. It is built around a post, which displays every property the row has, and it is the row for every other entity type, which display the properties they hold.

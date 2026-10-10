@@ -7,6 +7,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
 import streetlight.model.ui.GalaxyFoundryRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.layouts.feedSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
@@ -26,7 +27,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 galaxiesSection(content.galaxies)
 
-                feedSection(content.feed)
+                feedSection(content.feed) { HomeRoute(it) }
 
                 appFooter(HomeShell.SOURCE)
             }

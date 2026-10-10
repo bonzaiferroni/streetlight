@@ -11,6 +11,8 @@ import streetlight.model.data.EventTag
 sealed interface EarthRoute: StreetlightRoute {
     val layer: EarthLayer
     override val screen get() = Screen.Earth
+    // the earth view handles each of its routes itself
+    override val screenKey: Any get() = Screen.Earth
     val bounds: GeoRect? get() = null
 }
 

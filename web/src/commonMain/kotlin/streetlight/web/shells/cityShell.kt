@@ -4,6 +4,7 @@ import koala.SiteImage
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.CityContent
+import streetlight.model.ui.CityRoute
 import streetlight.web.layouts.feedSection
 import streetlight.web.ui.mainBody
 import streetlight.web.ui.entityHeader
@@ -15,7 +16,7 @@ fun FlowContent.cityShell(content: CityContent) {
             descriptor = "a city",
             image = content.city.image ?: SiteImage.PearlStreet,
         )
-        feedSection(content.feed, cityId = content.city.cityId)
+        feedSection(content.feed) { CityRoute(content.city.slug, it) }
     }
 
     dataIsland(CityShell.IslandId, content)

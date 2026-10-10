@@ -87,7 +87,7 @@ private fun ViewScope.sandboxContent(star: Star) {
     column {
         row {
             textBlock("Hello ${star.username}!", Flex1)
-            button("go home", onClick = { portal.go(HomeRoute) })
+            button("go home", onClick = { portal.go(HomeRoute()) })
             button("sign out", onClick = gate::signOut)
         }
 

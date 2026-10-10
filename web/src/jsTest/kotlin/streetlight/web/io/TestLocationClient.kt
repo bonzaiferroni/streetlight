@@ -21,7 +21,6 @@ import koala.model.DocTableItem
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
-import streetlight.model.writeCursor
 import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid

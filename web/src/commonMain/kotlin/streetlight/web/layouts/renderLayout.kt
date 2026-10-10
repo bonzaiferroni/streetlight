@@ -58,18 +58,14 @@ fun FlowContent.renderComments() {
 fun FlowContent.renderPosts(content: DesignContent) {
     when (content) {
         is StarContent -> feedSection(content.feed)
-        is GalaxyContent -> feedSection(content.feed, content.galaxy.galaxyId)
+        is GalaxyContent -> feedSection(content.feed)
         else -> error("not posts content")
     }
 }
 
 fun FlowContent.renderEvents(content: DesignContent) {
     when (content) {
-        is LocationContent -> layoutFeed {
-            content.events.forEach {
-                feedRow(it)
-            }
-        }
+        is LocationContent -> feedSection(content.feed)
         else -> error("not events content")
     }
 }
@@ -112,7 +108,7 @@ fun FlowContent.renderMap(content: DesignContent) {
 fun FlowContent.renderTabs(block: TabsBlock, content: DesignContent) {
     tabs {
         block.tabs.forEach {
-            if (it.name == "events" && content is LocationContent && content.events.isEmpty()) return@forEach // td: better solution
+            if (it.name == "events" && content is LocationContent && content.feed.entities.isEmpty()) return@forEach // td: better solution
             tab(it.name) {
                 renderColumn(it.blocks, content)
             }

@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 data class LocationContent(
     val location: Location,
     override val design: PageDesign?,
-    val events: List<Event>,
+    val feed: EntityFeed,
     val canEdit: Boolean,
 ): RouteContent, DesignContent {
     override val geoPoint: GeoPoint get() = location.geoPoint

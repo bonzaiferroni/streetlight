@@ -9,6 +9,7 @@ class TestApiClient(
     override val earth: EarthClient = TestEarthClient(),
     override val entity: EntityClient = TestEntityClient(),
     override val event: EventClient = TestEventClient(),
+    override val feed: FeedClient = TestFeedClient(),
     override val feedback: FeedbackClient = TestFeedbackClient(),
     override val galaxy: GalaxyClient = TestGalaxyClient(),
     override val location: LocationClient = TestLocationClient(),

@@ -14,37 +14,41 @@ import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.tagFilterMenu
 
 /**
- * The posts section of a page: a heading with the [FeedMode] switch, a tag filter and search field for an event feed,
+ * The feed section of a page: a heading with the [FeedMode] switch, a tag filter and search field for an event feed,
  * the mark filters of a galaxy, and the feed with a button for more.
  *
- * The feed's source picks the heading and the reader of the more button, and [galaxyId] or [cityId] names the
- * feed it reads.
+ * The feed's source picks the heading and is where the more button, the filters and the search read from. The
+ * type menu left of the heading shows the types the feed's context offers, each a link to [typeRoute] when given.
  */
 fun FlowContent.feedSection(
     feed: EntityFeed,
-    galaxyId: GalaxyId? = null,
-    cityId: CityId? = null,
+    typeRoute: ((FeedType) -> AppRoute)? = null,
 ) {
-    section {
-        setAttribute(AppAttribute.FeedSource.to(feed.source))
-        galaxyId?.let {
-            setAttribute(AppAttribute.GalaxyId.to(it))
-        }
-        cityId?.let {
-            setAttribute(AppAttribute.CityId.to(it))
-        }
+    val source = feed.source ?: error("a feed section shows a feed with a source")
+    val types = feed.types ?: source.context.types
 
-        // the spacer matches the switch, keeping the heading centered
+    section {
+        setAttribute(AppAttribute.FeedSource.to(source))
+
+        // the type menu matches the switch in width, keeping the heading centered
         row(AlignItemsCenter) {
-            div(FeedSection.SwitchWidth)
+            row(modify(FeedSection.SwitchWidth, OpacityHigh)) {
+                types.forEach { type ->
+                    val iconMod = modify(SmallIconHeight, PrimaryFg.takeIf { type == source.type })
+                    when (typeRoute) {
+                        null -> icon(type.toSvg(), iconMod)
+                        else -> navigation(typeRoute(type)) { icon(type.toSvg(), iconMod) }
+                    }
+                }
+            }
             filigree(Flex1) {
-                heading2(feed.source.heading, SectionHeadingMod)
+                heading2(source.type.heading, SectionHeadingMod)
             }
             rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
         }
 
         // td: filter and search posts
-        if (feed.source != FeedSource.Posts) {
+        if (source.type == FeedType.Events) {
             row(modify(AlignItemsCenter, JustifyContentSpaceBetween)) {
                 row(AlignItemsCenter) {
                     tagFilterMenu()
@@ -69,8 +73,7 @@ fun FlowContent.feedSection(
         layoutFeed {
             // td: message when empty
             feed.entities.forEach { entity ->
-                val curator = feed.curatorOf(entity)
-                feedRow(entity, curator)
+                feedRow(entity, feed.curatorOf(entity), entity.toCells(source.context))
             }
 
             feed.nextCursor?.let {
@@ -107,10 +110,20 @@ object FeedSection {
     val SwitchWidth = Width(12)
 }
 
-/** The heading of a feed from this source. */
-val FeedSource.heading get() = when (this) {
-    FeedSource.Events, FeedSource.City -> "Events"
-    FeedSource.Posts -> "Posts"
+/** The heading of a feed of this type. */
+val FeedType.heading get() = when (this) {
+    FeedType.Events -> "Events"
+    FeedType.Locations -> "Locations"
+    FeedType.GalaxyPosts, FeedType.Posts -> "Posts"
+    FeedType.Media -> "Media"
+}
+
+fun FeedType.toSvg() = when (this) {
+    FeedType.Events -> SvgFile.Calendar.small
+    FeedType.Locations -> SvgFile.MapPin.small
+    FeedType.GalaxyPosts -> SvgFile.Planet.small
+    FeedType.Posts -> SvgFile.News.small
+    FeedType.Media -> SvgFile.Photo.small
 }
 
 fun FeedMode.toSvg() = when (this) {

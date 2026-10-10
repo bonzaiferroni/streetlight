@@ -23,7 +23,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
     val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
     val model = app.getEventScout(galaxy, editor, locationScout, contentScope)
-    val doneRoute: AppRoute = galaxy?.route ?: HomeRoute
+    val doneRoute: AppRoute = galaxy?.route ?: HomeRoute()
     val routeFlow = model.stateFlow.dedupNotNull { state -> doneRoute.takeIf { state.isPosted } }
     goOnRoute(routeFlow)
 

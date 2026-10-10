@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.toDataOrNull
 import koala.dom.*
 import koala.dom.routeBlock
 import streetlight.model.data.HomeContent
@@ -17,8 +18,12 @@ fun ViewScope.viewHome(content: HomeContent) {
     }
 
     markerMap.setPoints(content.feed.entities)
-    document.setTitle(HomeRoute)
+    document.setTitle(HomeRoute())
     applyTheme(null)
+
+    followFeedRoute<HomeRoute>({ HomeRoute(it) }, { markerMap.setPoints(it.entities) }) { route ->
+        api.content.readHomeContent(route.feed).toDataOrNull(toaster) { it.feed }
+    }
 }
 
 fun RouteScope.viewHomeRoute() {

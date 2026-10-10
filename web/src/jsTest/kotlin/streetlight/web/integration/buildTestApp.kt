@@ -19,7 +19,7 @@ fun buildTestApp(
             single { scope }
             single { api }
             single { Toaster(get()) }
-            single { Portal(HomeRoute, Screen.entries) }
+            single { Portal(HomeRoute(), Screen.entries) }
         })
     }.koin
 

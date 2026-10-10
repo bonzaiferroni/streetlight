@@ -1,11 +1,14 @@
 package streetlight.model.ui
 
 import kampfire.api.Slug
+import streetlight.model.data.FeedType
 import koala.html.AppRoute
 
-data class CityRoute(override val slug: Slug): SlugRoute {
+data class CityRoute(override val slug: Slug, override val feed: FeedType? = null): SlugRoute, FeedRoute {
     override val screen get() = Screen.City
     override val title get() = "City"
+    override val defaultFeedRoute get() = copy(feed = null)
+    override fun toRelativePath() = toIdSitePath(slug).withFeedParam(feed)
 }
 
 data class CityConfigRoute(override val slug: Slug): SlugRoute {

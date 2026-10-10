@@ -20,18 +20,19 @@ import koala.model.DocTableItem
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
-import streetlight.model.writeCursor
 import web.sockets.WebSocket
 import web.sse.EventSource
 import kotlin.uuid.Uuid
 
 /** The calls of `Api.Content`, for the content of routes that belong to no other node. */
 interface ContentClient {
-    suspend fun readHomeContent(): Outcome<HomeContent>
+    suspend fun readHomeContent(feed: FeedType?): Outcome<HomeContent>
     suspend fun readCityListContent(): Outcome<CityListContent>
 }
 
 class BrowserContentClient(private val client: FetchClient): ContentClient {
-    override suspend fun readHomeContent() = client.getApi(Api.Content.Home)
+    override suspend fun readHomeContent(feed: FeedType?) = client.getApi(Api.Content.Home) { endpoint ->
+        feed?.let { writeParam(endpoint.feed, it) }
+    }
     override suspend fun readCityListContent() = client.getApi(Api.Content.CityList)
 }

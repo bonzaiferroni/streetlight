@@ -20,7 +20,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), contentScope)
     val model = app.getLocationScout(galaxy, editor, contentScope)
-    val doneRoute: AppRoute = galaxy?.route ?: HomeRoute
+    val doneRoute: AppRoute = galaxy?.route ?: HomeRoute()
     val routeFlow = model.stateFlow.dedupNotNull { state -> doneRoute.takeIf { state.isPosted } }
     goOnRoute(routeFlow)
 

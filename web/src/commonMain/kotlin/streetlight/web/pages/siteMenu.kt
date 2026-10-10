@@ -29,7 +29,7 @@ fun FlowContent.siteHelmPopover() {
                     button(SvgFile.Helm, modify(HelmBar.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
                         onClick = SiteHelm.closePopover.block
                     }
-                    navigation(HomeRoute) {
+                    navigation(HomeRoute()) {
                         textLogo(Height(5))
                     }
                 }
@@ -45,8 +45,8 @@ fun FlowContent.siteHelmPopover() {
 fun FlowContent.siteMenuSidebar() {
     column {
         filigree {
-            navigation(HomeRoute) {
-                setAttribute(KoalaBody.ScreenId.to(HomeRoute.screen.screenId))
+            navigation(HomeRoute()) {
+                setAttribute(KoalaBody.ScreenId.to(HomeRoute().screen.screenId))
                 textLogo(Height(5))
             }
         }

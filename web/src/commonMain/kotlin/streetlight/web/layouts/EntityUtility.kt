@@ -10,6 +10,7 @@ import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
 import streetlight.model.data.EventTag
+import streetlight.model.data.FeedContext
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Galaxy
@@ -107,14 +108,20 @@ fun Entity.toEntityRef(): EntityRef? = when (this) {
     is EventGroup -> null
 }
 
-/** The facts shown in this entity's [cellGrid], or `null` when it has none. */
-fun Entity.toCells(): List<EntityCell>? = when (this) {
+/**
+ * The facts shown in this entity's [cellGrid], or `null` when it has none. Shown in the feed of a location's own page,
+ * as [context] says, an event leaves out its location.
+ */
+fun Entity.toCells(context: FeedContext? = null): List<EntityCell>? = when (this) {
     is City -> buildList {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
-    is EventLocation -> eventCells(startsAt, cost, url, tag, locationLabel, locationRoute)
-    is EventPost -> event.toCells()
+    is EventLocation -> when (context) {
+        is FeedContext.Location -> eventCells(startsAt, cost, url, tag, null)
+        else -> eventCells(startsAt, cost, url, tag, locationLabel, locationRoute)
+    }
+    is EventPost -> event.toCells(context)
     is Event -> eventCells(startsAt, cost, url, tag, null)
     is Galaxy -> buildList {
         if (locationCount > 0) add(locationCountCell(locationCount))

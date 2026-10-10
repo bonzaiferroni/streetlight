@@ -47,7 +47,8 @@ class Portal(
     val routeState = state.tapOf { it.route }
     val screenState = state.tapOf(
         applyFlow = { states ->
-            states.dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
+            // a refresh rebuilds the view, and so does a route with a new screen key
+            states.dedupBy({ it.route.screenKey to it.refreshedAt }) { it.route.screen }
         }
     ) { it.route.screen }
 
@@ -150,7 +151,8 @@ class Portal(
             canGoBack = backstack.isNotEmpty(),
             initialScrollY = navigation.initialScrollY,
             isInitialRoute = false,
-            refreshedAt = Clock.System.now()
+            // going to the route already shown rebuilds it, as a refresh does
+            refreshedAt = if (route == this.route) Clock.System.now() else refreshedAt,
         )}
         setSitePath(route.toRelativePath(), appendToBackstack)
 

@@ -22,7 +22,9 @@ import streetlight.model.data.Feedback as FeedbackDto
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Content: ApiNode(this) {
-        object Home: GetEndpoint<HomeContent>(this)
+        object Home: GetEndpoint<HomeContent>(this) {
+            val feed = enumParamOf<FeedType>("feed")
+        }
         object CityList: GetEndpoint<CityListContent>(this)
     }
 
@@ -42,15 +44,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this)
         object ReadLights: GetEndpoint<List<EventId>>(this)
         object ReadSlug: GetByIdEndpoint<Slug, EventLocation>(this)
-
-        /** The upcoming events, soonest first. */
-        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint {
-            override val recordIdParam = uuidParamOf("recordId")
-            override val recordAtParam = instantParamOf("recordAt")
-            override val defaultDirection get() = SortDirection.Ascending
-            override val tagParam = intParamOf("tag")
-            override val searchParam = stringParamOf("search")
-        }
     }
 
     object Locations: GetByIdEndpoint<LocationId, Location>(this) {
@@ -147,16 +140,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
             override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
         }
-
-        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint, ScoreCursorEndpoint, MarkCursorEndpoint {
-            val galaxyId = tableIdParamOf("galaxyId") { GalaxyId(it) }
-            override val recordIdParam = uuidParamOf("recordId")
-            override val markIdParam = uuidParamOf("markId")
-            override val countParam = intParamOf("count")
-            override val directionParam = enumParamOf<SortDirection>("direction")
-            override val scoreParam = doubleParamOf("score")
-            override val recordAtParam = instantParamOf("recordAt")
-        }
     }
 
     object Galaxies: ApiNode(this) {
@@ -178,6 +161,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UpdateMark: PostEndpoint<MarkUpdate, Unit>(this)
     }
 
+    object Feeds: ApiNode(this) {
+        /** The page of a feed, by its source and cursor. */
+        object Read: PostEndpoint<FeedRequest, EntityFeed>(this)
+    }
+
     object Entities: ApiNode(this) {
         /** The whole entity of the record of [type] at [slug]. */
         object Read: GetEndpoint<Entity>(this) {
@@ -196,18 +184,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadTopCities: GetEndpoint<List<City>>(this)
         object ReadCity: GetByIdEndpoint<Slug, City>(this)
         object ReadCityPosts: GetByIdEndpoint<Slug, List<Entity>>(this)
-        object ReadContent: GetByIdEndpoint<Slug, CityContent>(this)
+        object ReadContent: GetByIdEndpoint<Slug, CityContent>(this) {
+            val feed = enumParamOf<FeedType>("feed")
+        }
         object UpdateCity: PostEndpoint<CityEdit, City>(this)
 
-        /** The upcoming events of a city, soonest first. */
-        object ReadFeed: GetEndpoint<EntityFeed>(this), TimeCursorEndpoint {
-            val cityId = tableIdParamOf("cityId") { CityId(it) }
-            override val recordIdParam = uuidParamOf("recordId")
-            override val recordAtParam = instantParamOf("recordAt")
-            override val defaultDirection get() = SortDirection.Ascending
-            override val tagParam = intParamOf("tag")
-            override val searchParam = stringParamOf("search")
-        }
 
         object Search: GetEndpoint<List<City>>(this) {
             val query = stringParamOf("name")

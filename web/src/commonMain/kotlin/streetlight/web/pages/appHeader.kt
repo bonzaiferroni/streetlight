@@ -16,7 +16,7 @@ fun FlowContent.appHeader(
     mod: Modifier? = modify(Height(8), Padding(1))
 ) {
     rayHeader(mod) {
-        navigation(HomeRoute, Height(100.pct)) {
+        navigation(HomeRoute(), Height(100.pct)) {
             textLogo(modify(Height(100.pct), FocusTarget))
         }
     }
@@ -32,7 +32,7 @@ fun FlowContent.configHeader(
     titleSecond: String,
 ) {
     rayHeader {
-        navigation(HomeRoute) {
+        navigation(HomeRoute()) {
             heading2(mod = modify(MoonShadowText, FocusTarget)) {
                 span {
                     addModifiers(AccentFg)

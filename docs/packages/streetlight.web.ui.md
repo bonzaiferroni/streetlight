@@ -68,7 +68,11 @@ A state parameter is a `Tap` for a read and a `MutableTap` for a read and write.
 
 ## Screens and Routes
 
-`Screen` is an enum in `streetlight.model.ui`. Each entry holds a `RouteParse` that turns a URL into a `StreetlightRoute`, and an optional path root taken from the entry name when absent.
+`Screen` is an enum in `streetlight.model.ui`. Each entry holds a `RouteParse` that turns a URL into a `StreetlightRoute`, and an optional path root taken from the entry name when absent. A `StaticParse` or `SlugParse` block has the query's `Parameters` as its receiver, so a route reads a query value as `StaticParse { HomeRoute(readFeedType()) }`.
+
+A route is an object while it has no parameters, and a data class once it has any. A route whose page holds a feed with more than one type is a `FeedRoute`: its `feed` names the type chosen, written to its path as the `feed` query parameter and left out for the default, so choosing a type navigates and the backstack holds each choice. Its content endpoint takes the type, and the server's render reads it from the query. The route dock treats a feed route as its `defaultFeedRoute`, so the dock's route stays marked whichever feed it shows.
+
+Portal keeps a screen's view across a change to a route with the same `screenKey`, which is the route itself by default, and rebuilds it on any other change or a refresh. Going to the route already shown counts as a refresh. A feed route's key is its `defaultFeedRoute`, so its view stays, and the view follows the new feed with `followFeedRoute`, which reads the route's content again and swaps the feed section in place. Every Earth route shares `Screen.Earth` as its key, since the Earth view handles each of its routes itself.
 
 `Portal` (`koala.model`) holds the current route as `PortalState`. It builds the route from the address bar on load and on browser navigation, and it intercepts clicks on local anchors. Code that holds a reference to `Portal` navigates with `Portal.go(route)`. With `appendToBackstack = false`, the route takes the place of the current one in the backstack and in the browser's history.
 
@@ -187,7 +191,7 @@ A popover menu is one popover shared by every button that opens it, and is built
 | Button, as `FlowContent.postMenu` | `commonMain` | Targets the menu's `PopoverId` with `setPopoverTarget` and sets the menu's data on itself as attributes |
 | Wire, as `ViewScope.wirePostMenu` | `jsMain` | Calls `popoverMenu` with the id, a transform that reads the attributes of the button that opened it into a value, and the content built for that value |
 
-An object named for the menu, as `PostMenu`, holds its `PopoverId` and the attributes its button sets. The wire is called once from the root view in `viewApp`. Content that calls the server reaches it through the `ViewScope`'s `api`, inside a `launchEffect`. A menu whose content needs no data passes a transform that returns `Unit`. A menu opened from inside a feed section, as `TagFilterMenu`, passes the invoker as its value and reads the section's `FeedSource`, `GalaxyId` and `CityId` from it rather than setting its own; `filterFeedByTag` does this, and serves the menu and the dom-agnostic clear button alike through `clearFeedTag`. A menu shows its state as an attribute on the element that displays it, and its stylesheet shows it with `attr()` in the `content` of a pseudo-element and selects on the attribute's presence, as `TagFilterMenu.Tag` does on the tag button.
+An object named for the menu, as `PostMenu`, holds its `PopoverId` and the attributes its button sets. The wire is called once from the root view in `viewApp`. Content that calls the server reaches it through the `ViewScope`'s `api`, inside a `launchEffect`. A menu whose content needs no data passes a transform that returns `Unit`. A menu opened from inside a feed section, as `TagFilterMenu`, passes the invoker as its value and reads the section's `FeedSource` from it rather than setting its own; `filterFeedByTag` does this, and serves the menu and the dom-agnostic clear button alike through `clearFeedTag`. A menu shows its state as an attribute on the element that displays it, and its stylesheet shows it with `attr()` in the `content` of a pseudo-element and selects on the attribute's presence, as `TagFilterMenu.Tag` does on the tag button.
 
 ## Dialogs
 

@@ -35,9 +35,9 @@ class AppContentFetcher(
     val api: ApiClient
 ): ContentFetcher {
     override suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent> = when (route) {
-        is HomeRoute -> api.content.readHomeContent()
+        is HomeRoute -> api.content.readHomeContent(route.feed)
         is CityListRoute -> api.content.readCityListContent()
-        is CityRoute -> api.city.readCityContent(route.slug)
+        is CityRoute -> api.city.readCityContent(route.slug, route.feed)
         is CityConfigRoute -> api.city.readCity(route.slug)
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
         is GalaxyConfigRoute -> api.galaxy.readGalaxyConfig(route.slug)
