@@ -122,7 +122,7 @@ fun FlowContent.multiBadge(curator: CuratorStatus) {
         setJsonData(CuratorMenu.CuratorJson, curator)
         setPopoverTarget(PopoverId.Curator)
         column(modify(Width(10), BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
-            icon(SvgFile.Flame, modify(Height(2), OpacityLow))
+            icon(SvgFile.Flame.small, modify(Height(2), OpacityLow))
             textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
             icon(SvgFile.ArrowsSort.small, modify(Height(2), OpacityLow))
         }
@@ -132,7 +132,7 @@ fun FlowContent.multiBadge(curator: CuratorStatus) {
 fun FlowContent.singleBadge(curator: CuratorStatus) {
     button {
         column(modify(Width(10), BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
-            icon(SvgFile.Flame, modify(Height(2), OpacityLow))
+            icon(SvgFile.Flame.small, modify(Height(2), OpacityLow))
             textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
             icon(SvgFile.ChevronUp.small, modify(Height(2), OpacityLow))
         }

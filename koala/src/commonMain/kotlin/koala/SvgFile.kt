@@ -246,6 +246,7 @@ object SvgFile {
     val EyeOff = svgPackOf("eye-off")
     val EyePlus = svgPackOf("eye-plus")
     val Eyeglass = svgPackOf("eyeglass")
+    val Family = svgPackOf("family")
     val Feather = svgPackOf("feather")
     val FerrisWheel = svgPackOf("ferris-wheel")
     val File = svgPackOf("file")
@@ -258,9 +259,11 @@ object SvgFile {
     val Filter = svgPackOf("filter")
     val Fire = svgPackOf("fire")
     val Firetruck = svgPackOf("firetruck")
+    val Fireworks = svgPackOf("fireworks")
     val FirstAidKit = svgPackOf("first-aid-kit")
     val Fish = svgPackOf("fish")
     val Flag = svgPackOf("flag")
+    val Flame = svgPackOf("flame")
     val Flask = svgPackOf("flask")
     val FlipHorizontal = svgPackOf("flip-horizontal")
     val Flower = svgPackOf("flower")
@@ -567,8 +570,6 @@ object SvgFile {
 
     // original
     val Bus = svgOf("bus")
-    val Flame = svgOf("flame")
-    val FlameLarge = svgOf("flame-large")
     val Food = svgOf("food")
     val Guitar = svgOf("guitar")
     val Helm = svgOf("helm")

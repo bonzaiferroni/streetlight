@@ -65,6 +65,9 @@ data class EventLocation(
     override val body get() = description ?: addressLine?.takeIf { it.isNotEmpty() }?.toMarkdown() ?: addedBodyOf(createdAt)
     override val markerId get() = eventId.toString()
 
+    /** The first of [tags], or `null` when it has none. */
+    val tag get() = tags?.firstOrNull()
+
     /** The location's name, or its address, or a placeholder. */
     val locationLabel get() = locationName ?: address ?: "(geolocation)"
 

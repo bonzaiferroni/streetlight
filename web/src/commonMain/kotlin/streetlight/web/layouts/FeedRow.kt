@@ -1,7 +1,6 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
-import koala.Svg
 import koala.modifier.*
 import kotlinx.css.px
 import koala.html.*
@@ -75,7 +74,7 @@ fun DIV.configureFeedRow(
         }
         div(FeedRowStyle.Badge) {
             when (curator) {
-                null -> flairBadge(flair.small)
+                null -> magicIcon(flair, modify(FeedRowStyle.Flair, ColorSchemeFg, OpacityLow))
                 else -> curatorBadge(curator)
             }
         }
@@ -108,10 +107,6 @@ fun FlowContent.entityBody(
             }
         }
     }
-}
-
-fun FlowContent.flairBadge(flair: Svg) {
-    icon(flair, modify(FeedRowStyle.Flair, ColorSchemeFg, OpacityLow))
 }
 
 /** Who posted [entity] and when, and to which galaxy when [isUniverse]. */

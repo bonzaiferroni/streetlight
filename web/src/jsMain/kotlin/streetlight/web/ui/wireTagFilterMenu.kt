@@ -19,7 +19,7 @@ fun ViewScope.wireTagFilterMenu() {
         val selected = invoker.getAttribute(TagFilterMenu.Tag)
         // the selected button drops Zen for the default button style
         fun modOf(label: String?) = Zen.takeIf { label != selected }
-        row(modify(FlexWrap, Gap(1))) {
+        row(modify(FlexWrap, JustifyContentCenter, Padding(1))) {
             button("All", mod = modOf(null), onClick = { filterBy(null) })
             EventTag.entries.forEach { tag ->
                 button(tag.label, mod = modOf(tag.label), onClick = { filterBy(tag) })

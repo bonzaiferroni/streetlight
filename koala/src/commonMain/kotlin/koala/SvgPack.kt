@@ -1,5 +1,7 @@
 package koala
 
+import kampfire.model.toUrl
+
 /** The variants of an icon, declared once by [label]. */
 data class SvgPack(
     val label: String,
@@ -13,12 +15,12 @@ data class SvgPack(
     override val assetType get() = AssetType.Svg
 }
 
-/** The [SvgPack] of [label], each variant named `label-variant.svg`. */
+/** The [SvgPack] of [label], each variant at `label-variant.svg` in [iconPath]. */
 fun svgPackOf(label: String) = SvgPack(
     label = label,
-    small = svgOf("$label-small"),
-    large = svgOf("$label-large"),
-    veryLarge = svgOf("$label-very-large"),
-    filled = svgOf("$label-filled"),
-    animated = svgOf("$label-animated"),
+    small = Svg("$iconPath$label-small.svg".toUrl()),
+    large = Svg("$iconPath$label-large.svg".toUrl()),
+    veryLarge = Svg("$iconPath$label-very-large.svg".toUrl()),
+    filled = Svg("$iconPath$label-filled.svg".toUrl()),
+    animated = Svg("$iconPath$label-animated.svg".toUrl()),
 )

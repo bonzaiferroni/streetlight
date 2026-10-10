@@ -43,6 +43,8 @@ data class EventPost(
     val event: EventLocation,
     override val post: Post,
 ): Entity by event {
+    /** The first of the event's tags, or `null` when it has none. */
+    val tag get() = event.tag
 }
 
 /** A post sharing media. */

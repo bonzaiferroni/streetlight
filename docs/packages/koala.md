@@ -36,7 +36,7 @@ A WebGL shader is written in GLSL ES 3.00 as a string in the Kotlin file of the 
 
 ## Icons
 
-`SvgFile` declares the site's icons, each an SVG file in `www/svg` named in kebab case, in alphabetical order. An icon taken from Tabler is declared once by its label with `svgPackOf`, as an `SvgPack` whose variants are files named `foo-variant.svg`:
+`SvgFile` declares the site's icons, each an SVG file named in kebab case, in alphabetical order. An icon taken from Tabler is declared once by its label with `svgPackOf`, as an `SvgPack` whose variants are files in `www/icon` named `foo-variant.svg`:
 
 | Variant | File | Content |
 |---|---|---|
@@ -46,9 +46,9 @@ A WebGL shader is written in GLSL ES 3.00 as a string in the Kotlin file of the 
 | `filled` | `foo-filled.svg` | A filled path, no stroke |
 | `animated` | `foo-animated.svg` | An animation |
 
-The stroke widths keep the lines a similar weight at each size. A pack declares every variant whether or not its file exists yet. A reference names the variant, as `SvgFile.Foo.large`.
+The stroke widths keep the lines a similar weight at each size. An animated icon is shown with `magicIcon`, which shows the `large` variant and swaps to the `animated` one under `prefers-reduced-motion: no-preference`. A pack declares every variant whether or not its file exists yet. A reference names the variant, as `SvgFile.Foo.large`.
 
-An icon from any other source is declared with `svgOf`, which takes the whole filename without its extension, as `svgOf("foo-large")`.
+An icon from any other source is a file in `www/svg`, declared with `svgOf`, which takes the whole filename without its extension, as `svgOf("foo-large")`.
 
 An icon from an outside source is listed in `docs/sources` under that source, its variants together as `foo-*.svg`, for attribution.
 

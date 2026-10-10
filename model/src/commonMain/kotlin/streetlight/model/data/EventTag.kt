@@ -7,15 +7,15 @@ import koala.SvgPack
 
 enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     // Broad
-    Meetup(SvgFile.Social),
+    Meetup(SvgFile.Coffee),
     Music(SvgFile.Music),
     Church(SvgFile.BuildingChurch),
     HealthAndFitness(SvgFile.Heartbeat, "Health & Fitness"),
     Education(SvgFile.School),
-    Sports(SvgFile.Trophy),
+    Sports(SvgFile.BallVolleyball),
     Volunteer(SvgFile.HeartHandshake),
-    KidsAndFamily(SvgFile.MoodKid, "Kids & Family"),
-    Arts(SvgFile.Palette),
+    KidsAndFamily(SvgFile.Family, "Kids & Family"),
+    Arts(SvgFile.Violin),
     FoodAndDrink(SvgFile.ToolsKitchen, "Food & Drink"),
 
     // Meetup
@@ -36,7 +36,7 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     StreetPerformance(SvgFile.AcousticGuitar, "Street Performance"),
     DJSet(SvgFile.Vinyl, "DJ Set"),
     Karaoke(SvgFile.MicrophoneHandheld),
-    Dance(SvgFile.Dance),
+    Dance(SvgFile.DiscoBall),
 
     // Health & Fitness
     Hike(SvgFile.Trekking),
@@ -45,7 +45,7 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     Wellness(SvgFile.Yoga),
 
     // Education
-    Class(SvgFile.Chalkboard),
+    Class(SvgFile.School),
     Crafting(SvgFile.NeedleThread),
     Lecture(SvgFile.Presentation),
 
@@ -56,7 +56,7 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     // Arts
     Theater(SvgFile.MasksTheater),
     Film(SvgFile.Movie),
-    ArtExhibition(SvgFile.Frame, "Art Exhibition"),
+    ArtExhibition(SvgFile.Palette, "Art Exhibition"),
     Comedy(SvgFile.MoodCrazyHappy),
 
     // Volunteer
@@ -70,7 +70,7 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
 
     // General
     Festival(SvgFile.Confetti),
-    Holiday(SvgFile.Gift),
+    Holiday(SvgFile.Fireworks),
     Market(SvgFile.BuildingStore),
     Politics(SvgFile.BuildingBank);
 

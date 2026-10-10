@@ -7,12 +7,14 @@ The `www` directory serves as the root for static assets and client-side resourc
 The directory is organized into several functional subdirectories:
 
 * **css/**: Contains standard CSS files. Stylesheets declared in Kotlin live in `koala.modifier`.
+* **favicon/**: The site's favicon.
+* **icon/**: The variants of each icon pack declared with `svgPackOf`.
 * **img/**: Static image assets, including JPEGs and PNGs used throughout the application.
 * **js/**: JavaScript source and compiled outputs. This includes:
     * **streetlight/**, **event-portal/**, **hello-portal/**: Compiled `webscripts` modules. The `web` and `koala` bundles are not served from `www`; the server serves both from `/js/streetlight/<build-id>/`.
     * **Handwritten scripts**: Files like `utils.js`, and `geoMap.js` provide targeted functionality.
 * **lottie/**: JSON animation files for use with the Lottie web library.
-* **svg/**: Vector graphics used for icons, markers, and UI elements.
+* **svg/**: Other vector graphics used for icons, markers, and UI elements.
 * **proto/**: Protocol Buffer definitions and serialized binary data used for communication (e.g., `gtfs-realtime.proto`).
 
 ### CSS Organization

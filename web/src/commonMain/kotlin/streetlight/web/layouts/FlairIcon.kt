@@ -1,15 +1,15 @@
 package streetlight.web.layouts
 
-import koala.Svg
+import koala.SvgPack
 import koala.SvgFile
 import streetlight.model.data.PostType
 
 /** The icon badge of an entity type. */
-enum class FlairIcon(val small: Svg) {
-    Default(SvgFile.FlameLarge),
-    Event(SvgFile.Calendar.large),
-    Location(SvgFile.MapPin.large),
-    Media(SvgFile.FlameLarge),
+enum class FlairIcon(val svg: SvgPack) {
+    Default(SvgFile.Flame),
+    Event(SvgFile.Calendar),
+    Location(SvgFile.MapPin),
+    Media(SvgFile.Flame),
 }
 
 val PostType.flair get() = when (this) {

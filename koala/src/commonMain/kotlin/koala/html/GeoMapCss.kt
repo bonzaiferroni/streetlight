@@ -1,5 +1,7 @@
 package koala.html
 
+import koala.SvgFile
+
 // language="CSS"
 val GeoMapCss get() = with(GeoMapKey) { """
 $Window {
@@ -35,7 +37,7 @@ $Crosshairs {
     width: 12px;
     height: 12px;
 
-    --svg: url("/www/svg/crosshairs.svg");
+    --svg: url("${SvgFile.Crosshairs.small}");
 
     position: absolute;
     top: 50%;

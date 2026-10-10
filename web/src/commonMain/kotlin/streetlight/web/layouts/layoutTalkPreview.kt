@@ -33,7 +33,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
                 row(modify(JustifySelfEnd, AlignItemsCenter)) {
                     card(controlMod) {
                         textBlock(comment.lightCount.toString())
-                        icon(SvgFile.FlameLarge)
+                        icon(SvgFile.Flame.large)
                     }
 
                     card(controlMod) {

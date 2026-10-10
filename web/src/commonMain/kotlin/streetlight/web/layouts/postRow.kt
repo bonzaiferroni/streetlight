@@ -44,6 +44,6 @@ fun FlowContent.postRow(event: EventEdit, location: Location, username: Username
             createdAt = Clock.System.now(),
             recordType = RecordType.Event,
         ),
-        cells = eventCells(event.startsAt, event.cost, event.website, event.tags, location.name),
+        cells = eventCells(event.startsAt, event.cost, event.website, event.tags?.firstOrNull(), location.name),
     )
 }

@@ -71,6 +71,7 @@ const val cssPath = "/www/css/"
 const val jsPath = "/www/js/"
 const val lottiePath = "/www/lottie/"
 const val svgPath = "/www/svg/"
+const val iconPath = "/www/icon/"
 const val imgPath = "/www/img/"
 const val genPath = "/gen/"
 

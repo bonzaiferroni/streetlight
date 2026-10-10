@@ -22,7 +22,7 @@ fun HTML.appHead(
 
         linkFira()
 
-        link { href = "/www/icon/foxicon.ico"; rel = "icon"}
+        link { href = "/www/favicon/foxicon.ico"; rel = "icon"}
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") {
             defer = true
         }

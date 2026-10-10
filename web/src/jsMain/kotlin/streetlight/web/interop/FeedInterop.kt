@@ -13,6 +13,7 @@ import koala.modifier.requireClosestAttribute
 import koala.modifier.unmodify
 import koala.modifier.setAttribute
 import koala.interop.ThisElement
+import koala.modifier.Zen
 import koala.modifier.getAttribute
 import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
@@ -147,7 +148,7 @@ fun AppendScope.appendFeed(feed: EntityFeed) {
         feedRow(post, curator)
     }
     feed.nextCursor?.let {
-        button("more") {
+        button("more", mod = Zen) {
             setAttribute(FeedSection.NextCursor.to(it))
             onClick = FeedSection.MorePosts.invokeJs(ThisElement)
         }

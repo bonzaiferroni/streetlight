@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import koala.SvgPack
 import koala.SvgFile
 import koala.html.AppRoute
 import kampfire.model.Url
@@ -73,16 +74,19 @@ fun Entity.toThemeColor(): ThemeColor = when (this) {
     is EventGroup -> ThemeColor.Location
 }
 
-fun Entity.toFlair(): FlairIcon = when (this) {
-    is EventLocation,is EventPost, is Event -> FlairIcon.Event
-    is LocationPost, is Location -> FlairIcon.Location
-    is MediaPost, is Media -> FlairIcon.Media
+/** The flair badge icon of this entity, the icon of its tag for an event that has one. */
+fun Entity.toFlair(): SvgPack = when (this) {
+    is EventLocation -> tag?.svg ?: FlairIcon.Event.svg
+    is EventPost -> tag?.svg ?: FlairIcon.Event.svg
+    is Event -> tag?.svg ?: FlairIcon.Event.svg
+    is LocationPost, is Location -> FlairIcon.Location.svg
+    is MediaPost, is Media -> FlairIcon.Media.svg
     is CustomEntity -> when (recordType) {
-        RecordType.Location -> FlairIcon.Location
-        RecordType.Event -> FlairIcon.Event
-        else -> FlairIcon.Default
+        RecordType.Location -> FlairIcon.Location.svg
+        RecordType.Event -> FlairIcon.Event.svg
+        else -> FlairIcon.Default.svg
     }
-    else -> FlairIcon.Default
+    else -> FlairIcon.Default.svg
 }
 
 /** The facts shown in this entity's [cellGrid], or `null` when it has none. */
@@ -91,9 +95,9 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
     }
-    is EventLocation -> eventCells(startsAt, cost, url, tags, locationLabel, locationRoute)
+    is EventLocation -> eventCells(startsAt, cost, url, tag, locationLabel, locationRoute)
     is EventPost -> event.toCells()
-    is Event -> eventCells(startsAt, cost, url, tags, null)
+    is Event -> eventCells(startsAt, cost, url, tag, null)
     is Galaxy -> buildList {
         if (locationCount > 0) add(locationCountCell(locationCount))
         if (eventCount > 0) add(eventCountCell(eventCount))
@@ -108,20 +112,20 @@ fun Entity.toCells(): List<EntityCell>? = when (this) {
 }
 
 /**
- * The cells of an event: its date, time, cost linking to [purchaseUrl], the first of its [tags], and [locationName]
+ * The cells of an event: its date, time, cost linking to [purchaseUrl], its [tag], and [locationName]
  * linking to [locationRoute].
  */
 fun eventCells(
     startsAt: Instant?,
     cost: Float?,
     purchaseUrl: Url?,
-    tags: List<EventTag>?,
+    tag: EventTag?,
     locationName: String?,
     locationRoute: AppRoute? = null,
 ) = buildList {
     startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
     cost?.let { add(costCell(it, purchaseUrl)) }
-    tags?.firstOrNull()?.let { add(EntityCell(SvgFile.Label.small, it.label, null)) }
+    tag?.let { add(EntityCell(SvgFile.Label.small, it.label, null)) }
     locationName?.let {
         val locationUrl = locationRoute?.let { route -> Url(route.toRelativePath()) }
         add(EntityCell(SvgFile.MapPin.small, it, locationUrl, themeColor = ThemeColor.Location))

@@ -6,7 +6,7 @@ A browser extension that sends the page in view to Streetlight as a lead.
 
 ## Structure
 
-The extension is plain JavaScript with no build step, loaded from `browser/leadExtension` as it stands. Its icon, `icons/foxicon.png`, is the PNG inside the site's `www/icon/foxicon.ico`, and serves the extension and its toolbar button at every size.
+The extension is plain JavaScript with no build step, loaded from `browser/leadExtension` as it stands. Its icon, `icons/foxicon.png`, is the PNG inside the site's `www/favicon/foxicon.ico`, and serves the extension and its toolbar button at every size.
 
 One Manifest V3 manifest serves Firefox and Chrome, from version 121 of each. `background` declares `background.js` under both `scripts` and `service_worker`: Firefox runs it as an event page and Chrome as a service worker. Scripts use the `chrome.*` namespace, which both browsers provide.
 

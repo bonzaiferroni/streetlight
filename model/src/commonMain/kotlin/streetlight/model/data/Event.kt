@@ -48,6 +48,9 @@ data class Event(
     val timeZone get() = TimeZone.currentSystemDefault() // notsure
     val isFree get() = cost == 0f
 
+    /** The first of [tags], or `null` when it has none. */
+    val tag get() = tags?.firstOrNull()
+
     override val label get() = title
     override val body get() = description ?: startsAt?.let { startsAtBodyOf(it) } ?: addedBodyOf(createdAt)
     override val geoPoint get() = null

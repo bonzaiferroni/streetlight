@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.Svg
+import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -21,6 +22,18 @@ fun FlowContent.icon(
     }
 }
 
+/** The [svg] pack as an [icon], animated unless the viewer prefers reduced motion. */
+fun FlowContent.magicIcon(
+    svg: SvgPack,
+    mod: Modifier? = SmallIconHeight,
+    block: DIV.() -> Unit = {}
+) {
+    icon(svg.large, modify(IconStyle.Magic, mod)) {
+        setStyle(Css.MaskUrlAnimated.of(svg.animated))
+        block()
+    }
+}
+
 /** Configures this element as an [icon] of [file]. */
 fun DIV.configureIcon(
     file: Svg,
@@ -36,6 +49,7 @@ object IconStyle {
     val Icon = Class("icon")
     val Stretch = Class("icon-stretch")
     val Signal = Class("signal")
+    val Magic = Class("magic-icon")
 
     val DefaultMod = modify(Aspect1, SmallIconHeight)
     val DefaultSignal = modify(Aspect1, SmallIconHeight, FadeIn)
@@ -59,6 +73,11 @@ $Icon {
     
     mask-size: 100% 100%;
     -webkit-mask-size: 100% 100%;
+}
+
+/* the animated variant replaces the still one unless the viewer prefers reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+    $Icon$Magic { mask-image: var(--mask-url-animated); -webkit-mask-image: var(--mask-url-animated); }
 }
 
 $Stretch {

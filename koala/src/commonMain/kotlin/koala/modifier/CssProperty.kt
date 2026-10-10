@@ -74,6 +74,7 @@ object Css {
     val Opacity = Property<Number>("opacity")
 
     val MaskUrl = Property<Asset>("mask-url", true)
+    val MaskUrlAnimated = Property<Asset>("mask-url-animated", true)
     val ColorScheme = Property<String>("color-scheme", true)
     val BackgroundUrl = Property<Url>("background-url", true)
     val AnchorId = Property<PositionAnchor>("anchor-id", true)

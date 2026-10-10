@@ -6,5 +6,5 @@ import kotlinx.html.FlowContent
 
 /** The flame logo as a glowing icon. */
 fun FlowContent.iconLogo(mod: Modifier? = SmallIconHeight) {
-    icon(SvgFile.Flame, modify(mod, GlowBackground))
+    icon(SvgFile.Flame.small, modify(mod, GlowBackground))
 }

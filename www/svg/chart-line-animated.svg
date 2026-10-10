@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-     class="icon icon-tabler icons-tabler-animated icon-tabler-chart-line">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M4 19l16 0"/>
-    <path d="M4 15L8 9L12 11L16 6L20 10">
-        <animate attributeName="d" values="M4 15L8 9L12 11L16 6L20 10;M4 15L8 9.136L12 10.439L16 5.259L20 9.759;M4 15L8 8.699L12 9.675L16 4.869L20 10.103;M4 15L8 7.946L12 9.153L16 5.059L20 10.83;M4 15L8 7.317L12 9.181L16 5.718L20 11.514;M4 15L8 7.181L12 9.742L16 6.459L20 11.754;M4 15L8 7.618L12 10.507L16 6.849L20 11.41;M4 15L8 8.371L12 11.028L16 6.659L20 10.684;M4 15L8 9L12 11L16 6L20 10" dur="4s" repeatCount="indefinite"/>
-    </path>
-</svg>

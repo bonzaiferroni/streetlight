@@ -44,6 +44,8 @@ An entry marked `FeedRowStyle.Featured` takes the `Grid` entry layout in any fee
 
 An entry's size is set by `--row-height` on `FeedRowStyle.Base`: 10 units, and 8 in `Minimal`. The square image, the flair and the clip of the text all read it, so a mode changes the size of its entries by setting it alone. A featured entry clips its text at 24 units. Text that reaches the clip fades over its last rem; shorter text does not fade. Text is left-aligned in every mode, and starts at the top of its area.
 
+An entry's flair is the icon of its tag for an event that has one, and the `FlairIcon` of its record otherwise. The badge shows the `animated` variant, and the `large` variant when the viewer prefers reduced motion.
+
 The feed mode is a root switch, as specified in `koala.interop.md`.
 
 The children of `FeedRowStyle.Content` each take a named grid area: `Image`, `Text`, `Badge` and `Cells`. A property that differs by mode lives in the CSS, not on the element. A spacing modifier such as `Gap(n)` renders as an inline style, which no stylesheet rule overrides, so a spacing that differs by mode is never set with one.
