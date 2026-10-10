@@ -30,6 +30,18 @@ A component that shows an entity takes the `Entity` and reads its content from t
 
 An entity supplies its content as data, such as an `EntityCell`. The component that shows the content declares its markup, so every entity is rendered the same way.
 
+## Entity Parts
+
+The parts an entity is shown with, shared by `feedRow` and `entityDialog`, are in `entityParts.kt`: `entityImage`, `entityHeading`, `entitySummary`, `entityBadge` and `entityLinks`. Each takes the entity and the classes its caller places it with, so the two layouts render the same markup and differ only in their stylesheets.
+
+The heading links to the entity's source when it has one, and to its page otherwise. The image and the summary open the `EntityDialog` for the entity's `toEntityRef()`; an entity with no ref links its image to its page and leaves its summary inert. A click on a link inside the summary follows the link and does not open the dialog.
+
+## Entity Dialog
+
+`entityDialog` shows all of an entity. Its image, its heading centered on a card background, and its cells join edge to edge as one part, with no badge; its whole body and links follow through `entityBody`, as a page header shows them, the links beside the body when there is room. The image keeps its native size, at most half the viewport's height, so the content below it shows. It has its own structure and stylesheet, `EntityDialogCss`, so the feed row's modes do not reach it.
+
+The feed carries only what a row shows. The dialog reads the whole entity when it opens, through `Api.Entities.Read`, by the `EntityRef` its opener carries as the `EntityDialog` attributes. Location, media and event entities, and the posts of each, have a ref; a post's dialog shows the record it shares.
+
 ## Feed Rows
 
 `feedRow` renders any `Entity` as one row. It is built around a post, which displays every property the row has, and it is the row for every other entity type, which display the properties they hold.

@@ -23,7 +23,7 @@ import streetlight.server.utils.readImageUrl
 
 /**
  * Delivers the event [schema] reads by selector from the event [lead] fetched as [document], with the values its
- * JSON-LD declares laid over it, merged with what its feed showed.
+ * JSON-LD declares laid over it, its meta image kept over a declared one, merged with what its feed showed.
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventPage(
@@ -34,7 +34,9 @@ suspend fun Crawler.crawlEventPage(
     val rawReadEvent = (schema as? EventPageSchema)?.let { selectors -> document?.let { parsePageEvent(selectors, it.doc, it.servedUrl, !lead.isExternalOrigin) } }
     val rawLdEvent = document?.let { it.doc.readPageLdEvent(it.servedUrl, !lead.isExternalOrigin)?.toRawEntity() }?.takeIf { it.isNotEmpty() }
     rawLdEvent.trackLdValues(lead.initialUrl)
-    val rawPageEvent = if (rawReadEvent == null && rawLdEvent == null) null else rawReadEvent.orEmpty() + rawLdEvent.orEmpty()
+    val rawPageEvent = if (rawReadEvent == null && rawLdEvent == null) null else document?.let {
+        (rawReadEvent.orEmpty() + rawLdEvent.orEmpty()).withMetaImage(it.doc, !lead.isExternalOrigin)
+    }
 
     when {
         document == null || rawPageEvent == null -> {

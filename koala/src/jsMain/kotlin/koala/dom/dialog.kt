@@ -7,10 +7,14 @@ import koala.html.heading2
 import kampfire.model.MutableTap
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.drop
+import koala.model.Portal
 import kotlinx.css.pct
 import kotlinx.html.js.dialog
 import web.events.addEventListener
 import web.html.HTMLDialogElement
+import web.events.CANCEL
+import web.events.Event
 import web.pointer.CLICK
 import web.pointer.PointerEvent
 import kotlin.time.Duration.Companion.milliseconds
@@ -19,7 +23,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * A modal dialog that is open while [state] is `true`, holding a child view built by [content] each time it
  * opens.
  *
- * A click on the backdrop closes it.
+ * A click on the backdrop or Escape closes it, and so does a new route, since the page behind it has changed.
  */
 fun ViewScope.dialog(
     state: MutableTap<Boolean>,
@@ -56,8 +60,9 @@ fun ViewScope.dialog(
     }
 
     element.addEventListener(PointerEvent.CLICK, { event ->
+        // through the state alone, so the close runs once and is not cut short
         if (event.target == element) {
-            closeDialog()
+            state.set(false)
         }
     })
 
@@ -67,6 +72,20 @@ fun ViewScope.dialog(
                 openDialog()
             } else {
                 closeDialog()
+            }
+        }
+    }
+
+    // Escape closes the dialog through its state too, rather than natively, at once and out of step with it
+    element.addEventListener(Event.CANCEL, { event ->
+        event.preventDefault()
+        state.set(false)
+    })
+
+    app.getOrNull<Portal>()?.let { portal ->
+        launchEffect {
+            portal.routeState.flow.drop(1).collect {
+                if (state.now) state.set(false)
             }
         }
     }

@@ -55,6 +55,7 @@ fun viewApp() {
                     wirePostMenu()
                     wireTagFilterMenu()
                     wireMessageDialog()
+                    wireEntityDialog()
                     wireGalaxyMenu()
                     wireFps()
                     wireSignInDialog()

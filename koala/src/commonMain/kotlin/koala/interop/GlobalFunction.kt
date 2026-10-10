@@ -13,11 +13,13 @@ interface GlobalFunction {
     /**
      * The JS call of this function with [args], as markup writes it in an attribute such as `onclick`.
      *
-     * A string is quoted, an [Id] or [Class] is written as its literal, and [ThisElement] is written as `this`.
+     * A string is quoted, an [Id] or [Class] is written as its literal, [ThisElement] is written as `this` and
+     * [ThisEvent] as `event`.
      */
     fun invokeJs(vararg args: Any) = args.joinToString(", ", "$name(", ")") { arg ->
         when (arg) {
             is ThisElement -> "this"
+            is ThisEvent -> "event"
             is String, is Uuid -> "'$arg'"
             is Id -> arg.jsLiteral
             is PositionAnchor -> "'${arg.identifier}'"
@@ -30,3 +32,6 @@ interface GlobalFunction {
 
 /** Stands for the element whose attribute holds the call, written as `this`. */
 data object ThisElement
+
+/** Stands for the event that triggered the handler holding the call, written as `event`. */
+data object ThisEvent

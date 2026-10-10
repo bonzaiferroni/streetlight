@@ -178,6 +178,14 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UpdateMark: PostEndpoint<MarkUpdate, Unit>(this)
     }
 
+    object Entities: ApiNode(this) {
+        /** The whole entity of the record of [type] at [slug]. */
+        object Read: GetEndpoint<Entity>(this) {
+            val type = enumParamOf<EntityType>("type")
+            val slug = stringParamOf("slug")
+        }
+    }
+
     object Medias: ApiNode(this, "media") {
         object ReadMedia: GetByIdEndpoint<Slug, Media>(this)
         object CreateMedia: PostEndpoint<MediaEdit, Media>(this)

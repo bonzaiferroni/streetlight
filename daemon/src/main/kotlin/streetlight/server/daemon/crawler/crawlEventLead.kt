@@ -17,7 +17,7 @@ import kotlin.time.Clock
 
 /**
  * Delivers the event read from the page of [lead] fetched as [document], as [schema], with the values its JSON-LD
- * declares laid over it: at its place, found stored or created first.
+ * declares laid over it, its meta image kept over a declared one: at its place, found stored or created first.
  */
 context(tracker: ParseTracker)
 suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, schema: LmSchema?) {
@@ -28,7 +28,7 @@ suspend fun Crawler.crawlEventLead(lead: EventLead, document: FetchDocument?, sc
     val ldEvent = document.doc.readPageLdEvent(document.servedUrl, !lead.isExternalOrigin)
     val rawLdEvent = ldEvent?.toRawEntity().orEmpty()
     rawLdEvent.trackLdValues(lead.initialUrl)
-    val rawEvent = eventRead.parseEvent(document.doc, lead.initialUrl) + rawLdEvent
+    val rawEvent = (eventRead.parseEvent(document.doc, lead.initialUrl) + rawLdEvent).withMetaImage(document.doc, resolveIfRelative = false)
 
     tracker.trackFoundRecord()
     val title = rawEvent[ParseProperty.Name] ?: return tracker.trackUnnamedRecord(rawEvent)

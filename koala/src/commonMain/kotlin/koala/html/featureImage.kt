@@ -13,7 +13,8 @@ import kotlinx.html.img
  * Shows [image] whole, contained over a blurred and scaled backdrop of the same image, falling back to
  * [placeholder].
  *
- * The fit is set on the root and inherited by the image, so a caller changes it with [mod].
+ * The fit is set on the root and inherited by the image, so a caller changes it with [mod]. When [isNative], the
+ * image shows its largest variant at its own size, as wide as the root at most, and the backdrop fills the rest.
  */
 fun FlowContent.containImage(
     image: Image? = null,
@@ -21,6 +22,7 @@ fun FlowContent.containImage(
     placeholder: Image = SiteImage.placeholder,
     alt: String? = null,
     lazy: Boolean = true,
+    isNative: Boolean = false,
     block: DIV.() -> Unit = {}
 ) {
     val image = image ?: placeholder
@@ -33,7 +35,10 @@ fun FlowContent.containImage(
         }
 
         img {
-            configureImage(null, image, ContainImage.ContentClass, alt, lazy) { }
+            when (isNative) {
+                true -> configureImage(image.largest ?: image.url, null, ContainImage.NativeClass, alt, lazy) { }
+                false -> configureImage(null, image, ContainImage.ContentClass, alt, lazy) { }
+            }
         }
     }
 }
@@ -42,6 +47,7 @@ object ContainImage {
     val Class = Class("contain-image")
     val BackdropClass = Class.withBemElement("backdrop")
     val ContentClass = Class.withBemElement("content")
+    val NativeClass = Class.withBemElement("native")
 }
 
 // language="CSS"
@@ -73,5 +79,11 @@ $ContentClass {
     min-width: 0;
     min-height: 0;
     object-fit: inherit;
+}
+
+/* the image at its own size, centered by the root */
+$NativeClass {
+    position: relative;
+    max-width: 100%;
 }
 """ }

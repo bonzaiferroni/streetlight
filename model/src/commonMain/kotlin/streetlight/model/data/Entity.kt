@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.api.toMarkdown
 import kabinet.utils.toAgoFormat
@@ -35,6 +36,12 @@ sealed interface Entity {
     val links: List<ExtraLink>? get() = null
     val createdAt: Instant? get() = null
 }
+
+/** The kinds of record whose whole [Entity] is read by its slug, through `Api.Entities.Read`. */
+enum class EntityType { Location, Media, Event }
+
+/** The record of [type] at [slug], whose whole [Entity] is read through `Api.Entities.Read`. */
+data class EntityRef(val type: EntityType, val slug: Slug)
 
 /** An [Entity] built directly, for content that has no type of its own, such as a preview of [recordType]. */
 @Serializable

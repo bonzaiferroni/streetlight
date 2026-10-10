@@ -113,6 +113,13 @@ internal fun costOf(text: String): Float? {
 private val dollarAmount = Regex("""\$\s?(\d+(?:\.\d{1,2})?)""")
 private val freeWord = Regex("""\bfree\b""", RegexOption.IGNORE_CASE)
 
+/**
+ * This entity with the image the page [doc] declares in its meta for outside links in place of its own, resolved
+ * against the page when relative and [resolveIfRelative]. Unchanged when the page declares none.
+ */
+internal fun RawEntity.withMetaImage(doc: Document, resolveIfRelative: Boolean): RawEntity =
+    doc.readImageUrl(resolveIfRelative)?.let { this + (ParseProperty.Image to it.value) } ?: this
+
 /** The properties of the event this schema read from the page [doc] at [url], an event lead's, the page's meta image first. */
 fun EventRead.parseEvent(doc: Document, url: Url): RawEntity = buildRawEntity {
     this[ParseProperty.Name] = name

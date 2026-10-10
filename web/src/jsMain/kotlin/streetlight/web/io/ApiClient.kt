@@ -7,6 +7,7 @@ interface ApiClient {
     val content: ContentClient
     val doc: DocClient
     val earth: EarthClient
+    val entity: EntityClient
     val event: EventClient
     val feedback: FeedbackClient
     val bug: BugClient
@@ -30,6 +31,7 @@ class BrowserApiClient(private val client: FetchClient): ApiClient {
     override val content: ContentClient = BrowserContentClient(client)
     override val doc: DocClient = BrowserDocClient(client)
     override val earth: EarthClient = BrowserEarthClient(client)
+    override val entity: EntityClient = BrowserEntityClient(client)
     override val event: EventClient = BrowserEventClient(client)
     override val feedback: FeedbackClient = BrowserFeedbackClient(client)
     override val bug: BugClient = BrowserBugClient(client)

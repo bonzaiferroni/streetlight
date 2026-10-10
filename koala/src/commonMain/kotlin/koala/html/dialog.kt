@@ -48,6 +48,9 @@ $Class[open] {
     }
 }
 
+/* the page holds still under an open dialog */
+:root:has($Class[open]) { overflow: hidden; }
+
 $Class::backdrop {
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);

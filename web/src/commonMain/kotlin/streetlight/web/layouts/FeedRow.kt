@@ -17,7 +17,6 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.CuratorMenu
 import streetlight.web.ui.PopoverId
-import streetlight.web.ui.curatorBadge
 import kotlin.time.Clock
 
 /**
@@ -43,12 +42,7 @@ fun DIV.configureFeedRow(
 ) {
     addModifiers(modify(FeedRowStyle.Base, ZenBg))
 
-    val image = entity.image // td: make placeholder depend on post type
     val colorScheme = entity.toThemeColor()
-    val flair = entity.toFlair()
-    val postRoute = entity.toRoute()
-    val headingUrl = entity.url?.value ?: postRoute?.toRelativePath()
-    val heading = entity.label
     val buttons = entityButtonsOf(entity, true)
     val description = entity.description
     val links = entity.links
@@ -63,21 +57,13 @@ fun DIV.configureFeedRow(
     // each child takes a grid area, placed by FeedMode
     div(FeedRowStyle.Content) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
-        navigationIfNotNull(postRoute, modify(FeedRowStyle.Image, OverflowClip, MoonShadow)) {
-            containImage(image, modify(FeedRowStyle.Feature, Size100P))
-        }
+        // td: make the image placeholder depend on post type
+        entityImage(entity, modify(FeedRowStyle.Image, OverflowClip, MoonShadow), modify(FeedRowStyle.Feature, Size100P))
         column(modify(FeedRowStyle.Text, Gap(0), TextShadow, OverflowHidden)) {
-            navigationIfNotNull(headingUrl) {
-                heading5(heading, modify(LineHeight115, SingleLine, Bold))
-            }
-            markdown(entity.body, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
+            entityHeading(entity)
+            entitySummary(entity, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
         }
-        div(FeedRowStyle.Badge) {
-            when (curator) {
-                null -> magicIcon(flair, modify(FeedRowStyle.Flair, ColorSchemeFg, OpacityLow))
-                else -> curatorBadge(curator)
-            }
-        }
+        entityBadge(entity, curator, FeedRowStyle.Badge, FeedRowStyle.Flair)
         cellGrid(cells, buttons, modify(FeedRowStyle.Cells, BorderRadius2, OverflowClip, Outline))
     }
 
@@ -97,14 +83,7 @@ fun FlowContent.entityBody(
             markdown(it, FeedRowStyle.ExpandedBody, limit = limit)
         }
         if (links != null || editRoute != null) {
-            div(FeedRowStyle.ExpandedLinks) {
-                links?.forEach { link ->
-                    btn(link.label, link.url, Zen)
-                }
-                editRoute?.let {
-                    btn("edit", it, Zen)
-                }
-            }
+            entityLinks(links, editRoute, FeedRowStyle.ExpandedLinks)
         }
     }
 }
@@ -313,7 +292,7 @@ $ExpandedContent {
     }
     $ExpandedBody  { grid-area: body }
     
-    @container (min-width: 960px) { 
+    @container (min-width: 640px) { 
         grid-template-rows: none;
         grid-template-columns: 1fr min-content;
         grid-template-areas: "body links";

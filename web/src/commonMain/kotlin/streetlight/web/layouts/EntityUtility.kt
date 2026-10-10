@@ -18,6 +18,8 @@ import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Entity
+import streetlight.model.data.EntityRef
+import streetlight.model.data.EntityType
 import streetlight.model.data.RecordType
 import streetlight.model.data.Star
 import streetlight.model.ui.CityRoute
@@ -87,6 +89,22 @@ fun Entity.toFlair(): SvgPack = when (this) {
         else -> FlairIcon.Default.svg
     }
     else -> FlairIcon.Default.svg
+}
+
+/** The record whose whole entity the [EntityDialog] reads, or `null` for an entity it does not show. */
+fun Entity.toEntityRef(): EntityRef? = when (this) {
+    is EventLocation -> EntityRef(EntityType.Event, eventSlug)
+    is EventPost -> event.toEntityRef()
+    is Event -> EntityRef(EntityType.Event, slug)
+    is LocationPost -> location.toEntityRef()
+    is Location -> EntityRef(EntityType.Location, slug)
+    is MediaPost -> media.toEntityRef()
+    is Media -> EntityRef(EntityType.Media, slug)
+    is City -> null
+    is Galaxy -> null
+    is CustomEntity -> null
+    is Star -> null
+    is EventGroup -> null
 }
 
 /** The facts shown in this entity's [cellGrid], or `null` when it has none. */
