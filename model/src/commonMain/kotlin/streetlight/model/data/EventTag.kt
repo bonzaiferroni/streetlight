@@ -33,10 +33,10 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     // Music
     Concert(SvgFile.Ticket),
     OpenMic(SvgFile.Microphone, "Open Mic"),
-    StreetPerformance(SvgFile.GuitarPick, "Street Performance"),
+    StreetPerformance(SvgFile.AcousticGuitar, "Street Performance"),
     DJSet(SvgFile.Vinyl, "DJ Set"),
     Karaoke(SvgFile.MicrophoneHandheld),
-    Dance(SvgFile.Shoe),
+    Dance(SvgFile.Dance),
 
     // Health & Fitness
     Hike(SvgFile.Trekking),

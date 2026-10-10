@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-accordion">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 6.5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v11a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -11"/>
+    <path d="M17 6.5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v11a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -11"/>
+    <path d="M7 7L8.667 17L10.333 7L12 17L13.667 7L15.333 17L17 7M7 7H17M7 17H17"/>
+    <path d="M5 9v.01m0 3v.01m0 3v.01"/>
+</svg>

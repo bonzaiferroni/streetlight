@@ -7,9 +7,9 @@ import koala.SvgPack
 enum class VehicleSvg(val svg: SvgPack) {
     Bus(SvgFile.TransitBus),
     Shuttle(SvgFile.BusStop),
-    LightRail(SvgFile.Locomotive),
+    LightRail(SvgFile.Tram),
     Train(SvgFile.Locomotive),
-    Streetcar(SvgFile.Locomotive),
+    Streetcar(SvgFile.Tram),
     Subway(SvgFile.Locomotive),
     Ferry(SvgFile.Ship),
     Boat(SvgFile.Sailboat),

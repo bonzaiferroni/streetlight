@@ -21,7 +21,7 @@ enum class ResourceSvg(val svg: SvgPack) {
 
     // Water
     Water(SvgFile.Droplet),
-    DrinkingFountain(SvgFile.GlassFull),
+    DrinkingFountain(SvgFile.Fountain),
     WaterRefill(SvgFile.Bottle),
 
     // Shelter & Housing
@@ -74,7 +74,7 @@ enum class ResourceSvg(val svg: SvgPack) {
     Shower(SvgFile.Bath),
     Laundry(SvgFile.WashMachine),
     HygieneKit(SvgFile.WashHand),
-    Haircut(SvgFile.Scissors),
+    Haircut(SvgFile.BarberPole),
     MenstrualProducts(SvgFile.DropletHeart),
     Diapers(SvgFile.BabyBottle),
 
@@ -123,7 +123,7 @@ enum class ResourceSvg(val svg: SvgPack) {
     EnglishClasses(SvgFile.AlphabetLatin),
     Library(SvgFile.Books),
     Tutoring(SvgFile.Pencil),
-    Childcare(SvgFile.HorseToy),
+    Childcare(SvgFile.ToyBlocks),
     Afterschool(SvgFile.Backpack),
     YouthProgram(SvgFile.MoodKid),
     SeniorServices(SvgFile.Old),

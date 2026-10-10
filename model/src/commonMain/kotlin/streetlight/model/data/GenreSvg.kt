@@ -6,11 +6,11 @@ import koala.SvgPack
 /** An icon for each genre of music. */
 enum class GenreSvg(val svg: SvgPack) {
     // Rock
-    Rock(SvgFile.GuitarPick),
+    Rock(SvgFile.ElectricGuitar),
     HardRock(SvgFile.Bolt),
     Metal(SvgFile.Skull),
     Punk(SvgFile.Bomb),
-    Grunge(SvgFile.MusicBolt),
+    Grunge(SvgFile.ElectricGuitar),
     Alternative(SvgFile.ArrowsShuffle),
     Indie(SvgFile.Vinyl),
     Emo(SvgFile.HeartBroken),
@@ -20,8 +20,8 @@ enum class GenreSvg(val svg: SvgPack) {
     // Pop
     Pop(SvgFile.Star),
     KPop(SvgFile.Magic),
-    Disco(SvgFile.Confetti),
-    Synthpop(SvgFile.WaveSawTool),
+    Disco(SvgFile.DiscoBall),
+    Synthpop(SvgFile.Synthesizer),
 
     // Hip Hop & R&B
     HipHop(SvgFile.Microphone),
@@ -36,24 +36,24 @@ enum class GenreSvg(val svg: SvgPack) {
     House(SvgFile.Home),
     Techno(SvgFile.WaveSawTool),
     Dubstep(SvgFile.WavesElectricity),
-    DrumAndBass(SvgFile.Metronome),
+    DrumAndBass(SvgFile.Drum),
     Ambient(SvgFile.Cloud),
     LoFi(SvgFile.Headphones),
 
     // Jazz & Blues
-    Jazz(SvgFile.Moon),
-    Swing(SvgFile.Shoe),
+    Jazz(SvgFile.Saxophone),
+    Swing(SvgFile.Dance),
     BigBand(SvgFile.Social),
     Blues(SvgFile.CloudRain),
 
     // Roots
     Country(SvgFile.Cactus),
     Folk(SvgFile.Campfire),
-    Bluegrass(SvgFile.GuitarPick),
+    Bluegrass(SvgFile.AcousticGuitar),
     Americana(SvgFile.Flag),
     Celtic(SvgFile.Clover),
     SingerSongwriter(SvgFile.Writing),
-    Acoustic(SvgFile.GuitarPick),
+    Acoustic(SvgFile.AcousticGuitar),
 
     // Latin & World
     Latin(SvgFile.Pepper),
@@ -61,7 +61,7 @@ enum class GenreSvg(val svg: SvgPack) {
     Reggaeton(SvgFile.Fire),
     Reggae(SvgFile.Leaf),
     World(SvgFile.World),
-    Afrobeat(SvgFile.Metronome),
+    Afrobeat(SvgFile.Drum),
 
     // Classical & Stage
     Classical(SvgFile.Clef),
