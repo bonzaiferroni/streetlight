@@ -33,6 +33,7 @@ fun testLocation(name: String = "The Fox Den"): Location {
         mapCategory = null,
         mapType = null,
         resources = emptySet(),
+        tags = null,
         hours = null,
         url = null,
         starCount = null,

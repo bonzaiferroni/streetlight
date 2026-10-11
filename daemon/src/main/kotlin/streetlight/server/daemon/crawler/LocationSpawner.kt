@@ -2,6 +2,7 @@ package streetlight.server.daemon.crawler
 
 import streetlight.model.data.ParseProperty
 import streetlight.model.data.RawEntity
+import streetlight.server.daemon.agent.EntityClassifier
 import kampfire.model.Distance
 import streetlight.model.data.toOriginId
 import streetlight.model.utils.expandAddress
@@ -87,7 +88,7 @@ class LocationSpawner(
             val edit = place.toEdit().takeIf { it.validity.isValid }
                 ?: return feedLocation.also { tracker.trackFallbackLocation(rawEvent, text) }
             try {
-                server.createLocation(null, edit, isImageRequired = false)
+                server.createLocation(null, crawler.classifier.classifyCrawledLocation(edit, tracker), isImageRequired = false)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -149,9 +150,9 @@ class LocationSpawner(
      * filling what the page lacks and giving the address.
      */
     context(crawler: Crawler)
-    suspend fun createLocationFrom(place: OSMLocation, rawLocation: RawEntity, website: Url?): Outcome<Location> {
+    suspend fun createLocationFrom(place: OSMLocation, rawLocation: RawEntity, website: Url?, tracker: ParseTracker): Outcome<Location> {
         val edit = rawLocation.toLocationEdit(website).copy(address = null).mergeLeft(place.toEdit())
-        return create(edit.withUnitOf(rawLocation[ParseProperty.Address]))
+        return create(edit.withUnitOf(rawLocation[ParseProperty.Address]), tracker)
     }
 
     /**
@@ -159,9 +160,9 @@ class LocationSpawner(
      * map id, since the map names something else there or nothing.
      */
     context(crawler: Crawler)
-    suspend fun createNamedLocationAt(place: OSMLocation, rawLocation: RawEntity, website: Url?): Outcome<Location> {
+    suspend fun createNamedLocationAt(place: OSMLocation, rawLocation: RawEntity, website: Url?, tracker: ParseTracker): Outcome<Location> {
         val edit = rawLocation.toLocationEdit(website).copy(address = null).mergeLeft(place.toAddressEdit())
-        return create(edit.withUnitOf(rawLocation[ParseProperty.Address]))
+        return create(edit.withUnitOf(rawLocation[ParseProperty.Address]), tracker)
     }
 
     /**
@@ -210,7 +211,7 @@ class LocationSpawner(
             tracker.trackMatchedLocation(rawEvent, name, it)
             return it
         }
-        val location = createLocationFrom(place, mapOf(ParseProperty.Name to placedName), website).toDataOr {
+        val location = createLocationFrom(place, mapOf(ParseProperty.Name to placedName), website, tracker).toDataOr {
             tracker.trackFailedLocation(rawEvent, name, it)
             return null
         }
@@ -238,7 +239,7 @@ class LocationSpawner(
             tracker.trackMatchedLocation(rawEvent, name, it)
             return it
         }
-        val location = createLocationAt(place, website).toDataOr {
+        val location = createLocationAt(place, website, tracker).toDataOr {
             tracker.trackFailedLocation(rawEvent, name, it)
             return null
         }
@@ -278,22 +279,22 @@ class LocationSpawner(
      * the thing the map names there; [website] when known.
      */
     context(crawler: Crawler)
-    suspend fun createLocationAt(place: OSMLocation, website: Url?): Outcome<Location> =
-        create(place.toAddressEdit().copy(website = website))
+    suspend fun createLocationAt(place: OSMLocation, website: Url?, tracker: ParseTracker): Outcome<Location> =
+        create(place.toAddressEdit().copy(website = website), tracker)
 
     /**
-     * The location created from [edit], when it has a point. A location already stored under its map id is returned
-     * in its place.
+     * The location created from [edit], classified, when it has a point. A location already stored under its map id is
+     * returned in its place.
      */
     context(crawler: Crawler)
-    private suspend fun create(edit: LocationEdit): Outcome<Location> {
+    private suspend fun create(edit: LocationEdit, tracker: ParseTracker): Outcome<Location> {
         if (edit.geoPoint == null) {
             return Problem("The place on the map has no point")
         }
         return crawler.dbWrite {
             edit.mapId?.let { dao.location.readLocationByMapId(it) }?.let { return@dbWrite Ok(it) }
             try {
-                server.createLocation(null, edit, isImageRequired = false)
+                server.createLocation(null, crawler.classifier.classifyCrawledLocation(edit, tracker), isImageRequired = false)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -435,3 +436,15 @@ private val placeNote = Regex("""\([^)]*\)|\[[^\]]*]""")
 private val placePhrases = listOf(Regex("""\bparking lot\b""", RegexOption.IGNORE_CASE))
 private val whitespaceRun = Regex("""\s+""")
 private const val kilometersPerDegree = 111.32
+
+/**
+ * The [edit] with the tags this classifier gives it, read without the source note, or as it is when it has no name
+ * to classify by.
+ */
+internal suspend fun EntityClassifier.classifyCrawledLocation(edit: LocationEdit, tracker: ParseTracker): LocationEdit {
+    if (edit.name.isNullOrBlank()) return edit
+    val classified = classifyLocation(edit.copy(description = edit.description?.withoutNote())) {
+        tracker.trackClassifiedLocation(it)
+    }
+    return edit.copy(tags = classified.tags)
+}

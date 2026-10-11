@@ -5,80 +5,84 @@ import koala.SvgFile
 import koala.SvgPack
 
 
-enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
+/** A kind of event, at a [specificity] of 0 for a broad category, rising as the tag names an event more narrowly. */
+enum class EventTag(val specificity: Int, val svg: SvgPack, label: String? = null): Labeled {
     // Broad
-    Meetup(SvgFile.Coffee),
-    Music(SvgFile.Music),
-    Church(SvgFile.BuildingChurch),
-    HealthAndFitness(SvgFile.Heartbeat, "Health & Fitness"),
-    Education(SvgFile.School),
-    Sports(SvgFile.BallVolleyball),
-    Volunteer(SvgFile.HeartHandshake),
-    KidsAndFamily(SvgFile.Family, "Kids & Family"),
-    Arts(SvgFile.Violin),
-    FoodAndDrink(SvgFile.ToolsKitchen, "Food & Drink"),
+    Meetup(0, SvgFile.Coffee),
+    Music(0, SvgFile.Music),
+    Church(0, SvgFile.BuildingChurch),
+    HealthAndFitness(0, SvgFile.Heartbeat, "Health & Fitness"),
+    Education(0, SvgFile.School),
+    Sports(0, SvgFile.BallVolleyball),
+    Volunteer(0, SvgFile.HeartHandshake),
+    KidsAndFamily(0, SvgFile.Family, "Kids & Family"),
+    Arts(0, SvgFile.Violin),
+    FoodAndDrink(0, SvgFile.ToolsKitchen, "Food & Drink"),
 
     // Social
-    Picnic(SvgFile.Basket),
-    Potluck(SvgFile.Soup),
-    Networking(SvgFile.Affiliate),
-    BooksAndWriting(SvgFile.Book, "Books & Writing"),
-    GamesAndTrivia(SvgFile.Dice, "Games & Trivia"),
-    Singles(SvgFile.Hearts),
-    LGBTQ(SvgFile.Rainbow),
-    Tech(SvgFile.DeviceLaptop),
-    Pets(SvgFile.Paw),
-    WatchParty(SvgFile.DeviceTv, "Watch Party"), // replace with Party
+    Picnic(1, SvgFile.Basket),
+    Potluck(2, SvgFile.Soup),
+    Networking(1, SvgFile.Affiliate),
+    BooksAndWriting(1, SvgFile.Book, "Books & Writing"),
+    GamesAndTrivia(1, SvgFile.Dice, "Games & Trivia"),
+    Singles(1, SvgFile.Hearts),
+    LGBTQ(1, SvgFile.Rainbow),
+    Tech(1, SvgFile.DeviceLaptop),
+    Pets(1, SvgFile.Paw),
+    Party(1, SvgFile.DeviceTv, "Watch Party"), // replace with Party
 
     // Music
-    Concert(SvgFile.Ticket),
-    OpenMic(SvgFile.Microphone, "Open Mic"),
-    StreetPerformance(SvgFile.AcousticGuitar, "Street Performance"),
-    DJSet(SvgFile.Vinyl, "DJ Set"),
-    Karaoke(SvgFile.MicrophoneHandheld),
-    Dance(SvgFile.DiscoBall),
+    Concert(1, SvgFile.Ticket),
+    OpenMic(2, SvgFile.Microphone, "Open Mic"),
+    StreetPerformance(2, SvgFile.AcousticGuitar, "Street Performance"),
+    DJSet(2, SvgFile.Vinyl, "DJ Set"),
+    Karaoke(2, SvgFile.MicrophoneHandheld),
+    Dance(1, SvgFile.DiscoBall),
 
     // Health & Fitness
-    Hike(SvgFile.Trekking),
-    Nature(SvgFile.Leaf),
-    Exercise(SvgFile.Barbell),
-    Wellness(SvgFile.Yoga),
+    Hike(1, SvgFile.Trekking),
+    Nature(1, SvgFile.Leaf),
+    Exercise(1, SvgFile.Barbell),
+    Wellness(1, SvgFile.Yoga),
 
     // Education
-    Class(SvgFile.School),
-    Crafting(SvgFile.NeedleThread),
-    Lecture(SvgFile.Presentation),
+    Class(1, SvgFile.School),
+    Crafting(1, SvgFile.NeedleThread),
+    Lecture(1, SvgFile.Presentation),
 
     // Sports
-    SportsMatch(SvgFile.Scoreboard, "Sports Match"),
-    PickupGame(SvgFile.BallBasketball, "Pickup Game"),
+    SportsMatch(1, SvgFile.Scoreboard, "Sports Match"),
+    PickupGame(2, SvgFile.BallBasketball, "Pickup Game"),
 
     // Arts
-    Theater(SvgFile.MasksTheater),
-    Film(SvgFile.Movie),
-    ArtExhibition(SvgFile.Palette, "Art Exhibition"),
-    Comedy(SvgFile.MoodCrazyHappy),
+    Theater(1, SvgFile.MasksTheater),
+    Film(1, SvgFile.Movie),
+    ArtExhibition(1, SvgFile.Palette, "Art Exhibition"),
+    Comedy(1, SvgFile.MoodCrazyHappy),
 
     // Volunteer
-    Fundraiser(SvgFile.PigMoney),
-    Cleanup(SvgFile.Recycle),
-    CommunityOutreach(SvgFile.Speakerphone, "Community Outreach"),
+    Fundraiser(1, SvgFile.PigMoney),
+    Cleanup(1, SvgFile.Recycle),
+    CommunityOutreach(1, SvgFile.Speakerphone, "Community Outreach"),
 
     // Food & Drink
-    FoodTruck(SvgFile.Truck, "Food Truck"),
-    Tasting(SvgFile.GlassFull),
+    FoodTruck(1, SvgFile.Truck, "Food Truck"),
+    Tasting(1, SvgFile.GlassFull),
 
     // General
-    Festival(SvgFile.Confetti),
-    Holiday(SvgFile.Fireworks),
-    Market(SvgFile.BuildingStore),
-    Politics(SvgFile.BuildingBank),
+    Festival(1, SvgFile.Confetti),
+    Holiday(0, SvgFile.Fireworks),
+    Market(1, SvgFile.BuildingStore),
+    Politics(1, SvgFile.BuildingBank),
 
     // Seasonal
-    Halloween(SvgFile.Pumpkin);
+    Halloween(2, SvgFile.Pumpkin);
 
     override val label = label ?: name
 }
+/** The tag of these with the highest [EventTag.specificity], the first among equals, or `null` when there are none. */
+fun List<EventTag>.mostSpecific(): EventTag? = maxByOrNull { it.specificity }
+
 /** A group of [tags] shown together in a menu. A tag may belong to more than one category. */
 enum class EventCategory(val tags: List<EventTag>, label: String? = null): Labeled {
     General(listOf(
@@ -88,7 +92,7 @@ enum class EventCategory(val tags: List<EventTag>, label: String? = null): Label
     )),
     Social(listOf(
         EventTag.Meetup, EventTag.Picnic, EventTag.Potluck, EventTag.Networking, EventTag.BooksAndWriting,
-        EventTag.GamesAndTrivia, EventTag.Singles, EventTag.LGBTQ, EventTag.Tech, EventTag.Pets, EventTag.WatchParty,
+        EventTag.GamesAndTrivia, EventTag.Singles, EventTag.LGBTQ, EventTag.Tech, EventTag.Pets, EventTag.Party,
     )),
     Music(listOf(
         EventTag.Music, EventTag.Concert, EventTag.OpenMic, EventTag.StreetPerformance, EventTag.DJSet,

@@ -183,7 +183,7 @@ enum class LocationTag(val svg: SvgPack, label: String? = null): Labeled {
     FarmersMarket(SvgFile.Carrot, "Farmers Market"),
     FleaMarket(SvgFile.Tag, "Flea Market"),
     Mall(SvgFile.ShoppingBag),
-    Shop(SvgFile.ShoppingCart),
+    Shopping(SvgFile.ShoppingCart),
     Boutique(SvgFile.Hanger),
     GroceryStore(SvgFile.Basket, "Grocery Store"),
     GameStore(SvgFile.Dice, "Game Store"),

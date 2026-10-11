@@ -70,8 +70,12 @@ private suspend fun Crawler.mergeAndUpdateLocation(lead: LocationLead, locationI
         ?: return tracker.trackFailedRecord(rawLocation, name, Problem("No location is stored as $locationId"))
 
     val storedEdit = stored.toEdit()
-    val edit = storedEdit.mergeLeft(rawLocation.toLocationEdit(lead.initialUrl))
-    if (edit == storedEdit) return tracker.trackDuplicateRecord(rawLocation, name, stored.label)
+    val mergedEdit = storedEdit.mergeLeft(rawLocation.toLocationEdit(lead.initialUrl))
+    if (mergedEdit == storedEdit) return tracker.trackDuplicateRecord(rawLocation, name, stored.label)
+    val edit = when {
+        mergedEdit.tags.isNotEmpty() -> mergedEdit
+        else -> classifier.classifyCrawledLocation(mergedEdit, tracker)
+    }
 
     dbWrite {
         try {
@@ -109,7 +113,7 @@ private suspend fun Crawler.deliverLocation(
         else -> {
             val (place, placedName) = found
             dao.location.readLocationByMapId(place.osmId)?.let { return tracker.trackDuplicateRecord(rawLocation, placedName, it.label) }
-            spawner.createLocationFrom(place, rawLocation + (ParseProperty.Name to placedName), lead.initialUrl)
+            spawner.createLocationFrom(place, rawLocation + (ParseProperty.Name to placedName), lead.initialUrl, tracker)
                 .toDataOr { return tracker.trackFailedRecord(rawLocation, placedName, it) }
             tracker.trackCreatedRecord()
         }
@@ -136,7 +140,7 @@ private suspend fun Crawler.deliverAtAddress(
     }
 
     spawner.readStoredLocation(place, name)?.let { return tracker.trackDuplicateRecord(rawLocation, name, it.label) }
-    spawner.createNamedLocationAt(place, rawLocation + (ParseProperty.Name to name), lead.initialUrl)
+    spawner.createNamedLocationAt(place, rawLocation + (ParseProperty.Name to name), lead.initialUrl, tracker)
         .toDataOr { return tracker.trackFailedRecord(rawLocation, name, it) }
 
     tracker.trackCreatedRecord()

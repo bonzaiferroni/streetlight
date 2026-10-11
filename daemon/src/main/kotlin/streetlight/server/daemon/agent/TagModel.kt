@@ -1,30 +1,50 @@
 package streetlight.server.daemon.agent
 
 import ai.koog.embeddings.base.Vector
-import streetlight.model.data.EventTag
 import kotlin.math.exp
 import kotlin.math.sqrt
 
-/** A logistic regression deciding one tag, from the features of an event's vector. */
+/** A logistic regression deciding one tag, from the features of an entity's vector. */
 class TagModel(
     private val weights: DoubleArray,
     private val bias: Double,
 ) {
-    /** The probability that the event of [features] carries this tag. */
+    /** The probability that the entity of [features] carries this tag. */
     fun readProbability(features: DoubleArray): Double = sigmoid(weights.dot(features) + bias)
 }
 
+/** The [models] of one kind of tag, reading vectors centered on [center], the center of their examples' vectors. */
+class TagModelSet<T>(
+    private val center: DoubleArray,
+    private val models: Map<T, TagModel>,
+) {
+    /** Each tag with a model and the probability that the entity of [vector] carries it, the likeliest first. */
+    fun rankTags(vector: Vector): List<RankedTag<T>> {
+        val features = vector.toFeatures(center)
+        return models
+            .map { (tag, model) -> RankedTag(tag, model.readProbability(features)) }
+            .sortedByDescending { it.probability }
+    }
+}
+
 /**
- * The model of each tag that at least two of the examples carry and some do not, trained on the [features] of each
- * example and the [tagSets] it carries.
+ * The model set of [tags], trained on the [vectors] of examples and the [tagSets] each carries: a model for each tag
+ * that at least two of the examples carry and some do not.
  */
-fun trainTagModels(features: List<DoubleArray>, tagSets: List<List<EventTag>>): Map<EventTag, TagModel> =
-    EventTag.entries.mapNotNull { tag ->
+fun <T> trainTagModelSet(tags: List<T>, vectors: List<Vector>, tagSets: List<List<T>>): TagModelSet<T> {
+    val center = vectors.toCentroid().values.toDoubleArray()
+    val features = vectors.map { it.toFeatures(center) }
+    val models = tags.mapNotNull { tag ->
         val labels = tagSets.map { tag in it }
         val positives = labels.count { it }
         if (positives < minPositives || positives == labels.size) return@mapNotNull null
         tag to trainTagModel(features, labels)
     }.toMap()
+    return TagModelSet(center, models)
+}
+
+/** The average of these vectors. */
+private fun List<Vector>.toCentroid() = Vector(first().values.indices.map { i -> sumOf { it.values[i] } / size })
 
 /** The features of this vector: its difference from [center], scaled to unit length. */
 fun Vector.toFeatures(center: DoubleArray): DoubleArray {

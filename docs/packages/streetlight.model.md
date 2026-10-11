@@ -51,6 +51,16 @@ An `LmSchema` is a class the LM is asked to fill: a `SelectorSchema` of selector
 
 A `RawEntity` holds the text of each `ParseProperty` read from a page, not yet parsed. A property is shared by every kind of record that has the same meaning, such as `Name` for an event's title and a location's name. A `RawEntity` is built with `buildRawEntity`, setting each property as `this[property] = value`; a null or blank value is left out. `LocationEdit.mergeLeft` keeps the links of the left edit and adds each link of the right whose label it lacks.
 
+## Tags
+
+A tag enum is stored by ordinal, so an entry is renamed in place and a new entry is added at the end. Each `EventTag` carries a `specificity`, rising as it names an event more narrowly; a view showing one tag of several shows the most specific.
+
+| Specificity | Names | Example |
+|---|---|---|
+| 0 | A broad category | `Music`, `Holiday` |
+| 1 | A kind of event | `Concert`, `Party` |
+| 2 | An occasion or format | `OpenMic`, `Halloween` |
+
 ## Opening Hours
 
 `expandAddress` spells out the USPS abbreviations of an address's street line: its suffix (`Ave` to `Avenue`) and its direction (`E` to `East`), before the street name or after it. Every other word is kept as written, so a leading "St." of a name stays, a single-letter street keeps its name ("100 E Street"), and a unit and the part after the first comma are untouched. An expanded address expands to itself. Every stored address is expanded when its location is created or updated, and an address is expanded before it is compared with stored ones.

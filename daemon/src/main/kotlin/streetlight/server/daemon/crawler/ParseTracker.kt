@@ -13,6 +13,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.jsonObject
 import streetlight.server.daemon.agent.EventClassification
+import streetlight.server.daemon.agent.LocationClassification
 import streetlight.server.daemon.agent.FetchText
 import streetlight.server.daemon.agent.SchemaObserver
 import streetlight.server.daemon.agent.SchemaProblem
@@ -144,6 +145,12 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
         (pageOf(rawEvent) ?: page(leadUrl)).trackClassification(classification)
     }
 
+    /** Tracks the [classification] of a location on the lead's page. */
+    fun trackClassifiedLocation(classification: LocationClassification) {
+        records.locationsClassified++
+        page(leadUrl).trackLocationClassification(classification)
+    }
+
     fun trackPastEvent() {
         records.past++
     }
@@ -191,12 +198,12 @@ class ParseTracker(private val source: String, private val leadUrl: Url) {
 
     /**
      * Whether the check needs a report: it failed, some page needs work, its feed was read and yielded no event
-     * that was created or already known, a location was spawned or failed to be, or an event was classified.
+     * that was created or already known, a location was spawned or failed to be, or an event or location was classified.
      */
     fun needsReport(): Boolean = failure != null || allPages().any { it.needsWork } ||
         (page(leadUrl).isAttempted && records.created + records.updated + records.duplicates + records.known == 0) ||
         records.locationsSpawned > 0 || records.locationsFailed > 0 ||
-        records.classified > 0
+        records.classified > 0 || records.locationsClassified > 0
 
     fun trackFailedCheck(error: Exception) {
         failure = "${error::class.simpleName}: ${error.message}"
@@ -404,6 +411,10 @@ class PageTracker internal constructor(internal val url: Url, private val tracke
 
     internal fun trackClassification(classification: EventClassification) {
         page.classifications.add(classification)
+    }
+
+    internal fun trackLocationClassification(classification: LocationClassification) {
+        page.locationClassifications.add(classification)
     }
 
     internal fun report(): PageReport {

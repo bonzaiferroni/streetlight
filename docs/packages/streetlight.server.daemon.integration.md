@@ -20,6 +20,8 @@ A test raises the resources it needs once per run, in a `lazy` of its companion.
 
 ## Classification
 
-`event-evaluation.json`, a test resource, is the evaluation set: observed events annotated from their full descriptions, held out from the example set, so a change to the classifier is scored against events it was not built from. It is in the format of the example set described in `streetlight.server.daemon.agent`.
+`event-evaluation.json`, a test resource, is the events' evaluation set: observed events annotated from their full descriptions, held out from the example set, so a change to the classifier is scored against events it was not built from. It is in the format of the example set described in `streetlight.server.daemon.agent`.
 
-`EntityClassifierEvaluationTest` classifies each event of the evaluation set with its tags cleared, through `readTags` on vectors cached as `EventEvaluation`, and prints the precision, recall and F0.5 of each tag the set holds. It asserts the average F0.5 across those tags is at least the floor the current example set and pipeline reach, so a change that lowers it fails; the floor is raised as they improve. It needs Ollama at its default address with the default embeddings model.
+`location-evaluation.json` is the locations' evaluation set, drawn from the same survey of stored locations as the example set and held out from it. Locations whose text is the same are kept on one side.
+
+`EntityClassifierEvaluationTest` classifies each event of its evaluation set with its tags cleared, through `readEventTags` on vectors cached as `EventEvaluation`, and each location of its set through `readLocationTags` on vectors cached as `LocationEvaluation`. For each set it prints the precision, recall and F0.5 of each tag the set holds, and asserts the average F0.5 across those tags is at least the floor the current example set and pipeline reach, so a change that lowers it fails; the floor is raised as they improve. It needs Ollama at its default address with the default embeddings model.

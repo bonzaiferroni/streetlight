@@ -33,23 +33,27 @@ A caller holds the interface. Holding `KoogHtmlParserClient` reaches a language 
 
 `KoogEmbeddingsClient` formats a query as `Instruct: <instruction>\nQuery:<text>`, the format of Qwen3-Embedding.
 
-`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient`, the center of the examples' vectors and a `TagModel` for each tag. The daemon's `main` builds it with `raiseEntityClassifier` before the crawler starts, and does not start it when any embedding fails. `classifyEvent` embeds an `EventEdit` once as a query, and `readTags` gives every tag whose model finds a probability of at least 0.7; an event may get several tags or none. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has, led by a `Category` line when its page declares a schema.org event type, its words split apart, as `Category: Music Event`. `classifyEvent` passes an `EventClassification` to its caller, holding the five likeliest tags with their probabilities and the tags given. An event whose embedding fails is returned untagged, with no `EventClassification`.
+`EntityClassifier` is the crawler's room for classification, and holds an `EmbeddingsClient` and a `TagModelSet` for each kind of entity it tags: events by `EventTag` and locations by `LocationTag`. The daemon's `main` builds it with `raiseEntityClassifier` before the crawler starts, and does not start it when any embedding fails. `classifyEvent` embeds an `EventEdit` once as a query, and `readEventTags` gives every tag whose model finds a probability of at least 0.7; an event may get several tags or none. An event is embedded from `getEmbeddingsText`: a `<label>: <value>` line for each of its title, description, website and minimum age that it has, led by a `Category` line when its page declares a schema.org event type, its words split apart, as `Category: Music Event`. `classifyEvent` passes an `EventClassification` to its caller, holding the five likeliest tags with their probabilities and the tags given. An event whose embedding fails is returned untagged, with no `EventClassification`.
 
-Each `EventTag` gives a short description of itself through `getClassifierLabel()`, in `TagAnnotation.kt`, which also holds, as a comment above each tag, the rule for annotating events with it. The descriptions are the guide to annotating the example and evaluation sets; the regression does not read them. A description names what the tag covers and never what it excludes; exclusions belong in the comment.
+`classifyLocation` does the same for a `LocationEdit`, with `locationInstruction` and `readLocationTags`, and passes a `LocationClassification`. A location is embedded from its `getEmbeddingsText`: a `Category` line of its map category and type, as `Category: amenity, Pub`, then a line for each of its name, description and website that it has.
+
+Each `EventTag` gives a short description of itself through `getClassifierLabel()`, in `TagAnnotation.kt`, and each `LocationTag` in `LocationTagAnnotation.kt`. Each file also holds, as a comment above each tag, the rule for annotating events with it. The descriptions are the guide to annotating the example and evaluation sets; the regression does not read them. A description names what the tag covers and never what it excludes; exclusions belong in the comment.
 
 ### Example Set
 
 `event-examples.json`, a resource of the daemon's main source set, holds observed events labeled by hand, for training the classifier. Each entry is an `EventEdit` without the source note the crawler adds after classification, holding the fields `getEmbeddingsText` reads and its `tags`. A tag present is a yes and a tag absent is a no, so an entry is annotated against every tag, by the rules in `TagAnnotation.kt`. `readEventEdits` reads a resource of either source set and fails when it is missing.
 
+`location-examples.json` holds locations the same way, each a `LocationEdit` without its source note, holding the fields its `getEmbeddingsText` reads and its `tags`, annotated by the rules in `LocationTagAnnotation.kt`. `readLocationEdits` reads it.
+
 The events of the evaluation set are never in the example set.
 
 ### Tag Models
 
-`raiseEntityClassifier` embeds every example as a query with `eventInstruction`, the way `classifyEvent` embeds an event. Every vector is centered on the average of the examples' vectors and scaled to unit length, in `toFeatures`. `trainTagModels` trains a logistic regression for each tag that at least two examples carry and some do not, by gradient descent, each class weighted by the inverse of its share and the weights regularized. A tag with fewer than two examples has no model and is never given. The models are trained at every start, from the cached vectors.
+`raiseEntityClassifier` embeds every example of each kind as a query with its instruction, the way the classifier embeds an entity of that kind, and trains a `TagModelSet` from each kind's examples with `trainTagModelSet`. Every vector is centered on the average of its kind's example vectors and scaled to unit length, in `toFeatures`. A logistic regression is trained for each tag that at least two examples carry and some do not, by gradient descent, each class weighted by the inverse of its share and the weights regularized. A tag with fewer than two examples has no model and is never given. The models are trained at every start, from the cached vectors.
 
 ### Embeddings Cache
 
-`getCachedVectors` keeps a named list of vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git: the examples' vectors as `EventExamples`, and the evaluation set's as `EventEvaluation`. Each line holds one entry, in the order of the list.
+`getCachedVectors` keeps a named list of vectors in `../data/embeddings`, relative to the `daemon` working directory, and ignored by git: the examples' vectors as `EventExamples` and `LocationExamples`, and the evaluation sets' as `EventEvaluation` and `LocationEvaluation`. Each line holds one entry, in the order of the list.
 
 | File | Holds |
 |---|---|

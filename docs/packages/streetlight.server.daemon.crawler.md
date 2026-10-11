@@ -62,7 +62,7 @@ A room owns its own state, never calls back into the desks, and is what a test r
 | `PageFetcher` | Fetches each page once its origin's robots gate opens, spaced by the origin's `Crawl-delay` or one second when it gives none, with a plain request or in the browser, and keeps the gates and the browser. A plain request answered `429` or `503` is sent once more, after its `Retry-After` or 30 seconds |
 | `SchemaMediator` | Finds each page's schema and keeps the LM's usage limit |
 | `LocationSpawner` | Resolves event locations and keeps its map searches |
-| `EntityClassifier` | Classifies what the crawler reads, by embeddings from its `EmbeddingsClient` |
+| `EntityClassifier` | Classifies the events and locations the crawler reads, by embeddings from its `EmbeddingsClient` |
 
 ## Feed Sources
 
@@ -91,7 +91,7 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Page html | `../logs/parser/<build>/html/<address>.html`, for each page that did not succeed |
 | Prompt html | `../logs/parser/<build>/html/<address>-trim.html`, exactly as the LM read it, for each such page sent to the LM |
 
-- `checkLead` builds a `ParseTracker` for each lead. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the lead was read and yielded no record created, duplicated or known, a location was spawned or failed to be, an event was classified, or the check failed. A later check of the same lead in the same build overwrites its report, and the report saves the lead's html.
+- `checkLead` builds a `ParseTracker` for each lead. When the check finishes, a report is written only if `needsReport()`: some page needs work, as stated under Links, the lead was read and yielded no record created, duplicated or known, a location was spawned or failed to be, an event or location was classified, or the check failed. A later check of the same lead in the same build overwrites its report, and the report saves the lead's html.
 - An exception during a check is caught and reported as the check's `failure`, and its link records are kept. The lead's `checked_at` stays set, so a lead that keeps failing waits for its next turn.
 - A step that records takes its tracker as an argument, never null and never inside a package, reports raw objects to it (the fetch and document, schemas tried or created, and its outcome at every exit), and consults it before fetching. A step computes no reported value.
 - The tracker derives every reported value. A new stat is added in the tracker alone.
@@ -106,8 +106,8 @@ Reports are kept per build of the parse pipeline. `parserBuildId` names the buil
 | Trim | The page's trim stats, once for every request made of it |
 | LM | Model, chars cut by the cap, attempts, tokens, time taken, raw response |
 | Schema | Stored or new, stored schemas tried, validation result, fields dropped; for a feed, event count and matches per field |
-| Classification | Each event's `EventClassification`, on the page it was read from: its most similar tags with their similarities, and the tags given |
-| Records | Counts of the records found, created, past, unnamed, unparsed, unlocated, shortened, duplicate, known and failed, of locations spawned and failed, and of events classified. What became of each record is a note on the page it was read from, or on the lead's page |
+| Classification | Each event's `EventClassification`, on the page it was read from, and each location's `LocationClassification`, on the lead's page: its likeliest tags with their probabilities, and the tags given |
+| Records | Counts of the records found, created, past, unnamed, unparsed, unlocated, shortened, duplicate, known and failed, of locations spawned and failed, and of events and locations classified. What became of each record is a note on the page it was read from, or on the lead's page |
 
 A page's report carries its `state` (`attempted`, `skipped`, `benched`, `deferred`) and the values recorded on its link.
 
@@ -166,6 +166,10 @@ A stored location is matched by name only when the names match both ways (`match
 Among several places, the closest name wins, then the nearest place. A distinct place already stored, by its map id or by a matching name within 150 m, is used as is; otherwise it is created from the map with no caller, so it has no edit log and no review. A location the crawler creates whose image cannot be stored is created without it. When nothing holds, the event stays at the feed's location: a feed lists its own venue far more often than another, and a venue's rooms seldom appear on the map. A general feed has no location of its own, so the 150 m rule does not apply. An event of a general feed that gives an address is placed as an event lead's is, by `LocationSpawner.placeEvent` (see Event Leads), keeping only places within 200 km of the feed; one that gives none is searched by its location text as above. An event whose place is not found is dropped and noted on its page, marking its feed and page `Partial`.
 
 Map searches are bounded to the 200 km around the feed's point, paced to one every 2 seconds across all of the crawler's searches by the `OSMGate` the crawler gives its `LocationSpawner`, each search reserving the next slot so concurrent searches stay spaced, and kept for the crawler's run behind a mutex. Each location resolved, matched, fallen back or failed is noted on its event's page, and a check that spawned a location, or failed to, is always reported.
+
+## Location Tags
+
+Every location the crawler creates with a name is classified before it is created, through `classifyCrawledLocation`, by its edit without the source note. A location created at an address alone, with no name, is not. A location lead that fills an untagged stored location classifies the merged edit. A location whose embedding fails is created untagged.
 
 ## Places on the Map
 

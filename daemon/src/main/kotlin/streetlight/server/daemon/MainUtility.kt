@@ -4,28 +4,34 @@ import ai.koog.embeddings.base.Vector
 import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
+import streetlight.model.data.EventTag
+import streetlight.model.data.LocationTag
 import streetlight.server.daemon.agent.EmbeddingsClient
 import streetlight.server.daemon.agent.EntityClassifier
 import streetlight.server.daemon.agent.eventInstruction
 import streetlight.server.daemon.agent.getEmbeddingsText
+import streetlight.server.daemon.agent.locationInstruction
 import streetlight.server.daemon.agent.readEventEdits
-import streetlight.server.daemon.agent.toFeatures
-import streetlight.server.daemon.agent.trainTagModels
+import streetlight.server.daemon.agent.readLocationEdits
+import streetlight.server.daemon.agent.trainTagModelSet
 import java.io.File
 
 /**
- * The [EntityClassifier] deciding each tag by a regression trained on the examples, their vectors centered on the
- * examples' average, or the first problem.
+ * The [EntityClassifier] deciding each event and location tag by a regression trained on the examples of its kind,
+ * or the first problem.
  */
 suspend fun EmbeddingsClient.raiseEntityClassifier(): Outcome<EntityClassifier> {
-    val examples = readEventEdits("event-examples.json")
-    val exampleTexts = examples.map { it.getEmbeddingsText() }
-    val exampleVectors = getCachedVectors("EventExamples", exampleTexts, eventInstruction).toDataOr { return it }
+    val events = readEventEdits("event-examples.json")
+    val eventVectors = getCachedVectors("EventExamples", events.map { it.getEmbeddingsText() }, eventInstruction)
+        .toDataOr { return it }
+    val locations = readLocationEdits("location-examples.json")
+    val locationVectors = getCachedVectors("LocationExamples", locations.map { it.getEmbeddingsText() }, locationInstruction)
+        .toDataOr { return it }
 
-    val center = exampleVectors.toCentroid().values.toDoubleArray()
-    val tagModels = trainTagModels(exampleVectors.map { it.toFeatures(center) }, examples.map { it.tags })
+    val eventModels = trainTagModelSet(EventTag.entries, eventVectors, events.map { it.tags })
+    val locationModels = trainTagModelSet(LocationTag.entries, locationVectors, locations.map { it.tags })
 
-    return Ok(EntityClassifier(this, center, tagModels))
+    return Ok(EntityClassifier(this, eventModels, locationModels))
 }
 
 /**
@@ -58,9 +64,6 @@ suspend fun EmbeddingsClient.getCachedVectors(
     vectorsFile.writeText(vectors.joinToString("\n") { it.values.joinToString(",") })
     return Ok(vectors)
 }
-
-/** The average of these vectors. */
-private fun List<Vector>.toCentroid() = Vector(first().values.indices.map { i -> sumOf { it.values[i] } / size })
 
 /** The [count] vectors this file holds, one per line, or null when it is missing or holds any other number. */
 private fun File.readVectors(count: Int): List<Vector>? {

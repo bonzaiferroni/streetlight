@@ -49,8 +49,9 @@ fun EventTag.getClassifierLabel(): String = when (this) {
     EventTag.Tech -> "A technology meetup or talk about software, AI, cybersecurity or computing"
     // An event for pets and their people.
     EventTag.Pets -> "An event for pets and their owners, such as a dog costume contest or yappy hour"
-    // Watching a broadcast together, usually a game at a bar. Also Sports when the broadcast is a game.
-    EventTag.WatchParty -> "A watch party to see a game or broadcast together on big screens"
+    // A party people come to for the celebration itself: a dance party, theme party, release party or watch party. Also
+    // Sports when it watches a game.
+    EventTag.Party -> "A party, such as a theme party, dance party, release party or watch party"
 
     // Music
     // Artists or bands performing for an audience. A DJ set is a Concert only when billed as a performance.
@@ -117,6 +118,8 @@ fun EventTag.getClassifierLabel(): String = when (this) {
     EventTag.Festival -> "A festival or fair with many acts or attractions"
     // Tied to a holiday or season: Halloween, Oktoberfest, Christmas, Día de Muertos.
     EventTag.Holiday -> "A holiday or seasonal celebration such as Halloween, Oktoberfest or Christmas"
+    // Tied to Halloween or its season: costume parties, haunted houses, ghost tours, trunk-or-treats. Also Holiday.
+    EventTag.Halloween -> "A Halloween event, such as a costume party, haunted house, ghost tour or trick-or-treat"
     // Vendors selling goods: markets, craft fairs, bazaars.
     EventTag.Market -> "A market, craft fair or vendor fair"
     // Civic and political life: elections, ballot issues, candidate forums, rallies, advocacy and political discussion.
