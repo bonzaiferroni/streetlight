@@ -26,6 +26,10 @@ A shell is an extension on `FlowContent`, named `fooShell`, in a file of the sam
 
 A shell declares no state. State the browser needs is carried in attributes and in the data island.
 
+## Choices in Attributes
+
+A choice the route carries, such as the type on `ConnectRoute`, is rendered for every option. The shell sets the choice as an attribute on an ancestor, and a stylesheet shows the matching option by selecting on that attribute and on the option's own. The route's `screenKey` leaves out the choice, and the view sets the attribute again as the route changes.
+
 ## Shape
 
 ```kotlin
@@ -81,6 +85,7 @@ The route dock is not shell content. It is not something a user needs to underst
 | [`cityFeedShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityFeedShell.kt) | The city feed |
 | [`siteDocShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/siteDocShell.kt) | A site doc beside the table of all site docs |
 | [`aboutShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/aboutShell.kt) | The about page |
+| [`connectShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/connectShell.kt) | The connect page: the pitch to each `ConnectType` |
 | [`aboutAppShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/aboutAppShell.kt) | The app's about page and its repositories |
 | [`privacyPolicyShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/privacyPolicyShell.kt) | The privacy policy |
 | [`passwordResetForm`](../../web/src/commonMain/kotlin/streetlight/web/shell/passwordResetForm.kt) | The form that sets a new password, sent by its own script |

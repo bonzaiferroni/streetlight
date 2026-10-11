@@ -4,9 +4,13 @@
     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
     <path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5"/>
     <path d="M12 8l4.524 -3.77a.9 .9 0 0 1 1.476 .692v12.156a.9 .9 0 0 1 -1.476 .692l-4.524 -3.77h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h8"/>
-    <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0;0.8 0;0 0" dur="1.5s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-        <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-        <path d="M18 8a3 3 0 0 1 0 6"/>
-    </g>
+    <path d="M18.415 7.559a6 6 0 0 1 0 6.882" opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.02;0.17;0.32;1" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M19.848 6.554a7.75 7.75 0 0 1 0 8.892" opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.17;0.32;0.47;1" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
+    <path d="M21.281 5.547a9.5 9.5 0 0 1 0 10.906" opacity="0">
+        <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.32;0.47;0.62;1" dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
 </svg>

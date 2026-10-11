@@ -14,6 +14,7 @@ import streetlight.web.page.appHeader
 import koala.component.*
 import koala.layout.*
 import koala.page.*
+import streetlight.web.component.connectPicker
 import streetlight.web.component.createPostMenu
 import streetlight.web.component.galaxyMenu
 
@@ -29,7 +30,7 @@ fun FlowContent.homeShell(content: HomeContent) {
                     createPostMenu(null)
                 }
 
-                galaxiesSection(content.galaxies)
+                leadingSection(content.galaxies)
 
                 feedSection(content.feed) { HomeRoute(it) }
 
@@ -41,7 +42,7 @@ fun FlowContent.homeShell(content: HomeContent) {
     dataIsland(HomeShell.IslandId, content)
 }
 
-fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
+fun FlowContent.leadingSection(galaxies: List<Galaxy>) {
     section(ContainerTypeInlineSize) {
         column(Gap0) {
             heading2("Galaxies", SectionHeadingMod)
@@ -67,11 +68,10 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
             }
             column(modify(MarginTop(4), ContainerMdMarginTop0)) {
                 filigree {
-                    heading4("Featured Galaxies", subHeadingMods)
+                    heading4("Get Involved", subHeadingMods)
                 }
-                row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                    lottie(LottieFile.DinoLoad, modify(Width(32), Aspect1))
-                }
+                connectPicker()
+                textBlock("Connect to your community through Streetlight.", modify(Italic, OpacityHigh, TextAlignCenter))
             }
         }
         row {

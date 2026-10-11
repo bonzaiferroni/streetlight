@@ -254,6 +254,7 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`viewCityFeed`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCityFeed.kt) | The city feed |
 | [`viewSiteDoc`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteDoc.kt) | The SiteDoc screen |
 | [`viewAboutApp`](../../web/src/jsMain/kotlin/streetlight/web/view/viewAboutApp.kt) | The AboutApp screen |
+| [`viewConnect`](../../web/src/jsMain/kotlin/streetlight/web/view/viewConnect.kt) | The Connect screen |
 | [`viewTalkLog`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTalkLog.kt) | The TalkLog screen |
 | [`viewInbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewInbox.kt) | The Inbox screen |
 | [`viewChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/view/viewChatRoom.kt) | The ChatRoom screen |
@@ -340,6 +341,7 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | Stylesheet | Role |
 |---|---|
 | [`EarthStyle`](../../web/src/commonMain/kotlin/streetlight/web/view/EarthStyle.kt) | The map screens |
+| [`ConnectStyle`](../../web/src/commonMain/kotlin/streetlight/web/view/ConnectStyle.kt) | The connect page's panels |
 | [`InboxStyle`](../../web/src/commonMain/kotlin/streetlight/web/view/InboxStyle.kt) | The inbox |
 | [`LayoutBuilderStyle`](../../web/src/commonMain/kotlin/streetlight/web/view/LayoutBuilderStyle.kt) | The layout builder |
 | [`RouteDockStyle`](../../web/src/commonMain/kotlin/streetlight/web/view/RouteDockCss.kt) | The route dock |

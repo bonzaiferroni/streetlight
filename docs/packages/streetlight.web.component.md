@@ -30,6 +30,7 @@ A button that opens a popover menu targets the menu's `PopoverId` and sets the m
 | [`createPostMenu`](../../web/src/commonMain/kotlin/streetlight/web/component/createPostMenu.kt) | Opens the create post menu |
 | [`galaxyMenu`](../../web/src/commonMain/kotlin/streetlight/web/component/galaxyMenu.kt) | Opens the menu of the star's galaxies |
 | [`buttonOf`](../../web/src/commonMain/kotlin/streetlight/web/component/buttonOf.kt) | A button linking to a galaxy |
+| [`connectPicker`](../../web/src/commonMain/kotlin/streetlight/web/component/connectPicker.kt) | The four connect types as links, the chosen one lit |
 
 ### Logos and Badges
 

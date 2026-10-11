@@ -2,29 +2,32 @@ package koala.layout
 
 import koala.modifier.*
 import kotlinx.css.GridTemplateColumns
+import kotlinx.css.GridTemplateRows
 import kotlinx.css.fr
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-/** A grid with the columns of [template], switching to [queryTemplate] on a narrow screen. */
+/** A grid with the columns of [columns], switching to [queryTemplate] on a narrow screen. */
 fun FlowContent.grid(
-    template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
-    queryTemplate: GridTemplateColumns = template,
+    columns: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     mod: Modifier? = null,
+    rows: GridTemplateRows? = null,
     content: DIV.() -> Unit,
 ) {
     div(modify(GridColumns.Class, mod)) {
-        configureGridColumns(template, queryTemplate)
+        configureGridColumns(columns, rows)
         content()
     }
 }
 
 internal fun DIV.configureGridColumns(
-    template: GridTemplateColumns,
-    queryTemplate: GridTemplateColumns,
+    columns: GridTemplateColumns,
+    rows: GridTemplateRows? = null,
 ) {
-    setStyle(Css.GridTemplateColumns.of(template))
-    setStyle(GridColumns.QueryTemplate.of(queryTemplate))
+    setStyle(Css.GridTemplateColumns.of(columns))
+    rows?.let {
+        setStyle(Css.GridTemplateRows.of(it))
+    }
 }
 
 object GridColumns {

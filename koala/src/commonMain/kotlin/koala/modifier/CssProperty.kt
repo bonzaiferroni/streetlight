@@ -9,6 +9,7 @@ import kotlinx.css.Flex
 import kotlinx.css.FlexDirection
 import kotlinx.css.FlexWrap
 import kotlinx.css.GridTemplateColumns
+import kotlinx.css.GridTemplateRows
 import kotlinx.css.JustifyContent
 import kotlinx.css.JustifySelf
 import kotlinx.css.LinearDimension
@@ -56,6 +57,7 @@ object Css {
     val AnchorName = Property<PositionAnchor>("anchor-name")
     val ZIndex = Property<Int>("z-index")
     val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns")
+    val GridTemplateRows = Property<GridTemplateRows>("grid-template-rows")
     val ViewTransitionName = Property<String>("view-transition-name")
     val AspectRatio = Property<Number>("aspect-ratio")
     val LineHeight = Property<Number>("line-height")

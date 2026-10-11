@@ -2,6 +2,7 @@ package koala.dom.layout
 
 import koala.modifier.*
 import kotlinx.css.GridTemplateColumns
+import kotlinx.css.GridTemplateRows
 import kotlinx.css.fr
 import kotlinx.html.DIV
 import koala.dom.AppendScope
@@ -12,9 +13,9 @@ import koala.layout.configureGridColumns
 fun AppendScope.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     mod: Modifier? = null,
-    queryTemplate: GridTemplateColumns = template,
+    rowTemplate: GridTemplateRows? = null,
     content: DIV.() -> Unit,
 ) = div(modify(GridColumns.Class, mod)) {
-    configureGridColumns(template, queryTemplate)
+    configureGridColumns(template, rowTemplate)
     content()
 }

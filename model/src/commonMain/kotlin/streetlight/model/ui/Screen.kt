@@ -16,6 +16,7 @@ import koala.model.UsernameParse
 import koala.model.UuidParse
 import io.ktor.http.Parameters
 import koala.model.DocId
+import streetlight.model.data.ConnectType
 import streetlight.model.data.FeedType
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
@@ -45,6 +46,7 @@ enum class Screen(
     Feedback(StaticParse { FrontDeskRoute }),
     SiteMonitor(StaticParse { SiteMonitorRoute }),
     Contribute(StaticParse { ContributeRoute }),
+    Connect(StaticParse { ConnectRoute(readConnectType()) }, null, true),
 
     // star
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
@@ -153,12 +155,28 @@ fun String.withFeedParam(feed: FeedType?) = feed?.let { "$this?$FEED_PARAM=${it.
 
 private const val FEED_PARAM = "feed"
 
+/** The connect type these parameters name, or `null` when they name none or one that is unknown. */
+fun Parameters.readConnectType(): ConnectType? =
+    this[CONNECT_TYPE_PARAM]?.let { name -> ConnectType.entries.firstOrNull { it.name == name } }
+
+private const val CONNECT_TYPE_PARAM = "type"
+
 // singletons
 data class HomeRoute(override val feed: FeedType? = null): FeedRoute {
     override val screen get() = Screen.Home
     override val title get() = "Home"
     override val defaultFeedRoute get() = copy(feed = null)
     override fun toRelativePath() = basePath.withFeedParam(feed)
+}
+
+/** The connect page, pitching Streetlight to the audience [type], or to none yet when `null`. */
+data class ConnectRoute(val type: ConnectType? = null): StreetlightRoute {
+    override val screen get() = Screen.Connect
+    override val title get() = "Connect"
+
+    // a change of type is a change within the view
+    override val screenKey get() = ConnectRoute()
+    override fun toRelativePath() = type?.let { "$basePath?$CONNECT_TYPE_PARAM=${it.name}" } ?: basePath
 }
 
 object ErrorRoute: StreetlightRoute {
