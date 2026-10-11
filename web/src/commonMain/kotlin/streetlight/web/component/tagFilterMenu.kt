@@ -22,7 +22,7 @@ fun FlowContent.tagFilterMenu() {
     }
     button(modify(TagFilterMenu.Clear, AlignSelfCenter)) {
         onClick = TagFilterMenu.ClearTag.invokeJs(ThisElement)
-        icon(SvgFile.X.small, SmallIconHeight)
+        icon(SvgFile.Restore.small, SmallIconHeight)
     }
 }
 
@@ -38,7 +38,7 @@ object TagFilterMenu {
 // language="CSS"
 val TagFilterMenuCss get() = with(TagFilterMenu) { """
 $Button::after {
-    content: "filter by tag";
+    content: "filter by type";
     font-style: italic;
     opacity: var(--opacity-high);
 }

@@ -55,6 +55,7 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 | Layout | Role |
 |---|---|
 | [`tabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/tabs.kt) | Tabs over panels, the selected tab bound to a field when given |
+| [`sideTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/sideTabs.kt) | A column of tabs bound to a field, beside the panel the selected tab shows |
 | [`lazyTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/lazyTabs.kt) | Tabs whose panels are built when first shown |
 | [`LazyTabScope`](../../koala/src/jsMain/kotlin/koala/dom/layout/LazyTabScope.kt) | Collects the tabs of a `lazyTabs` block |
 | [`dialog`, `dialogContent`, `dialogCard`](../../koala/src/jsMain/kotlin/koala/dom/layout/dialog.kt) | A modal dialog open while a field is `true`, and its content |

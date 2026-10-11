@@ -18,7 +18,7 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     Arts(SvgFile.Violin),
     FoodAndDrink(SvgFile.ToolsKitchen, "Food & Drink"),
 
-    // Meetup
+    // Social
     Picnic(SvgFile.Basket),
     Potluck(SvgFile.Soup),
     Networking(SvgFile.Affiliate),
@@ -72,7 +72,52 @@ enum class EventTag(val svg: SvgPack, label: String? = null): Labeled {
     Festival(SvgFile.Confetti),
     Holiday(SvgFile.Fireworks),
     Market(SvgFile.BuildingStore),
-    Politics(SvgFile.BuildingBank);
+    Politics(SvgFile.BuildingBank),
+
+    // Seasonal
+    Halloween(SvgFile.Pumpkin);
+
+    override val label = label ?: name
+}
+/** A group of [tags] shown together in a menu. A tag may belong to more than one category. */
+enum class EventCategory(val tags: List<EventTag>, label: String? = null): Labeled {
+    General(listOf(
+        EventTag.Meetup, EventTag.Music, EventTag.Church, EventTag.HealthAndFitness, EventTag.Education,
+        EventTag.Sports, EventTag.Volunteer, EventTag.KidsAndFamily, EventTag.Arts, EventTag.FoodAndDrink,
+        EventTag.Festival, EventTag.Holiday, EventTag.Market, EventTag.Politics, EventTag.Halloween,
+    )),
+    Social(listOf(
+        EventTag.Meetup, EventTag.Picnic, EventTag.Potluck, EventTag.Networking, EventTag.BooksAndWriting,
+        EventTag.GamesAndTrivia, EventTag.Singles, EventTag.LGBTQ, EventTag.Tech, EventTag.Pets, EventTag.WatchParty,
+    )),
+    Music(listOf(
+        EventTag.Music, EventTag.Concert, EventTag.OpenMic, EventTag.StreetPerformance, EventTag.DJSet,
+        EventTag.Karaoke, EventTag.Dance,
+    )),
+    HealthAndFitness(listOf(
+        EventTag.HealthAndFitness, EventTag.Hike, EventTag.Nature, EventTag.Exercise, EventTag.Wellness,
+    ), "Health & Fitness"),
+    Education(listOf(
+        EventTag.Education, EventTag.Class, EventTag.Crafting, EventTag.Lecture, EventTag.BooksAndWriting,
+    )),
+    Sports(listOf(
+        EventTag.Sports, EventTag.SportsMatch, EventTag.PickupGame,
+    )),
+    Arts(listOf(
+        EventTag.Arts, EventTag.Theater, EventTag.Film, EventTag.ArtExhibition, EventTag.Comedy, EventTag.Crafting,
+    )),
+    Volunteer(listOf(
+        EventTag.Volunteer, EventTag.Fundraiser, EventTag.Cleanup, EventTag.CommunityOutreach,
+    )),
+    KidsAndFamily(listOf(
+        EventTag.KidsAndFamily, EventTag.Picnic, EventTag.Pets, EventTag.Crafting, EventTag.Festival,
+    ), "Kids & Family"),
+    FoodAndDrink(listOf(
+        EventTag.FoodAndDrink, EventTag.FoodTruck, EventTag.Tasting, EventTag.Potluck, EventTag.Market,
+    ), "Food & Drink"),
+    Seasonal(listOf(
+        EventTag.Halloween,
+    ));
 
     override val label = label ?: name
 }

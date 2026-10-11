@@ -77,6 +77,7 @@ val HeavyCardBg = Class("heavy-card-bg")
 val BackgroundImage = Class("background-image")
 val HoverBg = Class("hover-bg")
 val BlurBackdrop = Class("blur-backdrop")
+val BlurBackdropBig = Class("blur-backdrop-big")
 
 // Transform
 val FlipX = Class("flip-x")
@@ -185,6 +186,11 @@ $HeavyCardBg   { background:       rgba(var(--paper), .8); }
 $BlurBackdrop {
     backdrop-filter: var(--strong-blur);
     -webkit-backdrop-filter: var(--strong-blur);
+}
+
+$BlurBackdropBig {
+    backdrop-filter: var(--stronger-blur);
+    -webkit-backdrop-filter: var(--stronger-blur);
 }
 
 /* Transform */

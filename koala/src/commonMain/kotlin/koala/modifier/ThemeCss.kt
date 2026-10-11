@@ -92,6 +92,7 @@ val ThemeCss get() = with(Koala) { """
     --unit: 0.5rem;
     
     --strong-blur: blur(10px);
+    --stronger-blur: blur(18px);
     --ghost-border: 2px solid rgba(var(--ink), .1);
     --color-scheme: var(--ink-fg);
 

@@ -434,6 +434,7 @@ object SvgFile {
     val Prescription = svgPackOf("prescription")
     val Presentation = svgPackOf("presentation")
     val Printer = svgPackOf("printer")
+    val Pumpkin = svgPackOf("pumpkin")
     val Puzzle = svgPackOf("puzzle")
     val Qrcode = svgPackOf("qrcode")
     val Question = svgPackOf("question")

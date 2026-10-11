@@ -71,7 +71,7 @@ object Popover {
     val Class = Class("popover")
     val TargetAction = stringAttributeOf("popovertargetaction")
 
-    val CardMod = modify(BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding(0))
+    val CardMod = modify(BlurBackdropBig, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding(0))
 }
 
 // language="CSS"
