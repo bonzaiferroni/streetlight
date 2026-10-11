@@ -74,16 +74,16 @@ fun DIV.configureFeedRow(
 fun FlowContent.entityBody(
     description: Markdown?,
     links: List<ExtraLink>?,
-    editRoute: AppRoute? = null,
+    mod: Modifier? = null,
     limit: Int? = null,
 ) {
-    if (description == null && links == null && editRoute == null) return
-    div(modify(FeedRowStyle.ExpandedContent, Padding(2), Gap(2))) {
+    if (description == null && links == null) return
+    div(modify(mod, FeedRowStyle.ExpandedContent, Padding(2), Gap(2))) {
         description?.let {
             markdown(it, FeedRowStyle.ExpandedBody, limit = limit)
         }
-        if (links != null || editRoute != null) {
-            entityLinks(links, editRoute, FeedRowStyle.ExpandedLinks)
+        if (links != null) {
+            entityLinks(links, FeedRowStyle.ExpandedLinks)
         }
     }
 }

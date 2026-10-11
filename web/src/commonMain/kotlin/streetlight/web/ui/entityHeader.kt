@@ -17,7 +17,6 @@ fun FlowContent.entityHeader(
     descriptor: String,
     cells: List<EntityCell>? = entity.toCells(),
     image: Image? = entity.image,
-    editRoute: AppRoute? = null,
     mod: Modifier? = null,
     block: DIV.() -> Unit = { },
 ) = pageHeader(
@@ -30,7 +29,6 @@ fun FlowContent.entityHeader(
     cells = cells,
     buttons = entityButtonsOf(entity, false),
     links = entity.links,
-    editRoute = editRoute,
     mod = mod,
     block = block,
 )

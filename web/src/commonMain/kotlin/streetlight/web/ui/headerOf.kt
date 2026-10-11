@@ -16,7 +16,6 @@ import streetlight.web.shells.galaxyMenu
 
 fun FlowContent.headerOf(
     location: Location,
-    editRoute: AppRoute?,
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -25,7 +24,6 @@ fun FlowContent.headerOf(
         entity = location,
         descriptor = "at",
         mod = mod,
-        editRoute = editRoute,
         block = block
     )
 }

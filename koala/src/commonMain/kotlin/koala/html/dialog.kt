@@ -19,7 +19,8 @@ $Class {
     color: rgb(var(--ink));
     border: none;
     outline: none;
-    width: min(calc(100% - var(--unit-2)), var(--content-panel-width));
+    width: calc(100% - var(--unit-2));
+    max-width: var(--content-panel-width);
     background-color: transparent;
     scrollbar-width: none;
     

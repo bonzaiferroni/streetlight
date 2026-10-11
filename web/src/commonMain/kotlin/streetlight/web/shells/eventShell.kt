@@ -21,7 +21,6 @@ fun FlowContent.eventShell(event: EventLocation) {
                 event.cost?.let { costCell(it, event.url) },
                 starCell(event.host),
             ),
-            editRoute = EventUpdateRoute(event.eventSlug),
         )
 
         tabs {

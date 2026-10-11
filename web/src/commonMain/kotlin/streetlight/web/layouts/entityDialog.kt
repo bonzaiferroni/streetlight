@@ -17,7 +17,7 @@ import streetlight.model.data.EntityType
  * a page header shows them.
  */
 fun FlowContent.entityDialog(entity: Entity) {
-    div(modify(EntityDialogStyle.Base, CardBg)) {
+    div(modify(EntityDialogStyle.Base, VoidBg)) {
         setStyle(Css.ColorScheme.of(entity.toThemeColor().cssValue))
         containImage(entity.image, modify(EntityDialogStyle.Image, CardBg), isNative = true)
         div(modify(CardBg, TextAlignCenter, PaddingX2, PaddingY2)) {
@@ -31,7 +31,7 @@ fun FlowContent.entityDialog(entity: Entity) {
 }
 
 /** Makes this element open the [EntityDialog] for [ref] on a click that lands outside a link. */
-fun DIV.isDialogEntity(ref: EntityRef) {
+fun DIV.setEntityRef(ref: EntityRef) {
     setAttribute(EntityDialog.Type.to(ref.type))
     setAttribute(EntityDialog.Slug.to(ref.slug))
     onClick = EntityDialog.Open.invokeJs(ThisElement, ThisEvent)

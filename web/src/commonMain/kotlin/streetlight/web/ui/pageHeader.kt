@@ -34,7 +34,6 @@ fun FlowContent.pageHeader(
     cells: List<EntityCell>? = null,
     buttons: List<EntityButton>? = null,
     links: List<ExtraLink>? = null,
-    editRoute: AppRoute? = null,
     mod: Modifier? = null,
     block: DIV.() -> Unit = { },
 ) {
@@ -63,6 +62,6 @@ fun FlowContent.pageHeader(
         // cell content
         cellGrid(cells, buttons)
 
-        entityBody(description, links, editRoute)
+        entityBody(description, links)
     }
 }

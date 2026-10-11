@@ -74,7 +74,6 @@ fun FlowContent.renderHeader(content: DesignContent) {
     when (content) {
         is LocationContent -> headerOf(
             location = content.location,
-            editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null
         )
         is Media -> headerOf(content)
         is StarContent -> headerOf(content.star)

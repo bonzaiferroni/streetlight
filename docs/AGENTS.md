@@ -160,6 +160,23 @@ A bounty list is organized by what it changes. Each module is a top item in back
 
 A staged bounty need not compile. Code is never added only to make it compile; a failed compile marks where the work stands. A finished bounty lists its compile gaps: each file a bold top item, each gap a subitem beneath it.
 
+### Long Bounty
+
+The navigator may open a *long bounty*: a body of work mapped in a document at `docs/bounty/<bounty-name>.md`, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
+
+| Part | Long bounty |
+|---|---|
+| Map | The document holds the shape, the steps, the decisions and the open questions. The agent records each step's progress and each decision in it as the work goes |
+| Pace | The agent carries on through the steps until it reaches a crossroads: a choice that is the navigator's, or a path that is not clear. It then stops and raises the question |
+| Questions | Raised at the crossroads with a recommendation, whether that comes at once or after much work |
+| Notice | The agent sends a voice message (see Voice) when it reaches a crossroads or finishes, since the navigator may be away from the terminal |
+| Compile and test | Allowed and expected, since the navigator is not compiling along the way. The agent compiles at milestones and runs the tests that cover its work, and narrows them with `--tests`. It does not check work more than the work needs |
+| Report | At a crossroads or the end: what was done, what was decided along the way, and the questions |
+
+## Scratch Points
+
+A scratch point is a moment when a shape already in the code would not be the one written from scratch, now that the code has seen some action. A first shape often serves best by showing what shape the work really wants. When the agent recognizes one, it raises it as a question, naming the shape it would write and what it replaces, rather than growing the old shape in ways it was not meant for. `AppRoute.screenKey`, which replaced `retainWithinScreen` once routes gained parameters that change content within a view, is an example.
+
 ## Scope
 
 Do the task given. When work uncovers a second thing worth doing, report it and wait, rather than widening the change.
@@ -170,13 +187,13 @@ This holds when the task cannot be finished without the change. Say what the tas
 
 When the code needed to answer a question is not in hand, ask for it. Do not infer its shape from the code around it.
 
-Run only the commands the agreed plan calls for. Do not compile or run tests to confirm code works unless asked. A failed compile is expected and is taken as it comes.
+Run only the commands the agreed plan calls for. Do not compile or run tests to confirm code works unless asked, or in a long bounty. A failed compile is expected and is taken as it comes.
 
 | Action | Rule |
 |---|---|
 | Editing and creating files | Allowed, particularly when discussed. Every edit is visible in the git diff |
 | Commands that read files | Allowed |
-| Build and test commands | Left to the user unless discussed, then allowed |
+| Build and test commands | Left to the user unless discussed or in a long bounty, then allowed |
 | Git commands that read, such as `status`, `diff` and `log` | Allowed |
 | Git commands that change the repository or its working tree | Always left to the user |
 

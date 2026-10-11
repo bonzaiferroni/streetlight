@@ -10,21 +10,21 @@ import streetlight.model.data.ExtraLink
 import streetlight.web.ui.curatorBadge
 
 /**
- * The image of [entity], with [featureMod] on the image itself. It opens the [EntityDialog] for [opener], and links
- * to the entity's page when [opener] is `null`.
+ * The image of [entity], with [featureMod] on the image itself. It opens the [EntityDialog] for [ref], and links
+ * to the entity's page when [ref] is `null`.
  */
 fun FlowContent.entityImage(
     entity: Entity,
     mod: Modifier? = null,
     featureMod: Modifier? = null,
-    opener: EntityRef? = entity.toEntityRef(),
+    ref: EntityRef? = entity.toEntityRef(),
 ) {
-    when (opener) {
+    when (ref) {
         null -> navigationIfNotNull(entity.toRoute(), mod) {
             containImage(entity.image, featureMod)
         }
         else -> div(mod) {
-            isDialogEntity(opener)
+            setEntityRef(ref)
             containImage(entity.image, featureMod)
         }
     }
@@ -37,15 +37,15 @@ fun FlowContent.entityHeading(entity: Entity, mod: Modifier? = null) {
     }
 }
 
-/** The body of [entity], cut at [limit] when given. It opens the [EntityDialog] for [opener] when given. */
+/** The body of [entity], cut at [limit] when given. It opens the [EntityDialog] for [ref] when given. */
 fun FlowContent.entitySummary(
     entity: Entity,
     mod: Modifier? = null,
     limit: Int? = null,
-    opener: EntityRef? = entity.toEntityRef(),
+    ref: EntityRef? = entity.toEntityRef(),
 ) {
     markdown(entity.body, mod, limit) {
-        opener?.let { isDialogEntity(it) }
+        ref?.let { setEntityRef(it) }
     }
 }
 
@@ -64,18 +64,14 @@ fun FlowContent.entityBadge(
     }
 }
 
-/** A button for each of [links], and an edit button to [editRoute] when given. */
+/** A button for each of [links]. */
 fun FlowContent.entityLinks(
     links: List<ExtraLink>?,
-    editRoute: AppRoute? = null,
     mod: Modifier? = null,
 ) {
     div(mod) {
         links?.forEach { link ->
             btn(link.label, link.url, Zen)
-        }
-        editRoute?.let {
-            btn("edit", it, Zen)
         }
     }
 }
