@@ -54,7 +54,7 @@ fun FlowContent.largePostCard(
             }
 
             // grid content
-            cellGrid(entity.toCells(), entityButtonsOf(entity, false), modify(Flex1, ContainerLgColumn, MinHeight(8)))
+            cellGrid(entity.toCells(), entityButtonsOf(entity), modify(Flex1, ContainerLgColumn, MinHeight(8)))
         }
     }
 }

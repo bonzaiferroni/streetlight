@@ -164,33 +164,27 @@ fun locationCells(mapType: String?, city: String?, eventCount: Int) = buildList 
     if (eventCount > 0) add(eventCountCell(eventCount))
 }
 
-/**
- * The buttons of [entity]'s [cellGrid]: its star toggle, the more button when [showMore], and the post menu of a
- * post.
- */
-fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton>? = when (entity) {
+/** The buttons of [entity]'s [cellGrid]: its star toggle, and the post menu of a post. */
+fun entityButtonsOf(entity: Entity): List<EntityButton>? = when (entity) {
     is City -> null
     is EventLocation -> buildList {
         add(EntityButton { starToggle(entity) })
-        if (showMore) add(EntityButton { moreButton() })
     }
-    is EventPost -> entityButtonsOf(entity.event, showMore).orEmpty() + EntityButton {
+    is EventPost -> entityButtonsOf(entity.event).orEmpty() + EntityButton {
         postMenu(entity.post.postId, entity.post.username)
     }
     is Event -> buildList {
         add(EntityButton { starToggle(entity) })
-        if (showMore) add(EntityButton { moreButton() })
     }
     is Galaxy -> listOf(
         EntityButton { starToggle(entity) },
     )
-    is LocationPost -> entityButtonsOf(entity.location, showMore).orEmpty() + EntityButton {
+    is LocationPost -> entityButtonsOf(entity.location).orEmpty() + EntityButton {
         postMenu(entity.post.postId, entity.post.username)
     }
     is MediaPost -> null
     is Location -> buildList {
         add(EntityButton { starToggle(entity) })
-        if (showMore) add(EntityButton { moreButton() })
     }
     is Media -> null
     is CustomEntity -> null

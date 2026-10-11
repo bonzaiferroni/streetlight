@@ -4,7 +4,6 @@ package koala.interop
 /** The global functions Koala defines, for markup to call. */
 object KoalaFun {
     val ScrollToId = JsSignature("scrollToId")
-    val ToggleAncestor = JsSignature("toggleAncestor")
     val toggleRootModifier = JsSignature("toggleRootModifier")
     val toggleRootModifierWithTransition = JsSignature("toggleRootModifierWithTransition")
     val applyRootSwitch = JsSignature("applyRootSwitch")

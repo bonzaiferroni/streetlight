@@ -27,7 +27,7 @@ fun FlowContent.entityHeader(
     colorScheme = entity.toThemeColor(),
     description = entity.description,
     cells = cells,
-    buttons = entityButtonsOf(entity, false),
+    buttons = entityButtonsOf(entity),
     links = entity.links,
     mod = mod,
     block = block,

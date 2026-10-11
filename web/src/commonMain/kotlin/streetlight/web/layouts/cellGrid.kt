@@ -12,11 +12,8 @@ import koala.SvgFile
 import koala.modifier.*
 import kotlinx.css.px
 import koala.html.*
-import koala.interop.KoalaFun
-import koala.interop.ThisElement
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.onClick
 import kotlinx.html.span
 import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
@@ -153,13 +150,6 @@ fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link.small, link.label, link.
 fun locationCountCell(count: Int) = EntityCell(SvgFile.MapPin.small, count.toMetricString(), null, "locations")
 
 fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar.small, count.toMetricString(), null, "events")
-
-/** Expands and collapses the body of the feed row around it. */
-fun FlowContent.moreButton() {
-    icon(SvgFile.Info.small, modify(CellGrid.ButtonIconMod, FeedRowStyle.MoreButton)) {
-        onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRowStyle.Base, FeedRowStyle.ToggleExpand)
-    }
-}
 
 /** One cell of a [cellGrid]: an icon, a text with an optional dimmer [label], and a link when [url] is given. */
 data class EntityCell(

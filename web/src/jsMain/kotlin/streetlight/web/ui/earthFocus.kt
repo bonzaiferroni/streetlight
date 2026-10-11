@@ -79,7 +79,7 @@ private fun ViewScope.focusPanel(
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(Gap0) {
             containImage(post.image, Flex1)
-            cellGrid(post.toCells(), entityButtonsOf(post, false))
+            cellGrid(post.toCells(), entityButtonsOf(post))
         }
         column(Padding(1)) {
             column(modify(Gap0, TextAlignCenter)) {

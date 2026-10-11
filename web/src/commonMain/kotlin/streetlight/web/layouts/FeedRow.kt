@@ -7,12 +7,10 @@ import koala.html.*
 import koala.markdown.MarkdownStyle
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kotlinx.css.pct
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
-import streetlight.model.data.ExtraLink
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.CuratorMenu
@@ -43,9 +41,7 @@ fun DIV.configureFeedRow(
     addModifiers(modify(FeedRowStyle.Base, ZenBg))
 
     val colorScheme = entity.toThemeColor()
-    val buttons = entityButtonsOf(entity, true)
-    val description = entity.description
-    val links = entity.links
+    val buttons = entityButtonsOf(entity)
 
     entity.post?.postId?.let {
         setAttribute(AppAttribute.PostId.to(it))
@@ -65,26 +61,6 @@ fun DIV.configureFeedRow(
         }
         entityBadge(entity, curator, FeedRowStyle.Badge, FeedRowStyle.Flair)
         cellGrid(cells, buttons, modify(FeedRowStyle.Cells, BorderRadius2, OverflowClip, Outline))
-    }
-
-    entityBody(description, links, limit = 1000)
-}
-
-/** The description and links of an entity, shared by [feedRow] and `entityHeader`, with an edit link to [editRoute]. */
-fun FlowContent.entityBody(
-    description: Markdown?,
-    links: List<ExtraLink>?,
-    mod: Modifier? = null,
-    limit: Int? = null,
-) {
-    if (description == null && links == null) return
-    div(modify(mod, FeedRowStyle.ExpandedContent, Padding(2), Gap(2))) {
-        description?.let {
-            markdown(it, FeedRowStyle.ExpandedBody, limit = limit)
-        }
-        if (links != null) {
-            entityLinks(links, FeedRowStyle.ExpandedLinks)
-        }
     }
 }
 
@@ -138,13 +114,8 @@ object FeedRowStyle {
     val Badge = Base.withBemElement("badge")
     val Flair = Base.withBemElement("flair")
     val Feature = Base.withBemElement("feature")
-    val MoreButton = Base.withBemElement("more-button")
-    val ExpandedContent = Base.withBemElement("expanded-content")
-    val ExpandedLinks = Base.withBemElement("expanded-links")
-    val ExpandedBody = Base.withBemElement("expanded-body")
     val Cells = Base.withBemElement("cells")
 
-    val ToggleExpand = Base.withBemModifier("expand-row")
     val Featured = Base.withBemModifier("featured")
 }
 
@@ -157,16 +128,8 @@ val FeedRowCss get() = with(FeedRowStyle) {
 $Base {
     --row-height: calc(var(--unit) * 10);
     --text-inset: calc(var(--unit) / 2);
-    display: grid;
-    grid-template-rows: auto 1fr;
     container-type: inline-size;
     padding: 2px;
-
-    &:not($ToggleExpand) {
-        $ExpandedContent {
-            display: none;
-        }
-    }
 }
 
 $Content {
@@ -254,8 +217,6 @@ $grid {
     }
 
     $Image $Feature { object-fit: contain; }
-
-    $ExpandedContent, $MoreButton { display: none; }
 }
 
 $Featured $Text { --clip: calc(var(--unit) * 24); }
@@ -268,37 +229,7 @@ $minimal {
         grid-template-areas: "image text badge";
     }
 
-    $Cells, $ExpandedContent, $MoreButton { display: none; }
-}
-
-$ExpandedContent {
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: min-content auto;
-    grid-template-areas: "links" "body";
-    
-    $ExpandedLinks {
-        grid-area: links;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(var(--unit-16), 1fr));
-        justify-items: center;
-        align-content: start;
-        gap: var(--unit);
-
-        > * {
-            width: 100%;
-            max-width: var(--unit-32);
-        }
-    }
-    $ExpandedBody  { grid-area: body }
-    
-    @container (min-width: 640px) { 
-        grid-template-rows: none;
-        grid-template-columns: 1fr min-content;
-        grid-template-areas: "body links";
-
-        $ExpandedLinks { grid-template-columns: max-content; }
-    }
+    $Cells { display: none; }
 }
 
 """}

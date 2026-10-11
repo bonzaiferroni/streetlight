@@ -25,7 +25,7 @@ fun FlowContent.entityDialog(entity: Entity) {
                 heading2(entity.label, modify(LineHeight115, Bold))
             }
         }
-        cellGrid(entity.toCells(), entityButtonsOf(entity, false))
+        cellGrid(entity.toCells(), entityButtonsOf(entity))
         entityBody(entity.body, entity.links)
     }
 }
