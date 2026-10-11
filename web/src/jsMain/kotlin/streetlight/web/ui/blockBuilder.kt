@@ -16,6 +16,9 @@ import streetlight.web.layouts.toMod
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
 
 /** The editor of the block [blockId], by the kind of block. */
 fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {

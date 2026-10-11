@@ -5,7 +5,7 @@ import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
-import koala.dom.MessageStore
+import koala.model.MessageStore
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.reactIn

@@ -4,7 +4,7 @@ import koala.modifier.*
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.routeBlock
-import koala.html.AppRoute
+import koala.model.AppRoute
 import koala.model.FetcherContent
 import streetlight.model.data.Star
 

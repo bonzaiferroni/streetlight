@@ -17,6 +17,9 @@ import streetlight.web.model.Earth
 import web.html.HTMLElement
 import kotlin.collections.first
 import kotlin.math.min
+import koala.dom.component.*
+import koala.external.*
+import koala.dom.layout.*
 
 fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()

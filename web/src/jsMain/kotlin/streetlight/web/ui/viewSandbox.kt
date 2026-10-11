@@ -5,6 +5,8 @@ import koala.LottieFile
 import koala.modifier.*
 import koala.dom.*
 import kotlinx.css.GridTemplateColumns
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun RouteScope.viewSandbox() {
     // val model = Sandbox(contentScope, api, toaster)

@@ -3,8 +3,8 @@ package streetlight.web.model
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
-import koala.dom.MessageStore
-import koala.model.dedup
+import koala.model.MessageStore
+import koala.utility.dedup
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.reactIn

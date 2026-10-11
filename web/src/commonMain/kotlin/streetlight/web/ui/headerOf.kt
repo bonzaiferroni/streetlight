@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
@@ -13,6 +12,9 @@ import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.shells.createPostMenu
 import streetlight.web.shells.galaxyMenu
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
 
 fun FlowContent.headerOf(
     location: Location,

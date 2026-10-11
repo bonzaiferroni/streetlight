@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Password
 import koala.dom.ViewScope
-import koala.dom.textField
+import koala.dom.component.textField
 import kotlinx.html.InputType
 import streetlight.web.model.PasswordEditor
 

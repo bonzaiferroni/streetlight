@@ -2,8 +2,8 @@ package streetlight.web.ui
 
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.IconStyle
-import koala.html.icon
+import koala.component.IconStyle
+import koala.component.icon
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 

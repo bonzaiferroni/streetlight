@@ -5,10 +5,10 @@ import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
 import koala.modifier.*
 import koala.dom.*
-import koala.html.filigree
-import koala.html.spacer
+import koala.component.filigree
+import koala.layout.spacer
 import kampfire.model.storeOf
-import koala.html.heading4
+import koala.component.heading4
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import streetlight.model.data.Comment
@@ -17,6 +17,8 @@ import streetlight.model.data.CommentUpdated
 import streetlight.model.data.PostOrder
 import streetlight.web.io.TalkLog
 import web.html.HTMLElement
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.viewTalkLog(model: TalkLog) {
     // this could be flawed

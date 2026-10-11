@@ -3,7 +3,10 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.Point
 import koala.modifier.*
-import koala.dom.*
+import koala.dom.append
+import koala.dom.asWeb
+import koala.dom.createDiv
+import koala.dom.onClick
 import koala.external.MarkerOptions
 import koala.external.maplibregl
 import kotlinx.css.properties.deg

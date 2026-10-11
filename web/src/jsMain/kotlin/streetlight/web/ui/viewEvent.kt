@@ -6,6 +6,7 @@ import streetlight.model.data.EventLocation
 import streetlight.model.ui.EventRoute
 import streetlight.web.shells.EventShell
 import streetlight.web.shells.eventShell
+import koala.dom.page.*
 
 fun ViewScope.viewEvent(event: EventLocation) {
     val camera = app.get<GeoCamera>()

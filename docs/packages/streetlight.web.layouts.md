@@ -9,7 +9,7 @@ Server-renderable components that lay out content. They are declared in `commonM
 | Package | Provides |
 |---|---|
 | `kotlinx.html` | The HTML DSL |
-| `koala.html` | Components |
+| `koala.component`, `koala.layout` | Components and layouts |
 | `koala.modifier` | Modifiers and classes |
 | `streetlight.model` | Entities and routes |
 

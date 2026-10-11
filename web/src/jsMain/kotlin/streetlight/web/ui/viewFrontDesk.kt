@@ -2,6 +2,8 @@ package streetlight.web.ui
 
 import koala.SiteImage
 import koala.dom.*
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.viewFrontDesk() {
     mainBody("viewFrontDesk.kt") {

@@ -1,0 +1,76 @@
+package koala.dom.layout
+
+import koala.modifier.*
+import kampfire.model.MutableTap
+import kampfire.model.Tap
+import kotlinx.coroutines.launch
+import kotlinx.html.DIV
+import web.html.HTMLDivElement
+import web.html.HTMLElement
+import koala.dom.AppendScope
+import koala.dom.ViewScope
+import koala.dom.clear
+import koala.dom.onClick
+
+/**
+ * A column of [items], each built by [block], where a click selects an item into [selection] and a second click
+ * clears it.
+ */
+fun <Item> ViewScope.selectorBlock(
+    items: Tap<List<Item>>,
+    selection: MutableTap<Item?>,
+    mod: Modifier? = null,
+    config: (DIV.() -> Unit)? = null,
+    block: ViewScope.(Item) -> HTMLElement
+): HTMLDivElement {
+    var selectedElement: HTMLElement? = null
+    val elementMap = mutableMapOf<Item, HTMLElement>()
+
+    fun selectElement(item: Item?) {
+        when (item) {
+            null -> {
+                selectedElement?.unmodify(Selected)
+                selectedElement = null
+            }
+            else -> {
+                val element = elementMap[item] ?: return
+                if (element.isModified(Selected)) {
+                    element.unmodify(Selected)
+                    selectedElement = null
+                } else {
+                    selectedElement?.unmodify(Selected)
+                    element.modify(Selected)
+                    selectedElement = element
+
+                }
+            }
+        }
+        if (item == selection.now) return
+        selection.set(item)
+    }
+
+    val element = flowBlock(items, mod, config = config) { items ->
+        elementMap.clear()
+        column {
+            items.forEach { item ->
+                val element = block(item).onClick {
+                    selectElement(item)
+                }
+                elementMap[item] = element
+            }
+        }
+    }
+
+    contentScope.launch {
+        selection.flow.collect { item ->
+            selectElement(item)
+        }
+    }
+
+    return element
+}
+/** The scrolling container of a [selectorBlock], holding the block and any content that follows its items. */
+fun AppendScope.selectorContainer(
+    mod: Modifier? = null,
+    content: DIV.() -> Unit,
+) = column(modify(Height(32), OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding(1), TextSmall, mod), content)

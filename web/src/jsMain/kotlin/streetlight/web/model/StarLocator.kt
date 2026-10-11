@@ -11,7 +11,7 @@ import koala.model.GeoMap
 import koala.model.readCurrentLocation
 import koala.model.streamCompassHeading
 import koala.model.streamCurrentLocation
-import koala.utils.launch
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import web.events.EventHandler

@@ -7,7 +7,7 @@ import kampfire.model.Outcome
 import kampfire.model.OutcomeSerializer
 import kampfire.model.Ok
 import kampfire.model.Problem
-import koala.utils.jsonConfig
+import koala.utility.jsonConfig
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.serializer
 import web.http.Response

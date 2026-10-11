@@ -1,7 +1,7 @@
 package streetlight.model.ui
 
 import kampfire.api.Slug
-import koala.html.AppRoute
+import koala.model.AppRoute
 import streetlight.model.data.FeedType
 import kotlin.test.Test
 import kotlin.test.assertEquals

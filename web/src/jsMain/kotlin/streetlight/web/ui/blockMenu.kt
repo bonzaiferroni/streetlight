@@ -4,12 +4,15 @@ import kampfire.api.Markdown
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.Id
+import koala.page.Id
 import koala.modifier.setPopoverTarget
 import koala.markdown.HeadingLevel
 import kampfire.model.storeOf
 import streetlight.model.data.*
 import kotlin.uuid.Uuid
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 /**
  * A button that opens the menu of blocks to add, by category, calling [onSelection] with the chosen block.

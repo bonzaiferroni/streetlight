@@ -7,6 +7,7 @@ import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
 import streetlight.web.shells.SiteDocKey
 import streetlight.web.shells.siteDocShell
+import koala.dom.page.*
 
 fun ViewScope.viewSiteDoc(content: DocContent) {
     shellBox {

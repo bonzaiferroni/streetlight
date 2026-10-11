@@ -2,7 +2,7 @@
 
 package koala
 
-import koala.utils.DropWhileBusy
+import koala.utility.DropWhileBusy
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope

@@ -1,7 +1,7 @@
 package koala.modifier
 
-import koala.html.AppScreen
-import koala.html.Id
+import koala.model.AppScreen
+import koala.page.Id
 
 /** The ids and attribute of the app body that Koala mounts into and reads. */
 object KoalaBody {

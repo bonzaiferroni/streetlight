@@ -7,12 +7,12 @@ import koala.LottieFile
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.ButtonPopover
-import koala.html.bulletsOf
-import koala.html.buttonPopover
-import koala.html.heading3
-import koala.html.heading5
-import koala.html.textProperty
+import koala.component.ButtonPopover
+import koala.component.bulletsOf
+import koala.component.buttonPopover
+import koala.component.heading3
+import koala.component.heading5
+import koala.component.textProperty
 import kampfire.model.MutableTap
 import kotlinx.coroutines.flow.map
 import kotlinx.css.pct
@@ -23,6 +23,9 @@ import kotlinx.datetime.plus
 import streetlight.model.data.EventProperty
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
 
 fun ViewScope.eventEditFormBody(model: EventEditor, isAdmin: Boolean = false) = formColumn {
     if (isAdmin) eventWebsiteForm(model)

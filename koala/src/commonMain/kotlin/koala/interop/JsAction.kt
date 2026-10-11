@@ -1,6 +1,6 @@
 package koala.interop
 
-import koala.html.Id
+import koala.page.Id
 
 /** A statement of JS to run inline. */
 data class JsAction(val block: String)

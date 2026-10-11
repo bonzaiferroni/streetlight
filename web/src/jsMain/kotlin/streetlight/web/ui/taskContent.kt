@@ -3,10 +3,10 @@ package streetlight.web.ui
 import koala.modifier.Accent
 import koala.modifier.modify
 import koala.dom.ViewScope
-import koala.dom.column
-import koala.dom.navigation
-import koala.html.heading3
-import koala.html.textBlock
+import koala.dom.layout.column
+import koala.dom.component.navigation
+import koala.component.heading3
+import koala.component.textBlock
 import streetlight.model.data.EditTaskContent
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.QuorumReviewContent

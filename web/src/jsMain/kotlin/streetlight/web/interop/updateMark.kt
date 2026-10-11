@@ -10,7 +10,7 @@ import koala.modifier.requireAttribute
 import koala.dom.requireClosest
 import koala.modifier.setAttribute
 import koala.modifier.Attribute
-import koala.html.ProgressBarStyle
+import koala.component.ProgressBarStyle
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.CuratorType
 import streetlight.model.data.MarkId

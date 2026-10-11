@@ -4,10 +4,10 @@ import kampfire.model.MutableTap
 import kampfire.model.storeOf
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.flowBlock
-import koala.dom.popoverCard
-import koala.dom.popoverRaw
-import koala.html.Id
+import koala.dom.layout.flowBlock
+import koala.dom.layout.popoverCard
+import koala.dom.layout.popoverRaw
+import koala.page.Id
 import web.events.addEventListener
 import web.html.HTMLElement
 import web.popover.TOGGLE

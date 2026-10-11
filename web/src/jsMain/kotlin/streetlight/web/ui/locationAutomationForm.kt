@@ -2,6 +2,9 @@ package streetlight.web.ui
 
 import koala.dom.*
 import streetlight.model.data.LocationConfigContent
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.locationAutomationForm(content: LocationConfigContent) = formColumn {
     formRow {

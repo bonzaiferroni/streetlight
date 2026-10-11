@@ -3,13 +3,13 @@ package streetlight.web.ui
 import koala.modifier.Accent
 import koala.LottieFile
 import koala.dom.*
-import koala.model.dedupNotNull
+import koala.utility.dedupNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Star
 import streetlight.model.ui.EventScoutRoute
-import koala.html.AppRoute
+import koala.model.AppRoute
 import koala.model.FetcherContent
 import koala.model.toContentOrNull
 import koala.modifier.AlignItemsEnd
@@ -17,6 +17,9 @@ import streetlight.model.ui.HomeRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.layouts.route
 import streetlight.web.model.EventScoutStage
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.utility.*
 
 fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
     val locationEditor = app.getLocationEditor(LocationEdit(), contentScope)

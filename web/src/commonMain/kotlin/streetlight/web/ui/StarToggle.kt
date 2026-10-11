@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.*
 import koala.interop.JsSignature
 import koala.interop.ThisElement
 import kotlinx.html.DIV
@@ -16,6 +15,8 @@ import streetlight.model.data.ToggleType
 import streetlight.model.data.Location
 import streetlight.web.layouts.CellGrid
 import kotlin.uuid.Uuid
+import koala.component.*
+import koala.layout.*
 
 /**
  * A button that lights or unlights an item for the star, with its count.

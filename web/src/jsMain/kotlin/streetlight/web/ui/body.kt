@@ -1,8 +1,8 @@
 package streetlight.web.ui
 
 import koala.dom.AppendScope
-import koala.dom.column
-import koala.html.section
+import koala.dom.layout.column
+import koala.layout.section
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.SECTION

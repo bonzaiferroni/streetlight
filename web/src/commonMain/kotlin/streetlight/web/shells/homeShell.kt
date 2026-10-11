@@ -2,7 +2,6 @@ package streetlight.web.shells
 
 import koala.LottieFile
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
@@ -12,6 +11,9 @@ import streetlight.web.layouts.feedSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
+import koala.component.*
+import koala.layout.*
+import koala.page.*
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(MarginTop(1)) {

@@ -3,11 +3,14 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.filigree
-import koala.html.heading3
+import koala.component.filigree
+import koala.component.heading3
 import streetlight.web.model.Earth
 import streetlight.web.pages.AppBody
 import web.dom.document
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.page.*
 
 fun ViewScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P, PositionRelative)) {

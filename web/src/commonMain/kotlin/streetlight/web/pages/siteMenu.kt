@@ -3,7 +3,6 @@ package streetlight.web.pages
 import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.*
 import koala.interop.InlineJs
 import koala.interop.KoalaFun
 import kotlinx.html.FlowContent
@@ -19,6 +18,10 @@ import streetlight.model.ui.SiteConfigRoute
 import streetlight.model.ui.SiteMonitorRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
+import koala.component.*
+import koala.layout.*
+import koala.model.*
+import koala.page.*
 
 /** The site menu as a popover from the helm button. */
 fun FlowContent.siteHelmPopover() {

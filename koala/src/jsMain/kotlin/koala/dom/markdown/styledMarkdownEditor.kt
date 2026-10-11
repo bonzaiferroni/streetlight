@@ -1,0 +1,102 @@
+package koala.dom.markdown
+
+import kampfire.api.Markdown
+import koala.modifier.*
+import koala.modifier.Attribute
+import koala.modifier.setAttribute
+import kampfire.model.MutableTap
+import kotlinx.html.DIV
+import kotlinx.html.js.div
+import kotlinx.html.js.onInputFunction
+import web.events.addEventListener
+import web.html.HTMLElement
+import web.keyboard.KEY_DOWN
+import web.keyboard.KeyboardEvent
+import koala.dom.component.handleEnterSubmit
+import koala.component.p
+import koala.dom.ViewScope
+import koala.dom.asWeb
+import koala.dom.launchEffect
+import koala.markdown.EditorStyle
+
+/**
+ * An editor bound to [state] that styles its markdown as it is typed, labeled [label] over its corner.
+ *
+ * With [onEnterSubmit], Enter submits and Shift+Enter starts a new line.
+ */
+fun ViewScope.markdownEditor(
+    state: MutableTap<Markdown>,
+    label: String? = null,
+    mod: Modifier? = null,
+    placeholder: String? = label,
+    onEnterSubmit: (() -> Unit)? = null,
+    block: DIV.() -> Unit = {}
+): HTMLElement {
+    val model = MarkdownEditor()
+    val inputParser = MarkdownInputParser(model)
+    var currentValue: Markdown? = null
+    lateinit var element: HTMLElement
+
+    fun display(value: Markdown) {
+        if (currentValue == value) return
+        currentValue = value
+        element.syncFromCollect(model, value)
+    }
+
+    element = div {
+        addModifiers(EditorStyle.Container, mod)
+        label?.let {
+            setAttribute(Attribute.BlockLabel, it.lowercase())
+        }
+        setAttribute(Attribute.ContentEditable, "plaintext-only")
+        setAttribute(Attribute.Role, "textbox")
+        setAttribute(Attribute.AriaMultiline, true)
+        setAttribute(Attribute.Spellcheck, true)
+        label?.let {
+            setAttribute(Attribute.AriaLabel, it)
+        }
+        placeholder?.let {
+            setAttribute(Attribute.Placeholder, it)
+        }
+
+        onInputFunction = {
+            val newValue = inputParser.syncFromInput(element)
+            if (newValue != currentValue) {
+                currentValue = newValue
+                state.set(newValue)
+            }
+        }
+
+        block()
+    }.asWeb()
+
+    onEnterSubmit?.let {
+        element.addEventListener(KeyboardEvent.KEY_DOWN, { event ->
+            event.handleEnterSubmit(onEnterSubmit)
+        })
+    }
+
+    launchEffect("styledMarkdownEditor") {
+        state.flow.collect {
+            display(it)
+        }
+    }
+
+    return element
+}
+
+private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdown) {
+    val blocks = model.syncFromCollect(markdown)
+
+    blocks.forEachIndexed { index, block ->
+        val element = children[index] as? HTMLElement
+        if (element == null) {
+            val p = createEditorBlock(block)
+            appendChild(p)
+        } else {
+            if (element.normalizedTextContent() == block.chunk) return@forEachIndexed
+            element.syncEditorBlock(block)
+        }
+    }
+}
+

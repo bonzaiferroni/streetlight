@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
 import koala.dom.AppendScope
-import koala.dom.navigation
-import koala.html.AppRoute
-import koala.html.heading1
+import koala.dom.component.navigation
+import koala.model.AppRoute
+import koala.component.heading1
 import koala.modifier.*
 import kotlinx.html.A
 

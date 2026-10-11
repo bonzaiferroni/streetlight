@@ -1,6 +1,6 @@
 package koala.modifier
 
-import koala.html.TagConfig
+import koala.page.TagConfig
 import kotlinx.css.CssBuilder
 import kotlinx.html.FlowContent
 import kotlinx.html.style

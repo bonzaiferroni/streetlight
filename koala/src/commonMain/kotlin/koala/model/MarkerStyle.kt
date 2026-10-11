@@ -2,7 +2,7 @@ package koala.model
 
 import koala.Asset
 import koala.modifier.*
-import koala.html.IconStyle
+import koala.component.IconStyle
 import kotlinx.css.LinearDimension
 import kotlinx.css.properties.Angle
 

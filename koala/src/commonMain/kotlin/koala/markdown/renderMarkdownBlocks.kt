@@ -1,7 +1,6 @@
 package koala.markdown
 
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.blockQuote
 import kotlinx.html.cite
@@ -19,6 +18,24 @@ import kotlinx.html.th
 import kotlinx.html.thead
 import kotlinx.html.tr
 import kotlinx.html.ul
+import koala.component.filigree
+import koala.component.heading
+import koala.component.heading1
+import koala.component.heading2
+import koala.component.heading3
+import koala.component.heading4
+import koala.component.heading5
+import koala.component.heading6
+import koala.component.image
+import koala.component.span
+import koala.component.textBlock
+import koala.layout.ListStyleDisc
+import koala.layout.ListStyleMinus
+import koala.layout.ListStylePlus
+import koala.layout.div
+import koala.layout.listItem
+import koala.layout.row
+import koala.page.TagConfig
 
 /** Renders [blocks] as HTML. */
 fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {

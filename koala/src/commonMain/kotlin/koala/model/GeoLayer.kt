@@ -3,6 +3,7 @@ package koala.model
 import kampfire.model.storeOf
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import koala.utility.dedup
 
 /** A layer of markers on the map, with its points, lines and visibility. */
 class GeoLayer(

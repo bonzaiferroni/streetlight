@@ -3,9 +3,9 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.icon
+import koala.dom.component.icon
 import koala.dom.onClick
-import koala.dom.row
+import koala.dom.layout.row
 import koala.modifier.Width
 import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth

@@ -1,13 +1,13 @@
 package streetlight.web.ui
 
-import koala.html.LabeledRoute
+import koala.model.LabeledRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.model.RouteDockState
 import koala.modifier.*
 import koala.dom.RouteScope
 import koala.dom.ViewScope
-import koala.dom.lazyTabs
-import koala.dom.section
+import koala.dom.layout.lazyTabs
+import koala.dom.layout.section
 import streetlight.model.data.ProfileConfig
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit

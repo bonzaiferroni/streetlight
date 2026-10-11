@@ -4,12 +4,12 @@ import kampfire.model.thumb
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.append
-import koala.dom.box
-import koala.dom.grid
+import koala.dom.layout.box
+import koala.dom.layout.grid
 import koala.dom.onClick
-import koala.dom.row
-import koala.dom.textBlock
-import koala.html.image
+import koala.dom.layout.row
+import koala.dom.component.textBlock
+import koala.component.image
 import kotlinx.css.GridTemplateColumns
 import streetlight.web.layouts.route
 import streetlight.web.model.DataCache

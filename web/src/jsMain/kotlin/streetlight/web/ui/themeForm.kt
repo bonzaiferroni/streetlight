@@ -3,11 +3,13 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.GridColumns
+import koala.layout.GridColumns
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.themeForm(model: ThemeEditor) {
     formCard {

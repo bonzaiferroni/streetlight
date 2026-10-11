@@ -4,9 +4,12 @@ package streetlight.web.shells
 
 import kampfire.api.toMarkdown
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.web.ui.mainBody
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
+import koala.page.*
 
 fun FlowContent.privacyPolicyShell() {
     mainBody("privacyPolicyShell.kt") {

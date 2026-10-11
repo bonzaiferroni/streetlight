@@ -2,8 +2,8 @@
 
 package streetlight.web.ui
 
-import koala.html.AppRoute
-import koala.html.Id
+import koala.model.AppRoute
+import koala.page.Id
 import web.dom.Document
 import web.dom.ElementId
 import web.html.HTMLElement

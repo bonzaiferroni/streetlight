@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.dom.ViewScope
 import koala.dom.createDiv
-import koala.html.AppRoute
+import koala.model.AppRoute
 import kotlinx.coroutines.flow.drop
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.FeedType

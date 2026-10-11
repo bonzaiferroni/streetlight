@@ -2,11 +2,13 @@ package streetlight.web.ui
 
 import koala.SvgFile
 import koala.dom.*
-import koala.html.IconStyle
-import koala.html.spacer
+import koala.component.IconStyle
+import koala.layout.spacer
 import koala.modifier.*
 import streetlight.model.data.EventTag
 import streetlight.web.model.Earth
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.earthControls(model: Earth) {
     val buttonMod = modify(PointerEventsAuto, OpacityHigh, EarthStyle.MoveDimmer)

@@ -1,10 +1,10 @@
 package streetlight.web.layouts
 
 import koala.modifier.*
-import koala.html.Id
-import koala.html.column
-import koala.html.heading3
-import koala.html.tabs
+import koala.page.Id
+import koala.layout.column
+import koala.component.heading3
+import koala.layout.tabs
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostListing
 import streetlight.model.data.PostType

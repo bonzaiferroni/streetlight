@@ -9,6 +9,7 @@ import streetlight.web.model.MarkerMap
 import streetlight.web.shells.HomeShell
 import streetlight.web.shells.homeShell
 import web.dom.document
+import koala.dom.page.*
 
 fun ViewScope.viewHome(content: HomeContent) {
     val markerMap = app.get<MarkerMap>()

@@ -11,6 +11,9 @@ import web.scroll.ScrollBehavior
 import web.scroll.ScrollToOptions
 import web.scroll.smooth
 import kotlin.time.Duration.Companion.milliseconds
+import koala.dom.component.*
+import koala.interop.*
+import koala.dom.layout.*
 
 fun ViewScope.wireRightPanel() {
     val omni = app.get<OmniClient>()

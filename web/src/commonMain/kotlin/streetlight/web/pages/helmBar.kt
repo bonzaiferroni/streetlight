@@ -2,9 +2,11 @@ package streetlight.web.pages
 
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.ui.Screen
+import koala.component.*
+import koala.layout.*
+import koala.page.*
 
 /**
  * The bar of the site and star helm buttons, each opening its popover. A button hides while its panel is shown

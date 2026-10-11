@@ -1,6 +1,5 @@
 package streetlight.web.layouts
 
-import koala.html.*
 import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus
@@ -8,6 +7,9 @@ import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
 import streetlight.model.data.ExtraLink
 import streetlight.web.ui.curatorBadge
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
 
 /**
  * The image of [entity], with [featureMod] on the image itself. It opens the [EntityDialog] for [ref], and links

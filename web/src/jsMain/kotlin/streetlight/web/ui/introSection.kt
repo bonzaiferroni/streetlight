@@ -3,9 +3,11 @@ package streetlight.web.ui
 import koala.Lottie
 import koala.modifier.*
 import koala.dom.*
-import koala.html.filigree
-import koala.html.heading1
+import koala.component.filigree
+import koala.component.heading1
 import kotlinx.html.DIV
+import koala.dom.component.*
+import koala.dom.layout.*
 
 @Deprecated("use body component")
 fun ViewScope.introSection(

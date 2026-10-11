@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.html.Id
-import koala.html.button
-import koala.html.icon
+import koala.page.Id
+import koala.component.button
+import koala.component.icon
 import koala.modifier.*
 import koala.interop.JsSignature
 import koala.interop.ThisElement

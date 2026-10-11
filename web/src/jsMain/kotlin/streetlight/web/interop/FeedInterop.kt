@@ -5,7 +5,7 @@ import koala.modifier.OpacityHigh
 import koala.dom.AppendScope
 import koala.dom.AppFacade
 import koala.dom.append
-import koala.dom.button
+import koala.dom.component.button
 import koala.dom.clear
 import koala.modifier.modify
 import koala.modifier.requireAttribute

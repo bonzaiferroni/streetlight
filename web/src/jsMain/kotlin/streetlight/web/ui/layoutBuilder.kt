@@ -4,14 +4,14 @@ import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.dom.button
-import koala.dom.row
-import koala.html.Id
-import koala.html.heading3
-import koala.html.heading6
-import koala.html.hr
+import koala.dom.component.button
+import koala.dom.layout.row
+import koala.page.Id
+import koala.component.heading3
+import koala.component.heading6
+import koala.component.hr
 import koala.modifier.setPopoverTarget
-import koala.html.textBlock
+import koala.component.textBlock
 import kampfire.model.MutableTap
 import kampfire.model.toggle
 import kotlinx.css.pct
@@ -22,6 +22,8 @@ import streetlight.web.model.ContainerEditor
 import streetlight.web.model.ContainerId
 import streetlight.web.model.LayoutEditor
 import kotlin.uuid.Uuid
+import koala.dom.component.*
+import koala.dom.layout.*
 
 /** The editor of a page layout: its blocks, and the blocks removed from it, which can be restored. */
 fun ViewScope.layoutBuilder(model: LayoutEditor) {

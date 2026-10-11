@@ -8,7 +8,7 @@ import kampfire.model.AccountType
 import kampfire.model.PrintLnMessenger
 import kampfire.model.SignUpRequest
 import kampfire.model.toDataOr
-import koala.dom.MessageStore
+import koala.model.MessageStore
 import kampfire.model.mutableTapOf
 import kampfire.model.tapOf
 import kampfire.model.storeOf

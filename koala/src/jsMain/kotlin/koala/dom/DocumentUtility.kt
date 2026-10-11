@@ -2,10 +2,13 @@ package koala.dom
 
 import js.array.asList
 import js.promise.Promise
-import koala.html.Id
+import koala.page.Id
 import web.dom.Document
 import web.dom.ElementId
 import web.viewtransition.ViewTransition
+import koala.dom.layout.closePopover
+import koala.dom.layout.open
+import koala.dom.layout.popover
 
 val Id.elementId get() = ElementId(identifier)
 

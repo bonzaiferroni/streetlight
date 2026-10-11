@@ -4,8 +4,8 @@ import kampfire.model.Outcome
 import kampfire.model.toDataOr
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.column
-import koala.dom.onView
+import koala.dom.layout.column
+import koala.external.onView
 import koala.dom.mountChildView
 
 /** Renders [content] with the data of [requestData] once the block is viewed. A failed request is toasted. */

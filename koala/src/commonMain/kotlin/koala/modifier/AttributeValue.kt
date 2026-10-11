@@ -1,6 +1,6 @@
 package koala.modifier
 
-import koala.html.Queryable
+import koala.page.Queryable
 
 /** An [attribute] set to [value], applied to an element and used as a selector. */
 data class AttributeValue<T>(val attribute: Attribute<T>, val value: T): Modifier, Queryable {

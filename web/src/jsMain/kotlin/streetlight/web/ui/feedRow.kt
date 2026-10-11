@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.dom.AppendScope
-import koala.dom.div
+import koala.dom.layout.div
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
 import streetlight.web.layouts.EntityCell

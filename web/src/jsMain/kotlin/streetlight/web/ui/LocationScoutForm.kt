@@ -4,9 +4,11 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import kampfire.model.tapOf
-import koala.html.spacer
+import koala.layout.spacer
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.model.LocationScout
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder") {
     setStyle(Css.ColorScheme.of(ThemeColor.Location.cssValue))

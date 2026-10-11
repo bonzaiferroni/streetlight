@@ -2,10 +2,10 @@ package streetlight.web.pages
 
 import koala.JsFile
 import koala.PageResource
-import koala.html.AppScreen
-import koala.html.appHead
-import koala.html.applyFiles
-import koala.html.linkScript
+import koala.model.AppScreen
+import koala.page.appHead
+import koala.page.applyFiles
+import koala.page.linkScript
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import streetlight.model.data.PageTheme

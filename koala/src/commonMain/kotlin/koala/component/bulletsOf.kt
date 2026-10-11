@@ -1,0 +1,38 @@
+package koala.component
+
+import koala.modifier.*
+import kotlinx.html.FlowContent
+import koala.layout.ListAxis
+import koala.layout.ListStyleDisc
+import koala.layout.listItem
+import koala.layout.ulist
+
+/** A bulleted list of [content]. */
+fun FlowContent.bulletsOf(mod: Modifier? = null, vararg content: String) {
+    ulist(modify(Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight, mod), ListAxis.Column) {
+        content.forEach { text ->
+            listItem(text)
+        }
+    }
+}
+
+fun FlowContent.bulletsOf(vararg text: String) = bulletsOf(null, *text)
+
+fun FlowContent.bulletsOf(content: List<String>) = bulletsOf(null, *content.toTypedArray())
+
+fun FlowContent.bulletsOf(mod: Modifier, content: List<String>) {
+    bulletsOf(mod, *content.toTypedArray())
+}
+
+/** A bulleted list with an item built by each of [contents]. */
+fun FlowContent.bulletsOf(mod: Modifier? = null, vararg contents: FlowContent.() -> Unit) {
+    ulist(modify(Gap(0), ListStyleDisc, PaddingLeft(3), ParagraphLineHeight, mod), ListAxis.Column) {
+        contents.forEach { element ->
+            listItem {
+                element()
+            }
+        }
+    }
+}
+
+fun FlowContent.bulletsOf(vararg content: FlowContent.() -> Unit) = bulletsOf(null, *content)

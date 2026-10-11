@@ -3,9 +3,9 @@ package streetlight.web.ui
 import kampfire.api.Username
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.Id
-import koala.html.button
-import koala.html.icon
+import koala.page.Id
+import koala.component.button
+import koala.component.icon
 import koala.modifier.setAttribute
 import koala.modifier.setPopoverTarget
 import koala.modifier.idAttributeOf

@@ -1,7 +1,6 @@
 package streetlight.web.shells
 
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
 import streetlight.model.ui.EventUpdateRoute
@@ -10,6 +9,10 @@ import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 import streetlight.web.ui.mainBody
 import streetlight.web.ui.entityHeader
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
+import koala.page.*
 
 fun FlowContent.eventShell(event: EventLocation) {
     mainBody("eventShell.kt") {

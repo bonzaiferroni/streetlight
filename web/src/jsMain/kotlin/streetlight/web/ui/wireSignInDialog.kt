@@ -5,11 +5,11 @@ import kampfire.model.setFalse
 import kampfire.model.setTrue
 import kampfire.model.storeOf
 import koala.dom.ViewScope
-import koala.dom.dialog
-import koala.dom.dialogCard
-import koala.dom.lazyTabs
-import koala.dom.rawDialogContent
-import koala.html.Id
+import koala.dom.layout.dialog
+import koala.dom.layout.dialogCard
+import koala.dom.layout.lazyTabs
+import koala.dom.layout.rawDialogContent
+import koala.page.Id
 import streetlight.model.data.Star
 
 /** The sign-in dialog, opened by [SignIn.isOpen] and closed once a star signs in. */

@@ -3,7 +3,6 @@ package streetlight.web.layouts
 import kabinet.utils.toAgoFormat
 import koala.modifier.*
 import kotlinx.css.px
-import koala.html.*
 import koala.markdown.MarkdownStyle
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -16,6 +15,9 @@ import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.CuratorMenu
 import streetlight.web.ui.PopoverId
 import kotlin.time.Clock
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
 
 /**
  * An entity in a feed. Its layout follows the page's [FeedMode].

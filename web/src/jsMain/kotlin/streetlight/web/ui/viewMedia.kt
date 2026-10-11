@@ -4,7 +4,7 @@ import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.mountChildView
 import koala.dom.routeBlock
-import koala.dom.shellBox
+import koala.dom.page.shellBox
 import streetlight.model.data.Media
 import streetlight.model.data.SpaceType
 import streetlight.model.ui.MediaRoute

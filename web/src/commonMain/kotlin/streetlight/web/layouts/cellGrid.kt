@@ -11,12 +11,13 @@ import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
 import kotlinx.css.px
-import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
+import koala.component.*
+import koala.layout.*
 
 /**
  * The facts of an entity as a grid of icon cells, followed by a cell of [buttons] that fills the rest of its row.

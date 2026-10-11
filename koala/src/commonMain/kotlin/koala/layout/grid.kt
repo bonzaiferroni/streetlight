@@ -1,0 +1,49 @@
+package koala.layout
+
+import koala.modifier.*
+import kotlinx.css.GridTemplateColumns
+import kotlinx.css.fr
+import kotlinx.html.DIV
+import kotlinx.html.FlowContent
+
+/** A grid with the columns of [template], switching to [queryTemplate] on a narrow screen. */
+fun FlowContent.grid(
+    template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
+    queryTemplate: GridTemplateColumns = template,
+    mod: Modifier? = null,
+    content: DIV.() -> Unit,
+) {
+    div(modify(GridColumns.Class, mod)) {
+        configureGridColumns(template, queryTemplate)
+        content()
+    }
+}
+
+internal fun DIV.configureGridColumns(
+    template: GridTemplateColumns,
+    queryTemplate: GridTemplateColumns,
+) {
+    setStyle(Css.GridTemplateColumns.of(template))
+    setStyle(GridColumns.QueryTemplate.of(queryTemplate))
+}
+
+object GridColumns {
+    val Class = Class("grid")
+
+    /** Columns that fill the row, each at least a minimum width. */
+    fun repeatFill(minPx: Int) = GridTemplateColumns("repeat(auto-fill, minmax(${minPx}px, 1fr))")
+
+    val QueryTemplate = Property<GridTemplateColumns>("grid-query-columns", true)
+}
+
+//language=CSS
+val GridColumnsCss get () = with(GridColumns) { """
+$Class {
+    display: grid; 
+    gap: var(--unit);
+    
+    @media (max-width: 600px) {
+        grid-template-columns: var($QueryTemplate) !important;
+    }
+}
+""" }

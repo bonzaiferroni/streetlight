@@ -1,6 +1,5 @@
 package streetlight.web.layouts
 
-import koala.html.*
 import koala.interop.JsSignature
 import koala.interop.ThisElement
 import koala.interop.ThisEvent
@@ -11,6 +10,8 @@ import kotlinx.html.onClick
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
 import streetlight.model.data.EntityType
+import koala.component.*
+import koala.layout.*
 
 /**
  * All of [entity]: its image, heading and cells joined edge to edge as one part, then its whole body and links, as

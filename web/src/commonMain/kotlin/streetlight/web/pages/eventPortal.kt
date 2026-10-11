@@ -3,12 +3,15 @@ package streetlight.web.pages
 import koala.FileSet
 import koala.Asset
 import koala.PageResource
-import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 import koala.modifier.*
 import kotlinx.css.LinearDimension
 import kotlinx.css.rem
+import koala.component.*
+import koala.interop.*
+import koala.layout.*
+import koala.page.*
 
 /** A standalone page for requesting songs at [event]. */
 fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>, resource: PageResource) {

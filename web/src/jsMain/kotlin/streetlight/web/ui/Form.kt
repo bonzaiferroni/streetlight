@@ -3,18 +3,20 @@ package streetlight.web.ui
 import koala.Lottie
 import koala.modifier.*
 import koala.dom.*
-import koala.dom.textBlock
-import koala.html.bulletsOf
-import koala.html.column
-import koala.html.filigree
-import koala.html.heading3
-import koala.html.heading4
-import koala.html.textBlock
-import koala.dom.MenuAction
+import koala.component.textBlock
+import koala.component.bulletsOf
+import koala.layout.column
+import koala.component.filigree
+import koala.component.heading3
+import koala.component.heading4
+import koala.model.MenuAction
 import kampfire.model.Tap
 import kampfire.model.MutableTap
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 /** The column of a form's cards. */
 fun ViewScope.formColumn(

@@ -7,8 +7,8 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.flowModifier
-import koala.dom.icon
-import koala.html.IconStyle
+import koala.dom.component.icon
+import koala.component.IconStyle
 import kotlinx.coroutines.flow.map
 
 fun ViewScope.workSignal(

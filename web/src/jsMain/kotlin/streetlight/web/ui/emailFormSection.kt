@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.dom.ViewScope
-import koala.dom.textField
+import koala.dom.component.textField
 import streetlight.web.model.EmailEditor
 
 fun ViewScope.emailFormSection(model: EmailEditor) = formSection("Email") {

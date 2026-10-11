@@ -2,9 +2,11 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.*
-import koala.html.MessageBox
+import koala.component.MessageBox
 import streetlight.web.model.Toaster
 import streetlight.web.pages.AppBody
+import koala.dom.component.*
+import koala.dom.layout.*
 
 /** Shows the toasts of [Toaster]. */
 fun ViewScope.wireToaster() {

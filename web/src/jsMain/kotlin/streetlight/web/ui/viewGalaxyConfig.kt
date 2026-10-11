@@ -3,11 +3,13 @@ package streetlight.web.ui
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.html.spacer
+import koala.layout.spacer
 import streetlight.model.data.GalaxyConfig
 import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.web.layouts.route
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
     val model = app.getGalaxyEditor(config.galaxy.toEdit(config.marks), contentScope)

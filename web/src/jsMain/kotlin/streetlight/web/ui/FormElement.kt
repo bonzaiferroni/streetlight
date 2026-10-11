@@ -2,11 +2,14 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.*
-import koala.html.bulletsOf
-import koala.html.filigree
-import koala.html.heading3
-import koala.dom.MenuAction
+import koala.component.bulletsOf
+import koala.component.filigree
+import koala.component.heading3
+import koala.model.MenuAction
 import kotlinx.html.DIV
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.formBodyProto(
     mod: Modifier? = null,

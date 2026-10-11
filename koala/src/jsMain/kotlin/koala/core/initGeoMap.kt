@@ -2,7 +2,7 @@
 
 package koala.core
 
-import koala.dom.ResizeObserver
+import koala.external.ResizeObserver
 import koala.modifier.getAttribute
 import koala.modifier.isModified
 import koala.external.FillExtrusionPaint
@@ -14,7 +14,7 @@ import koala.external.MapSource
 import koala.external.MapTerrain
 import koala.external.maplibregl
 import koala.modifier.Attribute
-import koala.html.GeoMapKey
+import koala.component.GeoMapKey
 import koala.model.LightLayer
 import kotlinx.browser.localStorage
 import web.html.HTMLElement

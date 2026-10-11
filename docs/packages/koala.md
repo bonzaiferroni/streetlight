@@ -14,15 +14,39 @@ The base set of components and functionality for web apps. It declares `View`, a
 
 `koala` depends on `kampfire`. `kampfire` does not depend on `koala`.
 
+## Packages
+
+| Package | Holds |
+|---|---|
+| `koala.component` | Components: the basic building blocks, such as `switch`, `textField` and `icon` |
+| `koala.layout` | Layouts: arrangements of components, such as `row`, `grid`, `tabs` and `dialog` |
+| `koala.model` | Classes and interfaces not bound to their point of use, such as `AppRoute` |
+| `koala.page` | The frame a page is built on: its head, scripts, ids, mounts and data islands |
+| `koala.markdown` | Markdown parsing and rendering |
+| `koala.interop` | Calls between markup and the bundle, and the `wire` functions that bind a view to server markup |
+| `koala.external` | Declarations of browser and library APIs |
+| `koala.utility` | Utilities whose target is not a koala type |
+| `koala.dom` | The view runtime: `View`, `ViewScope`, `AppendScope` and the view factories |
+
+UI that needs the browser lives under `koala.dom`, in a package that mirrors its dom-agnostic counterpart: `koala.dom.component`, `koala.dom.layout`, `koala.dom.page` and `koala.dom.markdown`. A browser view imports the `koala.dom` packages with a star import, so it sees the `AppendScope` and `ViewScope` variants and not the `FlowContent` ones. Markup rendered on the server imports the dom-agnostic packages.
+
+A view, a composition tied to a model and named `viewFoo` for the model `Foo`, belongs to the app, not to koala.
+
+| File | Lives in |
+|---|---|
+| `FooUtility.kt` | The package of its target type, so its extensions need no extra import. A target outside koala puts it in `koala.utility` |
+| `FooStyle` object and `FooCss` stylesheet | The dom-agnostic package of the component that references them |
+| A model declared for the browser | `commonMain`, unless it needs the browser |
+
 ## Launching Coroutines
 
-Start a coroutine with `koala.utils.launch`, not the raw builder.
+Start a coroutine with `koala.utility.launch`, not the raw builder.
 
 The browser does not give a coherent call stack for an exception thrown inside a coroutine. `launch` names the coroutine and carries the name in its context as `LaunchTelemetry`. `appExceptionHandler` appends that name to the exception message, along with the path of the view and element the coroutine belongs to, and rethrows the same throwable.
 
 A coroutine launched with the raw builder fails without a name, and its message says nothing about where it came from.
 
-Code that wraps launching builds on `koala.utils.launch` so that the telemetry is kept.
+Code that wraps launching builds on `koala.utility.launch` so that the telemetry is kept.
 
 ## DropWhileBusy
 

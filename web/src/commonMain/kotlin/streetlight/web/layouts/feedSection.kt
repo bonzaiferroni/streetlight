@@ -2,7 +2,6 @@ package streetlight.web.layouts
 
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.*
 import koala.interop.JsSignature
 import koala.interop.ThisElement
 import kotlinx.html.FlowContent
@@ -12,6 +11,10 @@ import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.tagFilterMenu
+import koala.component.*
+import koala.layout.*
+import koala.model.*
+import koala.page.*
 
 /**
  * The feed section of a page: a heading with the [FeedMode] switch, a tag filter and search field for an event feed,

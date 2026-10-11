@@ -9,7 +9,7 @@ Calls between server-rendered markup and the browser. Markup names a global JS f
 | Package | Provides |
 |---|---|
 | `koala.modifier` | `jsScriptOf`, `Attribute` and root modifier classes |
-| `koala.html` | `Id` and `Class` arguments |
+| `koala.page` | `Id` arguments |
 | `web` (Kotlin wrappers) | DOM and `localStorage` access in `jsMain` |
 
 ## Global Functions
@@ -43,8 +43,29 @@ A root switch has these parts:
 |---|---|
 | The `Attribute` | The app |
 | `RootSwitch` in the app's `HeadScriptConfig` | The app |
-| `rootSwitch`, the control | The app's markup, from `koala.html` |
+| `rootSwitch`, the control | The app's markup, from `koala.component` |
 | `rootSwitchCss`, marking the selected option | The app's stylesheet, listed in `KtStyles` |
 | CSS that reads the attribute | The app's stylesheet |
 | `applyRootSwitch` | `interopUtilities` |
 | `initRootSwitch` | `buildHeadScript` |
+
+## Wiring
+
+A `wire` function binds a view to markup the server rendered without the bundle. The markup side, such as `wiringBlock`, lives here beside the `wire` function that finds it.
+
+## Interop
+
+| Part | Role |
+|---|---|
+| [`KoalaFun`](../../koala/src/commonMain/kotlin/koala/interop/KoalaFun.kt) | The global functions Koala defines for markup |
+| [`GlobalFunction`, `ThisElement`, `ThisEvent`](../../koala/src/commonMain/kotlin/koala/interop/GlobalFunction.kt) | A JS function markup calls by name, and its element and event arguments |
+| [`JsSignature`, `jsFunctionOf`](../../koala/src/commonMain/kotlin/koala/interop/JsSignature.kt) | A function declared by name, or written in JS |
+| [`JsAction`](../../koala/src/commonMain/kotlin/koala/interop/JsAction.kt) | A statement of JS to run inline |
+| [`invoke`](../../koala/src/commonMain/kotlin/koala/interop/invoke.kt) | The JS call of a function with string arguments |
+| [`buildHeadScript`, `HeadScriptConfig`](../../koala/src/commonMain/kotlin/koala/interop/buildHeadScript.kt) | The head script that restores root settings |
+| [`KtFunction`](../../koala/src/jsMain/kotlin/koala/interop/KtFunction.kt) | A Kotlin function exposed to markup |
+| [`interopUtilities`](../../koala/src/jsMain/kotlin/koala/interop/interopUtilities.kt) | The Kotlin functions Koala exposes, and the root setting functions |
+| [`initTabs`](../../koala/src/jsMain/kotlin/koala/interop/initTabs.kt) | Wires server-rendered tabs |
+| [`wiringBlock`](../../koala/src/commonMain/kotlin/koala/interop/wireBlock.kt) | An element the browser wires a view into |
+| [`wireBlock`](../../koala/src/jsMain/kotlin/koala/interop/wireBlock.kt) | Mounts a child view into a server-rendered element |
+| [`wireGeoMap`, `wireMapContext`](../../koala/src/jsMain/kotlin/koala/interop/wireGeoMap.kt) | Attaches the shared map to its mount |

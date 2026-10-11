@@ -4,11 +4,13 @@ package streetlight.web.pages
 
 import koala.PageResource
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
 import streetlight.model.data.PageTheme
+import koala.layout.*
+import koala.model.*
+import koala.page.*
 
 /**
  * The body of an app page: the site menu, the content panel with the portal mount and the server-rendered shell

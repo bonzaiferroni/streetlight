@@ -3,7 +3,7 @@
 package koala.markdown
 
 import koala.modifier.*
-import koala.html.LottieClass
+import koala.component.LottieClass
 import kotlinx.html.*
 
 /** Renders [spans] as inline HTML. Inline images are left out, as [renderFirstInlineImage] places them. */

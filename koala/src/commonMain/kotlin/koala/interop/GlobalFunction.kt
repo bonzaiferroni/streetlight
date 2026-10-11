@@ -3,7 +3,7 @@ package koala.interop
 import kampfire.api.TableId
 import koala.modifier.Class
 import koala.modifier.PositionAnchor
-import koala.html.Id
+import koala.page.Id
 import kotlin.uuid.Uuid
 
 /** A JS function on `globalThis` that markup calls by [name]. */

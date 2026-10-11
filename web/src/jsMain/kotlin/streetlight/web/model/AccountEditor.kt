@@ -13,11 +13,11 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
-import koala.dom.MessageStore
+import koala.model.MessageStore
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.utils.launch
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Account

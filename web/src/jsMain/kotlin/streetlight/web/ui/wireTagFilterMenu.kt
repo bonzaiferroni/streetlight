@@ -5,6 +5,8 @@ import koala.modifier.*
 import streetlight.model.data.EventTag
 import streetlight.web.interop.filterFeedByTag
 import web.dom.document
+import koala.dom.component.*
+import koala.dom.layout.*
 
 /**
  * The menu of tags a feed can be filtered by, read for the feed holding the button that opened it. A tag replaces

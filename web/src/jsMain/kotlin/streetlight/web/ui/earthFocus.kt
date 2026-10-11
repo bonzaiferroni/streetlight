@@ -2,13 +2,13 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.*
-import koala.html.AppRoute
-import koala.html.btn
-import koala.html.containImage
-import koala.html.filigree
-import koala.html.heading3
-import koala.html.heading4
-import koala.html.navigationIfNotNull
+import koala.model.AppRoute
+import koala.component.btn
+import koala.component.containImage
+import koala.component.filigree
+import koala.component.heading3
+import koala.component.heading4
+import koala.component.navigationIfNotNull
 import koala.model.PointMarker
 import kotlinx.css.pct
 import kotlinx.html.hr
@@ -28,6 +28,9 @@ import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
 import streetlight.web.model.InflateMarker
 import streetlight.web.model.LocationMarker
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
 
 fun ViewScope.earthFocus(model: Earth) {
     flowBlock(model.focusEntitiesState,

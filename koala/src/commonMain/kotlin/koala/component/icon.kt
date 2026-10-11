@@ -1,0 +1,99 @@
+package koala.component
+
+import koala.Svg
+import koala.SvgPack
+import koala.modifier.*
+import kotlinx.html.DIV
+import kotlinx.html.FlowContent
+import kotlinx.html.div
+
+/** The SVG [file] as a square icon in the current color. */
+fun FlowContent.icon(
+    file: Svg,
+    mod: Modifier? = SmallIconHeight,
+    block: DIV.() -> Unit = {}
+) {
+    div {
+        configureIcon(
+            file = file,
+            mod = mod,
+            block = block
+        )
+    }
+}
+
+/** The [svg] pack as an [icon], animated unless the viewer prefers reduced motion. */
+fun FlowContent.magicIcon(
+    svg: SvgPack,
+    mod: Modifier? = SmallIconHeight,
+    block: DIV.() -> Unit = {}
+) {
+    icon(svg.large, modify(IconStyle.Magic, mod)) {
+        setStyle(Css.MaskUrlAnimated.of(svg.animated))
+        block()
+    }
+}
+
+/** Configures this element as an [icon] of [file]. */
+fun DIV.configureIcon(
+    file: Svg,
+    mod: Modifier? = null,
+    block: DIV.() -> Unit = {}
+) {
+    addModifiers(modify(IconStyle.Icon, mod))
+    setStyle(Css.MaskUrl.of(file))
+    block()
+}
+
+object IconStyle {
+    val Icon = Class("icon")
+    val Stretch = Class("icon-stretch")
+    val Signal = Class("signal")
+    val Magic = Class("magic-icon")
+
+    val DefaultMod = modify(Aspect1, SmallIconHeight)
+    val DefaultSignal = modify(Aspect1, SmallIconHeight, FadeIn)
+}
+
+// language="CSS"
+val IconCss get() = with(IconStyle) { """
+$Icon {
+    display: inline-block;
+    background-color: currentColor;
+    aspect-ratio: 1 / 1;
+
+    mask-image: var(--mask-url);
+    -webkit-mask-image: var(--mask-url);
+
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+
+    mask-position: center;
+    -webkit-mask-position: center;
+    
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+}
+
+/* the animated variant replaces the still one unless the viewer prefers reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+    $Icon$Magic { mask-image: var(--mask-url-animated); -webkit-mask-image: var(--mask-url-animated); }
+}
+
+$Stretch {
+    mask-size: 100% 100%;   /* or any width/height ye please */
+    mask-repeat: no-repeat;
+}
+
+$Icon$Clickable {
+    /*  transition: background-color var(--magic-interval) var(--magic-easing); */
+}
+
+$Icon$Clickable:hover {
+    background-color: rgb(var(--accent));
+}
+
+$Icon$Danger {
+    background-color: rgb(var(--danger));
+}
+""" }

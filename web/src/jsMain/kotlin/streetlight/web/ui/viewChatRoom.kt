@@ -4,6 +4,9 @@ import koala.modifier.*
 import koala.dom.*
 import kotlinx.css.pct
 import streetlight.web.model.ChatRoom
+import koala.dom.component.*
+import koala.external.*
+import koala.dom.layout.*
 
 fun RouteScope.viewChatRoom() {
     val model = app.get<ChatRoom>()

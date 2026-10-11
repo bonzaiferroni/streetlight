@@ -4,6 +4,9 @@ import koala.LottieFile
 import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.GalaxyEdit
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.viewGalaxyFoundry() {
     val model = app.getGalaxyEditor(GalaxyEdit(marks = emptyList()), contentScope)

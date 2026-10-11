@@ -5,7 +5,7 @@ package streetlight.web.model
 import kampfire.model.GeoRect
 import kampfire.model.storeOf
 import kampfire.model.toDataOr
-import koala.utils.launch
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce

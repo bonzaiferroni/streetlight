@@ -7,7 +7,7 @@ import kampfire.api.toMarkdown
 import kampfire.api.toSlug
 import kampfire.model.Url
 import kampfire.model.toDataOr
-import koala.dom.MessageStore
+import koala.model.MessageStore
 import koala.model.GeoCamera
 import koala.model.Portal
 import kampfire.model.tapOf

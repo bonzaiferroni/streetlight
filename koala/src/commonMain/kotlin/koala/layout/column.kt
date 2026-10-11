@@ -1,0 +1,30 @@
+package koala.layout
+
+import kotlinx.html.*
+import koala.modifier.*
+import koala.page.Id
+
+/** A flex [column] with [id]. */
+fun FlowContent.column(
+    id: Id?,
+    mod: Modifier? = null,
+    content: DIV.() -> Unit = { },
+) {
+    column(mod) {
+        id?.let {
+            this.id = id.identifier
+        }
+        content()
+    }
+}
+
+/** A flex column. */
+fun FlowContent.column(
+    mod: Modifier? = null,
+    content: DIV.() -> Unit = { },
+) {
+    div {
+        addModifiers(modify(FlexColumn, mod))
+        content()
+    }
+}

@@ -13,7 +13,7 @@ import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniClient
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionClient
-import koala.utils.launch
+import koala.utility.launch
 import streetlight.web.interop.appGlobalFunctions
 import streetlight.web.pages.AppOverlay
 import web.dom.document

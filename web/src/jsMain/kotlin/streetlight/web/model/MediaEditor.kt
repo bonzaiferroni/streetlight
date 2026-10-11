@@ -4,8 +4,8 @@ import kampfire.api.Slug
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
-import koala.dom.MessageStore
-import koala.model.dedup
+import koala.model.MessageStore
+import koala.utility.dedup
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope

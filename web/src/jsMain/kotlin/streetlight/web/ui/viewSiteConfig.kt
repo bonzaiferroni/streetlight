@@ -2,9 +2,12 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.*
-import koala.html.Id
+import koala.page.Id
 import streetlight.web.model.SiteConfig
 import streetlight.web.model.ThemeEditor
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.viewSiteConfig() {
     val model = app.get<SiteConfig>()

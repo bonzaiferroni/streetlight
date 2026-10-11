@@ -3,7 +3,7 @@ package koala.core
 import koala.dom.View
 import koala.dom.ViewScope
 import koala.dom.getPath
-import koala.utils.LaunchTelemetry
+import koala.utility.LaunchTelemetry
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext

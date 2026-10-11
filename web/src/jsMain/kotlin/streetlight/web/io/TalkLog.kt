@@ -5,7 +5,7 @@ import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.utils.launch
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow

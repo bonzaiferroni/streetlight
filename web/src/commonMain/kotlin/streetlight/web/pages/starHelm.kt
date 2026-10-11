@@ -2,12 +2,12 @@ package streetlight.web.pages
 
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.Id
+import koala.page.Id
 import koala.interop.InlineJs
-import koala.html.button
-import koala.html.card
-import koala.html.popover
-import koala.html.setId
+import koala.component.button
+import koala.layout.card
+import koala.layout.popover
+import koala.page.setId
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 

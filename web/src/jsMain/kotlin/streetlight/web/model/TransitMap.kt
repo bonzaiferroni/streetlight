@@ -10,7 +10,7 @@ import koala.model.MarkerId
 import koala.external.VehiclePosition
 import koala.model.GeoMap
 import koala.model.TravelMarker
-import koala.model.dedup
+import koala.utility.dedup
 import kampfire.model.storeOf
 import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope

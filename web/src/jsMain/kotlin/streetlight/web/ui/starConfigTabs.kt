@@ -5,15 +5,18 @@ import kampfire.api.obfuscate
 import kampfire.model.toUrl
 import koala.modifier.*
 import koala.dom.*
-import koala.html.Id
-import koala.html.listItem
-import koala.html.olist
+import koala.page.Id
+import koala.layout.listItem
+import koala.layout.olist
 import kotlinx.html.InputType
 import kotlinx.html.ol
 import streetlight.model.data.EmailStatus
 import streetlight.model.data.viableEmail
 import streetlight.web.model.AccountEditor
 import streetlight.web.model.AppConnector
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.starConfigTabs(model: AccountEditor) = tabs(Id("star-config-tabs")) {
     tab("account") {

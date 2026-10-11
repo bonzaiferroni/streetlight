@@ -1,6 +1,6 @@
 package koala.modifier
 
-import koala.html.Queryable
+import koala.page.Queryable
 import kotlin.jvm.JvmInline
 
 /** A CSS class, applied to an element and used as a selector. */

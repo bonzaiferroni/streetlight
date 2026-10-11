@@ -8,6 +8,10 @@ import koala.dom.*
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import streetlight.model.data.NewMessage
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
+import koala.model.*
 
 /** The recipient of the message being written; the dialog is open while it is set. */
 val recipientState = storeOf<Username?>(null)

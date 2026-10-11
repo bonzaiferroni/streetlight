@@ -2,7 +2,7 @@ package streetlight.web.shells
 
 import koala.SiteImage
 import koala.modifier.*
-import koala.html.cardOf
+import koala.layout.cardOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation

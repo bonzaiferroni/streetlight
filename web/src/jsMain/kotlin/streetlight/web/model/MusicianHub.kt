@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.toDataOr
-import koala.model.dedup
+import koala.utility.dedup
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

@@ -12,12 +12,12 @@ import kampfire.model.tapOf
 import koala.modifier.isModified
 import koala.modifier.modify
 import koala.modifier.unmodify
-import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import web.dom.document
 import web.html.HTMLElement
+import koala.utility.launch
 
 /**
  * Applies [modifier] while [isModifiedFlow] is `true`, starting from [initialValue], optionally in a view

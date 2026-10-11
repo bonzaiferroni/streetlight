@@ -6,8 +6,8 @@ import koala.model.ChartData
 import koala.model.ChartPoint
 import koala.model.markSeriesOf
 import koala.model.pointSeriesOf
-import koala.utils.launch
-import koala.model.dedup
+import koala.utility.launch
+import koala.utility.dedup
 import kampfire.model.mutableTapOf
 import kampfire.model.reactIn
 import kampfire.model.storeOf

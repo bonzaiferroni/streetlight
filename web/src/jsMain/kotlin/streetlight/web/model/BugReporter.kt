@@ -5,8 +5,8 @@ import kampfire.model.Messenger
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.toDataOr
-import koala.utils.DropWhileBusy
-import koala.utils.launch
+import koala.utility.DropWhileBusy
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.BugEdit
 import streetlight.model.data.Platform

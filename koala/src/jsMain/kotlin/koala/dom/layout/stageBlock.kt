@@ -1,0 +1,90 @@
+package koala.dom.layout
+
+import kampfire.model.Labeled
+import koala.SvgFile
+import koala.modifier.*
+import koala.component.heading3
+import kampfire.model.MutableTap
+import kotlinx.coroutines.launch
+import web.html.HTMLDivElement
+import web.html.HTMLElement
+import kotlin.enums.enumEntries
+import koala.component.heading
+import koala.dom.component.icon
+import koala.dom.ViewScope
+import koala.dom.onClick
+
+/**
+ * Steps through the entries of the enum [State]: a numbered row of stage headings over the content [block]
+ * builds for the current stage.
+ *
+ * A heading of an earlier stage returns to it. [isHeadingStage] leaves a stage out of the headings.
+ */
+inline fun <reified State> ViewScope.stageBlock(
+    stage: MutableTap<State>,
+    mod: Modifier? = null,
+    crossinline isHeadingStage: (State) -> Boolean = { true },
+    noinline block: ViewScope.(State) -> Unit
+): HTMLDivElement where State: Enum<State>, State: Labeled {
+    val entries = enumEntries<State>()
+    var currentValue: State? = null
+    val elements = mutableMapOf<State, HTMLElement>()
+
+    val selectElement: (State) -> Unit = { value ->
+        if (value != currentValue) {
+            currentValue = value
+            val currentOrdinal = currentValue.ordinal
+            if (elements.containsKey(value)) {
+                elements.forEach { (value, element) ->
+                    when  {
+                        value.ordinal < currentOrdinal -> {
+                            element.modify(Clickable)
+                            element.unmodify(Selected)
+                            element.unmodify(InkDimFg)
+                        }
+                        value.ordinal == currentOrdinal -> {
+                            element.unmodify(Clickable)
+                            element.modify(Selected)
+                            element.unmodify(InkDimFg)
+                        }
+                        value.ordinal > currentOrdinal -> {
+                            element.unmodify(Clickable)
+                            element.unmodify(Selected)
+                            element.modify(InkDimFg)
+                        }
+                    }
+                }
+            }
+            stage.set(value)
+        }
+    }
+
+    val element = column {
+        addModifiers(mod, Gap(4))
+        row(modify(JustifyContentCenter, AlignItemsCenter)) {
+            var step = 1
+            entries.forEach { value ->
+                if (!isHeadingStage(value)) return@forEach
+
+                elements[value] = box(modify(BorderRadius2, Padding(1))) {
+                    heading3("${step++}. ${value.label}")
+                }.onClick {
+                    if (value.ordinal >= (currentValue?.ordinal ?: 0)) return@onClick
+                    selectElement(value)
+                }
+                if (value.ordinal < entries.size - 1) {
+                    icon(SvgFile.ArrowRight.large, modify(SmallIconHeight, InkDimFg))
+                }
+            }
+        }
+        flowBlock(stage, modify(Magic, Blur), block = block)
+    }
+
+    contentScope.launch {
+        stage.flow.collect {
+            selectElement(it)
+        }
+    }
+
+    return element
+}

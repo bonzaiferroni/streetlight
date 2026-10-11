@@ -3,6 +3,8 @@ package streetlight.web.ui
 import koala.modifier.*
 import koala.dom.*
 import streetlight.web.model.EventScout
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.eventSearchForm(model: EventScout) = formSectionLegacy("Add an event") {
     formCard {

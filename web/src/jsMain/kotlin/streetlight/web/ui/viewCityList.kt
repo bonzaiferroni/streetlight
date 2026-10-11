@@ -6,6 +6,7 @@ import streetlight.model.ui.CityListRoute
 import streetlight.web.shells.CityListShell
 import streetlight.web.shells.cityListShell
 import web.dom.document
+import koala.dom.page.*
 
 fun ViewScope.viewCityList(content: CityListContent) {
     shellBox {

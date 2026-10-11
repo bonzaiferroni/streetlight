@@ -5,11 +5,14 @@ import kampfire.api.toSlug
 import kampfire.model.CoreProblem
 import kampfire.model.toDataOr
 import koala.dom.*
-import koala.html.div
+import koala.layout.div
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import streetlight.model.data.LocationConfig
 import streetlight.model.data.SubdomainConfig
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.locationSettingsForm(configState: MutableTap<LocationConfig>) = formColumn {
     formRow {

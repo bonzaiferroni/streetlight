@@ -4,12 +4,12 @@ import kampfire.api.toUsername
 import kampfire.model.toDataOr
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.model.dedup
+import koala.utility.dedup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import streetlight.web.io.ApiClient
 import streetlight.web.model.Toaster
-import koala.utils.launch
+import koala.utility.launch
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 

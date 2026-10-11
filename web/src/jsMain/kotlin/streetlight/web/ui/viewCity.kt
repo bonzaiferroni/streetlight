@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.toDataOrNull
 import kampfire.model.reactIn
 import koala.dom.*
-import koala.html.withLabel
+import koala.model.withLabel
 import streetlight.model.data.CityContent
 import streetlight.model.ui.CityConfigRoute
 import streetlight.model.ui.CityRoute
@@ -11,6 +11,7 @@ import streetlight.model.ui.EventsMapRoute
 import streetlight.web.model.RouteDockState
 import streetlight.web.shells.CityShell
 import streetlight.web.shells.cityShell
+import koala.dom.page.*
 
 fun ViewScope.viewCity(content: CityContent) {
     shellBox {

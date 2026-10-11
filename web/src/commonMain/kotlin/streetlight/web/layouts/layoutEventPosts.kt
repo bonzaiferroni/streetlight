@@ -2,11 +2,12 @@ package streetlight.web.layouts
 
 import kabinet.utils.toFutureFormat
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
 import streetlight.model.utils.toLocalDateTime
 import streetlight.web.shells.SectionHeadingMod
+import koala.component.*
+import koala.layout.*
 
 fun FlowContent.layoutEventPosts(
     headingText: String?,

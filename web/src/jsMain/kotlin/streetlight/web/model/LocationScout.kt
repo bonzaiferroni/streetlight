@@ -2,8 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
-import koala.dom.MessageStore
-import koala.utils.launch
+import koala.model.MessageStore
+import koala.utility.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.reactIn

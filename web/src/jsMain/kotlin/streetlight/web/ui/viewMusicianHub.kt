@@ -2,11 +2,11 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.button
-import koala.dom.column
-import koala.dom.lazyTabs
-import koala.dom.row
-import koala.html.Id
+import koala.dom.component.button
+import koala.dom.layout.column
+import koala.dom.layout.lazyTabs
+import koala.dom.layout.row
+import koala.page.Id
 import streetlight.web.model.MusicianHub
 
 fun ViewScope.viewMusicianHub(

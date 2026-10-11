@@ -3,10 +3,10 @@ package streetlight.web.model
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
-import koala.dom.MessageStore
+import koala.model.MessageStore
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.utils.launch
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.StarEdit

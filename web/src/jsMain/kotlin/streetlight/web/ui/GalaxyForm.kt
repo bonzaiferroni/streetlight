@@ -8,10 +8,12 @@ import kampfire.model.storeOf
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.bulletsOf
+import koala.component.bulletsOf
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.GalaxyProperty
 import streetlight.web.model.GalaxyEditor
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.galaxyNameFormRow(model: GalaxyEditor) = formRow {
     formSection("Name") {

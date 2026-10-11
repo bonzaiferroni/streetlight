@@ -1,0 +1,32 @@
+package koala.component
+
+import koala.modifier.Class
+import koala.layout.box
+
+object FilePickerKey {
+    val Class = Class("file-picker")
+    val DropZone = Class("file-picker-drop-zone")
+    val DragOver = Class("dragover")
+}
+
+// language="CSS"
+val FilePickerCss get() = with(FilePickerKey) { """
+$DropZone {
+    border: 2px dashed #888;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 200ms ease-in-out;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+
+$DropZone$DragOver {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
+}
+""" }

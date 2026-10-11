@@ -6,9 +6,9 @@ import kampfire.api.toSlug
 import kampfire.api.toUsername
 import kampfire.model.GeoPoint
 import koala.Lottie
-import koala.html.Id
-import koala.html.Queryable
-import koala.utils.jsonConfig
+import koala.page.Id
+import koala.page.Queryable
+import koala.utility.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlin.uuid.Uuid
 

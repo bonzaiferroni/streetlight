@@ -2,8 +2,9 @@ package streetlight.web.ui
 
 import koala.SiteImage
 import koala.dom.*
-import koala.html.Id
+import koala.page.Id
 import streetlight.web.layouts.feedRow
+import koala.dom.layout.*
 
 fun ViewScope.viewGalaxyList() {
     mainBody("viewGalaxyList.kt") {

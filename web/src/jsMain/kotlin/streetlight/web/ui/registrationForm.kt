@@ -4,13 +4,15 @@ import kampfire.api.Username
 import kampfire.model.AccountType
 import koala.modifier.*
 import koala.dom.*
-import koala.html.bulletsOf
-import koala.html.filigree
-import koala.html.heading3
-import koala.html.span
+import koala.component.bulletsOf
+import koala.component.filigree
+import koala.component.heading3
+import koala.component.span
 import kampfire.model.MutableTap
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.guestRegistrationForm(model: UserCreator) {
     formColumn {

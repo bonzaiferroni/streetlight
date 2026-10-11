@@ -2,11 +2,11 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.button
-import koala.dom.grid
+import koala.dom.component.button
+import koala.dom.layout.grid
 import koala.dom.requireClosest
-import koala.dom.textBlock
-import koala.html.progressBar
+import koala.dom.component.textBlock
+import koala.component.progressBar
 import kotlinx.css.GridTemplateColumns
 import streetlight.web.interop.applyCurator
 import streetlight.web.interop.updateMark

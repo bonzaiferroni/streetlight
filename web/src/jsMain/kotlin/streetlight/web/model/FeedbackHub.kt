@@ -3,12 +3,12 @@ package streetlight.web.model
 import kampfire.api.Markdown
 import kampfire.model.Messenger
 import kampfire.model.toDataOr
-import koala.utils.DropWhileBusy
-import koala.utils.launch
+import koala.utility.DropWhileBusy
+import koala.utility.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.dom.MarkdownEditor
+import koala.dom.markdown.MarkdownEditor
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit

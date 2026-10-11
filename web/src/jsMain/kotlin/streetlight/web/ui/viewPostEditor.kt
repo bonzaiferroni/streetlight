@@ -3,8 +3,8 @@ package streetlight.web.ui
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.html.AppRoute
-import koala.model.dedupNotNull
+import koala.model.AppRoute
+import koala.utility.dedupNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Media
@@ -12,6 +12,8 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.viewMediaConfig(media: Media, model: MediaEditor) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }

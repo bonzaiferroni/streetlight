@@ -1,7 +1,7 @@
 package streetlight.web.pages
 
 import koala.PageResource
-import koala.html.appHead
+import koala.page.appHead
 import kotlinx.html.HTML
 import streetlight.model.ui.Screen
 import streetlight.web.shells.aboutShell

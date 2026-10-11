@@ -2,13 +2,15 @@ package streetlight.web.ui
 
 import koala.modifier.Accent
 import koala.dom.*
-import koala.dom.MenuAction
+import koala.model.MenuAction
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()

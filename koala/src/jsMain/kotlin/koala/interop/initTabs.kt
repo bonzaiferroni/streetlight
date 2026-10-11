@@ -7,7 +7,7 @@ import koala.dom.querySelectorAll
 import koala.modifier.requireAttribute
 import koala.modifier.setAttribute
 import koala.modifier.unmodify
-import koala.html.TabsStyle
+import koala.layout.TabsStyle
 import web.animations.requestAnimationFrame
 import web.cssom.TRANSITION_END
 import web.cssom.TransitionEvent
@@ -85,7 +85,7 @@ fun initTabs(container: HTMLElement) {
     ))
 
     storageKey?.let {
-        localStorage.getItem(it)?.toIntOrNull()?.let { stored ->
+        localStorage.getItem(it)?.toIntOrNull()?.takeIf { stored -> stored in panels.indices }?.let { stored ->
             container.setAttribute(TabsStyle.Index.to(stored))
         }
     }

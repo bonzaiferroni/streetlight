@@ -9,8 +9,8 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.LottieFile
 import koala.SvgFile
-import koala.html.heading3
-import koala.html.heading5
+import koala.component.heading3
+import koala.component.heading5
 import kotlinx.css.dvh
 import kotlinx.css.pct
 import streetlight.model.data.InboxContent
@@ -19,6 +19,10 @@ import streetlight.model.data.StarBadge
 import streetlight.model.ui.InboxRoute
 import streetlight.web.io.OmniClient
 import streetlight.web.model.Inbox
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
+import koala.model.*
 
 fun ViewScope.viewInbox(star: Star, content: InboxContent) {
     val omni = app.get<OmniClient>()

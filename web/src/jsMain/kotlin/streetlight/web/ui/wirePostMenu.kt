@@ -6,6 +6,8 @@ import koala.modifier.*
 import koala.dom.*
 import koala.modifier.Attribute
 import streetlight.model.data.PostId
+import koala.dom.component.*
+import koala.dom.layout.*
 
 /** The menu of a post, for reporting or removing it. */
 fun ViewScope.wirePostMenu() {

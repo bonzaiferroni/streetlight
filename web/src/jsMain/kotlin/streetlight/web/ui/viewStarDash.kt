@@ -1,11 +1,11 @@
 package streetlight.web.ui
 
-import koala.html.LabeledRoute
+import koala.model.LabeledRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.model.RouteDockState
 import koala.modifier.*
 import koala.dom.*
-import koala.html.btn
+import koala.component.btn
 import koala.model.NullContent
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
@@ -17,6 +17,8 @@ import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.web.model.SessionClient
 import streetlight.model.ui.toRoute
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.viewStarDash(star: Star) {
     mainBody("viewStarDash.kt") {

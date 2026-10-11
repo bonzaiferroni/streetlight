@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
 import koala.dom.ViewScope
-import koala.dom.button
-import koala.dom.flowBlock
-import koala.dom.textBlock
+import koala.dom.component.button
+import koala.dom.layout.flowBlock
+import koala.dom.component.textBlock
 import kampfire.model.setTrue
 import koala.modifier.*
 import streetlight.model.data.Star

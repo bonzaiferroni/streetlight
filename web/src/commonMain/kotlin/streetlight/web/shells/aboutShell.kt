@@ -2,13 +2,13 @@ package streetlight.web.shells
 
 import kampfire.api.toMarkdown
 import koala.modifier.*
-import koala.html.card
-import koala.html.filigree
-import koala.html.heading1
-import koala.html.markdown
-import koala.html.section
-import koala.html.setId
-import koala.html.tabs
+import koala.layout.card
+import koala.component.filigree
+import koala.component.heading1
+import koala.markdown.markdown
+import koala.layout.section
+import koala.page.setId
+import koala.layout.tabs
 import kotlinx.html.FlowContent
 import streetlight.web.ui.mainBody
 

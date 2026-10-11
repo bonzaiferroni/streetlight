@@ -5,7 +5,7 @@ package streetlight.web.model
 import kampfire.model.reactIn
 import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
-import koala.utils.launch
+import koala.utility.launch
 import koala.model.StaticMarker
 import koala.model.Portal
 import kampfire.model.tapOf

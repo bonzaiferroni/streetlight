@@ -2,7 +2,6 @@ package streetlight.web.shells
 
 import koala.SvgFile
 import koala.modifier.*
-import koala.html.*
 import koala.model.DocNode
 import koala.model.DocTable
 import kotlinx.html.FlowContent
@@ -10,6 +9,10 @@ import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
 import streetlight.web.ui.pageHeader
 import streetlight.web.ui.mainBody
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
+import koala.page.*
 
 /** A site doc beside the table of all site docs. */
 fun FlowContent.siteDocShell(content: DocContent) {

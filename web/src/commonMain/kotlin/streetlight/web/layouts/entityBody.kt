@@ -1,10 +1,11 @@
 package streetlight.web.layouts
 
 import kampfire.api.Markdown
-import koala.html.*
 import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
+import koala.layout.*
+import koala.markdown.*
 
 /**
  * The [description] and [links] of an entity, the links beside the description when its container has room and

@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.dom.*
 import streetlight.web.model.ProfileEditor
+import koala.dom.component.*
 
 fun ViewScope.starProfileForm(model: ProfileEditor) = formColumn {
     formRow {

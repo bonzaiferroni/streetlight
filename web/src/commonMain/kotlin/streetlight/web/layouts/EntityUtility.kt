@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import koala.SvgPack
 import koala.SvgFile
-import koala.html.AppRoute
+import koala.model.AppRoute
 import kampfire.model.Url
 import koala.model.Doc
 import streetlight.model.data.EventGroup

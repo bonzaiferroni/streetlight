@@ -1,12 +1,12 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.dom.MenuAction
-import koala.model.dedupNotNull
+import koala.model.MenuAction
+import koala.utility.dedupNotNull
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Star
-import koala.html.AppRoute
+import koala.model.AppRoute
 import koala.model.FetcherContent
 import koala.model.toContentOrNull
 import koala.modifier.AlignItemsEnd
@@ -15,6 +15,9 @@ import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.layouts.route
 import streetlight.web.model.LocationScoutStage
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)

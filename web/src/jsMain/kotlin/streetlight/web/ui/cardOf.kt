@@ -4,6 +4,8 @@ import koala.SiteImage
 import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.Location
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.cardOf(
     location: Location,

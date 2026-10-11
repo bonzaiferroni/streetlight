@@ -2,9 +2,9 @@ package streetlight.web.ui
 
 import koala.SvgFile
 import koala.dom.*
-import koala.html.AppRoute
-import koala.html.navigation
-import koala.html.textBlock
+import koala.model.AppRoute
+import koala.component.navigation
+import koala.component.textBlock
 import koala.modifier.*
 import koala.modifier.Height
 import kampfire.model.tapOf
@@ -18,6 +18,8 @@ import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.dockRoute
 import streetlight.web.pages.AppOverlay
+import koala.dom.component.*
+import koala.dom.layout.*
 
 fun ViewScope.wireRouteDock() {
     mountChildView(AppOverlay.RouteDockId) {

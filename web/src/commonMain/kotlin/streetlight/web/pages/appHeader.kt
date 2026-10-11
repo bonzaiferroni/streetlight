@@ -1,11 +1,10 @@
 package streetlight.web.pages
 
-import koala.html.heading2
+import koala.component.heading2
 import koala.modifier.*
-import koala.html.hr
-import koala.html.navigation
-import koala.html.textLogo
-import koala.html.row
+import koala.component.hr
+import koala.component.navigation
+import koala.layout.row
 import kotlinx.css.pct
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

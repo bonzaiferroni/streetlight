@@ -1,9 +1,10 @@
 package streetlight.web.layouts
 
 import koala.modifier.*
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Entity
+import koala.component.*
+import koala.layout.*
 
 fun FlowContent.largePostCard(
     entity: Entity,

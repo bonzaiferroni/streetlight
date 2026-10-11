@@ -1,0 +1,28 @@
+package koala.dom.layout
+
+import koala.modifier.*
+import koala.page.Id
+import kotlinx.html.DIV
+import kotlinx.html.js.div
+import kotlinx.html.id
+import koala.dom.AppendScope
+import koala.dom.asWeb
+
+/** A flex [row] with [id]. */
+inline fun AppendScope.row(
+    id: Id,
+    mod: Modifier? = null,
+    crossinline content: DIV.() -> Unit,
+) = row(mod) {
+    this.id = id.identifier
+    content()
+}
+
+/** A flex row. */
+inline fun AppendScope.row(
+    mod: Modifier? = null,
+    crossinline content: DIV.() -> Unit,
+) = div {
+    addModifiers(FlexRow, mod)
+    content()
+}.asWeb()

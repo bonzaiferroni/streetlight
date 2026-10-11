@@ -3,7 +3,7 @@ package koala.dom
 import js.array.asList
 import kampfire.utils.takeEllipsis
 import koala.modifier.Property
-import koala.html.Queryable
+import koala.page.Queryable
 import web.cssom.CSSStyleDeclaration
 import web.dom.Document
 import web.dom.Element

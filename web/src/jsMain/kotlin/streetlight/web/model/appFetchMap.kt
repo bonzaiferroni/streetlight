@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Outcome
-import koala.html.AppRoute
+import koala.model.AppRoute
 import koala.model.RouteContent
 import streetlight.model.ui.Screen
 

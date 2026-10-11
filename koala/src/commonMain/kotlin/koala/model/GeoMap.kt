@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import koala.utility.dedup
 
 /** The map's layers and focused marker, shared by every view that shows the map. */
 class GeoMap(

@@ -3,8 +3,8 @@ package streetlight.web.ui
 import koala.Svg
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.icon
-import koala.dom.row
+import koala.dom.component.icon
+import koala.dom.layout.row
 import kampfire.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.InputType

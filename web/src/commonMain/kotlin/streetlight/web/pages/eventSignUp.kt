@@ -3,11 +3,14 @@ package streetlight.web.pages
 import koala.FileSet
 import koala.Asset
 import koala.PageResource
-import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 import koala.modifier.*
 import kotlinx.css.pct
+import koala.component.*
+import koala.interop.*
+import koala.layout.*
+import koala.page.*
 
 /** A standalone sign-up page for [event]. */
 fun HTML.eventSignUp(event: Event, resource: PageResource) {

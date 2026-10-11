@@ -4,6 +4,7 @@ import koala.modifier.*
 import koala.dom.*
 import kotlinx.css.pct
 import streetlight.web.model.EventEditor
+import koala.dom.component.*
 
 fun ViewScope.eventLinksForm(model: EventEditor) {
     formCard("Event Links") {

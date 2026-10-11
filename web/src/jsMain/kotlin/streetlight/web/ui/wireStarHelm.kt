@@ -4,13 +4,13 @@ import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.AppRoute
-import koala.html.button
-import koala.html.heading3
-import koala.html.icon
-import koala.html.image
+import koala.model.AppRoute
+import koala.component.button
+import koala.component.heading3
+import koala.component.icon
+import koala.component.image
 import kampfire.model.setTrue
-import koala.html.closePopoverOnClick
+import koala.layout.closePopoverOnClick
 import koala.interop.toggleRootModifierWithTransition
 import kotlinx.html.onClick
 import streetlight.model.data.Star
@@ -24,6 +24,9 @@ import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
 import web.dom.document
 import web.html.HTMLElement
+import koala.dom.component.*
+import koala.interop.*
+import koala.dom.layout.*
 
 /** Fills both star helms: the menu of the signed-in star, or the sign-in panel. */
 fun ViewScope.wireStarHelm() {

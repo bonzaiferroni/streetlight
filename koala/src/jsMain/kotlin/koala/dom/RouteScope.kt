@@ -1,13 +1,14 @@
 package koala.dom
 
-import koala.html.AppRoute
-import koala.html.Id
+import koala.model.AppRoute
+import koala.page.Id
 import koala.model.FetcherContent
 import koala.model.PortalState
 import koala.model.RouteContent
 import koala.model.RouteInflator
 import koala.model.toContentOrNull
 import kotlinx.browser.window
+import koala.dom.page.readIsland
 
 /** The receiver of a route's view, holding the route's [state] and the [inflator] that fetches its content. */
 class RouteScope(

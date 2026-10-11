@@ -1,14 +1,14 @@
 package streetlight.web.shells
 
 import koala.LottieFile
-import koala.html.heading5
-import koala.html.textBlock
-import koala.html.row
+import koala.component.heading5
+import koala.component.textBlock
+import koala.layout.row
 import kotlinx.html.*
 import koala.modifier.*
-import koala.html.column
-import koala.html.heading1
-import koala.html.lottie
+import koala.layout.column
+import koala.component.heading1
+import koala.component.lottie
 import kotlinx.css.pct
 import streetlight.web.ui.mainBody
 

@@ -1,12 +1,13 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.dom.MenuAction
+import koala.model.MenuAction
 import streetlight.model.data.City
 import streetlight.model.data.toEdit
 import streetlight.model.ui.CityConfigRoute
 import streetlight.model.ui.CityRoute
 import streetlight.web.model.CityEditor
+import koala.model.*
 
 fun ViewScope.viewCityConfig(city: City) {
     val model = CityEditor(city.toEdit(), contentScope, api, portal)

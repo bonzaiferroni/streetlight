@@ -1,7 +1,7 @@
 package streetlight.web.shells
 
 import koala.modifier.*
-import koala.html.btn
+import koala.component.btn
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.ui.GalaxyRoute

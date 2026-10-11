@@ -4,9 +4,9 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.toDataOr
 import koala.dom.ViewScope
-import koala.dom.dialog
-import koala.dom.flowBlock
-import koala.dom.rawDialogContent
+import koala.dom.layout.dialog
+import koala.dom.layout.flowBlock
+import koala.dom.layout.rawDialogContent
 import koala.modifier.requireAttribute
 import kotlinx.html.js.div
 import streetlight.model.data.Entity

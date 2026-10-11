@@ -11,7 +11,7 @@ import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOrNull
-import koala.utils.launch
+import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch

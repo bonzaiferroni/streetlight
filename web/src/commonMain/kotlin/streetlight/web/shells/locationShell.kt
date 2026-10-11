@@ -2,12 +2,12 @@ package streetlight.web.shells
 
 import koala.modifier.Attribute
 import koala.modifier.setAttribute
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationRoute
 import streetlight.web.layouts.renderLayout
 import streetlight.web.ui.mainBody
+import koala.page.*
 
 fun FlowContent.locationShell(
     content: LocationContent,

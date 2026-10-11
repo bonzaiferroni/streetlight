@@ -7,6 +7,7 @@ import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationRoute
 import streetlight.web.shells.LocationShell
 import streetlight.web.shells.locationShell
+import koala.dom.page.*
 
 fun RouteScope.viewLocation() {
     routeBlock<LocationRoute, LocationContent>(LocationShell.islandId) { content ->

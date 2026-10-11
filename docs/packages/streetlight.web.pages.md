@@ -8,7 +8,8 @@ Whole HTML documents the server responds with: the head, the app body around a r
 
 | Package | Provides |
 |---|---|
-| `koala.html` | `appHead`, and the components the body is built from |
+| `koala.page` | `appHead` |
+| `koala.component`, `koala.layout` | The components and layouts the body is built from |
 | `koala.modifier` | Modifiers and classes |
 | `koala.interop` | `HeadScriptConfig` and `RootSwitch` |
 | `kotlinx.html` | The HTML DSL |

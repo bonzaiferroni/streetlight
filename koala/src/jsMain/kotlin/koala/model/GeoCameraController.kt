@@ -1,7 +1,7 @@
 package koala.model
 
-import koala.utils.launch
-import koala.dom.onView
+import koala.utility.launch
+import koala.external.onView
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kampfire.model.GeoRect

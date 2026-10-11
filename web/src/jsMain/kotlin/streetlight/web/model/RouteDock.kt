@@ -4,9 +4,9 @@ import kampfire.model.reactIn
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import kampfire.model.tapOf
-import koala.html.AppRoute
-import koala.html.LabeledRoute
-import koala.html.withLabel
+import koala.model.AppRoute
+import koala.model.LabeledRoute
+import koala.model.withLabel
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.ui.CityListRoute

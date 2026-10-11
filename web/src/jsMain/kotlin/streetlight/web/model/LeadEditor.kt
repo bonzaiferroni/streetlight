@@ -4,7 +4,7 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.toDataOr
 import kampfire.model.toUrl
-import koala.dom.MessageStore
+import koala.model.MessageStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy

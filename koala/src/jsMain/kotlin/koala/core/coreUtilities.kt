@@ -5,8 +5,8 @@ import koala.modifier.Clickable
 import koala.dom.elementId
 import koala.modifier.modify
 import koala.modifier.Attribute
-import koala.html.Id
-import koala.html.Queryable
+import koala.page.Id
+import koala.page.Queryable
 import web.dom.Document
 import web.dom.Element
 import web.dom.NamedNodeMap

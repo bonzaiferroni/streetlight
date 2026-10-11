@@ -1,11 +1,12 @@
 package streetlight.web.shells
 
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.CityListContent
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.feedRow
 import streetlight.web.ui.mainBody
+import koala.layout.*
+import koala.page.*
 
 fun FlowContent.cityListShell(content: CityListContent) {
     mainBody("cityListShell.kt") {

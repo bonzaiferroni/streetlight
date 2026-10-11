@@ -1,6 +1,6 @@
 package koala.modifier
 
-import koala.html.ButtonStyle
+import koala.component.ButtonStyle
 
 // language="CSS"
 val ButtonCss get() = with(ButtonStyle) {"""

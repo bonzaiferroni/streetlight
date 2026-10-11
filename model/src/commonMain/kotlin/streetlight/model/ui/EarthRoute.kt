@@ -3,8 +3,8 @@ package streetlight.model.ui
 import kampfire.api.Slug
 import kampfire.api.toSlug
 import kampfire.model.GeoRect
-import koala.html.PathParse
-import koala.html.buildRelativePath
+import koala.model.PathParse
+import koala.model.buildRelativePath
 import streetlight.model.data.EventTag
 
 /** A route of the earth view, showing one of its layers. */

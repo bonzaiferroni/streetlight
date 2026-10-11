@@ -3,7 +3,7 @@
 package streetlight.web.ui
 
 import koala.modifier.*
-import koala.html.Id
+import koala.page.Id
 
 object EarthStyle {
     val Container = Id("earth")

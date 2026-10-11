@@ -6,16 +6,19 @@ import kampfire.api.toMarkdown
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.html.image
-import koala.html.markdown
-import koala.html.navigationIfNotNull
-import koala.html.spacer
+import koala.component.image
+import koala.markdown.markdown
+import koala.component.navigationIfNotNull
+import koala.layout.spacer
 import kotlinx.css.pct
 import streetlight.model.data.Comment
 import streetlight.model.ui.StarRoute
 import streetlight.web.io.TalkLog
 import web.html.HTMLElement
 import web.html.HTMLParagraphElement
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
 
 /**
  * A comment in a talk log, with its replies, and its reply and edit forms.

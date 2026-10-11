@@ -2,9 +2,9 @@ package streetlight.web.pages
 
 import koala.PageResource
 import koala.modifier.KoalaBody
-import koala.html.appHead
-import koala.html.box
-import koala.html.div
+import koala.page.appHead
+import koala.layout.box
+import koala.layout.div
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body

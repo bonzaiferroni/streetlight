@@ -6,9 +6,9 @@ import koala.modifier.MoonShadow
 import koala.modifier.OpacityHigh
 import koala.modifier.Size100P
 import koala.modifier.modify
-import koala.html.Id
-import koala.html.image
-import koala.html.setId
+import koala.page.Id
+import koala.component.image
+import koala.page.setId
 import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 
 /** The signed-in star's image, filled in by the client. */

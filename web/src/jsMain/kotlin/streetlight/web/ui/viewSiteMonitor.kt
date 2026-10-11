@@ -6,6 +6,9 @@ import koala.dom.*
 import koala.external.ECharts
 import streetlight.model.ui.SiteMonitorRoute
 import web.dom.document
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.page.*
 
 fun RouteScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(contentScope)

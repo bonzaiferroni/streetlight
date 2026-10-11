@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.dom.ViewScope
 import koala.external.maplibregl
 import koala.model.MarkerStyle
-import koala.model.jsObject
+import koala.utility.jsObject
 import kotlinx.coroutines.launch
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.VehicleType

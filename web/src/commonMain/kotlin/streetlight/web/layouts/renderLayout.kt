@@ -1,8 +1,7 @@
 package streetlight.web.layouts
 
 import koala.modifier.*
-import koala.html.*
-import koala.html.textBlock
+import koala.component.textBlock
 import kotlinx.css.pct
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
@@ -12,6 +11,10 @@ import streetlight.web.shells.MediaShell
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.LayoutStyle
 import streetlight.web.ui.headerOf
+import koala.component.*
+import koala.layout.*
+import koala.markdown.*
+import koala.page.*
 
 /** Renders the page of [content] by its design's layout, or the default layout of its kind. */
 fun FlowContent.renderLayout(content: DesignContent) {

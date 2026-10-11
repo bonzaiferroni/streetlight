@@ -9,6 +9,8 @@ import streetlight.model.utils.AddedText
 import streetlight.model.utils.CommonText
 import streetlight.model.utils.RemovedText
 import streetlight.model.utils.createTextDelta
+import koala.dom.component.*
+import koala.dom.layout.*
 
 /** A grid of [deltaRow]s. */
 fun AppendScope.deltaGrid(

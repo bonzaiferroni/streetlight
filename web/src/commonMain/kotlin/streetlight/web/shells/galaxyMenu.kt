@@ -1,7 +1,7 @@
 package streetlight.web.shells
 
-import koala.html.Id
-import koala.html.button
+import koala.page.Id
+import koala.component.button
 import koala.modifier.Zen
 import koala.modifier.setPopoverTarget
 import kotlinx.html.FlowContent

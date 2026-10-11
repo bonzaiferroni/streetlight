@@ -10,7 +10,8 @@ The server-rendered content of a route. A shell is declared in `commonMain` so t
 |---|---|
 | `streetlight.web.layouts` | Components that lay out content |
 | `streetlight.web.ui` | `mainBody` |
-| `koala.html` | Components and `dataIsland` |
+| `koala.component`, `koala.layout` | Components and layouts |
+| `koala.page` | `dataIsland` |
 | `streetlight.model` | Route content types |
 
 ## Shell Content

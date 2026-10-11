@@ -8,7 +8,7 @@ import kabinet.utils.toAgoFormat
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Image
-import koala.html.AppRoute
+import koala.model.AppRoute
 import koala.model.MarkerId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant

@@ -5,7 +5,7 @@ import streetlight.web.model.RouteDockState
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.routeBlock
-import koala.dom.shellBox
+import koala.dom.page.shellBox
 import streetlight.model.data.StarContent
 import streetlight.model.ui.StarRoute
 import streetlight.web.shells.StarShell

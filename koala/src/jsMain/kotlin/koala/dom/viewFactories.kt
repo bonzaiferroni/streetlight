@@ -1,9 +1,10 @@
 package koala.dom
 
-import koala.html.Id
+import koala.page.Id
 import kotlinx.coroutines.CoroutineScope
 import web.dom.document
 import web.html.HTMLElement
+import koala.dom.component.textBlock
 
 /** Replaces this element's children with a root view built by [block], in [parentScope]. */
 fun HTMLElement.mountRootView(

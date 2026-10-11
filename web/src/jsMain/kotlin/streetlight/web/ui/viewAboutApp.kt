@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.dom.ViewScope
-import koala.dom.shellBox
+import koala.dom.page.shellBox
 import streetlight.web.shells.aboutShell
 
 fun ViewScope.viewAboutApp() {

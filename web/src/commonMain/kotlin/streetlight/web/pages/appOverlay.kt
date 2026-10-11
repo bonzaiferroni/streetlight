@@ -4,10 +4,12 @@ package streetlight.web.pages
 
 import koala.modifier.*
 import koala.interop.KoalaFun.initRootModifier
-import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.web.ui.WorkSignalStyle
 import streetlight.web.ui.workSignal
+import koala.interop.*
+import koala.layout.*
+import koala.page.*
 
 /** The fixed layer over the page: the helm bar, the work signal, and the route dock. */
 fun FlowContent.appOverlay() {

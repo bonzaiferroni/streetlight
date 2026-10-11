@@ -3,7 +3,7 @@ package koala.model
 import kampfire.api.Markdown
 import kampfire.model.Url
 import koala.Image
-import koala.html.Id
+import koala.page.Id
 import kotlinx.serialization.Serializable
 import kotlin.String
 import kotlin.collections.List

@@ -1,0 +1,55 @@
+package koala.interop
+
+import koala.page.Id
+import web.dom.document
+import web.html.HTMLElement
+import koala.dom.ViewScope
+import koala.dom.elementId
+import koala.dom.getElementOrNullById
+import koala.dom.mountChildView
+import koala.dom.querySelector
+import koala.external.onView
+
+/**
+ * Mounts a child view built by [block] into the server-rendered element with [elementId], once it comes into
+ * view unless [wireOnView] is off.
+ */
+fun ViewScope.wireBlock(
+    elementId: Id,
+    ancestor: HTMLElement? = null,
+    wireOnView: Boolean = true,
+    block: ViewScope.() -> Unit
+): HTMLElement {
+    val element = (ancestor ?: document.body).querySelector(elementId) ?: document.getElementOrNullById(elementId)
+        ?: error("couldn't find ${elementId.identifier}")
+
+    wireBlock(elementId.identifier, element, wireOnView, block)
+
+    return element
+}
+
+/** Mounts a child view built by [block] into [element], once it comes into view unless [wireOnView] is off. */
+fun ViewScope.wireBlock(
+    name: String,
+    element: HTMLElement,
+    wireOnView: Boolean = true,
+    block: ViewScope.() -> Unit
+) {
+    fun wireElement() {
+        mountChildView(name, element, block)
+    }
+
+    if (wireOnView) {
+        var isRendered = false
+        element.style.removeProperty("display")
+
+        element.onView { isVisible ->
+            if (isVisible && !isRendered) {
+                isRendered = true
+                wireElement()
+            }
+        }
+    } else {
+        wireElement()
+    }
+}

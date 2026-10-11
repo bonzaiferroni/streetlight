@@ -2,13 +2,14 @@
 
 ## Introduction
 
-The browser-side presentation layer. View functions build the DOM through the `koala.dom` DSL and wire it to state exposed by the view models in `streetlight.web.model`.
+The browser-side presentation layer. View functions build the DOM through the `koala.dom` packages and wire it to state exposed by the view models in `streetlight.web.model`.
 
 ## Dependencies
 
 | Package | Provides |
 |---|---|
-| `koala.dom` | The DOM DSL and `ViewScope` |
+| `koala.dom` | `ViewScope` and the view runtime |
+| `koala.dom.component`, `koala.dom.layout` | Components and layouts built in the browser |
 | `koala.modifier` | Modifiers and classes |
 | `streetlight.web.model` | View models |
 | `streetlight.web.layouts` | Server-renderable components |

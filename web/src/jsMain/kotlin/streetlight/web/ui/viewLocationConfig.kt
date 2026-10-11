@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.toDataOrNull
 import koala.modifier.*
 import koala.dom.*
-import koala.html.Id
+import koala.page.Id
 import kampfire.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
@@ -13,6 +13,8 @@ import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.layouts.route
 import streetlight.web.model.DesignEditor
 import streetlight.web.shells.cardOf
+import koala.dom.layout.*
+import koala.model.*
 
 fun ViewScope.viewLocationConfig(
     content: LocationConfigContent,

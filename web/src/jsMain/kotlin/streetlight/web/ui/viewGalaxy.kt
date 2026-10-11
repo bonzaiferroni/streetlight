@@ -8,6 +8,7 @@ import streetlight.model.ui.toConfigRoute
 import streetlight.web.model.RouteDockState
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.galaxyShell
+import koala.dom.page.*
 
 fun ViewScope.viewGalaxy(content: GalaxyContent) {
     shellBox {

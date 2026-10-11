@@ -1,11 +1,11 @@
 package koala.model
 
-import koala.html.box
-import koala.html.column
-import koala.html.icon
-import koala.html.row
-import koala.html.span
-import koala.html.textBlock
+import koala.layout.box
+import koala.layout.column
+import koala.component.icon
+import koala.layout.row
+import koala.component.span
+import koala.component.textBlock
 import koala.modifier.AlignItemsCenter
 import koala.modifier.Bold
 import koala.modifier.ColorSchemeFg

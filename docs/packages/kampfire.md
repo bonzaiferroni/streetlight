@@ -33,4 +33,4 @@ A call that can fail returns `Outcome`. It is either `Ok` with data and an optio
 
 ## Interface Here, Implementation Elsewhere
 
-A type that describes a behavior the UI performs is declared here as an interface, and the implementation that binds to the DOM lives in `koala`. `Messenger` is declared here, and `MessageStore` implements it in `koala.dom`.
+A type that describes a behavior the UI performs is declared here as an interface, and the implementation that binds to the DOM lives in `koala`. `Messenger` is declared here, and `MessageStore` implements it in `koala.model`.

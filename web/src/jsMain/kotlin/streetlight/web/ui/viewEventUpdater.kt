@@ -1,11 +1,11 @@
 package streetlight.web.ui
 
 import koala.modifier.Accent
-import koala.dom.MenuAction
+import koala.model.MenuAction
 import koala.dom.RouteScope
 import koala.dom.ViewScope
-import koala.dom.column
-import koala.dom.lazyTabs
+import koala.dom.layout.column
+import koala.dom.layout.lazyTabs
 import koala.dom.routeBlock
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventUpdaterContent

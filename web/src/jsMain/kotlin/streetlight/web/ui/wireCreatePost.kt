@@ -2,12 +2,14 @@ package streetlight.web.ui
 
 import kampfire.api.Slug
 import koala.dom.*
-import koala.html.LabeledRoute
+import koala.model.LabeledRoute
 import koala.modifier.Attribute
 import koala.modifier.getAttribute
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.model.ui.MediaForgeRoute
+import koala.dom.component.*
+import koala.dom.layout.*
 
 /** The create post menu, posting to the galaxy of the button that opened it. */
 fun ViewScope.wireCreatePost() {

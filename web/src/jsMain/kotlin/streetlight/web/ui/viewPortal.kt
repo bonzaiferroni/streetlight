@@ -7,9 +7,9 @@ import koala.modifier.modify
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.closeOpenPopovers
-import koala.dom.flowBlock
+import koala.dom.layout.flowBlock
 import koala.dom.querySelector
-import koala.dom.textBlock
+import koala.dom.component.textBlock
 import koala.model.Portal
 import streetlight.model.ui.Screen
 import koala.model.RouteInflator

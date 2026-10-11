@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.html.Id
+import koala.page.Id
 
 object PopoverId {
     val StarMenu = Id("star-menu-popover")

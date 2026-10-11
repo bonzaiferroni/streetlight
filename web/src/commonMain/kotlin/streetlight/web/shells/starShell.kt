@@ -1,7 +1,7 @@
 package streetlight.web.shells
 
-import koala.html.Id
-import koala.html.dataIsland
+import koala.page.Id
+import koala.page.dataIsland
 import kotlinx.html.FlowContent
 import streetlight.model.data.StarContent
 import streetlight.web.layouts.renderLayout

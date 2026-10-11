@@ -2,10 +2,10 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.box
-import koala.dom.image
-import koala.dom.imageDrop
-import koala.dom.setBlockLabel
+import koala.dom.layout.box
+import koala.dom.component.image
+import koala.dom.component.imageDrop
+import koala.dom.component.setBlockLabel
 import streetlight.web.model.ImageEditor
 
 fun ViewScope.imageFormSection(

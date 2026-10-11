@@ -1,11 +1,11 @@
 package streetlight.web.ui
 
 import koala.dom.AppendScope
-import koala.html.box
-import koala.html.column
-import koala.html.row
-import koala.html.span
-import koala.html.textBlock
+import koala.layout.box
+import koala.layout.column
+import koala.layout.row
+import koala.component.span
+import koala.component.textBlock
 import koala.model.MarkerStyle
 import koala.model.ThumbMarker
 import koala.modifier.AlignItemsCenter

@@ -3,6 +3,8 @@ package streetlight.web.ui
 import koala.dom.*
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
+import koala.dom.component.*
+import koala.dom.layout.*
 
 //fun ViewScope.editTalentForm() {
 //    val userCache = app.get<DataCache>()

@@ -1,10 +1,14 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.html.heading4
+import koala.component.heading4
 import koala.modifier.*
 import streetlight.model.ui.Screen
 import streetlight.web.model.BugReporter
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
+import koala.model.*
 
 fun ViewScope.viewBugReporter() {
     val model = BugReporter(contentScope, api)

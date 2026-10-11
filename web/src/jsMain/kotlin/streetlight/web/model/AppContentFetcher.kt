@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import koala.html.AppRoute
+import koala.model.AppRoute
 import koala.model.ContentFetcher
 import koala.model.FetcherContent
 import koala.model.NullContent

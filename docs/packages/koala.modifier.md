@@ -10,7 +10,7 @@ A `Modifier` is one change to an HTML element. `Modifier` is a sealed interface,
 |---|---|
 | `kotlinx.css` | CSS value types |
 | `kotlinx.html` | The tags modifiers apply to |
-| `koala.html` | `Class` and `Id` |
+| `koala.page` | `Id` |
 | `web` (Kotlin wrappers) | DOM access in `jsMain` |
 
 ## Modifier Kinds

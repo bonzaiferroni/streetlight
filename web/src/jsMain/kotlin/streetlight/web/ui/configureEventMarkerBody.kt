@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
-import koala.html.ListStyleGlyph
-import koala.html.bulletsOf
-import koala.html.span
-import koala.html.textBlock
+import koala.layout.ListStyleGlyph
+import koala.component.bulletsOf
+import koala.component.span
+import koala.component.textBlock
 import koala.model.ThumbMarker
 import koala.model.markerBodyRow
 import koala.model.markerLabel
