@@ -4,7 +4,7 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
 import streetlight.model.data.SongId
-import streetlight.web.pages.EventPortalSelector
+import streetlight.web.page.EventPortalSelector
 
 fun main() {
     val eventId = document.queryAttribute(EventPortalSelector.eventIdAttribute)?.let { EventId(it) } ?: return

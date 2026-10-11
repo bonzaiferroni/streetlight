@@ -2,11 +2,10 @@ package streetlight.web.interop
 
 import koala.dom.ViewScope
 import koala.interop.KtFunction
-import streetlight.web.layouts.EntityDialog
-import streetlight.web.layouts.FeedSection
-import streetlight.web.ui.StarToggle
-import streetlight.web.ui.TagFilterMenu
-import streetlight.web.ui.readEntityRef
+import streetlight.web.layout.EntityDialog
+import streetlight.web.layout.FeedSection
+import streetlight.web.component.StarToggle
+import streetlight.web.component.TagFilterMenu
 
 /** The app's functions callable from HTML event handlers. */
 fun ViewScope.appGlobalFunctions() = listOf(

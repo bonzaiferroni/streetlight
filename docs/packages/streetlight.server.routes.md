@@ -83,7 +83,7 @@ Every route that has a shell has a content endpoint returning the result of `rea
 
 ## Page Routes
 
-`servePages.kt` responds with HTML from `streetlight.web.pages` instead of implementing `Api` endpoints. It takes a `ServerResource` because the templates need build-mode-dependent asset paths.
+`servePages.kt` responds with HTML from `streetlight.web.page` instead of implementing `Api` endpoints. It takes a `ServerResource` because the templates need build-mode-dependent asset paths.
 
 A screen whose route is likely to be shared or linked from another site is rendered here on the initial load. Its branch in `renderScreen` calls `renderFoo`, an `ApiScope` extension returning `HtmlRender`, which reads the route's content with `readFooContent` and passes it to `fooShell` inside `appPage`. A screen with no branch is rendered by `renderClientBase`, and the browser builds its content.
 

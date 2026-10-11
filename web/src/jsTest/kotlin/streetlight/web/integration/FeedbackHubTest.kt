@@ -12,7 +12,7 @@ import streetlight.web.io.ApiClient
 import streetlight.web.io.TestApiClient
 import streetlight.web.io.TestFeedbackClient
 import streetlight.web.model.Toaster
-import streetlight.web.ui.viewFeedbackHub
+import streetlight.web.view.viewFeedbackHub
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

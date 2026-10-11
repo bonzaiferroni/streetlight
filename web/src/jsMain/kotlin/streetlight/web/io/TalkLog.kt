@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.*
-import streetlight.web.ui.CommentView
+import streetlight.web.view.CommentView
 import kotlin.uuid.Uuid
 
 /** The live comments of a space: its history, and the comments created and updated as they arrive. */

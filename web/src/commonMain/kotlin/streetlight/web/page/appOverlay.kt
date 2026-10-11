@@ -1,0 +1,77 @@
+@file:Suppress("JSUnresolvedReference", "CssInvalidMediaFeature")
+
+package streetlight.web.page
+
+import koala.modifier.*
+import koala.interop.KoalaFun.initRootModifier
+import kotlinx.html.FlowContent
+import streetlight.web.component.WorkSignalStyle
+import streetlight.web.component.workSignal
+import koala.interop.*
+import koala.layout.*
+import koala.page.*
+
+/** The fixed layer over the page: the helm bar, the work signal, and the route dock. */
+fun FlowContent.appOverlay() {
+    column(AppOverlay.Container, AppLayer.Overlay.mod) {
+        helmBar()
+        spacer(Flex1)
+        workSignal(WorkSignalStyle.AbsolutePositioned.append(modify(Right0, Bottom0))) {
+            setId(AppOverlay.WorkSignal)
+        }
+        div(AppOverlay.RouteDockId)
+    }
+}
+
+/** Restores the revealed side panels at page load. */
+val AppOverlayScript get() = with(AppOverlay) {
+    jsScriptOf {
+        invoke(initRootModifier, RevealLeftPanel)
+        invoke(initRootModifier, RevealRightPanel)
+    }
+}
+
+object AppOverlay {
+    val Container = Id("app-overlay")
+    val WorkSignal = Id("overlay-work-signal")
+    val RouteDockId = Id("route-dock")
+    val MediaVlgReveal = Class("display-none-below-vlg")
+    val RevealLeftPanel = Class("reveal-left-panel")
+    val RevealRightPanel = Class("reveal-right-panel")
+}
+
+// language="CSS"
+val AppOverlayCss get() = with(AppOverlay) { """
+$Container {
+    position: fixed;
+    pointer-events: none;
+    inset: 0;
+}
+
+$MediaVlgReveal {
+    opacity: 1;
+    transform: translate(0px, 0px);
+    
+    transition: 
+        opacity var(--magic-interval),
+        transform var(--magic-interval),
+        visibility var(--magic-interval) allow-discrete;
+}
+
+@media (max-width: ${CONTENT_PANEL_WIDTH_PX + 100}px) {
+    $MediaVlgReveal {
+        transform: var(--slide-up-initial);
+        opacity: 0;         
+        visibility: hidden;    
+    }
+}
+
+@starting-style {
+    $MediaVlgReveal {
+        opacity: 0;
+        transform: var(--slide-up-initial);
+    }
+}
+
+""" }
+

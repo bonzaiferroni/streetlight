@@ -1,0 +1,40 @@
+package streetlight.web.layout
+
+import koala.SiteImage
+import koala.modifier.*
+import koala.layout.cardOf
+import kotlinx.html.FlowContent
+import streetlight.model.data.Event
+import streetlight.model.data.EventLocation
+import streetlight.model.data.Galaxy
+import streetlight.model.data.EventPost
+import streetlight.model.data.Location
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.LocationRoute
+import streetlight.web.model.eventRoute
+import streetlight.web.model.route
+
+fun FlowContent.cardOf(event: Event, mod: Modifier? = null) {
+    cardOf(event.route, event.title, event.image?.thumb, event.description?.value, mod)
+}
+
+fun FlowContent.cardOf(location: Location) {
+    cardOf(LocationRoute(location.slug), location.label, location.image?.thumb, location.description?.value)
+}
+
+fun FlowContent.cardOf(event: EventLocation) {
+    cardOf(event.eventRoute, event.title, event.image.thumb, event.description?.value)
+}
+
+fun FlowContent.cardOf(galaxy: Galaxy) {
+    cardOf(GalaxyRoute(galaxy.slug), galaxy.name, SiteImage.placeholderTh, galaxy.description?.value)
+}
+
+fun FlowContent.cardOf(
+    post: EventPost,
+    mod: Modifier? = null,
+) {
+    val route = post.event.eventRoute
+    val thumbUrl = post.image?.thumb ?: SiteImage.placeholderTh
+    cardOf(route, post.label, thumbUrl, post.body.value, mod)
+}

@@ -8,7 +8,7 @@ import streetlight.model.ui.Screen
 import streetlight.web.io.ApiClient
 import streetlight.web.io.TestApiClient
 import streetlight.web.io.TestBugClient
-import streetlight.web.ui.viewBugReporter
+import streetlight.web.view.viewBugReporter
 import web.window.window
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -35,7 +35,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.EventsMap
 import streetlight.model.ui.EventsMapRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.utils.localStoreOf
+import streetlight.web.utility.localStoreOf
 import kotlin.time.Duration.Companion.seconds
 
 /**

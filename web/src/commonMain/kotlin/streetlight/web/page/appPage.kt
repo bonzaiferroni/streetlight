@@ -1,0 +1,34 @@
+package streetlight.web.page
+
+import koala.JsFile
+import koala.PageResource
+import koala.model.AppScreen
+import koala.page.appHead
+import koala.page.applyFiles
+import koala.page.linkScript
+import kotlinx.html.FlowContent
+import kotlinx.html.HTML
+import streetlight.model.data.PageTheme
+import koala.interop.HeadScriptConfig
+import koala.interop.RootSwitch
+import streetlight.web.layout.FeedMode
+import streetlight.web.layout.FeedRowStyle
+
+/** An app page for [screen], with the head that supports the map, and the body of [appBody]. */
+fun HTML.appPage(
+    title: String,
+    screen: AppScreen,
+    resource: PageResource,
+    theme: PageTheme? = null,
+    block: (FlowContent.() -> Unit)? = null
+) {
+    appHead("$title | Streetlight", resource) {
+        supportProtobuf()
+        supportGeoMap()
+        applyFiles(JsFile)
+        linkScript(resource.bundle.koala)
+    }
+    appBody(screen, resource, theme, block)
+}
+
+

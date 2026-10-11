@@ -136,7 +136,7 @@ listOf("Development", "Production").forEach { mode ->
 dokka {
     dokkaSourceSets.configureEach {
         includes.from(fileTree(rootDir.resolve("docs/packages")) {
-            include("streetlight.web.*.md")
+            include("web.md", "streetlight.web.*.md")
             exclude("streetlight.web.integration.md")
         })
     }

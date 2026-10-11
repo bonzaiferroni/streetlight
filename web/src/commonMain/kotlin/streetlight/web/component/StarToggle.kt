@@ -1,0 +1,106 @@
+package streetlight.web.component
+
+import koala.Svg
+import koala.SvgFile
+import koala.modifier.*
+import koala.interop.JsSignature
+import koala.interop.ThisElement
+import kotlinx.html.DIV
+import kotlinx.html.FlowContent
+import kotlinx.html.onClick
+import streetlight.model.data.Event
+import streetlight.model.data.EventLocation
+import streetlight.model.data.Galaxy
+import streetlight.model.data.ToggleType
+import streetlight.model.data.Location
+import streetlight.web.layout.CellGrid
+import kotlin.uuid.Uuid
+import koala.component.*
+import koala.layout.*
+
+/**
+ * A button that lights or unlights an item for the star, with its count.
+ *
+ * The click calls [signature] with the toggle's element, which reads the item from its attributes.
+ */
+fun FlowContent.starToggle(
+    toggleType: ToggleType,
+    isLit: Boolean,
+    uuid: Uuid,
+    starCount: Int?,
+    unlitSvg: Svg = SvgFile.Star.small,
+    litSvg: Svg = SvgFile.Star.filled,
+    signature: JsSignature = StarToggle.ToggleAny,
+    mod: Modifier? = null,
+    block: DIV.() -> Unit = {}
+) {
+    row(modify(AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
+        addModifiers(mod, StarToggle.Class)
+        setAttribute(Attribute.IsOn.to(isLit))
+        setAttribute(StarToggle.TypeData.to(toggleType))
+        setAttribute(StarToggle.ToggleId.to(uuid))
+        onClick = signature.invokeJs(ThisElement)
+
+        block()
+        box {
+            icon(unlitSvg, modify(CellGrid.ButtonIconMod, StarToggle.UnlitIcon))
+            icon(litSvg, modify(CellGrid.ButtonIconMod, StarToggle.LitIcon))
+        }
+        starCount?.let {
+            textBlock(it.toString(), modify(CellGrid.TextMod, StarToggle.Counter, UserSelectNone))
+        }
+    }
+}
+
+fun FlowContent.starToggle(galaxy: Galaxy) {
+    starToggle(ToggleType.Galaxy, galaxy.isLit, galaxy.galaxyId.value, galaxy.starCount, signature = StarToggle.ToggleGalaxy)
+}
+
+fun FlowContent.starToggle(event: EventLocation) {
+    starToggle(ToggleType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus.small, SvgFile.CalendarMinus.small)
+}
+
+fun FlowContent.starToggle(event: Event) {
+    starToggle(ToggleType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus.small, SvgFile.CalendarMinus.small)
+}
+
+fun FlowContent.starToggle(location: Location) {
+    starToggle(ToggleType.Location, location.isLit, location.locationId.value, location.starCount)
+}
+
+object StarToggle {
+    val Class = Class("light-control")
+    val Counter = Class("light-counter")
+    val Lit = Class("lit")
+    val LitIcon = Class("lit-icon")
+    val UnlitIcon = Class("unlit-icon")
+
+    val ToggleAny = JsSignature("toggleAny")
+    val ToggleGalaxy = JsSignature("toggleGalaxy")
+
+    val TypeData = enumAttributeOf<ToggleType>("light-type")
+    val ToggleId = uuidAttributeOf("toggle-id")
+}
+
+// language="CSS"
+val StarToggleCss get() = with(StarToggle) {"""
+    
+$Class {
+    
+    $LitIcon {
+        visibility: hidden;
+    }
+    
+    &${Attribute.IsOn.to(true)} {
+        color: var(--lamp-fg);
+        
+        $UnlitIcon {
+            visibility: hidden;
+        }
+        
+        $LitIcon {
+            visibility: visible;
+        }
+    }
+}
+""" }

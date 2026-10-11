@@ -1,0 +1,40 @@
+package streetlight.web.interop
+
+import koala.modifier.*
+import koala.dom.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import streetlight.web.io.OmniClient
+import streetlight.web.page.AppBody
+import web.html.HTMLElement
+import web.scroll.ScrollBehavior
+import web.scroll.ScrollToOptions
+import web.scroll.smooth
+import kotlin.time.Duration.Companion.milliseconds
+import koala.dom.component.*
+import koala.interop.*
+import koala.dom.layout.*
+
+fun ViewScope.wireRightPanel() {
+    val omni = app.get<OmniClient>()
+    var container: HTMLElement? = null
+    val cardMod = modify(ZenBg, Height100Pct, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)
+
+    wireBlock(AppBody.RightPanel) {
+        container = card(cardMod) {
+//            itemsBlock(recordFlow, modify(Magic, SlideLeft)) { record ->
+//                textBlock(record.text, modify(TextSmall))
+//            }
+        }
+    }
+
+    contentScope.launch {
+        omni.recordsState.flow.collect {
+            delay(100.milliseconds)
+            container?.scrollTo(ScrollToOptions(
+                top = container.scrollHeight.toDouble(),
+                behavior = ScrollBehavior.smooth
+            ))
+        }
+    }
+}

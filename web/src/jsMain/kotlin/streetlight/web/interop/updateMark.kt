@@ -15,10 +15,9 @@ import streetlight.model.data.CuratorStatus
 import streetlight.model.data.CuratorType
 import streetlight.model.data.MarkId
 import streetlight.model.data.MarkUpdate
-import streetlight.web.ui.CuratorMenu
-import streetlight.web.ui.api
-import streetlight.web.ui.starCheck
-import streetlight.web.ui.toaster
+import streetlight.web.component.CuratorMenu
+import streetlight.web.model.api
+import streetlight.web.model.toaster
 import web.dom.Element
 import web.html.HTMLElement
 

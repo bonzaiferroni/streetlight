@@ -1,4 +1,4 @@
-import streetlight.web.ui.viewApp
+import streetlight.web.view.viewApp
 
 fun main() {
     console.log("loading streetlight")

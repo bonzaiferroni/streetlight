@@ -1,0 +1,26 @@
+package streetlight.web.view
+
+import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.GalaxyMapRoute
+import kampfire.model.reactIn
+import koala.dom.ViewScope
+import streetlight.model.ui.CityMap
+import streetlight.model.ui.GalaxyMap
+import streetlight.model.ui.EventsMap
+import streetlight.web.model.Earth
+import streetlight.web.model.RouteDockState
+import streetlight.web.model.dock
+
+fun ViewScope.earthMenu(model: Earth) {
+    model.focusEntitiesState.reactIn(contentScope) { focus ->
+        dock.setVisible(focus == null)
+    }
+
+    model.mapState.reactIn(contentScope) { map ->
+        when (map) {
+            is GalaxyMap -> map.galaxy?.let { dock.mergeState(GalaxyMapRoute(it.slug), RouteDockState(title = it.name)) }
+            is CityMap -> dock.mergeState(CityMapRoute, RouteDockState(title = "Cities"))
+            is EventsMap, null -> Unit
+        }
+    }
+}

@@ -12,10 +12,10 @@ import koala.modifier.toCssText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import streetlight.model.data.PageTheme
-import streetlight.web.pages.DEFAULT_THEME_KEY
-import streetlight.web.pages.DefaultThemeOnly
-import streetlight.web.pages.toStyleSet
-import streetlight.web.utils.localStoreOf
+import streetlight.web.page.DEFAULT_THEME_KEY
+import streetlight.web.page.DefaultThemeOnly
+import streetlight.web.page.toStyleSet
+import streetlight.web.utility.localStoreOf
 import web.cssom.ClassName
 import web.dom.document
 

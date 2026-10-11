@@ -1,0 +1,182 @@
+package streetlight.web.view
+
+import koala.Svg
+import koala.SvgFile
+import koala.modifier.*
+import koala.dom.*
+import koala.dom.component.button
+import koala.dom.layout.row
+import koala.page.Id
+import koala.component.heading3
+import koala.component.heading6
+import koala.component.hr
+import koala.modifier.setPopoverTarget
+import koala.component.textBlock
+import kampfire.model.MutableTap
+import kampfire.model.toggle
+import kotlinx.css.pct
+import kotlinx.html.BUTTON
+import streetlight.web.model.BlockEditor
+import streetlight.web.model.BlockId
+import streetlight.web.model.ContainerEditor
+import streetlight.web.model.ContainerId
+import streetlight.web.model.LayoutEditor
+import kotlin.uuid.Uuid
+import koala.dom.component.*
+import koala.dom.layout.*
+import streetlight.web.layout.BodyStyle
+
+/** The editor of a page layout: its blocks, and the blocks removed from it, which can be restored. */
+fun ViewScope.layoutBuilder(model: LayoutEditor) {
+    column(BodyStyle.MainColumn) {
+        containerBuilder(model, model.mainContainerId)
+        // td: footer designer
+        flowBlock(model.removedBlockIdsState) { removedBlockIds ->
+            if (removedBlockIds.isEmpty()) return@flowBlock
+            removedBlockList(model, removedBlockIds)
+        }
+    }
+}
+
+/** The editors of a container's blocks, closed by a row that adds a block to it. */
+fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
+    val editor = model.getContainer(containerId)
+    flowBlock(editor.blockIdsField) { blockIds ->
+        column(BorderRadius1) {
+            blockIds.forEach { blockId ->
+                blockBuilder(model, blockId)
+            }
+            lastEditorRow(editor)
+        }
+    }
+}
+
+/**
+ * The controls above a block: add above, edit, remove, and move. The label opens [menuContent] when given.
+ *
+ * While a block moves, the row becomes the button that moves it here.
+ */
+fun ViewScope.editorRow(
+    editor: BlockEditor,
+    isEditingState: MutableTap<Boolean>? = null,
+    menuContent: (ViewScope.() -> Unit)? = null,
+) {
+    val popoverId = menuContent?.let {
+        Id(Uuid.random().toString()).also {
+            popover(it, mod = SystemBg) {
+                menuContent()
+            }
+        }
+    }
+    flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
+        when (movingBlockId) {
+            null -> {
+                row(AlignItemsCenter) {
+                    row(modify(Flex1, AlignItemsCenter)) {
+                        blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
+                        hr(modify(SystemFg, Flex1))
+                        isEditingState?.let { state ->
+                            editorIconButton(SvgFile.Edit.filled, { state.toggle() }).also {
+                                it.flowModifier(state, AccentFg, contentScope)
+                            }
+                        }
+                    }
+
+                    val headingMod = modify(
+                        PaddingX2, PaddingY1, BorderRadiusPill, OutlineEditorFg,
+                        MinWidth(16), TextAlignCenter
+                    )
+                    when (popoverId) {
+                        null -> heading6(editor.label, headingMod)
+                        else -> button(mod = modify(Editor, JustifySelfCenter)) {
+                            setPopoverTarget(popoverId)
+                            heading6(editor.label, headingMod)
+                        }
+                    }
+
+                    row(modify(Flex1, AlignItemsCenter)) {
+                        editorIconButton(SvgFile.Trash.small, { editor.removeFromLayout() })
+                        hr(modify(SystemFg, Flex1))
+                        editorIconButton(SvgFile.ArrowsSort.small, { editor.model.startMove(editor.blockId) })
+                    }
+                }
+            }
+            else -> {
+                if (editor.isNextSiblingOf(movingBlockId) || editor.isChildOf(movingBlockId)) return@flowBlock
+                val isOriginalLocation = editor.model.movingBlockIdState.now == editor.blockId
+                val label = if (isOriginalLocation) "cancel move" else "move before ${editor.label}"
+                val mod = if (isOriginalLocation) Secondary else Editor
+                button(label, {
+                    if (isOriginalLocation) editor.model.cancelMove()
+                    else editor.model.finishMove(editor.blockId)
+                }, modify(mod, Width(100.pct)))
+            }
+        }
+    }
+}
+
+/** The row at the end of a container, which adds a block or receives the moving block. */
+fun ViewScope.lastEditorRow(
+    editor: ContainerEditor
+) {
+    flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
+        when (movingBlockId) {
+            null -> {
+                row(AlignItemsCenter) {
+                    hr(modify(SystemFg, Flex1, OpacityLow))
+                    blockMenu(editor.name, editor.depth, { editor.createBlock(it)} )
+                }
+            }
+            else -> {
+                val blockEditor = editor.model.getBlock(movingBlockId)
+                val index = blockEditor.index
+                val isNextPosition = blockEditor.parentId == editor.containerId
+                        && index != null && index + 1 == editor.childIds.size
+                if (editor.isDescendentOf(movingBlockId) || isNextPosition) return@flowBlock
+                button("move to ${editor.name}", {
+                    editor.model.finishMoveToContainer(editor.containerId)
+                }, modify(Editor, Width(100.pct)))
+            }
+        }
+    }
+}
+
+fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
+    column {
+        filigree { heading3("Removed Blocks") }
+        blockIds.forEach { blockId ->
+            val blockEditor = model.getBlock(blockId)
+            val blockName = blockEditor.block::class.simpleName ?: "[block]"
+            row(JustifyContentSpaceBetween) {
+                textBlock(blockName)
+                button({
+                    model.startMove(blockId)
+                }, LayoutBuilderMod.TextButton) {
+                    textBlock("restore")
+                }
+            }
+        }
+    }
+}
+
+fun ViewScope.editorTextButton(
+    name: String,
+    onClick: (() -> Unit)? = null,
+    config: BUTTON.() -> Unit = { }
+) = button(onClick, Padding(1)) {
+    config()
+    textBlock(name, LayoutBuilderMod.TextButton)
+}
+
+fun ViewScope.editorIconButton(
+    icon: Svg,
+    onClick: (() -> Unit)? = null,
+    config: BUTTON.() -> Unit = { }
+) = button(icon, onClick, modify(SystemFg, SmallIconHeight)) {
+    config()
+}
+
+object LayoutBuilderMod {
+    val TextButton = modify(TextUppercase, TextSmall, Bold, SystemFg)
+    val Container = modify(ZenBg, MoonShadow, Padding(1))
+}

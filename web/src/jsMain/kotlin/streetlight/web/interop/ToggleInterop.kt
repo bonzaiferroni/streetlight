@@ -10,9 +10,8 @@ import koala.modifier.setAttribute
 import koala.modifier.Attribute
 import streetlight.model.data.LightEdit
 import streetlight.web.model.DataCache
-import streetlight.web.ui.StarToggle
-import streetlight.web.ui.api
-import streetlight.web.ui.starCheck
+import streetlight.web.component.StarToggle
+import streetlight.web.model.api
 import web.dom.document
 import web.html.HTMLElement
 

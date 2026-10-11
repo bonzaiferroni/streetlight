@@ -45,7 +45,6 @@ An `AppRoute` carries no label. A link that shows a route as text takes a `Label
 | [`Doc`](../../koala/src/commonMain/kotlin/koala/model/Doc.kt) | A document of the site |
 | [`DocTree`](../../koala/src/commonMain/kotlin/koala/model/DocTree.kt) | The docs of a site as nodes |
 | [`KeyedField`](../../koala/src/commonMain/kotlin/koala/model/KeyedField.kt) | A value with a key that stays with it while its list changes |
-| [`ItemCache`](../../koala/src/commonMain/kotlin/koala/model/ItemCache.kt) | A cache of items, loaded on first use and kept current |
 | [`ChartSeries`](../../koala/src/commonMain/kotlin/koala/model/ChartSeries.kt) | A named series of a chart |
 | [`LineChartAdapter`](../../koala/src/jsMain/kotlin/koala/model/LineChartAdapter.kt) | Draws chart data as an ECharts line chart |
 | [`LocalStorageDelegate`](../../koala/src/jsMain/kotlin/koala/model/LocalStorageDelegate.kt) | A property backed by `localStorage` |

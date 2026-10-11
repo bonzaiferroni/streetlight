@@ -1,0 +1,168 @@
+package streetlight.web.layout
+
+import kabinet.utils.format
+import kabinet.utils.toMetricString
+import kabinet.utils.toAgoFormat
+import kabinet.utils.toFutureFormat
+import kabinet.utils.toTimeFormat
+import kampfire.api.Username
+import kampfire.model.Url
+import koala.Svg
+import koala.SvgFile
+import koala.modifier.*
+import kotlinx.css.px
+import kotlinx.html.DIV
+import kotlinx.html.FlowContent
+import kotlinx.html.span
+import streetlight.model.data.ExtraLink
+import kotlin.time.Instant
+import koala.component.*
+import koala.layout.*
+import streetlight.web.model.ThemeColor
+import streetlight.web.model.themeColor
+
+/**
+ * The facts of an entity as a grid of icon cells, followed by a cell of [buttons] that fills the rest of its row.
+ * Nothing renders when both are empty.
+ *
+ * A cell with a url is a link.
+ */
+fun FlowContent.cellGrid(
+    cells: List<EntityCell>?,
+    buttons: List<EntityButton>?,
+    mod: Modifier? = null,
+) {
+    if (cells.isNullOrEmpty() && buttons.isNullOrEmpty()) return
+    div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, mod)) {
+        cells?.forEach { cell ->
+            when (val url = cell.url) {
+                null -> row(CellGrid.CellMod) {
+                    cell.themeColor?.let {
+                        setStyle(Css.ColorScheme.of(it.cssValue))
+                    }
+                    cellContent(cell)
+                }
+                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) {
+                    cell.themeColor?.let {
+                        setStyle(Css.ColorScheme.of(it.cssValue))
+                    }
+                    cellContent(cell)
+                }
+            }
+        }
+//        if (!buttons.isNullOrEmpty()) {
+//            row(modify(CellGrid.Buttons, CardBg, JustifyContentEnd, PrimaryLightFg)) {
+//                row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
+//                    buttons.forEach { it.block(this) }
+//                }
+//            }
+//        }
+    }
+}
+
+private fun FlowContent.cellContent(cell: EntityCell) {
+    row(CellGrid.ContentMod) {
+        icon(cell.icon, CellGrid.IconMod)
+        textBlock(mod = CellGrid.TextMod) {
+            +cell.text
+            cell.label?.let { label ->
+                span {
+                    addModifiers(CellGrid.LabelMod)
+                    +" $label"
+                }
+            }
+        }
+    }
+}
+
+object CellGrid {
+    val Base = Class("cell-grid")
+    val Buttons = Base.withBemElement("buttons")
+    val CellMod = modify(CardBg)
+    val ContentMod = modify(AlignItemsCenter, Gap(0), Padding(1))
+    val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
+    val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
+    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1, TextAlignCenter)
+    val LabelMod = modify(OpacityHigh)
+}
+
+//language="CSS"
+val CellGridCss get() = with(CellGrid) { """
+$Base {
+    container-type: inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+
+    > * {
+        --cols: 1;
+        --cell-width: calc((100cqi - (var(--cols) - 1) * 2px) / var(--cols));
+        width: var(--cell-width);
+        height: calc(var(--unit) * 5);
+        min-width: 0;
+
+        @container (width >= 258px) { --cols: 2; }
+        @container (width >= 388px) { --cols: 3; }
+        @container (width >= 518px) { --cols: 4; }
+        @container (width >= 648px) { --cols: 5; }
+        @container (width >= 778px) { --cols: 6; }
+        @container (width >= 908px) { --cols: 7; }
+    }
+
+    > :last-child {
+        flex-grow: 1;
+    }
+
+    > * > * {
+        flex: 1;
+        min-width: 0;
+    }
+}
+""" }
+
+/** The time of day [startsAt]. */
+fun startsAtCell(startsAt: Instant) = EntityCell(SvgFile.Clock.small, startsAt.toTimeFormat(), null)
+
+fun dateCell(startsAt: Instant) = EntityCell(SvgFile.Calendar.small, startsAt.toFutureFormat(), null)
+
+fun FlowContent.exampleStartsAtCell() {
+//    cell {
+//        textBlock("[Day]", modify(CellContent.TextMod, ColorSchemeFg))
+//        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft(1)))
+//    }
+}
+
+/** The cost, or FREE, linking to [purchaseUrl] when there is a cost. */
+fun costCell(cost: Float, purchaseUrl: Url?): EntityCell {
+    val ticketsUrl = cost.takeIf { it != 0f }?.let {
+        purchaseUrl
+    }
+    val costText = when (cost) {
+        0f -> "FREE"
+        else -> "$${cost.format(2, true)}"
+    }
+    return EntityCell(SvgFile.Ticket.small, costText, ticketsUrl)
+}
+
+fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.value ?: "Guest", null)
+
+fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock.small, postedAt.toAgoFormat(), null)
+
+fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link.small, link.label, link.url)
+
+fun locationCountCell(count: Int) = EntityCell(SvgFile.MapPin.small, count.toMetricString(), null, "locations")
+
+fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar.small, count.toMetricString(), null, "events")
+
+/** One cell of a [cellGrid]: an icon, a text with an optional dimmer [label], and a link when [url] is given. */
+data class EntityCell(
+    val icon: Svg,
+    val text: String,
+    val url: Url?,
+    val label: String? = null,
+    val themeColor: ThemeColor? = null
+)
+
+data class EntityButton(
+    val block: DIV.() -> Unit
+)

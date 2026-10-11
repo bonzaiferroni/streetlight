@@ -1,0 +1,109 @@
+package streetlight.web.shell
+
+import koala.LottieFile
+import koala.component.heading5
+import koala.component.textBlock
+import koala.layout.row
+import kotlinx.html.*
+import koala.modifier.*
+import koala.layout.column
+import koala.component.heading1
+import koala.component.lottie
+import kotlinx.css.pct
+import streetlight.web.layout.mainBody
+
+fun FlowContent.aboutAppShell() {
+    mainBody("aboutAppShell.kt") {
+        column(AlignItemsCenter) {
+            heading1("About Streetlight")
+            column(modify(MediaMdRow, AlignItemsCenter)) {
+                lottie(LottieFile.CupShuffle, modify(Flex1, MaxWidth(50.pct)))
+                val introText = "Streetlight is your front page for community events. " +
+                        "It is cross-platform, open-source, and 100% Kotlin. "
+                textBlock(introText, modify(Flex3, TextLarge))
+            }
+            column(modify(MediaMdRow, AlignItemsCenter)) {
+                lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth(50.pct)))
+                column(Flex3) {
+                    column(Gap0) {
+                        textBlock("Do you have a talent to share with passersby?")
+                        textBlock("Do you have a business, venue, or message you would like to promote?")
+                        textBlock("Are you walking down the street somewhere and looking for something to experience?")
+                    }
+                    textBlock("Consider downloading Streetlight to see what it can offer.", Bold)
+                }
+            }
+            column(modify(MediaMdRow, AlignItemsCenter)) {
+                lottie(LottieFile.Cat, modify(Flex1, MaxWidth(50.pct)))
+                column(Flex3) {
+                    textBlock {
+                        externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
+                        +" is 100% free and open-source. Free as in speech, free as in beer. "
+                    }
+                    textBlock(
+                        "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
+                                "As a software development community, we welcome people at any stage in their career. "
+                        // pending resources to follow through
+    //                            "Are you interested in working on open-source software full time? " +
+    //                            "We are based in Aurora, CO, and we have support opportunities. "
+                    )
+    //                paragraph("Work on Streetlight or your own open-source idea.", Large)
+                    textBlock {
+                        +"For better or for worse, apps are evermore present in our lives. "
+                        +"As software engineers, we hold influence. "
+                        +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
+                        +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
+                    }
+                    textBlock("It's giants all the way down.", TextLarge)
+                }
+            }
+            column(modify(Gap0, AlignItemsStretch, Width(100.pct), MarginTop(4))) {
+                heading5("Our Giants", TextAlignCenter)
+                githubLink("web", "kotlinx.html", "Kotlin")
+                githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
+                githubLink("app database", "SQLite", "sqlite")
+                githubLink("app ORM", "Room", "androidx-releases")
+                githubLink("server", "Ktor", "jetbrains")
+                githubLink("server database", "Postgres", "postgres")
+                githubLink("server ORM", "Exposed", "jetbrains")
+                githubLink("animation", "Lottie", "airbnb")
+                githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
+                githubLink("map", "MapLibre", "maplibre-gl-js")
+                githubLink("map data", "OpenFreeMap", "hyper-knot")
+                githubLink("icons", "Tabler", "tabler")
+                githubLink("image encoding", "scrimage", "sksamuel")
+                githubLink("HTML parsing", "ksoup", "fleeksoft")
+            }
+        }
+    }
+}
+
+/** A row labeled [role] linking to the GitHub repository [repo] of [user], in a new tab. */
+fun FlowContent.githubLink(
+    role: String,
+    name: String,
+    user: String,
+    repo: String = name,
+) {
+    row {
+        textBlock("$role:", modify(OpacityHigh, TextAlignRight, Flex1))
+        a("https://github.com/$user/$repo") {
+            addModifiers(Flex1)
+            target = "_blank"
+            rel = "noopener noreferrer"
+            +name
+        }
+    }
+}
+
+/** A link to [url] that opens in a new tab. */
+fun FlowContent.externalLink(
+    url: String,
+    text: String
+) {
+    a(url) {
+        target = "_blank"
+        rel = "noopener noreferrer"
+        +text
+    }
+}

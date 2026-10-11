@@ -1,0 +1,48 @@
+package streetlight.web.view
+
+import koala.dom.*
+import streetlight.model.data.LocationConfigContent
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
+import streetlight.web.model.api
+import streetlight.web.dom.layout.formColumn
+import streetlight.web.dom.layout.formRow
+import streetlight.web.dom.layout.formSection
+import streetlight.web.dom.layout.formSubmit
+
+fun ViewScope.locationAutomationForm(content: LocationConfigContent) = formColumn {
+    formRow {
+        eventSchemaSection(content)
+    }
+}
+
+fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("Event Schema") {
+    // val schemasField = storeOf(content.origins.firstOrNull()?.schemas?.map { it.selector } ?: emptyList())
+    // val messages = MessageStore()
+    // when (val eventsUrl = content.location.eventsUrl) {
+    //     null -> textBlock("No calendar url available.")
+    //     else -> column {
+    //         formSubmit("reload schema", {
+    //             launchEffect {
+    //                 messages.deliverSending()
+    //                 val schemas = api.location.parseEventSchema(eventsUrl).handleResponse(messages, "schema delivered")
+    //                     ?: return@launchEffect
+    //                 schemasField.addAll(schemas)
+    //             }
+    //         }, messages)
+    //         flowBlock(schemasField) { eventSchema ->
+    //             val uploadMessages = MessageStore()
+    //             column {
+    //                 formSubmit("Upload", {
+    //                     launchEffect {
+    //                         api.location.uploadSchemas(UrlSchemas(content.location.locationId, eventsUrl, schemasField.now))
+    //                             .handleResponse(uploadMessages)
+    //                     }
+    //                 }, uploadMessages)
+    //                 textBlock(jsonPrettyConfig.encodeToString(eventSchema), modify(WhiteSpacePreLine))
+    //             }
+    //         }
+    //     }
+    // }
+}

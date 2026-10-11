@@ -7,9 +7,7 @@ import koala.model.IconMarker
 import koala.model.ThumbMarker
 import kotlinx.html.DIV
 import streetlight.model.data.EventGroup
-import streetlight.web.layouts.ThemeColor
-import streetlight.web.layouts.light
-import streetlight.web.ui.configureEventMarkerBody
+import streetlight.web.dom.component.configureEventMarkerBody
 
 interface InflateMarker {
     val group: EventGroup

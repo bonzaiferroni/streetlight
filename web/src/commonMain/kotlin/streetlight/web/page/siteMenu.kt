@@ -1,0 +1,139 @@
+package streetlight.web.page
+
+import koala.Svg
+import koala.SvgFile
+import koala.modifier.*
+import koala.interop.InlineJs
+import koala.interop.KoalaFun
+import kotlinx.html.FlowContent
+import kotlinx.html.onClick
+import streetlight.model.ui.CityListRoute
+import streetlight.model.ui.ContributeRoute
+import streetlight.model.ui.FrontDeskRoute
+import streetlight.model.ui.GalaxyListRoute
+import streetlight.model.ui.GalaxyMapRoute
+import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.Screen
+import streetlight.model.ui.SiteConfigRoute
+import streetlight.model.ui.SiteMonitorRoute
+import streetlight.web.model.SiteDoc
+import streetlight.web.model.route
+import koala.component.*
+import koala.layout.*
+import koala.model.*
+import koala.page.*
+import streetlight.web.component.textLogo
+
+/** The site menu as a popover from the helm button. */
+fun FlowContent.siteHelmPopover() {
+    popover(SiteHelm.popoverId, SiteHelm.PopoverClass, SiteHelm.PositionAnchor) {
+        card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
+            column(PaddingRight(1)) {
+                row(AlignItemsCenter) {
+                    button(SvgFile.Helm, modify(HelmBar.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
+                        onClick = SiteHelm.closePopover.block
+                    }
+                    navigation(HomeRoute()) {
+                        textLogo(Height(5))
+                    }
+                }
+                siteMenuItems()
+            }
+        }
+    }
+
+    stylesheet(SiteHelmCss)
+}
+
+/** The site menu in the left panel. */
+fun FlowContent.siteMenuSidebar() {
+    column {
+        filigree {
+            navigation(HomeRoute()) {
+                setAttribute(KoalaBody.ScreenId.to(HomeRoute().screen.screenId))
+                textLogo(Height(5))
+            }
+        }
+        siteMenuItems()
+    }
+}
+
+fun FlowContent.siteMenuItems() {
+    item("Earth", GalaxyMapRoute(null), SvgFile.Earth.large)
+    item("Galaxies", GalaxyListRoute, SvgFile.Satellite.large)
+    item("Cities", CityListRoute, SvgFile.City.large)
+    // radio
+    label("meta")
+    item("Help & Feedback", FrontDeskRoute, SvgFile.Question.large)
+    item("Contribute", ContributeRoute, SvgFile.HeartHandshake.large) // td
+    item("Status", SiteMonitorRoute, SvgFile.Chart.large) // td
+    item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed.large)
+    label("config")
+    item("Settings", SiteConfigRoute, SvgFile.Gear.large)
+    row(modify(SiteHelm.rowMod, ThemeToggle)) {
+        onClick = KoalaFun.toggleRootModifier.invokeJs(DayTheme)
+        icon(SvgFile.Sun.large, HelmBar.IconMod)
+        textBlock("Theme")
+    }
+}
+
+private fun FlowContent.label(label: String) {
+    filigree {
+        textBlock(label, modify(TextSmall, TextUppercase, OpacityHalf))
+    }
+}
+
+private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
+    navigation(route) {
+        setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
+        closePopoverOnClick(SiteHelm.popoverId)
+
+        row(SiteHelm.rowMod) {
+            icon(svg, HelmBar.IconMod)
+            textBlock(label)
+        }
+    }
+}
+
+object SiteHelm {
+    val popoverId = Id("site-helm")
+    val PositionAnchor = popoverId.toPositionAnchor()
+    val Container = Class("site-helm-menu")
+    val PopoverClass = Class("site-helm-popover")
+
+    val closePopover = InlineJs.closePopover(popoverId)
+    val rowMod = modify(AlignItemsCenter)
+}
+
+private val ThemeToggle = Class("theme-toggle")
+
+// language="CSS"
+val SiteHelmCss get() = with(SiteHelm) { """
+${SiteHelm.Container} {
+    border-radius: 0 0 var(--unit-2) 0;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+${SiteHelm.PopoverClass} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+$DayTheme $ThemeToggle ${IconStyle.Icon} {
+    ${Css.MaskUrl.of(SvgFile.Moon.large)} !important;
+}
+
+${generateScreenSelectors(highlightedScreens)} {
+    color: var(--primary-fg);
+}
+""" }
+
+val highlightedScreens = listOf(
+    Screen.Home, Screen.Earth, Screen.GalaxyList, Screen.CityList,
+    Screen.Feedback, Screen.SiteMonitor, Screen.Contribute, Screen.Docs,
+    Screen.SiteConfig,
+)
+

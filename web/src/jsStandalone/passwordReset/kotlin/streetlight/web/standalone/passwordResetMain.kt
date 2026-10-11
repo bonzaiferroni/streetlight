@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import streetlight.model.Api
-import streetlight.web.shells.PasswordResetForm
+import streetlight.web.shell.PasswordResetForm
 import web.html.HTMLInputElement
 import web.html.HTMLParagraphElement
 import web.http.BodyInit

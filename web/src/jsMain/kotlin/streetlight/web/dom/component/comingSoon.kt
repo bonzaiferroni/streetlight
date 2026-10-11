@@ -1,0 +1,9 @@
+package streetlight.web.dom.component
+
+import koala.LottieFile
+import koala.dom.AppendScope
+import koala.dom.component.lottie
+import koala.modifier.*
+
+fun AppendScope.comingSoon(mod: Modifier? = modify(MaxWidth(48), AlignSelfCenter)) =
+    lottie(LottieFile.DinoLoad, mod)

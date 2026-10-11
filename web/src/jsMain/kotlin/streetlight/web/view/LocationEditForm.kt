@@ -1,0 +1,79 @@
+package streetlight.web.view
+
+import koala.LottieFile
+import koala.modifier.*
+import koala.dom.*
+import streetlight.model.data.LocationProperty
+import streetlight.web.model.LocationEditor
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.dom.markdown.*
+import streetlight.web.layout.BodyStyle
+import streetlight.web.dom.layout.centeredText
+import streetlight.web.dom.layout.formBullets
+import streetlight.web.dom.layout.formCard
+import streetlight.web.dom.layout.formFiller
+import streetlight.web.dom.layout.formRow
+import streetlight.web.dom.layout.formSection
+import streetlight.web.dom.layout.formSubmit
+import streetlight.web.dom.layout.formTextField
+
+fun ViewScope.locationEditFormBody(model: LocationEditor) = column(BodyStyle.MainColumn) {
+    locationWebsiteForm(model)
+    locationDetailsForm(model)
+    locationImageForm(model)
+    locationLinksForm(model)
+}
+
+fun ViewScope.locationDetailsForm(model: LocationEditor) = formCard("Location Details") {
+    formRow {
+        formSection("Name") {
+            formTextField(model.nameField, "title", maxLength = 50)
+                .flowValid(LocationProperty.Name, model.validityField, contentScope)
+        }
+        formSection("Address / City") {
+            row {
+                textField(model.addressField, "address", Flex1)
+                textField(model.cityField, "city", Flex1)
+            }
+        }
+    }
+
+    formSection("Description") {
+        markdownEditor(
+            state = model.descriptionField,
+            label = "description",
+            mod = MinHeight(24)
+        )
+    }
+}
+
+fun ViewScope.locationImageForm(model: LocationEditor) =
+    imageFormSection(
+        instructions = "This image will appear at the top of the location page.",
+        imageEditor = model.imageEditor
+    )
+
+fun ViewScope.locationLinksForm(model: LocationEditor) = formCard("Links") {
+    formRow {
+        formSection("Website") {
+            textField(model.websiteField, "website")
+            centeredText("This location's home on the web.")
+        }
+        formSection("Calendar") {
+            textField(model.eventsUrlField, "calendar")
+            centeredText("Does the location have an events page or calendar?")
+        }
+    }
+}
+
+fun ViewScope.locationWebsiteForm(model: LocationEditor) = formCard("Website") {
+    formRow {
+        formSection("Read Website") {
+            textField(model.websiteField, "website")
+            formBullets("Does this location have a website? We can read it to find certain details.", "Image", "Description", "Links")
+            formSubmit("🤖 read website", onClick = model::readWebsite, model.websiteMessage)
+        }
+        formFiller(LottieFile.Ghost)
+    }
+}

@@ -1,0 +1,29 @@
+package streetlight.web.dom.layout
+
+import kampfire.model.Outcome
+import kampfire.model.toDataOr
+import koala.modifier.*
+import koala.dom.ViewScope
+import koala.dom.layout.column
+import koala.external.onView
+import koala.dom.mountChildView
+import streetlight.web.utility.element
+import streetlight.web.model.toaster
+
+/** Renders [content] with the data of [requestData] once the block is viewed. A failed request is toasted. */
+fun <T> ViewScope.dataBlock(
+    requestData: suspend () -> Outcome<T>,
+    mod: Modifier? = null,
+    content: ViewScope.(T) -> Unit
+) {
+    // td: add retry button
+    val element = column(mod)
+    element.onView {
+        launchEffect {
+            val data = requestData().toDataOr(toaster) { return@launchEffect }
+            this@dataBlock.mountChildView("request", element) {
+                content(data)
+            }
+        }
+    }
+}

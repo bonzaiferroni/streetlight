@@ -1,0 +1,83 @@
+package streetlight.web.view
+
+import koala.SvgFile
+import koala.dom.*
+import koala.model.AppRoute
+import koala.component.navigation
+import koala.component.textBlock
+import koala.modifier.*
+import koala.modifier.Height
+import kampfire.model.tapOf
+import kotlinx.css.pct
+import streetlight.model.ui.CityConfigRoute
+import streetlight.model.ui.EarthRoute
+import streetlight.model.ui.GalaxyConfigRoute
+import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.LocationConfigRoute
+import streetlight.model.ui.ProfileConfigRoute
+import streetlight.model.ui.StarConfigRoute
+import streetlight.web.model.dockRoute
+import streetlight.web.page.AppOverlay
+import koala.dom.component.*
+import koala.dom.layout.*
+import streetlight.web.model.dock
+import streetlight.web.model.portal
+
+fun ViewScope.wireRouteDock() {
+    mountChildView(AppOverlay.RouteDockId) {
+        viewRouteDock()
+    }
+}
+
+fun ViewScope.viewRouteDock() {
+    val model = dock
+    fun isRouteNow(route: AppRoute) = portal.routeState.tapOf { it.dockRoute == route }
+
+    column(modify(RouteDockStyle.Container, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
+        flowBlock(model.titleState, modify(Magic, Height(3))) { title ->
+            if (title == null) return@flowBlock
+            filigree(ruleMod = MaxWidth(8)) {
+                textBlock(title, PrimaryFg)
+            }
+        }
+        row(modify(Gap(1), AlignItemsCenter)) {
+            val trayMod = modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, BorderSolid2Px, Padding(1))
+            flowBlock(model.leftRoutes, modify(Flex1, Magic, DisplayFlex, JustifyContentEnd)) { leftRoutes ->
+                val routes = leftRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
+                row(trayMod) {
+                    routes.forEach { route ->
+                        this@flowBlock.navigation(route, modify(SmallIconHeight, BorderRadiusPill)) {
+                            icon(iconOf(route), Height(100.pct))
+                        }.asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+                    }
+                }
+            }
+            flowBlock(model.mainRoutes, Magic) { mainRoutes ->
+                val routes = mainRoutes ?: return@flowBlock
+                row(modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
+                    routes.forEach { labeledRoute ->
+                        this@flowBlock.navigation(labeledRoute.route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +labeledRoute.label }
+                            .asWeb().flowModifier(isRouteNow(labeledRoute.route), RouteDockStyle.RouteNow, contentScope)
+                    }
+                }
+            }
+            flowBlock(model.rightRoutes, modify(Flex1, Magic, DisplayFlex, JustifyContentStart)) { rightRoutes ->
+                val routes = rightRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
+                row(trayMod) {
+                    routes.forEach { route ->
+                        this@flowBlock.navigation(route, modify(SmallIconHeight, BorderRadiusPill)) {
+                            icon(iconOf(route), Height(100.pct))
+                        }.asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+                    }
+                }
+            }
+        }
+    }.flowModifier(model.isVisibleState.tapOf { !it }, RouteDockStyle.Hidden, contentScope)
+}
+
+private fun iconOf(route: AppRoute) = when(route) {
+    is EarthRoute -> SvgFile.Earth.large
+    is HomeRoute -> SvgFile.Home.small
+    is CityConfigRoute, is GalaxyConfigRoute, is LocationConfigRoute, is ProfileConfigRoute, is StarConfigRoute -> SvgFile.Gear.small
+    else -> error("no dock icon for route: $route")
+}
