@@ -21,9 +21,10 @@ body {
 
 ${ButtonStyle.Class} {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-rows: 1lh;
     column-gap: var(--unit);
     align-items: center;
+    justify-items: center;
     padding: var(--btn-padding);
     border: none;
     border-radius: var(--btn-border-radius);
@@ -40,11 +41,8 @@ ${ButtonStyle.Class} {
     white-space: nowrap;
     min-width: calc(var(--unit) * 16);
 
-    > :first-child { width: 1rem; text-align: center; opacity: .75; }
-    > :only-child { grid-column: 1 / -1; justify-self: center; opacity: 1; width: auto; }
-    > :nth-child(2) { justify-self: center; }
-    > span { font-size: inherit; line-height: 1rem; }
-    &:not(:has(*)) { grid-template-columns: 1fr; }
+    &:has(> ${ButtonStyle.Flair}) { grid-template-columns: auto 1fr; }
+    > ${ButtonStyle.Flair} { opacity: .75; }
     
     &$Editor {
         box-shadow: none;

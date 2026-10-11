@@ -94,7 +94,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
             mod = MinHeight(48)
         )
         row(JustifyContentSpaceBetween) {
-            buttonPopover("Markdown Hints", flair = "💡") {
+            buttonPopover("Markdown Hints", flair = SvgFile.Bulb) {
                 card(modify(ButtonPopover.CardMod, Padding(2))) {
                     bulletsOf(
                         "Add a blank line in between paragraphs.",

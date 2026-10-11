@@ -1,6 +1,8 @@
 package koala.component
 
 import kampfire.model.Url
+import koala.SvgFile
+import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.*
 import koala.model.AppRoute
@@ -9,18 +11,15 @@ import koala.page.Id
 /**
  * A link styled as a button, to [route].
  *
- * A flair is shown before the text: [flair] when given, or one chosen for common labels such as "tickets" unless
- * [addFlair] is off.
+ * [flair] is shown before the text, by default one chosen for common labels such as "tickets".
  */
 fun FlowContent.btn(
     text: String,
     route: AppRoute,
     mod: Modifier? = null,
-    addFlair: Boolean = true,
-    flair: String? = null,
+    flair: SvgPack? = labelFlairs[text.lowercase()],
     block: A.() -> Unit = {}
 ) {
-    val flair = flair ?: if (addFlair) labelPrefixMap[text.lowercase()] else null
     navigation(
         route = route,
         mod = modify(ButtonStyle.Class, mod),
@@ -39,7 +38,7 @@ fun FlowContent.btn(
     route: AppRoute,
     background: Url?,
     mod: Modifier? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(
@@ -60,8 +59,7 @@ fun FlowContent.btn(
 /**
  * A link styled as a button, to [href].
  *
- * A flair is shown before the text: [flair] when given, or one chosen for the label or the link's domain unless
- * [addFlair] is off.
+ * [flair] is shown before the text, by default one chosen for the label or the link's domain.
  */
 @Deprecated("use overload that takes url")
 fun FlowContent.btn(
@@ -69,15 +67,9 @@ fun FlowContent.btn(
     href: String,
     mod: Modifier? = null,
     id: Id? = null,
-    addFlair: Boolean = true,
-    flair: String? = null,
+    flair: SvgPack? = flairOf(text, href),
     block: A.() -> Unit = {},
 ) {
-    val flair =
-        flair ?: labelPrefixMap[text.lowercase()] ?: href.takeIf { addFlair }?.let { domainOf(it) }?.let { domain ->
-            domainPrefixMap[domain] ?: "🔗"
-        }
-
     navigation(
         href = href,
         mod = modify(ButtonStyle.Class, mod),
@@ -97,10 +89,9 @@ fun FlowContent.btn(
     href: Url,
     mod: Modifier? = null,
     id: Id? = null,
-    addFlair: Boolean = true,
-    flair: String? = null,
+    flair: SvgPack? = flairOf(text, href.value),
     block: A.() -> Unit = {},
-) = btn(text, href.value, mod, id, addFlair, flair, block)
+) = btn(text, href.value, mod, id, flair, block)
 
 /** The host of [url] without a leading `www.`, or `null`. */
 fun domainOf(url: String): String? =
@@ -110,17 +101,18 @@ fun domainOf(url: String): String? =
         ?.removePrefix("www.")
         ?.takeIf { it.isNotBlank() }
 
-private const val video = "📼"
+/** The flair of the label [text], or of the domain of [href], or a link icon. */
+private fun flairOf(text: String, href: String): SvgPack =
+    labelFlairs[text.lowercase()] ?: domainOf(href)?.let { domainFlairs[it] } ?: SvgFile.Link
 
-private val domainPrefixMap = mapOf(
-    "youtube.com" to video,
-    "en.wikipedia.org" to "📖",
+private val domainFlairs = mapOf(
+    "youtube.com" to SvgFile.BrandYoutube,
+    "en.wikipedia.org" to SvgFile.Book,
 )
 
-private val labelPrefixMap = mapOf(
-    "tickets" to "🎟",
-    "edit" to "✍",
-    "website" to "🌐",
-    "calendar" to "📅",
+private val labelFlairs = mapOf(
+    "tickets" to SvgFile.Ticket,
+    "edit" to SvgFile.Edit,
+    "website" to SvgFile.World,
+    "calendar" to SvgFile.Calendar,
 )
-

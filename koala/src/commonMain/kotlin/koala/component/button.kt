@@ -1,6 +1,7 @@
 package koala.component
 
 import koala.Svg
+import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
@@ -10,7 +11,7 @@ import kotlinx.html.button as buttonTag
 fun FlowContent.button(
     text: String,
     mod: Modifier? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
@@ -22,16 +23,12 @@ fun FlowContent.button(
 fun BUTTON.configureButton(
     text: String,
     mod: Modifier? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     addModifiers(ButtonStyle.Class, mod)
     block()
-    flair?.let {
-        span {
-            +flair
-        }
-    }
+    flair?.let { flairIcon(it) }
     span {
         +text
     }
@@ -78,8 +75,16 @@ fun BUTTON.configureElementButton(
     block()
 }
 
+/** The [flair] of a [btn], as an icon in a span. */
+internal fun FlowContent.flairIcon(flair: SvgPack) {
+    span(modify(IconStyle.Icon, ButtonStyle.Flair, SmallIconHeight)) {
+        setStyle(Css.MaskUrl.of(flair.small))
+    }
+}
+
 object ButtonStyle {
     val Class = Class("btn")
+    val Flair = Class("btn-flair")
     val IconClass = Class("icon-button")
     val ElementClass = Class("element-button")
 }

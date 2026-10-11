@@ -28,7 +28,7 @@ fun ViewScope.wireTagFilterMenu() {
         row(modify(FlexWrap, JustifyContentCenter, Padding(1))) {
             button("All", mod = modOf(null), onClick = { filterBy(null) })
             EventTag.entries.forEach { tag ->
-                button(tag.label, mod = modOf(tag.label), onClick = { filterBy(tag) })
+                button(tag.label, { filterBy(tag) }, modOf(tag.label), flair = tag.svg)
             }
         }
     }

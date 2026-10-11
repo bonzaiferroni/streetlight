@@ -1,5 +1,6 @@
 package koala.dom.component
 
+import koala.SvgPack
 import koala.modifier.*
 import koala.model.AppRoute
 import koala.page.Id
@@ -14,7 +15,7 @@ fun AppendScope.navigation(
     href: String? = null,
     mod: Modifier? = null,
     id: Id? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     block: A.() -> Unit = {}
 ) = a {
     configureNavigation(href, mod, id, flair, block)

@@ -25,6 +25,10 @@ An image component takes the `Image`, not a URL of one size, so it renders the i
 
 A caller changes the fit of a `containImage` on its root, which the content image inherits.
 
+## Flair
+
+A button's or link's flair is an `SvgPack`, rendered as its `small` variant in a span carrying `ButtonStyle.Flair`. The `btn` stylesheet places the flair by that class, never by child position. A `btn` row is one line high, and the flair overflows into its padding, so the flair never sets the height. A `btn` defaults its flair from its label, and from its link's domain for an `href`. A caller passes `flair = null` for none.
+
 ## Root Switch
 
 `rootSwitch(attribute, mod) { value -> }` renders a row of element buttons, one per value of an enum root setting. The lambda builds each button's content. A button applies its value with `applyRootSwitch` and carries it under `attribute.optionAttribute`.

@@ -1,5 +1,6 @@
 package koala.dom.component
 
+import koala.SvgPack
 import kampfire.model.Messenger
 import kampfire.model.UIMessage
 import koala.modifier.*
@@ -21,7 +22,7 @@ fun AppendScope.safetyButton(
     onConfirm: (() -> Unit)? = null,
     onClick: ((Boolean) -> Unit)?= null,
     mod: Modifier? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     confirmText: String = "Confirm",
     block: BUTTON.() -> Unit = {},
 ) {

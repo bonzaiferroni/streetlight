@@ -1,5 +1,6 @@
 package streetlight.web.component
 
+import koala.SvgFile
 import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
@@ -8,7 +9,7 @@ import koala.component.*
 
 /** Opens the create post menu, for posts to [galaxy] when given. */
 fun FlowContent.createPostMenu(galaxy: Galaxy? = null) {
-    button("Create Post", Zen, "☰") {
+    button("Create Post", Zen, SvgFile.Menu) {
         setPopoverTarget(PopoverId.CreatePost)
         galaxy?.let {
             setAttribute(Attribute.Slug.to(galaxy.slug))

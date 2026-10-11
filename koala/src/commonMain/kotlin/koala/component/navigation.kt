@@ -1,5 +1,6 @@
 package koala.component
 
+import koala.SvgPack
 import koala.modifier.Class
 import koala.interop.KoalaFun
 import koala.modifier.Modifier
@@ -20,7 +21,7 @@ fun FlowContent.navigation(
     href: String? = null,
     mod: Modifier? = null,
     id: Id? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     config: A.() -> Unit = {},
 ) {
     a {
@@ -32,17 +33,13 @@ internal fun A.configureNavigation(
     href: String? = null,
     mod: Modifier? = null,
     id: Id? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     config: A.() -> Unit = {}
 ) {
     setId(id)
     addModifiers(modify(ActionKey.Class, mod))
     href?.let { this.href = href }
-    flair?.let {
-        span {
-            +flair
-        }
-    }
+    flair?.let { flairIcon(it) }
     config()
 }
 
@@ -64,7 +61,7 @@ fun FlowContent.navigation(
     route: AppRoute,
     mod: Modifier? = null,
     id: Id? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(

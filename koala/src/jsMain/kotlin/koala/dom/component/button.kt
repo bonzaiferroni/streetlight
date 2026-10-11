@@ -1,5 +1,6 @@
 package koala.dom.component
 
+import koala.SvgPack
 import koala.Svg
 import kampfire.model.Tap
 import kampfire.model.Url
@@ -33,7 +34,7 @@ fun AppendScope.button(
     onClick: (() -> Unit)? = null,
     mod: Modifier? = null,
     onClickEvent: ((Event) -> Unit)? = null,
-    flair: String? = null,
+    flair: SvgPack? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
