@@ -39,6 +39,7 @@ The `ViewScope` variant of an interactive component builds its element through t
 | [`checkBox`](../../koala/src/jsMain/kotlin/koala/dom/component/checkBox.kt) | A checkbox bound to a field |
 | [`switch`](../../koala/src/jsMain/kotlin/koala/dom/component/switch.kt) | A labeled on/off switch bound to a field |
 | [`dropMenu`](../../koala/src/jsMain/kotlin/koala/dom/component/dropMenu.kt) | A select of options bound to a field |
+| [`optionSwitch`](../../koala/src/jsMain/kotlin/koala/dom/component/optionSwitch.kt) | A field's options laid out side by side, the selected one lighted; for options that fit where a `dropMenu` would hide them |
 | [`datetimeInput`, `dateInput`, `timeInput`](../../koala/src/jsMain/kotlin/koala/dom/component/datetimeInput.kt) | Date and time inputs bound to a field |
 | [`colorPicker`](../../koala/src/jsMain/kotlin/koala/dom/component/colorPicker.kt) | A button showing a color that opens the browser's color picker |
 | [`glowField`](../../koala/src/jsMain/kotlin/koala/dom/component/glowField.kt) | A field where a handle is dragged to place a background glow |

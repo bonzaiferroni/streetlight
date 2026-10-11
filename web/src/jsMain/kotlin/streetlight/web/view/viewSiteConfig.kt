@@ -39,7 +39,7 @@ fun ViewScope.viewSiteConfig() {
                         }
                     }
                     formSection("Day / Night") {
-                        dropMenu(model.themeState)
+                        optionSwitch(model.themeState)
                     }
                 }
                 themeForm(editor)

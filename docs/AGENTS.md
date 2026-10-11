@@ -160,6 +160,10 @@ A bounty list is organized by what it changes. Each module is a top item in back
 
 A staged bounty need not compile. Code is never added only to make it compile; a failed compile marks where the work stands. A finished bounty lists its compile gaps: each file a bold top item, each gap a subitem beneath it.
 
+### Fast Bounty
+
+The navigator may open a *fast bounty*: a bounty given the green light to complete at once. The agent does the analysis, then carries the list through without waiting for "complete". Where a question is wanted before the work, the agent asks it first and carries through once it is answered. The reply shows the bounty list, completed items marked with 🍻, and its notes, as a bounty's does.
+
 ### Long Bounty
 
 The navigator may open a *long bounty*: a body of work mapped in a document at `docs/bounty/<bounty-name>.md`, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
