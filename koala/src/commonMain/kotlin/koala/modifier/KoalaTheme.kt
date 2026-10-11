@@ -57,6 +57,15 @@ object KoalaStyle {
     val RhoFocus = Property<LinearDimension>("rho-focus", true)
     val BetaFocus = Property<LinearDimension>("beta-focus", true)
     val GammaFocus = Property<LinearDimension>("gamma-focus", true)
+
+    val all = listOf(
+        Accent, Primary, ColorFlux,
+        RhoColor, BetaColor, GammaColor,
+        RhoX, BetaX, GammaX,
+        RhoY, BetaY, GammaY,
+        RhoRadius, BetaRadius, GammaRadius,
+        RhoFocus, BetaFocus, GammaFocus,
+    )
 }
 
 /** Where a background glow sits, as percentages of the viewport, and its radius. */

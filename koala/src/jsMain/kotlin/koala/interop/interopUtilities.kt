@@ -27,6 +27,18 @@ fun toggleRootModifier(mod: String) {
     localStorage.setItem(mod, classes.contains(ClassName(mod)).toString())
 }
 
+/** Sets whether the class [mod] is on the root element, and stores it in `localStorage`. */
+fun setRootModifier(mod: String, isOn: Boolean) {
+    document.documentElement.classList.toggle(ClassName(mod), isOn)
+    localStorage.setItem(mod, isOn.toString())
+}
+
+/** Sets the root element's inline style to [cssText] and stores it in `localStorage` under [key]. */
+fun applyRootStyle(key: String, cssText: String) {
+    document.documentElement.style.cssText = cssText
+    localStorage.setItem(key, cssText)
+}
+
 /** Sets the root setting [name] to [value] on the root element and in `localStorage`. */
 fun applyRootSwitch(name: String, value: String) {
     document.documentElement.setAttribute(name, value)

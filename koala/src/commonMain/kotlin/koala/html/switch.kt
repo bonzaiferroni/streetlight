@@ -16,6 +16,8 @@ $Class {
     align-items: center;
     align-self: start;
     min-width: 0;
+    /* the pill's travel */
+    padding-right: 1rem;
 
     border-radius: 2rem;
 
@@ -58,6 +60,7 @@ $Ghost {
 
     padding: var(--btn-padding);
     font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight);
     line-height: 1rem;
     text-transform: uppercase;
     white-space: nowrap;

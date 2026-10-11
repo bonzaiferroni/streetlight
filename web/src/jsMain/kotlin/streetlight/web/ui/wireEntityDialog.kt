@@ -21,18 +21,18 @@ import web.html.HTMLElement
 /** The record shown in the entity dialog; the dialog is open while it is set. */
 private val entityRefState = storeOf<EntityRef?>(null)
 
-/** The dialog showing the whole entity of a record, read when it opens, opened with [openEntityDialog]. */
+/** The dialog showing the whole entity of a record, read when it opens, opened with [readEntityRef]. */
 fun ViewScope.wireEntityDialog() {
     val isOpen = entityRefState.mutableTapOf({ it != null }) { if (it) this else null }
     dialog(isOpen, EntityDialogStyle.Frame) {
         val ref = entityRefState.now ?: return@dialog
-        val entityState = storeOf<Entity?>(null)
+        val localEntityState = storeOf<Entity?>(null)
         launchEffect {
             val entity = api.entity.readEntity(ref).toDataOr(toaster) { return@launchEffect }
-            entityState.set(entity)
+            localEntityState.set(entity)
         }
         rawDialogContent(null) {
-            flowBlock(entityState) { entity ->
+            flowBlock(localEntityState) { entity ->
                 entity?.let { div { entityDialog(it) } }
             }
         }
@@ -40,7 +40,7 @@ fun ViewScope.wireEntityDialog() {
 }
 
 /** Opens the entity dialog for the record named on [element], unless the click [event] landed on a link. */
-fun openEntityDialog(element: HTMLElement, event: Event) {
+fun readEntityRef(element: HTMLElement, event: Event) {
     if ((event.target as? Element)?.closest("a") != null) return
     val type = element.requireAttribute(EntityDialog.Type)
     val slug = element.requireAttribute(EntityDialog.Slug)

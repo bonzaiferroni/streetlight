@@ -27,12 +27,15 @@ A site-wide display setting lives on `document.documentElement` and in `localSto
 
 | Setting | Applied with | Initialized with |
 |---|---|---|
-| A class, on or off | `toggleRootModifier(mod)` | `initRootModifier(mod)` |
+| A class, on or off | `toggleRootModifier(mod)` or `setRootModifier(mod, isOn)` | `initRootModifier(mod)` |
 | An attribute with a value | `applyRootSwitch(name, value)` | `initRootSwitch(name, fallback)` |
+| The root's inline style | `applyRootStyle(key, cssText)` | `initRootStyle(key)` |
 
 An apply function writes the element and `localStorage` together. An init function runs in the head, before the body renders, so the stored setting is the first style shown. `initRootSwitch` sets the fallback when nothing is stored.
 
-An app declares its root switches once, as a `HeadScriptConfig` of `RootSwitch(attribute, fallback)`, and builds it into `PageResource.headScript` with `buildHeadScript` at startup. `appHead` emits it first in the head of every page. The script defines both init functions, restores `DayTheme`, and invokes `initRootSwitch` for each switch. The app writes no JS for a setting.
+An app declares its root settings once, as a `HeadScriptConfig` of `RootSwitch(attribute, fallback)` entries, root modifier classes and an optional root style key, and builds it into `PageResource.headScript` with `buildHeadScript` at startup. `appHead` emits it first in the head of every page. The script defines the init functions, restores `DayTheme`, and invokes the matching init function for each setting. The app writes no JS for a setting.
+
+The root style is a single key, since its text replaces the root's whole inline style.
 
 A root switch has these parts:
 

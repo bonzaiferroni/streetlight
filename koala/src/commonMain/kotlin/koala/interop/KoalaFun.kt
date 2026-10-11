@@ -18,6 +18,14 @@ object KoalaFun {
         } 
     """.trimIndent())
 
+    /** Sets the root's inline style from `localStorage` under [key]. Defined and invoked by [buildHeadScript]. */
+    val initRootStyle = jsFunctionOf("""
+        function initRootStyle(key) {
+            const style = localStorage.getItem(key);
+            if (style) document.documentElement.style.cssText = style;
+        }
+    """.trimIndent())
+
     /** Sets a root setting from `localStorage`, or to its fallback. Defined and invoked by [buildHeadScript]. */
     val initRootSwitch = jsFunctionOf("""
         function initRootSwitch(name, fallback) {

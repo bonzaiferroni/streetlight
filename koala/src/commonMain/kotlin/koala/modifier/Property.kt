@@ -45,20 +45,23 @@ fun CoreAttributeGroupFacade.setStyle(vararg styles: InlineStyle<*>?) = setStyle
 
 /** Appends [styles] to the tag's inline style. */
 fun CoreAttributeGroupFacade.setStyle(styles: StyleSet) {
-    styles.let {
-        style = buildString {
-            attributes["style"]?.let { style ->
-                append(style)
-                append(' ')
-            }
-            styles.forEach { style ->
-                if (style == null) return@forEach
-                append(style.property.identifier)
-                append(": ")
-                append(style.stringValue)
-                append("; ")
-            }
+    style = buildString {
+        attributes["style"]?.let { style ->
+            append(style)
+            append(' ')
         }
+        append(styles.toCssText())
+    }
+}
+
+/** The declarations of this set as inline style text. */
+fun StyleSet.toCssText() = buildString {
+    this@toCssText.forEach { style ->
+        if (style == null) return@forEach
+        append(style.property.identifier)
+        append(": ")
+        append(style.stringValue)
+        append("; ")
     }
 }
 

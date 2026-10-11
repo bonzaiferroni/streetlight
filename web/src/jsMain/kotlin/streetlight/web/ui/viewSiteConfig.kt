@@ -1,20 +1,31 @@
 package streetlight.web.ui
 
-import koala.modifier.AlignItemsStart
-import koala.modifier.modify
-import koala.dom.ViewScope
-import koala.dom.column
-import koala.dom.dropMenu
-import koala.dom.switch
+import koala.modifier.*
+import koala.dom.*
 import streetlight.web.model.SiteConfig
+import streetlight.web.model.ThemeEditor
 
 fun ViewScope.viewSiteConfig() {
-    val config = app.get<SiteConfig>()
+    val model = app.get<SiteConfig>()
 
     configBody("Site", "Config", "viewSiteConfig.kt") {
-        column(AlignItemsStart) {
-            switch("show transit", config.showTransitState)
-            dropMenu(config.themeFlow)
+        lazyTabs {
+            tab("general") {
+                column(AlignItemsStart) {
+                    // switch("show transit", config.showTransitState)
+                    switch("default theme only", model.defaultThemeOnlyState)
+                    dropMenu(model.themeFlow)
+                }
+            }
+            tab("default theme") {
+                val editor = ThemeEditor(model.themeState.now)
+                val messenger = MessageStore()
+                themeForm(editor)
+                formSubmit("save", {
+                    val theme = editor.buildTheme() ?: return@formSubmit
+                    model.themeState.set(theme)
+                }, messenger)
+            }
         }
     }
 }

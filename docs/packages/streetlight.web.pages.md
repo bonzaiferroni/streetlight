@@ -26,4 +26,10 @@ A page header is built on `rayHeader`, which places its content between a ray in
 
 ## Head Script
 
-The site's root switches are declared in `StreetlightHeadScript` in `appPage.kt`. A new root switch is added there.
+The site's root settings are declared in the `HeadScriptConfig` in `ServerResource.kt`. A new root setting is added there.
+
+## Themes
+
+A theme is a set of custom properties from `PageTheme.toStyleSet()`. The viewer's default theme is the root's inline style, stored under `DEFAULT_THEME_KEY` and restored by the head script. A page's own theme is the body's inline style and overrides the default; clearing the body returns the page to the default.
+
+`DefaultThemeOnly` is a root modifier. While it is on, `PageThemeCss` makes the body inherit every `KoalaStyle` property from the root, over any page theme.

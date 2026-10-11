@@ -2,15 +2,28 @@ package streetlight.web.model
 
 import kampfire.model.Labeled
 import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
+import koala.interop.applyRootStyle
+import koala.interop.setRootModifier
+import koala.modifier.toCssText
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
+import streetlight.model.data.PageTheme
+import streetlight.web.pages.DEFAULT_THEME_KEY
+import streetlight.web.pages.DefaultThemeOnly
+import streetlight.web.pages.toStyleSet
 import streetlight.web.utils.localStoreOf
+import web.cssom.ClassName
+import web.dom.document
 
 /** The viewer's site settings, kept in local storage. */
 class SiteConfig(
     private val scope: CoroutineScope
 ) {
     private val state = localStoreOf(scope, SITE_CONFIG_KEY, SiteConfigState())
+    val themeState = localStoreOf(scope, "default-theme", PageTheme())
+    val defaultThemeOnlyState = storeOf(document.documentElement.classList.contains(ClassName(DefaultThemeOnly.identifier)))
 
     val stateNow get() = state.now
     val stateFlow = state.flow
@@ -18,6 +31,15 @@ class SiteConfig(
     val themeFlow = state.mutableTapOf({ it.theme }) { copy(theme = it) }
     val locationPostModeState = state.mutableTapOf({ it.locationPostMode }) { copy(locationPostMode = it) }
     val eventPostModeState = state.mutableTapOf({ it.eventPostMode }) { copy(eventPostMode = it) }
+
+    init {
+        scope.launch {
+            themeState.flow.collect { applyRootStyle(DEFAULT_THEME_KEY, it.toStyleSet().toCssText()) }
+        }
+        scope.launch {
+            defaultThemeOnlyState.flow.collect { setRootModifier(DefaultThemeOnly.identifier, it) }
+        }
+    }
 }
 
 @Serializable

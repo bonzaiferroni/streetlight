@@ -1,6 +1,7 @@
 package koala.interop
 
 import koala.modifier.Attribute
+import koala.modifier.Class
 import koala.modifier.DayTheme
 import koala.modifier.jsScriptOf
 
@@ -12,24 +13,36 @@ data class RootSwitch<T>(
     val fallbackValue get() = attribute.toStringValue(fallback)
 }
 
-/** The settings an app restores in the head of every page. */
+/**
+ * The settings an app restores in the head of every page: its [rootSwitches], its [rootModifiers] besides
+ * [DayTheme], and the root's inline style stored under [rootStyleKey].
+ */
 data class HeadScriptConfig(
     val rootSwitches: List<RootSwitch<*>> = emptyList(),
+    val rootModifiers: List<Class> = emptyList(),
+    val rootStyleKey: String? = null,
 )
 
 /**
  * The head script for [config], which runs before the body renders so the stored settings are the first style
  * shown.
  *
- * It restores the day theme and each of the config's root switches.
+ * It restores the day theme and each of the config's root settings.
  */
 fun buildHeadScript(config: HeadScriptConfig) = with(KoalaFun) {
     jsScriptOf {
         define(initRootModifier)
         define(initRootSwitch)
+        define(initRootStyle)
         invoke(initRootModifier, DayTheme)
+        config.rootModifiers.forEach {
+            invoke(initRootModifier, it)
+        }
         config.rootSwitches.forEach {
             invoke(initRootSwitch, it.attribute.identifier, it.fallbackValue)
+        }
+        config.rootStyleKey?.let {
+            invoke(initRootStyle, it)
         }
     }
 }
