@@ -31,7 +31,7 @@ object GridColumns {
     val Class = Class("grid")
 
     /** Columns that fill the row, each at least a minimum width. */
-    fun repeatFill(minPx: Int) = GridTemplateColumns("repeat(auto-fill, minmax(${400}px, 1fr))")
+    fun repeatFill(minPx: Int) = GridTemplateColumns("repeat(auto-fill, minmax(${minPx}px, 1fr))")
 
     val QueryTemplate = Property<GridTemplateColumns>("grid-query-columns", true)
 }

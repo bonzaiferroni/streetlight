@@ -31,10 +31,9 @@ $Class {
 
 $Pill {
     position: absolute;
-    top: 50%;
+    inset-block: 0;
     left: 0;
     right: 1rem;
-    transform: translate(0, -50%);
     transition: var(--transition-transform), var(--transition-background);
 
     padding: var(--btn-padding);
@@ -69,7 +68,7 @@ $Ghost {
 /* ON state: slide pill to the right, full opacity */
 $Class${Attribute.IsOn.to(true)} $Pill {
     background: var(--primary-button);
-    transform: translate(1rem, -50%);
+    transform: translateX(1rem);
     box-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
 }
 

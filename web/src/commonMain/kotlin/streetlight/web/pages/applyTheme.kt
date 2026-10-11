@@ -1,3 +1,5 @@
+@file:Suppress("CssInvalidPseudoSelector")
+
 package streetlight.web.pages
 
 import koala.modifier.Class

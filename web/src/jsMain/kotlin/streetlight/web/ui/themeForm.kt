@@ -3,6 +3,7 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
+import koala.html.GridColumns
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import streetlight.model.data.PageTheme
@@ -31,9 +32,11 @@ fun ViewScope.themeForm(model: ThemeEditor) {
             }
         }
         formSection("Glow Settings") {
-            glowConfig("rho", model.rhoState)
-            glowConfig("beta", model.betaState)
-            glowConfig("gamma", model.gammaState)
+            column(Gap(2)) {
+                glowConfig("rho", model.rhoState)
+                glowConfig("beta", model.betaState)
+                glowConfig("gamma", model.gammaState)
+            }
         }
     }
 
@@ -46,7 +49,7 @@ fun ViewScope.glowConfig(name: String, state: MutableTap<Glow>) {
     val energyState = state.mutableTapOf({ it.energy }) { copy(energy = it) }
     val focusState = state.mutableTapOf({ it.focus }) { copy(focus = it) }
 
-    row(FlexItems1) {
+    grid(GridColumns.repeatFill(192)) {
         colorPicker(name, colorState)
         slider(SvgFile.Ruler.small, radiusState, (0..KoalaTheme.MaxRadius))
         slider(SvgFile.Bulb.small, energyState, (0..KoalaTheme.MaxEnergy))

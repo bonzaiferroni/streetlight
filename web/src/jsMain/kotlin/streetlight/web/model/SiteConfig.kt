@@ -2,11 +2,13 @@ package streetlight.web.model
 
 import kampfire.model.Labeled
 import kampfire.model.mutableTapOf
+import kampfire.model.reactIn
 import kampfire.model.storeOf
 import koala.interop.applyRootStyle
 import koala.interop.setRootModifier
+import koala.modifier.Class
+import koala.modifier.DayTheme
 import koala.modifier.toCssText
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import streetlight.model.data.PageTheme
@@ -22,30 +24,28 @@ class SiteConfig(
     private val scope: CoroutineScope
 ) {
     private val state = localStoreOf(scope, SITE_CONFIG_KEY, SiteConfigState())
-    val themeState = localStoreOf(scope, "default-theme", PageTheme())
-    val defaultThemeOnlyState = storeOf(document.documentElement.classList.contains(ClassName(DefaultThemeOnly.identifier)))
+    val pageThemeState = localStoreOf(scope, "default-theme", PageTheme())
+    val defaultThemeOnlyState = storeOf(hasRootModifier(DefaultThemeOnly))
+    val themeState = storeOf(if (hasRootModifier(DayTheme)) SiteTheme.Light else SiteTheme.Dark)
 
     val stateNow get() = state.now
     val stateFlow = state.flow
     val showTransitState = state.mutableTapOf({ it.showTransit }) { copy(showTransit = it) }
-    val themeFlow = state.mutableTapOf({ it.theme }) { copy(theme = it) }
     val locationPostModeState = state.mutableTapOf({ it.locationPostMode }) { copy(locationPostMode = it) }
     val eventPostModeState = state.mutableTapOf({ it.eventPostMode }) { copy(eventPostMode = it) }
 
     init {
-        scope.launch {
-            themeState.flow.collect { applyRootStyle(DEFAULT_THEME_KEY, it.toStyleSet().toCssText()) }
-        }
-        scope.launch {
-            defaultThemeOnlyState.flow.collect { setRootModifier(DefaultThemeOnly.identifier, it) }
-        }
+        pageThemeState.reactIn(scope) { applyRootStyle(DEFAULT_THEME_KEY, it.toStyleSet().toCssText()) }
+        defaultThemeOnlyState.reactIn(scope) { setRootModifier(DefaultThemeOnly.identifier, it) }
+        themeState.reactIn(scope) { setRootModifier(DayTheme.identifier, it == SiteTheme.Light) }
     }
 }
+
+private fun hasRootModifier(mod: Class) = document.documentElement.classList.contains(ClassName(mod.identifier))
 
 @Serializable
 data class SiteConfigState(
     val showTransit: Boolean = false,
-    val theme: SiteTheme = SiteTheme.Dark,
     val locationPostMode: LocationPostMode = LocationPostMode.Return,
     val eventPostMode: EventPostMode = EventPostMode.Return,
 )
