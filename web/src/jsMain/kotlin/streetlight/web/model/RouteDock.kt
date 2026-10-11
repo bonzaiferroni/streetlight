@@ -9,10 +9,10 @@ import koala.model.LabeledRoute
 import koala.model.withLabel
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.ui.CityListRoute
+import streetlight.model.ui.CityFeedRoute
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.CityRoute
-import streetlight.model.ui.GalaxyListRoute
+import streetlight.model.ui.GalaxyFeedRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.FeedRoute
@@ -93,8 +93,8 @@ private fun stateOf(route: AppRoute): RouteDockState? {
     return when (route) {
         // universe
         is HomeRoute -> universeStateOf(EventsMapRoute())
-        is GalaxyListRoute -> universeStateOf(GalaxyMapRoute(null))
-        is CityListRoute -> universeStateOf(CityMapRoute)
+        is GalaxyFeedRoute -> universeStateOf(GalaxyMapRoute(null))
+        is CityFeedRoute -> universeStateOf(CityMapRoute)
 
         // galaxy
         is GalaxyRoute -> RouteDockState(
@@ -142,7 +142,7 @@ private fun stateOf(route: AppRoute): RouteDockState? {
 }
 
 private fun universeStateOf(mapRoute: AppRoute) = RouteDockState(
-    mainRoutes = listOf(HomeRoute().withLabel(), GalaxyListRoute.withLabel(), CityListRoute.withLabel()),
+    mainRoutes = listOf(HomeRoute().withLabel(), GalaxyFeedRoute().withLabel(), CityFeedRoute().withLabel()),
     title = "Streetlight",
     rightRoutes = listOf(mapRoute),
 )

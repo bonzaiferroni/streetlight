@@ -12,7 +12,7 @@ import kotlinx.css.fr
 import streetlight.model.data.Star
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.HomeRoute
-import streetlight.model.ui.GalaxyListRoute
+import streetlight.model.ui.GalaxyFeedRoute
 import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.web.model.SessionClient
@@ -106,7 +106,7 @@ private fun ViewScope.sandboxContent(star: Star) {
                 textBlock("Add things to the map.", Flex1)
                 btn("Edit Profile", ProfileConfigRoute)
                 btn("Go to sandbox", SandboxRoute)
-                button("galaxy list", { portal.go(GalaxyListRoute) }, Accent)
+                button("galaxy list", { portal.go(GalaxyFeedRoute()) }, Accent)
             }
         }
 

@@ -71,7 +71,7 @@ enum class Screen(
     Galaxy(SlugParse { GalaxyRoute(it) }, "g", true),
     GalaxyFoundry(StaticParse { GalaxyFoundryRoute }),
     GalaxyConfig(SlugParse { GalaxyConfigRoute(it) } ),
-    GalaxyList(StaticParse { GalaxyListRoute }, "galaxies"),
+    GalaxyFeed(StaticParse { GalaxyFeedRoute(readFeedType()) }, "galaxies", true),
 
     // event
     Event(SlugParse { EventRoute(it) }, "e", true),
@@ -90,7 +90,7 @@ enum class Screen(
     // city
     City(SlugParse { CityRoute(it, readFeedType()) }),
     CityConfig(SlugParse { CityConfigRoute(it) }),
-    CityList(StaticParse { CityListRoute }, "cities", true),
+    CityFeed(StaticParse { CityFeedRoute(readFeedType()) }, "cities", true),
 
     // media
     Media(SlugParse { MediaRoute(it) }, "m", true),

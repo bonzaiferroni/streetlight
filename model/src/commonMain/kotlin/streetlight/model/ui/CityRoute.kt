@@ -16,7 +16,9 @@ data class CityConfigRoute(override val slug: Slug): SlugRoute {
     override val title get() = "City Config"
 }
 
-object CityListRoute: StreetlightRoute {
-    override val screen get() = Screen.CityList
+data class CityFeedRoute(override val feed: FeedType? = null): FeedRoute {
+    override val screen get() = Screen.CityFeed
     override val title get() = "Cities"
+    override val defaultFeedRoute get() = copy(feed = null)
+    override fun toRelativePath() = basePath.withFeedParam(feed)
 }

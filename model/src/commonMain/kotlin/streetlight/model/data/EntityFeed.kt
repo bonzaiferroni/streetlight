@@ -75,11 +75,21 @@ sealed interface FeedContext {
     data class Star(val username: Username): FeedContext {
         override val types get() = listOf(FeedType.Media)
     }
+
+    @Serializable
+    data object Galaxies: FeedContext {
+        override val types get() = listOf(FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies)
+    }
+
+    @Serializable
+    data object Cities: FeedContext {
+        override val types get() = listOf(FeedType.Cities)
+    }
 }
 
 /**
  * What a feed lists: upcoming events, locations newest first, the posts of the galaxies a star follows, a galaxy's
- * posts, or media.
+ * posts, media, the galaxies a star follows by name, galaxies by star count or newest first, or cities by name.
  */
 @Serializable
-enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media }
+enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media, StarGalaxies, TopGalaxies, NewGalaxies, Cities }

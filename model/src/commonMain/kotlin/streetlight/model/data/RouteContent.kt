@@ -66,10 +66,16 @@ data class CityContent(
     val feed: EntityFeed,
 ): RouteContent
 
-/** The content of the city list. */
+/** The content of the city feed: its first page. */
 @Serializable
-data class CityListContent(
-    val cities: List<City>,
+data class CityFeedContent(
+    val feed: EntityFeed,
+): RouteContent
+
+/** The content of the galaxy feed: its first page. */
+@Serializable
+data class GalaxyFeedContent(
+    val feed: EntityFeed,
 ): RouteContent
 
 /** The content of a doc page: the doc and the table of contents. */

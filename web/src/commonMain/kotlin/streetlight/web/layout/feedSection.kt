@@ -52,10 +52,10 @@ fun FlowContent.feedSection(
         }
 
         // td: filter and search posts
-        if (source.type == FeedType.Events) {
+        if (source.type.isSearched) {
             row(modify(AlignItemsCenter, JustifyContentSpaceBetween)) {
                 row(AlignItemsCenter) {
-                    tagFilterMenu()
+                    if (source.type == FeedType.Events) tagFilterMenu()
                 }
                 searchField(textMod = FeedSection.Search) {
                     onInput = FeedSection.SearchFeed.invokeJs(ThisElement)
@@ -120,6 +120,16 @@ val FeedType.heading get() = when (this) {
     FeedType.Locations -> "Locations"
     FeedType.GalaxyPosts, FeedType.Posts -> "Posts"
     FeedType.Media -> "Media"
+    FeedType.StarGalaxies -> "My Galaxies"
+    FeedType.TopGalaxies -> "Top Galaxies"
+    FeedType.NewGalaxies -> "New Galaxies"
+    FeedType.Cities -> "Cities"
+}
+
+/** Whether a feed of this type has a search field. */
+val FeedType.isSearched get() = when (this) {
+    FeedType.Events, FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies, FeedType.Cities -> true
+    FeedType.Locations, FeedType.GalaxyPosts, FeedType.Posts, FeedType.Media -> false
 }
 
 fun FeedType.toSvg() = when (this) {
@@ -128,6 +138,10 @@ fun FeedType.toSvg() = when (this) {
     FeedType.GalaxyPosts -> SvgFile.Planet.small
     FeedType.Posts -> SvgFile.News.small
     FeedType.Media -> SvgFile.Photo.small
+    FeedType.StarGalaxies -> SvgFile.Star.small
+    FeedType.TopGalaxies -> SvgFile.Trophy.small
+    FeedType.NewGalaxies -> SvgFile.Seedling.small
+    FeedType.Cities -> SvgFile.City.small
 }
 
 fun FeedMode.toSvg() = when (this) {

@@ -245,13 +245,13 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 |---|---|
 | [`viewHome`](../../web/src/jsMain/kotlin/streetlight/web/view/viewHome.kt) | The Home screen |
 | [`viewGalaxy`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxy.kt) | The Galaxy screen |
-| [`viewGalaxyList`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxyList.kt) | The GalaxyList screen |
+| [`viewGalaxyFeed`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxyFeed.kt) | The galaxy feed |
 | [`viewStar`](../../web/src/jsMain/kotlin/streetlight/web/view/viewStar.kt) | The Star screen |
 | [`viewLocation`](../../web/src/jsMain/kotlin/streetlight/web/view/viewLocation.kt) | The Location screen |
 | [`viewEvent`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEvent.kt) | The Event screen |
 | [`viewMedia`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMedia.kt) | The Media screen |
 | [`viewCity`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCity.kt) | The City screen |
-| [`viewCityList`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCityList.kt) | The CityList screen |
+| [`viewCityFeed`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCityFeed.kt) | The city feed |
 | [`viewSiteDoc`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteDoc.kt) | The SiteDoc screen |
 | [`viewAboutApp`](../../web/src/jsMain/kotlin/streetlight/web/view/viewAboutApp.kt) | The AboutApp screen |
 | [`viewTalkLog`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTalkLog.kt) | The TalkLog screen |

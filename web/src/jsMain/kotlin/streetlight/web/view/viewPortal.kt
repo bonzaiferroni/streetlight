@@ -71,10 +71,10 @@ fun ViewScope.viewPortal() {
                 Screen.Galaxy -> viewGalaxyRoute()
                 Screen.GalaxyFoundry -> viewGalaxyFoundry()
                 Screen.GalaxyConfig -> viewGalaxyConfigRoute()
-                Screen.GalaxyList -> viewGalaxyList()
+                Screen.GalaxyFeed -> viewGalaxyFeedRoute()
 
                 // city
-                Screen.CityList -> viewCityListRoute()
+                Screen.CityFeed -> viewCityFeedRoute()
                 Screen.City -> viewCityRoute()
                 Screen.CityConfig -> viewCityConfigRoute()
 

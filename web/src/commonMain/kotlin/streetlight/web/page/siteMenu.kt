@@ -7,10 +7,10 @@ import koala.interop.InlineJs
 import koala.interop.KoalaFun
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import streetlight.model.ui.CityListRoute
+import streetlight.model.ui.CityFeedRoute
 import streetlight.model.ui.ContributeRoute
 import streetlight.model.ui.FrontDeskRoute
-import streetlight.model.ui.GalaxyListRoute
+import streetlight.model.ui.GalaxyFeedRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
@@ -60,8 +60,8 @@ fun FlowContent.siteMenuSidebar() {
 
 fun FlowContent.siteMenuItems() {
     item("Earth", GalaxyMapRoute(null), SvgFile.Earth.large)
-    item("Galaxies", GalaxyListRoute, SvgFile.Satellite.large)
-    item("Cities", CityListRoute, SvgFile.City.large)
+    item("Galaxies", GalaxyFeedRoute(), SvgFile.Satellite.large)
+    item("Cities", CityFeedRoute(), SvgFile.City.large)
     // radio
     label("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.Question.large)
@@ -132,7 +132,7 @@ ${generateScreenSelectors(highlightedScreens)} {
 """ }
 
 val highlightedScreens = listOf(
-    Screen.Home, Screen.Earth, Screen.GalaxyList, Screen.CityList,
+    Screen.Home, Screen.Earth, Screen.GalaxyFeed, Screen.CityFeed,
     Screen.Feedback, Screen.SiteMonitor, Screen.Contribute, Screen.Docs,
     Screen.SiteConfig,
 )

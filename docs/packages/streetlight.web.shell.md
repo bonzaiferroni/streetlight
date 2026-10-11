@@ -77,7 +77,8 @@ The route dock is not shell content. It is not something a user needs to underst
 | [`eventShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/eventShell.kt) | An event |
 | [`mediaShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/mediaShell.kt) | A medium |
 | [`cityShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityShell.kt) | A city |
-| [`cityListShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityListShell.kt) | The list of cities |
+| [`galaxyFeedShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/galaxyFeedShell.kt) | The galaxy feed |
+| [`cityFeedShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityFeedShell.kt) | The city feed |
 | [`siteDocShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/siteDocShell.kt) | A site doc beside the table of all site docs |
 | [`aboutShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/aboutShell.kt) | The about page |
 | [`aboutAppShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/aboutAppShell.kt) | The app's about page and its repositories |

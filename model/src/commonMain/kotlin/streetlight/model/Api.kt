@@ -25,7 +25,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Home: GetEndpoint<HomeContent>(this) {
             val feed = enumParamOf<FeedType>("feed")
         }
-        object CityList: GetEndpoint<CityListContent>(this)
+        object CityFeed: GetEndpoint<CityFeedContent>(this) {
+            val feed = enumParamOf<FeedType>("feed")
+        }
+        object GalaxyFeed: GetEndpoint<GalaxyFeedContent>(this) {
+            val feed = enumParamOf<FeedType>("feed")
+        }
     }
 
     object Events: GetEndpoint<List<Event>>(this) {

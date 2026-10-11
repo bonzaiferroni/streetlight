@@ -27,12 +27,16 @@ import kotlin.uuid.Uuid
 /** The calls of `Api.Content`, for the content of routes that belong to no other node. */
 interface ContentClient {
     suspend fun readHomeContent(feed: FeedType?): Outcome<HomeContent>
-    suspend fun readCityListContent(): Outcome<CityListContent>
+    suspend fun readCityFeedContent(): Outcome<CityFeedContent>
+    suspend fun readGalaxyFeedContent(feed: FeedType?): Outcome<GalaxyFeedContent>
 }
 
 class BrowserContentClient(private val client: FetchClient): ContentClient {
     override suspend fun readHomeContent(feed: FeedType?) = client.getApi(Api.Content.Home) { endpoint ->
         feed?.let { writeParam(endpoint.feed, it) }
     }
-    override suspend fun readCityListContent() = client.getApi(Api.Content.CityList)
+    override suspend fun readCityFeedContent() = client.getApi(Api.Content.CityFeed)
+    override suspend fun readGalaxyFeedContent(feed: FeedType?) = client.getApi(Api.Content.GalaxyFeed) { endpoint ->
+        feed?.let { writeParam(endpoint.feed, it) }
+    }
 }

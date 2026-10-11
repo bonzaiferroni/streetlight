@@ -13,7 +13,7 @@ enum class SortDirection { Ascending, Descending }
  * after it.
  *
  * It pages any table keyed by a [Uuid]. A [tag], the ordinal of an [EventTag], filters the feed to entities with that
- * tag, and a [search] to entities whose name or location name holds it.
+ * tag, and a [search] to entities whose searched text, such as a name, holds it.
  */
 @Serializable
 sealed interface EntityCursor {
@@ -41,6 +41,19 @@ sealed interface EntityCursor {
     ) : EntityCursor {
         companion object  {
             val Default get() = Score(SortDirection.Descending)
+        }
+    }
+
+    @Serializable
+    data class Name(
+        override val direction: SortDirection,
+        override val recordId: Uuid? = null,
+        val name: String? = null,
+        override val tag: Int? = null,
+        override val search: String? = null,
+    ) : EntityCursor {
+        companion object {
+            val Default get() = Name(SortDirection.Ascending)
         }
     }
 

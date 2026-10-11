@@ -30,12 +30,9 @@ fun ViewScope.viewSiteConfig() {
                 val messenger = MessageStore()
                 formRow {
                     formSection("Theme Override") {
-                        row {
-                            switch("use my theme", model.defaultThemeOnlyState)
-                            centeredText(
-                                "This allows you to override custom themes set by Streetlight content to maintain a consistent visual style.",
-                                Flex1,
-                            )
+                        row(AlignItemsCenter) {
+                            switch("override", model.defaultThemeOnlyState)
+                            centeredText("Override custom themes to maintain a consistent visual style.", Flex1,)
                         }
                     }
                     formSection("Day / Night") {
