@@ -38,7 +38,7 @@ fun ViewScope.earthFocus(model: Earth) {
         modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight(100.pct), PointerEventsAuto, ZenBg, BlurBackdrop)
     ) { entitiesOrNull ->
         val entities = entitiesOrNull ?: return@flowBlock
-        column(FeedSection.FeedColumnMod) {
+        column(modify(FeedSection.FeedColumnMod, FadeIn)) {
             entities.forEachIndexed { index, entity ->
                 when (index) {
                     0 -> div(FeedRowStyle.Featured) { configureFeedRow(entity) }

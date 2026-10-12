@@ -60,7 +60,7 @@ fun DIV.configureFeedRow(
     div(FeedRowStyle.Content) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         // td: make the image placeholder depend on post type
-        entityImage(entity, modify(FeedRowStyle.Image, OverflowClip, MoonShadow), modify(FeedRowStyle.Feature, Size100P))
+        entityImage(entity, modify(FeedRowStyle.Image, OverflowClip, MoonShadow), modify(FeedRowStyle.Feature, Size100P, FocusInSlow))
         column(modify(FeedRowStyle.Text, Gap(0), TextShadow, OverflowHidden)) {
             entityHeading(entity)
             entitySummary(entity, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))

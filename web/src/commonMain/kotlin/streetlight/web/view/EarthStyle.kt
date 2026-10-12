@@ -72,7 +72,7 @@ $Container {
 $Grid {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto 1fr minmax(0, 2fr);
+    grid-template-rows: auto 1fr minmax(0, 4fr);
     grid-template-areas: 
         "header"
         "window"
