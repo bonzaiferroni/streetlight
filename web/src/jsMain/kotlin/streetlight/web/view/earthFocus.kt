@@ -42,7 +42,7 @@ fun ViewScope.earthFocus(model: Earth) {
             entities.forEachIndexed { index, entity ->
                 when (index) {
                     0 -> div(FeedRowStyle.Featured) { configureFeedRow(entity) }
-                    else -> feedRow(entity)
+                    else -> feedRow(entity, mod = Padding(1))
                 }
             }
         }

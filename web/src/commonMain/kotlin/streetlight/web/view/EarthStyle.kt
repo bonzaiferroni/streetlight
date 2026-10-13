@@ -72,7 +72,7 @@ $Container {
 $Grid {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto 1fr minmax(0, 4fr);
+    grid-template-rows: auto 1fr minmax(0, 5fr);
     grid-template-areas: 
         "header"
         "window"
@@ -105,6 +105,9 @@ $Grid {
             "focus window";
     }
 }
+
+/* a border, not an outline, since the scrolled content paints over an outline inset within it */
+$Focus:not(:empty) { border: var(--outline-low); }
 
 $Unbounded {
     position: relative;

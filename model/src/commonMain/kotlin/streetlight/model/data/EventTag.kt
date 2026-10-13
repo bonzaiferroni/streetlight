@@ -27,7 +27,7 @@ enum class EventTag(val specificity: Int, val svg: SvgPack, label: String? = nul
     GamesAndTrivia(1, SvgFile.Dice, "Games & Trivia"),
     Singles(1, SvgFile.Hearts),
     LGBTQ(1, SvgFile.Rainbow),
-    Tech(1, SvgFile.DeviceLaptop),
+    Tech(1, SvgFile.Code),
     Pets(1, SvgFile.Paw),
     Party(1, SvgFile.DeviceTv, "Watch Party"), // replace with Party
 

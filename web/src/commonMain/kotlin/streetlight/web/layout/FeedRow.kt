@@ -32,8 +32,9 @@ fun FlowContent.feedRow(
     entity: Entity,
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
+    mod: Modifier? = null,
 ) {
-    div() {
+    div(mod) {
         configureFeedRow(entity, curator, cells)
     }
 }

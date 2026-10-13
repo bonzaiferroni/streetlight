@@ -2,6 +2,7 @@ package streetlight.web.dom.layout
 
 import koala.dom.AppendScope
 import koala.dom.layout.div
+import koala.modifier.Modifier
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
 import streetlight.web.layout.EntityCell
@@ -13,6 +14,7 @@ fun AppendScope.feedRow(
     entity: Entity,
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
-) = div(null) {
+    mod: Modifier? = null,
+) = div(mod) {
     configureFeedRow(entity, curator, cells)
 }
