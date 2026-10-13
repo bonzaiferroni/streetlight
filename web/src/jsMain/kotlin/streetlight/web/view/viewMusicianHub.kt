@@ -3,9 +3,9 @@ package streetlight.web.view
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.component.button
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.dom.layout.lazyTabs
-import koala.dom.layout.row
+import koala.dom.component.row
 import koala.page.Id
 import streetlight.web.model.MusicianHub
 import streetlight.web.model.api

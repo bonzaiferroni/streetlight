@@ -7,9 +7,9 @@ import koala.interop.JsSignature
 import koala.modifier.modify
 import koala.page.Id
 import koala.component.button
-import koala.layout.column
+import koala.component.column
 import koala.page.linkScript
-import koala.layout.row
+import koala.component.row
 import koala.page.setId
 import koala.component.textBlock
 import koala.component.textField

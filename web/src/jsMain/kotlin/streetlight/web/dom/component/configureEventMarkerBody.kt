@@ -1,6 +1,6 @@
 package streetlight.web.dom.component
 
-import koala.layout.ListStyleGlyph
+import koala.component.ListStyleGlyph
 import koala.component.bulletsOf
 import koala.component.span
 import koala.component.textBlock

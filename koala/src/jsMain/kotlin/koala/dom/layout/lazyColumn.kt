@@ -20,6 +20,7 @@ import koala.dom.clear
 import koala.dom.createDiv
 import koala.dom.launchEffect
 import koala.dom.mountChildView
+import koala.dom.component.div
 
 /**
  * A scrolling column of [list], applying each change in place rather than rebuilding.

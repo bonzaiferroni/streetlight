@@ -5,8 +5,8 @@ import koala.SvgPack
 import koala.component.icon
 import koala.component.navigation
 import koala.component.textBlock
-import koala.layout.column
-import koala.layout.grid
+import koala.component.column
+import koala.component.grid
 import koala.modifier.*
 import kotlinx.css.GridTemplateColumns
 import kotlinx.css.GridTemplateRows

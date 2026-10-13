@@ -1,7 +1,6 @@
 package koala.component
 
 import koala.modifier.Class
-import koala.layout.box
 
 object FilePickerKey {
     val Class = Class("file-picker")

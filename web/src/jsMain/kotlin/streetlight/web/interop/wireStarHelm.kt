@@ -10,7 +10,7 @@ import koala.component.heading3
 import koala.component.icon
 import koala.component.image
 import kampfire.model.setTrue
-import koala.layout.closePopoverOnClick
+import koala.component.closePopoverOnClick
 import koala.interop.toggleRootModifierWithTransition
 import kotlinx.html.onClick
 import streetlight.model.data.Star

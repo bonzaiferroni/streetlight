@@ -10,7 +10,6 @@ import web.html.HTMLInputElement
 import koala.dom.ViewScope
 import koala.dom.asWeb
 import koala.dom.launchEffect
-import koala.dom.layout.box
 
 /** A button labeled [text], filled with the color of [colorState], that opens the browser's color picker. */
 fun ViewScope.colorPicker(

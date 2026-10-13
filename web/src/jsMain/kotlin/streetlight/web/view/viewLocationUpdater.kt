@@ -9,6 +9,7 @@ import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
+import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
 import streetlight.web.dom.layout.configBody

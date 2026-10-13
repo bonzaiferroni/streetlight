@@ -3,7 +3,6 @@ package koala.dom.component
 import koala.modifier.*
 import kotlinx.html.DIV
 import koala.dom.AppendScope
-import koala.dom.layout.row
 import koala.component.configureFiligree
 import koala.component.heading
 

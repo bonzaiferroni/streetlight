@@ -1,8 +1,6 @@
-package koala.component
+package koala.layout
 
 import koala.modifier.Class
-import koala.layout.box
-import koala.layout.card
 
 object MessageBox {
     val Mod = Class("message-box")

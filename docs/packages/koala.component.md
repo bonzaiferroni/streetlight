@@ -10,7 +10,6 @@ Components declared on `FlowContent`, which build markup without the bundle, and
 |---|---|
 | `kotlinx.html` | The HTML DSL |
 | `koala.modifier` | Modifiers and classes |
-| `koala.layout` | The containers components are built from |
 | `koala.page` | `Id` |
 | `koala.interop` | `KoalaFun` for markup that calls the browser |
 | `kampfire.model` | Shared model types |
@@ -38,6 +37,34 @@ The app marks the selected button by adding `rootSwitchCss(attribute, values)` t
 The setting is restored on load through the app's `HeadScriptConfig`, described in `koala.interop.md`.
 
 ## Components
+
+### Containers
+
+| Component | Role |
+|---|---|
+| [`div`](../../koala/src/commonMain/kotlin/koala/component/div.kt) | A `div` with modifiers applied |
+| [`box`](../../koala/src/commonMain/kotlin/koala/component/box.kt) | Children stacked in one grid cell, over one another |
+| [`card`, `cardOf`](../../koala/src/commonMain/kotlin/koala/component/card.kt) | A container with a card's background and corners |
+| [`section`](../../koala/src/commonMain/kotlin/koala/component/section.kt) | A `section` laid out as a flex column |
+| [`spacer`, `centeredHeading`](../../koala/src/commonMain/kotlin/koala/component/spacer.kt) | An empty element that takes up space, and a heading centered in a row |
+
+### Arrangements
+
+| Component | Role |
+|---|---|
+| [`row`](../../koala/src/commonMain/kotlin/koala/component/row.kt) | A flex row |
+| [`column`](../../koala/src/commonMain/kotlin/koala/component/column.kt) | A flex column |
+| [`grid`](../../koala/src/commonMain/kotlin/koala/component/grid.kt) | A grid of column and row templates |
+| [`carousel`](../../koala/src/commonMain/kotlin/koala/component/carousel.kt) | A row that scrolls sideways, snapping to each child |
+| [`olist`, `ulist`](../../koala/src/commonMain/kotlin/koala/component/listing.kt) | Lists laid out along an axis |
+| [`listItem`](../../koala/src/commonMain/kotlin/koala/component/listItem.kt) | An item of a list |
+
+### Overlays
+
+| Component | Role |
+|---|---|
+| [`popover`, `popoverCard`](../../koala/src/commonMain/kotlin/koala/component/popover.kt) | A popover positioned against an anchor |
+| [`DialogStyle`](../../koala/src/commonMain/kotlin/koala/component/dialog.kt) | The stylesheet of the `dialog` in `koala.dom.component` |
 
 ### Buttons and Links
 
@@ -95,4 +122,3 @@ The setting is restored on load through the app's `HeadScriptConfig`, described 
 |---|---|
 | [`progressBar`](../../koala/src/commonMain/kotlin/koala/component/progressBar.kt) | A bar filled to a progress from 0 to 1 |
 | [`hr`](../../koala/src/commonMain/kotlin/koala/component/hr.kt) | A horizontal rule |
-| [`MessageBox`](../../koala/src/commonMain/kotlin/koala/component/messageBox.kt) | The stylesheet of the `messageBox` in `koala.dom.component` |

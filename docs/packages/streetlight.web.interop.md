@@ -9,7 +9,7 @@ The app's calls between markup and the bundle: the global functions markup calls
 | Package | Provides |
 |---|---|
 | `koala.interop` | `JsSignature`, `KtFunction` and `wireBlock` |
-| `koala.dom`, `koala.dom.layout` | The view runtime, `dialog` and `popover` |
+| `koala.dom`, `koala.dom.component`, `koala.dom.layout` | The view runtime, `dialog`, `popover`, `flowBlock` and `lazyTabs` |
 | `streetlight.web.component`, `streetlight.web.layout` | The markup the functions here find and bind |
 | `streetlight.web.model` | Services and view models |
 

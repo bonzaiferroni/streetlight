@@ -11,7 +11,7 @@ import koala.markdown.accepts
 import koala.markdown.markdownBlockTypeOf
 import web.html.HTMLElement
 import koala.dom.clear
-import koala.dom.layout.open
+import koala.dom.component.open
 import koala.markdown.s
 
 /**

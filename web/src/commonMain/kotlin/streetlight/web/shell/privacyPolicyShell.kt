@@ -7,7 +7,6 @@ import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.web.layout.mainBody
 import koala.component.*
-import koala.layout.*
 import koala.markdown.*
 import koala.page.*
 

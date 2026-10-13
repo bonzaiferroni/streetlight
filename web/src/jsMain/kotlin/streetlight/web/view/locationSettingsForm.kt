@@ -5,7 +5,7 @@ import kampfire.api.toSlug
 import kampfire.model.CoreProblem
 import kampfire.model.toDataOr
 import koala.dom.*
-import koala.layout.div
+import koala.component.div
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import streetlight.model.data.LocationConfig

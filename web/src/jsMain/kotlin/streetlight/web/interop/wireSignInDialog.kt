@@ -5,10 +5,10 @@ import kampfire.model.setFalse
 import kampfire.model.setTrue
 import kampfire.model.storeOf
 import koala.dom.ViewScope
-import koala.dom.layout.dialog
-import koala.dom.layout.dialogCard
+import koala.dom.component.dialog
+import koala.dom.component.dialogCard
 import koala.dom.layout.lazyTabs
-import koala.dom.layout.rawDialogContent
+import koala.dom.component.rawDialogContent
 import koala.page.Id
 import streetlight.model.data.Star
 import streetlight.web.view.fullRegistrationForm

@@ -2,7 +2,7 @@ package streetlight.web.dom.page
 
 import koala.core.queryAndInitLotties
 import koala.dom.AppendScope
-import koala.dom.layout.column
+import koala.dom.component.column
 import streetlight.model.data.ExtraLink
 import streetlight.web.page.configureAppFooter
 import web.html.HTMLElement

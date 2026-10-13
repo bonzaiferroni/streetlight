@@ -13,8 +13,8 @@ import kotlinx.css.GridTemplateColumns
 import web.html.HTMLElement
 import koala.dom.AppendScope
 import koala.dom.clear
-import koala.dom.layout.div
-import koala.dom.layout.row
+import koala.dom.component.div
+import koala.dom.component.row
 import koala.markdown.EditorStyle
 
 private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, block: MarkdownTable) {

@@ -3,9 +3,6 @@ package koala.component
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.centeredHeading
-import koala.layout.row
-import koala.layout.spacer
 
 /** A heading row with the label built by [labelContent] centered, after what [block] builds. */
 fun FlowContent.sectionHeading(

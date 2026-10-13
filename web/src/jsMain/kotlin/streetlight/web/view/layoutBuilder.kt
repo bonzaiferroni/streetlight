@@ -5,7 +5,7 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.component.button
-import koala.dom.layout.row
+import koala.dom.component.row
 import koala.page.Id
 import koala.component.heading3
 import koala.component.heading6

@@ -4,9 +4,6 @@ import kampfire.model.Url
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.box
-import koala.layout.grid
-import koala.layout.spacer
 
 /** A 3:2 image under a darkening gradient, with [text] as a heading over its bottom edge. */
 fun FlowContent.headerImage(

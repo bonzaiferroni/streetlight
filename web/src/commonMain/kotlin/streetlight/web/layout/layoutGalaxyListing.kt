@@ -2,7 +2,7 @@ package streetlight.web.layout
 
 import koala.modifier.*
 import koala.page.Id
-import koala.layout.column
+import koala.component.column
 import koala.component.heading3
 import koala.layout.tabs
 import kotlinx.html.FlowContent

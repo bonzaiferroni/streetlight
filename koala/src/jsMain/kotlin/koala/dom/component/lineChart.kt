@@ -12,7 +12,6 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 import koala.dom.ViewScope
 import koala.dom.launchEffect
-import koala.dom.layout.div
 
 /** A line chart titled [title], redrawn with each value of [dataFlow] and extended with each value of [pointFlow]. */
 fun ViewScope.lineChart(

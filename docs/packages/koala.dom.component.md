@@ -10,7 +10,7 @@ Components built in the browser on `AppendScope` or `ViewScope`, bound to state 
 |---|---|
 | `koala.dom` | `ViewScope`, `AppendScope` and the view runtime |
 | `koala.component` | The `configureFoo` functions and stylesheets of the components here |
-| `koala.dom.layout` | The containers components are built from |
+| `koala.dom.layout` | `flowBlock` |
 | `kampfire.model` | `MutableTap` and `Tap` |
 | `web` (Kotlin wrappers) | DOM types |
 
@@ -19,6 +19,30 @@ Components built in the browser on `AppendScope` or `ViewScope`, bound to state 
 The `ViewScope` variant of an interactive component builds its element through the `configureFoo` functions of its `koala.component` variant and adds the `MutableTap` binding, as specified in `koala.component`.
 
 ## Components
+
+### Containers
+
+| Component | Role |
+|---|---|
+| [`div`](../../koala/src/jsMain/kotlin/koala/dom/component/div.kt) | A `div` with modifiers applied |
+| [`box`](../../koala/src/jsMain/kotlin/koala/dom/component/box.kt) | Children stacked in one grid cell, over one another |
+| [`card`, `cardOf`](../../koala/src/jsMain/kotlin/koala/dom/component/card.kt) | A container with a card's background and corners |
+| [`section`](../../koala/src/jsMain/kotlin/koala/dom/component/section.kt) | A `section` laid out as a flex column |
+
+### Arrangements
+
+| Component | Role |
+|---|---|
+| [`row`](../../koala/src/jsMain/kotlin/koala/dom/component/row.kt) | A flex row |
+| [`column`](../../koala/src/jsMain/kotlin/koala/dom/component/column.kt) | A flex column |
+| [`grid`](../../koala/src/jsMain/kotlin/koala/dom/component/grid.kt) | A grid of column and row templates |
+
+### Overlays
+
+| Component | Role |
+|---|---|
+| [`dialog`, `dialogContent`, `dialogCard`](../../koala/src/jsMain/kotlin/koala/dom/component/dialog.kt) | A modal dialog open while a field is `true`, and its content |
+| [`popover`, `popoverCard`](../../koala/src/jsMain/kotlin/koala/dom/component/popover.kt) | A popover, with or without a card |
 
 ### Buttons and Links
 
@@ -64,9 +88,3 @@ The `ViewScope` variant of an interactive component builds its element through t
 | [`lottie`](../../koala/src/jsMain/kotlin/koala/dom/component/lottie.kt) | A Lottie animation, started at once |
 | [`geoMapMount`](../../koala/src/jsMain/kotlin/koala/dom/component/geoMapMount.kt) | The element a map is mounted into |
 | [`lineChart`](../../koala/src/jsMain/kotlin/koala/dom/component/lineChart.kt) | A line chart redrawn from a flow |
-
-### Feedback
-
-| Component | Role |
-|---|---|
-| [`messageBox`](../../koala/src/jsMain/kotlin/koala/dom/component/messageBox.kt) | A message in a card styled by its type, or nothing |

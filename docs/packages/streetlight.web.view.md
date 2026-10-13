@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Views: compositions tied to a model, which build the DOM through the `koala.dom` packages and bind it to the state of the view models in `streetlight.web.model`. A part of a view that takes a model lives here beside it; a part that takes none is a component or layout. The common half holds the `Style` objects and stylesheets of views, which the server renders.
+Views: compositions tied to a model, which build the DOM through the `koala.dom` packages and bind it to the state of the view models in `streetlight.web.model`. A part of a view that takes a model holding UI state lives here beside it; any other part is a component or layout. The common half holds the `Style` objects and stylesheets of views, which the server renders.
 
 ## Dependencies
 

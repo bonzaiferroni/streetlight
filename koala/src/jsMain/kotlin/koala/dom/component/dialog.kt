@@ -1,4 +1,4 @@
-package koala.dom.layout
+package koala.dom.component
 
 import koala.modifier.*
 import koala.component.filigree
@@ -20,7 +20,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import koala.dom.ViewScope
 import koala.dom.launchEffect
 import koala.dom.mountChildView
-import koala.layout.DialogStyle
+import koala.component.DialogStyle
 
 /**
  * A modal dialog that is open while [state] is `true`, holding a child view built by [content] each time it

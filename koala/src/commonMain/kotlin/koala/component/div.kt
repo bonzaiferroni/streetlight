@@ -1,4 +1,4 @@
-package koala.layout
+package koala.component
 
 import koala.modifier.*
 import kotlinx.html.DIV

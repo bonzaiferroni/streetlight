@@ -6,7 +6,6 @@ import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
 import koala.dom.component.*
-import koala.dom.layout.*
 import koala.dom.markdown.*
 import streetlight.web.layout.BodyStyle
 import streetlight.web.dom.layout.centeredText

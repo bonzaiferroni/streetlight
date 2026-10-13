@@ -16,7 +16,6 @@ import streetlight.web.component.CuratorMenu
 import streetlight.web.page.PopoverId
 import kotlin.time.Clock
 import koala.component.*
-import koala.layout.*
 import koala.markdown.*
 import streetlight.web.model.toButtons
 import streetlight.web.model.flair

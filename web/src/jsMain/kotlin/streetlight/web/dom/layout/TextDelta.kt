@@ -10,7 +10,6 @@ import streetlight.model.utils.CommonText
 import streetlight.model.utils.RemovedText
 import streetlight.model.utils.createTextDelta
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.layout.TextDeltaStyle
 
 /** A grid of [deltaRow]s. */

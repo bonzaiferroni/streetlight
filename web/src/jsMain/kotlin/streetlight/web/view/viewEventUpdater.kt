@@ -4,7 +4,7 @@ import koala.modifier.Accent
 import koala.model.MenuAction
 import koala.dom.RouteScope
 import koala.dom.ViewScope
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.dom.layout.lazyTabs
 import koala.dom.routeBlock
 import streetlight.model.data.EventEdit

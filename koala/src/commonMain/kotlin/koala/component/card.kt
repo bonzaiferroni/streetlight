@@ -1,4 +1,4 @@
-package koala.layout
+package koala.component
 
 import kampfire.model.Url
 import koala.modifier.*
@@ -7,10 +7,6 @@ import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent
 import kotlinx.html.div
-import koala.component.heading5
-import koala.component.image
-import koala.component.navigation
-import koala.component.textBlock
 import koala.model.AppRoute
 
 /** A container with a card's background and corners. */

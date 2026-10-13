@@ -5,8 +5,8 @@ import kampfire.model.storeOf
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.layout.flowBlock
-import koala.dom.layout.popoverCard
-import koala.dom.layout.popoverRaw
+import koala.dom.component.popoverCard
+import koala.dom.component.popoverRaw
 import koala.page.Id
 import web.events.addEventListener
 import web.html.HTMLElement

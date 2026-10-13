@@ -10,6 +10,7 @@ import koala.dom.launchEffect
 import koala.layout.TabScope
 import koala.layout.TabsStyle
 import koala.layout.configureTabs
+import koala.dom.component.column
 
 /**
  * Tabs over panels, with the selected tab kept in step with [indexState] when given.

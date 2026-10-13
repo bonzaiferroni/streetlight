@@ -9,7 +9,6 @@ import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.model.ui.MediaForgeRoute
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.page.PopoverId
 import streetlight.web.dom.component.PopoverMenuMod
 import streetlight.web.dom.component.popoverMenu

@@ -29,12 +29,12 @@ import koala.component.heading6
 import koala.component.image
 import koala.component.span
 import koala.component.textBlock
-import koala.layout.ListStyleDisc
-import koala.layout.ListStyleMinus
-import koala.layout.ListStylePlus
-import koala.layout.div
-import koala.layout.listItem
-import koala.layout.row
+import koala.component.ListStyleDisc
+import koala.component.ListStyleMinus
+import koala.component.ListStylePlus
+import koala.component.div
+import koala.component.listItem
+import koala.component.row
 import koala.page.TagConfig
 
 /** Renders [blocks] as HTML. */

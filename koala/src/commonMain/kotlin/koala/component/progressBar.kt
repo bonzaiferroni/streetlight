@@ -3,7 +3,6 @@ package koala.component
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.div
 
 /** A bar filled to [progress], from 0 to 1. */
 fun FlowContent.progressBar(

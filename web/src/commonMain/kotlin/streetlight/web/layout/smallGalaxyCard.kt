@@ -5,7 +5,6 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.ui.toRoute
 import koala.component.*
-import koala.layout.*
 import streetlight.web.model.ThemeColor
 import streetlight.web.model.toButtons
 import streetlight.web.model.route

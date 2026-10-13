@@ -1,10 +1,10 @@
 package streetlight.web.layout
 
 import koala.component.heading2
-import koala.layout.listItem
-import koala.layout.olist
-import koala.layout.section
-import koala.layout.ulist
+import koala.component.listItem
+import koala.component.olist
+import koala.component.section
+import koala.component.ulist
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationPost
 import streetlight.web.shell.SectionHeadingMod

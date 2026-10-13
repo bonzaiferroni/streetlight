@@ -2,7 +2,7 @@ package streetlight.web.view
 
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.layout.box
+import koala.dom.component.box
 import koala.dom.component.image
 import koala.dom.component.imageDrop
 import koala.dom.component.setBlockLabel

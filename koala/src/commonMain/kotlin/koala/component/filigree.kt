@@ -3,7 +3,6 @@ package koala.component
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.row
 
 /** Frames what [block] builds, usually a heading, between two decorative rules. */
 fun FlowContent.filigree(

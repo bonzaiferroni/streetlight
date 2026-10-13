@@ -1,9 +1,9 @@
-package streetlight.web.dom.layout
+package streetlight.web.view
 
 import koala.modifier.Accent
 import koala.modifier.modify
 import koala.dom.ViewScope
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.dom.component.navigation
 import koala.component.heading3
 import koala.component.textBlock
@@ -13,7 +13,9 @@ import streetlight.model.data.QuorumReviewContent
 import streetlight.model.data.TaskContent
 import streetlight.web.layout.TextDeltaStyle
 import streetlight.web.model.getLocationEditor
-import streetlight.web.view.locationEditFormBody
+import streetlight.web.dom.layout.deltaGrid
+import streetlight.web.dom.layout.deltaRow
+import streetlight.web.dom.layout.formSubmit
 
 fun ViewScope.taskContent(task: TaskContent) {
     when (task) {

@@ -10,7 +10,7 @@ The frame a page is built on, without the bundle: its head, scripts, element ids
 |---|---|
 | `kotlinx.html` | The HTML DSL |
 | `koala.modifier` | Modifiers and classes |
-| `koala.layout` | The containers mounts are built from |
+| `koala.component` | The containers mounts are built from |
 | `kotlinx.serialization` | The JSON of data islands |
 
 ## Unsafe Content

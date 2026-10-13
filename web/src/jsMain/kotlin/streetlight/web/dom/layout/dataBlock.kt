@@ -4,7 +4,7 @@ import kampfire.model.Outcome
 import kampfire.model.toDataOr
 import koala.modifier.*
 import koala.dom.ViewScope
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.external.onView
 import koala.dom.mountChildView
 import streetlight.web.utility.element

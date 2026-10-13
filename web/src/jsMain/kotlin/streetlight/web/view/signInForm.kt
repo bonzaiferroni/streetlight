@@ -11,10 +11,10 @@ import koala.dom.ViewScope
 import koala.model.MessageStore
 import koala.dom.component.button
 import koala.dom.component.checkBox
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.dom.layout.flowBlock
 import koala.dom.component.lottie
-import koala.dom.layout.row
+import koala.dom.component.row
 import koala.dom.component.textBlock
 import koala.dom.component.textField
 import kampfire.model.MutableTap

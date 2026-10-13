@@ -3,13 +3,12 @@ package streetlight.web.view
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.layout.GridColumns
+import koala.component.GridColumns
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.dom.page.applyTheme
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formCard

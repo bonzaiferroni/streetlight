@@ -12,7 +12,6 @@ import kampfire.model.MutableTap
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.dom.layout.formBullets
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow

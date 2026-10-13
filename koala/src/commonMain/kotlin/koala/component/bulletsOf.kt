@@ -2,10 +2,6 @@ package koala.component
 
 import koala.modifier.*
 import kotlinx.html.FlowContent
-import koala.layout.ListAxis
-import koala.layout.ListStyleDisc
-import koala.layout.listItem
-import koala.layout.ulist
 
 /** A bulleted list of [content]. */
 fun FlowContent.bulletsOf(mod: Modifier? = null, vararg content: String) {

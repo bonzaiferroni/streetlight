@@ -3,7 +3,7 @@ package streetlight.web.interop
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.component.button
-import koala.dom.layout.grid
+import koala.dom.component.grid
 import koala.dom.requireClosest
 import koala.dom.component.textBlock
 import koala.component.progressBar

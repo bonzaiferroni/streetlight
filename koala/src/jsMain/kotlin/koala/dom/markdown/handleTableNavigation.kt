@@ -8,7 +8,7 @@ import web.dom.Node
 import web.html.HTMLElement
 import web.keyboard.KeyboardEvent
 import web.window.window
-import koala.dom.layout.row
+import koala.dom.component.row
 import koala.markdown.EditorStyle
 
 /**

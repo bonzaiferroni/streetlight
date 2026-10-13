@@ -4,7 +4,7 @@ import koala.modifier.PositionAnchor
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
-import koala.layout.popover
+import koala.component.popover
 
 /** The id of an element, used to render it and to select it. */
 @JvmInline

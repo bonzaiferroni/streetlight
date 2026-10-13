@@ -11,7 +11,6 @@ import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
 import streetlight.model.data.EntityType
 import koala.component.*
-import koala.layout.*
 import streetlight.web.model.toButtons
 import streetlight.web.model.toCells
 import streetlight.web.model.toRoute

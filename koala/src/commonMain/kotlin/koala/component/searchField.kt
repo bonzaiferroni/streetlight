@@ -4,7 +4,6 @@ import koala.SvgFile
 import koala.modifier.*
 import kotlinx.html.*
 import koala.interop.invoke
-import koala.layout.div
 
 /**
  * A text input for a search: a pill holding a search icon before its text, showing [placeholder] while empty.

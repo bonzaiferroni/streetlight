@@ -10,7 +10,6 @@ import streetlight.model.data.Star
 import streetlight.web.component.createPostMenu
 import streetlight.web.component.galaxyMenu
 import koala.component.*
-import koala.layout.*
 import koala.markdown.*
 
 fun FlowContent.headerOf(

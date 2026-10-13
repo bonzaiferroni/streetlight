@@ -3,7 +3,6 @@ package koala.component
 import koala.modifier.Attribute
 import koala.modifier.Required
 import koala.modifier.Valid
-import koala.layout.box
 
 // language="CSS"
 val BlockLabelCss get() = """

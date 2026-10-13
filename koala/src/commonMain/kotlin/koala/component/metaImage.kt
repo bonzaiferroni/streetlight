@@ -4,7 +4,6 @@ import koala.Image
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.box
 
 /** [image] with its description as alt text and its attribution, linked when it has a URL, over its bottom corner. */
 fun FlowContent.metaImage(

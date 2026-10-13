@@ -9,7 +9,6 @@ import streetlight.model.data.CommentId
 import streetlight.model.ui.StarRoute
 import streetlight.web.shell.SectionHeadingMod
 import koala.component.*
-import koala.layout.*
 import koala.markdown.*
 import koala.model.*
 import streetlight.web.model.route

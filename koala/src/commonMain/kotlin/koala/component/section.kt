@@ -1,11 +1,9 @@
-package koala.layout
+package koala.component
 
 import koala.modifier.*
 import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 import kotlinx.html.section as sectionTag
-import koala.component.filigree
-import koala.component.heading3
 import koala.page.Id
 import koala.page.setId
 

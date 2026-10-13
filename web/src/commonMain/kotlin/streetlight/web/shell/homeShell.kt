@@ -12,7 +12,6 @@ import streetlight.web.layout.smallGalaxyCard
 import streetlight.web.page.appFooter
 import streetlight.web.page.appHeader
 import koala.component.*
-import koala.layout.*
 import koala.page.*
 import streetlight.web.component.connectPicker
 import streetlight.web.component.createPostMenu

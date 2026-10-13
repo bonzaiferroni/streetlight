@@ -23,7 +23,6 @@ import web.url.URL
 import koala.dom.AppendScope
 import koala.dom.asWeb
 import koala.dom.onClick
-import koala.dom.layout.div
 import koala.component.FilePickerKey
 
 /**

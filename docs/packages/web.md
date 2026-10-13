@@ -30,4 +30,4 @@ The module follows the map in `koala.md` under Packages.
 
 The browser half of the UI lives under `streetlight.web.dom`, in `streetlight.web.dom.component`, `streetlight.web.dom.layout` and `streetlight.web.dom.page`, mirroring the server-rendered packages as `koala.dom` does.
 
-A part of a view that takes a model belongs to `streetlight.web.view`. A form that takes none is a layout.
+A part of a view that takes a model holding UI state belongs to `streetlight.web.view`. A layout that takes a model without UI state, and a form that takes none, stay layouts.

@@ -2,7 +2,7 @@ package streetlight.web.interop
 
 import koala.modifier.*
 import koala.dom.*
-import koala.component.MessageBox
+import koala.layout.MessageBox
 import streetlight.web.model.Toaster
 import streetlight.web.page.AppBody
 import koala.dom.component.*

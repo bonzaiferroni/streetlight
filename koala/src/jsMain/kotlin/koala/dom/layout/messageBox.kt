@@ -1,13 +1,13 @@
-package koala.dom.component
+package koala.dom.layout
 
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.modifier.*
 import kampfire.model.Tap
 import koala.dom.ViewScope
-import koala.dom.layout.card
-import koala.dom.layout.flowBlock
-import koala.component.MessageBox
+import koala.dom.component.card
+import koala.dom.component.textBlock
+import koala.layout.MessageBox
 
 /** The message of [tap] in a card styled by its type, or nothing while it is `null`. */
 fun ViewScope.messageBox(

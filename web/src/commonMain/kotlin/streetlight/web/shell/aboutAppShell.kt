@@ -3,10 +3,10 @@ package streetlight.web.shell
 import koala.LottieFile
 import koala.component.heading5
 import koala.component.textBlock
-import koala.layout.row
+import koala.component.row
 import kotlinx.html.*
 import koala.modifier.*
-import koala.layout.column
+import koala.component.column
 import koala.component.heading1
 import koala.component.lottie
 import kotlinx.css.pct

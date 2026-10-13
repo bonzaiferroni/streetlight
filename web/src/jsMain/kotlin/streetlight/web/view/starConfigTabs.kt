@@ -6,8 +6,8 @@ import kampfire.model.toUrl
 import koala.modifier.*
 import koala.dom.*
 import koala.page.Id
-import koala.layout.listItem
-import koala.layout.olist
+import koala.component.listItem
+import koala.component.olist
 import kotlinx.html.InputType
 import kotlinx.html.ol
 import streetlight.model.data.EmailStatus

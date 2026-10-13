@@ -1,12 +1,9 @@
-package koala.layout
+package koala.component
 
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
-import koala.component.heading
-import koala.component.heading3
-import koala.component.hr
 import koala.interop.invoke
 
 /** An empty element, sized by [mod], that takes up space. */

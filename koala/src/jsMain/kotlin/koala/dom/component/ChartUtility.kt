@@ -18,7 +18,6 @@ import koala.external.ThemeTooltipOption
 import koala.external.TimeLabelFormatter
 import kotlinx.browser.document
 import kotlinx.browser.window
-import koala.dom.layout.grid
 
 /** Values and a theme that style ECharts charts with the app's CSS variables. */
 object ChartUtility {

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import web.dom.Element
 import web.geometry.DOMRectReadOnly
-import koala.dom.layout.box
+import koala.dom.component.box
 
 /** The browser's `ResizeObserver`. */
 external class ResizeObserver(

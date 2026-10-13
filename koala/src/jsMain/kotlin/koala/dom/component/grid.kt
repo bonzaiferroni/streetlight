@@ -1,4 +1,4 @@
-package koala.dom.layout
+package koala.dom.component
 
 import koala.modifier.*
 import kotlinx.css.GridTemplateColumns
@@ -6,8 +6,8 @@ import kotlinx.css.GridTemplateRows
 import kotlinx.css.fr
 import kotlinx.html.DIV
 import koala.dom.AppendScope
-import koala.layout.GridColumns
-import koala.layout.configureGridColumns
+import koala.component.GridColumns
+import koala.component.configureGridColumns
 
 /** A grid with the columns of [template] and the rows of [rowTemplate]. */
 fun AppendScope.grid(

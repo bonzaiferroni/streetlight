@@ -5,7 +5,7 @@ import koala.model.ScriptLoader
 import koala.dom.ViewScope
 import koala.dom.launchEffect
 import koala.dom.mountChildView
-import koala.dom.layout.div
+import koala.dom.component.div
 
 /**
  * Loads the script at [src] once, then builds [content]. Content is built at once when the script is already

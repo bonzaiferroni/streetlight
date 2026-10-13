@@ -1,4 +1,4 @@
-package koala.dom.layout
+package koala.dom.component
 
 import koala.modifier.*
 import koala.model.LabeledRoute
@@ -9,18 +9,15 @@ import kotlinx.html.js.div
 import web.dom.Element
 import web.html.HTMLDivElement
 import web.html.HTMLElement
-import koala.dom.component.button
 import koala.component.heading
-import koala.dom.component.navigation
-import koala.dom.component.textBlock
 import koala.dom.AppendScope
 import koala.dom.append
 import koala.dom.asWeb
 import koala.dom.onClick
 import koala.model.MenuAction
 import koala.model.MenuRoute
-import koala.layout.Popover
-import koala.layout.configurePopover
+import koala.component.Popover
+import koala.component.configurePopover
 
 /** A [popover] with no card, holding what [config] builds. */
 fun AppendScope.popoverRaw(

@@ -4,7 +4,6 @@ import koala.modifier.*
 import kotlinx.css.pct
 import kotlinx.html.*
 import koala.interop.invoke
-import koala.layout.box
 import koala.page.Id
 import koala.page.setId
 

@@ -10,7 +10,6 @@ import web.html.HTMLInputElement
 import koala.dom.ViewScope
 import koala.dom.asWeb
 import koala.dom.launchEffect
-import koala.dom.layout.box
 import koala.component.configureSearchFieldContainer
 import koala.component.configureSearchFieldInput
 

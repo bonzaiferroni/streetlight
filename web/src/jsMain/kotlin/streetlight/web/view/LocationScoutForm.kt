@@ -4,7 +4,7 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import kampfire.model.tapOf
-import koala.layout.spacer
+import koala.component.spacer
 import streetlight.web.model.ThemeColor
 import streetlight.web.model.LocationScout
 import koala.dom.component.*

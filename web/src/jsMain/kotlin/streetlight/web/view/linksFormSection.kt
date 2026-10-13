@@ -1,4 +1,4 @@
-package streetlight.web.dom.layout
+package streetlight.web.view
 
 import kampfire.model.MutableTap
 import kampfire.model.toValidAbsoluteUrlOrNull
@@ -6,7 +6,7 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import koala.component.heading4
-import koala.layout.spacer
+import koala.component.spacer
 import koala.component.textBlock
 import kampfire.model.append
 import kampfire.model.removeAt
@@ -16,6 +16,7 @@ import kampfire.model.toggle
 import streetlight.model.data.ExtraLink
 import koala.dom.component.*
 import koala.dom.layout.*
+import streetlight.web.dom.layout.formSection
 
 fun ViewScope.linksFormSection(linksState: MutableTap<List<ExtraLink>>) {
     formSection("additional links") {

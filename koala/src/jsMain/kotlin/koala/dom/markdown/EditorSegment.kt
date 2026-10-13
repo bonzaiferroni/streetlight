@@ -31,7 +31,7 @@ import kotlin.collections.forEach
 import kotlin.sequences.forEach
 import kotlin.sequences.plus
 import koala.dom.component.span
-import koala.dom.layout.row
+import koala.dom.component.row
 
 /** A range of a markdown chunk and the class the editor styles it with. */
 data class EditorSegment(val from: Int, val to: Int, val mod: Class)

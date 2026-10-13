@@ -3,7 +3,6 @@ package streetlight.web.view
 import koala.dom.*
 import streetlight.web.model.LeadEditor
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formSection

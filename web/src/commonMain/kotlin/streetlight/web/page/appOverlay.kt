@@ -8,7 +8,7 @@ import kotlinx.html.FlowContent
 import streetlight.web.component.WorkSignalStyle
 import streetlight.web.component.workSignal
 import koala.interop.*
-import koala.layout.*
+import koala.component.*
 import koala.page.*
 
 /** The fixed layer over the page: the helm bar, the work signal, and the route dock. */

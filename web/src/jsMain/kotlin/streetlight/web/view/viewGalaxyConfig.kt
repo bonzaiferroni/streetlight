@@ -3,7 +3,7 @@ package streetlight.web.view
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.layout.spacer
+import koala.component.spacer
 import streetlight.model.data.GalaxyConfig
 import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute

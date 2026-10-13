@@ -4,11 +4,11 @@ import koala.LottieFile
 import koala.SvgFile
 import koala.modifier.*
 import koala.component.navigation
-import koala.layout.column
+import koala.component.column
 import koala.component.filigree
 import koala.component.icon
 import koala.component.lottie
-import koala.layout.row
+import koala.component.row
 import koala.component.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

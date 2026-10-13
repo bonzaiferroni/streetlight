@@ -6,7 +6,6 @@ import koala.modifier.*
 import streetlight.model.ui.Screen
 import streetlight.web.model.BugReporter
 import koala.dom.component.*
-import koala.dom.layout.*
 import koala.dom.markdown.*
 import koala.model.*
 import streetlight.web.model.api

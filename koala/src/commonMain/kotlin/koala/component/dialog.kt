@@ -1,4 +1,4 @@
-package koala.layout
+package koala.component
 
 import koala.modifier.Class
 import koala.modifier.Reveal

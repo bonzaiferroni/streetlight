@@ -6,9 +6,9 @@ import koala.page.Id
 import web.dom.Document
 import web.dom.ElementId
 import web.viewtransition.ViewTransition
-import koala.dom.layout.closePopover
-import koala.dom.layout.open
-import koala.dom.layout.popover
+import koala.dom.component.closePopover
+import koala.dom.component.open
+import koala.dom.component.popover
 
 val Id.elementId get() = ElementId(identifier)
 

@@ -18,8 +18,8 @@ The base set of components and functionality for web apps. It declares `View`, a
 
 | Package | Holds |
 |---|---|
-| `koala.component` | Components: the basic building blocks, such as `switch`, `textField` and `icon` |
-| `koala.layout` | Layouts: arrangements of components, such as `row`, `grid`, `tabs` and `dialog` |
+| `koala.component` | Components, such as `switch`, `column` and `icon` |
+| `koala.layout` | Layouts, such as `tabs` and `messageBox` |
 | `koala.model` | Classes and interfaces not bound to their point of use, such as `AppRoute` |
 | `koala.page` | The frame a page is built on: its head, scripts, ids, mounts and data islands |
 | `koala.markdown` | Markdown parsing and rendering |
@@ -30,13 +30,23 @@ The base set of components and functionality for web apps. It declares `View`, a
 
 UI that needs the browser lives under `koala.dom`, in a package that mirrors its dom-agnostic counterpart: `koala.dom.component`, `koala.dom.layout`, `koala.dom.page` and `koala.dom.markdown`. A browser view imports the `koala.dom` packages with a star import, so it sees the `AppendScope` and `ViewScope` variants and not the `FlowContent` ones. Markup rendered on the server imports the dom-agnostic packages.
 
-A view, a composition tied to a model and named `viewFoo` for the model `Foo`, belongs to the app, not to koala.
-
 | File | Lives in |
 |---|---|
 | `FooUtility.kt` | The package of its target type, so its extensions need no extra import. A target outside koala puts it in `koala.utility` |
 | `FooStyle` object and `FooCss` stylesheet | The dom-agnostic package of the component that references them |
 | A model declared for the browser | `commonMain`, unless it needs the browser |
+
+## UI Hierarchy
+
+| Level | Definition | Package |
+|---|---|---|
+| Component | A single element of UI, even when built from other components | `koala.component` |
+| Layout | A composed section of UI, calling components only to lay them out, reusable or not | `koala.layout` |
+| View | A layout associated with a model that holds UI state | The app |
+
+A container such as `div`, `column`, `card`, `popover` or `dialog` is a component. A form's parts and a feed row are layouts. A view is named `viewFoo` for the model `Foo`.
+
+A component is imported with `koala.component.*`, and in the browser with `koala.dom.component.*`.
 
 ## Launching Coroutines
 

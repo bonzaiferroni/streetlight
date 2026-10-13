@@ -6,7 +6,6 @@ import koala.model.GeoCameraController
 import kotlinx.html.DIV
 import koala.dom.ViewScope
 import koala.interop.wireGeoMap
-import koala.dom.layout.box
 import koala.component.configureGeoMapMount
 
 /** A map centered on [initialPoint], returning the controller that moves its camera. */

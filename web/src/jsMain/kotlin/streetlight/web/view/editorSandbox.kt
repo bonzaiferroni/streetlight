@@ -5,12 +5,12 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.component.button
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.dom.component.filigree
 import koala.dom.layout.flowBlock
 import koala.dom.flowModifier
 import koala.dom.markdown.markdown
-import koala.dom.layout.row
+import koala.dom.component.row
 import koala.dom.markdown.markdownEditor
 import koala.component.heading1
 import koala.markdown.EditorStyle

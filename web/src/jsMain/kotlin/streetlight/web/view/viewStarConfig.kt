@@ -8,8 +8,8 @@ import koala.modifier.*
 import koala.model.MessageStore
 import koala.dom.RouteScope
 import koala.dom.ViewScope
-import koala.dom.layout.card
-import koala.dom.layout.column
+import koala.dom.component.card
+import koala.dom.component.column
 import koala.dom.component.navigation
 import koala.dom.component.textBlock
 import koala.component.bulletsOf

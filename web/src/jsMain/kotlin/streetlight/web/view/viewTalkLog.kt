@@ -6,7 +6,7 @@ import kampfire.model.toDataOr
 import koala.modifier.*
 import koala.dom.*
 import koala.component.filigree
-import koala.layout.spacer
+import koala.component.spacer
 import kampfire.model.storeOf
 import koala.component.heading4
 import kotlinx.coroutines.launch
@@ -18,7 +18,6 @@ import streetlight.model.data.PostOrder
 import streetlight.web.io.TalkLog
 import web.html.HTMLElement
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.model.api
 import streetlight.web.model.session
 import streetlight.web.model.toaster

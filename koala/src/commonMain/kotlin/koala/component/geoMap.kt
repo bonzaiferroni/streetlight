@@ -4,7 +4,6 @@ import kampfire.model.GeoPoint
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.box
 import koala.page.Id
 import koala.page.mount
 

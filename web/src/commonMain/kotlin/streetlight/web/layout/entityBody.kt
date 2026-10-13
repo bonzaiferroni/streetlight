@@ -4,7 +4,7 @@ import kampfire.api.Markdown
 import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import koala.layout.*
+import koala.component.*
 import koala.markdown.*
 
 /**

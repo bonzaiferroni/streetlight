@@ -4,7 +4,7 @@ import koala.Svg
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.component.icon
-import koala.dom.layout.row
+import koala.dom.component.row
 import kampfire.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.InputType

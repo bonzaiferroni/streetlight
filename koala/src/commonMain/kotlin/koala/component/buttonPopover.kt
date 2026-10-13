@@ -5,7 +5,6 @@ import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import koala.layout.popover
 import koala.page.Id
 
 /** A button labeled [label] that opens a popover holding what [block] builds. */

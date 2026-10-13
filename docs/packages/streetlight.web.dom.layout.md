@@ -48,10 +48,8 @@ The function that does a submit's work calls `deliverSending()` on its messenger
 | [`mainBody`, `configBody`, `pageBody`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/body.kt) | The page of a view: its header, its body section and the footer |
 | [`formCard`, `formRow`, `formSection`, `formSubmit`…](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/Form.kt) | The parts forms are built from |
 | [`formSectionLegacy`, `formBodyProto`…](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/FormElement.kt) | Form parts of the earlier approach, still used by the event scout |
-| [`linksFormSection`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/linksFormSection.kt) | A form section editing a list of links |
 | [`cardOf`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/cardOf.kt) | The card of a location, linking to it or calling a function |
 | [`feedRow`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/feedRow.kt) | Appends a feed row, as the server-rendered `feedRow` |
 | [`dataBlock`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/dataBlock.kt) | Content built from data requested once the block is viewed |
 | [`introSection`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/introSection.kt) | A section introducing a page, with an optional animation |
-| [`taskContent`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/taskContent.kt) | The content of a task, by its kind |
 | [`deltaGrid`, `deltaRow`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/TextDelta.kt) | The differences between two texts, row by row |

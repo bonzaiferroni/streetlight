@@ -7,7 +7,6 @@ import streetlight.model.data.EventPost
 import streetlight.model.utils.toLocalDateTime
 import streetlight.web.shell.SectionHeadingMod
 import koala.component.*
-import koala.layout.*
 
 fun FlowContent.layoutEventPosts(
     headingText: String?,

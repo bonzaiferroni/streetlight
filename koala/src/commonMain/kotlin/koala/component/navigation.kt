@@ -11,7 +11,6 @@ import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.onClick
-import koala.layout.box
 import koala.model.AppRoute
 import koala.page.Id
 import koala.page.setId

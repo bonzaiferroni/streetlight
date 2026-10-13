@@ -11,7 +11,6 @@ import web.pointer.PointerEvent
 import kotlin.math.roundToInt
 import koala.dom.ViewScope
 import koala.dom.launchEffect
-import koala.dom.layout.box
 import koala.component.GlowControlStyle
 
 /** A field with a handle that positions the glow of [state] by dragging. */

@@ -3,9 +3,9 @@ package streetlight.web.component
 import kabinet.utils.toMetricString
 import koala.SvgFile
 import koala.modifier.*
-import koala.layout.box
+import koala.component.box
 import koala.component.button
-import koala.layout.column
+import koala.component.column
 import koala.component.icon
 import koala.modifier.jsonAttributeOf
 import koala.modifier.setAttribute

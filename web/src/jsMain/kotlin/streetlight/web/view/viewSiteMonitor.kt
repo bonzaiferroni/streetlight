@@ -7,7 +7,6 @@ import koala.external.ECharts
 import streetlight.model.ui.SiteMonitorRoute
 import web.dom.document
 import koala.dom.component.*
-import koala.dom.layout.*
 import koala.dom.page.*
 import streetlight.web.model.getSiteMonitor
 import streetlight.web.dom.layout.mainBody

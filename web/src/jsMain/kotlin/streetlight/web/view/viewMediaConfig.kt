@@ -13,7 +13,6 @@ import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.model.api
 import streetlight.web.dom.layout.configBody
 import streetlight.web.dom.component.configHeading

@@ -7,8 +7,8 @@ import koala.component.filigree
 import koala.component.heading3
 import koala.model.MenuAction
 import kotlinx.html.DIV
-import koala.dom.component.*
 import koala.dom.layout.*
+import koala.dom.component.*
 import koala.model.*
 import streetlight.web.utility.element
 

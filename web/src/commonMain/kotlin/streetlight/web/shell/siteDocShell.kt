@@ -10,7 +10,6 @@ import streetlight.model.ui.SiteDocRoute
 import streetlight.web.layout.pageHeader
 import streetlight.web.layout.mainBody
 import koala.component.*
-import koala.layout.*
 import koala.markdown.*
 import koala.page.*
 

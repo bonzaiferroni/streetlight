@@ -5,8 +5,8 @@ import koala.modifier.*
 import koala.page.Id
 import koala.interop.InlineJs
 import koala.component.button
-import koala.layout.card
-import koala.layout.popover
+import koala.component.card
+import koala.component.popover
 import koala.page.setId
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick

@@ -9,7 +9,6 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import streetlight.model.data.NewMessage
 import koala.dom.component.*
-import koala.dom.layout.*
 import koala.dom.markdown.*
 import koala.model.*
 import streetlight.web.model.api

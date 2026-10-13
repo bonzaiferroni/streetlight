@@ -1,4 +1,4 @@
-package koala.dom.layout
+package koala.dom.component
 
 import kampfire.model.Url
 import koala.modifier.*

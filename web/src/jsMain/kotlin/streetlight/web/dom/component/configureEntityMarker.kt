@@ -1,9 +1,9 @@
 package streetlight.web.dom.component
 
 import koala.dom.AppendScope
-import koala.layout.box
-import koala.layout.column
-import koala.layout.row
+import koala.component.box
+import koala.component.column
+import koala.component.row
 import koala.component.span
 import koala.component.textBlock
 import koala.model.MarkerStyle

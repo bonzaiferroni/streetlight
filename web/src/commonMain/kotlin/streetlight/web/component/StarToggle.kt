@@ -16,7 +16,6 @@ import streetlight.model.data.Location
 import streetlight.web.layout.CellGrid
 import kotlin.uuid.Uuid
 import koala.component.*
-import koala.layout.*
 
 /**
  * A button that lights or unlights an item for the star, with its count.

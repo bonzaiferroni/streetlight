@@ -3,7 +3,7 @@ package streetlight.web.view
 import koala.SvgFile
 import koala.dom.*
 import koala.component.IconStyle
-import koala.layout.spacer
+import koala.component.spacer
 import koala.modifier.*
 import streetlight.model.data.EventTag
 import streetlight.web.model.Earth

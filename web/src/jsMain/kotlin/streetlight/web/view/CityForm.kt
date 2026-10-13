@@ -10,7 +10,6 @@ import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formTextField
-import streetlight.web.dom.layout.linksFormSection
 
 fun ViewScope.cityDetailsForm(model: CityEditor) = formCard("City Details") {
     formRow {

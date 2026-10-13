@@ -5,8 +5,8 @@ import kampfire.model.Token
 import koala.PageResource
 import koala.modifier.*
 import koala.component.ButtonStyle
-import koala.layout.card
-import koala.layout.column
+import koala.component.card
+import koala.component.column
 import koala.component.filigree
 import koala.component.heading1
 import koala.component.textBlock

@@ -4,9 +4,9 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.component.navigation
 import kotlinx.html.FlowContent
-import koala.layout.box
-import koala.layout.div
-import koala.layout.grid
+import koala.component.box
+import koala.component.div
+import koala.component.grid
 
 /** The Streetlight logo: the wordmark with a glowing flame. */
 fun FlowContent.textLogo(

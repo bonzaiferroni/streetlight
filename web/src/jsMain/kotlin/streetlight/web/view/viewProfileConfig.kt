@@ -7,7 +7,7 @@ import koala.modifier.*
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.layout.lazyTabs
-import koala.dom.layout.section
+import koala.dom.component.section
 import streetlight.model.data.ProfileConfig
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit

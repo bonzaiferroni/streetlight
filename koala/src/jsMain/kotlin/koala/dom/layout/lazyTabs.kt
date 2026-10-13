@@ -12,6 +12,8 @@ import koala.dom.mountChildView
 import koala.layout.TabsStyle
 import koala.layout.configureTabsContainer
 import koala.layout.configureTabsHeader
+import koala.dom.component.box
+import koala.dom.component.column
 
 /**
  * Tabs whose panels are built the first time each is shown.

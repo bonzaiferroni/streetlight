@@ -9,7 +9,7 @@ import koala.dom.*
 import koala.component.image
 import koala.markdown.markdown
 import koala.component.navigationIfNotNull
-import koala.layout.spacer
+import koala.component.spacer
 import kotlinx.css.pct
 import streetlight.model.data.Comment
 import streetlight.model.ui.StarRoute
@@ -17,7 +17,6 @@ import streetlight.web.io.TalkLog
 import web.html.HTMLElement
 import web.html.HTMLParagraphElement
 import koala.dom.component.*
-import koala.dom.layout.*
 import koala.dom.markdown.*
 import streetlight.web.utility.element
 

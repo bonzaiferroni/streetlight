@@ -5,7 +5,6 @@ import koala.modifier.*
 import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import koala.layout.row
 
 /**
  * Renders a row of buttons, one per value of the root setting [attribute].

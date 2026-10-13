@@ -1,9 +1,9 @@
 package streetlight.web.interop
 
 import koala.dom.ViewScope
-import koala.dom.layout.column
+import koala.dom.component.column
 import koala.modifier.getAttribute
-import koala.dom.layout.popoverOption
+import koala.dom.component.popoverOption
 import koala.model.LabeledRoute
 import koala.modifier.Attribute
 import streetlight.model.ui.StarRoute

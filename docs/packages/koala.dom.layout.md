@@ -10,6 +10,7 @@ Layouts built in the browser on `AppendScope` or `ViewScope`, including the bloc
 |---|---|
 | `koala.dom` | `ViewScope`, `AppendScope` and the view runtime |
 | `koala.layout` | The stylesheets and `configureFoo` functions of the layouts here |
+| `koala.dom.component` | The components layouts are built from |
 | `kampfire.model` | `Tap`, `MutableTap` and `Store` |
 | `web` (Kotlin wrappers) | DOM types |
 
@@ -23,22 +24,11 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 
 ## Layouts
 
-### Containers
+### Feedback
 
 | Layout | Role |
 |---|---|
-| [`div`](../../koala/src/jsMain/kotlin/koala/dom/layout/div.kt) | A `div` with modifiers applied |
-| [`box`](../../koala/src/jsMain/kotlin/koala/dom/layout/box.kt) | Children stacked in one grid cell, over one another |
-| [`card`, `cardOf`](../../koala/src/jsMain/kotlin/koala/dom/layout/card.kt) | A container with a card's background and corners |
-| [`section`](../../koala/src/jsMain/kotlin/koala/dom/layout/section.kt) | A `section` laid out as a flex column |
-
-### Arrangements
-
-| Layout | Role |
-|---|---|
-| [`row`](../../koala/src/jsMain/kotlin/koala/dom/layout/row.kt) | A flex row |
-| [`column`](../../koala/src/jsMain/kotlin/koala/dom/layout/column.kt) | A flex column |
-| [`grid`](../../koala/src/jsMain/kotlin/koala/dom/layout/grid.kt) | A grid of column templates, with another on a narrow screen |
+| [`messageBox`](../../koala/src/jsMain/kotlin/koala/dom/layout/messageBox.kt) | A message in a card styled by its type, or nothing |
 
 ### Blocks Built From State
 
@@ -50,7 +40,7 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 | [`selectorBlock`, `selectorContainer`](../../koala/src/jsMain/kotlin/koala/dom/layout/selectorBlock.kt) | A column of items selected by click, and its scrolling container |
 | [`stageBlock`](../../koala/src/jsMain/kotlin/koala/dom/layout/stageBlock.kt) | Numbered stages of an enum over the content of the current one |
 
-### Panels and Overlays
+### Panels
 
 | Layout | Role |
 |---|---|
@@ -58,5 +48,3 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 | [`sideTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/sideTabs.kt) | A column of tabs bound to a field, beside the panel the selected tab shows |
 | [`lazyTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/lazyTabs.kt) | Tabs whose panels are built when first shown |
 | [`LazyTabScope`](../../koala/src/jsMain/kotlin/koala/dom/layout/LazyTabScope.kt) | Collects the tabs of a `lazyTabs` block |
-| [`dialog`, `dialogContent`, `dialogCard`](../../koala/src/jsMain/kotlin/koala/dom/layout/dialog.kt) | A modal dialog open while a field is `true`, and its content |
-| [`popover`, `popoverCard`](../../koala/src/jsMain/kotlin/koala/dom/layout/popover.kt) | A popover, with or without a card |

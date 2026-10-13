@@ -1,9 +1,9 @@
 package koala.model
 
-import koala.layout.box
-import koala.layout.column
+import koala.component.box
+import koala.component.column
 import koala.component.icon
-import koala.layout.row
+import koala.component.row
 import koala.component.span
 import koala.component.textBlock
 import koala.modifier.AlignItemsCenter

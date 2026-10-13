@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
 import streetlight.model.data.PageTheme
-import koala.layout.*
+import koala.component.*
 import koala.model.*
 import koala.page.*
 

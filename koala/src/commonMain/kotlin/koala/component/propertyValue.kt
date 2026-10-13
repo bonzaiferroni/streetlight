@@ -2,7 +2,6 @@ package koala.component
 
 import kotlinx.html.*
 import koala.modifier.*
-import koala.layout.row
 
 /** A line showing [propertyName], dimmed, followed by [propertyValue]. */
 fun FlowContent.textProperty(

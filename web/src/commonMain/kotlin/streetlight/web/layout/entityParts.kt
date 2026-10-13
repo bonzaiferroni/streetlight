@@ -8,7 +8,6 @@ import streetlight.model.data.EntityRef
 import streetlight.model.data.ExtraLink
 import streetlight.web.component.curatorBadge
 import koala.component.*
-import koala.layout.*
 import koala.markdown.*
 import streetlight.web.model.flair
 import streetlight.web.model.toEntityRef

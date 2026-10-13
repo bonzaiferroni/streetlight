@@ -7,7 +7,6 @@ import koala.dom.*
 import koala.modifier.Attribute
 import streetlight.model.data.PostId
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.page.PopoverId
 import streetlight.web.component.PostMenu
 import streetlight.web.model.api

@@ -11,6 +11,7 @@ import koala.dom.AppendScope
 import koala.dom.ViewScope
 import koala.dom.clear
 import koala.dom.onClick
+import koala.dom.component.column
 
 /**
  * A column of [items], each built by [block], where a click selects an item into [selection] and a second click

@@ -15,7 +15,6 @@ import web.keyboard.KeyboardEvent
 import koala.dom.ViewScope
 import koala.dom.asWeb
 import koala.dom.launchEffect
-import koala.dom.layout.box
 import koala.component.configureTextFieldContainer
 import koala.component.configureTextFieldInput
 

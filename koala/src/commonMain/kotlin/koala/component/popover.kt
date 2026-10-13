@@ -1,6 +1,6 @@
 @file:Suppress("CssInvalidPropertyValue", "CssInvalidFunction")
 
-package koala.layout
+package koala.component
 
 import koala.interop.InlineJs
 import koala.modifier.*
@@ -10,7 +10,6 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.onClick
-import koala.component.button
 import koala.page.Id
 import koala.page.setId
 

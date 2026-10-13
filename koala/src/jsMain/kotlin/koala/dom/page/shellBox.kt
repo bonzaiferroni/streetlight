@@ -11,7 +11,7 @@ import koala.dom.clear
 import koala.dom.getElementOrNullById
 import koala.external.onView
 import koala.interop.wireGeoMap
-import koala.dom.layout.box
+import koala.dom.component.box
 
 /**
  * Adopts the server-rendered shell when the document has one, and otherwise builds it with [block].

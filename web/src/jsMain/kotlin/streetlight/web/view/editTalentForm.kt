@@ -4,7 +4,6 @@ import koala.dom.*
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
 import koala.dom.component.*
-import koala.dom.layout.*
 import streetlight.web.model.api
 import streetlight.web.model.portal
 

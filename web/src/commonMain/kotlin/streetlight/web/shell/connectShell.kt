@@ -2,12 +2,12 @@ package streetlight.web.shell
 
 import koala.LottieFile
 import koala.VideoFile
-import koala.layout.card
+import koala.component.card
 import koala.component.*
-import koala.layout.box
-import koala.layout.column
-import koala.layout.div
-import koala.layout.section
+import koala.component.box
+import koala.component.column
+import koala.component.div
+import koala.component.section
 import koala.modifier.*
 import koala.page.Id
 import koala.page.setId

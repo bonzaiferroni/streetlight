@@ -4,8 +4,8 @@ import kampfire.api.Markdown
 import koala.Image
 import koala.modifier.*
 import koala.model.AppRoute
-import koala.layout.card
-import koala.layout.column
+import koala.component.card
+import koala.component.column
 import koala.component.filigree
 import koala.component.heading2
 import koala.component.metaImage

@@ -9,7 +9,6 @@ import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
-import streetlight.web.dom.layout.linksFormSection
 
 fun ViewScope.eventLinksForm(model: EventEditor) {
     formCard("Event Links") {

@@ -1,7 +1,6 @@
 package koala.component
 
 import koala.modifier.*
-import koala.layout.box
 
 object SwitchStyle {
     val Class = Class("switch")

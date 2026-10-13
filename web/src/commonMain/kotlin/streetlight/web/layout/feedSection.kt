@@ -12,7 +12,6 @@ import streetlight.web.shell.SectionHeadingMod
 import streetlight.web.page.AppAttribute
 import streetlight.web.component.tagFilterMenu
 import koala.component.*
-import koala.layout.*
 import koala.model.*
 import koala.page.*
 import streetlight.web.model.toCells

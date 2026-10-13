@@ -8,7 +8,6 @@ import koala.toImage
 import koala.dom.ViewScope
 import koala.dom.clear
 import koala.dom.onClick
-import koala.dom.layout.box
 import koala.dom.layout.flowBlock
 
 /**

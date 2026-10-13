@@ -5,7 +5,6 @@ import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.GalaxyEdit
 import koala.dom.component.*
-import koala.dom.layout.*
 import koala.model.*
 import streetlight.web.layout.BodyStyle
 import streetlight.web.dom.layout.formCard

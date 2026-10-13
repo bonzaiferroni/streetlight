@@ -26,7 +26,6 @@ import streetlight.web.dom.layout.mainBody
 import streetlight.web.layout.mainBody
 import streetlight.web.model.portal
 import streetlight.web.component.starToggle
-import streetlight.web.dom.layout.taskContent
 
 fun ViewScope.viewStarDash(star: Star) {
     mainBody("viewStarDash.kt") {

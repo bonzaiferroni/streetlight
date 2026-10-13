@@ -1,7 +1,7 @@
 package streetlight.web.layout
 
-import koala.layout.column
-import koala.layout.section
+import koala.component.column
+import koala.component.section
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

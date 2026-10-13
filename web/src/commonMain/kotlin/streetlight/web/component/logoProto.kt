@@ -3,7 +3,7 @@ package streetlight.web.component
 import koala.SvgFile
 import kotlinx.html.*
 import koala.modifier.*
-import koala.layout.div
+import koala.component.div
 
 /** The large flame logo, glowing. */
 fun FlowContent.logoProto(

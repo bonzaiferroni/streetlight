@@ -4,7 +4,6 @@ import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Entity
 import koala.component.*
-import koala.layout.*
 import streetlight.web.model.toButtons
 import streetlight.web.model.toCells
 import streetlight.web.model.toRoute

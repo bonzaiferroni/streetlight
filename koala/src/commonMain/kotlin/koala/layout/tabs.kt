@@ -7,6 +7,9 @@ import kotlinx.html.p
 import koala.component.button
 import koala.page.Id
 import koala.page.setId
+import koala.component.box
+import koala.component.column
+import koala.component.row
 
 /**
  * Tabs over panels, with [initialTab] selected. The browser wires them with [initTabs].

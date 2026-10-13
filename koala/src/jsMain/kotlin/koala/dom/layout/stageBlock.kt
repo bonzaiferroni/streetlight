@@ -13,6 +13,9 @@ import koala.component.heading
 import koala.dom.component.icon
 import koala.dom.ViewScope
 import koala.dom.onClick
+import koala.dom.component.box
+import koala.dom.component.column
+import koala.dom.component.row
 
 /**
  * Steps through the entries of the enum [State]: a numbered row of stage headings over the content [block]

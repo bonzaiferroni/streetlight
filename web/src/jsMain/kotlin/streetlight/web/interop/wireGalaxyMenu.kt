@@ -4,10 +4,10 @@ import kampfire.model.thumb
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.append
-import koala.dom.layout.box
-import koala.dom.layout.grid
+import koala.dom.component.box
+import koala.dom.component.grid
 import koala.dom.onClick
-import koala.dom.layout.row
+import koala.dom.component.row
 import koala.dom.component.textBlock
 import koala.component.image
 import kotlinx.css.GridTemplateColumns

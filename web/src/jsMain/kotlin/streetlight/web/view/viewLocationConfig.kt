@@ -13,6 +13,7 @@ import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.model.route
 import streetlight.web.model.DesignEditor
 import streetlight.web.layout.cardOf
+import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
 import streetlight.web.model.api

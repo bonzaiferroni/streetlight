@@ -1,4 +1,4 @@
-package koala.layout
+package koala.component
 
 import kotlinx.html.*
 import koala.modifier.*

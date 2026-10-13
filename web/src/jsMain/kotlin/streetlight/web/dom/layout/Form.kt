@@ -5,7 +5,7 @@ import koala.modifier.*
 import koala.dom.*
 import koala.component.textBlock
 import koala.component.bulletsOf
-import koala.layout.column
+import koala.component.column
 import koala.component.filigree
 import koala.component.heading3
 import koala.component.heading4
@@ -14,8 +14,8 @@ import kampfire.model.Tap
 import kampfire.model.MutableTap
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
-import koala.dom.component.*
 import koala.dom.layout.*
+import koala.dom.component.*
 import koala.model.*
 import streetlight.web.layout.BodyStyle
 
