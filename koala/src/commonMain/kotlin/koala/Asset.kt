@@ -41,6 +41,7 @@ enum class AssetType {
     Lottie,
     Svg,
     Image,
+    Video,
 }
 
 data class Stylesheet(override val url: Url): Asset {
@@ -64,6 +65,15 @@ data class Svg(override val url: Url): Asset {
     override fun toString() = url.value
 }
 
+data class Video(override val url: Url): Asset {
+    companion object {
+        fun of(filename: String) = Video("$videoPath$filename".toUrl())
+    }
+
+    override val assetType get() = AssetType.Video
+    override fun toString() = url.value
+}
+
 /** The [Svg] of [label], at `label.svg`. */
 fun svgOf(label: String) = Svg("$svgPath$label.svg".toUrl())
 
@@ -73,6 +83,7 @@ const val lottiePath = "/www/lottie/"
 const val svgPath = "/www/svg/"
 const val iconPath = "/www/icon/"
 const val imgPath = "/www/img/"
+const val videoPath = "/www/video/"
 const val genPath = "/gen/"
 
 /**
@@ -92,6 +103,7 @@ fun fileOf(filename: String, isGenerated: Boolean): Asset {
         type == AssetType.Stylesheet -> cssPath
         type == AssetType.Svg -> svgPath
         type == AssetType.Image -> imgPath
+        type == AssetType.Video -> videoPath
         else -> error("unsupported path: $filename")
     }
 
@@ -102,6 +114,7 @@ fun fileOf(filename: String, isGenerated: Boolean): Asset {
         AssetType.Stylesheet -> Stylesheet(url)
         AssetType.Svg -> Svg(url)
         AssetType.Image -> Image(url)
+        AssetType.Video -> Video(url)
         else -> error("unsupported type: $type")
     }
 }

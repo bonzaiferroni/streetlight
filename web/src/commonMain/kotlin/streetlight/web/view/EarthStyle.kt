@@ -107,7 +107,7 @@ $Grid {
 }
 
 /* a border, not an outline, since the scrolled content paints over an outline inset within it */
-$Focus:not(:empty) { border: var(--outline-low); }
+$Focus:not(:empty) { outline: var(--outline-low); }
 
 $Unbounded {
     position: relative;

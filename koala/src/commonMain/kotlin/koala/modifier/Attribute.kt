@@ -61,6 +61,8 @@ data class Attribute<T>(
         val ContentVisibility = stringAttributeOf("content-visibility")
         val ContainIntrinsicSize = stringAttributeOf("contain-intrinsic-size")
         val Disabled = unitAttributeOf("disabled")
+        val Muted = unitAttributeOf("muted")
+        val PlaysInline = unitAttributeOf("playsinline")
     }
 }
 

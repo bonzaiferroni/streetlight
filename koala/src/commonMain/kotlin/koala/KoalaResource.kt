@@ -54,3 +54,6 @@ object LottieFile : FileSet<Lottie>() {
     val StreetlightNight = addLottie("streetlight-night.json")
 }
 
+object VideoFile {
+    val MapZoomClick = Video.of("map-zoom-click.webm")
+}
