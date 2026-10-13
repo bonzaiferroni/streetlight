@@ -14,6 +14,11 @@ import streetlight.model.data.EmailStatus
 import streetlight.model.data.viableEmail
 import streetlight.web.model.AccountEditor
 import streetlight.web.model.AppConnector
+import streetlight.model.data.CapabilityStatus
+import streetlight.web.model.SellerEditor
+import streetlight.web.model.SellerStage
+import streetlight.web.model.api
+import streetlight.web.model.toaster
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
@@ -86,7 +91,53 @@ fun ViewScope.starConfigTabs(model: AccountEditor) = tabs(Id("star-config-tabs")
             }
         }
     }
+    tab("selling") {
+        val model = SellerEditor(contentScope, api.seller, toaster)
+        formRow {
+            sellerSection(model)
+        }
+    }
 }
+
+fun ViewScope.sellerSection(model: SellerEditor) = formSection("Stripe") {
+    val messages = MessageStore()
+    flowBlock(model.stageFlow, modify(Magic, Blur)) { stage ->
+        val seller = model.stateNow.seller
+        column {
+            when (stage) {
+                SellerStage.Loading -> Unit
+                SellerStage.NotStarted -> {
+                    centeredText(sellerInfo)
+                    formSubmit("Start selling", { model.onboard(messages) }, messages)
+                }
+                SellerStage.AwaitingSeller -> {
+                    centeredText("Stripe needs a few more details from you.")
+                    formSubmit("Continue setup", { model.onboard(messages) }, messages)
+                }
+                SellerStage.UnderReview -> {
+                    centeredText("Stripe is reviewing your details. Check back later.")
+                }
+                SellerStage.Restricted -> {
+                    centeredText("Stripe has restricted payments on your account.", CautionFg)
+                    seller?.statusReason?.let { centeredText("Reason: $it", CautionFg) }
+                    formSubmit("Update details", { model.onboard(messages) }, messages)
+                }
+                SellerStage.Ready -> {
+                    centeredText("Your Stripe account is ready to accept payments.", ValidFg)
+                    if (seller?.payoutStatus != CapabilityStatus.Active) {
+                        centeredText("Payouts are paused until Stripe has what it needs.", CautionFg)
+                    }
+                    button("Stripe Dashboard", "https://dashboard.stripe.com".toUrl(), AlignSelfCenter)
+                }
+            }
+        }
+    }
+}
+
+private val sellerInfo = """
+Sell the services you offer and get paid through Stripe. Payments go straight to your own Stripe account.
+Stripe hosts the setup, so your bank and identity details never touch Streetlight. If you already use Stripe, sign in with the same email to reuse your details.
+"""
 
 fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
     val messages = MessageStore()

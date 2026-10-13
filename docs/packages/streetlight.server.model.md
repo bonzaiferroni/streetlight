@@ -21,7 +21,7 @@ A server-side function takes its dependencies through a receiver rather than a p
 |---|---|
 | `DaoScope` | `dao`, `transaction { }`, `log` |
 | `ClientScope` | `client` |
-| `DataScope` | `DaoScope`, `ClientScope`, `appEmail` |
+| `DataScope` | `DaoScope`, `ClientScope`, `appEmail`, `hostAddress` |
 | `ServerScope` | `DataScope`, `ProviderScope` |
 | `ApiScope` | `ServerScope`, Ktor's `Routing` |
 
@@ -44,10 +44,17 @@ Anything outside the process sits behind an interface, with the implementation n
 | `MapReferenceClient` | `OSMMapReferenceClient` | `TestMapReferenceClient` |
 | `BlobClient` | `S3BlobClient` | `TestBlobClient` |
 | `EmailClient` | `PostmarkEmailClient` | `TestEmailClient` |
+| `PaymentClient` | `StripePaymentClient` | `TestPaymentClient` |
 
 The name is the implementation specifier followed by the interface, and the interfaces live here.
 
+An interface and the types it returns are named for the domain, not the provider, as `PaymentClient` and `ProviderAccount`. Every key the server and the daemon read from the environment is a constant of `EnvKey` in `streetlight.server`, read as `env.read(EnvKey.FOO)`. The implementation reads its secret from the environment on first call, so a server without the key starts and fails only the calls that need it.
+
 An interface earns its place where the call leaves the process. Everything inside it is reached by its own type.
+
+## Outbound Links
+
+A link sent out of the site, such as in an email or to a payment provider, is built as `"$hostAddress${route.toRelativePath()}"`, never with `toAbsolutePath()`.
 
 ## serverModule
 

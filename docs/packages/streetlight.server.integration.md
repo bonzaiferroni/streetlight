@@ -77,4 +77,4 @@ Utilities live in `TestUtility.kt`.
 
 ## Fakes
 
-`EmailRouter` keeps an inbox per address. `TestEmailClient` delivers into it, and takes a `getErrorCode` function so a test can make sending fail. `TestMapClient` and `TestBlobClient` are unimplemented.
+`EmailRouter` keeps an inbox per address. `TestEmailClient` delivers into it, and takes a `getErrorCode` function so a test can make sending fail. `TestPaymentClient` holds its accounts in a map, each created with no requirements met; a test replaces an entry to change what the provider reports. `TestMapClient` and `TestBlobClient` are unimplemented.

@@ -148,11 +148,15 @@ These lists do not count against the character limit of *fast chat*. A comment o
 
 Documentation is maintained as the work goes, following the rest of this document.
 
+### Bounty Documents
+
+A bounty document lives at `logs/bounty/<bounty-name>.md`. Once its bounty is complete, it moves to `logs/bounty/complete/`.
+
 ### Workflow
 
 1. **Stage the Bounty.** Before any code changes, draw the map to follow: analyze the code and present the lists above.
 2. **Follow the Bounty.** Tackle each item one at a time, or the whole list. "step" finishes the next item, "complete" finishes the list. Stepping suits a bounty whose items deserve their own consideration. Each reply presents the current status of the bounty.
-3. **Aftermath.** The bounty may uncover items for a future bounty. They are taken up next, or saved at `docs/bounty/<bounty-name>.md`.
+3. **Aftermath.** The bounty may uncover items for a future bounty. They are taken up next, or saved at `logs/bounty/<bounty-name>.md`.
 
 ### List Format
 
@@ -166,7 +170,7 @@ The navigator may open a *fast bounty*: a bounty given the green light to comple
 
 ### Long Bounty
 
-The navigator may open a *long bounty*: a body of work mapped in a document at `docs/bounty/<bounty-name>.md`, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
+The navigator may open a *long bounty*: a body of work mapped in a document at `logs/bounty/<bounty-name>.md`, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
 
 | Part | Long bounty |
 |---|---|

@@ -1,5 +1,6 @@
 package streetlight.server.daemon.agent
 
+import streetlight.server.EnvKey
 import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.http.client.ktor.KtorKoogHttpClient
@@ -93,12 +94,12 @@ data class LmConfig(
  * `google` reads its key from `GEMINI_KEY_A`. `ollama` reads `LM_MODEL`, `LM_CONTEXT_LENGTH` and
  * `LM_BASE_URL`, each with a default.
  */
-fun Environment.readLmConfig(): LmConfig = when (val provider = readOrNull("LM_PROVIDER") ?: "google") {
-    "google" -> LmConfig.gemini(read("GEMINI_KEY_A"))
+fun Environment.readLmConfig(): LmConfig = when (val provider = readOrNull(EnvKey.LM_PROVIDER) ?: "google") {
+    "google" -> LmConfig.gemini(read(EnvKey.GEMINI_KEY_A))
     "ollama" -> LmConfig.ollama(
-        id = readOrNull("LM_MODEL") ?: "qwen3.5:9b",
-        contextLength = readOrNull("LM_CONTEXT_LENGTH")?.toLong() ?: 32768,
-        baseUrl = readOrNull("LM_BASE_URL"),
+        id = readOrNull(EnvKey.LM_MODEL) ?: "qwen3.5:9b",
+        contextLength = readOrNull(EnvKey.LM_CONTEXT_LENGTH)?.toLong() ?: 32768,
+        baseUrl = readOrNull(EnvKey.LM_BASE_URL),
     )
     else -> error("Unknown LM_PROVIDER: $provider")
 }

@@ -253,6 +253,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ChangeEmail: PostEndpoint<EmailChange, Unit>(this)
     }
 
+    object Sellers: ApiNode(this) {
+        object Onboard: PostEndpoint<SellerOnboarding, Url>(this) {
+            object Refresh: ApiNode(this)
+        }
+        object ReadStatus: GetEndpoint<Seller?>(this)
+    }
+
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)
     object DocsTable: GetEndpoint<List<DocTableItem>>(this)
 

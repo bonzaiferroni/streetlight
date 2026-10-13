@@ -53,7 +53,9 @@ These serve functions live here rather than in `streetlight.server.routes`:
 | `serveSiteStatus` | `serveSiteStatus.kt` | `Api.Status` |
 | `serveWebhooks` | `configureWebhooks.kt` | A raw `post` path, not an `Api` endpoint |
 
-`serveWebhooks` does not take its path from `Api` because the caller is Postmark, not the Streetlight client. It authenticates on a secret path segment read from the environment through `provide`, and answers `200` before doing its work, so that a slow write does not provoke a retry from the sender.
+`serveWebhooks` does not take its paths from `Api` because the callers are Postmark and Stripe, not the Streetlight client. The Postmark webhook authenticates on a secret path segment read from the environment through `provide`, and answers `200` before doing its work, so that a slow write does not provoke a retry from the sender.
+
+The Stripe Connect webhook receives thin events. It reads the raw body and checks its `Stripe-Signature` against the secret before parsing it, answering `400` to a bad signature. It answers `200` after its work, so a failed write is retried. An event names the account it concerns, and the account's state is read again from the provider, since events may arrive out of order.
 
 ## Daemons
 
