@@ -3,10 +3,8 @@ package streetlight.web.shell
 import koala.LottieFile
 import koala.VideoFile
 import koala.layout.card
-import koala.component.heading2
-import koala.component.lottie
-import koala.component.textBlock
-import koala.component.video
+import koala.component.*
+import koala.layout.box
 import koala.layout.column
 import koala.layout.div
 import koala.layout.section
@@ -31,12 +29,16 @@ fun FlowContent.connectShell(type: ConnectType?) {
 
         section(ContainerTypeInlineSize) {
             column(modify(ContainerMdRow, FlexItems1, AlignItemsCenter)) {
-                column(AlignItemsCenter) {
-                    video(VideoFile.MapZoomClick, modify(Width(100.pct), MaxWidth(64)))
-                    // lottie(LottieFile.StreetlightNight, modify(Width(100.pct), MaxWidth(64)))
-                    heading2("Connect to your community", SectionHeadingMod)
+                box {
+                    video(
+                        VideoFile.MapZoomClick,
+                        modify(BorderRadius2, OverflowClip, Outline, MoonShadow)
+                    )
                 }
-                connectPicker()
+                column {
+                    heading3("Connect to your community")
+                    connectPicker()
+                }
             }
         }
 

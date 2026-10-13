@@ -7,7 +7,7 @@ import kotlinx.css.fr
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-/** A grid with the columns of [columns], switching to [queryTemplate] on a narrow screen. */
+/** A grid with the columns of [columns] and the rows of [rows]. */
 fun FlowContent.grid(
     columns: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     mod: Modifier? = null,
@@ -35,18 +35,12 @@ object GridColumns {
 
     /** Columns that fill the row, each at least a minimum width. */
     fun repeatFill(minPx: Int) = GridTemplateColumns("repeat(auto-fill, minmax(${minPx}px, 1fr))")
-
-    val QueryTemplate = Property<GridTemplateColumns>("grid-query-columns", true)
 }
 
 //language=CSS
 val GridColumnsCss get () = with(GridColumns) { """
 $Class {
-    display: grid; 
+    display: grid;
     gap: var(--unit);
-    
-    @media (max-width: 600px) {
-        grid-template-columns: var($QueryTemplate) !important;
-    }
 }
 """ }

@@ -9,7 +9,7 @@ import koala.dom.AppendScope
 import koala.layout.GridColumns
 import koala.layout.configureGridColumns
 
-/** A grid with the columns of [template], switching to [queryTemplate] on a narrow screen. */
+/** A grid with the columns of [template] and the rows of [rowTemplate]. */
 fun AppendScope.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     mod: Modifier? = null,
