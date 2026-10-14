@@ -34,14 +34,16 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 
-fun ViewScope.eventEditFormBody(model: EventEditor, isAdmin: Boolean = false) = formColumn {
-    if (isAdmin) eventWebsiteForm(model)
-    eventDetailsForm(model)
-    eventImageForm(model)
-    eventLinksForm(model)
+context(model: EventEditor)
+fun ViewScope.eventEditFormBody(isAdmin: Boolean = false) = formColumn {
+    if (isAdmin) eventWebsiteForm()
+    eventDetailsForm()
+    eventImageForm()
+    eventLinksForm()
 }
 
-fun ViewScope.eventWebsiteForm(model: EventEditor) = formCard("Parse Event") {
+context(model: EventEditor)
+fun ViewScope.eventWebsiteForm() = formCard("Parse Event") {
     formRow {
         formSection("Website") {
             centeredText("Does this event have a web page? We can read it to find certain details.")
@@ -52,7 +54,8 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCard("Parse Event") {
     }
 }
 
-fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
+context(model: EventEditor)
+fun ViewScope.eventDetailsForm() = formCard("Event Details") {
     formRow {
         formSection("Title") {
             textField(model.titleState, "title", maxLength = 50)
@@ -115,11 +118,10 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
     }
 }
 
-fun ViewScope.eventImageForm(model: EventEditor) =
-    imageFormSection(
-        instructions = "This image will appear in the feed and at the top of the event page.",
-        imageEditor = model.imageEditor
-    )
+context(model: EventEditor)
+fun ViewScope.eventImageForm() = context(model.imageEditor) {
+    imageFormSection("This image will appear in the feed and at the top of the event page.")
+}
 
 /** A date with buttons that step it by a day. */
 fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {

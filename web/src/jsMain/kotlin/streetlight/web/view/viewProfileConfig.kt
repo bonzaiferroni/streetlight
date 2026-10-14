@@ -18,20 +18,27 @@ import streetlight.web.model.dock
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getProfileEditor
 
-fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
+context(star: Star)
+fun ViewScope.viewProfileConfig(config: ProfileConfig) {
     val model = app.getProfileEditor(star.toEdit(config.design), contentScope)
     configBody("Profile", "Config", "viewProfileConfig.kt") {
         configHeading(star.username.value, StarRoute(star.username))
 
         lazyTabs {
             tab("Content") {
-                starProfileForm(model)
+                context(model) {
+                    starProfileForm()
+                }
             }
             tab("Theme") {
-                themeForm(model.designer.theme)
+                context(model.designer.theme) {
+                    themeForm()
+                }
             }
             tab("Layout") {
-                layoutBuilder(model.designer.layout)
+                context(model.designer.layout) {
+                    layoutBuilder()
+                }
             }
         }
         formSubmit("Save", model::submit, model.messages)
@@ -41,7 +48,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
 }
 
 fun RouteScope.viewProfileConfigRoute() {
-    starRouteBlock<ProfileConfigRoute, ProfileConfig> { star, config ->
-        viewProfileConfig(star, config)
+    starRouteBlock<ProfileConfigRoute, ProfileConfig> { config ->
+        viewProfileConfig(config)
     }
 }

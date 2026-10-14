@@ -9,7 +9,8 @@ import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formPart
 import streetlight.web.dom.layout.formSectionLegacy
 
-fun ViewScope.eventSearchForm(model: EventScout) = formSectionLegacy("Add an event") {
+context(model: EventScout)
+fun ViewScope.eventSearchForm() = formSectionLegacy("Add an event") {
     formCard {
         formPart(
             instructions = "What is the name of the event?",

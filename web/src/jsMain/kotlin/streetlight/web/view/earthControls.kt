@@ -10,7 +10,8 @@ import streetlight.web.model.Earth
 import koala.dom.component.*
 import koala.dom.layout.*
 
-fun ViewScope.earthControls(model: Earth) {
+context(model: Earth)
+fun ViewScope.earthControls() {
     val buttonMod = modify(PointerEventsAuto, OpacityHigh, EarthStyle.MoveDimmer)
     val iconButtonMod = modify(buttonMod, IconStyle.DefaultMod)
     val buttonTextMod = modify(TextSmall, TextUppercase)

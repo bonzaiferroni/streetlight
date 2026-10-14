@@ -19,7 +19,8 @@ import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getLocationEditor
 import streetlight.web.model.portal
 
-fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
+context(star: Star)
+fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent) {
     val edit = content.location.toEdit()
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
@@ -29,11 +30,13 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
         lazyTabs {
             tab("edit") {
                 column {
-                    locationEditFormBody(model)
+                    context(model) {
+                        locationEditFormBody()
+                    }
                     formSubmit(
                         label = "Save",
                         onClick = {
-                            launchEffect(::viewLocationUpdater) {
+                            launchEffect("viewLocationUpdater") {
                                 val location = model.submitSuspend()
                                 if (location != null) {
                                     portal.go(LocationRoute(location.slug))
@@ -60,8 +63,8 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
 
 fun RouteScope.viewLocationUpdaterRoute() {
     routeBlock<LocationUpdateRoute, LocationUpdaterContent> { content ->
-        starGate { star ->
-            viewLocationUpdater(content, star)
+        starGate {
+            viewLocationUpdater(content)
         }
     }
 }

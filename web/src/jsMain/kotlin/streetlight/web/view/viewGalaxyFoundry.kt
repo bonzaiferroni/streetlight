@@ -24,18 +24,20 @@ fun ViewScope.viewGalaxyFoundry() {
             textBlock(introText2)
         }
 
-        column(BodyStyle.MainColumn) {
-            formCard("Galaxy Name") {
-                galaxyNameFormRow(model)
-            }
-            formCard("Description") {
-                galaxyDescriptionFormRow(model)
-            }
-            formCard("Map Location") {
-                galaxyMapFormRow(model)
-            }
-            formCard("Access") {
-                galaxyAccessFormRow(model)
+        context(model) {
+            column(BodyStyle.MainColumn) {
+                formCard("Galaxy Name") {
+                    galaxyNameFormRow()
+                }
+                formCard("Description") {
+                    galaxyDescriptionFormRow()
+                }
+                formCard("Map Location") {
+                    galaxyMapFormRow()
+                }
+                formCard("Access") {
+                    galaxyAccessFormRow()
+                }
             }
         }
 

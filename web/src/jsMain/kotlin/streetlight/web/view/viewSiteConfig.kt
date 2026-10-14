@@ -39,7 +39,9 @@ fun ViewScope.viewSiteConfig() {
                         optionSwitch(model.themeState)
                     }
                 }
-                themeForm(editor)
+                context(editor) {
+                    themeForm()
+                }
                 formSubmit("save", {
                     val theme = editor.buildTheme() ?: return@formSubmit
                     model.pageThemeState.set(theme)

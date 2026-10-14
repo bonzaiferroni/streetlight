@@ -10,7 +10,8 @@ import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 
-fun ViewScope.eventLinksForm(model: EventEditor) {
+context(model: EventEditor)
+fun ViewScope.eventLinksForm() {
     formCard("Event Links") {
         formRow {
             formSection("Website") {

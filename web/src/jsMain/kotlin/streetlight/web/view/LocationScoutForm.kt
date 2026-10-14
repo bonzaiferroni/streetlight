@@ -16,7 +16,8 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 
-fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder") {
+context(model: LocationScout)
+fun ViewScope.locationFinder() = formCard("Location Finder") {
     setStyle(Css.ColorScheme.of(ThemeColor.Location.cssValue))
 
     formRow {

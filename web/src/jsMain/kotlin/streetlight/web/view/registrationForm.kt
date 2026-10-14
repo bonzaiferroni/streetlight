@@ -18,7 +18,8 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 
-fun ViewScope.guestRegistrationForm(model: UserCreator) {
+context(model: UserCreator)
+fun ViewScope.guestRegistrationForm() {
     formColumn {
         formRow {
             column {
@@ -45,8 +46,8 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
                     }
                 )
             }
-            usernameSection(model)
-            requirementsSection(model)
+            usernameSection()
+            requirementsSection()
         }
         formSubmit(
             label = "Register as Guest",
@@ -65,16 +66,21 @@ Guest accounts and user data are automatically deleted after 30 days without act
 If you decide to stick around, you can make the account permanent and more secure by adding a password. 
 """
 
-fun ViewScope.fullRegistrationForm(model: UserCreator) {
+context(model: UserCreator)
+fun ViewScope.fullRegistrationForm() {
 
     formColumn {
         formRow {
-            usernameSection(model)
+            usernameSection()
 
-            emailFormSection(model.emailEditor)
-            passwordFormSection(model.passwordEditor)
+            context(model.emailEditor) {
+                emailFormSection()
+            }
+            context(model.passwordEditor) {
+                passwordFormSection()
+            }
 
-            requirementsSection(model)
+            requirementsSection()
         }
         formSubmit(
             label = "Sign up",
@@ -85,11 +91,13 @@ fun ViewScope.fullRegistrationForm(model: UserCreator) {
     }
 }
 
-private fun ViewScope.requirementsSection(model: UserCreator) = formSection("Requirements") {
+context(model: UserCreator)
+private fun ViewScope.requirementsSection() = formSection("Requirements") {
     minAgeToggle(model.minAgeField)
 }
 
-private fun ViewScope.usernameSection(model: UserCreator) = formSection("Username") {
+context(model: UserCreator)
+private fun ViewScope.usernameSection() = formSection("Username") {
     row {
         textField(
             label = null,

@@ -17,14 +17,16 @@ import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.dom.layout.formTextField
 
-fun ViewScope.locationEditFormBody(model: LocationEditor) = column(BodyStyle.MainColumn) {
-    locationWebsiteForm(model)
-    locationDetailsForm(model)
-    locationImageForm(model)
-    locationLinksForm(model)
+context(model: LocationEditor)
+fun ViewScope.locationEditFormBody() = column(BodyStyle.MainColumn) {
+    locationWebsiteForm()
+    locationDetailsForm()
+    locationImageForm()
+    locationLinksForm()
 }
 
-fun ViewScope.locationDetailsForm(model: LocationEditor) = formCard("Location Details") {
+context(model: LocationEditor)
+fun ViewScope.locationDetailsForm() = formCard("Location Details") {
     formRow {
         formSection("Name") {
             formTextField(model.nameField, "title", maxLength = 50)
@@ -47,13 +49,13 @@ fun ViewScope.locationDetailsForm(model: LocationEditor) = formCard("Location De
     }
 }
 
-fun ViewScope.locationImageForm(model: LocationEditor) =
-    imageFormSection(
-        instructions = "This image will appear at the top of the location page.",
-        imageEditor = model.imageEditor
-    )
+context(model: LocationEditor)
+fun ViewScope.locationImageForm() = context(model.imageEditor) {
+    imageFormSection("This image will appear at the top of the location page.")
+}
 
-fun ViewScope.locationLinksForm(model: LocationEditor) = formCard("Links") {
+context(model: LocationEditor)
+fun ViewScope.locationLinksForm() = formCard("Links") {
     formRow {
         formSection("Website") {
             textField(model.websiteField, "website")
@@ -66,7 +68,8 @@ fun ViewScope.locationLinksForm(model: LocationEditor) = formCard("Links") {
     }
 }
 
-fun ViewScope.locationWebsiteForm(model: LocationEditor) = formCard("Website") {
+context(model: LocationEditor)
+fun ViewScope.locationWebsiteForm() = formCard("Website") {
     formRow {
         formSection("Read Website") {
             textField(model.websiteField, "website")

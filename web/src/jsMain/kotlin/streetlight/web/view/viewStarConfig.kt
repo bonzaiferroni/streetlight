@@ -28,14 +28,15 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getAccountEditor
 
-fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
+context(model: AccountEditor, star: Star)
+fun ViewScope.viewStarConfig() {
     configBody("Star", "Config", "viewStarConfig.kt") {
         configHeading(star.username.value, StarRoute(star.username))
 
         if (star.accountType == AccountType.Guest) {
-            registerAccountForm(model)
+            registerAccountForm()
         } else {
-            starConfigTabs(model)
+            starConfigTabs()
         }
     }
 
@@ -43,13 +44,16 @@ fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
 }
 
 fun RouteScope.viewStarConfigRoute() {
-    starRouteBlock<StarConfigRoute, Account>(Magic) { star, account ->
+    starRouteBlock<StarConfigRoute, Account>(Magic) { account ->
         val model = app.getAccountEditor(account, contentScope)
-        viewStarConfig(star, model)
+        context(model) {
+            viewStarConfig()
+        }
     }
 }
 
-fun ViewScope.registerAccountForm(model: AccountEditor) = formColumn {
+context(model: AccountEditor)
+fun ViewScope.registerAccountForm() = formColumn {
     val messages = MessageStore()
     formRow {
         column {
@@ -71,8 +75,12 @@ fun ViewScope.registerAccountForm(model: AccountEditor) = formColumn {
                 "Avoid automatic deletion after 30 days without activity"
             )
         }
-        passwordFormSection(model.passwordEditor)
-        emailFormSection(model.emailEditor)
+        context(model.passwordEditor) {
+            passwordFormSection()
+        }
+        context(model.emailEditor) {
+            emailFormSection()
+        }
     }
 
     formSubmit("Register Account", { model.completeRegistration(messages) })

@@ -21,8 +21,10 @@ fun ViewScope.viewCityConfig(city: City) {
     configBody("City", "Config", "viewCityConfig.kt") {
         configHeading(city.name, CityRoute(city.slug))
 
-        cityDetailsForm(model)
-        cityLinksForm(model)
+        context(model) {
+            cityDetailsForm()
+            cityLinksForm()
+        }
         formSubmit(
             label = "Save",
             onClick = { model.submit(messenger) },

@@ -23,27 +23,33 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
     configBody("Galaxy", "Config", "viewGalaxyConfig.kt") {
         configHeading(initialGalaxy.name, initialGalaxy.route)
 
-        lazyTabs {
-            tab("settings") {
-                formColumn {
-                    galaxyDescriptionFormRow(model)
+        context(model) {
+            lazyTabs {
+                tab("settings") {
+                    formColumn {
+                        galaxyDescriptionFormRow()
+                    }
                 }
-            }
-            tab("map") {
-                formColumn {
-                    galaxyMapFormRow(model)
+                tab("map") {
+                    formColumn {
+                        galaxyMapFormRow()
+                    }
                 }
-            }
-            tab("access") {
-                formColumn {
-                    galaxyAccessFormRow(model)
+                tab("access") {
+                    formColumn {
+                        galaxyAccessFormRow()
+                    }
                 }
-            }
-            tab("Theme") {
-                themeForm(model.designer.theme)
-            }
-            tab("Layout") {
-                layoutBuilder(model.designer.layout)
+                tab("Theme") {
+                    context(model.designer.theme) {
+                        themeForm()
+                    }
+                }
+                tab("Layout") {
+                    context(model.designer.layout) {
+                        layoutBuilder()
+                    }
+                }
             }
         }
 

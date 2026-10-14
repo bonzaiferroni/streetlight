@@ -33,7 +33,8 @@ import koala.dom.layout.*
 import koala.dom.markdown.*
 import streetlight.web.dom.layout.feedRow
 
-fun ViewScope.earthFocus(model: Earth) {
+context(model: Earth)
+fun ViewScope.earthFocus() {
     flowBlock(model.focusEntitiesState,
         modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight(100.pct), PointerEventsAuto, ZenBg, BlurBackdrop)
     ) { entitiesOrNull ->

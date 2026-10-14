@@ -27,35 +27,37 @@ import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.component.slider
 
 /** The editor of the block [blockId], by the kind of block. */
-fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
+context(model: LayoutEditor)
+fun ViewScope.blockBuilder(blockId: BlockId) {
     val editor = model.getBlock(blockId)
-    when (val block = editor.blockState.now) {
-        HeaderBlock, EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder(editor)
-        is HeadingBlock -> headingBuilder(editor)
-        is ImageBlock -> imageBuilder(editor)
-        is GalleryBlock -> galleryBuilder(editor)
-        is RichTextBlock -> richTextBuilder(editor)
-        is TextBlock -> textBuilder(editor)
-        is TabsBlock -> tabsBuilder(editor)
-        is ColumnsBlock -> columnBuilder(editor)
+    context(editor) {
+        when (val block = editor.blockState.now) {
+            HeaderBlock, EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder()
+            is HeadingBlock -> headingBuilder()
+            is ImageBlock -> imageBuilder()
+            is GalleryBlock -> galleryBuilder()
+            is RichTextBlock -> richTextBuilder()
+            is TextBlock -> textBuilder()
+            is TabsBlock -> tabsBuilder()
+            is ColumnsBlock -> columnBuilder()
+        }
     }
 }
 
 /** The editor row of a block above its [content]. */
+context(editor: BlockEditor)
 fun ViewScope.blockBuilder(
-    editor: BlockEditor,
     content: FlowContent.() -> Unit
 ) = column {
-    editorRow(editor)
+    editorRow()
     content()
 }
 
 /** The editor of a block whose content is drawn from its page, shown as a placeholder. */
-fun ViewScope.blockBuilder(
-    editor: BlockEditor,
-) {
+context(editor: BlockEditor)
+fun ViewScope.blockBuilder() {
     val blockType = editor.block.blockType
-    blockBuilder(editor) {
+    blockBuilder() {
         buildContentBlock(blockType)
     }
 }
@@ -66,10 +68,11 @@ fun ViewScope.buildContentBlock(type: BlockType) {
     }
 }
 
-fun ViewScope.tabsBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.tabsBuilder() {
     // val tabsField = editor.blockField.narrow<LayoutBlock, TabsBlock>()
     column {
-        editorRow(editor) {
+        editorRow() {
             flowBlock(editor.refreshState) {
                 column {
                     editor.childIds.forEach { containerId ->
@@ -104,7 +107,9 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                 editor.childIds.forEach { containerId ->
                     val container = editor.model.getContainer(containerId)
                     tab(container.name) {
-                        containerBuilder(editor.model, containerId)
+                        context(editor.model) {
+                            containerBuilder(containerId)
+                        }
                     }
                 }
             }
@@ -112,12 +117,13 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
     }
 }
 
-fun ViewScope.textBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.textBuilder() {
     val blockState = editor.blockState.mutableTapOf({ it as TextBlock }) { it }
     val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
     val isEditingState = storeOf(textState.now.isEmpty())
     column {
-        editorRow(editor, isEditingState)
+        editorRow(isEditingState)
         flowBlock(isEditingState) { isEditing ->
             if (isEditing) {
                 textField(textState)
@@ -128,14 +134,15 @@ fun ViewScope.textBuilder(editor: BlockEditor) {
     }
 }
 
-fun ViewScope.headingBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.headingBuilder() {
     val blockState = editor.blockState.mutableTapOf({ it as HeadingBlock }) { it }
     val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
     val isEditingState = storeOf(textState.now.isEmpty())
     val levelState = blockState.mutableTapOf({ it.level }) { copy(level = it) }
     val hasFiligreeState = blockState.mutableTapOf({ it.hasFiligree }) { copy(hasFiligree = it) }
     column {
-        editorRow(editor, isEditingState) {
+        editorRow(isEditingState) {
             formColumn {
                 formRow {
                     formSection("Level") {
@@ -159,7 +166,8 @@ fun ViewScope.headingBuilder(editor: BlockEditor) {
     }
 }
 
-fun ViewScope.richTextBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.richTextBuilder() {
     val blockState = editor.blockState.mutableTapOf({ it as RichTextBlock }) { it }
     val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
     val sizeState = blockState.mutableTapOf({ it.size ?: Size3.default }) {
@@ -167,7 +175,7 @@ fun ViewScope.richTextBuilder(editor: BlockEditor) {
     }
     val isEditingState = storeOf(textState.now.value.isEmpty())
     column {
-        editorRow(editor, isEditingState) {
+        editorRow(isEditingState) {
             formColumn {
                 formSection("Size") {
                     dropMenu(sizeState)
@@ -188,7 +196,8 @@ fun ViewScope.richTextBuilder(editor: BlockEditor) {
     }
 }
 
-fun ViewScope.imageBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.imageBuilder() {
     val blockState = editor.blockState.mutableTapOf({ it as ImageBlock }) { it }
     val imageState = blockState.mutableTapOf({ it.image }) { copy(image = it) }
     val shapeState = blockState.mutableTapOf({ it.shape ?: ImageShape.default }) {
@@ -199,7 +208,7 @@ fun ViewScope.imageBuilder(editor: BlockEditor) {
     }
     val widthState = blockState.mutableTapOf({ it.width ?: 100 }) { copy(width = it.takeIf { it != 100 }) }
     column {
-        editorRow(editor) {
+        editorRow() {
             formColumn {
                 row(FlexItems1) {
                     formSection("Shape") {
@@ -224,7 +233,8 @@ fun ViewScope.imageBuilder(editor: BlockEditor) {
     }
 }
 
-fun ViewScope.galleryBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.galleryBuilder() {
     val blockState = editor.blockState.mutableTapOf({ it as GalleryBlock }) { it }
     val newImageState = blockState.mutableTapOf<GalleryBlock, Image?>({ null }) {
         if (it == null) return@mutableTapOf this
@@ -234,7 +244,7 @@ fun ViewScope.galleryBuilder(editor: BlockEditor) {
         copy(shape = it.takeIf { it != ImageShape.default })
     }
     column {
-        editorRow(editor) {
+        editorRow() {
             formColumn {
                 formSection("Shape") {
                     dropMenu(shapeState)
@@ -259,18 +269,23 @@ fun ViewScope.galleryBuilder(editor: BlockEditor) {
     }
 }
 
-fun ViewScope.columnBuilder(editor: BlockEditor) {
+context(editor: BlockEditor)
+fun ViewScope.columnBuilder() {
     // val blockState = editor.blockState.mutableTapOf({ it as ColumnBlock }) { it }
     val containerId = editor.childIds.first()
     val container = editor.model.getContainer(containerId)
     column {
-        editorRow(editor)
+        editorRow()
         flowBlock(container.blockIdsField) { blockIds ->
             row(BodyStyle.FormRow) {
-                blockIds.forEach { blockId ->
-                    blockBuilder(editor.model, blockId)
+                context(editor.model) {
+                    blockIds.forEach { blockId ->
+                        blockBuilder(blockId)
+                    }
                 }
-                lastEditorRow(container)
+                context(container) {
+                    lastEditorRow()
+                }
             }
         }
     }

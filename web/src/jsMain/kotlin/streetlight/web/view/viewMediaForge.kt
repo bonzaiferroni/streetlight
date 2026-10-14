@@ -26,13 +26,19 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
 
         lazyTabs {
             tab("Content") {
-                mediaForm(model)
+                context(model) {
+                    mediaForm()
+                }
             }
             tab("Theme") {
-                themeForm(model.designer.theme)
+                context(model.designer.theme) {
+                    themeForm()
+                }
             }
             tab("Layout") {
-                layoutBuilder(model.designer.layout)
+                context(model.designer.layout) {
+                    layoutBuilder()
+                }
             }
         }
 

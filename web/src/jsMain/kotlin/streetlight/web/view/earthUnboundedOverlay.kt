@@ -21,7 +21,8 @@ import koala.dom.component.*
 import koala.external.*
 import streetlight.web.utility.element
 
-fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraController) {
+context(model: Earth, mapContext: GeoCameraController)
+fun ViewScope.earthUnboundedOverlay() {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
     val element = div(modify(EarthStyle.Unbounded, PointerEventsNone))
@@ -80,7 +81,7 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
         hint.element.style.transform = "translate(-50%, -50%)" // rotate(${angle}rad)
     }
 
-    launchEffect(ViewScope::earthUnboundedOverlay) {
+    launchEffect("earthUnboundedOverlay") {
 //        launch {
 //            combine(
 //                model.unboundedMarkersState.flow,

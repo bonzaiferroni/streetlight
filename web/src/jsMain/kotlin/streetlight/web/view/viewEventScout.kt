@@ -30,7 +30,8 @@ import streetlight.web.model.getEventScout
 import streetlight.web.model.getLocationEditor
 import streetlight.web.model.getLocationScout
 
-fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
+context(star: Star)
+fun ViewScope.viewEventScout(galaxy: Galaxy?) {
     val locationEditor = app.getLocationEditor(LocationEdit(), contentScope)
     val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
@@ -51,19 +52,29 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
             when (stage) {
                 EventScoutStage.LocationSearch -> formBodyProto {
                     column {
-                        locationFinder(locationScout)
-                        if (star.isAdmin) leadForm(model.leadEditor)
+                        context(locationScout) {
+                            locationFinder()
+                        }
+                        if (star.isAdmin) context(model.leadEditor) {
+                            leadForm()
+                        }
                     }
                 }
                 EventScoutStage.LocationEdit -> column {
-                    locationEditFormBody(locationEditor)
+                    context(locationEditor) {
+                        locationEditFormBody()
+                    }
                     formSubmit("Next", model::submitLocation, locationEditor.messages, Accent)
                 }
                 EventScoutStage.EventSearch -> formBodyProto {
-                    eventSearchForm(model)
+                    context(model) {
+                        eventSearchForm()
+                    }
                 }
                 EventScoutStage.EventEdit -> column {
-                    eventEditFormBody(editor, star.isAdmin)
+                    context(editor) {
+                        eventEditFormBody(star.isAdmin)
+                    }
                     formSubmit("Next", model::review, editor.message, Accent)
                 }
                 EventScoutStage.Post -> formBodyProto {
@@ -84,7 +95,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?, star: Star) {
 }
 
 fun RouteScope.viewEventScoutRoute() {
-    starRouteBlock<EventScoutRoute, FetcherContent> { star, content ->
-        viewEventScout(content.toContentOrNull<Galaxy>(), star)
+    starRouteBlock<EventScoutRoute, FetcherContent> { content ->
+        viewEventScout(content.toContentOrNull<Galaxy>())
     }
 }

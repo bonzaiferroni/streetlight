@@ -8,9 +8,12 @@ import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 
-fun ViewScope.starProfileForm(model: ProfileEditor) = formColumn {
+context(model: ProfileEditor)
+fun ViewScope.starProfileForm() = formColumn {
     formRow {
-        imageFormSection(imageInstructions1, model.imageEditor)
+        context(model.imageEditor) {
+            imageFormSection(imageInstructions1)
+        }
         formSection("Content") {
             textField(model.taglineField, "tagline", maxLength = 50)
             centeredText("The tagline will appear under your name.")

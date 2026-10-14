@@ -10,9 +10,9 @@ import streetlight.web.model.ImageEditor
 import streetlight.web.dom.layout.formBullets
 import streetlight.web.dom.layout.formSection
 
+context(imageEditor: ImageEditor)
 fun ViewScope.imageFormSection(
     instructions: String,
-    imageEditor: ImageEditor,
 ) = formSection("Image", AlignSelfCenter) {
     imageDrop(imageEditor.imageField) {
         box {

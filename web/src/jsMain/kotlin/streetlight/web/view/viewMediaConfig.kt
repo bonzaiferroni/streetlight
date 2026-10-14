@@ -19,14 +19,15 @@ import streetlight.web.dom.component.configHeading
 import streetlight.web.model.portal
 import streetlight.web.model.toaster
 
-fun ViewScope.viewMediaConfig(media: Media, model: MediaEditor) {
+context(model: MediaEditor)
+fun ViewScope.viewMediaConfig(media: Media) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
     configBody("Media", "Config", "viewMediaConfig.kt") {
         configHeading(media.title ?: "Post", MediaRoute(media.slug))
 
-        mediaForm(model)
+        mediaForm()
 
         row(JustifyContentEnd) {
             button("Edit", onClick = model::submitPost)
@@ -37,7 +38,9 @@ fun ViewScope.viewMediaConfig(media: Media, model: MediaEditor) {
 fun RouteScope.viewMediaConfigRoute() {
     routeBlock<MediaUpdateRoute, Media> {
         val editor = MediaEditor(it.toEdit(), contentScope, api, toaster)
-        viewMediaConfig(it, editor)
+        context(editor) {
+            viewMediaConfig(it)
+        }
     }
 }
 

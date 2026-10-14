@@ -22,7 +22,8 @@ import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formTextField
 import streetlight.web.model.geoCamera
 
-fun ViewScope.galaxyNameFormRow(model: GalaxyEditor) = formRow {
+context(model: GalaxyEditor)
+fun ViewScope.galaxyNameFormRow() = formRow {
     formSection("Name") {
         formTextField(
             field = model.nameState,
@@ -47,7 +48,8 @@ fun ViewScope.galaxyNameFormRow(model: GalaxyEditor) = formRow {
     }
 }
 
-fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
+context(model: GalaxyEditor)
+fun ViewScope.galaxyDescriptionFormRow() = formRow {
     formSection("Description") {
         textEditor(model.descriptionField, "description")
         bulletsOf(
@@ -57,7 +59,7 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
         )
     }
 
-    galaxyImageSection(model)
+    galaxyImageSection()
 
     formSection("Tagline") {
         formTextField(model.taglineField, "tagline", maxLength = 50)
@@ -99,7 +101,8 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
     }
 }
 
-fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
+context(model: GalaxyEditor)
+fun ViewScope.galaxyMapFormRow() = formRow {
     formSection("Map Location") {
         formField {
             geoMapMount(mod = FormMod.GeoMap)
@@ -144,9 +147,11 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
     }
 }
 
-fun ViewScope.galaxyImageSection(model: GalaxyEditor) = imageFormSection(imageInstructions1, model.imageEditor)
+context(model: GalaxyEditor)
+fun ViewScope.galaxyImageSection() = context(model.imageEditor) { imageFormSection(imageInstructions1) }
 
-fun ViewScope.galaxyAccessFormRow(model: GalaxyEditor) = formRow {
+context(model: GalaxyEditor)
+fun ViewScope.galaxyAccessFormRow() = formRow {
     formSection("Permissions") {
         formField {
             dropMenu(model.permissionField)

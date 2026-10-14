@@ -11,11 +11,11 @@ import streetlight.model.data.Star
 /** A `routeBlock` behind a [starGate]. */
 inline fun <reified Route: AppRoute, reified Content: FetcherContent> RouteScope.starRouteBlock(
     mod: Modifier? = null,
-    crossinline content: ViewScope.(Star, Content) -> Unit
+    crossinline content: context(Star) ViewScope.(Content) -> Unit
 ) {
-    starGate(mod) { star ->
-        routeBlock<Route, Content>(this@starRouteBlock.inflator, this@starRouteBlock.state) { content ->
-            content(star, content)
+    starGate(mod) {
+        routeBlock<Route, Content>(this@starRouteBlock.inflator, this@starRouteBlock.state) {
+            content(it)
         }
     }
 }

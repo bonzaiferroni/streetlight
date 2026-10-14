@@ -16,7 +16,8 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.component.slider
 
-fun ViewScope.themeForm(model: ThemeEditor) {
+context(model: ThemeEditor)
+fun ViewScope.themeForm() {
     formCard {
         formRow {
             formSection("Colors") {

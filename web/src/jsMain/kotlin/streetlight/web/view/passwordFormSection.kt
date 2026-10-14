@@ -8,11 +8,13 @@ import streetlight.web.model.PasswordEditor
 import streetlight.web.dom.layout.formBullets
 import streetlight.web.dom.layout.formSection
 
-fun ViewScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
-    passwordFormInput(model)
+context(model: PasswordEditor)
+fun ViewScope.passwordFormSection() = formSection("Password") {
+    passwordFormInput()
 }
 
-fun ViewScope.passwordFormInput(model: PasswordEditor) {
+context(model: PasswordEditor)
+fun ViewScope.passwordFormInput() {
     textField(model.passwordField, "password") {
         type = InputType.password
     }

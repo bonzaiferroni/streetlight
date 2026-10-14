@@ -11,16 +11,16 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formTextField
 
-fun ViewScope.cityDetailsForm(model: CityEditor) = formCard("City Details") {
+context(model: CityEditor)
+fun ViewScope.cityDetailsForm() = formCard("City Details") {
     formRow {
         formSection("Name") {
             formTextField(model.nameField, "name", maxLength = 50)
                 .flowValid(CityProperty.Name, model.validityField, contentScope)
         }
-        imageFormSection(
-            instructions = "This image will appear at the top of the city page.",
-            imageEditor = model.imageEditor,
-        )
+        context(model.imageEditor) {
+            imageFormSection("This image will appear at the top of the city page.")
+        }
     }
 
     formSection("Description") {
@@ -32,6 +32,7 @@ fun ViewScope.cityDetailsForm(model: CityEditor) = formCard("City Details") {
     }
 }
 
-fun ViewScope.cityLinksForm(model: CityEditor) = formCard("City Links") {
+context(model: CityEditor)
+fun ViewScope.cityLinksForm() = formCard("City Links") {
     linksFormSection(model.linksState)
 }

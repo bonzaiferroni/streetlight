@@ -27,79 +27,87 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 
-fun ViewScope.starConfigTabs(model: AccountEditor) = tabs(Id("star-config-tabs")) {
+context(model: AccountEditor)
+fun ViewScope.starConfigTabs() = tabs(Id("star-config-tabs")) {
     tab("account") {
         formRow {
-            emailSection(model)
-            passwordSection(model)
+            emailSection()
+            passwordSection()
         }
     }
     tab("connect apps") {
-        val model = AppConnector()
-        formRow {
-            formSection("PayPal") {
-                olist {
-                    listItem {
-                        +"Visit "
-                        navigation("https://paypal.me", "paypal.me")
-                        +" to create a public link"
-                    }
-                    listItem {
-                        +"Enter the username you chose in the field below."
-                    }
-                    listItem {
-                        +"Payments go directly to you, Streetlight just provides the link."
-                    }
-                }
-                row {
-                    textField(model.paypalIdState, "PayPal username", Flex1)
-                    flowBlock(model.paypalIdState) { paypalId ->
-                        if (paypalId.isEmpty()) {
-                            button("test link", null, Attribute.Disabled.to(Unit))
-                        } else {
-                            val url = "https://paypal.me/${paypalId}".toUrl()
-                            button("Test Link", url)
-                        }
-                    }
-                }
-            }
-            formSection("Venmo") {
-                row {
-                    textField(model.venmoIdState, "Venmo", Flex1)
-                    flowBlock(model.venmoIdState) { venmoId ->
-                        if (venmoId.isEmpty()) {
-                            button("test link", null, Attribute.Disabled.to(Unit))
-                        } else {
-                            val url = "https://venmo.com/${venmoId}".toUrl()
-                            button("Test Link", url)
-                        }
-                    }
-                }
-            }
-            formSection("Cash App") {
-                row {
-                    textField(model.cashAppIdState, "Cash App", Flex1)
-                    flowBlock(model.cashAppIdState) { cashAppId ->
-                        if (cashAppId.isEmpty()) {
-                            button("test link", null, Attribute.Disabled.to(Unit))
-                        } else {
-                            val url = "https://cash.app/${cashAppId}".toUrl()
-                            button("Test Link", url)
-                        }
-                    }
-                }
-            }
-        }
+        connectApps()
     }
     tab("selling") {
         val model = SellerEditor(contentScope, api.seller, toaster)
-        formRow {
-            sellerSection(model)
+        context(model) {
+            formRow {
+                sellerSection()
+            }
         }
     }
 }
 
-fun ViewScope.sellerSection(model: SellerEditor) = formSection("Stripe") {
+fun ViewScope.connectApps() {
+    val model = AppConnector()
+    formRow {
+        formSection("PayPal") {
+            olist {
+                listItem {
+                    +"Visit "
+                    navigation("https://paypal.me", "paypal.me")
+                    +" to create a public link"
+                }
+                listItem {
+                    +"Enter the username you chose in the field below."
+                }
+                listItem {
+                    +"Payments go directly to you, Streetlight just provides the link."
+                }
+            }
+            row {
+                textField(model.paypalIdState, "PayPal username", Flex1)
+                flowBlock(model.paypalIdState) { paypalId ->
+                    if (paypalId.isEmpty()) {
+                        button("test link", null, Attribute.Disabled.to(Unit))
+                    } else {
+                        val url = "https://paypal.me/${paypalId}".toUrl()
+                        button("Test Link", url)
+                    }
+                }
+            }
+        }
+        formSection("Venmo") {
+            row {
+                textField(model.venmoIdState, "Venmo", Flex1)
+                flowBlock(model.venmoIdState) { venmoId ->
+                    if (venmoId.isEmpty()) {
+                        button("test link", null, Attribute.Disabled.to(Unit))
+                    } else {
+                        val url = "https://venmo.com/${venmoId}".toUrl()
+                        button("Test Link", url)
+                    }
+                }
+            }
+        }
+        formSection("Cash App") {
+            row {
+                textField(model.cashAppIdState, "Cash App", Flex1)
+                flowBlock(model.cashAppIdState) { cashAppId ->
+                    if (cashAppId.isEmpty()) {
+                        button("test link", null, Attribute.Disabled.to(Unit))
+                    } else {
+                        val url = "https://cash.app/${cashAppId}".toUrl()
+                        button("Test Link", url)
+                    }
+                }
+            }
+        }
+    }
+}
+
+context(model: SellerEditor)
+fun ViewScope.sellerSection() = formSection("Stripe") {
     val messages = MessageStore()
     flowBlock(model.stageFlow, modify(Magic, Blur)) { stage ->
         val seller = model.stateNow.seller
@@ -139,7 +147,8 @@ Sell the services you offer and get paid through Stripe. Payments go straight to
 Stripe hosts the setup, so your bank and identity details never touch Streetlight. If you already use Stripe, sign in with the same email to reuse your details.
 """
 
-fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
+context(model: AccountEditor)
+fun ViewScope.passwordSection() = formSection("Password") {
     val messages = MessageStore()
 
     flowBlock(model.isEditingPasswordField, modify(Magic, Blur, Scale)) { isEditing ->
@@ -153,7 +162,9 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
                     }
                     centeredText("New password:", MarginTop(1))
                 }
-                passwordFormInput(model.passwordEditor)
+                context(model.passwordEditor) {
+                    passwordFormInput()
+                }
                 if (email != null) {
                     button({ model.resetPassword(email, messages) }, AlignSelfCenter) {
                         textBlock("I forgot my current password.")
@@ -178,25 +189,26 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
     }
 }
 
-fun ViewScope.emailSection(model: AccountEditor) = formSection("Email") {
+context(model: AccountEditor)
+fun ViewScope.emailSection() = formSection("Email") {
     flowBlock(model.emailAndStatusField) { (email, status) ->
         if (status == EmailStatus.NotOwned || status == EmailStatus.Bounced) {
-            invalidStatusForm(model, email)
+            invalidStatusForm(email)
         } else if (email == null) {
-            emailNullForm(model)
+            emailNullForm()
         } else  {
             flowBlock(model.isRemovingEmailField, modify(Magic, Blur)) { isRemovingEmail ->
                 when (isRemovingEmail) {
-                    true -> removingEmailForm(model)
-                    else -> emailProvidedForm(model, email, status)
+                    true -> removingEmailForm()
+                    else -> emailProvidedForm(email, status)
                 }
             }
         }
     }
 }
 
+context(model: AccountEditor)
 private fun ViewScope.emailProvidedForm(
-    model: AccountEditor,
     email: EmailAddress,
     status: EmailStatus?,
 ) {
@@ -227,7 +239,8 @@ private fun ViewScope.emailProvidedForm(
     }
 }
 
-private fun ViewScope.emailNullForm(model: AccountEditor) {
+context(model: AccountEditor)
+private fun ViewScope.emailNullForm() {
     val submitLabel = when (model.stateNow.isChangingEmail) {
         true -> "change email"
         else -> "add email"
@@ -240,12 +253,15 @@ private fun ViewScope.emailNullForm(model: AccountEditor) {
             }
             centeredText("What is your new email?", MarginTop(1))
         }
-        emailFormInput(model.emailEditor)
+        context(model.emailEditor) {
+            emailFormInput()
+        }
         formSubmit(submitLabel, model::addEmail, model.emailMessages)
     }
 }
 
-private fun ViewScope.invalidStatusForm(model: AccountEditor, email: EmailAddress?) {
+context(model: AccountEditor)
+private fun ViewScope.invalidStatusForm(email: EmailAddress?) {
     column {
         textBlock(
             "We were unable to deliver to the email address you provided, please provide a different one.",
@@ -254,12 +270,15 @@ private fun ViewScope.invalidStatusForm(model: AccountEditor, email: EmailAddres
         email?.let {
             textBlock("Provided address: ${email.obfuscate()}")
         }
-        emailFormInput(model.emailEditor)
+        context(model.emailEditor) {
+            emailFormInput()
+        }
         formSubmit("add email", model::addEmail, model.emailMessages)
     }
 }
 
-private fun ViewScope.removingEmailForm(model: AccountEditor) {
+context(model: AccountEditor)
+private fun ViewScope.removingEmailForm() {
     column {
         if (model.stateNow.hasVerifiedEmail) {
             centeredText("Please provide a password to authorize removal.")

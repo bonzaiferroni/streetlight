@@ -29,7 +29,9 @@ fun ViewScope.editTaskContent(task: EditTaskContent) {
     val editor = app.getLocationEditor(edit, contentScope)
     column {
         textBlock("Check to make sure this information is complete.")
-        locationEditFormBody(editor)
+        context(editor) {
+            locationEditFormBody()
+        }
         formSubmit("done", {
             launchEffect {
 

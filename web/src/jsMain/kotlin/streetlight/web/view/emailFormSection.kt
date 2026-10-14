@@ -6,11 +6,13 @@ import streetlight.web.model.EmailEditor
 import streetlight.web.dom.layout.formBullets
 import streetlight.web.dom.layout.formSection
 
-fun ViewScope.emailFormSection(model: EmailEditor) = formSection("Email") {
-    emailFormInput(model)
+context(model: EmailEditor)
+fun ViewScope.emailFormSection() = formSection("Email") {
+    emailFormInput()
 }
 
-fun ViewScope.emailFormInput(model: EmailEditor) {
+context(model: EmailEditor)
+fun ViewScope.emailFormInput() {
     textField(model.emailStringField, "optional", placeholder = "email")
     formBullets(
         null,

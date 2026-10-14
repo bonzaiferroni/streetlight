@@ -9,7 +9,8 @@ import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 
-fun ViewScope.mediaForm(model: MediaEditor) = formCard {
+context(model: MediaEditor)
+fun ViewScope.mediaForm() = formCard {
     formRow {
         formSection("title") {
             textField(model.titleField, "title")

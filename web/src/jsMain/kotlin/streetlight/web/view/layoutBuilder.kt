@@ -27,26 +27,30 @@ import koala.dom.layout.*
 import streetlight.web.layout.BodyStyle
 
 /** The editor of a page layout: its blocks, and the blocks removed from it, which can be restored. */
-fun ViewScope.layoutBuilder(model: LayoutEditor) {
+context(model: LayoutEditor)
+fun ViewScope.layoutBuilder() {
     column(BodyStyle.MainColumn) {
-        containerBuilder(model, model.mainContainerId)
+        containerBuilder(model.mainContainerId)
         // td: footer designer
         flowBlock(model.removedBlockIdsState) { removedBlockIds ->
             if (removedBlockIds.isEmpty()) return@flowBlock
-            removedBlockList(model, removedBlockIds)
+            removedBlockList(removedBlockIds)
         }
     }
 }
 
 /** The editors of a container's blocks, closed by a row that adds a block to it. */
-fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
+context(model: LayoutEditor)
+fun ViewScope.containerBuilder(containerId: ContainerId) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
         column(BorderRadius1) {
             blockIds.forEach { blockId ->
-                blockBuilder(model, blockId)
+                blockBuilder(blockId)
             }
-            lastEditorRow(editor)
+            context(editor) {
+                lastEditorRow()
+            }
         }
     }
 }
@@ -56,8 +60,8 @@ fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
  *
  * While a block moves, the row becomes the button that moves it here.
  */
+context(editor: BlockEditor)
 fun ViewScope.editorRow(
-    editor: BlockEditor,
     isEditingState: MutableTap<Boolean>? = null,
     menuContent: (ViewScope.() -> Unit)? = null,
 ) {
@@ -116,9 +120,8 @@ fun ViewScope.editorRow(
 }
 
 /** The row at the end of a container, which adds a block or receives the moving block. */
-fun ViewScope.lastEditorRow(
-    editor: ContainerEditor
-) {
+context(editor: ContainerEditor)
+fun ViewScope.lastEditorRow() {
     flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
         when (movingBlockId) {
             null -> {
@@ -141,7 +144,8 @@ fun ViewScope.lastEditorRow(
     }
 }
 
-fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
+context(model: LayoutEditor)
+fun ViewScope.removedBlockList(blockIds: List<BlockId>) {
     column {
         filigree { heading3("Removed Blocks") }
         blockIds.forEach { blockId ->

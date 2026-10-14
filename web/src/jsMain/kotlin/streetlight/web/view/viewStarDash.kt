@@ -27,14 +27,15 @@ import streetlight.web.layout.mainBody
 import streetlight.web.model.portal
 import streetlight.web.component.starToggle
 
-fun ViewScope.viewStarDash(star: Star) {
+context(star: Star)
+fun ViewScope.viewStarDash() {
     mainBody("viewStarDash.kt") {
         lazyTabs {
             tab("activity") {
-                activityContent(star)
+                activityContent()
             }
             tab("sandbox") {
-                sandboxContent(star)
+                sandboxContent()
             }
         }
     }
@@ -44,13 +45,13 @@ fun ViewScope.viewStarDash(star: Star) {
 
 fun RouteScope.viewStarDashRoute() {
     routeBlock<StarDashRoute, NullContent>() {
-        starGate { star ->
-            viewStarDash(star)
+        starGate {
+            viewStarDash()
         }
     }
 }
 
-private fun ViewScope.activityContent(star: Star) {
+private fun ViewScope.activityContent() {
     grid {
         section("galaxies") {
             dataBlock(api.galaxy::readUserGalaxies) { galaxies ->
@@ -89,7 +90,8 @@ private fun ViewScope.activityContent(star: Star) {
     }
 }
 
-private fun ViewScope.sandboxContent(star: Star) {
+context(star: Star)
+private fun ViewScope.sandboxContent() {
     // val model = UserHub(renderScope, app.client.api)
     val gate = app.get<SessionClient>()
 

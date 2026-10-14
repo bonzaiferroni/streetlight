@@ -25,7 +25,8 @@ import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getLocationEditor
 import streetlight.web.model.getLocationScout
 
-fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
+context(star: Star)
+fun ViewScope.viewLocationScout(galaxy: Galaxy?) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), contentScope)
     val model = app.getLocationScout(galaxy, editor, contentScope)
@@ -39,11 +40,17 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
         stageBlock(model.stageState) { stage ->
             when (stage) {
                 LocationScoutStage.Search -> column {
-                    locationFinder(model)
-                    if (star.isAdmin) leadForm(model.leadEditor)
+                    context(model) {
+                        locationFinder()
+                    }
+                    if (star.isAdmin) context(model.leadEditor) {
+                        leadForm()
+                    }
                 }
                 LocationScoutStage.Edit -> column {
-                    locationEditFormBody(editor)
+                    context(editor) {
+                        locationEditFormBody()
+                    }
                     formSubmit(
                         label = "Next",
                         onClick = model::review,
@@ -72,8 +79,8 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?, star: Star) {
 }
 
 fun RouteScope.viewLocationScoutRoute() {
-    starRouteBlock<LocationScoutRoute, FetcherContent> { star, content ->
-        viewLocationScout(content.toContentOrNull<Galaxy>(), star)
+    starRouteBlock<LocationScoutRoute, FetcherContent> { content ->
+        viewLocationScout(content.toContentOrNull<Galaxy>())
     }
 }
 

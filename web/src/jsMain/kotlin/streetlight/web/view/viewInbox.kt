@@ -29,7 +29,8 @@ import streetlight.web.model.toaster
 import streetlight.web.component.workSignal
 import streetlight.web.dom.component.workSignal
 
-fun ViewScope.viewInbox(star: Star, content: InboxContent) {
+context(star: Star)
+fun ViewScope.viewInbox(content: InboxContent) {
     val omni = app.get<OmniClient>()
     val model = Inbox(scope, star, content.chats, api, toaster, omni)
     val isChatOpenState = model.openChatState.tapOf { it != null }
@@ -68,19 +69,22 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
             }
         }
         row(modify(InboxStyle.Grid, Flex1, MinHeight0)) {
-            chatList(model, star)
-            messageList(model)
+            context(model) {
+                chatList()
+                messageList()
+            }
         }.flowModifier(isChatOpenState, Reveal, contentScope)
     }
 }
 
 fun RouteScope.viewInboxRoute() {
-    starRouteBlock<InboxRoute, InboxContent> { star, content ->
-        viewInbox(star, content)
+    starRouteBlock<InboxRoute, InboxContent> { content ->
+        viewInbox(content)
     }
 }
 
-private fun ViewScope.chatList(model: Inbox, star: Star) {
+context(model: Inbox, star: Star)
+private fun ViewScope.chatList() {
     column(modify(InboxStyle.ChatList, Flex1, Gap0)) {
         box(modify(Flex1, PositionRelative, MinHeight0)) {
             workSignal(model.chatCursorState, modify(Bottom0, Right0))
@@ -134,7 +138,8 @@ fun AppendScope.starBadge(badge: StarBadge) {
     }
 }
 
-private fun ViewScope.messageList(model: Inbox) {
+context(model: Inbox)
+private fun ViewScope.messageList() {
     flowBlock(model.openChatState, modify(InboxStyle.MessageList, Flex2, FlexColumn, PositionRelative)) { chat ->
         workSignal(model.messageCursorState, modify(Top0, Right0))
         if (chat == null) {

@@ -30,16 +30,21 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 
-fun ViewScope.signInForm(model: UserCreator) {
+context(model: UserCreator)
+fun ViewScope.signInForm() {
     val gate = app.get<SessionClient>()
     val cred = app.get<CredentialStore>()
 
     formColumn {
         formRow {
             flowBlock(model.guestField) { username ->
-                when (username) {
-                    null -> recoverOrSignInForm(cred, gate)
-                    else -> guestSignInForm(username, cred, gate)
+                context(cred) {
+                    context(gate) {
+                        when (username) {
+                            null -> recoverOrSignInForm()
+                            else -> guestSignInForm(username)
+                        }
+                    }
                 }
             }
 
@@ -50,7 +55,8 @@ fun ViewScope.signInForm(model: UserCreator) {
     }
 }
 
-fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionClient) {
+context(cred: CredentialStore, gate: SessionClient)
+fun ViewScope.recoverOrSignInForm() {
     val isRecoveringField = storeOf(false)
     flowBlock(isRecoveringField) { isRecovering ->
         when (isRecovering) {
@@ -71,12 +77,13 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionClient) {
                     }, messages, isDisplayedFlow = isSubmitVisible)
                 }
             }
-            else -> registeredSignInForm(isRecoveringField, cred, gate)
+            else -> registeredSignInForm(isRecoveringField)
         }
     }
 }
 
-fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: SessionClient) {
+context(cred: CredentialStore, gate: SessionClient)
+fun ViewScope.guestSignInForm(username: Username) {
     val messages = MessageStore()
     formColumn {
         formSection("guest sign in") {
@@ -90,7 +97,8 @@ fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: S
     }
 }
 
-fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>, cred: CredentialStore, gate: SessionClient) {
+context(cred: CredentialStore, gate: SessionClient)
+fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>) {
     formColumn {
         val messages = MessageStore()
         formSection("sign in") {

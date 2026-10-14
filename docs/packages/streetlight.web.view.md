@@ -37,7 +37,25 @@ A view function is an extension on `ViewScope`, named for what it renders, in a 
 fun ViewScope.viewFeedbackHub()
 ```
 
-It takes no context parameter. `ViewScope` carries the `AppContainer`, so a view reaches a service with `app.get<T>()` rather than receiving it through its signature. A new service becomes available to every view at once, and a view's parameters are only what that view is about.
+`ViewScope` carries the `AppContainer`, so a view reaches a service with `app.get<T>()` rather than receiving it through its signature. A new service becomes available to every view at once, and a view's parameters are only what that view is about.
+
+A context parameter is reserved for a value that is the context the view runs in, not what it is about.
+
+| Context | Provided by |
+|---|---|
+| The signed-in `Star` | `starGate` and `starRouteBlock` |
+| A view model, for a view or part that declares UI from it | A `context(model) { }` block where the model is built or reached |
+
+A model reached through another, such as `model.imageEditor`, is provided by its own `context` block around the call. A value enters context through `context`, not `with`, so its members never shadow the calls inside. `with` is kept for a block that reads the members of its receiver.
+
+```kotlin
+context(model: Inbox, star: Star)
+private fun ViewScope.chatList()
+
+context(model.designer.theme) {
+    themeForm()
+}
+```
 
 A view rendered directly by a route has a second function taking `RouteScope`, named with a `Route` suffix. The route function reads route arguments and calls the plain view function, so the view itself stays reachable from anywhere.
 

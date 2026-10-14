@@ -20,7 +20,8 @@ import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getEventEditor
 import streetlight.web.model.portal
 
-fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
+context(star: Star)
+fun ViewScope.viewEventUpdater(content: EventUpdaterContent) {
     val edit = content.event.toEdit()
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
@@ -30,7 +31,9 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
         lazyTabs {
             tab("edit") {
                 column {
-                    eventEditFormBody(model)
+                    context(model) {
+                        eventEditFormBody()
+                    }
                     formSubmit(
                         label = "Save",
                         onClick = {
@@ -59,8 +62,8 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
 
 fun RouteScope.viewEventUpdaterRoute() {
     routeBlock<EventUpdateRoute, EventUpdaterContent> { content ->
-        starGate { star ->
-            viewEventUpdater(content, star)
+        starGate {
+            viewEventUpdater(content)
         }
     }
 }

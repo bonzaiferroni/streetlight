@@ -14,12 +14,12 @@ import streetlight.web.model.session
 fun ViewScope.starGate(
     mod: Modifier? = null,
     baseContent: ViewScope.() -> Unit = ViewScope::signInToContinue,
-    content: ViewScope.(Star) -> Unit
+    content: context(Star) ViewScope.() -> Unit
 ) {
     flowBlock(session.starState, mod) { star ->
         when (star) {
             null -> baseContent()
-            else -> content(star)
+            else -> context(star) { content() }
         }
     }
 }

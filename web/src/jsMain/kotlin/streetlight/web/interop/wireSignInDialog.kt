@@ -28,20 +28,22 @@ fun ViewScope.wireSignInDialog() {
     dialog(SignIn.isOpen) {
         val model = app.getUserCreator(contentScope)
         rawDialogContent("Sign In") {
-            lazyTabs(Id("sign-in-tabs")) { // mod = Width64
-                tab("guest") {
-                    dialogCard {
-                        guestRegistrationForm(model)
+            context(model) {
+                lazyTabs(Id("sign-in-tabs")) { // mod = Width64
+                    tab("guest") {
+                        dialogCard {
+                            guestRegistrationForm()
+                        }
                     }
-                }
-                tab("register") {
-                    dialogCard {
-                        fullRegistrationForm(model)
+                    tab("register") {
+                        dialogCard {
+                            fullRegistrationForm()
+                        }
                     }
-                }
-                tab("sign in") {
-                    dialogCard {
-                        signInForm(model)
+                    tab("sign in") {
+                        dialogCard {
+                            signInForm()
+                        }
                     }
                 }
             }

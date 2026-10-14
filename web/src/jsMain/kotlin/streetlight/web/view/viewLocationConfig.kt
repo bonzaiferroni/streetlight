@@ -51,7 +51,9 @@ fun ViewScope.viewLocationConfig(
             tab("profile") {
                 val editor = app.getLocationEditor(locationState.now.toEdit(), contentScope)
                 column {
-                    locationEditFormBody(editor)
+                    context(editor) {
+                        locationEditFormBody()
+                    }
                     formSubmit(
                         label = "Save profile",
                         onClick = {
@@ -67,13 +69,17 @@ fun ViewScope.viewLocationConfig(
             }
             tab("theme") {
                 column {
-                    themeForm(designer.theme)
+                    context(designer.theme) {
+                        themeForm()
+                    }
                     formSubmit("save config", ::saveConfig, saveMessages)
                 }
             }
             tab("layout") {
                 column {
-                    layoutBuilder(designer.layout)
+                    context(designer.layout) {
+                        layoutBuilder()
+                    }
                     formSubmit("save config", ::saveConfig, saveMessages)
                 }
             }

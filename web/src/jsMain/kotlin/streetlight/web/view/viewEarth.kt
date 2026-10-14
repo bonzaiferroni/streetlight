@@ -16,14 +16,15 @@ import streetlight.web.model.getEarthMap
 import streetlight.web.component.workSignal
 import streetlight.web.dom.component.workSignal
 
-fun ViewScope.viewEarth(model: Earth) {
+context(model: Earth)
+fun ViewScope.viewEarth() {
     box(EarthStyle.Container, modify(Size100P, PositionRelative)) {
         geoMapMount(mod = EarthStyle.Map)
         column(modify(Gap0, PointerEventsNone)) {
             div(modify(EarthStyle.Grid, Flex1, MinHeight(0))) {
-                earthHeader(model)
-                earthMenu(model)
-                earthFocus(model)
+                earthHeader()
+                earthMenu()
+                earthFocus()
             }.flowModifier(model.isFocusedState, EarthStyle.IsFocused, contentScope)
         }
         workSignal(model.isQueryingState, modify(Bottom0, Right0))
@@ -36,7 +37,9 @@ fun ViewScope.viewEarthRoute() {
 
     this@viewEarthRoute.mountChildView("earth", element) {
         val model = app.getEarthMap(contentScope, null)
-        viewEarth(model)
+        context(model) {
+            viewEarth()
+        }
     }
 
     onDispose {
@@ -45,7 +48,8 @@ fun ViewScope.viewEarthRoute() {
     }
 }
 
-fun ViewScope.earthHeader(model: Earth) {
+context(model: Earth)
+fun ViewScope.earthHeader() {
     flowBlock(model.mapState, modify(EarthStyle.Header, Magic)) { map ->
         if (map == null) return@flowBlock
         column(Gap0) {
@@ -54,7 +58,7 @@ fun ViewScope.earthHeader(model: Earth) {
                     heading3(map.title)
                 }
             }
-            earthControls(model)
+            earthControls()
         }
     }
 }
