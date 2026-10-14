@@ -53,6 +53,7 @@ val Aspect1 = Css.AspectRatio.of(1)
 val Aspect2By1 = Css.AspectRatio.of(2)
 val Aspect3By2 = Css.AspectRatio.of(1.5)
 val Aspect3By1 = Css.AspectRatio.of(3)
+val Aspect4By3 = Css.AspectRatio.of(4.0 / 3.0)
 
 val ZIndex1 = Css.ZIndex.of(1)
 val ZIndex2 = Css.ZIndex.of(2)

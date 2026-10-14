@@ -29,15 +29,15 @@ fun FlowContent.connectShell(type: ConnectType?) {
 
         section(ContainerTypeInlineSize) {
             column(modify(ContainerMdRow, FlexItems1, AlignItemsCenter)) {
+                column {
+                    heading3("Connect to your community", AlignSelfCenter)
+                    connectPicker(modify(Width(60.pct), AlignSelfCenter))
+                }
                 box {
                     video(
                         VideoFile.MapZoomClick,
                         modify(BorderRadius2, OverflowClip, Outline, MoonShadow)
                     )
-                }
-                column {
-                    heading3("Connect to your community")
-                    connectPicker()
                 }
             }
         }

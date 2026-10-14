@@ -12,7 +12,9 @@ import streetlight.web.layout.smallGalaxyCard
 import streetlight.web.page.appFooter
 import streetlight.web.page.appHeader
 import koala.component.*
+import koala.modifier.Width
 import koala.page.*
+import kotlinx.css.pct
 import streetlight.web.component.connectPicker
 import streetlight.web.component.createPostMenu
 import streetlight.web.component.galaxyMenu
@@ -69,8 +71,11 @@ fun FlowContent.leadingSection(galaxies: List<Galaxy>) {
                 filigree {
                     heading4("Get Involved", subHeadingMods)
                 }
-                connectPicker()
-                textBlock("Connect to your community through Streetlight.", modify(Italic, OpacityHigh, TextAlignCenter))
+                textBlock(
+                    "Connect to your community through Streetlight.",
+                    modify(Italic, OpacityHigh, TextAlignCenter, MarginTop(1)),
+                )
+                connectPicker(modify(Width(60.pct), AlignSelfCenter))
             }
         }
         row {
