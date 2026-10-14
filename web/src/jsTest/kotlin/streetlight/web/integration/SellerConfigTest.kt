@@ -8,7 +8,7 @@ import streetlight.model.data.SellerStatus
 import streetlight.web.io.ApiClient
 import streetlight.web.io.TestApiClient
 import streetlight.web.io.TestSellerClient
-import streetlight.web.model.SellerEditor
+import streetlight.web.model.SellerConnector
 import streetlight.web.model.toaster
 import streetlight.web.view.sellerConfigPanel
 import kotlin.test.Test
@@ -79,7 +79,7 @@ class SellerConfigTest: ViewTest() {
     }
 
     private fun mountWith(sellers: TestSellerClient): View = mount {
-        context(SellerEditor(contentScope, sellers, toaster) { opened.add(it) }) {
+        context(SellerConnector(contentScope, sellers, toaster) { opened.add(it) }) {
             sellerConfigPanel()
         }
     }

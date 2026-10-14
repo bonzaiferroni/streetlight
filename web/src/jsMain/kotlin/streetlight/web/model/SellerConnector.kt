@@ -9,6 +9,7 @@ import koala.utility.DropWhileBusy
 import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.CapabilityStatus
+import streetlight.model.data.OfferingEdit
 import streetlight.model.data.SellerStatus
 import streetlight.model.data.SellerOnboarding
 import streetlight.web.io.SellerClient
@@ -19,14 +20,14 @@ import web.window.window
  *
  * [openUrl] leaves the app for the onboarding link.
  */
-class SellerEditor(
+class SellerConnector(
     private val scope: CoroutineScope,
     private val api: SellerClient,
     private val toaster: Toaster,
     private val openUrl: (Url) -> Unit = { window.location.assign(it.value) },
 ) {
     private val onboarding = DropWhileBusy()
-    private val state = storeOf(SellerEditorState())
+    private val state = storeOf(SellerConnectorState())
     val stateNow get() = state.now
 
     val stageFlow = state.tapOf { it.stage }
@@ -51,10 +52,11 @@ class SellerEditor(
     }
 }
 
-data class SellerEditorState(
+data class SellerConnectorState(
     val status: SellerStatus? = null,
     val isLoaded: Boolean = false,
     val country: String = "US",
+    val offeringEdit: OfferingEdit? = null
 ) {
     val stage get() = when {
         !isLoaded -> SellerStage.Loading
