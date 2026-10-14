@@ -1,8 +1,8 @@
-# Package streetlight.server.db.services
+# Package streetlight.server.db.dao
 
 ## Introduction
 
-The read and write operations over the tables in `streetlight.server.db.tables`. Nothing here knows about HTTP — routes call these.
+Daos: the read and write operations over the tables in `streetlight.server.db.tables`, and the queries, aspects and utilities they use. Nothing here knows about HTTP. The functions in `streetlight.server.service` and the routes call these.
 
 ## Dependencies
 
@@ -17,9 +17,11 @@ The read and write operations over the tables in `streetlight.server.db.tables`.
 
 | File | Contents |
 |---|---|
-| `FooTableDao.kt` | `FooTableDao : DbService()`, the operations owned by one table. The common case |
+| `FooTableDao.kt` | `FooTableDao : DbService()`, the operations owned by the one table `FooTable`. Every table has one, except join tables and the like |
+| `FooDao.kt` | `FooDao : DbService()`, the operations of the domain `Foo` across the tables that support it, as `EarthDao` |
 | `FooQuery.kt` / `FooAspect.kt` | Reads that span tables, or shape a row into something wider than one dto |
-| `FooService.kt` | Logic that coordinates daos rather than touching a table directly |
+
+Logic that coordinates daos rather than touching a table belongs in `streetlight.server.service`.
 
 ## Dao Methods
 

@@ -9,7 +9,7 @@ The crawler, a standalone process that reads event feeds and the event pages the
 | Package | Provides |
 |---|---|
 | `streetlight.server.model` | `Server`, the DAO, event creation and the `MapReferenceClient` |
-| `streetlight.server.db.datascope` | Location creation |
+| `streetlight.server.service` | Location creation |
 | `streetlight.server.daemon.agent` | Fetching, html parsing, the `SchemaMediator`, the `EntityClassifier`, schema validation and date parsing |
 
 ## Structure

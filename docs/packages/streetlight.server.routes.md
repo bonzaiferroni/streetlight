@@ -10,7 +10,7 @@ Implementations of the endpoints declared in `streetlight.model.Api`. One realm 
 |---|---|
 | `streetlight.model` | `Api` endpoints and DTOs |
 | `streetlight.server.model` | `ApiScope` and content reads |
-| `streetlight.server.db.datascope` | Operations that span daos |
+| `streetlight.server.service` | The server's work, which a route calls |
 | `klutch.server` | `authGate`, `getApi` and `postApi` |
 | `kampfire.model` | `Outcome` |
 

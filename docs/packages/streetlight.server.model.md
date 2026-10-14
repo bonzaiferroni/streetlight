@@ -8,7 +8,7 @@ The server's dependency container: the scope interfaces a receiver carries, the 
 
 | Package | Provides |
 |---|---|
-| `streetlight.server.db.services` | The daos in `DaoFacade` |
+| `streetlight.server.db.dao` | The daos in `DaoFacade` |
 | `klutch.server` | Providers and identity |
 | `streetlight.model.data` | DTOs |
 | `org.koin` | The container |
@@ -35,7 +35,7 @@ Declare the narrowest scope the function uses. A function on `DataScope` is call
 
 ## Facades
 
-`DaoFacade` holds one DAO per table, `ClientFacade` holds the external clients. Both take every member as a defaulted constructor parameter, so a caller replaces one and takes the rest. `StreetlightAgent` holds the identity the server and the crawler present when they fetch from other sites.
+`DaoFacade` holds the daos, each a defaulted constructor parameter, so a caller replaces one and takes the rest. `ClientFacade` holds the external clients, resolved from the container; `buildTestServer` takes each client as a defaulted parameter, so a test replaces one and takes the rest. `StreetlightAgent` holds the identity the server and the crawler present when they fetch from other sites.
 
 Reach a DAO through `dao.foo` rather than constructing it. A DAO constructed in place is invisible to the container and cannot be substituted.
 

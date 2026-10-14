@@ -8,7 +8,7 @@ Integration tests for the server. Each file covers one user-facing flow from its
 
 | Package | Provides |
 |---|---|
-| `streetlight.server.db.datascope` | The flows under test |
+| `streetlight.server.service` | The flows under test |
 | `streetlight.server.model` | Scopes and test fakes |
 | `org.jetbrains.exposed` | Database reads in assertions |
 | `kotlin.test` | Assertions |
