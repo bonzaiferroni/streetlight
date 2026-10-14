@@ -105,7 +105,9 @@ A paged read is limited to `EntityCursor.DefaultLimit`.
 
 ## Image Columns
 
-A table holding an image declares `val image = image("image").nullable()` and `val imageConfig = imageConfigOf(this, image, ImageTarget.Foo)`. `ImageTarget.sizes` decides the sizes each target's images are stored at, so a new target adds a branch there.
+A table holding an image implements `ImageColumnTable`, overriding `image` as `image("image").nullable()` and `imageTarget` as `ImageTarget.Foo`. `ImageTarget.sizes` decides the sizes each target's images are stored at, so a new target adds a branch there. `dao.image.readTableImage(table, id)` reads the image on a row of any such table.
+
+An interface implemented only by tables takes the `Table` suffix, as `SlugTable` and `ImageColumnTable`.
 
 ## Aggregate Columns
 
