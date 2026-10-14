@@ -46,7 +46,7 @@ A context parameter is reserved for a value that is the context the view runs in
 | The signed-in `Star` | `starGate` and `starRouteBlock` |
 | A view model, for a view or part that declares UI from it | A `context(model) { }` block where the model is built or reached |
 
-A model reached through another, such as `model.imageEditor`, is provided by its own `context` block around the call. A value enters context through `context`, not `with`, so its members never shadow the calls inside. `with` is kept for a block that reads the members of its receiver.
+A model reached through another, such as `model.imageEditor`, is provided by its own `context` block around the call. The rule for choosing a context parameter is in `docs/kotlin-style.md`.
 
 ```kotlin
 context(model: Inbox, star: Star)

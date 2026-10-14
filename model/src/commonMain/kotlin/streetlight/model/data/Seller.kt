@@ -1,23 +1,14 @@
 package streetlight.model.data
 
 import kotlinx.serialization.Serializable
-import kotlin.time.Instant
 
-/** A user's registration with a [PaymentProvider], through which they accept payments for services. */
+/** The state of a star's seller account, as shown to them. */
 @Serializable
-data class Seller(
-    val starId: StarId,
-    val provider: PaymentProvider,
-    val providerAccountId: String,
-    val configuration: SellerConfiguration,
-    val country: String,
+data class SellerStatus(
     val chargeStatus: CapabilityStatus,
     val payoutStatus: CapabilityStatus,
     val isAwaitingSeller: Boolean,
-    val defaultCurrency: String?,
     val statusReason: String?,
-    val createdAt: Instant,
-    val updatedAt: Instant,
 )
 
 /** A service that processes payments on a seller's behalf. */

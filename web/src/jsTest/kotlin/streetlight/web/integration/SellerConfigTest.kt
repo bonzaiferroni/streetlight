@@ -4,33 +4,38 @@ import kampfire.model.CoreProblem
 import kampfire.model.Url
 import koala.dom.View
 import streetlight.model.data.CapabilityStatus
-import streetlight.model.data.PaymentProvider
-import streetlight.model.data.Seller
-import streetlight.model.data.SellerConfiguration
-import streetlight.model.data.StarId
+import streetlight.model.data.SellerStatus
 import streetlight.web.io.ApiClient
 import streetlight.web.io.TestApiClient
 import streetlight.web.io.TestSellerClient
 import streetlight.web.model.SellerEditor
 import streetlight.web.model.toaster
-import streetlight.web.view.sellerSection
+import streetlight.web.view.sellerConfigPanel
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
-class SellerSectionTest: ViewTest() {
+class SellerConfigTest: ViewTest() {
 
     private val opened = mutableListOf<Url>()
 
     override fun api(): ApiClient = TestApiClient()
 
     @Test
+    fun `a ready seller sees their status without opening the dialog`() = runViewTest {
+        val view = mountWith(TestSellerClient(statusOf(CapabilityStatus.Active, statusReason = null)))
+
+        view.awaitText("Ready")
+        assertFalse(view.showsText("Stripe Dashboard"), "the dialog content should stay hidden until it is opened")
+    }
+
+    @Test
     fun `a star who has not started selling is sent to the onboarding link`() = runViewTest {
         val view = mountWith(TestSellerClient())
 
+        view.awaitText("Not connected")
+        view.clickButton("Manage")
         view.awaitText("Start selling")
         view.clickButton("Start selling")
 
@@ -40,17 +45,21 @@ class SellerSectionTest: ViewTest() {
 
     @Test
     fun `a restricted seller sees the reason`() = runViewTest {
-        val seller = sellerOf(CapabilityStatus.Restricted, statusReason = "rejected_other")
-        val view = mountWith(TestSellerClient(seller))
+        val status = statusOf(CapabilityStatus.Restricted, statusReason = "rejected_other")
+        val view = mountWith(TestSellerClient(status))
 
+        view.awaitText("Restricted")
+        view.clickButton("Manage")
         view.awaitText("Reason: rejected_other")
         assertTrue(view.showsText("Update details"), "a restricted seller should be offered to update their details")
     }
 
     @Test
     fun `a seller under review is offered nothing to do`() = runViewTest {
-        val view = mountWith(TestSellerClient(sellerOf(CapabilityStatus.Pending, statusReason = null)))
+        val view = mountWith(TestSellerClient(statusOf(CapabilityStatus.Pending, statusReason = null)))
 
+        view.awaitText("Under review")
+        view.clickButton("Manage")
         view.awaitText("Stripe is reviewing your details")
         assertFalse(view.showsText("Continue setup"), "a seller under review should not be sent back to setup")
         assertFalse(view.showsText("Update details"), "a seller under review should not be asked for details")
@@ -60,6 +69,8 @@ class SellerSectionTest: ViewTest() {
     fun `a failed onboarding request shows its problem and opens nothing`() = runViewTest {
         val view = mountWith(TestSellerClient(onOnboard = { CoreProblem.Something }))
 
+        view.awaitText("Not connected")
+        view.clickButton("Manage")
         view.awaitText("Start selling")
         view.clickButton("Start selling")
 
@@ -68,21 +79,15 @@ class SellerSectionTest: ViewTest() {
     }
 
     private fun mountWith(sellers: TestSellerClient): View = mount {
-        sellerSection(SellerEditor(contentScope, sellers, toaster) { opened.add(it) })
+        context(SellerEditor(contentScope, sellers, toaster) { opened.add(it) }) {
+            sellerConfigPanel()
+        }
     }
 }
 
-private fun sellerOf(chargeStatus: CapabilityStatus, statusReason: String?) = Seller(
-    starId = StarId(Uuid.random()),
-    provider = PaymentProvider.Stripe,
-    providerAccountId = "acct_test",
-    configuration = SellerConfiguration.Standard,
-    country = "US",
+private fun statusOf(chargeStatus: CapabilityStatus, statusReason: String?) = SellerStatus(
     chargeStatus = chargeStatus,
     payoutStatus = CapabilityStatus.Restricted,
     isAwaitingSeller = false,
-    defaultCurrency = "usd",
     statusReason = statusReason,
-    createdAt = Instant.fromEpochSeconds(0),
-    updatedAt = Instant.fromEpochSeconds(0),
 )

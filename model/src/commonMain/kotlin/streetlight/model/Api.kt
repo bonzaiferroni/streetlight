@@ -257,7 +257,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Onboard: PostEndpoint<SellerOnboarding, Url>(this) {
             object Refresh: ApiNode(this)
         }
-        object ReadStatus: GetEndpoint<Seller?>(this)
+        object ReadStatus: GetEndpoint<SellerStatus?>(this)
     }
 
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)

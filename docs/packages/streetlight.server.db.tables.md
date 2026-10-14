@@ -29,6 +29,8 @@ Rows never leave this package as raw `Uuid` or as Exposed `ResultRow`. Each tabl
 
 Reading from the table transforms the row id into `FooId`. Register `FooId` in `RecordId.kt`'s `toRecordId` map so it can be reified from a `Uuid` or a `String`.
 
+A record the UI does not read whole keeps both companions in `streetlight.server.model`, in `Foo.kt`: `Foo` is a plain data class and `FooId` a `@JvmInline value class` implementing `TableId<Uuid>`, unregistered in `RecordId.kt`. `FooId` moves to `streetlight.model.data` once it crosses the API.
+
 ## Row Transforms
 
 If a table translates directly to a DTO, define a transform below the object:

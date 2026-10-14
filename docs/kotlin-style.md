@@ -34,6 +34,39 @@ A function's name follows a verbNoun shape and names the noun it acts on.
 | One kind of work takes one verb, in names and comments alike | A tracker's functions are `track…`, and its comments say "Tracks" |
 | A name after its verb follows the AdjectiveNoun shape of a type, naming what the work is about | `trackSkippedUrl`, `trackFailedRecord`, `trackLdValues` |
 
+## Context Parameters
+
+A value is a context parameter when it is the context a function runs in, not what the function is about. Each test is sufficient on its own:
+
+| Test | Example |
+|---|---|
+| A caller has it in hand and passes it on unchanged | A view model handed from a view to each of its parts |
+| It is established once, above the code that reads it | The signed-in `Star` beneath `starGate` |
+| It is a model the function declares UI from | `context(model: AccountEditor)` on a form |
+
+A value stays an argument when it is what the function is about, when it differs between calls from the same place, or when a caller would pass a different value of the same type beside it.
+
+A model is a type that declares UI state and never references its implementation. A type that references its view, such as `TalkLog` holding `CommentView`, stays an argument until it is separated.
+
+A context parameter is named like a variable, after the rules above, and keeps the name it had as an argument.
+
+```kotlin
+context(model: Inbox, star: Star)
+private fun ViewScope.chatList()
+```
+
+A value enters context through `context(value) { }`, where it is built or reached. The block wraps only the calls that need it.
+
+```kotlin
+context(model.imageEditor) {
+    imageFormSection(instructions)
+}
+```
+
+`with` is not used to provide context, since it makes the receiver's members resolvable and one can shadow a call in the block. `with` is kept for a block that reads the members of its receiver, such as a stylesheet.
+
+A function with context parameters cannot be taken as a callable reference. Where a name was taken from one, as in `launchEffect(::foo)`, the name is written as a string.
+
 ## Outcomes
 
 A function whose failure the caller must report returns an `Outcome`, as `Ok` with its data or a `Problem` whose message is written for the user. The caller unwraps it with `toDataOr(messenger)`, which delivers the problem's message. A problem is declared once, as a property of a `FooProblem` object.

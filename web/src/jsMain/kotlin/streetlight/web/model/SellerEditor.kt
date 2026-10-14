@@ -9,7 +9,7 @@ import koala.utility.DropWhileBusy
 import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.CapabilityStatus
-import streetlight.model.data.Seller
+import streetlight.model.data.SellerStatus
 import streetlight.model.data.SellerOnboarding
 import streetlight.web.io.SellerClient
 import web.window.window
@@ -33,8 +33,8 @@ class SellerEditor(
 
     init {
         scope.launch("read seller status") {
-            val seller = api.readStatus().toDataOr(toaster) { return@launch }
-            state.set { copy(seller = seller, isLoaded = true) }
+            val status = api.readStatus().toDataOr(toaster) { return@launch }
+            state.set { copy(status = status, isLoaded = true) }
         }
     }
 
@@ -52,16 +52,16 @@ class SellerEditor(
 }
 
 data class SellerEditorState(
-    val seller: Seller? = null,
+    val status: SellerStatus? = null,
     val isLoaded: Boolean = false,
     val country: String = "US",
 ) {
     val stage get() = when {
         !isLoaded -> SellerStage.Loading
-        seller == null -> SellerStage.NotStarted
-        seller.chargeStatus == CapabilityStatus.Active -> SellerStage.Ready
-        seller.isAwaitingSeller -> SellerStage.AwaitingSeller
-        seller.chargeStatus == CapabilityStatus.Pending -> SellerStage.UnderReview
+        status == null -> SellerStage.NotStarted
+        status.chargeStatus == CapabilityStatus.Active -> SellerStage.Ready
+        status.isAwaitingSeller -> SellerStage.AwaitingSeller
+        status.chargeStatus == CapabilityStatus.Pending -> SellerStage.UnderReview
         else -> SellerStage.Restricted
     }
 }

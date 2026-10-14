@@ -17,7 +17,7 @@ The domain types and API endpoints shared by the server and the web client. Both
 
 | Type | Pattern |
 |---|---|
-| `Foo` | The DTO of a record, in `streetlight.model.data`, in `Foo.kt` |
+| `Foo` | The DTO of a record, in `streetlight.model.data`, in `Foo.kt`. When the UI does not read the whole record, `Foo` is in `streetlight.server.model` and the UI reads a narrower DTO, as `Seller` and `SellerStatus` |
 | `FooId` | A `@JvmInline value class` over `Uuid` implementing `RecordId`, in `Foo.kt` |
 | `FooEdit` | The fields a form sends for `Foo` |
 | `FooContent` | The content of a route, implementing `RouteContent` |
@@ -28,6 +28,8 @@ The domain types and API endpoints shared by the server and the web client. Both
 `Api` in `Api.kt` is a tree of `ApiNode`s holding one endpoint object per call. The endpoints of one model sit under its node, as `Api.Cities`.
 
 ## Data Classes
+
+A DTO in `streetlight.model.data` carries only what the UI depends on, not every column of its table. A type the server uses internally is declared in `streetlight.server.model`.
 
 A DTO lists its id first, then its non-nullable properties, its nullable properties, and its time properties last.
 

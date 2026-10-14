@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The server's dependency container: the scope interfaces a receiver carries, the facades that group its services, and the interfaces for everything outside the process.
+The server's dependency container: the scope interfaces a receiver carries, the facades that group its services, the interfaces for everything outside the process, and the DTOs the server keeps to itself.
 
 ## Dependencies
 
@@ -12,6 +12,10 @@ The server's dependency container: the scope interfaces a receiver carries, the 
 | `klutch.server` | Providers and identity |
 | `streetlight.model.data` | DTOs |
 | `org.koin` | The container |
+
+## Server DTOs
+
+A DTO the server uses internally, such as one holding columns the UI never reads, is declared here rather than in `streetlight.model.data`. Its id is declared beside it, as `streetlight.server.db.tables.md` specifies.
 
 ## Scopes
 
