@@ -6,6 +6,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLOptionElement
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.events.Event
@@ -39,6 +40,13 @@ suspend fun View.writeIn(label: String, text: String) {
 }
 
 fun View.clickButton(label: String) = button(label).click()
+
+fun View.typeIn(label: String, text: String) {
+    val input = mount.asW3C().querySelector("[data-block-label='${label.lowercase()}'] input") as? HTMLInputElement
+        ?: fail("no text field labelled '$label'")
+    input.value = text
+    input.dispatchEvent(Event("input"))
+}
 
 fun View.chooseIn(label: String, option: String) {
     val select = mount.asW3C().querySelector("[data-block-label='$label'] select") as? HTMLSelectElement

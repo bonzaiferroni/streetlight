@@ -20,7 +20,8 @@ data class OfferingEdit(
     val validity by lazy {
         buildSet {
             if (title.isNullOrBlank()) add(OfferingProperty.Title)
-            if (priceCents == null) add(OfferingProperty.Price)
+            if (priceCents == null || priceCents < 0) add(OfferingProperty.Price)
+            if (platformCut !in 0..MAX_PLATFORM_CUT) add(OfferingProperty.PlatformCut)
         }.toValidityCheck()
     }
 }
@@ -29,7 +30,11 @@ data class OfferingEdit(
 object OfferingProperty {
     val Title = "title"
     val Price = "price"
+    val PlatformCut = "platform cut"
 }
+
+/** The largest [OfferingEdit.platformCut], in basis points: the whole sale. */
+const val MAX_PLATFORM_CUT = 10_000
 
 /** An edit of this offering, starting from its current values. */
 fun Offering.toEdit() = OfferingEdit(
@@ -42,3 +47,20 @@ fun Offering.toEdit() = OfferingEdit(
     currency = currency,
     platformCut = platformCut,
 )
+
+/**
+ * The whole hundredths in this text, as cents from `12.50` or basis points from `5`, or `null` when it is not a
+ * number with at most two decimal places.
+ */
+fun String.toCentsOrNull(): Int? {
+    val text = trim()
+    val whole = text.substringBefore('.')
+    val fraction = text.substringAfter('.', "")
+    if (whole.isEmpty() && fraction.isEmpty()) return null
+    if (!whole.all { it.isDigit() } || !fraction.all { it.isDigit() } || fraction.length > 2) return null
+    val wholeValue = whole.ifEmpty { "0" }.toIntOrNull() ?: return null
+    return wholeValue * 100 + fraction.padEnd(2, '0').toInt()
+}
+
+/** These cents as text with two decimal places, as `12.50`. */
+fun Int.toCentsLabel() = "${this / 100}.${(this % 100).toString().padStart(2, '0')}"

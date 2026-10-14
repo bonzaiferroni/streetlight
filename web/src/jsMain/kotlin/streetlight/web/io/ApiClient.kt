@@ -19,6 +19,7 @@ interface ApiClient {
     val omniLog: OmniLogClient
     val post: PostClient
     val seller: SellerClient
+    val offering: OfferingClient
     val song: SongClient
     val star: StarClient
     val status: StatusClient
@@ -45,6 +46,7 @@ class BrowserApiClient(private val client: FetchClient): ApiClient {
     override val omniLog: OmniLogClient = BrowserOmniLogClient(client)
     override val post: PostClient = BrowserPostClient(client)
     override val seller: SellerClient = BrowserSellerClient(client)
+    override val offering: OfferingClient = BrowserOfferingClient(client)
     override val song: SongClient = BrowserSongClient(client)
     override val star: StarClient = BrowserStarClient(client)
     override val status: StatusClient = BrowserStatusClient(client)

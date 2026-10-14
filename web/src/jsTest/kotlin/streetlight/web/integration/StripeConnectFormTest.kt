@@ -10,13 +10,13 @@ import streetlight.web.io.TestApiClient
 import streetlight.web.io.TestSellerClient
 import streetlight.web.model.SellerConnector
 import streetlight.web.model.toaster
-import streetlight.web.view.sellerConfigPanel
+import streetlight.web.view.stripeConnectForm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class SellerConfigTest: ViewTest() {
+class StripeConnectFormTest: ViewTest() {
 
     private val opened = mutableListOf<Url>()
 
@@ -80,7 +80,7 @@ class SellerConfigTest: ViewTest() {
 
     private fun mountWith(sellers: TestSellerClient): View = mount {
         context(SellerConnector(contentScope, sellers, toaster) { opened.add(it) }) {
-            sellerConfigPanel()
+            stripeConnectForm()
         }
     }
 }

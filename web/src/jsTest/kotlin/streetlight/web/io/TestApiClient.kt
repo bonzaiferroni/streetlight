@@ -18,6 +18,7 @@ class TestApiClient(
     override val omniLog: OmniLogClient = TestOmniLogClient(),
     override val post: PostClient = TestPostClient(),
     override val seller: SellerClient = TestSellerClient(),
+    override val offering: OfferingClient = TestOfferingClient(),
     override val song: SongClient = TestSongClient(),
     override val star: StarClient = TestStarClient(),
     override val status: StatusClient = TestStatusClient(),

@@ -1,51 +1,35 @@
 package streetlight.web.view
 
-import kampfire.model.setTrue
-import kampfire.model.storeOf
-import kampfire.model.toUrl
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
-import streetlight.model.data.CapabilityStatus
 import streetlight.web.model.SellerConnector
-import streetlight.web.model.SellerStage
-import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formRow
-import streetlight.web.dom.layout.formSection
-import streetlight.web.dom.layout.formSubmit
+import streetlight.web.model.OfferingEditor
 import streetlight.web.model.SellerConfig
 import streetlight.web.model.api
 import streetlight.web.model.toaster
 
-/** The status of the star's Stripe connection, with a button that opens a dialog to set it up or manage it. */
+/**
+ * The star's Stripe connection and their offerings, or the editor of one offering while [SellerConfig] has an edit
+ * staged.
+ */
 fun ViewScope.sellerConfigPanel() {
     val connector = SellerConnector(contentScope, api.seller, toaster)
-    val config = SellerConfig(contentScope)
+    val config = SellerConfig(contentScope, api.offering, toaster)
     context(connector, config) {
         flowBlock(config.offeringEditState) { edit ->
             when (edit) {
-                null -> {
-                    formRow {
-                        stripeConnectForm()
-                        offeringsForm()
-                    }
+                null -> formRow {
+                    stripeConnectForm()
+                    offeringsForm()
                 }
-                else -> {
-                    // create OfferingEditor as context
-                    // show form
+                else -> context(OfferingEditor(edit, api)) {
+                    offeringEditForm()
                 }
             }
         }
     }
-}
-
-context(model: SellerConfig)
-fun ViewScope.offeringsForm() {
-
-}
-
-fun ViewScope.offeringEditForm() {
-
 }

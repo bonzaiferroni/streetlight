@@ -24,6 +24,9 @@ data class Offering(
     val image: Image?,
 )
 
+/** The price of this offering, as `12.50 USD`. */
+val Offering.priceLabel get() = "${priceCents.toCentsLabel()} ${currency.uppercase()}"
+
 @JvmInline
 @Serializable
 value class OfferingId(override val value: Uuid): RecordId {

@@ -80,6 +80,19 @@ Work that rebuilds with the content belongs in `contentScope`. Work that must su
 
 A view model constructed inside a view is given `contentScope`, so its coroutines end when the content it serves is replaced.
 
+## Staged Edits
+
+A panel that lists records and edits one at a time holds a config model whose state carries the edit staged, `null` while none is. The panel shows its forms while the edit is `null`, and otherwise builds an editor from the edit and provides it as context to the edit form, in their place. The editor returns the saved record through `submitSuspend`, and the form hands it to the config model, which ends the edit. `sellerConfigPanel` is the example, with `SellerConfig` and `OfferingEditor`.
+
+```kotlin
+flowBlock(config.offeringEditState) { edit ->
+    when (edit) {
+        null -> formRow { offeringsForm() }
+        else -> context(OfferingEditor(edit, api)) { offeringEditForm() }
+    }
+}
+```
+
 ## Rendering State
 
 `flowBlock` renders a value as HTML. It takes a `Tap` or a `Flow`, and its block is rebuilt as a child view whenever the value changes. The previous child view is disposed first.

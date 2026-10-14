@@ -260,6 +260,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadStatus: GetEndpoint<SellerStatus?>(this)
     }
 
+    object Offerings: ApiNode(this) {
+        object ReadMine: GetEndpoint<List<Offering>>(this)
+        object Create: PostEndpoint<OfferingEdit, Offering>(this)
+        object Update: PostEndpoint<OfferingEdit, Offering>(this)
+    }
+
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)
     object DocsTable: GetEndpoint<List<DocTableItem>>(this)
 
