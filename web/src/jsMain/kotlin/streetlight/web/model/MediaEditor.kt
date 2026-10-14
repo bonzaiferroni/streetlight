@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Slug
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
@@ -39,7 +40,7 @@ class MediaEditor(
     val textField = editField.mutableTapOf({ it.text ?: "".toMarkdown() }) { copy(text = it.takeIf(Markdown::isNotBlank)) }
 
     val message = MessageStore()
-    val imageEditor = ImageEditor(imageField, api)
+    val imageEditor = ImageEditor(imageField, ImageTarget.Media, api)
 
     init {
         scope.launch {

@@ -103,6 +103,10 @@ A paged read is limited to `EntityCursor.DefaultLimit`.
 | Instant | timestamp |
 | enum class | `enumeration`, stored by ordinal. An enum stored this way only ever has entries appended, never reordered or removed |
 
+## Image Columns
+
+A table holding an image declares `val image = image("image").nullable()` and `val imageConfig = imageConfigOf(this, image, ImageTarget.Foo)`. `ImageTarget.sizes` decides the sizes each target's images are stored at, so a new target adds a branch there.
+
 ## Aggregate Columns
 
 An aggregate that must be current on every read is kept live.

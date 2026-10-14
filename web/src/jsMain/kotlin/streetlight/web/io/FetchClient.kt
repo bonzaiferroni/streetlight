@@ -2,6 +2,7 @@
 
 package streetlight.web.io
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Endpoint
 import kampfire.api.GetByIdEndpoint
 import kampfire.api.GetEndpoint
@@ -234,7 +235,7 @@ class FetchClient() {
     }
 
     /** Uploads the local file of [blobImage] to [postUrl] with its details, returning the stored image. */
-    suspend fun uploadBlob(postUrl: String, blobImage: Image): Outcome<Image> {
+    suspend fun uploadBlob(postUrl: String, blobImage: Image, target: ImageTarget): Outcome<Image> {
         val response = fetch(blobImage.url.value)
         val blob = response.blob()
 
@@ -246,6 +247,7 @@ class FetchClient() {
                 BlobPropertyBag(type = "application/json")
             )
         )
+        form.append("target", target.name)
         form.append("file", blob, "upload")
 
         return request(

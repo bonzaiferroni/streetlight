@@ -32,7 +32,7 @@ class TestUserClient: UserClient {
     override suspend fun logout(): Outcome<Boolean> = TODO()
     override suspend fun checkUsernameExists(username: Username): Outcome<Boolean> = TODO()
     override suspend fun generateUsername(): Outcome<Username> = TODO()
-    override suspend fun uploadImageBlob(blobImage: Image): Outcome<Image> = TODO()
+    override suspend fun uploadImageBlob(blobImage: Image, target: ImageTarget): Outcome<Image> = TODO()
     override suspend fun readTalents(): Outcome<List<Talent>> = TODO()
     override suspend fun editTalent(talent: TalentEdit): Outcome<Talent> = TODO()
 }

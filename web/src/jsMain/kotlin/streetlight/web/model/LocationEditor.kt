@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
@@ -44,7 +45,7 @@ class LocationEditor(
     val validityField = editField.tapOf { it.validity }
     val websiteField = editField.mutableTapOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
 
-    val imageEditor = ImageEditor(imageField, api)
+    val imageEditor = ImageEditor(imageField, ImageTarget.Location, api)
     val websiteMessage = MessageStore()
     val messages = MessageStore()
 

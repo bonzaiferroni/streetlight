@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.model.Messenger
 import koala.merge
 import kampfire.model.tapOf
@@ -153,7 +154,7 @@ class LayoutEditor(
         is ImageBlock -> {
             block.image?.let { image ->
                 when (image.url.isBlob) {
-                    true -> uploadImage(image, messenger, api)?.let { storedImage ->
+                    true -> uploadImage(image, ImageTarget.Block, messenger, api)?.let { storedImage ->
                         block.copy(image = storedImage.merge(image))
                     }.also { println("uploaded") }
                     else -> block
@@ -163,7 +164,7 @@ class LayoutEditor(
         is GalleryBlock -> {
             val images = block.images.map { image ->
                 when (image.url.isBlob) {
-                    true -> uploadImage(image, messenger, api)?.also { println("uploaded") } ?: error("upload fail")
+                    true -> uploadImage(image, ImageTarget.Block, messenger, api)?.also { println("uploaded") } ?: error("upload fail")
                     else -> image
                 }
             }

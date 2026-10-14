@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
@@ -31,7 +32,7 @@ class ProfileEditor(
     val taglineField = editField.mutableTapOf({ it.tagline ?: "" }) { copy(tagline = it) }
 
     val messages = MessageStore()
-    val imageEditor = ImageEditor(imageField, api)
+    val imageEditor = ImageEditor(imageField, ImageTarget.Star, api)
 
     fun submit() {
         scope.launch(::submit) {

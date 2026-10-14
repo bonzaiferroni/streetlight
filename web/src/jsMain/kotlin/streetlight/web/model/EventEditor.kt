@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toDataOr
@@ -51,7 +52,7 @@ class EventEditor(
     val originalSourceUrlState = state.mutableTapOf({ it.originalSourceUrl }) { copy(originalSourceUrl = it) }
     val linksState = editState.mutableTapOf({ it.links ?: emptyList() }) { copy(links = it.takeIf { it.isNotEmpty() })}
 
-    val imageEditor = ImageEditor(imageState, api)
+    val imageEditor = ImageEditor(imageState, ImageTarget.Event, api)
     val message = MessageStore()
     val parseMessage = MessageStore()
 

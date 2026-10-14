@@ -2,6 +2,7 @@
 
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.api.toSlug
@@ -75,7 +76,7 @@ class GalaxyEditor(
     val cityQueryField = state.mutableTapOf({ it.cityQuery }) { copy(cityQuery = it) }
 
     val editMessage = MessageStore()
-    val imageEditor = ImageEditor(imageField, api)
+    val imageEditor = ImageEditor(imageField, ImageTarget.Galaxy, api)
 
     init {
         galaxy.geoRect?.let {

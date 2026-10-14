@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import streetlight.model.data.ImageTarget
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.Messenger
@@ -32,7 +33,7 @@ class CityEditor(
     val linksState = editState.mutableTapOf({ it.links ?: emptyList() }) { copy(links = it.takeIf { it.isNotEmpty() }) }
     val validityField = editState.tapOf { it.validity }
 
-    val imageEditor = ImageEditor(imageField, api)
+    val imageEditor = ImageEditor(imageField, ImageTarget.City, api)
 
     fun submit(messenger: Messenger) {
         editState.now.validity.message?.let {

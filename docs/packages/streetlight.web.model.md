@@ -81,6 +81,10 @@ A model editing a record holds an edit DTO in its state. On a successful send it
 
 Functionality two models share lives in a submodel named with the suffix `Editor`, such as `EmailEditor` and `LeadEditor`. A model holds its submodel as a property, built in its own constructor, and the view reaches it through the model. The submodel holds its own state, publishes it, and makes its own API call, so the base models stay clean and the work is written once. What differs between its users, such as a `LeadEditor`'s `LeadType`, is passed through its constructor.
 
+## Images
+
+An `ImageEditor` takes the `ImageTarget` of the record it edits, and uploads at that target's sizes. An image a model uploads without one, such as a layout block's, names its target in the `uploadImage` call.
+
 ## Viewer Settings
 
 A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postModeState`, so its view binds to the model.
