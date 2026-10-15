@@ -13,7 +13,7 @@ import streetlight.model.data.Star
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyFeedRoute
-import streetlight.model.ui.SandboxRoute
+import streetlight.model.ui.SandboxIndexRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.web.model.SessionClient
 import streetlight.model.ui.toRoute
@@ -106,7 +106,7 @@ private fun ViewScope.sandboxContent() {
             row {
                 textBlock("Add things to the map.", Flex1)
                 btn("Edit Profile", ProfileConfigRoute)
-                btn("Go to sandbox", SandboxRoute)
+                btn("Go to sandbox", SandboxIndexRoute)
                 button("galaxy list", { portal.go(GalaxyFeedRoute()) }, Accent)
             }
         }

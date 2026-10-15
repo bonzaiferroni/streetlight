@@ -1,56 +1,56 @@
 package streetlight.web.view
 
-import kampfire.model.storeOf
-import koala.LottieFile
-import koala.modifier.*
 import koala.dom.*
-import kotlinx.css.GridTemplateColumns
 import koala.dom.component.*
 import koala.dom.layout.*
-import streetlight.web.model.Sandbox
-import streetlight.web.model.api
-import streetlight.web.model.toaster
+import koala.modifier.*
+import streetlight.model.ui.SandboxAccountRoute
+import streetlight.model.ui.SandboxIndexRoute
+import streetlight.model.ui.SandboxItemRoute
+import streetlight.model.ui.SandboxItemsRoute
+import streetlight.model.ui.SandboxRoute
+import streetlight.model.ui.SandboxStripeRoute
+import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.formSection
 
-fun RouteScope.viewSandbox() {
-    // val model = Sandbox(contentScope, api, toaster)
-
-    console.log("welcome to sandbox")
-
-    val nameState = storeOf("Jimmy")
-    val indexState = storeOf(0)
-
-    grid(GridTemplateColumns("1fr 1fr"), MarginTop(1)) {
-        column {
-            lazyTabs(indexState = indexState) {
-                tab("original") {
-                    lottie(LottieFile.Math)
-                }
-                tab("original") {
-                    lottie(LottieFile.CupShuffleProto)
-                }
-                tab("original") {
-                    lottie(LottieFile.CupShuffleProto)
-                }
+/** The sandbox, where the [subrouter] is tried out on the [SandboxRoute]s. */
+fun RouteScope.viewSandbox() = configBody("Sand", "Box", "viewSandbox.kt") {
+    subrouter(
+        label = "Sandbox",
+        index = SandboxIndexRoute,
+        menu = sandboxMenu,
+    ) { route ->
+        when (route) {
+            SandboxIndexRoute -> sandboxIndex()
+            SandboxAccountRoute -> formSection("Account") {
+                textBlock("The account settings would go here.")
             }
-            textBlock("select a tab")
-        }
-
-        column {
-            tabs(indexState = indexState) {
-                tab("mod 1") {
-                    lottie(LottieFile.CupShuffle)
-                }
-                tab("mod 2") {
-                    lottie(LottieFile.CupShuffle)
-                }
-                tab("mod 3") {
-                    lottie(LottieFile.CupShuffle)
-                }
+            SandboxStripeRoute -> formSection("Stripe") {
+                textBlock("The Stripe connection would go here.")
             }
-            textBlock("select a tab")
+            SandboxItemsRoute -> sandboxItems()
+            is SandboxItemRoute -> formSection(route.title) {
+                textBlock(route.itemId?.let { "The editor of item $it would go here." } ?: "A new item would start here.")
+            }
         }
     }
 }
 
-class SandboxException : Exception("There's a snake in my boot!")
+private val sandboxMenu = listOf(SandboxAccountRoute, SandboxStripeRoute, SandboxItemsRoute)
 
+/** Links to each route of the menu, which serve as the menu when the panel is hidden. */
+private fun ViewScope.sandboxIndex() = formSection("Index") {
+    sandboxMenu.forEach { route ->
+        navigation(route) { +route.title }
+    }
+}
+
+private fun ViewScope.sandboxItems() = formSection("Items") {
+    navigation(SandboxItemRoute(null)) { +"New item" }
+    (1..3).forEach { itemId ->
+        val route = SandboxItemRoute(itemId)
+        navigation(route) { +route.title }
+    }
+}
+
+class SandboxException : Exception("There's a snake in my boot!")

@@ -9,7 +9,6 @@ import koala.utility.DropWhileBusy
 import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.CapabilityStatus
-import streetlight.model.data.OfferingEdit
 import streetlight.model.data.SellerStatus
 import streetlight.model.data.SellerOnboarding
 import streetlight.web.io.SellerClient
@@ -56,7 +55,6 @@ data class SellerConnectorState(
     val status: SellerStatus? = null,
     val isLoaded: Boolean = false,
     val country: String = "US",
-    val offeringEdit: OfferingEdit? = null
 ) {
     val stage get() = when {
         !isLoaded -> SellerStage.Loading

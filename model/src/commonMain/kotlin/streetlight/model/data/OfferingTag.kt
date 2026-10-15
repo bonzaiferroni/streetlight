@@ -2,8 +2,8 @@ package streetlight.model.data
 
 import kampfire.model.Labeled
 
-/** The kind of work an offering delivers. */
+/** The trade of the star an offering comes from, as a developer or a performer. */
 enum class OfferingTag(override val label: String): Labeled {
-    CreateLocation("Create Location"),
-    ManageLocation("Manage Location"),
+    Developer("Developer"),
+    Performer("Performer"),
 }

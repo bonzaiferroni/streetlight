@@ -40,7 +40,7 @@ enum class Screen(
 ): AppScreen {
     Home(StaticParse { HomeRoute(readFeedType()) }, "", true),
     MediaUpdate(UuidParse { MediaUpdateRoute(it.toRecordId()) }),
-    Sandbox(StaticParse { SandboxRoute }),
+    Sandbox(parseSandboxRoute),
     Chat(StaticParse { ChatRoute }),
     SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
     Feedback(StaticParse { FrontDeskRoute }),
@@ -182,11 +182,6 @@ data class ConnectRoute(val type: ConnectType? = null): StreetlightRoute {
 object ErrorRoute: StreetlightRoute {
     override val screen get() = Screen.Error
     override val title get() = "Alas"
-}
-
-object SandboxRoute: StreetlightRoute {
-    override val screen get() = Screen.Sandbox
-    override val title get() = "Sandbox"
 }
 
 object ChatRoute: StreetlightRoute {

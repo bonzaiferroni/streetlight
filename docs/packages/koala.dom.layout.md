@@ -46,5 +46,6 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 |---|---|
 | [`tabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/tabs.kt) | Tabs over panels, the selected tab bound to a field when given |
 | [`sideTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/sideTabs.kt) | A column of tabs bound to a field, beside the panel the selected tab shows |
+| [`subrouter`](../../koala/src/jsMain/kotlin/koala/dom/layout/subrouter.kt) | Breadcrumbs, a menu panel when wide, and the content of the current route of a screen's routes |
 | [`lazyTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/lazyTabs.kt) | Tabs whose panels are built when first shown |
 | [`LazyTabScope`](../../koala/src/jsMain/kotlin/koala/dom/layout/LazyTabScope.kt) | Collects the tabs of a `lazyTabs` block |

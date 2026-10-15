@@ -25,6 +25,7 @@ An `AppRoute` carries no label. A link that shows a route as text takes a `Label
 |---|---|
 | [`AppRoute`, `AppScreen`, `RouteParse`](../../koala/src/commonMain/kotlin/koala/model/AppRoute.kt) | A place in the app, the screen that renders it, and how its path is parsed |
 | [`AppRouteUtility`](../../koala/src/commonMain/kotlin/koala/model/AppRouteUtility.kt) | Relative paths built from route parts |
+| [`SubRoute`](../../koala/src/commonMain/kotlin/koala/model/SubRoute.kt) | A route among several one screen shows, beneath its parent |
 | [`LabeledRoute`](../../koala/src/commonMain/kotlin/koala/model/LabeledRoute.kt) | A route with the label that links to it |
 | [`RouteContent`](../../koala/src/commonMain/kotlin/koala/model/RouteContent.kt) | The content a `ContentFetcher` returns for a route |
 | [`Portal`](../../koala/src/jsMain/kotlin/koala/model/Portal.kt) | The current route, kept in step with the address bar |

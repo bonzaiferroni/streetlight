@@ -75,6 +75,8 @@ A method that reports to the user takes a `Messenger` parameter. The view decide
 
 ## Editing
 
+A `FooEditor` takes its initial value, usually a `FooEdit`, and its whole role is to manage that state and submit it. Whatever builds it decides the initial value, such as a route block or a config model's staged edit, and the editor takes it from there; it does not choose which record to edit or load it.
+
 A model editing a record holds an edit DTO in its state. On a successful send it clears the fields the sender filled and keeps the choices they made, so a second send starts from the same settings.
 
 ## Submodels

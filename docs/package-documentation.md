@@ -59,6 +59,7 @@ The specification follows, under headings that name its topics. The document clo
 | Section | Holds |
 |---|---|
 | `## Workflows` | Step lists for recurring tasks in the package |
+| `## Tests Wanted` | Tests worth writing once the code they cover is stable, as described in `docs/testing.md` |
 | `## Known Issues` | Defects recorded as described below |
 
 ## Known Issues
