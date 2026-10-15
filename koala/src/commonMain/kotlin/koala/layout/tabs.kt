@@ -21,10 +21,11 @@ fun FlowContent.tabs(
     mod: Modifier? = null,
     viewportMod: Modifier? = null,
     initialTab: Int? = null,
+    param: String? = null,
     content: TabScope.() -> Unit,
 ) {
     column {
-        configureTabs(id, mod, viewportMod, initialTab, content)
+        configureTabs(id, mod, viewportMod, initialTab, param, content)
     }
 }
 
@@ -34,13 +35,14 @@ fun DIV.configureTabs(
     mod: Modifier?,
     viewportMod: Modifier?,
     initialTab: Int?,
+    param: String?,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
     val initialIndex = initialTab ?: 0
 
-    configureTabsContainer(id, mod, initialIndex)
+    configureTabsContainer(id, mod, initialIndex, param)
     configureTabsHeader(scope.tabs, initialIndex)
     configureTabsViewport(viewportMod, scope.tabs, initialIndex)
 }
@@ -50,12 +52,16 @@ fun DIV.configureTabsContainer(
     id: Id?,
     mod: Modifier?,
     initialIndex: Int,
+    param: String?,
 ) {
     addModifiers(modify(mod, TabsStyle.Container, TabsStyle.Initial))
     id?.let {
         setId(it)
     }
     setAttribute(TabsStyle.Index.to(initialIndex))
+    param?.let {
+        setAttribute(TabsStyle.Param.to(it))
+    }
 }
 
 /** Adds the row of tab buttons, with [initialIndex] active. */
@@ -108,6 +114,7 @@ object TabsStyle {
     val Initial = Container.withBemModifier("initial")
 
     val Index = intAttributeOf("tab")
+    val Param = stringAttributeOf("param")
 
     val IndexDelta = Property<Int>("index-delta", true)
 }

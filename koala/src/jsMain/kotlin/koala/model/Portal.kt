@@ -11,7 +11,10 @@ import koala.modifier.Attribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.js.JsPlainObject
 import web.dom.document
+import web.events.CustomEvent
+import web.events.EventType
 import web.events.addEventListener
 import web.history.POP_STATE
 import web.history.PopStateEvent
@@ -94,6 +97,13 @@ class Portal(
                 handleRoute(window.location.href, false)
             }
         })
+
+        window.addEventListener(QUERY_PARAM_CHANGE, { event ->
+            val url = URL(window.location.href)
+            url.searchParams.set(event.detail.key, event.detail.value)
+            val route = routeOf(url) ?: return@addEventListener
+            if (route != stateNow.route) go(route)
+        })
     }
 
     /** A flow of the routes of type [T]. */
@@ -106,13 +116,13 @@ class Portal(
     /**
      * Navigates to [route], remembering the current one and its scroll position.
      *
-     * Without [appendToBackstack], [route] takes the place of the current one, in the backstack and in the browser's
+     * A [route] with the [AppRoute.screenKey] of the current one takes its place, in the backstack and in the browser's
      * history.
      */
-    fun go(route: AppRoute, appendToBackstack: Boolean = true) {
+    fun go(route: AppRoute) {
         val navigation = Navigation(route, 0.0)
-        when (appendToBackstack) {
-            true -> go(navigation, backstack + Navigation(stateNow.route, window.scrollY))
+        when (route.screenKey != stateNow.route.screenKey) {
+            true -> go(navigation, backstack + Navigation(stateNow.route, window.scrollY), true)
             false -> go(navigation, backstack, false)
         }
     }
@@ -125,7 +135,7 @@ class Portal(
                 .firstOrNull { (_, value) -> value.route.toRelativePath() == sitePath }
                 ?: return false
         }
-        go(route, backstack.dropLast(index + 1))
+        go(route, backstack.dropLast(index + 1), false)
         return true
     }
 
@@ -141,7 +151,7 @@ class Portal(
         isWrecked = true
     }
 
-    private fun go(navigation: Navigation, backstack: List<Navigation>, appendToBackstack: Boolean = true) {
+    private fun go(navigation: Navigation, backstack: List<Navigation>, appendToBackstack: Boolean) {
         val route = navigation.route
         console.log("setting route: ${route.screen}")
         this.backstack = backstack
@@ -189,3 +199,13 @@ private data class Navigation(
     val route: AppRoute,
     val initialScrollY: Double,
 )
+
+/** A query parameter of the current route, set to [value] under [key]. */
+@JsPlainObject
+external interface QueryParamChange : JsAny {
+    val key: String
+    val value: String
+}
+
+/** The event asking [Portal] to set a query parameter of the current route, dispatched on `window`. */
+val QUERY_PARAM_CHANGE = EventType<CustomEvent<QueryParamChange>>("koala:query-param-change")

@@ -17,6 +17,12 @@ Classes and interfaces not bound to their point of use: routes, menus, documents
 
 An `AppRoute` carries no label. A link that shows a route as text takes a `LabeledRoute`, which pairs the route with the label of that link and defaults it to the route's `title`. Two links to one route may label it differently while the route stays equal to the one parsed from the path.
 
+## History
+
+`Portal.go` replaces the current entry, in its backstack and in the browser's history, when the new route has the current route's `screenKey`, and adds one otherwise.
+
+Only `Portal` writes the browser's history. Code that sets a query parameter of the current route dispatches a `QUERY_PARAM_CHANGE` event on `window`, and `Portal` goes to the route parsed from the address with that parameter set. A parameter the route does not parse leaves it unchanged.
+
 ## Models
 
 ### Routes

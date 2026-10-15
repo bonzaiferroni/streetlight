@@ -186,10 +186,10 @@ class Earth(
         go(EventsMapRoute(null, current.tag, search))
     }
 
-    /** Replaces the current route with [route], as a change of filter that the backstack does not keep. */
+    /** Navigates to [route], remembering it as the route Earth issued. */
     private fun go(route: EventsMapRoute) {
         issuedRoute = route
-        portal.go(route, false)
+        portal.go(route)
     }
 
     /** Frames every marker when there are markers and none of them is in view. */
