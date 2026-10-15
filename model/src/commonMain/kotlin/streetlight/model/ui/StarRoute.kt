@@ -1,6 +1,7 @@
 package streetlight.model.ui
 
 import kampfire.api.Username
+import kampfire.api.intParamOf
 
 data class StarRoute(val username: Username): StreetlightRoute, SlugRoute {
     override val screen get() = Screen.Star
@@ -19,6 +20,8 @@ object ProfileConfigRoute: StreetlightRoute {
 }
 
 object StarConfigRoute: StreetlightRoute {
+    val tabIndex = intParamOf("tab-index")
+
     override val screen get() = Screen.StarConfig
     override val title get() = "Account"
 }

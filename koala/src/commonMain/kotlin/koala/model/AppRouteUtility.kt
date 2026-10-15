@@ -1,7 +1,7 @@
 package koala.model
 
 import io.ktor.http.Parameters
-import io.ktor.http.ParametersBuilder
+import kampfire.api.PathBuilder
 import io.ktor.http.formUrlEncode
 
 fun buildRelativePath(nodes: List<String>, extra: Any? = null) = buildString {
@@ -24,8 +24,8 @@ fun buildRelativePath(nodes: List<String>, extra: Any? = null) = buildString {
     }
 }
 
-fun buildRelativePath(nodes: List<String>, block: ParametersBuilder.() -> Unit) =
-    buildRelativePath(nodes, Parameters.build(block))
+fun buildRelativePath(nodes: List<String>, block: PathBuilder.() -> Unit) =
+    PathBuilder(buildRelativePath(nodes)).apply(block).build()
 
 fun <T> Parameters.getAll(name: String, toValue: (String) -> T?) = getAll(name)
     ?.mapNotNull(toValue)

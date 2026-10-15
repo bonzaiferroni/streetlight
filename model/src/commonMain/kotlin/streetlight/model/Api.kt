@@ -140,7 +140,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object SpiritVision: ApiNode(this)
 
         object ReadMapQuery: GetEndpoint<EntityFeed>(this), MapEndpoint {
-            override val viewParam = geoRectOf(MapEndpoint.ViewParam)
+            override val viewParam = geoRectParamOf(MapEndpoint.ViewParam)
             override val seenParam = geoRectArrayOf(MapEndpoint.SeenParam)
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
             override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)
@@ -211,7 +211,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object EarthNode: ApiNode(this, "earth") {
         object Query: GetEndpoint<EntityFeed>(this), MapEndpoint {
-            override val viewParam = geoRectOf(MapEndpoint.ViewParam)
+            override val viewParam = geoRectParamOf(MapEndpoint.ViewParam)
             override val seenParam = geoRectArrayOf(MapEndpoint.SeenParam)
             override val recordIdParam = uuidParamOf(MapEndpoint.RecordIdParam)
             override val scoreParam = doubleParamOf(MapEndpoint.ScoreParam)

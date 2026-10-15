@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-import kampfire.api.EndpointParam
+import kampfire.api.QueryParam
 import kampfire.api.PathBuilder
 import kampfire.model.GeoRect
 import kotlin.uuid.Uuid
@@ -31,12 +31,12 @@ fun <T: MapEndpoint> T.writeMapQuery(query: MapQuery) {
  * Its entities are filtered by tag when it has a [tagParam] and by search when it has a [searchParam].
  */
 interface MapEndpoint {
-    val viewParam: EndpointParam<GeoRect?>
-    val seenParam: EndpointParam<List<GeoRect>?>
-    val recordIdParam: EndpointParam<Uuid>
-    val scoreParam: EndpointParam<Double>
-    val tagParam: EndpointParam<Int>? get() = null
-    val searchParam: EndpointParam<String>? get() = null
+    val viewParam: QueryParam<GeoRect?>
+    val seenParam: QueryParam<List<GeoRect>?>
+    val recordIdParam: QueryParam<Uuid>
+    val scoreParam: QueryParam<Double>
+    val tagParam: QueryParam<Int>? get() = null
+    val searchParam: QueryParam<String>? get() = null
 
     companion object {
         const val ViewParam = "view"

@@ -36,7 +36,7 @@ The server is built by `buildTestServer`, so its `ServerConfig` has metrics, dat
 | `getApi(endpoint, query)` | A pre-built query string, for a `QueryEndpoint` |
 | `deleteApi(endpoint, body)` | A JSON body to a `DeleteEndpoint` |
 
-A block writes parameters with the endpoint's own `EndpointParam`, so the key and encoding are the ones the server reads.
+A block writes parameters with the endpoint's own `QueryParam`, so the key and encoding are the ones the server reads.
 
 ```kotlin
 getApi(Api.Locations.Search) {

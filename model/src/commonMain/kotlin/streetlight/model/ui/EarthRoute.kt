@@ -1,6 +1,10 @@
 package streetlight.model.ui
 
 import kampfire.api.Slug
+import kampfire.api.enumParamOf
+import kampfire.api.geoRectParamOf
+import kampfire.api.read
+import kampfire.api.stringParamOf
 import kampfire.api.toSlug
 import kampfire.model.GeoRect
 import koala.model.PathParse
@@ -44,20 +48,18 @@ data class EventsMapRoute(
 ): EarthRoute {
     companion object {
         val nodes = listOf(EARTH_NODE)
+
+        val search = stringParamOf("search")
+        val tag = enumParamOf<EventTag>("tag")
+        val bounds = geoRectParamOf("rect")
     }
 
     override val layer get() = EarthLayer.Events
     override val title get() = "Events"
     override fun toRelativePath() = buildRelativePath(nodes) {
-        bounds?.let {
-            append(RECT_NODE, it.toString())
-        }
-        tag?.let {
-            append(TAG_PARAM, tag.name)
-        }
-        searchText?.let {
-            append(SEARCH_PARAM, it)
-        }
+        writeParam(Companion.bounds, bounds)
+        writeParam(Companion.tag, tag)
+        writeParam(search, searchText)
     }
 }
 
@@ -67,9 +69,9 @@ val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, param
         CITIES_NODE -> CityMapRoute
         GALAXY_NODE -> GalaxyMapRoute(nodes.takeSegment(2)?.toSlug())
         else -> {
-            val tag = parameters[TAG_PARAM]?.let { EventTag.valueOf(it) }
-            val rect = parameters[RECT_NODE]?.let { GeoRect.of(it) }
-            val searchText = parameters[SEARCH_PARAM]?.trim()?.takeIf { it.isNotEmpty() }
+            val tag = parameters.read(EventsMapRoute.tag)
+            val rect = parameters.read(EventsMapRoute.bounds)
+            val searchText = parameters.read(EventsMapRoute.search)?.trim()?.takeIf { it.isNotEmpty() }
             EventsMapRoute(rect, tag, searchText)
         }
     }
@@ -81,7 +83,3 @@ fun List<String>.takeSegment(index: Int) = getOrNull(index)?.takeIf { it.isNotBl
 private const val EARTH_NODE = "earth"
 private const val GALAXY_NODE = "galaxy"
 private const val CITIES_NODE = "cities"
-
-private const val TAG_PARAM = "tag"
-private const val SEARCH_PARAM = "search"
-private const val RECT_NODE = "rect"
