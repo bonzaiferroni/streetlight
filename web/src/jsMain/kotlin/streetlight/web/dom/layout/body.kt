@@ -3,9 +3,11 @@ package streetlight.web.dom.layout
 import koala.dom.AppendScope
 import koala.dom.component.column
 import koala.component.section
+import koala.model.AppRoute
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
+import streetlight.model.ui.HomeRoute
 import streetlight.web.page.appHeader
 import streetlight.web.page.configHeader
 import streetlight.web.layout.BodyStyle
@@ -29,9 +31,10 @@ fun AppendScope.configBody(
     titleFirst: String,
     titleSecond: String,
     sourceFile: String,
+    route: AppRoute = HomeRoute(),
     mod: Modifier? = null,
     content: SECTION.() -> Unit
-) = pageBody(sourcePathView(sourceFile), mod, { configHeader(titleFirst, titleSecond) }, content)
+) = pageBody(sourcePathView(sourceFile), mod, { configHeader(titleFirst, titleSecond, route) }, content)
 
 /**
  * The shape every body shares: what [header] builds, then [content] in a body section closed by a footer linking

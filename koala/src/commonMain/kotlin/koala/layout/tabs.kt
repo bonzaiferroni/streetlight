@@ -4,11 +4,13 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.p
+import koala.component.IconStyle
 import koala.page.Id
 import koala.page.setId
 import koala.component.box
 import koala.component.column
 import koala.component.row
+import koala.component.span
 
 /**
  * Tabs over panels, with [initialTab] selected. The browser wires them with [initTabs].
@@ -84,6 +86,11 @@ fun DIV.configureTabsHeader(
                 tab.colorScheme?.let {
                     setStyle(Css.ColorScheme.of(it))
                 }
+                tab.icon?.let { icon ->
+                    span(modify(IconStyle.Icon, SmallIconHeight, OpacityHigh)) {
+                        setStyle(Css.MaskUrl.of(icon.small))
+                    }
+                }
                 +tab.label
             }
         }
@@ -154,6 +161,11 @@ $Button {
     text-overflow: ellipsis;
     overflow: hidden;
     
+    > ${IconStyle.Icon} {
+        vertical-align: calc((1cap - var(--unit) * 3) / 2);
+        margin-inline-end: var(--unit);
+    }
+
     &:hover {
         background-color: rgba(var(--primary), 0.1);
     }

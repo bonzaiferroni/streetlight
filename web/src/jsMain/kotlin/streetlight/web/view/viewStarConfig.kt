@@ -30,8 +30,8 @@ import streetlight.web.model.getAccountEditor
 
 context(model: AccountEditor, star: Star, route: StarConfigRoute)
 fun ViewScope.viewStarConfig() {
-    configBody("Star", "Config", "viewStarConfig.kt") {
-        configHeading(star.username.value, StarRoute(star.username))
+    configBody("Config:", star.username.value, "viewStarConfig.kt", StarRoute(star.username)) {
+        // configHeading(star.username.value, StarRoute(star.username))
 
         if (star.accountType == AccountType.Guest) {
             registerAccountForm()
