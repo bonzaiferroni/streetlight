@@ -28,7 +28,7 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getAccountEditor
 
-context(model: AccountEditor, star: Star)
+context(model: AccountEditor, star: Star, route: StarConfigRoute)
 fun ViewScope.viewStarConfig() {
     configBody("Star", "Config", "viewStarConfig.kt") {
         configHeading(star.username.value, StarRoute(star.username))
@@ -40,7 +40,7 @@ fun ViewScope.viewStarConfig() {
         }
     }
 
-    dock.mergeState(StarConfigRoute, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
+    dock.mergeState(route, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewStarConfigRoute() {

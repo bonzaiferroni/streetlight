@@ -34,12 +34,12 @@ interface AppRoute {
             val idArg = pathNodes.getOrNull(1)
             return when (val parse = screen.routeParse) {
                 is StaticParse -> parse.block(parameters)
-                is UuidParse -> idArg?.let { parse.block(Uuid.parse(it)) }
-                is IdParse -> idArg?.let { parse.block(it) }
-                is SlugOrNullParse -> parse.block(idArg?.toSlug())
+                is UuidParse -> idArg?.let { parse.block(parameters, Uuid.parse(it)) }
+                is IdParse -> idArg?.let { parse.block(parameters, it) }
+                is SlugOrNullParse -> parse.block(parameters, idArg?.toSlug())
                 is SlugParse -> idArg?.let { parse.block(parameters, idArg.toSlug()) }
-                is UsernameParse -> idArg?.let { parse.block(idArg.toUsername()) }
-                is PathParse -> parse.block(pathNodes, parameters)
+                is UsernameParse -> idArg?.let { parse.block(parameters, idArg.toUsername()) }
+                is PathParse -> parse.block(parameters, pathNodes)
             }
         }
     }
@@ -60,29 +60,29 @@ interface AppScreen {
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this
 
-/** Turns the segments of a path into an [AppRoute], by the shape of its argument. */
+/** Turns the segments of a path into an [AppRoute], by the shape of its argument, with its query parameters in reach. */
 sealed interface RouteParse {
     val label: String get() = "id"
 }
 
-/** A route with no argument, built with its query parameters in reach. */
+/** A route with no argument. */
 data class StaticParse(
     val block: Parameters.() -> AppRoute
 ): RouteParse
 
 /** A route with a [Uuid] argument. */
 data class UuidParse(
-    val block: (Uuid) -> AppRoute
+    val block: Parameters.(Uuid) -> AppRoute
 ): RouteParse
 
 /** A route with a text id argument. */
 data class IdParse(
-    val block: (String) -> AppRoute
+    val block: Parameters.(String) -> AppRoute
 ): RouteParse
 
 /** A route with an optional [Slug] argument. */
 data class SlugOrNullParse(
-    val block: (Slug?) -> AppRoute
+    val block: Parameters.(Slug?) -> AppRoute
 ): RouteParse
 
 /** A route with a [Slug] argument. */
@@ -92,12 +92,12 @@ data class SlugParse(
 
 /** A route with a [Username] argument. */
 data class UsernameParse(
-    val block: (Username) -> AppRoute
+    val block: Parameters.(Username) -> AppRoute
 ): RouteParse
 
 /** A route read from all its path segments, reachable under each of [roots]. */
 data class PathParse(
     val roots: List<String>,
-    val block: (List<String>, Parameters) -> AppRoute
+    val block: Parameters.(List<String>) -> AppRoute
 ): RouteParse
 

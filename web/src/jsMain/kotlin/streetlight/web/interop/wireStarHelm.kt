@@ -75,7 +75,7 @@ private fun ViewScope.starPanel() {
 
         // calendar route goes here
         routeItem(StarDashRoute, "Dashboard", SvgFile.Dashboard.large)
-        routeItem(StarConfigRoute, "Account", SvgFile.User.large)
+        routeItem(StarConfigRoute(), "Account", SvgFile.User.large)
         routeItem(InboxRoute, "Inbox", SvgFile.Mail.large)
 
         button({

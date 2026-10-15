@@ -9,7 +9,6 @@ import koala.dom.component.dialog
 import koala.dom.component.dialogCard
 import koala.dom.layout.lazyTabs
 import koala.dom.component.rawDialogContent
-import koala.page.Id
 import streetlight.model.data.Star
 import streetlight.web.view.fullRegistrationForm
 import streetlight.web.model.getUserCreator
@@ -29,7 +28,7 @@ fun ViewScope.wireSignInDialog() {
         val model = app.getUserCreator(contentScope)
         rawDialogContent("Sign In") {
             context(model) {
-                lazyTabs(Id("sign-in-tabs")) { // mod = Width64
+                lazyTabs("sign-in-tabs") { // mod = Width64
                     tab("guest") {
                         dialogCard {
                             guestRegistrationForm()

@@ -31,7 +31,7 @@ import web.window.window
 
 /**
  * Wires a server-rendered tabs [container]: its buttons select a panel, the viewport animates to the panel's
- * height, and the selection is restored from `localStorage` when the container has an id.
+ * height, and the selection is restored from `localStorage` when the container has a storage key.
  *
  * Does nothing for a container already initialized.
  */
@@ -42,8 +42,8 @@ fun initTabs(container: HTMLElement) {
     val viewport = container.querySelector(TabsStyle.Viewport) ?: error("no viewport found")
     val buttons = container.querySelectorAll(TabsStyle.Button)
     val panels = container.querySelectorAll(TabsStyle.Panel)
-    val storageKey = container.id.toString().takeIf { it.isNotEmpty() }?.let { "${STORAGE_KEY_BASE}.$it" }
-    val param = container.getAttribute(TabsStyle.Param)
+    val storageKey = container.getAttribute(TabsStyle.StorageKey)
+    val param = container.getAttribute(TabsStyle.ParamKey)
     var currentIndex = container.requireAttribute(TabsStyle.Index)
 
     fun changeTab(index: Int) {
@@ -85,7 +85,7 @@ fun initTabs(container: HTMLElement) {
         requestAnimationFrame {
             val index = container.requireAttribute(TabsStyle.Index)
             storageKey?.let {
-                localStorage.setItem(it, index.toString())
+                writeStorageIndex(it, index)
             }
             param?.let {
                 writeParamIndex(it, index)
@@ -99,7 +99,7 @@ fun initTabs(container: HTMLElement) {
     ))
 
     storageKey?.let { key ->
-        localStorage.getItem(key)?.toIntOrNull()?.takeIf { it in panels.indices }?.let { index ->
+        readStorageIndex(key)?.takeIf { it in panels.indices }?.let { index ->
             container.setAttribute(TabsStyle.Index.to(index))
         }
     }
@@ -116,8 +116,16 @@ fun findAndInitTabs(parent: HTMLElement) {
 }
 
 /** Reads the tab index held by the query [param] of the current url, or null when absent or not an index. */
-private fun readParamIndex(param: String): Int? =
-    URL(window.location.href).searchParams.get(param.toJsString())?.toString()?.toIntOrNull()
+fun readParamIndex(param: String): Int? =
+    URL(window.location.href).searchParams.get(param.toJsString())?.toIntOrNull()
+
+/** Reads the tab index stored under [storageKey], or null when absent or not an index. */
+fun readStorageIndex(storageKey: String): Int? =
+    localStorage.getItem("$STORAGE_KEY_BASE.$storageKey")?.toIntOrNull()
+
+/** Stores [index] under [storageKey]. */
+private fun writeStorageIndex(storageKey: String, index: Int) =
+    localStorage.setItem("$STORAGE_KEY_BASE.$storageKey", index.toString())
 
 /** Asks [Portal] to set the query [param] of the current route to [index]. */
 private fun writeParamIndex(param: String, index: Int) {

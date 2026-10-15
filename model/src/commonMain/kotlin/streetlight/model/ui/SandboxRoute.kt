@@ -15,33 +15,32 @@ sealed interface SandboxRoute: StreetlightRoute, SubRoute<SandboxRoute> {
 data object SandboxIndexRoute: SandboxRoute {
     override val title get() = "Index"
     override val parent get() = null
-    override fun toRelativePath() = buildRelativePath(listOf(SANDBOX_NODE))
 }
 
 data object SandboxAccountRoute: SandboxRoute {
     override val title get() = "Account"
-    override fun toRelativePath() = buildRelativePath(listOf(SANDBOX_NODE, ACCOUNT_NODE))
+    override fun toRelativePath() = buildRelativePath(listOf(ACCOUNT_NODE))
 }
 
 data object SandboxStripeRoute: SandboxRoute {
     override val title get() = "Stripe"
-    override fun toRelativePath() = buildRelativePath(listOf(SANDBOX_NODE, STRIPE_NODE))
+    override fun toRelativePath() = buildRelativePath(listOf(STRIPE_NODE))
 }
 
 data object SandboxItemsRoute: SandboxRoute {
     override val title get() = "Items"
-    override fun toRelativePath() = buildRelativePath(listOf(SANDBOX_NODE, ITEMS_NODE))
+    override fun toRelativePath() = buildRelativePath(listOf(ITEMS_NODE))
 }
 
 /** The item [itemId], or a new item when it is `null`. */
 data class SandboxItemRoute(val itemId: Int?): SandboxRoute {
     override val title get() = itemId?.let { "Item $it" } ?: "New Item"
     override val parent get() = SandboxItemsRoute
-    override fun toRelativePath() = buildRelativePath(listOf(SANDBOX_NODE, ITEMS_NODE), itemId ?: NEW_NODE)
+    override fun toRelativePath() = buildRelativePath(listOf(ITEMS_NODE), itemId ?: NEW_NODE)
 }
 
 /** Reads a sandbox route from its path: `/sandbox`, `/sandbox/account`, `/sandbox/stripe`, or `/sandbox/items/{id}`. */
-val parseSandboxRoute = PathParse(listOf(ACCOUNT_NODE, STRIPE_NODE, ITEMS_NODE)) { nodes, _ ->
+val parseSandboxRoute = PathParse(listOf(ACCOUNT_NODE, STRIPE_NODE, ITEMS_NODE)) { nodes ->
     when (nodes.getOrNull(1)) {
         ACCOUNT_NODE -> SandboxAccountRoute
         STRIPE_NODE -> SandboxStripeRoute
@@ -54,7 +53,6 @@ val parseSandboxRoute = PathParse(listOf(ACCOUNT_NODE, STRIPE_NODE, ITEMS_NODE))
     }
 }
 
-private const val SANDBOX_NODE = "sandbox"
 private const val ACCOUNT_NODE = "account"
 private const val STRIPE_NODE = "stripe"
 private const val ITEMS_NODE = "items"

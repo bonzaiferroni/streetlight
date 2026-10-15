@@ -3,7 +3,6 @@ package streetlight.web.view
 import kampfire.model.toDataOrNull
 import koala.modifier.*
 import koala.dom.*
-import koala.page.Id
 import kampfire.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
@@ -47,7 +46,7 @@ fun ViewScope.viewLocationConfig(
             configHeading(location.name ?: "Location", location.route)
         }
 
-        lazyTabs(Id("location-config-tabs")) {
+        lazyTabs("location-config-tabs") {
             tab("profile") {
                 val editor = app.getLocationEditor(locationState.now.toEdit(), contentScope)
                 column {

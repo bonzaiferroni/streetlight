@@ -22,7 +22,7 @@ fun HTML.eventSignUp(event: Event, resource: PageResource) {
             heading1(event.title)
             heading2("Sign Up")
 
-            tabs(Id("signup-tabs")) {
+            tabs("signup-tabs") {
                 tab("Guest") {
                     textBlock("hello")
                 }

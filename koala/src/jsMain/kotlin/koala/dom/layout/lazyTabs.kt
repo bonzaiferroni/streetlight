@@ -14,25 +14,32 @@ import koala.layout.configureTabsContainer
 import koala.layout.configureTabsHeader
 import koala.dom.component.box
 import koala.dom.component.column
+import koala.interop.readParamIndex
+import koala.interop.readStorageIndex
 
 /**
  * Tabs whose panels are built the first time each is shown.
  *
- * The selected tab follows [indexState] when given, and otherwise starts at [defaultTab]. A container with [id]
- * restores its selected tab from `localStorage`.
+ * The selected tab follows [indexState] when given, and otherwise starts at [defaultTab]. A container with
+ * [storageKey] restores its selected tab from `localStorage`.
  */
 fun ViewScope.lazyTabs(
-    id: Id? = null,
+    storageKey: String? = null,
     mod: Modifier? = null,
     viewportMod: Modifier? = null,
     indexState: MutableTap<Int>? = null,
     defaultTab: Int? = null,
+    paramKey: String? = null,
+    id: Id? = null,
     content: LazyTabScope.() -> Unit,
 ): HTMLDivElement {
     val scope = LazyTabScope()
     scope.content()
     val tabCount = scope.tabs.size
-    val initialIndex = indexState?.now ?: defaultTab ?: 0
+    val initialIndex = indexState?.now
+        ?: paramKey?.let { readParamIndex(it) }
+        ?: storageKey?.let { readStorageIndex(it) }
+        ?: defaultTab ?: 0
     val panelCache = Array<HTMLElement?>(tabCount) { null }
     val isRendered = Array(tabCount) { false }
 
@@ -45,7 +52,7 @@ fun ViewScope.lazyTabs(
     }
 
     val container = column {
-        configureTabsContainer(id, mod, initialIndex)
+        configureTabsContainer(storageKey, mod, initialIndex, paramKey, id)
         configureTabsHeader(scope.tabs, initialIndex)
 
         box(modify(viewportMod, TabsStyle.Viewport)) {

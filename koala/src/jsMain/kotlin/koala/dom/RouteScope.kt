@@ -25,7 +25,7 @@ class RouteScope(
  */
 inline fun <reified Route: AppRoute, Data: FetcherContent> RouteScope.routeBlock(
     crossinline provideData: suspend (Route) -> Data,
-    crossinline block: ViewScope.(Data) -> Unit
+    crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) {
     val state = state
     val route = state.route as? Route ?: error("route was not the expected type: ${Route::class.simpleName}")
@@ -33,7 +33,9 @@ inline fun <reified Route: AppRoute, Data: FetcherContent> RouteScope.routeBlock
     launchEffect(RouteScope::class) {
         val data = provideData(route)
         this@routeBlock.rebuildContent {
-            block(data)
+            context(route) {
+                block(data)
+            }
             if (!state.isInitialRoute) {
                 window.scrollTo(0.0, state.initialScrollY)
             }
@@ -47,7 +49,7 @@ inline fun <reified Route: AppRoute, Data: FetcherContent> RouteScope.routeBlock
  */
 inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.routeBlock(
     shellId: Id,
-    crossinline block: ViewScope.(Data) -> Unit
+    crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) = routeBlock<Route, Data>(
     provideData = { route ->
         if (state.isInitialRoute) {
@@ -61,7 +63,7 @@ inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.ro
 
 /** Builds the route's view with [block] from content fetched for the route. */
 inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.routeBlock(
-    crossinline block: ViewScope.(Data) -> Unit
+    crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) = routeBlock<Route, Data>(
     provideData = { inflator.contentFor<Data>(it) },
     block = block
@@ -71,7 +73,7 @@ inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.ro
 inline fun <reified Route: AppRoute, reified Data: FetcherContent> ViewScope.routeBlock(
     inflator: RouteInflator,
     state: PortalState,
-    crossinline block: ViewScope.(Data) -> Unit
+    crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) {
     RouteScope(this, inflator, state).routeBlock<Route, Data>(block)
 }

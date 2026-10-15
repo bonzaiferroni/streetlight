@@ -26,7 +26,7 @@ fun FlowContent.layoutPostListing(types: Set<PostType>, listing: PostListing) {
             }
         }
         else -> {
-            tabs(GalaxyPostListing.Id) {
+            tabs("galaxy-listing") {
                 types.forEach { type ->
                     when (type) {
                         PostType.Event -> {

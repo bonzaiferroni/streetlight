@@ -39,7 +39,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                     }
                 }
             }
-            tabs(Id("event-portal-tabs"), Width(64)) {
+            tabs("event-portal-tabs", Width(64)) {
                 tab("bio") {
                     textBlock("yer bio")
                 }

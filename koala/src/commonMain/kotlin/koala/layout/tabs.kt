@@ -4,7 +4,6 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.p
-import koala.component.button
 import koala.page.Id
 import koala.page.setId
 import koala.component.box
@@ -14,53 +13,59 @@ import koala.component.row
 /**
  * Tabs over panels, with [initialTab] selected. The browser wires them with [initTabs].
  *
- * A container with [id] restores its selected tab from `localStorage`.
+ * A container with [storageKey] restores its selected tab from `localStorage`.
  */
 fun FlowContent.tabs(
-    id: Id? = null,
+    storageKey: String? = null,
     mod: Modifier? = null,
     viewportMod: Modifier? = null,
     initialTab: Int? = null,
-    param: String? = null,
+    paramKey: String? = null,
+    id: Id? = null,
     content: TabScope.() -> Unit,
 ) {
     column {
-        configureTabs(id, mod, viewportMod, initialTab, param, content)
+        configureTabs(storageKey, mod, viewportMod, initialTab, paramKey, id, content)
     }
 }
 
 /** Configures this element as [tabs]. */
 fun DIV.configureTabs(
-    id: Id?,
+    storageKey: String?,
     mod: Modifier?,
     viewportMod: Modifier?,
     initialTab: Int?,
-    param: String?,
+    paramKey: String?,
+    id: Id?,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
     val initialIndex = initialTab ?: 0
 
-    configureTabsContainer(id, mod, initialIndex, param)
+    configureTabsContainer(storageKey, mod, initialIndex, paramKey, id)
     configureTabsHeader(scope.tabs, initialIndex)
     configureTabsViewport(viewportMod, scope.tabs, initialIndex)
 }
 
 /** Marks this element as a tabs container, not yet wired, with [initialIndex] selected. */
 fun DIV.configureTabsContainer(
-    id: Id?,
+    storageKey: String?,
     mod: Modifier?,
     initialIndex: Int,
-    param: String?,
+    paramKey: String?,
+    id: Id?,
 ) {
     addModifiers(modify(mod, TabsStyle.Container, TabsStyle.Initial))
     id?.let {
         setId(it)
     }
     setAttribute(TabsStyle.Index.to(initialIndex))
-    param?.let {
-        setAttribute(TabsStyle.Param.to(it))
+    paramKey?.let {
+        setAttribute(TabsStyle.ParamKey.to(it))
+    }
+    storageKey?.let {
+        setAttribute(TabsStyle.StorageKey.to(it))
     }
 }
 
@@ -114,7 +119,8 @@ object TabsStyle {
     val Initial = Container.withBemModifier("initial")
 
     val Index = intAttributeOf("tab")
-    val Param = stringAttributeOf("param")
+    val ParamKey = stringAttributeOf("param")
+    val StorageKey = stringAttributeOf("storage-key")
 
     val IndexDelta = Property<Int>("index-delta", true)
 }

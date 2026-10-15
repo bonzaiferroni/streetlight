@@ -22,7 +22,7 @@ sealed interface EarthRoute: StreetlightRoute {
 
 data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     companion object {
-        val nodes = listOf(EARTH_NODE, GALAXY_NODE)
+        val nodes = listOf(GALAXY_NODE)
     }
 
     override val title get() = "Galaxies"
@@ -33,7 +33,7 @@ data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
 }
 
 data object CityMapRoute: EarthRoute {
-    val nodes = listOf(EARTH_NODE, CITIES_NODE)
+    val nodes = listOf(CITIES_NODE)
 
     override val title get() = "Cities"
     override val layer get() = EarthLayer.City
@@ -47,8 +47,6 @@ data class EventsMapRoute(
     val searchText: String? = null,
 ): EarthRoute {
     companion object {
-        val nodes = listOf(EARTH_NODE)
-
         val search = stringParamOf("search")
         val tag = enumParamOf<EventTag>("tag")
         val bounds = geoRectParamOf("rect")
@@ -56,7 +54,7 @@ data class EventsMapRoute(
 
     override val layer get() = EarthLayer.Events
     override val title get() = "Events"
-    override fun toRelativePath() = buildRelativePath(nodes) {
+    override fun toRelativePath() = buildRelativePath {
         writeParam(Companion.bounds, bounds)
         writeParam(Companion.tag, tag)
         writeParam(search, searchText)
@@ -64,14 +62,14 @@ data class EventsMapRoute(
 }
 
 /** Reads an earth route from its path: `/earth`, `/earth/galaxy/{slug}`, or `/earth/cities`. */
-val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, parameters ->
+val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes ->
     when (nodes.getOrNull(1)) {
         CITIES_NODE -> CityMapRoute
         GALAXY_NODE -> GalaxyMapRoute(nodes.takeSegment(2)?.toSlug())
         else -> {
-            val tag = parameters.read(EventsMapRoute.tag)
-            val rect = parameters.read(EventsMapRoute.bounds)
-            val searchText = parameters.read(EventsMapRoute.search)?.trim()?.takeIf { it.isNotEmpty() }
+            val tag = read(EventsMapRoute.tag)
+            val rect = read(EventsMapRoute.bounds)
+            val searchText = read(EventsMapRoute.search)?.trim()?.takeIf { it.isNotEmpty() }
             EventsMapRoute(rect, tag, searchText)
         }
     }
@@ -80,6 +78,5 @@ val parseEarthRoute = PathParse(listOf(GALAXY_NODE, CITIES_NODE)) { nodes, param
 /** The path segment at [index], or `null` when it is missing or blank. */
 fun List<String>.takeSegment(index: Int) = getOrNull(index)?.takeIf { it.isNotBlank() }
 
-private const val EARTH_NODE = "earth"
 private const val GALAXY_NODE = "galaxy"
 private const val CITIES_NODE = "cities"

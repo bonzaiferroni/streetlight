@@ -2,7 +2,6 @@ package streetlight.web.view
 
 import koala.modifier.*
 import koala.dom.*
-import koala.page.Id
 import streetlight.web.model.SiteConfig
 import streetlight.web.model.ThemeEditor
 import koala.dom.component.*
@@ -18,7 +17,7 @@ fun ViewScope.viewSiteConfig() {
     val model = app.get<SiteConfig>()
 
     configBody("Site", "Config", "viewSiteConfig.kt") {
-        lazyTabs(Id("site-config-tabs")) {
+        lazyTabs("site-config-tabs") {
 //            tab("general") {
 //                column(AlignItemsStart) {
 //                    // switch("show transit", config.showTransitState)

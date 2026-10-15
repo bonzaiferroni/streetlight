@@ -6,7 +6,6 @@ import koala.dom.component.button
 import koala.dom.component.column
 import koala.dom.layout.lazyTabs
 import koala.dom.component.row
-import koala.page.Id
 import streetlight.web.model.MusicianHub
 import streetlight.web.model.api
 
@@ -16,7 +15,7 @@ fun ViewScope.viewMusicianHub(
     val model = MusicianHub(contentScope, api)
 
     column {
-        lazyTabs(Id("user-hub-tabs")) {
+        lazyTabs("user-hub-tabs") {
             tab("Songs") {
                 column(AlignItemsCenter) {
                     row(Width(64)) {
