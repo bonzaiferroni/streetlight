@@ -27,12 +27,13 @@ import streetlight.model.ui.StarRoute
 /**
  * The navigation dock of the current route: a title and main, left, and right route links.
  *
- * A page can add to the dock with [mergeState]; a merge for a route not yet current waits for that route.
+ * A page can add to the dock with [mergeState]; a merge for a route not yet current waits for that route. A merge
+ * holds across a change to a route with the same [AppRoute.screenKey], since the page that made it stays.
  */
 class RouteDock(scope: CoroutineScope, val portal: Portal) {
     private val state = storeOf<RouteDockState?>(null)
     private var stateRoute: AppRoute? = null
-    private var pending: RouteDockMerge? = null
+    private var routeDockMerge: RouteDockMerge? = null
     private val visible = storeOf(true)
 
     val titleState = state.tapOf { it?.title }
@@ -44,11 +45,12 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     init {
         portal.routeState.reactIn(scope) { portalRoute ->
             val route = portalRoute.dockRoute
+            val keptMerge = routeDockMerge?.takeIf { it.route.screenKey == route.screenKey }
             state.set { stateOf(route) }
             stateRoute = route
+            routeDockMerge = null
+            keptMerge?.let { applyMerge(it.state) }
             visible.set(true)
-            pending?.takeIf { it.route == route }?.let { applyMerge(it.state) }
-            pending = null
         }
     }
 
@@ -56,7 +58,7 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     fun mergeState(route: AppRoute, merge: RouteDockState) {
         when (route.dockRoute) {
             stateRoute -> applyMerge(merge)
-            else -> pending = RouteDockMerge(route.dockRoute, merge)
+            else -> routeDockMerge = RouteDockMerge(route.dockRoute, merge)
         }
     }
 
@@ -65,15 +67,10 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     }
 
     private fun applyMerge(merge: RouteDockState) {
-        state.set {
-            val base = this ?: RouteDockState()
-            base.copy(
-                mainRoutes = merge.mainRoutes ?: base.mainRoutes,
-                title = merge.title ?: base.title,
-                leftRoutes = merge.leftRoutes ?: base.leftRoutes,
-                rightRoutes = merge.rightRoutes ?: base.rightRoutes,
-            )
-        }
+        val route = stateRoute ?: return
+        val gathered = routeDockMerge?.takeIf { it.route == route }?.state?.mergedWith(merge) ?: merge
+        routeDockMerge = RouteDockMerge(route, gathered)
+        state.set { (this ?: RouteDockState()).mergedWith(merge) }
     }
 }
 
@@ -82,6 +79,14 @@ data class RouteDockState(
     val title: String? = null,
     val leftRoutes: List<AppRoute>? = null,
     val rightRoutes: List<AppRoute>? = null,
+)
+
+/** This state with the non-null parts of [merge] set over it. */
+private fun RouteDockState.mergedWith(merge: RouteDockState) = copy(
+    mainRoutes = merge.mainRoutes ?: mainRoutes,
+    title = merge.title ?: title,
+    leftRoutes = merge.leftRoutes ?: leftRoutes,
+    rightRoutes = merge.rightRoutes ?: rightRoutes,
 )
 
 private data class RouteDockMerge(
