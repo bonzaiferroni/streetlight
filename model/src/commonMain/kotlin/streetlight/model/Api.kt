@@ -261,6 +261,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadStatus: GetEndpoint<SellerStatus?>(this)
     }
 
+    object Payments: ApiNode(this) {
+        object Create: PostEndpoint<PaymentEdit, Payment>(this)
+    }
+
     object Offerings: ApiNode(this) {
         object ReadMine: GetEndpoint<List<Offering>>(this)
         object Read: GetByIdEndpoint<OfferingId, Offering>(this)

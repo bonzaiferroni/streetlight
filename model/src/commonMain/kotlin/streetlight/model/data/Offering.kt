@@ -20,7 +20,7 @@ data class Offering(
     val priceCents: Int,
     val currency: String,
     val platformCut: Int,
-    val isActive: Boolean,
+    val isPublic: Boolean,
     override val description: Markdown?,
     val tags: List<OfferingTag>?,
     override val image: Image?,

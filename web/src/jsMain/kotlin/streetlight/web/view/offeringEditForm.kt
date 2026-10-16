@@ -57,6 +57,6 @@ fun ViewScope.offeringEditForm() = formColumn {
             }
         },
         messenger = messages,
-        back = MenuAction("back", onClick = config::cancelOfferingEdit),
+        back = MenuAction("back", onClick = config::cancelFocus),
     )
 }

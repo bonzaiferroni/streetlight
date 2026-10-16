@@ -31,7 +31,8 @@ fun ViewScope.offeringsDash() {
             column {
                 offerings.forEach { offering ->
                     dashboardEntity(offering, listOf(
-                        MenuAction("Edit") { model.startOfferingEdit(offering) }
+                        MenuAction("Edit") { model.startOfferingEdit(offering) },
+                        MenuAction("send invoice") { model.startPaymentEdit(offering) },
                     ))
                 }
             }

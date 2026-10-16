@@ -47,6 +47,6 @@ fun ViewScope.dashboardEntity(entity: Entity, actions: List<MenuAction>? = null,
 
 fun ViewScope.dashboardAction(action: MenuAction) {
     button(action.onClick) {
-        textBlock(action.label, modify(TextUppercase, TextSmall, OpacityHigh, Bold, PaddingX2))
+        textBlock(action.label, modify(TextUppercase, TextSmall, OpacityHigh, Bold, PaddingX1))
     }
 }

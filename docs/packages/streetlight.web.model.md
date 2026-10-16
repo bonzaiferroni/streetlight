@@ -142,8 +142,9 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`PasswordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/PasswordEditor.kt) | A password field with its confirmation |
 | [`AppConnector`](../../web/src/jsMain/kotlin/streetlight/web/model/AppConnector.kt) | The payment handles a star links to their profile |
 | [`SellerConnector`](../../web/src/jsMain/kotlin/streetlight/web/model/SellerConnector.kt) | The star's seller account and its onboarding |
-| [`SellerConfig`](../../web/src/jsMain/kotlin/streetlight/web/model/SellerConfig.kt) | The star's offerings and the offering edit staged |
+| [`SellerConfig`](../../web/src/jsMain/kotlin/streetlight/web/model/SellerConfig.kt) | The star's offerings and the edit staged as the panel's focus |
 | [`OfferingEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/OfferingEditor.kt) | Creates or updates an offering |
+| [`PaymentEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/PaymentEditor.kt) | Creates a payment for an offering |
 | [`CityEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/CityEditor.kt) | Edits a city |
 | [`EventEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/EventEditor.kt) | Creates or updates an event |
 | [`LocationEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LocationEditor.kt) | Creates or updates a location |

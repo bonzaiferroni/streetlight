@@ -82,13 +82,15 @@ A view model constructed inside a view is given `contentScope`, so its coroutine
 
 ## Staged Edits
 
-A panel that lists records and edits one at a time holds a config model whose state carries the edit staged, `null` while none is. The panel shows its forms while the edit is `null`, and otherwise builds an editor from the edit and provides it as context to the edit form, in their place. The editor returns the saved record through `submitSuspend`, and the form hands it to the config model, which ends the edit. `sellerConfigPanel` is the example, with `SellerConfig` and `OfferingEditor`.
+A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the form hands it to the config model, which ends the edit. `sellerConfigPanel` is the example, with `SellerConfig`, `OfferingEditor` and `PaymentEditor`.
 
 ```kotlin
-flowBlock(config.offeringEditState) { edit ->
-    when (edit) {
-        null -> formRow { offeringsForm() }
-        else -> context(OfferingEditor(edit, api)) { offeringEditForm() }
+flowBlock(config.focusState) { focus ->
+    when (focus) {
+        null -> formRow { offeringsDash() }
+        is OfferingEdit -> context(OfferingEditor(focus, api)) { offeringEditForm() }
+        is PaymentEdit -> context(PaymentEditor(focus, api)) { paymentEditForm() }
+        else -> error("unknown seller focus: $focus")
     }
 }
 ```
