@@ -7,6 +7,7 @@ import kotlinx.html.SECTION
 import kotlinx.html.js.section as sectionTag
 import koala.dom.AppendScope
 import koala.component.SectionStyle
+import koala.component.heading4
 
 /** A `section` laid out as a flex column. */
 fun AppendScope.section(
@@ -24,7 +25,7 @@ fun AppendScope.section(
     block: SECTION.() -> Unit = {}
 ) = section(mod) {
     filigree {
-        heading3(title)
+        heading4(title, modify(SystemFg, TextUppercase))
     }
     block()
 }

@@ -80,6 +80,7 @@ The route dock is not shell content. It is not something a user needs to underst
 | [`locationShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/locationShell.kt) | A location |
 | [`eventShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/eventShell.kt) | An event |
 | [`mediaShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/mediaShell.kt) | A medium |
+| [`offeringShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/offeringShell.kt) | An offering |
 | [`cityShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityShell.kt) | A city |
 | [`galaxyFeedShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/galaxyFeedShell.kt) | The galaxy feed |
 | [`cityFeedShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityFeedShell.kt) | The city feed |

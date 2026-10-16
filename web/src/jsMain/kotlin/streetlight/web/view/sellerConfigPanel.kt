@@ -1,11 +1,10 @@
 package streetlight.web.view
 
-import koala.modifier.*
 import koala.dom.*
-import koala.dom.component.*
+import koala.dom.component.section
 import koala.dom.layout.*
-import koala.model.*
-import streetlight.model.ui.StarConfigRoute
+import koala.model.MenuAction
+import streetlight.web.dom.layout.dashboardHeading
 import streetlight.web.model.SellerConnector
 import streetlight.web.dom.layout.formRow
 import streetlight.web.model.OfferingEditor
@@ -25,10 +24,16 @@ fun ViewScope.sellerConfigPanel() {
             when (edit) {
                 null -> formRow {
                     stripeConnectForm()
-                    offeringsForm()
+                    offeringsDash()
                 }
                 else -> context(OfferingEditor(edit, api)) {
-                    offeringEditForm()
+                    section {
+                        val label = if (edit.offeringId == null) "New Offer" else "Update Offer"
+                        dashboardHeading(label, listOf(
+                            MenuAction("back", onClick = config::cancelOfferingEdit)
+                        ))
+                        offeringEditForm()
+                    }
                 }
             }
         }

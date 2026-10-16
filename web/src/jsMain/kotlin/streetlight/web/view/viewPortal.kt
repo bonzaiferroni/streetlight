@@ -82,6 +82,9 @@ fun ViewScope.viewPortal() {
                 Screen.MediaForge -> viewMediaForgeRoute()
                 Screen.Media -> viewMediaRoute()
 
+                // offering
+                Screen.Offering -> viewOfferingRoute()
+
                 // other
                 Screen.SiteConfig -> viewSiteConfig()
                 Screen.AboutApp -> viewAboutApp()

@@ -9,6 +9,7 @@ import koala.dom.component.column
 import koala.dom.component.dialog
 import koala.dom.component.dialogContent
 import koala.dom.component.row
+import koala.dom.component.section
 import koala.dom.component.textBlock
 import koala.dom.layout.flowBlock
 import koala.model.MessageStore
@@ -22,6 +23,7 @@ import koala.modifier.ValidFg
 import koala.modifier.modify
 import streetlight.model.data.CapabilityStatus
 import streetlight.web.dom.layout.centeredText
+import streetlight.web.dom.layout.dashboardHeading
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.SellerConnector
@@ -29,7 +31,8 @@ import streetlight.web.model.SellerStage
 
 context(model: SellerConnector)
 fun ViewScope.stripeConnectForm() {
-    formSection("Stripe") {
+    section {
+        dashboardHeading("Stripe")
         val isDialogOpen = storeOf(false)
 
         row(AlignItemsCenter) {

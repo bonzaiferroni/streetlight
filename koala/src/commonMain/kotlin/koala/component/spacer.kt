@@ -8,7 +8,7 @@ import koala.interop.invoke
 
 /** An empty element, sized by [mod], that takes up space. */
 fun FlowContent.spacer(
-    mod: Modifier? = null,
+    mod: Modifier? = Flex1,
     block: (DIV.() -> Unit)? = null,
 ) {
     div {

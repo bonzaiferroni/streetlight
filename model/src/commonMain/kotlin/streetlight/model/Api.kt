@@ -67,6 +67,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadTop: GetEndpoint<List<Location>>(this) {
             val count = intParamOf("count")
         }
+        object ReadHosted: GetEndpoint<List<Location>>(this)
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this)
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this)
         object QueryBounds: PostEndpoint<GeoRect, List<LocationInfo>>(this)

@@ -20,6 +20,7 @@ import streetlight.model.data.ConnectType
 import streetlight.model.data.FeedType
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
+import streetlight.model.data.OfferingId
 import streetlight.model.data.RecordId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -96,6 +97,9 @@ enum class Screen(
 
     // media
     Media(SlugParse { MediaRoute(it) }, "m", true),
+
+    // offering
+    Offering(UuidParse { OfferingRoute(OfferingId(it)) }, "o", true),
 
     Error(StaticParse { ErrorRoute });
 

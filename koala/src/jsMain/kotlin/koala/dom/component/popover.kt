@@ -52,7 +52,7 @@ fun AppendScope.popover(
 fun AppendScope.popoverCard(
     mod: Modifier? = null,
     content: DIV.() -> Unit = {}
-) = card(Popover.CardMod.append(mod)) {
+) = card(modify(Popover.CardMod, mod)) {
     content()
 }
 

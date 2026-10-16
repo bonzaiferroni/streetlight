@@ -47,11 +47,10 @@ fun DIV.configurePopover(
 
 /** A [popover] styled as a card. */
 fun FlowContent.popoverCard(
-    id: Id,
     mod: Modifier? = null,
     content: DIV.() -> Unit = {}
 ) {
-    popover(id, modify(Popover.CardMod, Margin1, mod)) {
+    card(modify(Popover.CardMod, mod)) {
         content()
     }
 }

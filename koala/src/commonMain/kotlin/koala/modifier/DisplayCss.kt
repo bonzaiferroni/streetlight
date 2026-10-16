@@ -26,6 +26,8 @@ val Chopped = Class("chopped")
 
 // Border
 val SideBorder = Class("side-border")
+/** A bottom border in the color of a filigree's rule. */
+val BorderBottom2Px = Class("filigree-border-bottom")
 
 // Color
 val Accent = Class("accent")
@@ -134,6 +136,7 @@ $Chopped {
 
 /* Border */
 $SideBorder { border-left: var(--ghost-border); border-right: var(--ghost-border); }
+$BorderBottom2Px { border-bottom: 2px solid color-mix(in srgb, currentColor 25%, transparent); }
 
 /* Color */
 $AccentFg        { color:            var(--accent-fg); }

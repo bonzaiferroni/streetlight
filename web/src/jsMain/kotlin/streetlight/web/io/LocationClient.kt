@@ -42,6 +42,8 @@ interface LocationClient {
     suspend fun configSubdomain(config: SubdomainConfig): Outcome<Unit>
     suspend fun checkSubdomain(config: SubdomainConfig): Outcome<Boolean>
     suspend fun queryLocation(point: GeoPoint): Outcome<List<Location>>
+    /** The locations the signed-in user hosts, by name. */
+    suspend fun readHostedLocations(): Outcome<List<Location>>
 }
 
 class BrowserLocationClient(private val client: FetchClient): LocationClient {
@@ -67,4 +69,5 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
     override suspend fun configSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.UpdateSubdomain, config)
     override suspend fun checkSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.CheckSubdomain, config)
     override suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
+    override suspend fun readHostedLocations() = client.getApi(Api.Locations.ReadHosted)
 }

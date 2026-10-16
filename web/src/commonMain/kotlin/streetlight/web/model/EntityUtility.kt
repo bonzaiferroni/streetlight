@@ -17,6 +17,8 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
+import streetlight.model.data.Offering
+import streetlight.model.data.priceLabel
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
@@ -28,6 +30,7 @@ import streetlight.model.ui.EventRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.MediaRoute
+import streetlight.model.ui.OfferingRoute
 import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.component.postMenu
@@ -65,6 +68,7 @@ fun Entity.toRoute(): AppRoute? = when (this) {
     is CustomEntity -> route
     is Star -> StarRoute(username)
     is EventGroup -> null
+    is Offering -> OfferingRoute(offeringId)
 }
 
 fun Entity.toThemeColor(): ThemeColor = when (this) {
@@ -84,6 +88,7 @@ fun Entity.toThemeColor(): ThemeColor = when (this) {
     }
     is Star -> ThemeColor.Primary
     is EventGroup -> ThemeColor.Location
+    is Offering -> ThemeColor.Primary
 }
 
 /** The flair badge icon of this entity, the icon of its tag for an event that has one. */
@@ -115,6 +120,7 @@ fun Entity.toEntityRef(): EntityRef? = when (this) {
     is CustomEntity -> null
     is Star -> null
     is EventGroup -> null
+    is Offering -> null
 }
 
 /**
@@ -143,6 +149,7 @@ fun Entity.toCells(context: FeedContext? = null): List<EntityCell>? = when (this
     is CustomEntity -> null
     is Star -> null
     is EventGroup -> null
+    is Offering -> listOf(EntityCell(SvgFile.Coin.small, priceLabel, null))
 }
 
 /**
@@ -199,6 +206,7 @@ fun Entity.toButtons(): List<EntityButton>? = when (val entity = this) {
     is CustomEntity -> null
     is Star -> null
     is EventGroup -> null
+    is Offering -> null
 }
 
 /** A second route shown under the title, such as the location of an event post. */

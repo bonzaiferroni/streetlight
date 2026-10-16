@@ -1,7 +1,9 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import koala.Image
+import koala.model.RouteContent
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
@@ -19,10 +21,15 @@ data class Offering(
     val currency: String,
     val platformCut: Int,
     val isActive: Boolean,
-    val description: Markdown?,
+    override val description: Markdown?,
     val tags: List<OfferingTag>?,
-    val image: Image?,
-)
+    override val image: Image?,
+): Entity, RouteContent {
+    override val label get() = title
+    override val body get() = description ?: priceLabel.toMarkdown()
+    override val geoPoint get() = null
+    override val markerId get() = offeringId.toString()
+}
 
 /** The price of this offering, as `12.50 USD`. */
 val Offering.priceLabel get() = "${priceCents.toCentsLabel()} ${currency.uppercase()}"

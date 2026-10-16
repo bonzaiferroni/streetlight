@@ -7,13 +7,12 @@ import koala.LottieFile
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.component.ButtonPopover
 import koala.component.bulletsOf
-import koala.component.buttonPopover
 import koala.component.heading3
 import koala.component.heading5
 import koala.component.textProperty
 import kampfire.model.MutableTap
+import koala.component.buttonPopover
 import kotlinx.coroutines.flow.map
 import kotlinx.css.pct
 import kotlinx.datetime.DateTimeUnit
@@ -98,16 +97,14 @@ fun ViewScope.eventDetailsForm() = formCard("Event Details") {
         )
         row(JustifyContentSpaceBetween) {
             buttonPopover("Markdown Hints", flair = SvgFile.Bulb) {
-                card(modify(ButtonPopover.CardMod, Padding(2))) {
-                    bulletsOf(
-                        "Add a blank line in between paragraphs.",
-                        "Use # symbols at the beginning of a line to provide a heading.",
-                        "One # provides the largest heading, two provides the next largest, etc.",
-                    )
-                    textProperty("Example", "### My Fancy Heading")
-                    textProperty("Becomes") {
-                        heading3("My Fancy Heading")
-                    }
+                bulletsOf(
+                    "Add a blank line in between paragraphs.",
+                    "Use # symbols at the beginning of a line to provide a heading.",
+                    "One # provides the largest heading, two provides the next largest, etc.",
+                )
+                textProperty("Example", "### My Fancy Heading")
+                textProperty("Becomes") {
+                    heading3("My Fancy Heading")
                 }
             }
             buttonDialog("Preview", emoji = "👀") {
