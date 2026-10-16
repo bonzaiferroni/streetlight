@@ -5,6 +5,7 @@ import koala.dom.*
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
+import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.SellerConnector
 import streetlight.web.dom.layout.formRow
 import streetlight.web.model.OfferingEditor

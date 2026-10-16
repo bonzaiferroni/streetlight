@@ -7,6 +7,7 @@ import io.ktor.http.ParametersBuilder
 import io.ktor.http.formUrlEncode
 import kampfire.model.GeoRect
 import kampfire.model.toArrayString
+import kotlin.enums.enumEntries
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
@@ -48,6 +49,13 @@ inline fun <reified T : Enum<T>> enumParamOf(key: String) = QueryParam(
     key = key,
     toValue = { enumValueOf<T>(it) },
     toString = { (it as Enum<T>).name }
+)
+
+/** Declares an enum query parameter, written as the entry's ordinal. An ordinal out of range reads as `null`. */
+inline fun <reified T : Enum<T>> ordinalParamOf(key: String) = QueryParam<T?>(
+    key = key,
+    toValue = { text -> text.toIntOrNull()?.let { enumEntries<T>().getOrNull(it) } },
+    toString = { it?.ordinal?.toString() ?: error("enum param $key not found") }
 )
 
 /** Declares an [Instant] query parameter, written in epoch seconds. */

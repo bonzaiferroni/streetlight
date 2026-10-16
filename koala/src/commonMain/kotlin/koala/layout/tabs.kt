@@ -76,7 +76,7 @@ fun DIV.configureTabsHeader(
     tabs: List<TabHeader>,
     initialIndex: Int,
 ) {
-    row(TabsStyle.Header) {
+    row(modify(TabsStyle.Header, Outline)) {
         tabs.forEachIndexed { index, tab ->
             p {
                 if (index == initialIndex) {
@@ -128,8 +128,6 @@ object TabsStyle {
     val Index = intAttributeOf("tab")
     val ParamKey = stringAttributeOf("param")
     val StorageKey = stringAttributeOf("storage-key")
-
-    val IndexDelta = Property<Int>("index-delta", true)
 }
 
 // language="CSS"
@@ -143,7 +141,6 @@ $Header {
     width: 100%;
     text-transform: uppercase;
     font-size: var(--text-small);
-    outline: var(--outline-low);
 }
 
 $Button {

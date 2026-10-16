@@ -262,6 +262,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Offerings: ApiNode(this) {
         object ReadMine: GetEndpoint<List<Offering>>(this)
+        object Read: GetByIdEndpoint<OfferingId, Offering>(this)
         object Create: PostEndpoint<OfferingEdit, Offering>(this)
         object Update: PostEndpoint<OfferingEdit, Offering>(this)
     }

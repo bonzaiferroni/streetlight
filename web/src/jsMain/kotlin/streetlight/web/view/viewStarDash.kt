@@ -23,16 +23,14 @@ import streetlight.web.model.api
 import streetlight.web.dom.layout.dataBlock
 import streetlight.web.model.dock
 import streetlight.web.dom.layout.mainBody
-import streetlight.web.layout.mainBody
 import streetlight.web.model.portal
-import streetlight.web.component.starToggle
 
 context(star: Star)
 fun ViewScope.viewStarDash() {
     mainBody("viewStarDash.kt") {
         lazyTabs {
-            tab("activity") {
-                activityContent()
+            tab("overview") {
+                starOverview()
             }
             tab("sandbox") {
                 sandboxContent()
@@ -48,45 +46,6 @@ fun RouteScope.viewStarDashRoute() {
         starGate {
             viewStarDash()
         }
-    }
-}
-
-private fun ViewScope.activityContent() {
-    grid {
-        section("galaxies") {
-            dataBlock(api.galaxy::readUserGalaxies) { galaxies ->
-                galaxies.forEach { galaxy ->
-                    grid(columnsOf(1.fr, LinearDimension.auto)) {
-                        navigation(galaxy.toRoute()) {
-                            // listingOf(galaxy.name, galaxy.image?.thumb)
-                        }
-                        // starToggle(galaxy.isLit, galaxy.galaxyId)
-                    }
-                }
-            }
-        }
-        section("edits") {
-            dataBlock(api.star::readPendingEdits) { logs ->
-                logs.forEach { log ->
-                    val label = log.recordEdit?.label ?: return@forEach
-                    // listingOf(label, log.recordEdit?.image?.thumb)
-                }
-            }
-        }
-//        val dialog = dialog()
-//        section("requests") {
-//            dataBlock(api::readUserTasks) { tasks ->
-//                tasks.forEach { task ->
-//                    textBlock(task.label).onClick {
-//                        dialog.updateContent(task.label, true) {
-//                            dialogCard {
-//                                taskContent(task)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 }
 

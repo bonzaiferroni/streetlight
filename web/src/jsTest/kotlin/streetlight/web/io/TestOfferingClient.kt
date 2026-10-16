@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.model.HttpProblem
 import kampfire.model.Ok
 import kampfire.model.Outcome
 import streetlight.model.data.Offering
@@ -14,6 +15,9 @@ class TestOfferingClient(
     val offerings = offerings.toMutableList()
 
     override suspend fun readMine(): Outcome<List<Offering>> = Ok(offerings.toList())
+
+    override suspend fun readOffering(offeringId: OfferingId): Outcome<Offering> =
+        offerings.firstOrNull { it.offeringId == offeringId }?.let { Ok(it) } ?: HttpProblem.NotFound
 
     override suspend fun create(edit: OfferingEdit): Outcome<Offering> {
         val offering = edit.toOffering(OfferingId(Uuid.random()))

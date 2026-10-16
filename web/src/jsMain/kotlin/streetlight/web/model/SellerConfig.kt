@@ -7,6 +7,7 @@ import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Offering
 import streetlight.model.data.OfferingEdit
+import streetlight.model.data.OfferingId
 import streetlight.model.data.toEdit
 import streetlight.web.io.OfferingClient
 
