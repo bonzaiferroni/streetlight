@@ -89,6 +89,7 @@ fun ViewScope.viewPortal() {
                 Screen.SiteConfig -> viewSiteConfig()
                 Screen.AboutApp -> viewAboutApp()
                 Screen.Connect -> viewConnectRoute()
+                Screen.Onboard -> viewOnboardRoute()
                 Screen.Docs -> viewSiteDocRoute()
                 Screen.Talk -> viewTalkRoute()
                 else -> textBlock("Coming soon: $screen")

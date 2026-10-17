@@ -12,14 +12,14 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.css.GridTemplateRows
 import kotlinx.css.pct
 import kotlinx.html.FlowContent
-import streetlight.model.data.ConnectType
+import streetlight.model.data.OnboardType
 import streetlight.model.ui.ConnectRoute
 import streetlight.web.page.AppAttribute
 
 /**
- * Renders a 3:2 grid of four quadrants, one per [ConnectType], each linking to its [ConnectRoute].
+ * Renders a 3:2 grid of four quadrants, one per [OnboardType], each linking to its [ConnectRoute].
  *
- * The quadrant whose type matches an ancestor's [AppAttribute.ConnectType] is lit.
+ * The quadrant whose type matches an ancestor's [AppAttribute.OnboardType] is lit.
  */
 fun FlowContent.connectPicker(mod: Modifier? = null) {
     grid(
@@ -27,7 +27,7 @@ fun FlowContent.connectPicker(mod: Modifier? = null) {
         modify(Outline, MoonShadow, Aspect4By3, Gap2Px, BorderRadius2, OverflowClip, mod),
         GridTemplateRows("repeat(2, minmax(0, 1fr))")
     ) {
-        ConnectType.entries.forEach { type ->
+        OnboardType.entries.forEach { type ->
             navigation(ConnectRoute(type), modify(ConnectPickerStyle.Option, AppAttribute.ConnectOption.to(type), CardBg)) {
                 column(modify(Height(100.pct), JustifyContentCenter, AlignItemsCenter, TextSmall, TextUppercase)) {
                     icon(type.svg.animated, Width(5))
@@ -39,11 +39,11 @@ fun FlowContent.connectPicker(mod: Modifier? = null) {
 }
 
 /** The icon of this connect type. */
-val ConnectType.svg: SvgPack get() = when (this) {
-    ConnectType.BusinessOwner -> SvgFile.BuildingStore
-    ConnectType.Performer -> SvgFile.AcousticGuitar
-    ConnectType.Developer -> SvgFile.Code
-    ConnectType.EventHost -> SvgFile.Speakerphone
+val OnboardType.svg: SvgPack get() = when (this) {
+    OnboardType.LocationHost -> SvgFile.BuildingStore
+    OnboardType.Performer -> SvgFile.AcousticGuitar
+    OnboardType.Developer -> SvgFile.Code
+    OnboardType.EventHost -> SvgFile.Speakerphone
 }
 
 object ConnectPickerStyle {
@@ -57,7 +57,7 @@ $Option {
 }
 
 /* the option of the type chosen on an ancestor */
-${ConnectType.entries.joinToString(",\n") { "${AppAttribute.ConnectType.selector(it)} $Option${AppAttribute.ConnectOption.selector(it)}" }} {
+${OnboardType.entries.joinToString(",\n") { "${AppAttribute.OnboardType.selector(it)} $Option${AppAttribute.ConnectOption.selector(it)}" }} {
     background-color: var(--primary-bg);
 }
 """ }

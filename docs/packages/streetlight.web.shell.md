@@ -86,7 +86,7 @@ The route dock is not shell content. It is not something a user needs to underst
 | [`cityFeedShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/cityFeedShell.kt) | The city feed |
 | [`siteDocShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/siteDocShell.kt) | A site doc beside the table of all site docs |
 | [`aboutShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/aboutShell.kt) | The about page |
-| [`connectShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/connectShell.kt) | The connect page: the pitch to each `ConnectType` |
+| [`connectShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/connectShell.kt) | The connect page: the pitch to each `OnboardType` |
 | [`aboutAppShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/aboutAppShell.kt) | The app's about page and its repositories |
 | [`privacyPolicyShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/privacyPolicyShell.kt) | The privacy policy |
 | [`passwordResetForm`](../../web/src/commonMain/kotlin/streetlight/web/shell/passwordResetForm.kt) | The form that sets a new password, sent by its own script |

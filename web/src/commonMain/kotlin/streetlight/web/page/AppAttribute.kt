@@ -4,7 +4,7 @@ import koala.modifier.enumAttributeOf
 import koala.modifier.stringAttributeOf
 import koala.modifier.idAttributeOf
 import koala.modifier.jsonAttributeOf
-import streetlight.model.data.ConnectType
+import streetlight.model.data.OnboardType
 import streetlight.model.data.FeedSource
 import streetlight.model.data.MarkId
 import streetlight.model.data.PostId
@@ -18,7 +18,7 @@ object AppAttribute {
     val GalaxyName = stringAttributeOf("galaxy-name")
 
     /** The connect type chosen on the page, set on an ancestor of the connect picker and panels. */
-    val ConnectType = enumAttributeOf<ConnectType>("connect-type")
+    val OnboardType = enumAttributeOf<OnboardType>("connect-type")
     /** The connect type a picker option or panel stands for. */
-    val ConnectOption = enumAttributeOf<ConnectType>("connect-option")
+    val ConnectOption = enumAttributeOf<OnboardType>("connect-option")
 }

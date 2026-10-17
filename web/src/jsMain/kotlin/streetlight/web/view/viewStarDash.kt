@@ -17,13 +17,14 @@ import streetlight.model.ui.StarDashTab
 import streetlight.web.model.SessionClient
 import koala.dom.component.*
 import koala.dom.layout.*
+import streetlight.web.dom.layout.configBody
 import streetlight.web.model.dock
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.portal
 
 context(star: Star, route: StarDashRoute)
 fun ViewScope.viewStarDash() {
-    mainBody("viewStarDash.kt") {
+    configBody("dash:", star.username.value, "viewStarDash.kt") {
         lazyTabs(paramKey = StarDashRoute.tabParam.key) {
             StarDashTab.entries.forEach {
                 tab(it.label, it.svg) {

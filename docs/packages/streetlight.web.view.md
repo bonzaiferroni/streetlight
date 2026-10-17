@@ -302,6 +302,7 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`viewSiteDoc`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteDoc.kt) | The SiteDoc screen |
 | [`viewAboutApp`](../../web/src/jsMain/kotlin/streetlight/web/view/viewAboutApp.kt) | The AboutApp screen |
 | [`viewConnect`](../../web/src/jsMain/kotlin/streetlight/web/view/viewConnect.kt) | The Connect screen |
+| [`viewOnboard`](../../web/src/jsMain/kotlin/streetlight/web/view/viewOnboard.kt) | The onboarding of a star as an `OnboardType` |
 | [`viewTalkLog`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTalkLog.kt) | The TalkLog screen |
 | [`viewInbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewInbox.kt) | The Inbox screen |
 | [`viewChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/view/viewChatRoom.kt) | The ChatRoom screen |

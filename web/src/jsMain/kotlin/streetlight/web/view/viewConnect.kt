@@ -6,7 +6,7 @@ import koala.dom.page.shellBox
 import koala.dom.getElementOrNullById
 import koala.modifier.setAttribute
 import kotlinx.coroutines.flow.drop
-import streetlight.model.data.ConnectType
+import streetlight.model.data.OnboardType
 import streetlight.model.ui.ConnectRoute
 import streetlight.web.dom.page.applyTheme
 import streetlight.web.model.portal
@@ -17,7 +17,7 @@ import streetlight.web.utility.setTitle
 import web.dom.document
 
 /** The connect page, opened on [type], following the route as its type changes. */
-fun ViewScope.viewConnect(type: ConnectType?) {
+fun ViewScope.viewConnect(type: OnboardType) {
     shellBox {
         connectShell(type)
     }
@@ -30,10 +30,7 @@ fun ViewScope.viewConnect(type: ConnectType?) {
             val connectRoute = route as? ConnectRoute ?: return@collect
             val root = document.getElementOrNullById(ConnectShell.RootId) ?: return@collect
 
-            when (val connectType = connectRoute.type) {
-                null -> root.removeAttribute(AppAttribute.ConnectType.identifier)
-                else -> root.setAttribute(AppAttribute.ConnectType.to(connectType))
-            }
+            root.setAttribute(AppAttribute.OnboardType.to(connectRoute.type))
         }
     }
 }

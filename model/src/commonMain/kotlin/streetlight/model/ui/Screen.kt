@@ -16,7 +16,7 @@ import koala.model.UsernameParse
 import koala.model.UuidParse
 import io.ktor.http.Parameters
 import koala.model.DocId
-import streetlight.model.data.ConnectType
+import streetlight.model.data.OnboardType
 import streetlight.model.data.FeedType
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
@@ -47,7 +47,8 @@ enum class Screen(
     Feedback(StaticParse { FrontDeskRoute }),
     SiteMonitor(StaticParse { SiteMonitorRoute }),
     Contribute(StaticParse { ContributeRoute }),
-    Connect(StaticParse { ConnectRoute(readConnectType()) }, null, true),
+    Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.LocationHost) }, null, true),
+    Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
 
     // star
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
@@ -160,8 +161,8 @@ fun String.withFeedParam(feed: FeedType?) = feed?.let { "$this?$FEED_PARAM=${it.
 private const val FEED_PARAM = "feed"
 
 /** The connect type these parameters name, or `null` when they name none or one that is unknown. */
-fun Parameters.readConnectType(): ConnectType? =
-    this[CONNECT_TYPE_PARAM]?.let { name -> ConnectType.entries.firstOrNull { it.name == name } }
+fun Parameters.readConnectType(): OnboardType? =
+    this[CONNECT_TYPE_PARAM]?.let { name -> OnboardType.entries.firstOrNull { it.name == name } }
 
 private const val CONNECT_TYPE_PARAM = "type"
 
@@ -173,14 +174,21 @@ data class HomeRoute(override val feed: FeedType? = null): FeedRoute {
     override fun toRelativePath() = basePath.withFeedParam(feed)
 }
 
-/** The connect page, pitching Streetlight to the audience [type], or to none yet when `null`. */
-data class ConnectRoute(val type: ConnectType? = null): StreetlightRoute {
+/** The connect page, pitching Streetlight to the audience [type]. */
+data class ConnectRoute(val type: OnboardType = OnboardType.LocationHost): StreetlightRoute {
     override val screen get() = Screen.Connect
     override val title get() = "Connect"
 
     // a change of type is a change within the view
     override val screenKey get() = ConnectRoute()
-    override fun toRelativePath() = type?.let { "$basePath?$CONNECT_TYPE_PARAM=${it.name}" } ?: basePath
+    override fun toRelativePath() = "$basePath?$CONNECT_TYPE_PARAM=${type.name}"
+}
+
+/** The onboarding of a star as the audience [type]. */
+data class OnboardRoute(val type: OnboardType): StreetlightRoute {
+    override val screen get() = Screen.Onboard
+    override val title get() = "Onboard"
+    override fun toRelativePath() = "$basePath?$CONNECT_TYPE_PARAM=${type.name}"
 }
 
 object ErrorRoute: StreetlightRoute {
