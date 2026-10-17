@@ -5,7 +5,6 @@ import koala.dom.component.checkBox
 import koala.dom.component.row
 import koala.dom.component.textField
 import koala.dom.flowValid
-import koala.dom.launchEffect
 import koala.dom.markdown.markdownEditor
 import koala.model.MenuAction
 import koala.model.MessageStore
@@ -17,10 +16,10 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.OfferingEditor
-import streetlight.web.model.SellerConfig
+import streetlight.web.model.Merchant
 
 /** The form of the offering [model] edits, which returns to [config]'s list once saved or abandoned. */
-context(model: OfferingEditor, config: SellerConfig)
+context(model: OfferingEditor, config: Merchant)
 fun ViewScope.offeringEditForm() = formColumn {
     val messages = MessageStore()
     val heading = if (model.stateNow.edit.offeringId == null) "New Offering" else "Edit Offering"

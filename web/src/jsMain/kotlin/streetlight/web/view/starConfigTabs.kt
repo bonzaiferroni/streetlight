@@ -22,9 +22,6 @@ fun ViewScope.starConfigTabs() = tabs(paramKey = StarConfigRoute.tabParam.key) {
                 StarConfigTab.ConnectApps -> {
                     connectAppsPanel()
                 }
-                StarConfigTab.ECommerce -> {
-                    sellerConfigPanel()
-                }
             }
         }
     }

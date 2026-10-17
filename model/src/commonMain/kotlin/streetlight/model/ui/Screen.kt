@@ -52,7 +52,7 @@ enum class Screen(
     // star
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
     Star(UsernameParse { StarRoute(it) }, "s", true),
-    StarDash(StaticParse { StarDashRoute }),
+    StarDash(StaticParse { StarDashRoute.of(this) }),
     ProfileConfig(StaticParse { ProfileConfigRoute }),
     StarConfig(StaticParse { StarConfigRoute.of(this) }),
     Inbox(StaticParse { InboxRoute }),

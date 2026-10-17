@@ -18,7 +18,7 @@ import streetlight.web.io.ApiClient
  * The star's offerings, payments and customers, and the [SellerConfigState.focus] the panel shows in place of them: an [OfferingEdit] for an
  * [OfferingEditor] or a [PaymentEdit] for a [PaymentEditor], `null` while none is staged.
  */
-class SellerConfig(
+class Merchant(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,

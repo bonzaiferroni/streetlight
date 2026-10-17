@@ -109,6 +109,8 @@ A route is an object while it has no parameters, and a data class once it has an
 
 Portal keeps a screen's view across a change to a route with the same `screenKey`, which is the route itself by default, and rebuilds it on any other change or a refresh. Going to the route already shown counts as a refresh. A feed route's key is its `defaultFeedRoute`, so its view stays, and the view follows the new feed with `followFeedRoute`, which reads the route's content again and swaps the feed section in place. Every Earth route shares `Screen.Earth` as its key, since the Earth view handles each of its routes itself.
 
+A screen whose tabs are addressable declares a `FooTab` enum in `streetlight.model.ui`, each entry `Labeled` and holding its `svg`. The route carries `tab: FooTab?`, written as the `tab` query parameter with `ordinalParamOf` and left out for the default, and fixes its `screenKey` so a change of tab keeps the view. The view's tabs take `paramKey = FooRoute.tabParam.key` and build one tab per entry with a `when` over it. `StarConfigRoute` and `StarDashRoute` are the examples.
+
 ## Subroutes
 
 A screen that holds many routes declares them as a sealed interface implementing `SubRoute` of itself. Each route names its `parent`, `null` for the index, and all share the screen as their `screenKey`. The screen parses them with a `PathParse` and its view hands them to `subrouter`, whose content is a `when` over the routes. A route that edits a record carries its id, `null` for a new one. `SandboxRoute` is the example.

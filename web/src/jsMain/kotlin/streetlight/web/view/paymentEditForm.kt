@@ -14,10 +14,10 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.PaymentEditor
-import streetlight.web.model.SellerConfig
+import streetlight.web.model.Merchant
 
 /** The form of the payment [model] edits, which returns to [config]'s list once sent or abandoned. */
-context(model: PaymentEditor, config: SellerConfig)
+context(model: PaymentEditor, config: Merchant)
 fun ViewScope.paymentEditForm() = formColumn {
     val messages = MessageStore()
 

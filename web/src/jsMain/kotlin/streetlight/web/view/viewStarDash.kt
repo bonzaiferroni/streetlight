@@ -15,6 +15,7 @@ import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyFeedRoute
 import streetlight.model.ui.SandboxIndexRoute
 import streetlight.model.ui.StarDashRoute
+import streetlight.model.ui.StarDashTab
 import streetlight.web.model.SessionClient
 import streetlight.model.ui.toRoute
 import koala.dom.component.*
@@ -25,20 +26,23 @@ import streetlight.web.model.dock
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.portal
 
-context(star: Star)
+context(star: Star, route: StarDashRoute)
 fun ViewScope.viewStarDash() {
     mainBody("viewStarDash.kt") {
-        lazyTabs {
-            tab("overview") {
-                starOverview()
-            }
-            tab("sandbox") {
-                sandboxContent()
+        lazyTabs(paramKey = StarDashRoute.tabParam.key) {
+            StarDashTab.entries.forEach {
+                tab(it.label, it.svg) {
+                    when (it) {
+                        StarDashTab.Overview -> starOverview()
+                        StarDashTab.ECommerce -> sellerConfigPanel()
+                        StarDashTab.Sandbox -> sandboxContent()
+                    }
+                }
             }
         }
     }
 
-    dock.mergeState(StarDashRoute, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
+    dock.mergeState(route, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewStarDashRoute() {

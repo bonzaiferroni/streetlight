@@ -18,9 +18,19 @@ data class StarRoute(val username: Username): StreetlightRoute, SlugRoute {
     override val slug get() = username
 }
 
-object StarDashRoute: StreetlightRoute {
+data class StarDashRoute(val tab: StarDashTab? = null): StreetlightRoute {
+    companion object {
+        val tabParam = ordinalParamOf<StarDashTab>("tab")
+
+        fun of(parameters: Parameters) = StarDashRoute(parameters.read(tabParam))
+    }
+
     override val screen get() = Screen.StarDash
-    override val title get() = "Messages"
+    override val title get() = "Dashboard"
+    override val screenKey get() = "star-dash"
+    override fun toRelativePath() = buildRelativePath {
+        writeParam(tabParam, tab)
+    }
 }
 
 object ProfileConfigRoute: StreetlightRoute {
@@ -50,8 +60,15 @@ object InboxRoute: StreetlightRoute {
 
 enum class StarConfigTab(val svg: SvgPack, label: String? = null): Labeled {
     Account(SvgFile.User),
-    ConnectApps(SvgFile.Affiliate, "connect apps"),
-    ECommerce(SvgFile.BuildingStore, "e-commerce");
+    ConnectApps(SvgFile.Affiliate, "connect apps");
+
+    override val label = label ?: name
+}
+
+enum class StarDashTab(val svg: SvgPack, label: String? = null): Labeled {
+    Overview(SvgFile.Dashboard),
+    ECommerce(SvgFile.BuildingStore, "e-commerce"),
+    Sandbox(SvgFile.Flask);
 
     override val label = label ?: name
 }

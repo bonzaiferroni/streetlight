@@ -11,23 +11,23 @@ import streetlight.model.data.OfferingEdit
 import streetlight.model.data.PaymentEdit
 import streetlight.web.model.OfferingEditor
 import streetlight.web.model.PaymentEditor
-import streetlight.web.model.SellerConfig
+import streetlight.web.model.Merchant
 import streetlight.web.model.api
 import streetlight.web.model.toaster
 
 /**
- * The star's Stripe connection and their offerings, or the editor of the offering or payment [SellerConfig] has
+ * The star's Stripe connection and their offerings, or the editor of the offering or payment [Merchant] has
  * staged as its focus.
  */
 fun ViewScope.sellerConfigPanel() {
     val connector = SellerConnector(contentScope, api.seller, toaster)
-    val config = SellerConfig(contentScope, api, toaster)
+    val config = Merchant(contentScope, api, toaster)
     context(connector, config) {
         flowBlock(config.focusState) { focus ->
             when (focus) {
                 null -> formRow {
                     stripeConnectForm()
-                    sellerDash()
+                    merchantDash()
                 }
                 is OfferingEdit -> context(OfferingEditor(focus, api)) {
                     section {

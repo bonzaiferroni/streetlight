@@ -14,18 +14,18 @@ import streetlight.model.data.toCentsLabel
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.dashboardEntity
 import streetlight.web.dom.layout.dashboardHeading
-import streetlight.web.model.SellerConfig
+import streetlight.web.model.Merchant
 
 /** The star's offerings, the payments they have requested, and their customers. */
-context(model: SellerConfig)
-fun ViewScope.sellerDash() {
+context(model: Merchant)
+fun ViewScope.merchantDash() {
     offeringsSection()
     paymentsSection()
     customersSection()
 }
 
 /** The star's offerings, each with buttons that stage its edit or an invoice for it, under a button for a new one. */
-context(model: SellerConfig)
+context(model: Merchant)
 private fun ViewScope.offeringsSection() = section {
     dashboardHeading("Offerings", listOf(
         MenuAction("New", onClick = model::startNewOffering)
@@ -48,7 +48,7 @@ private fun ViewScope.offeringsSection() = section {
 }
 
 /** The payments the star has requested, newest first, each with its customer, amount, status and age. */
-context(model: SellerConfig)
+context(model: Merchant)
 private fun ViewScope.paymentsSection() = section {
     dashboardHeading("Payments")
     flowBlock(model.paymentsState) { payments ->
@@ -73,7 +73,7 @@ private fun ViewScope.paymentsSection() = section {
 }
 
 /** The star's customers, each by name and email. */
-context(model: SellerConfig)
+context(model: Merchant)
 private fun ViewScope.customersSection() = section {
     dashboardHeading("Customers")
     flowBlock(model.customersState) { customers ->
