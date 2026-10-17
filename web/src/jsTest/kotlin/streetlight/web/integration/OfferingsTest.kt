@@ -6,7 +6,7 @@ import streetlight.model.data.OfferingId
 import streetlight.web.io.ApiClient
 import streetlight.web.io.TestApiClient
 import streetlight.web.io.TestOfferingClient
-import streetlight.web.view.sellerConfigPanel
+import streetlight.web.view.sellerDash
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -65,7 +65,7 @@ class OfferingsTest: ViewTest() {
     }
 
     private fun mountPanel(): View = mount {
-        sellerConfigPanel()
+        sellerDash()
     }
 }
 

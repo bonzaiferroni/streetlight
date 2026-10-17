@@ -7,8 +7,6 @@ import koala.modifier.*
 import koala.dom.*
 import koala.component.btn
 import koala.model.NullContent
-import kotlinx.css.LinearDimension
-import kotlinx.css.fr
 import streetlight.model.data.Star
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.HomeRoute
@@ -17,11 +15,8 @@ import streetlight.model.ui.SandboxIndexRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarDashTab
 import streetlight.web.model.SessionClient
-import streetlight.model.ui.toRoute
 import koala.dom.component.*
 import koala.dom.layout.*
-import streetlight.web.model.api
-import streetlight.web.dom.layout.dataBlock
 import streetlight.web.model.dock
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.portal
@@ -34,7 +29,7 @@ fun ViewScope.viewStarDash() {
                 tab(it.label, it.svg) {
                     when (it) {
                         StarDashTab.Overview -> starOverview()
-                        StarDashTab.ECommerce -> sellerConfigPanel()
+                        StarDashTab.ECommerce -> sellerDash()
                         StarDashTab.Sandbox -> sandboxContent()
                     }
                 }
