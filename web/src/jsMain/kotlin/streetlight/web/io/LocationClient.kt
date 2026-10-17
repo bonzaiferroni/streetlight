@@ -30,9 +30,9 @@ interface LocationClient {
     suspend fun readLocation(slug: Slug): Outcome<Location>
     suspend fun readLocationContent(slug: Slug): Outcome<LocationContent>
     suspend fun readLocationUpdaterContent(slug: Slug): Outcome<LocationUpdaterContent>
-    suspend fun parseLocation(request: ParseRequest): Outcome<LocationEdit>
     suspend fun readLocationsInBounds(bounds: GeoRect): Outcome<List<LocationInfo>>
     suspend fun searchLocations(query: String, city: String? = null, state: String? = null, limit: Int = 10): Outcome<List<Location>>
+    suspend fun matchLocations(name: String, address: String?): Outcome<List<Location>>
     suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent>
     suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>>
     suspend fun updateLocationConfig(edit: LocationConfig): Outcome<Unit>
@@ -44,6 +44,7 @@ interface LocationClient {
     suspend fun queryLocation(point: GeoPoint): Outcome<List<Location>>
     /** The locations the signed-in user hosts, by name. */
     suspend fun readHostedLocations(): Outcome<List<Location>>
+    suspend fun readHostedConfigs(): Outcome<List<LocationConfigContent>>
 }
 
 class BrowserLocationClient(private val client: FetchClient): LocationClient {
@@ -51,7 +52,6 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
     override suspend fun readLocation(slug: Slug) = client.getApi(Api.Locations.ReadLocation, slug)
     override suspend fun readLocationContent(slug: Slug) = client.getApi(Api.Locations.ReadContent, slug)
     override suspend fun readLocationUpdaterContent(slug: Slug) = client.getApi(Api.Locations.ReadUpdaterContent, slug)
-    override suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
     override suspend fun readLocationsInBounds(bounds: GeoRect) = client.postApi(Api.Locations.QueryBounds, bounds)
     override suspend fun searchLocations(query: String, city: String?, state: String?, limit: Int) =
         client.getApi(Api.Locations.Search) {
@@ -59,6 +59,11 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
             writeParam(it.city, city)
             writeParam(it.state, state)
             writeParam(it.limit, limit)
+        }
+    override suspend fun matchLocations(name: String, address: String?) =
+        client.getApi(Api.Locations.Match) {
+            writeParam(it.name, name)
+            writeParam(it.address, address)
         }
     override suspend fun readLocationConfigContent(locationId: LocationId) = client.getApi(Api.Locations.ReadConfigContent, locationId)
     override suspend fun parseEventSchema(url: Url) = client.postApi(Api.Locations.ParseEventSchema, url)
@@ -70,4 +75,5 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
     override suspend fun checkSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.CheckSubdomain, config)
     override suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     override suspend fun readHostedLocations() = client.getApi(Api.Locations.ReadHosted)
+    override suspend fun readHostedConfigs() = client.getApi(Api.Locations.ReadHostedConfigs)
 }

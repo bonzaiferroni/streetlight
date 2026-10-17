@@ -3,21 +3,17 @@ package streetlight.web.model
 import streetlight.model.data.ImageTarget
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import koala.model.MessageStore
 import koala.utility.dedupNotNull
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
-import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.UrlParseRequest
-import streetlight.model.data.mergeLeft
 import streetlight.model.external.Address
 import streetlight.web.io.ApiClient
 
@@ -43,36 +39,15 @@ class LocationEditor(
     val cityField = editField.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
     val eventsUrlField = editField.mutableTapOf({ it.eventsUrl?.value ?: "" }) { copy(eventsUrl = it.toUrl()) }
     val validityField = editField.tapOf { it.validity }
+    val isHostField = editField.mutableTapOf({ it.isHost == true }) { copy(isHost = it) }
     val websiteField = editField.mutableTapOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
 
     val imageEditor = ImageEditor(imageField, ImageTarget.Location, api)
-    val websiteMessage = MessageStore()
     val messages = MessageStore()
-
-    init {
-        websiteField.reactIn(scope) { websiteMessage.clear() }
-    }
-
-    // fun setWebsite(value: String?) {
-    //     if (value == editNow.website) return
-    //     setEdit { it.copy(website = value) }
-    //     websiteMessage.clear()
-    // }
 
     // fun setEdit(block: (LocationEdit) -> LocationEdit) {
     //     state.set { copy(edit = block(it.edit)) }
     // }
-
-    /** Fills the blanks of the edit from the location's website. */
-    fun readWebsite() {
-        val website = editNow.website?.takeIf { it.isAbsolute } ?: return
-        scope.launch {
-            websiteMessage.set("Reading the link, this will take a minute.", true)
-            val edit = api.location.parseLocation(UrlParseRequest(website)).toDataOr(websiteMessage) { return@launch }
-            state.set { copy(edit = edit.mergeLeft(editNow)) }
-            websiteMessage.deliver("Does this information look correct?")
-        }
-    }
 
     /** Whether the edit is valid, showing the reason when not. */
     fun isEditValid(): Boolean {

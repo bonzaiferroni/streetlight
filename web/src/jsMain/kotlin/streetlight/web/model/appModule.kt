@@ -92,3 +92,6 @@ fun AppContainer.getAccountEditor(edit: Account, scope: CoroutineScope) =
 
 fun AppContainer.getProfileEditor(edit: StarEdit, scope: CoroutineScope) =
     ProfileEditor(edit, scope, koin.get(), koin.get())
+
+fun AppContainer.getLocationOnboarder(editor: LocationEditor, scope: CoroutineScope) =
+    LocationOnboarder(editor, scope, koin.get(), koin.get())

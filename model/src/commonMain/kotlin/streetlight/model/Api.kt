@@ -64,12 +64,16 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             val state = stringOrNullParamOf("state")
             val limit = intParamOf("limit")
         }
+        object Match: GetEndpoint<List<Location>>(this) {
+            val name = stringParamOf("name")
+            val address = stringOrNullParamOf("address")
+        }
         object ReadTop: GetEndpoint<List<Location>>(this) {
             val count = intParamOf("count")
         }
         object ReadHosted: GetEndpoint<List<Location>>(this)
+        object ReadHostedConfigs: GetEndpoint<List<LocationConfigContent>>(this)
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this)
-        object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this)
         object QueryBounds: PostEndpoint<GeoRect, List<LocationInfo>>(this)
         object ReadConfigContent: GetByIdEndpoint<LocationId, LocationConfigContent>(this)
         object ParseEventSchema: PostEndpoint<Url, List<SelectorSchema>>(this)

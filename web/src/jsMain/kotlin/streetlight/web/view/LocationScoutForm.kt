@@ -55,7 +55,8 @@ fun ViewScope.locationFinder() = formCard("Location Finder") {
     }
 }
 
-private fun ViewScope.searchItem(
+/** A row naming a location found in a search, with its [address] and [city] when known. */
+fun ViewScope.searchItem(
     name: String?,
     address: String?,
     city: String?,

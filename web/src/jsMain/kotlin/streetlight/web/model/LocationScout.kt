@@ -99,7 +99,6 @@ class LocationScout(
         state.tapOf{ it.edit }.reactIn(scope) { edit ->
             val edit = edit ?: return@reactIn
             editor.editField.update { edit.mergeLeft(it) }
-            editor.readWebsite()
         }
     }
 

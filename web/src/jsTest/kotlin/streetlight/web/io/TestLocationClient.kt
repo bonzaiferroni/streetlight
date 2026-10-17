@@ -33,10 +33,14 @@ class TestLocationClient(
     override suspend fun readLocation(slug: Slug): Outcome<Location> = TODO()
     override suspend fun readLocationContent(slug: Slug): Outcome<LocationContent> = TODO()
     override suspend fun readLocationUpdaterContent(slug: Slug): Outcome<LocationUpdaterContent> = TODO()
-    override suspend fun parseLocation(request: ParseRequest): Outcome<LocationEdit> = TODO()
     override suspend fun readLocationsInBounds(bounds: GeoRect): Outcome<List<LocationInfo>> = TODO()
     override suspend fun searchLocations(query: String, city: String?, state: String?, limit: Int): Outcome<List<Location>> =
         Ok(locations.filter { it.name?.contains(query, ignoreCase = true) == true }.take(limit))
+    override suspend fun matchLocations(name: String, address: String?): Outcome<List<Location>> =
+        Ok(locations.filter {
+            name.isNotBlank() && it.name?.contains(name, ignoreCase = true) == true ||
+                !address.isNullOrBlank() && it.address?.contains(address, ignoreCase = true) == true
+        })
     override suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent> = TODO()
     override suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>> = TODO()
     override suspend fun updateLocationConfig(edit: LocationConfig): Outcome<Unit> = TODO()
@@ -47,4 +51,5 @@ class TestLocationClient(
     override suspend fun checkSubdomain(config: SubdomainConfig): Outcome<Boolean> = TODO()
     override suspend fun queryLocation(point: GeoPoint): Outcome<List<Location>> = TODO()
     override suspend fun readHostedLocations(): Outcome<List<Location>> = TODO()
+    override suspend fun readHostedConfigs(): Outcome<List<LocationConfigContent>> = TODO()
 }

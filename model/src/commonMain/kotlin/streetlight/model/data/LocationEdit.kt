@@ -38,6 +38,7 @@ data class LocationEdit(
     val eventsUrl: Url? = null,
     val extraLinks: List<ExtraLink>? = null,
     override val image: Image? = null,
+    val isHost: Boolean? = null,
 ): Labeled, RecordEdit, LocationEntity {
     override val recordType get() = RecordType.Location
 
@@ -110,6 +111,7 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
             extraLinks.orEmpty() + links.filter { link -> link.label !in labels }
         } ?: extraLinks,
         image = image ?: edit.image?.takeIf { it.value.isNotEmpty() },
+        isHost = isHost ?: edit.isHost,
     )
 } ?: this
 

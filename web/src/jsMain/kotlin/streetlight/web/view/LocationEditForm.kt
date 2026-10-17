@@ -1,6 +1,5 @@
 package streetlight.web.view
 
-import koala.LottieFile
 import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.LocationProperty
@@ -9,9 +8,7 @@ import koala.dom.component.*
 import koala.dom.markdown.*
 import streetlight.web.layout.BodyStyle
 import streetlight.web.dom.layout.centeredText
-import streetlight.web.dom.layout.formBullets
 import streetlight.web.dom.layout.formCard
-import streetlight.web.dom.layout.formFiller
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
@@ -19,7 +16,6 @@ import streetlight.web.dom.layout.formTextField
 
 context(model: LocationEditor)
 fun ViewScope.locationEditFormBody() = column(BodyStyle.MainColumn) {
-    locationWebsiteForm()
     locationDetailsForm()
     locationImageForm()
     locationLinksForm()
@@ -69,13 +65,8 @@ fun ViewScope.locationLinksForm() = formCard("Links") {
 }
 
 context(model: LocationEditor)
-fun ViewScope.locationWebsiteForm() = formCard("Website") {
-    formRow {
-        formSection("Read Website") {
-            textField(model.websiteField, "website")
-            formBullets("Does this location have a website? We can read it to find certain details.", "Image", "Description", "Links")
-            formSubmit("🤖 read website", onClick = model::readWebsite, model.websiteMessage)
-        }
-        formFiller(LottieFile.Ghost)
+fun ViewScope.locationHostForm() = formCard("Host") {
+    formSection {
+        checkBox(model.isHostField, "I am the owner of this location or have permission to manage their profile on Streetlight.")
     }
 }
