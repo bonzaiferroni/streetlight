@@ -13,7 +13,7 @@ import streetlight.model.data.EventFeed
 import streetlight.model.data.GeneralEventFeed
 import streetlight.model.data.Location
 import streetlight.server.daemon.agent.parseLocalDateTime
-import streetlight.server.routes.createEvent
+import streetlight.server.service.createEvent
 import kotlin.time.Clock
 
 /**

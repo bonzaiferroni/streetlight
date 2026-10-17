@@ -30,7 +30,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.OSMQuery
 import streetlight.model.external.toGeoPoint
-import streetlight.server.db.datascope.createLocation
+import streetlight.server.service.createLocation
 import streetlight.server.model.MapReferenceClient
 import streetlight.server.model.Server
 import kotlin.math.cos

@@ -87,6 +87,10 @@ private fun ViewScope.locationSearch() = formRow {
     val canSearchOSMState = nameState.combine(model.isOSMState) { name, isOSM -> name.isNotBlank() && !isOSM }
 
     formSection("Your Location") {
+        centeredText(
+            "This is for owners of a location, or those with their permission to manage its profile on Streetlight. " +
+                "Find your location to get started."
+        )
         textField(nameState, "name")
         textField(addressState, "address")
         messageBox(model.searchMessage)

@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LocationConfig(
     val locationId: LocationId,
-    val parseMode: ParseMode,
+    val parseMode: ParseMode?,
     val design: PageDesign?,
     val subdomain: Slug?,
 )

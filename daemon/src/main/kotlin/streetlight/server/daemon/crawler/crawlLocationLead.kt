@@ -28,7 +28,7 @@ import streetlight.server.daemon.agent.resolveUrl
 import streetlight.server.daemon.agent.areaOf
 import streetlight.server.daemon.agent.tryQuery
 import streetlight.server.utils.readImageUrl
-import streetlight.server.db.datascope.updateLocation
+import streetlight.server.service.updateLocation
 import streetlight.server.utils.readMetaContent
 
 /**

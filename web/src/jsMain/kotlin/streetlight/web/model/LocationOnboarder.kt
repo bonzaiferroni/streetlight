@@ -62,22 +62,24 @@ class LocationOnboarder(
         }
     }
 
-    /** Picks up the onboarding of a hosted location: its design when it has none, otherwise how its events are read. */
+    /** Picks up the onboarding of a hosted location at the first stage it has not finished. */
     fun resumeHosted(content: LocationConfigContent) {
-        if (content.config.design == null) {
-            state.set { copy(focus = content) }
-            return
-        }
-        scope.launch(::resumeHosted) {
-            focusParseMode(content, focusMessage)
+        when {
+            content.config.design == null -> state.set { copy(focus = content) }
+            content.config.parseMode == null -> scope.launch(::resumeHosted) { focusParseMode(content, focusMessage) }
+            else -> state.set { copy(focus = FocusTBD) }
         }
     }
 
     /** Starts the search for a location to onboard. */
     fun addNewLocation() = state.set { copy(focus = NullLocation) }
 
-    /** Saves the edited location and makes its config the focus. */
+    /** Saves the edited location and makes its config the focus, once the star confirms they are its host. */
     fun submitLocation() {
+        if (editor.editField.now.isHost != true) {
+            editor.messages.deliver("Only the owner of a location, or someone with their permission, can continue.")
+            return
+        }
         scope.launch(::submitLocation) {
             val location = editor.submitSuspend() ?: return@launch
             val content = api.location.readLocationConfigContent(location.locationId)

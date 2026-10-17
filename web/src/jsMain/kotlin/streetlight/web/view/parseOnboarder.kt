@@ -28,7 +28,11 @@ import streetlight.web.model.ParseModeFocus
 context(model: LocationOnboarder)
 fun ViewScope.parseOnboarder(focus: ParseModeFocus) {
     val configState = storeOf(
-        ParseConfig(focus.content.location.locationId, focus.content.location.eventsUrl, focus.content.config.parseMode)
+        ParseConfig(
+            locationId = focus.content.location.locationId,
+            eventsUrl = focus.content.location.eventsUrl,
+            parseMode = focus.content.config.parseMode ?: ParseMode.Partial,
+        )
     )
     val messages = MessageStore()
 
