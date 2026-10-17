@@ -69,25 +69,17 @@ If you decide to stick around, you can make the account permanent and more secur
 context(model: UserCreator)
 fun ViewScope.fullRegistrationForm() {
 
-    formColumn {
-        formRow {
-            usernameSection()
+    formRow {
+        usernameSection()
 
-            context(model.emailEditor) {
-                emailFormSection()
-            }
-            context(model.passwordEditor) {
-                passwordFormSection()
-            }
-
-            requirementsSection()
+        context(model.emailEditor) {
+            emailFormSection()
         }
-        formSubmit(
-            label = "Sign up",
-            onClick = { model.createAccount(AccountType.Registered) },
-            messenger = model.messages,
-            enabledTap = model.isValidField
-        )
+        context(model.passwordEditor) {
+            passwordFormSection()
+        }
+
+        requirementsSection()
     }
 }
 

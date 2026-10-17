@@ -173,6 +173,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |
 | [`Sandbox`](../../web/src/jsMain/kotlin/streetlight/web/model/Sandbox.kt) | The state of the sandbox |
+| [`Onboarder`](../../web/src/jsMain/kotlin/streetlight/web/model/Onboarder.kt) | Walks a star through an account and the config of their `OnboardType` |
 
 ### Map
 

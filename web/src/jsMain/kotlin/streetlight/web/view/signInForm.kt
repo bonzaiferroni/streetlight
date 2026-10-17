@@ -47,10 +47,6 @@ fun ViewScope.signInForm() {
                     }
                 }
             }
-
-            column(AlignItemsCenter) {
-                lottie(LottieFile.StrollingMan, MaxWidth(24))
-            }
         }
     }
 }

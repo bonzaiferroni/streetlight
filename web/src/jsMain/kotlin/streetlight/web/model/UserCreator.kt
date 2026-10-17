@@ -5,6 +5,7 @@ import kampfire.api.obfuscatePassword
 import kampfire.api.toUsername
 import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
+import kampfire.model.Labeled
 import kampfire.model.PrintLnMessenger
 import kampfire.model.SignUpRequest
 import kampfire.model.toDataOr
@@ -12,6 +13,8 @@ import koala.model.MessageStore
 import kampfire.model.mutableTapOf
 import kampfire.model.tapOf
 import kampfire.model.storeOf
+import koala.SvgFile
+import koala.SvgPack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
@@ -89,4 +92,12 @@ data class UserCreatorState(
     companion object {
         const val MINIMUM_AGE = 17
     }
+}
+
+enum class SignInPath(val svg: SvgPack, label: String? = null): Labeled {
+    Guest(SvgFile.Ghost),
+    Register(SvgFile.UserPlus),
+    LogIn(SvgFile.Login, "Log In");
+
+    override val label = label ?: name
 }

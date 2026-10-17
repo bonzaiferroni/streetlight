@@ -184,11 +184,11 @@ data class ConnectRoute(val type: OnboardType = OnboardType.LocationHost): Stree
     override fun toRelativePath() = "$basePath?$CONNECT_TYPE_PARAM=${type.name}"
 }
 
-/** The onboarding of a star as the audience [type]. */
-data class OnboardRoute(val type: OnboardType): StreetlightRoute {
+/** The onboarding of a star as the audience [onboardType]. */
+data class OnboardRoute(val onboardType: OnboardType): StreetlightRoute {
     override val screen get() = Screen.Onboard
     override val title get() = "Onboard"
-    override fun toRelativePath() = "$basePath?$CONNECT_TYPE_PARAM=${type.name}"
+    override fun toRelativePath() = "$basePath?$CONNECT_TYPE_PARAM=${onboardType.name}"
 }
 
 object ErrorRoute: StreetlightRoute {

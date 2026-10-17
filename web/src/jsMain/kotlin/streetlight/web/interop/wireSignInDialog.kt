@@ -1,5 +1,6 @@
 package streetlight.web.interop
 
+import kampfire.model.AccountType
 import kampfire.model.reactIn
 import kampfire.model.setFalse
 import kampfire.model.setTrue
@@ -10,7 +11,10 @@ import koala.dom.component.dialogCard
 import koala.dom.layout.lazyTabs
 import koala.dom.component.rawDialogContent
 import streetlight.model.data.Star
+import streetlight.web.dom.layout.formColumn
+import streetlight.web.dom.layout.formSubmit
 import streetlight.web.view.fullRegistrationForm
+import streetlight.web.model.SignInPath
 import streetlight.web.model.getUserCreator
 import streetlight.web.view.guestRegistrationForm
 import streetlight.web.model.session
@@ -29,19 +33,23 @@ fun ViewScope.wireSignInDialog() {
         rawDialogContent("Sign In") {
             context(model) {
                 lazyTabs("sign-in-tabs") { // mod = Width64
-                    tab("guest") {
-                        dialogCard {
-                            guestRegistrationForm()
-                        }
-                    }
-                    tab("register") {
-                        dialogCard {
-                            fullRegistrationForm()
-                        }
-                    }
-                    tab("sign in") {
-                        dialogCard {
-                            signInForm()
+                    SignInPath.entries.forEach {
+                        tab(it.label, it.svg) {
+                            dialogCard {
+                                when (it) {
+                                    SignInPath.Guest -> guestRegistrationForm()
+                                    SignInPath.Register -> formColumn {
+                                        fullRegistrationForm()
+                                        formSubmit(
+                                            label = "Sign up",
+                                            onClick = { model.createAccount(AccountType.Registered) },
+                                            messenger = model.messages,
+                                            enabledTap = model.isValidField
+                                        )
+                                    }
+                                    SignInPath.LogIn -> signInForm()
+                                }
+                            }
                         }
                     }
                 }
