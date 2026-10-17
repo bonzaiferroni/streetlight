@@ -78,6 +78,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadConfigContent: GetByIdEndpoint<LocationId, LocationConfigContent>(this)
         object ParseEventSchema: PostEndpoint<Url, List<SelectorSchema>>(this)
         object UpdateConfig: PostEndpoint<LocationConfig, Unit>(this)
+        object ReadGatherStatus: GetByIdEndpoint<LocationId, GatherEventStatus>(this)
+        object UpdateParseConfig: PostEndpoint<ParseConfig, Unit>(this)
         object UploadSchemas: PostEndpoint<UrlSchemas, Unit>(this)
         object UpdateSubdomain: PostEndpoint<SubdomainConfig, Unit>(this)
         object CheckSubdomain: PostEndpoint<SubdomainConfig, Boolean>(this)

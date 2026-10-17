@@ -14,7 +14,7 @@ import streetlight.web.model.api
 
 /** The design of the onboarded location: its theme and layout, held here until saved. */
 context(model: LocationOnboarder)
-fun ViewScope.locationConfigOnboarder() {
+fun ViewScope.designOnboarder() {
     val designer = DesignEditor(api, DefaultLayout.location, PageDesign(null, null))
     val messages = MessageStore()
 

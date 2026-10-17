@@ -44,6 +44,8 @@ class TestLocationClient(
     override suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent> = TODO()
     override suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>> = TODO()
     override suspend fun updateLocationConfig(edit: LocationConfig): Outcome<Unit> = TODO()
+    override suspend fun readGatherStatus(locationId: LocationId): Outcome<GatherEventStatus> = TODO()
+    override suspend fun updateParseConfig(config: ParseConfig): Outcome<Unit> = TODO()
     override suspend fun uploadSchemas(schemas: UrlSchemas): Outcome<Unit> = TODO()
     override suspend fun createLocation(location: LocationEdit): Outcome<Location> = TODO()
     override suspend fun updateLocation(location: LocationEdit): Outcome<Location> = TODO()

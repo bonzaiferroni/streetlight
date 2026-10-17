@@ -1,12 +1,17 @@
 package streetlight.web.view
 
+import kampfire.model.combine
+import kampfire.model.reactIn
+import kampfire.model.refine
 import kampfire.model.storeOf
-import koala.LottieFile
 import koala.SvgFile
 import koala.dom.ViewScope
+import kotlinx.coroutines.flow.debounce
+import kotlin.time.Duration.Companion.milliseconds
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.modifier.*
+import kotlinx.coroutines.FlowPreview
 import kotlinx.css.dvh
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.LocationEdit
@@ -16,9 +21,11 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.layout.BodyStyle
+import streetlight.web.model.FocusTBD
 import streetlight.web.model.HostedLocations
 import streetlight.web.model.LocationOnboarder
 import streetlight.web.model.NullLocation
+import streetlight.web.model.ParseModeFocus
 import streetlight.web.model.getLocationEditor
 import streetlight.web.model.getLocationOnboarder
 
@@ -41,11 +48,10 @@ fun ViewScope.locationOnboarder() {
                     locationHostForm()
                     formSubmit("Next", model::submitLocation, editor.messages, Primary)
                 }
-                is LocationConfigContent -> when (focus.config.design) {
-                    null -> locationConfigOnboarder()
-                    else -> textBlock("Hello designed location!")
-                }
-                else -> error("unknown onboarder focus: $focus")
+                is LocationConfigContent -> designOnboarder()
+                is ParseModeFocus -> parseOnboarder(focus)
+                FocusTBD -> textBlock("Hello parse mode!")
+                else -> error("unknown Onboarder focus: $focus")
             }
         }
     }
@@ -55,9 +61,13 @@ fun ViewScope.locationOnboarder() {
 context(model: LocationOnboarder)
 private fun ViewScope.hostedLocations(hosted: List<LocationConfigContent>) = formRow {
     val hostedState = storeOf(hosted)
+    val selectionState = storeOf<LocationConfigContent?>(null)
+    selectionState.reactIn(contentScope) { content -> content?.let(model::resumeHosted) }
+
     formSection("Your Locations") {
+        messageBox(model.focusMessage)
         selectorContainer {
-            selectorBlock(items = hostedState, selection = model.hostedSelectionState) { content ->
+            selectorBlock(items = hostedState, selection = selectionState) { content ->
                 searchItem(content.location.name, content.location.address, content.location.city)
             }
             button("add a new location", model::addNewLocation, Zen)
@@ -66,19 +76,27 @@ private fun ViewScope.hostedLocations(hosted: List<LocationConfigContent>) = for
 }
 
 /** The name and address of the owner's location, and the locations found for them. */
+@OptIn(FlowPreview::class)
 context(model: LocationOnboarder)
 private fun ViewScope.locationSearch() = formRow {
+    val nameState = storeOf("")
+    val addressState = storeOf("")
+    nameState.combine(addressState) { name, address -> name to address }
+        .refine { it.debounce(500.milliseconds) }
+        .reactIn(contentScope) { (name, address) -> model.searchLocations(name, address) }
+    val canSearchOSMState = nameState.combine(model.isOSMState) { name, isOSM -> name.isNotBlank() && !isOSM }
+
     formSection("Your Location") {
-        textField(model.nameState, "name")
-        textField(model.addressState, "address")
+        textField(nameState, "name")
+        textField(addressState, "address")
         messageBox(model.searchMessage)
         selectorContainer {
             selectorBlock(items = model.resultsState, selection = model.selectionState) { location ->
                 searchItem(location.name, location.address, location.city)
             }
-            flowBlock(model.canSearchOSMState) { canSearchOSM ->
+            flowBlock(canSearchOSMState) { canSearchOSM ->
                 if (canSearchOSM) {
-                    button("Not listed? Search OpenStreetMap", model::searchOSM, Zen)
+                    button("Not listed? Search OpenStreetMap", { model.searchOSM(nameState.now, addressState.now) }, Zen)
                 }
             }
         }

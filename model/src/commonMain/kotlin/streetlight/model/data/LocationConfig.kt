@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
+import kampfire.model.Labeled
 import koala.model.RouteContent
 import kotlinx.serialization.Serializable
 
@@ -24,7 +25,7 @@ data class LocationConfigContent(
 ): RouteContent
 
 /** The extent of a feed's events that is read automatically. */
-enum class ParseMode {
+enum class ParseMode: Labeled {
     /** Nothing, the page is not read. */
     None,
 
@@ -32,5 +33,7 @@ enum class ParseMode {
     Partial,
 
     /** The events, with their whole descriptions. */
-    Full,
+    Full;
+
+    override val label get() = name
 }

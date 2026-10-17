@@ -36,6 +36,8 @@ interface LocationClient {
     suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent>
     suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>>
     suspend fun updateLocationConfig(edit: LocationConfig): Outcome<Unit>
+    suspend fun readGatherStatus(locationId: LocationId): Outcome<GatherEventStatus>
+    suspend fun updateParseConfig(config: ParseConfig): Outcome<Unit>
     suspend fun uploadSchemas(schemas: UrlSchemas): Outcome<Unit>
     suspend fun createLocation(location: LocationEdit): Outcome<Location>
     suspend fun updateLocation(location: LocationEdit): Outcome<Location>
@@ -68,6 +70,8 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
     override suspend fun readLocationConfigContent(locationId: LocationId) = client.getApi(Api.Locations.ReadConfigContent, locationId)
     override suspend fun parseEventSchema(url: Url) = client.postApi(Api.Locations.ParseEventSchema, url)
     override suspend fun updateLocationConfig(edit: LocationConfig) = client.postApi(Api.Locations.UpdateConfig, edit)
+    override suspend fun readGatherStatus(locationId: LocationId) = client.getApi(Api.Locations.ReadGatherStatus, locationId)
+    override suspend fun updateParseConfig(config: ParseConfig) = client.postApi(Api.Locations.UpdateParseConfig, config)
     override suspend fun uploadSchemas(schemas: UrlSchemas) = client.postApi(Api.Locations.UploadSchemas, schemas)
     override suspend fun createLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateLocation, location)
     override suspend fun updateLocation(location: LocationEdit) = client.postApi(Api.Locations.UpdateLocation, location)
