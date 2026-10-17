@@ -30,9 +30,9 @@ fun ViewScope.offeringEditForm() = formColumn {
             textField(model.titleField, "title", maxLength = 50)
                 .flowValid(OfferingProperty.Title, model.validityField, contentScope)
             row(AlignItemsCenter) {
-                textField(model.priceField, "price", Flex1)
+                textField(model.priceField, "price", Flex1, prefix = "$")
                     .flowValid(OfferingProperty.Price, model.validityField, contentScope)
-                textField(model.platformCutField, "Streetlight cut (%)", Flex1)
+                textField(model.platformCutField, "Streetlight cut", Flex1, suffix = "%")
                     .flowValid(OfferingProperty.PlatformCut, model.validityField, contentScope)
             }
             row(AlignItemsCenter) {

@@ -64,3 +64,9 @@ fun String.toCentsOrNull(): Int? {
 
 /** These cents as text with two decimal places, as `12.50`. */
 fun Int.toCentsLabel() = "${this / 100}.${(this % 100).toString().padStart(2, '0')}"
+
+/** These basis points as a percent with no trailing zeros, as `5` or `2.5`. */
+fun Int.toPercentLabel(): String {
+    val fraction = (this % 100).toString().padStart(2, '0').trimEnd('0')
+    return if (fraction.isEmpty()) "${this / 100}" else "${this / 100}.$fraction"
+}

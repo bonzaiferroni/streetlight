@@ -262,7 +262,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Payments: ApiNode(this) {
+        object ReadMine: GetEndpoint<List<Payment>>(this)
         object Create: PostEndpoint<PaymentEdit, Payment>(this)
+    }
+
+    object Customers: ApiNode(this) {
+        object ReadMine: GetEndpoint<List<Customer>>(this)
     }
 
     object Offerings: ApiNode(this) {

@@ -24,13 +24,13 @@ class OfferingsTest: ViewTest() {
         val view = mountPanel()
 
         view.awaitText("Nothing offered yet.")
-        view.clickButton("New offering")
+        view.clickButton("New")
         view.awaitText("New Offering")
         view.typeIn("title", "Website Build")
         view.typeIn("price", "500")
         view.clickButton("Save")
 
-        view.awaitText("500.00 USD")
+        view.awaitText("Website Build")
         assertEquals("Website Build", offerings.offerings.single().title, "the offering should be created")
     }
 
@@ -55,7 +55,7 @@ class OfferingsTest: ViewTest() {
         val view = mountPanel()
 
         view.awaitText("Nothing offered yet.")
-        view.clickButton("New offering")
+        view.clickButton("New")
         view.awaitText("New Offering")
         view.typeIn("title", "Website Build")
         view.clickButton("Save")

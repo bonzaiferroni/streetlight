@@ -13,6 +13,7 @@ import streetlight.model.data.OfferingEdit
 import streetlight.model.data.OfferingTag
 import streetlight.model.data.toCentsLabel
 import streetlight.model.data.toCentsOrNull
+import streetlight.model.data.toPercentLabel
 import streetlight.web.io.ApiClient
 
 /** Edits [edit], a new offering or one of the star's, and saves it. */
@@ -23,7 +24,7 @@ class OfferingEditor(
     private val state = storeOf(OfferingEditorState(
         edit = edit,
         priceText = edit.priceCents?.toCentsLabel() ?: "",
-        platformCutText = edit.platformCut.takeIf { it > 0 }?.toCentsLabel() ?: "",
+        platformCutText = edit.platformCut.toPercentLabel(),
     ))
     val stateNow get() = state.now
 
@@ -71,7 +72,7 @@ data class OfferingEditorState(
 )
 
 /** The cut in basis points from a percent, `0` when blank, or `-1`, out of range, when it is not a number. */
-private fun String.toPlatformCut() = when {
+fun String.toPlatformCut() = when {
     isBlank() -> 0
     else -> toCentsOrNull() ?: -1
 }

@@ -20,11 +20,13 @@ This rule covers test code. It says nothing about how the crew talks to each oth
 
 ## When to Test
 
-Prototype code gets no tests. It is written to find a shape and is expected to change or go, so a test of it is busy work.
+Prototype code gets no tests. It is written to find a shape and is expected to change or go, so a test of it is busy work. The one exception is a test that clears up a real uncertainty about how the code behaves, written because no cheaper look can answer it.
 
 Code gets tests once it is stable. Until then, a test wanted for it is listed under `## Tests Wanted` in its package document, one line per test in the voice of a test name, and written when the code settles. An entry is removed in the same pass as the test is written.
 
-Testing effort goes to integration and end-to-end tests. Unit tests are chosen sparingly, for the logic described under Kinds of Test, and full coverage is not a goal.
+Tests stay sparse while code is unstable, since a test of a shape still moving is friction: it must change with the code. Testing effort goes to integration and end-to-end tests. A unit test is the exception, written only for logic the compiler cannot check, as described under Kinds of Test, and full coverage is not a goal.
+
+Tests are not run as part of the work on unstable code. They are brought in line with the code once it settles.
 
 ## Kinds of Test
 

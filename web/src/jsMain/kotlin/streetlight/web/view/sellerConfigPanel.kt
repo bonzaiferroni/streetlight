@@ -21,13 +21,13 @@ import streetlight.web.model.toaster
  */
 fun ViewScope.sellerConfigPanel() {
     val connector = SellerConnector(contentScope, api.seller, toaster)
-    val config = SellerConfig(contentScope, api.offering, toaster)
+    val config = SellerConfig(contentScope, api, toaster)
     context(connector, config) {
         flowBlock(config.focusState) { focus ->
             when (focus) {
                 null -> formRow {
                     stripeConnectForm()
-                    offeringsDash()
+                    sellerDash()
                 }
                 is OfferingEdit -> context(OfferingEditor(focus, api)) {
                     section {

@@ -87,7 +87,7 @@ A panel that lists records and edits one at a time holds a config model whose st
 ```kotlin
 flowBlock(config.focusState) { focus ->
     when (focus) {
-        null -> formRow { offeringsDash() }
+        null -> formRow { sellerDash() }
         is OfferingEdit -> context(OfferingEditor(focus, api)) { offeringEditForm() }
         is PaymentEdit -> context(PaymentEditor(focus, api)) { paymentEditForm() }
         else -> error("unknown seller focus: $focus")

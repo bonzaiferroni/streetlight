@@ -2,6 +2,7 @@ package koala.dom.component
 
 import koala.modifier.*
 import koala.page.Id
+import kotlinx.css.LinearDimension
 import kampfire.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.js.onInputFunction
@@ -21,7 +22,8 @@ import koala.component.configureTextFieldInput
 /**
  * A text input bound to [field], labeled [label] over its corner.
  *
- * With [maxLength], a count of characters used is shown. With [onEnterSubmit], Enter submits.
+ * With [maxLength], a count of characters used is shown. With [onEnterSubmit], Enter submits. [prefix] and [suffix]
+ * are shown at the start and end of the input, outside its value.
  */
 fun ViewScope.textField(
     field: MutableTap<String>,
@@ -33,6 +35,8 @@ fun ViewScope.textField(
     name: String? = null,
     size: Int = 25,
     maxLength: Int? = null,
+    prefix: String? = null,
+    suffix: String? = null,
     onEnterSubmit: (() -> Unit)? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLElement {
@@ -52,7 +56,11 @@ fun ViewScope.textField(
         configureTextFieldContainer(label, mod)
 
         element = input {
-            configureTextFieldInput(id, textMod, placeholder, size, maxLength, name, currentValue)
+            val affixMod = modify(
+                prefix?.let { Css.PaddingLeft.of(it.toAffixInset()) },
+                suffix?.let { Css.PaddingRight.of(it.toAffixInset()) },
+            )
+            configureTextFieldInput(id, modify(affixMod, textMod), placeholder, size, maxLength, name, currentValue)
 
             onInputFunction = {
                 val newValue = (it.target as HTMLInputElement).value
@@ -63,6 +71,9 @@ fun ViewScope.textField(
             }
             block?.invoke(this)
         }.asWeb()
+
+        prefix?.let { textBlock(it, modify(TextFieldAffixMod, JustifySelfStart)) }
+        suffix?.let { textBlock(it, modify(TextFieldAffixMod, JustifySelfEnd)) }
 
         maxLengthText = maxLength?.let {
             textBlock("${currentValue.length}/$it",
@@ -85,6 +96,11 @@ fun ViewScope.textField(
 
     return parent
 }
+
+private val TextFieldAffixMod = modify(AlignSelfCenter, PaddingX1, OpacityHalf, PointerEventsNone)
+
+/** The padding that clears an affix of this text beside the input's own padding. */
+private fun String.toAffixInset() = LinearDimension("calc(var(--unit) * 2 + ${length}ch)")
 
 /** True when the event is Enter without Shift, outside text composition. */
 fun KeyboardEvent.isEnterSubmit() = key == "Enter" && !shiftKey && !isComposing

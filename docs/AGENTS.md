@@ -178,7 +178,7 @@ The navigator may open a *long bounty*: a body of work mapped in a document at `
 | Pace | The agent carries on through the steps until it reaches a crossroads: a choice that is the navigator's, or a path that is not clear. It then stops and raises the question |
 | Questions | Raised at the crossroads with a recommendation, whether that comes at once or after much work |
 | Notice | The agent sends a voice message (see Voice) when it reaches a crossroads or finishes, since the navigator may be away from the terminal |
-| Compile and test | Allowed and expected, since the navigator is not compiling along the way. The agent compiles at milestones and runs the tests that cover its work, and narrows them with `--tests`. It does not check work more than the work needs |
+| Compile | Allowed and expected, since the navigator is not compiling along the way. The agent compiles at milestones. It does not run tests unless the navigator asks, and does not check work more than the work needs |
 | Report | At a crossroads or the end: what was done, what was decided along the way, and the questions |
 
 ## Scratch Points
@@ -201,7 +201,8 @@ Run only the commands the agreed plan calls for. Do not compile or run tests to 
 |---|---|
 | Editing and creating files | Allowed, particularly when discussed. Every edit is visible in the git diff |
 | Commands that read files | Allowed |
-| Build and test commands | Left to the user unless discussed or in a long bounty, then allowed |
+| Build commands | Left to the user unless discussed or in a long bounty, then allowed |
+| Test commands | Left to the user unless asked |
 | Git commands that read, such as `status`, `diff` and `log` | Allowed |
 | Git commands that change the repository or its working tree | Always left to the user |
 
