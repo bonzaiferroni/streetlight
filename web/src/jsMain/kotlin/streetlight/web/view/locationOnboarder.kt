@@ -32,7 +32,7 @@ import streetlight.web.model.getLocationOnboarder
 context(star: Star)
 fun ViewScope.locationOnboarder() {
     val editor = app.getLocationEditor(LocationEdit(), contentScope)
-    val model = app.getLocationOnboarder(editor, contentScope)
+    val model = app.getLocationOnboarder(star.username, editor, contentScope)
 
     context(model, editor) {
         flowBlock(model.focusState, modify(Magic, MinHeight(60.dvh))) { focus ->
@@ -61,13 +61,11 @@ fun ViewScope.locationOnboarder() {
 context(model: LocationOnboarder)
 private fun ViewScope.hostedLocations(hosted: List<LocationConfigContent>) = formRow {
     val hostedState = storeOf(hosted)
-    val selectionState = storeOf<LocationConfigContent?>(null)
-    selectionState.reactIn(contentScope) { content -> content?.let(model::resumeHosted) }
 
     formSection("Your Locations") {
         messageBox(model.focusMessage)
         selectorContainer {
-            selectorBlock(items = hostedState, selection = selectionState) { content ->
+            selectorBlock(items = hostedState, onSelect = model::resumeHosted) { content ->
                 searchItem(content.location.name, content.location.address, content.location.city)
             }
             button("add a new location", model::addNewLocation, Zen)
@@ -95,7 +93,7 @@ private fun ViewScope.locationSearch() = formRow {
         textField(addressState, "address")
         messageBox(model.searchMessage)
         selectorContainer {
-            selectorBlock(items = model.resultsState, selection = model.selectionState) { location ->
+            selectorBlock(items = model.resultsState, onSelect = model::selectLocation) { location ->
                 searchItem(location.name, location.address, location.city)
             }
             flowBlock(canSearchOSMState) { canSearchOSM ->

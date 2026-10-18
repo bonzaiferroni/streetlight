@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Username
 import kampfire.model.Messenger
 import koala.utility.LaunchTelemetry
 import koala.core.appExceptionHandler
@@ -93,5 +94,5 @@ fun AppContainer.getAccountEditor(edit: Account, scope: CoroutineScope) =
 fun AppContainer.getProfileEditor(edit: StarEdit, scope: CoroutineScope) =
     ProfileEditor(edit, scope, koin.get(), koin.get())
 
-fun AppContainer.getLocationOnboarder(editor: LocationEditor, scope: CoroutineScope) =
-    LocationOnboarder(editor, scope, koin.get(), koin.get())
+fun AppContainer.getLocationOnboarder(username: Username, editor: LocationEditor, scope: CoroutineScope) =
+    LocationOnboarder(username, editor, scope, koin.get(), koin.get())

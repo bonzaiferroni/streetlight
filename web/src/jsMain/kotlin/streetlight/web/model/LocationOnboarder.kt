@@ -1,19 +1,19 @@
 package streetlight.web.model
 
-import kampfire.model.mutableTapOf
-import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import koala.model.MessageStore
 import koala.utility.launch
+import kampfire.api.Username
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import streetlight.model.data.GatherEventStatus
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.ParseConfig
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.LocationId
 import streetlight.model.data.toEdit
 import streetlight.model.data.toEditOrNull
 import streetlight.web.io.ApiClient
@@ -21,6 +21,7 @@ import streetlight.web.io.OSMClient
 
 /** The onboarding of a location's owner, finding their location in Streetlight or in OpenStreetMap, then editing it. */
 class LocationOnboarder(
+    private val username: Username,
     val editor: LocationEditor,
     private val scope: CoroutineScope,
     private val api: ApiClient,
@@ -31,20 +32,16 @@ class LocationOnboarder(
     val searchMessage = MessageStore()
     val focusMessage = MessageStore()
     private var searchJob: Job? = null
+    private var hosts: Map<LocationId, Username> = emptyMap()
 
     val resultsState = state.tapOf { it.results }
     val isOSMState = state.tapOf { it.isOSM }
     val focusState = state.tapOf { it.focus }
-    val selectionState = state.mutableTapOf({ it.focus as? LocationEdit }) { copy(focus = it) }
 
     init {
         scope.launch("read hosted configs") {
             val hosted = api.location.readHostedConfigs().toDataOrNull(searchMessage).orEmpty()
             state.set { copy(focus = if (hosted.isEmpty()) NullLocation else HostedLocations(hosted)) }
-        }
-
-        focusState.reactIn(scope) { focus ->
-            if (focus is LocationEdit) editor.editField.set(focus)
         }
     }
 
@@ -58,17 +55,32 @@ class LocationOnboarder(
                 else -> api.location.matchLocations(name, address.takeIf { it.isNotBlank() })
                     .toDataOr(searchMessage) { return@launch }
             }
+            hosts = matches.mapNotNull { match -> match.host?.let { match.locationId to it } }.toMap()
             state.set { copy(results = matches.map { it.toEdit() }, isOSM = false) }
         }
     }
 
     /** Picks up the onboarding of a hosted location at the first stage it has not finished. */
-    fun resumeHosted(content: LocationConfigContent) {
+    fun resumeHosted(content: LocationConfigContent?) {
+        content ?: return
         when {
             content.config.design == null -> state.set { copy(focus = content) }
             content.config.parseMode == null -> scope.launch(::resumeHosted) { focusParseMode(content, focusMessage) }
             else -> state.set { copy(focus = FocusTBD) }
         }
+    }
+
+    /** Starts the edit of [location], unless another star already hosts it. */
+    fun selectLocation(location: LocationEdit?) {
+        location ?: return
+        val host = location.locationId?.let { hosts[it] }
+        if (host != null && host != username) {
+            searchMessage.deliver("${location.name ?: "This location"} already has a host on Streetlight.")
+            return
+        }
+        searchMessage.clear()
+        editor.editField.set(location)
+        state.set { copy(focus = location) }
     }
 
     /** Starts the search for a location to onboard. */
@@ -130,6 +142,7 @@ class LocationOnboarder(
             val places = osm.readLocations(query).toDataOr(searchMessage) { return@launch }
                 .mapNotNull { it.toEditOrNull() }
             if (places.isEmpty()) searchMessage.deliver("No locations found.") else searchMessage.clear()
+            hosts = emptyMap()
             state.set { copy(results = places, isOSM = true) }
         }
     }

@@ -3,6 +3,7 @@ package koala.dom.layout
 import koala.modifier.*
 import kampfire.model.MutableTap
 import kampfire.model.Tap
+import kampfire.model.storeOf
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import web.html.HTMLDivElement
@@ -70,6 +71,25 @@ fun <Item> ViewScope.selectorBlock(
 
     return element
 }
+
+/**
+ * A column of [items], each built by [block], where a click selects an item and a second click clears it, handing
+ * the selection to [onSelect], `null` once cleared and at the start.
+ */
+fun <Item> ViewScope.selectorBlock(
+    items: Tap<List<Item>>,
+    onSelect: (Item?) -> Unit,
+    mod: Modifier? = null,
+    config: (DIV.() -> Unit)? = null,
+    block: ViewScope.(Item) -> HTMLElement
+): HTMLDivElement {
+    val selection = storeOf<Item?>(null)
+    contentScope.launch {
+        selection.flow.collect { onSelect(it) }
+    }
+    return selectorBlock(items, selection, mod, config, block)
+}
+
 /** The scrolling container of a [selectorBlock], holding the block and any content that follows its items. */
 fun AppendScope.selectorContainer(
     mod: Modifier? = null,
