@@ -30,7 +30,7 @@ fun ViewScope.guestRegistrationForm() {
                     navigation { +"→ Learn More" }
                 }
             }
-            card(PrimaryCardBg) {
+            card(modify(PrimaryCardBg, Outline, MoonShadow)) {
                 filigree {
                     textBlock("How it works", modify(OpacityHigh, Italic))
                 }

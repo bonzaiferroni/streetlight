@@ -7,6 +7,7 @@ import kampfire.model.toUrl
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.markdown.markdown
+import koala.markdown.lazyMarkdown
 import koala.markdown.toParsedMarkdown
 import koala.model.MessageStore
 import koala.modifier.*
@@ -89,15 +90,16 @@ private val GatherEventStatus.Blocked.reason get() = when {
     else -> "Our crawler read your events page, but couldn't gather events from it."
 }
 
-val parseIntro by lazy { """
+//language="MD"
+val parseIntro by lazyMarkdown("""
 You can share the **web address** of your calendar or events page. 
 Streetlight users can click the link to view the events on your page. 
 
 We can also read the page periodically and add the events to Streetlight. This makes them visible on our map.
-""".toParsedMarkdown()
-}
+""")
 
-val parseModeInfo by lazy { """
+//language="MD"
+val parseModeInfo by lazyMarkdown("""
 You can choose how much information we automatically gather.
 
 | | |
@@ -105,9 +107,10 @@ You can choose how much information we automatically gather.
 | **None** | Your events page is not read. |
 | **Partial** | Your events are gathered with a short description that links back to your page. |
 | **Full** | Your events are gathered with all description content and a link to your page. |
-""".toParsedMarkdown() }
+""")
 
-val parseOperationInfo by lazy { """
+//language="MD"
+val parseOperationInfo by lazyMarkdown("""
 We send a crawler to read your content once a day. It identifies itself as `Streetlight/1.0` and follows any directives in **robots.txt**. It typically makes one request per page. We look for event information declared within json or html. 
 
 We gather the following information declared as meta information or within the body:
@@ -121,4 +124,4 @@ We gather the following information declared as meta information or within the b
 * Tickets link
 * Event page link
 
-""".toParsedMarkdown() }
+""")

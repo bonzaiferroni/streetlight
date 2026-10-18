@@ -47,14 +47,14 @@ class LocationOnboarder(
         }
     }
 
-    /** Looks for the location named [name] at [address] in Streetlight, in place of any search still running. */
-    fun searchLocations(name: String, address: String) {
+    /** Looks for the location named [name] at [address] in [city] in Streetlight, in place of any search still running. */
+    fun searchLocations(name: String, address: String, city: String) {
         searchJob?.cancel()
         searchMessage.clear()
         searchJob = scope.launch(::searchLocations) {
             val matches = when {
                 name.isBlank() && address.isBlank() -> emptyList()
-                else -> api.location.matchLocations(name, address.takeIf { it.isNotBlank() })
+                else -> api.location.matchLocations(name, address.takeIf { it.isNotBlank() }, city.takeIf { it.isNotBlank() })
                     .toDataOr(searchMessage) { return@launch }
             }
             hosts = matches.mapNotNull { match -> match.host?.let { match.locationId to it } }.toMap()
@@ -133,12 +133,12 @@ class LocationOnboarder(
         }
     }
 
-    /** Searches OpenStreetMap for [name] at [address], in place of any search still running. */
-    fun searchOSM(name: String, address: String) {
+    /** Searches OpenStreetMap for [name] at [address] in [city], in place of any search still running. */
+    fun searchOSM(name: String, address: String, city: String) {
         searchJob?.cancel()
         searchMessage.deliverSending("Searching OpenStreetMap...")
         searchJob = scope.launch(::searchOSM) {
-            val query = listOf(name, address).filter { it.isNotBlank() }.joinToString(", ")
+            val query = listOf(name, address, city).filter { it.isNotBlank() }.joinToString(", ")
             val places = osm.readLocations(query).toDataOr(searchMessage) { return@launch }
                 .mapNotNull { it.toEditOrNull() }
             if (places.isEmpty()) searchMessage.deliver("No locations found.") else searchMessage.clear()

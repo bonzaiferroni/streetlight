@@ -21,6 +21,8 @@ fun Markdown.toBlocks() = markdownBlocksOf(this)
 
 fun String.toParsedMarkdown() = toMarkdown().toBlocks()
 
+fun lazyMarkdown(content: String) = lazy { content.toParsedMarkdown() }
+
 /** Parses markdown into blocks, line by line. A line that opens no other block is a paragraph. */
 class MarkdownParser {
 

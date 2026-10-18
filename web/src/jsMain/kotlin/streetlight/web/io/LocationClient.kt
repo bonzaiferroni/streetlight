@@ -32,7 +32,7 @@ interface LocationClient {
     suspend fun readLocationUpdaterContent(slug: Slug): Outcome<LocationUpdaterContent>
     suspend fun readLocationsInBounds(bounds: GeoRect): Outcome<List<LocationInfo>>
     suspend fun searchLocations(query: String, city: String? = null, state: String? = null, limit: Int = 10): Outcome<List<Location>>
-    suspend fun matchLocations(name: String, address: String?): Outcome<List<Location>>
+    suspend fun matchLocations(name: String, address: String?, city: String?): Outcome<List<Location>>
     suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent>
     suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>>
     suspend fun updateLocationConfig(edit: LocationConfig): Outcome<Unit>
@@ -62,10 +62,11 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
             writeParam(it.state, state)
             writeParam(it.limit, limit)
         }
-    override suspend fun matchLocations(name: String, address: String?) =
+    override suspend fun matchLocations(name: String, address: String?, city: String?) =
         client.getApi(Api.Locations.Match) {
             writeParam(it.name, name)
             writeParam(it.address, address)
+            writeParam(it.city, city)
         }
     override suspend fun readLocationConfigContent(locationId: LocationId) = client.getApi(Api.Locations.ReadConfigContent, locationId)
     override suspend fun parseEventSchema(url: Url) = client.postApi(Api.Locations.ParseEventSchema, url)

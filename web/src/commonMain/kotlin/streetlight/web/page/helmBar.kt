@@ -13,13 +13,13 @@ import streetlight.web.component.starBadge
  * beside the content.
  */
 fun FlowContent.helmBar() {
-    val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, Outline)
+    val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, CardStaticBg, WhiteFg)
     siteHelmPopover()
     starHelmPopover()
     row(HelmBar.StickyBarId, Padding(1)) {
         div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
-            button(SvgFile.Helm, modify(HelmBar.IconMod, OpacityHigh)) {
+            button(SvgFile.Helm, modify(HelmBar.IconMod)) {
                 setPopoverTarget(SiteHelm.popoverId)
             }
         }
@@ -39,7 +39,7 @@ fun FlowContent.helmBar() {
 object HelmBar {
     val StickyBarId = Id("helm-bar")
     val CardClass = Class("helm-card")
-    val IconMod = modify(Height(6), Aspect1, DisplayFlex)
+    val IconMod = modify(Height(6), Aspect1, DisplayFlex, MoonDropShadow)
     val SiteHelmButton = Id("site-helm-button")
     val StarHelmButton = Id("star-helm-button")
 }

@@ -36,10 +36,11 @@ class TestLocationClient(
     override suspend fun readLocationsInBounds(bounds: GeoRect): Outcome<List<LocationInfo>> = TODO()
     override suspend fun searchLocations(query: String, city: String?, state: String?, limit: Int): Outcome<List<Location>> =
         Ok(locations.filter { it.name?.contains(query, ignoreCase = true) == true }.take(limit))
-    override suspend fun matchLocations(name: String, address: String?): Outcome<List<Location>> =
+    override suspend fun matchLocations(name: String, address: String?, city: String?): Outcome<List<Location>> =
         Ok(locations.filter {
-            name.isNotBlank() && it.name?.contains(name, ignoreCase = true) == true ||
-                !address.isNullOrBlank() && it.address?.contains(address, ignoreCase = true) == true
+            (name.isNotBlank() && it.name?.contains(name, ignoreCase = true) == true ||
+                !address.isNullOrBlank() && it.address?.contains(address, ignoreCase = true) == true) &&
+                (city.isNullOrBlank() || it.city?.contains(city, ignoreCase = true) == true)
         })
     override suspend fun readLocationConfigContent(locationId: LocationId): Outcome<LocationConfigContent> = TODO()
     override suspend fun parseEventSchema(url: Url): Outcome<List<SelectorSchema>> = TODO()

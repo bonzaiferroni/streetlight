@@ -75,7 +75,11 @@ val InkBg = Class("ink-bg")
 val ZenBg = Class("zen-card-bg")
 val CardBg = Class("card-bg")
 val VoidBg = Class("void-bg")
+/** The night card background, in both themes. */
+val CardStaticBg = Class("card-static-bg")
 val HeavyCardBg = Class("heavy-card-bg")
+/** Children on a zen background, divided by 2px gaps. */
+val ZenGrid = Class("zen-grid")
 val BackgroundImage = Class("background-image")
 val HoverBg = Class("hover-bg")
 val BlurBackdrop = Class("blur-backdrop")
@@ -142,7 +146,7 @@ $BorderBottom2Px { border-bottom: 2px solid color-mix(in srgb, currentColor 25%,
 $AccentFg        { color:            var(--accent-fg); }
 $PrimaryFg       { color:            var(--primary-fg); }
 $PrimaryLightFg  { color:            var(--primary-light-fg); }
-$WhiteFg         { color:            var(--white-fg); }
+$WhiteFg         { color:            white; }
 $SystemFg        { color:            var(--system-fg); }
 $ErrorFg         { color:            var(--error-fg); }
 $CautionFg       { color:            var(--caution-fg); }
@@ -184,7 +188,11 @@ $InkBg         { background-color: var(--ink-fg); }
 $ZenBg         { background:       var(--zen-bg); }
 $CardBg        { background:       var(--card-bg); }
 $VoidBg        { background:       var(--void-bg); }
+$CardStaticBg  { background:       rgba(var(--black), .4); }
 $HeavyCardBg   { background:       rgba(var(--paper), .8); }
+
+$ZenGrid       { gap: 2px; }
+$ZenGrid > *   { background: var(--zen-bg); }
 
 $BlurBackdrop {
     backdrop-filter: var(--strong-blur);

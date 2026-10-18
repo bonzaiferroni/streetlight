@@ -172,14 +172,14 @@ The navigator may open a *fast bounty*: a bounty given the green light to comple
 
 The navigator may open a *long bounty*: a body of work mapped in a document at `logs/bounty/<bounty-name>.md`, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
 
-| Part | Long bounty |
-|---|---|
-| Map | The document holds the shape, the steps, the decisions and the open questions. The agent records each step's progress and each decision in it as the work goes |
-| Pace | The agent carries on through the steps until it reaches a crossroads: a choice that is the navigator's, or a path that is not clear. It then stops and raises the question |
-| Questions | Raised at the crossroads with a recommendation, whether that comes at once or after much work |
-| Notice | The agent sends a voice message (see Voice) when it reaches a crossroads or finishes, since the navigator may be away from the terminal |
+| Part | Long bounty                                                                                                                                                                                             |
+|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Map | The document holds the shape, the steps, the decisions and the open questions. The agent records each step's progress and each decision in it as the work goes                                          |
+| Pace | The agent carries on through the steps until it reaches a crossroads: a choice that is the navigator's, or a path that is not clear. It then stops and raises the question                              |
+| Questions | Ask questions when the path is unclear, each with a recommendation, so the work then runs on a full plan; a crossroads found later is raised when it comes |
+| Notice | The agent sends a voice message (see Voice) when it reaches a crossroads or finishes, since the navigator may be away from the terminal                                                                 |
 | Compile | Allowed and expected, since the navigator is not compiling along the way. The agent compiles at milestones. It does not run tests unless the navigator asks, and does not check work more than the work needs |
-| Report | At a crossroads or the end: what was done, what was decided along the way, and the questions |
+| Report | At a crossroads or the end: what was done, what was decided along the way, and the questions                                                                                                            |
 
 ## Scratch Points
 

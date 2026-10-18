@@ -16,8 +16,6 @@ $Class {
     align-items: center;
     align-self: start;
     min-width: 0;
-    /* the pill's travel */
-    padding-right: 1rem;
 
     border-radius: 2rem;
 
@@ -56,6 +54,8 @@ $Pill {
 $Ghost {
     visibility: hidden;
     pointer-events: none;
+    /* the pill's travel, inside the switch's content so flex sizing counts it */
+    margin-right: 1rem;
 
     padding: var(--btn-padding);
     font-size: var(--btn-font-size);

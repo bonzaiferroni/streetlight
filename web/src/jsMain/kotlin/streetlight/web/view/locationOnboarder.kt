@@ -11,12 +11,15 @@ import kotlinx.coroutines.flow.debounce
 import kotlin.time.Duration.Companion.milliseconds
 import koala.dom.component.*
 import koala.dom.layout.*
+import koala.markdown.lazyMarkdown
+import koala.markdown.markdown
 import koala.modifier.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.css.dvh
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Star
+import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
@@ -130,18 +133,19 @@ context(model: LocationOnboarder)
 private fun ViewScope.locationSearch() = formRow {
     val nameState = storeOf("")
     val addressState = storeOf("")
+    val cityState = storeOf("")
     nameState.combine(addressState) { name, address -> name to address }
+        .combine(cityState) { (name, address), city -> Triple(name, address, city) }
         .refine { it.debounce(500.milliseconds) }
-        .reactIn(contentScope) { (name, address) -> model.searchLocations(name, address) }
+        .reactIn(contentScope) { (name, address, city) -> model.searchLocations(name, address, city) }
     val canSearchOSMState = nameState.combine(model.isOSMState) { name, isOSM -> name.isNotBlank() && !isOSM }
 
-    formSection("Your Location") {
-        centeredText(
-            "This is for owners of a location, or those with their permission to manage its profile on Streetlight. " +
-                "Find your location to get started."
-        )
+    formSection("Location Search") {
         textField(nameState, "name")
-        textField(addressState, "address")
+        row {
+            textField(addressState, "address", Flex2)
+            textField(cityState, "city", Flex1)
+        }
         messageBox(model.searchMessage)
         selectorContainer {
             selectorBlock(items = model.resultsState, onSelect = model::selectLocation) { location ->
@@ -149,9 +153,26 @@ private fun ViewScope.locationSearch() = formRow {
             }
             flowBlock(canSearchOSMState) { canSearchOSM ->
                 if (canSearchOSM) {
-                    button("Not listed? Search OpenStreetMap", { model.searchOSM(nameState.now, addressState.now) }, Zen)
+                    button(
+                        "Not listed? Search OpenStreetMap",
+                        { model.searchOSM(nameState.now, addressState.now, cityState.now) },
+                        modify(Zen, AlignSelfCenter)
+                    )
                 }
             }
         }
     }
+
+    formSection("How it works") {
+        markdown(locationSearchIntro)
+    }
 }
+
+// language="MD"
+val locationSearchIntro by lazyMarkdown("""
+This tool helps you get started with a location you own or have permission to manage. [Click here](${LocationScoutRoute(null).toRelativePath()}) share a location that you are not affiliated with. 
+
+* Start typing in any of the fields to search our location database. 
+* If you don't see your location, click the **Search OpenStreetMap** button. 
+* This tool helps us pinpoint the geolocation so we can add it to the map.
+""")

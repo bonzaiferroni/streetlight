@@ -67,6 +67,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Match: GetEndpoint<List<Location>>(this) {
             val name = stringParamOf("name")
             val address = stringOrNullParamOf("address")
+            val city = stringOrNullParamOf("city")
         }
         object ReadTop: GetEndpoint<List<Location>>(this) {
             val count = intParamOf("count")

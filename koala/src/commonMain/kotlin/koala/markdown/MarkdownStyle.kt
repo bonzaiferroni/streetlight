@@ -44,7 +44,7 @@ $FloatLeft {
 }
 
 $Block > * + * {
-    margin-top: var(--unit-2);
+    margin-top: var(--unit-1);
 }
 
 /* after the block spacing, so a heading's wider margin wins */

@@ -60,7 +60,7 @@ fun ViewScope.formRow(
 fun ViewScope.formHeading(
     text: String
 ) = filigree(ruleMod = MaxWidth(32)) {
-    heading4(text, modify(SystemFg, TextUppercase, TextShadow))
+    heading4(text, modify(SystemFg, TextUppercase))
 }
 
 fun ViewScope.formBullets(
