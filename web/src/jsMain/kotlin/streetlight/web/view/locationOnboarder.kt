@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import kampfire.model.Labeled
 import kampfire.model.combine
 import kampfire.model.reactIn
 import kampfire.model.refine
@@ -21,13 +22,16 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.layout.BodyStyle
-import streetlight.web.model.FocusTBD
+import streetlight.web.model.FinishedStage
 import streetlight.web.model.HostedLocations
 import streetlight.web.model.LocationOnboarder
 import streetlight.web.model.NullLocation
 import streetlight.web.model.ParseModeFocus
 import streetlight.web.model.getLocationEditor
 import streetlight.web.model.getLocationOnboarder
+import streetlight.web.model.portal
+import streetlight.web.model.route
+import streetlight.model.ui.StarDashRoute
 
 context(star: Star)
 fun ViewScope.locationOnboarder() {
@@ -37,23 +41,68 @@ fun ViewScope.locationOnboarder() {
     context(model, editor) {
         flowBlock(model.focusState, modify(Magic, MinHeight(60.dvh))) { focus ->
             when (focus) {
-                null -> column(modify(AlignItemsCenter, JustifyContentCenter)) {
-                    centeredText("Looking for hosted locations...", Italic)
-                    icon(SvgFile.Book.animated, Height(10))
+                null -> onboardStage(0) {
+                    column(modify(AlignItemsCenter, JustifyContentCenter)) {
+                        centeredText("Looking for hosted locations...", Italic)
+                        icon(SvgFile.Book.animated, Height(10))
+                    }
                 }
-                is HostedLocations -> hostedLocations(focus.locations)
-                NullLocation -> locationSearch()
-                is LocationEdit -> column(BodyStyle.MainColumn) {
-                    locationEditFormBody()
-                    locationHostForm()
-                    formSubmit("Next", model::submitLocation, editor.messages, Primary)
+                is HostedLocations -> onboardStage(0) {
+                    hostedLocations(focus.locations)
                 }
-                is LocationConfigContent -> designOnboarder()
-                is ParseModeFocus -> parseOnboarder(focus)
-                FocusTBD -> textBlock("Hello parse mode!")
+                NullLocation -> onboardStage(0) {
+                    locationSearch()
+                }
+                is LocationEdit -> onboardStage(0) {
+                    column(BodyStyle.MainColumn) {
+                        locationEditFormBody()
+                        locationHostForm()
+                        formSubmit("Next", model::submitLocation, editor.messages, Primary)
+                    }
+                }
+                is LocationConfigContent -> onboardStage(1) {
+                    designOnboarder()
+                }
+                is ParseModeFocus -> onboardStage(2) {
+                    parseOnboarder(focus)
+                }
+                is FinishedStage -> onboardStage(3) {
+                    finishedStage(focus)
+                }
                 else -> error("unknown Onboarder focus: $focus")
             }
         }
+    }
+}
+
+fun ViewScope.onboardStage(stage: Int, content: ViewScope.() -> Unit) {
+    column {
+        row(modify(Gap(2), Padding(2), JustifyContentCenter, FlexWrap, TextUppercase, TextSmall)) {
+            LocationOnboardStage.entries.forEach {
+                val mod = when {
+                    stage == it.ordinal -> PrimaryFg
+                    stage > it.ordinal -> modify(OpacityHalf, Strikethrough)
+                    else -> OpacityHigh
+                }
+                textBlock("${it.ordinal + 1}. ${it.label}", mod)
+            }
+        }
+        content()
+    }
+}
+
+private enum class LocationOnboardStage(override val label: String): Labeled {
+    Create("Create a location"),
+    Design("Design your page"),
+    Connect("Share your events");
+}
+
+/** The end of the onboarding of the [focus] location, leading to its page or the dashboard. */
+private fun ViewScope.finishedStage(focus: FinishedStage) = formRow {
+    formSection("All Set") {
+        centeredText("${focus.location.name ?: "Your location"} is ready on Streetlight.")
+        button("view location", { portal.go(focus.location.route) }, Primary)
+        button("go to dashboard", { portal.go(StarDashRoute()) }, Zen)
     }
 }
 

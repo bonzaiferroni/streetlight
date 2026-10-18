@@ -17,7 +17,7 @@ import streetlight.web.model.session
 
 /** The onboarding of a star as the audience the [route] names. */
 context(route: OnboardRoute)
-fun ViewScope.viewOnboard() = configBody("start:", route.onboardType.label, "viewOnboard.kt") {
+fun ViewScope.viewOnboard() = configBody("hello: ", route.onboardType.label, "viewOnboard.kt") {
     // app.getUserCreator(contentScope)
     // val model = Onboarder(contentScope)
     flowBlock(session.starState) { star ->
@@ -26,7 +26,7 @@ fun ViewScope.viewOnboard() = configBody("start:", route.onboardType.label, "vie
             else -> {
                 context(star) {
                     when (route.onboardType) {
-                        OnboardType.LocationHost -> locationOnboarder()
+                        OnboardType.BusinessOwner -> locationOnboarder()
                         OnboardType.Performer, OnboardType.Developer, OnboardType.EventHost -> {
                             textBlock("hello Onboarder!")
                         }

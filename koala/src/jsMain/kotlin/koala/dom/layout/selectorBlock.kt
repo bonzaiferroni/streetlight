@@ -73,19 +73,19 @@ fun <Item> ViewScope.selectorBlock(
 }
 
 /**
- * A column of [items], each built by [block], where a click selects an item and a second click clears it, handing
- * the selection to [onSelect], `null` once cleared and at the start.
+ * A column of [items], each built by [block], where a click selects an item, handing it to [onSelect], and a second
+ * click clears it.
  */
 fun <Item> ViewScope.selectorBlock(
     items: Tap<List<Item>>,
-    onSelect: (Item?) -> Unit,
+    onSelect: (Item) -> Unit,
     mod: Modifier? = null,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> HTMLElement
 ): HTMLDivElement {
     val selection = storeOf<Item?>(null)
     contentScope.launch {
-        selection.flow.collect { onSelect(it) }
+        selection.flow.collect { it?.let(onSelect) }
     }
     return selectorBlock(items, selection, mod, config, block)
 }

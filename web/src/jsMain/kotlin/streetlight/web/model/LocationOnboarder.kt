@@ -9,9 +9,11 @@ import koala.utility.launch
 import kampfire.api.Username
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import streetlight.model.data.PageDesign
 import streetlight.model.data.GatherEventStatus
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.ParseConfig
+import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.toEdit
@@ -61,18 +63,16 @@ class LocationOnboarder(
     }
 
     /** Picks up the onboarding of a hosted location at the first stage it has not finished. */
-    fun resumeHosted(content: LocationConfigContent?) {
-        content ?: return
+    fun resumeHosted(content: LocationConfigContent) {
         when {
             content.config.design == null -> state.set { copy(focus = content) }
             content.config.parseMode == null -> scope.launch(::resumeHosted) { focusParseMode(content, focusMessage) }
-            else -> state.set { copy(focus = FocusTBD) }
+            else -> state.set { copy(focus = FinishedStage(content.location)) }
         }
     }
 
     /** Starts the edit of [location], unless another star already hosts it. */
-    fun selectLocation(location: LocationEdit?) {
-        location ?: return
+    fun selectLocation(location: LocationEdit) {
         val host = location.locationId?.let { hosts[it] }
         if (host != null && host != username) {
             searchMessage.deliver("${location.name ?: "This location"} already has a host on Streetlight.")
@@ -104,7 +104,7 @@ class LocationOnboarder(
     fun submitDesign(designer: DesignEditor, messages: MessageStore) {
         val content = stateNow.focus as? LocationConfigContent ?: return
         scope.launch(::submitDesign) {
-            val design = designer.build(messages)
+            val design = designer.build(messages) ?: PageDesign(null, null)
             messages.deliverSending()
             api.location.updateLocationConfig(content.config.copy(design = design)).toDataOr(messages) { return@launch }
             val updated = api.location.readLocationConfigContent(content.location.locationId)
@@ -123,13 +123,13 @@ class LocationOnboarder(
     fun submitParseConfig(config: ParseConfig, messages: MessageStore) {
         val content = (stateNow.focus as? ParseModeFocus)?.content ?: return
         if (config.eventsUrl == content.location.eventsUrl && config.parseMode == content.config.parseMode) {
-            state.set { copy(focus = FocusTBD) }
+            state.set { copy(focus = FinishedStage(content.location)) }
             return
         }
         scope.launch(::submitParseConfig) {
             messages.deliverSending()
             api.location.updateParseConfig(config).toDataOr(messages) { return@launch }
-            state.set { copy(focus = FocusTBD) }
+            state.set { copy(focus = FinishedStage(content.location)) }
         }
     }
 
@@ -166,5 +166,5 @@ data class ParseModeFocus(
     val status: GatherEventStatus,
 )
 
-/** The focus that follows the parse mode, still to be decided. */
-object FocusTBD
+/** The focus once the onboarding of [location] is finished. */
+data class FinishedStage(val location: Location)

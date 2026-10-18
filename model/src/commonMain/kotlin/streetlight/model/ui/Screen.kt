@@ -47,7 +47,7 @@ enum class Screen(
     Feedback(StaticParse { FrontDeskRoute }),
     SiteMonitor(StaticParse { SiteMonitorRoute }),
     Contribute(StaticParse { ContributeRoute }),
-    Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.LocationHost) }, null, true),
+    Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.BusinessOwner) }, null, true),
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
 
     // star
@@ -175,7 +175,7 @@ data class HomeRoute(override val feed: FeedType? = null): FeedRoute {
 }
 
 /** The connect page, pitching Streetlight to the audience [type]. */
-data class ConnectRoute(val type: OnboardType = OnboardType.LocationHost): StreetlightRoute {
+data class ConnectRoute(val type: OnboardType = OnboardType.BusinessOwner): StreetlightRoute {
     override val screen get() = Screen.Connect
     override val title get() = "Connect"
 

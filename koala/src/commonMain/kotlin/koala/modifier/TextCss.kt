@@ -3,6 +3,7 @@ package koala.modifier
 // Font
 val Bold = Class("bold")
 val Italic = Class("italic")
+val Strikethrough = Class("strikethrough")
 val TextSmall = Class("text-small")
 val TextLarge = Class("text-large")
 
@@ -33,6 +34,7 @@ val TextCss get() = """
 /* Font */
 $Bold      { font-weight: 600; }
 $Italic    { font-style:  italic; }
+$Strikethrough { text-decoration-line: line-through; }
 $TextSmall { font-size:   var(--text-small) !important; }
 $TextLarge { font-size:   var(--text-large) !important; }
 

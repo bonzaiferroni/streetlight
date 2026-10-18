@@ -40,7 +40,7 @@ fun FlowContent.connectPicker(mod: Modifier? = null) {
 
 /** The icon of this connect type. */
 val OnboardType.svg: SvgPack get() = when (this) {
-    OnboardType.LocationHost -> SvgFile.BuildingStore
+    OnboardType.BusinessOwner -> SvgFile.BuildingStore
     OnboardType.Performer -> SvgFile.AcousticGuitar
     OnboardType.Developer -> SvgFile.Code
     OnboardType.EventHost -> SvgFile.Speakerphone
