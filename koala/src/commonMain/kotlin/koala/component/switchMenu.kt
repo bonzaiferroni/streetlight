@@ -3,15 +3,15 @@ package koala.component
 import koala.modifier.*
 import kotlinx.css.LinearDimension
 
-object OptionSwitchStyle {
-    val Class = Class("option-switch")
-    val Option = Class("option-switch__option")
-    val Label = Class("option-switch__label")
+object SwitchMenuStyle {
+    val Class = Class("switch-menu")
+    val Option = Class("switch-menu__option")
+    val Label = Class("switch-menu__label")
     val OptionWidth = Property<LinearDimension>("option-width", true)
 }
 
 // language="CSS"
-val OptionSwitchCss get() = with(OptionSwitchStyle) { """
+val SwitchMenuCss get() = with(SwitchMenuStyle) { """
 /* options on a row share its width, each at least as wide as the widest option */
 $Class {
     display: grid;
@@ -27,7 +27,8 @@ $Option {
     padding: var(--btn-padding);
     border: none;
     background: none;
-    color: inherit;
+    color: rgb(255 255 255 / .9);
+    text-shadow: var(--btn-text-shadow);
     font-size: var(--btn-font-size);
     font-weight: var(--btn-font-weight);
     line-height: 1rem;
@@ -53,7 +54,6 @@ $Option {
 
     &[aria-checked="true"] {
         color: white;
-        text-shadow: var(--btn-text-shadow);
         cursor: default;
 
         /* scaled in as ScaleIn does */
@@ -68,5 +68,11 @@ $Option {
         outline: 2px solid color-mix(in srgb, var(--primary-button) 70%, white);
         outline-offset: 2px;
     }
+}
+
+/* the day light matches the day button: darker, without the glow */
+$DayTheme $Option::before {
+    background: var(--primary-button-day);
+    box-shadow: var(--btn-outline);
 }
 """ }

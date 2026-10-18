@@ -35,7 +35,7 @@ fun DIV.configureMarkdown(
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
-    addModifiers(modify(MarkdownStyle.Container, Prose), mod)
+    addModifiers(modify(MarkdownStyle.Container), mod)
     block()
     renderMarkdownBlocks(blocks)
 }

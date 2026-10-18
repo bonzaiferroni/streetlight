@@ -84,7 +84,7 @@ The setting is restored on load through the app's `HeadScriptConfig`, described 
 | [`searchField`](../../koala/src/commonMain/kotlin/koala/component/searchField.kt) | A search input in a pill with a search icon |
 | [`textField`](../../koala/src/commonMain/kotlin/koala/component/textField.kt) | A text input labeled over its corner |
 | [`SwitchStyle`](../../koala/src/commonMain/kotlin/koala/component/switch.kt) | The stylesheet of the `switch` in `koala.dom.component` |
-| [`OptionSwitchStyle`](../../koala/src/commonMain/kotlin/koala/component/optionSwitch.kt) | The stylesheet of the `optionSwitch` in `koala.dom.component` |
+| [`SwitchMenuStyle`](../../koala/src/commonMain/kotlin/koala/component/switchMenu.kt) | The stylesheet of the `switchMenu` in `koala.dom.component` |
 | [`FilePickerKey`](../../koala/src/commonMain/kotlin/koala/component/filePicker.kt) | The stylesheet of the `filePicker` in `koala.dom.component` |
 | [`GlowControlStyle`](../../koala/src/commonMain/kotlin/koala/component/GlowControlStyle.kt) | The stylesheet of the `glowField` in `koala.dom.component` |
 

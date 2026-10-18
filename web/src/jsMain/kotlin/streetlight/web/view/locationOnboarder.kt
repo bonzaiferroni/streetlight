@@ -77,7 +77,7 @@ fun ViewScope.locationOnboarder() {
 
 fun ViewScope.onboardStage(stage: Int, content: ViewScope.() -> Unit) {
     column {
-        row(modify(Gap(2), Padding(2), JustifyContentCenter, FlexWrap, TextUppercase, TextSmall)) {
+        row(modify(Gap(2), Padding(2), JustifyContentCenter, FlexWrap, TextUppercase, TextSmall, TextShadow)) {
             LocationOnboardStage.entries.forEach {
                 val mod = when {
                     stage == it.ordinal -> PrimaryFg
@@ -101,8 +101,10 @@ private enum class LocationOnboardStage(override val label: String): Labeled {
 private fun ViewScope.finishedStage(focus: FinishedStage) = formRow {
     formSection("All Set") {
         centeredText("${focus.location.name ?: "Your location"} is ready on Streetlight.")
-        button("view location", { portal.go(focus.location.route) }, Primary)
-        button("go to dashboard", { portal.go(StarDashRoute()) }, Zen)
+        row(FlexItems1) {
+            button("go to dashboard", { portal.go(StarDashRoute()) }, Zen)
+            button("view location", { portal.go(focus.location.route) }, Primary)
+        }
     }
 }
 

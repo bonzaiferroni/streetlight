@@ -1,6 +1,7 @@
 package koala.markdown
 
 import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.model.toUrl
 import koala.markdown.ContentBlock.BlockQuote
 import koala.markdown.ContentBlock.Code
@@ -15,6 +16,10 @@ import koala.markdown.ContentBlock.UnorderedList
 /** The blocks of [markdown]. */
 fun markdownBlocksOf(markdown: Markdown) =
     MarkdownParser().parseBlocks(markdown.value)
+
+fun Markdown.toBlocks() = markdownBlocksOf(this)
+
+fun String.toParsedMarkdown() = toMarkdown().toBlocks()
 
 /** Parses markdown into blocks, line by line. A line that opens no other block is a paragraph. */
 class MarkdownParser {

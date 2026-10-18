@@ -85,6 +85,7 @@ ${ButtonStyle.Class}$Zen {
 
 $DayTheme {
     ${ButtonStyle.Class} {
+        box-shadow: var(--btn-outline);
         background: var(--primary-button-day);
     }
 

@@ -145,7 +145,7 @@ val ThemeCss get() = with(Koala) { """
 body {
     background-color: var(--body-bg);
 
-    --primary-button: rgb(var(--primary));
+    --primary-button: oklch(from rgb(var(--primary)) calc(l * 0.93) calc(c * 0.8) h);
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
     --primary-light-fg: color-mix(in srgb, rgb(var(--primary)) 25%, rgb(var(--ink)));
     --primary-bg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--paper)));

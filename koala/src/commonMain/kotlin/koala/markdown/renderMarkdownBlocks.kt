@@ -193,7 +193,7 @@ fun FlowContent.renderTable(block: MarkdownTable) {
     val hasHeader = block.header.cells.any { it.spans.isNotEmpty() }
 
     table {
-        addModifiers(AlignSelfStart, MoonShadow, BorderRadius2, ZenBg)
+        addModifiers(AlignSelfStart)
         if (hasHeader) {
             thead {
                 tr {

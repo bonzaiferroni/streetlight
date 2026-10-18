@@ -12,8 +12,8 @@ import koala.model.MenuAction
 import koala.modifier.*
 import streetlight.model.data.toCentsLabel
 import streetlight.web.dom.layout.centeredText
-import streetlight.web.dom.layout.dashboardEntity
-import streetlight.web.dom.layout.dashboardHeading
+import streetlight.web.dom.layout.dashEntity
+import streetlight.web.dom.layout.dashSectionHeading
 import streetlight.web.model.Merchant
 
 /** The star's offerings, the payments they have requested, and their customers. */
@@ -27,7 +27,7 @@ fun ViewScope.merchantDash() {
 /** The star's offerings, each with buttons that stage its edit or an invoice for it, under a button for a new one. */
 context(model: Merchant)
 private fun ViewScope.offeringsSection() = section {
-    dashboardHeading("Offerings", listOf(
+    dashSectionHeading("Offerings", listOf(
         MenuAction("New", onClick = model::startNewOffering)
     ))
     flowBlock(model.offeringsState) { offerings ->
@@ -38,7 +38,7 @@ private fun ViewScope.offeringsSection() = section {
         }
         column {
             offerings.forEach { offering ->
-                dashboardEntity(offering, listOf(
+                dashEntity(offering, listOf(
                     MenuAction("Edit") { model.startOfferingEdit(offering) },
                     MenuAction("send invoice") { model.startPaymentEdit(offering) },
                 ))
@@ -50,7 +50,7 @@ private fun ViewScope.offeringsSection() = section {
 /** The payments the star has requested, newest first, each with its customer, amount, status and age. */
 context(model: Merchant)
 private fun ViewScope.paymentsSection() = section {
-    dashboardHeading("Payments")
+    dashSectionHeading("Payments")
     flowBlock(model.paymentsState) { payments ->
         if (payments == null) return@flowBlock
         if (payments.isEmpty()) {
@@ -75,7 +75,7 @@ private fun ViewScope.paymentsSection() = section {
 /** The star's customers, each by name and email. */
 context(model: Merchant)
 private fun ViewScope.customersSection() = section {
-    dashboardHeading("Customers")
+    dashSectionHeading("Customers")
     flowBlock(model.customersState) { customers ->
         if (customers == null) return@flowBlock
         if (customers.isEmpty()) {

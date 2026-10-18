@@ -6,7 +6,8 @@ import kampfire.model.mutableTapOf
 import kampfire.model.toUrl
 import koala.dom.ViewScope
 import koala.dom.component.*
-import koala.dom.layout.*
+import koala.dom.markdown.markdown
+import koala.markdown.toParsedMarkdown
 import koala.model.MessageStore
 import koala.modifier.*
 import streetlight.model.data.GatherEventStatus
@@ -15,6 +16,8 @@ import streetlight.model.data.LinkContent
 import streetlight.model.data.ParseConfig
 import streetlight.model.data.ParseMode
 import streetlight.web.dom.layout.centeredText
+import streetlight.web.dom.layout.dashSection
+import streetlight.web.dom.layout.dashSectionHeading
 import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
@@ -37,10 +40,12 @@ fun ViewScope.parseOnboarder(focus: ParseModeFocus) {
     val messages = MessageStore()
 
     column(BodyStyle.MainColumn) {
-        formCard("Events") {
+        formCard {
             formRow {
                 parsePermissionSection(configState)
-                gatherStatusSection(focus.status)
+                formSection("How it works") {
+                    markdown(parseOperationInfo)
+                }
             }
         }
         formSubmit("Next", { model.submitParseConfig(configState.now, messages) }, messages, Primary)
@@ -48,20 +53,19 @@ fun ViewScope.parseOnboarder(focus: ParseModeFocus) {
 }
 
 /** The events page of the location, and how much of it the crawler may read. */
-private fun ViewScope.parsePermissionSection(configState: MutableTap<ParseConfig>) = formSection("Permission") {
+private fun ViewScope.parsePermissionSection(configState: MutableTap<ParseConfig>) = formSection("Finding your events") {
     val urlState = configState.mutableTapOf({ it.eventsUrl?.value ?: "" }) { copy(eventsUrl = it.takeIf { url -> url.isNotBlank() }?.toUrl()) }
     val modeState = configState.mutableTapOf({ it.parseMode }) { copy(parseMode = it) }
 
-    centeredText("Our crawler can gather the events from your calendar or events page, so you don't have to post each one.")
+    markdown(parseIntro)
     textField(urlState, "events page")
-    dropMenu(modeState)
-    flowBlock(modeState) { mode ->
-        centeredText(mode.description, Italic)
-    }
+    switchMenu(modeState)
+    markdown(parseModeInfo, MarginTop(1))
 }
 
+// td: move to dashboard
 /** What the crawler has gathered from the events page so far. */
-private fun ViewScope.gatherStatusSection(status: GatherEventStatus) = formSection("Status") {
+private fun ViewScope.gatherStatusSection(status: GatherEventStatus) = dashSection("Gathered Events") {
     when (status) {
         GatherEventStatus.Url -> centeredText("Add the url of your events page so our crawler can find it.")
         GatherEventStatus.Unchecked -> centeredText("Our crawler hasn't read your events page yet. Check back soon.")
@@ -77,12 +81,6 @@ private fun ViewScope.gatherStatusSection(status: GatherEventStatus) = formSecti
     }
 }
 
-private val ParseMode.description get() = when (this) {
-    ParseMode.None -> "Your events page is not read."
-    ParseMode.Partial -> "Your events are gathered with a short description that links back to your page."
-    ParseMode.Full -> "Your events are gathered with their whole descriptions."
-}
-
 private val GatherEventStatus.Blocked.reason get() = when {
     access == LinkAccess.RobotsBlock -> "Your site's robots.txt asks crawlers not to read your events page."
     access == LinkAccess.Refused -> "Your site refused our crawler's request for your events page."
@@ -90,3 +88,37 @@ private val GatherEventStatus.Blocked.reason get() = when {
     content == LinkContent.OffSchema || content == LinkContent.OffScope -> "Your events page doesn't look like a list of events."
     else -> "Our crawler read your events page, but couldn't gather events from it."
 }
+
+val parseIntro by lazy { """
+You can share the **web address** of your calendar or events page. 
+Streetlight users can click the link to view the events on your page. 
+
+We can also read the page periodically and add the events to Streetlight. This makes them visible on our map.
+""".toParsedMarkdown()
+}
+
+val parseModeInfo by lazy { """
+You can choose how much information we automatically gather.
+
+| | |
+|:---:|---|
+| **None** | Your events page is not read. |
+| **Partial** | Your events are gathered with a short description that links back to your page. |
+| **Full** | Your events are gathered with all description content and a link to your page. |
+""".toParsedMarkdown() }
+
+val parseOperationInfo by lazy { """
+We send a crawler to read your content once a day. It identifies itself as `Streetlight/1.0` and follows any directives in **robots.txt**. It typically makes one request per page. We look for event information declared within json or html. 
+
+We gather the following information declared as meta information or within the body:
+
+* Title
+* Date / Start time / End time
+* Description
+* Event Image
+* Cost
+* Contact
+* Tickets link
+* Event page link
+
+""".toParsedMarkdown() }

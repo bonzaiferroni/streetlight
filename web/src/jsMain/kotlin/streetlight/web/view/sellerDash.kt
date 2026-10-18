@@ -4,7 +4,7 @@ import koala.dom.*
 import koala.dom.component.section
 import koala.dom.layout.*
 import koala.model.MenuAction
-import streetlight.web.dom.layout.dashboardHeading
+import streetlight.web.dom.layout.dashSectionHeading
 import streetlight.web.model.SellerConnector
 import streetlight.web.dom.layout.formRow
 import streetlight.model.data.OfferingEdit
@@ -32,7 +32,7 @@ fun ViewScope.sellerDash() {
                 is OfferingEdit -> context(OfferingEditor(focus, api)) {
                     section {
                         val label = if (focus.offeringId == null) "New Offer" else "Update Offer"
-                        dashboardHeading(label, listOf(
+                        dashSectionHeading(label, listOf(
                             MenuAction("back", onClick = config::cancelFocus)
                         ))
                         offeringEditForm()
@@ -40,7 +40,7 @@ fun ViewScope.sellerDash() {
                 }
                 is PaymentEdit -> context(PaymentEditor(focus, api)) {
                     section {
-                        dashboardHeading("Send Invoice", listOf(
+                        dashSectionHeading("Send Invoice", listOf(
                             MenuAction("back", onClick = config::cancelFocus)
                         ))
                         paymentEditForm()
