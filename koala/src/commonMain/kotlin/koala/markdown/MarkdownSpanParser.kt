@@ -133,7 +133,7 @@ class MarkdownSpanParser {
                 altTextIndex = cursor + 2,
                 url = args.url.toUrl(),
                 urlIndex = urlStart,
-                maxWidthPercent = args.maxWidthPercent,
+                width = args.width,
                 type = args.type,
             ),
             closeParen + 1,
@@ -166,26 +166,33 @@ class MarkdownSpanParser {
 data class ParsedImageArgs(
     val url: String,
     val type: ImageType,
-    val maxWidthPercent: Int?
+    val width: Int? = null,
 )
 
 internal fun parseImageArgs(raw: String): ParsedImageArgs {
-    val commaIndex = raw.indexOf(',')
-    val url: String
-    val width: Int?
-    if (commaIndex == -1) {
-        url = raw.trim()
-        width = null
-    } else {
-        url = raw.substring(0, commaIndex).trim()
-        width = raw.substring(commaIndex + 1).trim().toIntOrNull()
-    }
+    val trimmed = raw.trim()
+    if (' ' !in trimmed) return ParsedImageArgs(url = trimmed, type = imageTypeOf(trimmed).withoutIcon())
+    val args = trimmed.split(' ')
+    val url = args.first()
+    val type = imageTypeOf(url)
     return ParsedImageArgs(
         url = url,
-        type = imageTypeOf(url),
-        maxWidthPercent = width
+        type = if (args.argValue("icon") != null) type else type.withoutIcon(),
+        width = args.argValue("width")?.toIntOrNull(),
     )
 }
+
+/** The value of [key] in these args, "" for a bare key, or null if absent. */
+internal fun List<String>.argValue(key: String): String? = firstNotNullOfOrNull { arg ->
+    when {
+        arg == key -> ""
+        arg.startsWith(key) && arg.getOrNull(key.length) == '=' -> arg.substring(key.length + 1)
+        else -> null
+    }
+}
+
+/** An svg renders as a plain image unless the `icon` arg asks for the mask. */
+private fun ImageType.withoutIcon() = if (this == ImageType.Svg) ImageType.Image else this
 
 private fun imageTypeOf(url: String): ImageType {
     val extension = url.substringAfterLast('.', "").lowercase()
@@ -195,7 +202,8 @@ private fun imageTypeOf(url: String): ImageType {
 /** The kind of image a URL points to, by its extension. A `.json` file is a Lottie animation. */
 enum class ImageType(vararg extensions: String) {
     Image,
-    Lottie("json");
+    Lottie("json"),
+    Svg("svg");
     // Video("mp4", "webm");
 
     val extensions = extensions.toSet()

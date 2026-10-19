@@ -95,7 +95,7 @@ private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan> = when (this) {
         else -> sequenceOf(MarkdownInlineCode(code, codeIndex))
     }
     is MarkdownBlockImage -> sequenceOf(
-        MarkdownInlineImage(altText, altTextIndex, url, urlIndex, maxWidthPercent, type)
+        MarkdownInlineImage(altText, altTextIndex, url, urlIndex, width, type)
     )
     MarkdownHorizontalRule -> emptySequence()
 }

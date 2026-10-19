@@ -50,7 +50,7 @@ data class MarkdownInlineImage(
     override val altTextIndex: Int,
     override val url: Url,
     override val urlIndex: Int,
-    override val maxWidthPercent: Int?,
+    override val width: Int?,
     override val type: ImageType,
 ) : MarkdownSpan, MarkdownImage {
     override val text get() = altText

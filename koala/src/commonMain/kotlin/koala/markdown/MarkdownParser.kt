@@ -190,7 +190,7 @@ class MarkdownParser {
             altTextIndex = 2,
             url = args.url.toUrl(),
             urlIndex = chunk.contentStart(closeBracket + 2, closeParen),
-            maxWidthPercent = args.maxWidthPercent,
+            width = args.width,
             type = args.type,
         )
     }

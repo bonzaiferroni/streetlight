@@ -13,6 +13,7 @@ import koala.dom.component.*
 import koala.dom.layout.*
 import koala.markdown.lazyMarkdown
 import koala.markdown.markdown
+import koala.markdown.toMarkdown
 import koala.modifier.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.css.dvh
@@ -116,6 +117,10 @@ context(model: LocationOnboarder)
 private fun ViewScope.hostedLocations(hosted: List<LocationConfigContent>) = formRow {
     val hostedState = storeOf(hosted)
 
+    formSection("Welcome Back") {
+        markdown(welcomeBackInfo)
+    }
+
     formSection("Your Locations") {
         messageBox(model.focusMessage)
         selectorContainer {
@@ -126,6 +131,10 @@ private fun ViewScope.hostedLocations(hosted: List<LocationConfigContent>) = for
         }
     }
 }
+
+private val welcomeBackInfo by lazyMarkdown("""
+It looks like you are already the host of one or more locations. You can pick up where you left off or start a new configuration. ${SvgFile.Restore.animated.toMarkdown()}
+""")
 
 /** The name and address of the owner's location, and the locations found for them. */
 @OptIn(FlowPreview::class)

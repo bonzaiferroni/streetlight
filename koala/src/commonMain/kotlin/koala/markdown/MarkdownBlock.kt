@@ -7,11 +7,11 @@ sealed interface MarkdownBlock {
     val blockType: ContentBlock
 }
 
-/** An image in markdown, written `![alt](url, width)`, with the positions of its alt text and URL in the source. */
+/** An image in markdown, written `![alt](url width=units icon)`, with the positions of its alt text and URL in the source. */
 interface MarkdownImage: MarkdownUrl {
     val altText: String
     val altTextIndex: Int
-    val maxWidthPercent: Int?
+    val width: Int?
     val type: ImageType
 }
 
@@ -115,7 +115,7 @@ data class MarkdownBlockImage(
     override val altTextIndex: Int,
     override val url: Url,
     override val urlIndex: Int,
-    override val maxWidthPercent: Int?,
+    override val width: Int?,
     override val type: ImageType,
 ): MarkdownBlock, MarkdownImage {
     override val blockType get() = ContentBlock.Image

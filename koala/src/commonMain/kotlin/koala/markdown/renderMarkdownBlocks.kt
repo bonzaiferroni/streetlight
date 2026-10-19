@@ -118,13 +118,12 @@ fun FlowContent.renderHorizontalRule() {
 fun FlowContent.renderImage(block: MarkdownBlockImage) {
     figure {
         addModifiers(MarkdownStyle.BlockImage)
-        block.maxWidthPercent?.let {
-            style = "max-width: $it%;"
-        }
+        block.width?.let { addModifiers(MaxWidth(it)) }
 
         when (block.type) {
             ImageType.Image -> renderBasicImage(block)
             ImageType.Lottie -> renderLottieImage(block)
+            ImageType.Svg -> renderSvgImage(block)
         }
         figcaption {
             +block.altText

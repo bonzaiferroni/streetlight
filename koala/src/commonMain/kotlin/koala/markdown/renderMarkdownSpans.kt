@@ -3,7 +3,9 @@
 package koala.markdown
 
 import koala.modifier.*
+import koala.Svg
 import koala.component.LottieClass
+import koala.component.icon
 import kotlinx.html.*
 
 /** Renders [spans] as inline HTML. Inline images are left out, as [renderFirstInlineImage] places them. */
@@ -67,12 +69,11 @@ fun FlowOrPhrasingContent.renderFirstInlineImage(spans: List<MarkdownSpan>) {
 fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     span {
         addModifiers(MarkdownStyle.InlineImage, FloatRight, MarginLeft(2), MarginBottom(2))
-        span.maxWidthPercent?.let {
-            style = "max-width: $it%;"
-        }
+        span.width?.let { addModifiers(MaxWidth(it)) }
         when (span.type) {
             ImageType.Lottie -> renderLottieImage(span)
             ImageType.Image -> renderBasicImage(span)
+            ImageType.Svg -> renderSvgImage(span)
         }
         span {
             addModifiers(MarkdownStyle.InlineImageCaption)
@@ -96,6 +97,11 @@ fun FlowContent.renderLottieImage(span: MarkdownImage) {
         addModifiers(LottieClass.Core)
         attributes["data-lottie"] = span.url.value
     }
+}
+
+/** Renders [span] as an icon in the current color. */
+fun FlowContent.renderSvgImage(span: MarkdownImage) {
+    icon(Svg(span.url), Width(span.width ?: 10))
 }
 
 /** The `s` tag, for struck-through text. */
