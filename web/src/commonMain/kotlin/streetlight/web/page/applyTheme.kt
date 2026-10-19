@@ -3,12 +3,14 @@
 package streetlight.web.page
 
 import koala.modifier.Class
+import koala.modifier.Glow
 import koala.modifier.KoalaStyle
 import koala.modifier.rgba
 import koala.modifier.setStyle
 import koala.modifier.styleOf
 import kotlinx.css.pct
 import kotlinx.html.BODY
+import streetlight.model.data.PageBackgroundMode
 import streetlight.model.data.PageTheme
 
 /** Sets the colors and gradients of [theme] as the body's custom properties. */
@@ -27,14 +29,18 @@ fun PageTheme.toStyleSet() = styleOf(
     KoalaStyle.RhoY.of(rho.position.y.pct),
     KoalaStyle.BetaY.of(beta.position.y.pct),
     KoalaStyle.GammaY.of(gamma.position.y.pct),
-    KoalaStyle.RhoRadius.of(rho.position.radius),
-    KoalaStyle.BetaRadius.of(beta.position.radius),
-    KoalaStyle.GammaRadius.of(gamma.position.radius),
+    KoalaStyle.RhoRadius.of(lightRadius(rho)),
+    KoalaStyle.BetaRadius.of(lightRadius(beta)),
+    KoalaStyle.GammaRadius.of(lightRadius(gamma)),
     KoalaStyle.RhoFocus.of(rho.focus.pct),
     KoalaStyle.BetaFocus.of(beta.focus.pct),
     KoalaStyle.GammaFocus.of(gamma.focus.pct),
-    if (!colorFlux) KoalaStyle.ColorFlux.of("none") else null
+    if (backgroundMode != PageBackgroundMode.Flux) KoalaStyle.ColorFlux.of("none") else null
 )
+
+/** The radius of [glow], or 0 when the page shows no lights. */
+private fun PageTheme.lightRadius(glow: Glow) =
+    if (backgroundMode == PageBackgroundMode.None) 0 else glow.position.radius
 
 /** The `localStorage` key of the viewer's default theme, held as the root's inline style. */
 const val DEFAULT_THEME_KEY = "streetlight.default-theme-style"

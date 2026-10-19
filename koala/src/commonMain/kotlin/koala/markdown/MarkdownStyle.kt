@@ -49,7 +49,7 @@ $Block > * + * {
 
 /* after the block spacing, so a heading's wider margin wins */
 $Heading {
-    margin-top: var(--unit-4);
+    margin-top: var(--unit-2);
     text-align: center;
 }
 

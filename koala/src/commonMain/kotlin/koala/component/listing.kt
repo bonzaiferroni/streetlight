@@ -86,6 +86,11 @@ ol {
     padding-left: var(--unit-3);
 }
 
+/* a marker takes only color, so the opacity rides in its alpha */
+li::marker {
+    color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
 $Prose ${ListKey.Class} {
     gap: 0;
 }

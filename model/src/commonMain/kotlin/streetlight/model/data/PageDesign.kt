@@ -3,6 +3,7 @@ package streetlight.model.data
 import koala.modifier.Glow
 import koala.modifier.Koala
 import koala.modifier.Rgb
+import kampfire.model.Labeled
 import kotlinx.serialization.Serializable
 
 /** The layout and theme of a page. */
@@ -20,5 +21,19 @@ data class PageTheme(
     val rho: Glow = Koala.rho,
     val beta: Glow = Koala.beta,
     val gamma: Glow = Koala.gamma,
-    val colorFlux: Boolean = true,
+    val backgroundMode: PageBackgroundMode = PageBackgroundMode.Flux,
 )
+
+/** How a page shows its background lights. */
+enum class PageBackgroundMode: Labeled {
+    /** No lights. */
+    None,
+
+    /** Lights that hold their colors. */
+    Static,
+
+    /** Lights whose colors slowly drift. */
+    Flux;
+
+    override val label get() = name
+}
