@@ -125,11 +125,35 @@ sealed interface SandboxRoute: StreetlightRoute, SubRoute<SandboxRoute> {
 
 `Portal` (`koala.model`) holds the current route as `PortalState`. It builds the route from the address bar on load and on browser navigation, and it intercepts clicks on local anchors. Code that holds a reference to `Portal` navigates with `Portal.go(route)`. With `appendToBackstack = false`, the route takes the place of the current one in the backstack and in the browser's history.
 
-`viewPortal` is a `flowBlock` over `Portal.screenState`. It renders the selected `Screen` inside a `RouteScope` built from the current `PortalState`, mapping each `Screen` to its route function in a single `when`. A screen with no branch falls to the catch-all rather than failing.
+`viewPortal` is a `flowBlock` over `Portal.screenState`. It renders the selected `Screen` inside a `RouteScope` built from the current `PortalState`, branching on the screen's `AppSection` (`streetlight.web.model`) to the portal of that section. Each section portal maps its screens to their route functions in a single `when`. A screen with no branch falls to the catch-all rather than failing.
 
-To add a screen: declare the `Screen` entry and its route, write `viewFoo` and `viewFooRoute`, then add the branch in `viewPortal`.
+| Section | Holds | Portal |
+|---|---|---|
+| `Core` | Viewing content | `viewCorePortal`, in the main bundle |
+| `Studio` | Sharing and configuring content | `viewStudioPortal`, in its own chunk |
+
+To add a screen: declare the `Screen` entry and its route, write `viewFoo` and `viewFooRoute`, add the screen to its section in `toAppSection`, then add the branch in that section's portal.
 
 A route whose view reads content has a branch in `AppContentFetcher`. The content type implements `RouteContent`, which `AppContentFetcher` and `routeBlock` both require, whether it is a `FooContent` or a record such as `City`.
+
+## Lazy Chunks
+
+Code reached only through a `@Lazy` `LazyFunction` is delivered in its own chunk, loaded the first time it is called. `lazyRoute` builds a route view from one, once its chunk has loaded.
+
+| Rule | Detail |
+|---|---|
+| One `@Lazy` val per file | The file is named `lazyFoo.kt` and holds nothing else. Each lazy val in a file loads the whole file's chunk |
+| No direct reference | Code in the main bundle never references a declaration in a file the lazy val reaches, or that file joins the main bundle |
+| Section portal in its own file | `viewStudioPortal` is reached only through `lazyStudio` |
+
+```kotlin
+@Lazy
+val lazyStudio = LazyFunction<RouteScope.() -> Unit> {
+    { viewStudioPortal() }
+}
+```
+
+A chunk is worth splitting when its own code is large beside what it uses from the main bundle. Each main bundle declaration a chunk uses costs the main bundle size in production.
 
 ## Shell Views
 

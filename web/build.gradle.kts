@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.jsPlainObjects)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.seskar)
 }
 
 val standalones = file("standalones.txt").readText()
@@ -23,6 +24,10 @@ fun String.capital() = replaceFirstChar { it.uppercase() }
 
 kotlin {
     js {
+        useEsModules()
+        compilerOptions {
+            target.set("es2015")
+        }
         browser {
             commonWebpackConfig {
                 sourceMaps = true
@@ -71,6 +76,7 @@ kotlin {
         jsMain.dependencies {
             implementation(libs.kotlinx.html.js)
             implementation(kotlinWrappers.browser)
+            implementation(kotlinWrappers.js)
         }
 
         jsTest.dependencies {

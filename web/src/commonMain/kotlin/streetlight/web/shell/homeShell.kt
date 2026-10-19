@@ -15,6 +15,8 @@ import koala.component.*
 import koala.modifier.Width
 import koala.page.*
 import kotlinx.css.pct
+import streetlight.model.ui.SandboxIndexRoute
+import streetlight.model.ui.SandboxRoute
 import streetlight.web.component.connectPicker
 import streetlight.web.component.createPostMenu
 import streetlight.web.component.galaxyMenu
@@ -32,6 +34,8 @@ fun FlowContent.homeShell(content: HomeContent) {
                 }
 
                 leadingSection(content.galaxies)
+
+                navigation("sandbox", SandboxIndexRoute.toRelativePath())
 
                 feedSection(content.feed) { HomeRoute(it) }
 

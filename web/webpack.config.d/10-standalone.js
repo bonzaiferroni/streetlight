@@ -18,7 +18,7 @@ standalones.forEach(function (name) {
         name,
         name + mode + "Executable",
         "kotlin",
-        "streetlight-web-" + name + ".js"
+        "streetlight-web-" + name + ".mjs"
     )];
 });
 

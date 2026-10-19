@@ -12,6 +12,8 @@ import koala.dom.querySelector
 import koala.dom.component.textBlock
 import koala.model.Portal
 import streetlight.model.ui.Screen
+import streetlight.web.model.AppSection
+import streetlight.web.model.toAppSection
 import koala.model.RouteInflator
 import web.dom.document
 import web.html.HTMLElement
@@ -39,62 +41,48 @@ fun ViewScope.viewPortal() {
         val routeScope = RouteScope(this, inflator, portal.stateNow)
         RouteView.setActiveScope(routeScope)
         with (routeScope) {
-            when (screen) {
-                Screen.Home -> viewHomeRoute()
-                Screen.Sandbox -> viewSandbox()
-                Screen.Earth -> viewEarthRoute()
-                Screen.MediaUpdate -> viewMediaConfigRoute()
-                Screen.Chat -> viewChatRoom()
-                Screen.SongProfile -> viewSongProfile()
-                Screen.Feedback -> viewFrontDeskRoute()
-                Screen.SiteMonitor -> viewSiteMonitor()
-
-                // star
-                Screen.Star -> viewStarRoute()
-                Screen.StarDash -> viewStarDashRoute()
-                Screen.ProfileConfig -> viewProfileConfigRoute()
-                Screen.StarConfig -> viewStarConfigRoute()
-                Screen.Inbox -> viewInboxRoute()
-
-                // location
-                Screen.LocationConfig -> viewLocationConfigRoute()
-                Screen.Location -> viewLocation()
-                Screen.LocationUpdate -> viewLocationUpdaterRoute()
-                Screen.LocationScout -> viewLocationScoutRoute()
-
-                // event
-                Screen.Event -> viewEventRoute()
-                Screen.EventScout -> viewEventScoutRoute()
-                Screen.UpdateEvent -> viewEventUpdaterRoute()
-
-                // galaxy
-                Screen.Galaxy -> viewGalaxyRoute()
-                Screen.GalaxyFoundry -> viewGalaxyFoundry()
-                Screen.GalaxyConfig -> viewGalaxyConfigRoute()
-                Screen.GalaxyFeed -> viewGalaxyFeedRoute()
-
-                // city
-                Screen.CityFeed -> viewCityFeedRoute()
-                Screen.City -> viewCityRoute()
-                Screen.CityConfig -> viewCityConfigRoute()
-
-                // media
-                Screen.MediaForge -> viewMediaForgeRoute()
-                Screen.Media -> viewMediaRoute()
-
-                // offering
-                Screen.Offering -> viewOfferingRoute()
-
-                // other
-                Screen.SiteConfig -> viewSiteConfig()
-                Screen.AboutApp -> viewAboutApp()
-                Screen.Connect -> viewConnectRoute()
-                Screen.Onboard -> viewOnboardRoute()
-                Screen.Docs -> viewSiteDocRoute()
-                Screen.Talk -> viewTalkRoute()
-                else -> textBlock("Coming soon: $screen")
+            when ((screen as Screen).toAppSection()) {
+                AppSection.Core -> viewCorePortal()
+                AppSection.Studio -> lazyRoute(lazyStudio)
             }
         }
+    }
+}
+
+/** The view of the current screen in the Core section. */
+private fun RouteScope.viewCorePortal() {
+    when (val screen = state.route.screen) {
+        Screen.Home -> viewHomeRoute()
+        Screen.Earth -> viewEarthRoute()
+        Screen.SongProfile -> viewSongProfile()
+
+        // star
+        Screen.Star -> viewStarRoute()
+
+        // location
+        Screen.Location -> viewLocation()
+
+        // event
+        Screen.Event -> viewEventRoute()
+
+        // galaxy
+        Screen.Galaxy -> viewGalaxyRoute()
+        Screen.GalaxyFeed -> viewGalaxyFeedRoute()
+
+        // city
+        Screen.CityFeed -> viewCityFeedRoute()
+        Screen.City -> viewCityRoute()
+
+        // media
+        Screen.Media -> viewMediaRoute()
+
+        // offering
+        Screen.Offering -> viewOfferingRoute()
+
+        // other
+        Screen.AboutApp -> viewAboutApp()
+        Screen.Connect -> viewConnectRoute()
+        else -> textBlock("Coming soon: $screen")
     }
 }
 
