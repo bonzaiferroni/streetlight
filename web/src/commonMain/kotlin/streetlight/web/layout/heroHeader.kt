@@ -48,7 +48,8 @@ fun FlowContent.heroHeader(
             }
         }
 
-        column(modify(HeroHeader.Title, PaddingX2, Gap(1), AlignSelfStart, AlignItemsCenter)) {
+        val fgMod = if (image != null) modify(WhiteFg, TextShadow) else null
+        column(modify(HeroHeader.Title, PaddingX2, Gap(1), AlignSelfStart, AlignItemsCenter, fgMod)) {
             heading1(title, FocusTarget)
             filigree(AlignSelfStretch) {
                 textBlock(descriptor, modify(Italic, OpacityHalf))
@@ -118,7 +119,6 @@ $Title {
     > h1 {
         font-size: clamp(2.5rem, 10cqi, var(--heading-1-size));
         line-height: 1;
-        text-shadow: 0 0 32px var(--rho-color), var(--text-shadow);
     }
 }
 

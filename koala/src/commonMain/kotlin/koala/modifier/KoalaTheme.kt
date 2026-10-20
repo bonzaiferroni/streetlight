@@ -21,9 +21,9 @@ data class KoalaTheme(
     val gold: Rgb = Rgb(200, 178, 87),
     val purple: Rgb = Rgb(158, 87, 200),
 
-    val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 39), 50, 0),
-    val beta: Glow = Glow(Rgb(88, 164, 255), GlowPosition(82, 20, 39), 50, 0),
-    val gamma: Glow = Glow(Rgb(88, 255, 188), GlowPosition(50, 65, 36), 40, 0),
+    val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 39), 25, 0),
+    val beta: Glow = Glow(Rgb(88, 164, 255), GlowPosition(82, 20, 39), 25, 0),
+    val gamma: Glow = Glow(Rgb(88, 255, 188), GlowPosition(50, 65, 36), 20, 0),
 ) {
     companion object {
         const val ThemeId = "koala"

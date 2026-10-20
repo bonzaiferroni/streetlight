@@ -93,7 +93,7 @@ fun ViewScope.editorRow(
                     when (popoverId) {
                         null -> heading6(editor.label, headingMod)
                         else -> button(mod = modify(Editor, JustifySelfCenter)) {
-                            setPopoverTarget(popoverId)
+                            setPopoverTarget(popoverId, true)
                             heading6(editor.label, headingMod)
                         }
                     }

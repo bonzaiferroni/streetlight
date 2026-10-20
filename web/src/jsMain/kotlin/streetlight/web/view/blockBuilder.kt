@@ -32,7 +32,8 @@ fun ViewScope.blockBuilder(blockId: BlockId) {
     val editor = model.getBlock(blockId)
     context(editor) {
         when (val block = editor.blockState.now) {
-            is HeaderBlock, EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder()
+            is HeaderBlock -> headerBuilder()
+            is EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder()
             is HeadingBlock -> headingBuilder()
             is ImageBlock -> imageBuilder()
             is GalleryBlock -> galleryBuilder()
@@ -59,6 +60,27 @@ fun ViewScope.blockBuilder() {
     val blockType = editor.block.blockType
     blockBuilder() {
         buildContentBlock(blockType)
+    }
+}
+
+/** The editor of a header block: its layout, and whether it shows its cells and body. */
+context(editor: BlockEditor)
+fun ViewScope.headerBuilder() {
+    val blockState = editor.blockState.mutableTapOf({ it as HeaderBlock }) { it }
+    val headerTypeState = blockState.mutableTapOf({ it.headerType }) { copy(headerType = it) }
+    val showCellsState = blockState.mutableTapOf({ it.showCells }) { copy(showCells = it) }
+    val showBodyState = blockState.mutableTapOf({ it.showBody }) { copy(showBody = it) }
+    column {
+        editorRow() {
+            formColumn {
+                formSection("Header") {
+                    dropMenu(headerTypeState)
+                    checkBox(showCellsState, "cells")
+                    checkBox(showBodyState, "body")
+                }
+            }
+        }
+        buildContentBlock(BlockType.Header)
     }
 }
 
