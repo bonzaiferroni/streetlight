@@ -13,6 +13,7 @@ interface JsBundle {
     val web: Js
     val koala: Js
     val passwordReset: Js
+    val locationApp: Js
 }
 
 /** The scripts Koala loads on every page. */

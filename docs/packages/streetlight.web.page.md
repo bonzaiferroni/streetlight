@@ -17,7 +17,7 @@ Whole HTML documents the server responds with: the head, the app body around a r
 
 ## Pages
 
-A page is an extension on `HTML`. It calls `appHead` with its title, then builds its body. A route's page is `appPage`, which places the route's shell inside `appBody`.
+A page is an extension on `HTML`. It calls `appHead` with its title, then builds its body. A route's page is `appPage`, which places the route's shell inside `appBody`. A sub-app's page, `fooAppPage`, builds its own body around the portal mount and the shell mount, and links the sub-app's bundle.
 
 A page's stylesheet is `buildSiteStyles()`, which `ServerResource` serves and the promo shots add at startup. A new `FooCss` is listed in `KtStyles` in `siteStyles.kt`.
 
@@ -48,6 +48,7 @@ A theme is a set of custom properties from `PageTheme.toStyleSet()`. The viewer'
 | Page | Role |
 |---|---|
 | [`appPage`](../../web/src/commonMain/kotlin/streetlight/web/page/appPage.kt) | An app page for a screen |
+| [`locationAppPage`](../../web/src/commonMain/kotlin/streetlight/web/page/locationAppPage.kt) | A page of a LocationApp, with none of the app's menus, overlay or footer |
 | [`staticPage`](../../web/src/commonMain/kotlin/streetlight/web/page/staticPage.kt) | A page without the client app |
 | [`messagePage`](../../web/src/commonMain/kotlin/streetlight/web/page/messagePage.kt) | A static page showing a message |
 | [`aboutPage`](../../web/src/commonMain/kotlin/streetlight/web/page/aboutPage.kt) | The about page |

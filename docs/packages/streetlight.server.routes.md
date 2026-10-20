@@ -89,3 +89,8 @@ A screen whose route is likely to be shared or linked from another site is rende
 
 `readFooContent` is a `DaoScope` extension in `streetlight.server.model`.
 
+## Subdomains
+
+`serveSubdomains.kt` answers a host one label below the site's root with that label's LocationApp. `renderLocationApp` reads the content by the subdomain with no identity, since a LocationApp has no sign-in, and places `locationAppShell` in `locationAppPage`. `Api.Locations.ReadSubdomainContent` serves the same content.
+
+A subdomain answers only the screens of its LocationApp: `/`, and an event's path for an event at the subdomain's location, in the location's theme. Every other path, and an event elsewhere, is answered by `respondBaseHostRedirect` with the same path on the base host. A subdomain route wins over the `servePages` route of the same path, since its host selector adds a constant to the front of the match. A subdomain has no `{...}` route: it ties with a static root such as `/www` and wins, redirecting the site's assets. A path no screen names falls to `servePages`. A screen the LocationApp takes on is removed from the redirected screens in the same pass.

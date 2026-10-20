@@ -21,7 +21,8 @@ The domain types and API endpoints shared by the server and the web client. Both
 | `FooId` | A `@JvmInline value class` over `Uuid` implementing `RecordId`, in `Foo.kt` |
 | `FooEdit` | The fields a form sends for `Foo` |
 | `FooContent` | The content of a route, implementing `RouteContent` |
-| `FooRoute` | A route, in `streetlight.model.ui`, paired with a `Screen` entry |
+| `FooRoute` | A route, in `streetlight.model.ui`, paired with a `Screen` entry, or with an entry of a sub-app's screens |
+| `FooAppScreen` | The screens of a sub-app, an `AppScreen` enum in `streetlight.model.ui`. Its `portalScreens` lists its entries with the `Screen` entries the sub-app also renders |
 
 ## Endpoints
 

@@ -64,8 +64,7 @@ class Portal(
         // known issue: this prevents scroll restoration on refresh
         history.scrollRestoration = ScrollRestoration.manual
 
-        fun handleRoute(href: String, isClick: Boolean) {
-            val route = routeOf(URL(href, window.location.href)) ?: return
+        fun handleRoute(route: AppRoute, isClick: Boolean) {
             if (route == stateNow.route) {
                 if (isClick) {
                     refresh()
@@ -79,11 +78,12 @@ class Portal(
             val anchor = (event.target as? HTMLElement)?.closest("a") as? HTMLAnchorElement ?: return@addEventListener
             val modifiedClick = event.ctrlKey || event.metaKey || event.shiftKey
 
-            // Only intercept local paths, let external links sail free
+            // Only intercept local paths to a screen of this portal, let other links sail free
             if (anchor.hostname == window.location.hostname && anchor.target != WindowTarget._blank && !modifiedClick && !isWrecked) {
-                event.preventDefault()
                 val href = anchor.getAttribute("href") ?: return@addEventListener
-                handleRoute(href, true)
+                val route = routeOf(URL(href, window.location.href)) ?: return@addEventListener
+                event.preventDefault()
+                handleRoute(route, true)
             }
         })
 
@@ -94,7 +94,8 @@ class Portal(
             }
             val isSuccess = goBack(sitePath)
             if (!isSuccess) {
-                handleRoute(window.location.href, false)
+                val route = routeOf(URL(window.location.href)) ?: return@addEventListener
+                handleRoute(route, false)
             }
         })
 

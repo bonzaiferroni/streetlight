@@ -52,6 +52,7 @@ class TestLocationClient(
     override suspend fun updateLocation(location: LocationEdit): Outcome<Location> = TODO()
     override suspend fun configSubdomain(config: SubdomainConfig): Outcome<Unit> = TODO()
     override suspend fun checkSubdomain(config: SubdomainConfig): Outcome<Boolean> = TODO()
+    override suspend fun readSubdomainContent(slug: Slug): Outcome<LocationContent> = TODO()
     override suspend fun queryLocation(point: GeoPoint): Outcome<List<Location>> = TODO()
     override suspend fun readHostedLocations(): Outcome<List<Location>> = TODO()
     override suspend fun readHostedConfigs(): Outcome<List<LocationConfigContent>> = TODO()

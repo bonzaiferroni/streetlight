@@ -84,6 +84,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UploadSchemas: PostEndpoint<UrlSchemas, Unit>(this)
         object UpdateSubdomain: PostEndpoint<SubdomainConfig, Unit>(this)
         object CheckSubdomain: PostEndpoint<SubdomainConfig, Boolean>(this)
+        object ReadSubdomainContent: GetByIdEndpoint<Slug, LocationContent>(this)
     }
 
     object Songs: GetEndpoint<List<Song>>(this) {

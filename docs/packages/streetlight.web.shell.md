@@ -46,6 +46,8 @@ object FooShell {
 }
 ```
 
+A sub-app's shell, `fooAppShell`, builds no `mainBody`, since the app's header and footer are not part of a sub-app. Content a shell shares with a sub-app's shell is `fooBody` in `streetlight.web.layout`, which `fooShell` calls inside `mainBody` and the sub-app's shell calls without it, as `eventBody`.
+
 `mainBody` from `streetlight.web.layout` builds the header, the body `section` and the footer. It takes the shell's file name, which the footer links as the source. The body lambda runs inside the body `section`.
 
 | Part | Holds |
@@ -78,6 +80,8 @@ The route dock is not shell content. It is not something a user needs to underst
 | [`galaxyShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/galaxyShell.kt) | A galaxy |
 | [`starShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/starShell.kt) | A star |
 | [`locationShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/locationShell.kt) | A location |
+| [`locationAppShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/locationAppShell.kt) | The home of a LocationApp |
+| [`locationAppEventShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/locationAppEventShell.kt) | An event of a LocationApp |
 | [`eventShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/eventShell.kt) | An event |
 | [`mediaShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/mediaShell.kt) | A medium |
 | [`offeringShell`](../../web/src/commonMain/kotlin/streetlight/web/shell/offeringShell.kt) | An offering |

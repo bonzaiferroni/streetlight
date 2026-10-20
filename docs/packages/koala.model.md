@@ -21,6 +21,8 @@ An `AppRoute` carries no label. A link that shows a route as text takes a `Label
 
 `Portal.go` replaces the current entry, in its backstack and in the browser's history, when the new route has the current route's `screenKey`, and adds one otherwise.
 
+`Portal` intercepts a click on a same-host link only when the link parses to a route of its screens. Any other link is left to the browser, which loads it from the server.
+
 Only `Portal` writes the browser's history. Code that sets a query parameter of the current route dispatches a `QUERY_PARAM_CHANGE` event on `window`, and `Portal` goes to the route parsed from the address with that parameter set. A parameter the route does not parse leaves it unchanged.
 
 ## Models
