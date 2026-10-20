@@ -1,0 +1,7 @@
+node_modules/
+bundle/
+frames/
+out/
+# scratch from the first shoot; fizzbuzz/auth.json holds a session cookie
+fizzbuzz/
+scout/

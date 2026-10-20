@@ -51,6 +51,16 @@ kotlin {
             }
             binaries.executable(standalone)
         }
+
+        // promo shots mount views over the test fakes; tools/promo bundles them when a shot is captured
+        val promo = compilations.create("promo") {
+            associateWith(this@js.compilations.getByName("main"))
+            associateWith(this@js.compilations.getByName("test"))
+            defaultSourceSet {
+                kotlin.setSrcDirs(listOf("src/jsPromo/kotlin"))
+            }
+        }
+        binaries.executable(promo)
     }
     jvm()
     wasmJs {
@@ -122,7 +132,7 @@ tasks.named<Test>("jvmTest") {
 
 tasks.withType<KotlinJsIrLink>().configureEach {
     val taskName = name
-    if (standalones.any { taskName.startsWith("compile${it.capital()}") }) {
+    if ((standalones + "promo").any { taskName.startsWith("compile${it.capital()}") }) {
         compilerOptions.main.set(JsMainFunctionExecutionMode.CALL)
     }
 }
@@ -143,7 +153,7 @@ dokka {
     dokkaSourceSets.configureEach {
         includes.from(fileTree(rootDir.resolve("docs/packages")) {
             include("web.md", "streetlight.web.*.md")
-            exclude("streetlight.web.integration.md")
+            exclude("streetlight.web.integration.md", "streetlight.web.promo.md")
         })
     }
 }

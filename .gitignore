@@ -38,9 +38,9 @@ users.json
 /server-old
 /debug
 
-benchmark/node_modules/
-benchmark/traces/
-benchmark/server
+tools/benchmark/node_modules/
+tools/benchmark/traces/
+tools/benchmark/server
 
 # generated API reference, published by CI
 /docs/kdoc/

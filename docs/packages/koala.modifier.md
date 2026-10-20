@@ -63,7 +63,7 @@ A stylesheet declared in Kotlin is written as `docs/css-style.md` specifies.
 
 A stylesheet that serves a single component is declared in that component's file, with its classes in an object named for the component, as `CellGrid.Base` in `cellGrid.kt`.
 
-A stylesheet is served only once it is listed in `KtStyles` in `ServerResource.kt`.
+A stylesheet is served only once it is listed in `KtStyles` in `web/src/commonMain/kotlin/streetlight/web/page/siteStyles.kt`.
 
 `KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance. A base color in `ThemeCss`, such as `--green`, is written from an `Rgb` in `KoalaTheme`, never as literal channels, so Kotlin code can read the same color. Its `-fg` and `-bg` variants are mixed from it in CSS.
 

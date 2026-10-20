@@ -19,6 +19,8 @@ Whole HTML documents the server responds with: the head, the app body around a r
 
 A page is an extension on `HTML`. It calls `appHead` with its title, then builds its body. A route's page is `appPage`, which places the route's shell inside `appBody`.
 
+A page's stylesheet is `buildSiteStyles()`, which `ServerResource` serves and the promo shots add at startup. A new `FooCss` is listed in `KtStyles` in `siteStyles.kt`.
+
 A head support, such as maps or protobuf, is a `HEAD` extension in `supports.kt`, added by the page that needs it.
 
 ## Headers
@@ -66,5 +68,6 @@ A theme is a set of custom properties from `PageTheme.toStyleSet()`. The viewer'
 | [`starHelmPopover`](../../web/src/commonMain/kotlin/streetlight/web/page/starHelm.kt) | The star menu |
 | [`applyTheme`, `toStyleSet`](../../web/src/commonMain/kotlin/streetlight/web/page/applyTheme.kt) | Themes, as specified under Themes |
 | [`StreetlightCss`](../../web/src/commonMain/kotlin/streetlight/web/page/StreetlightCss.kt) | The site-wide stylesheet |
+| [`buildSiteStyles`](../../web/src/commonMain/kotlin/streetlight/web/page/siteStyles.kt) | The stylesheet every page serves, assembled from the base sheets and `KtStyles` |
 | [`AppAttribute`](../../web/src/commonMain/kotlin/streetlight/web/page/AppAttribute.kt) | The data attributes the app's scripts read |
 | [`PopoverId`](../../web/src/commonMain/kotlin/streetlight/web/page/PopoverId.kt) | The ids of the app's popovers |

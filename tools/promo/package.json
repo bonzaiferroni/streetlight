@@ -1,0 +1,16 @@
+{
+  "name": "promo",
+  "version": "1.0.0",
+  "description": "Promo video capture for Streetlight",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "playwright": "^1.64.0",
+    "sharp": "^0.35.5"
+  },
+  "private": true
+}

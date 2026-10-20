@@ -36,10 +36,10 @@ fun ViewScope.lazyTabs(
     val scope = LazyTabScope()
     scope.content()
     val tabCount = scope.tabs.size
-    val initialIndex = indexState?.now
+    val initialIndex = (indexState?.now
         ?: paramKey?.let { readParamIndex(it) }
         ?: storageKey?.let { readStorageIndex(it) }
-        ?: defaultTab ?: 0
+        ?: defaultTab ?: 0).coerceIn(0, tabCount - 1)
     val panelCache = Array<HTMLElement?>(tabCount) { null }
     val isRendered = Array(tabCount) { false }
 
