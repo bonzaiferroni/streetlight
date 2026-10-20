@@ -29,13 +29,7 @@ The package is the `promo` compilation of web's js target, in `web/src/jsPromo`.
 
 `main()` adds the site stylesheet from `buildSiteStyles()` and mounts the shot named by the `shot` query parameter as the body. A new shot is added to `shots` in `Main.kt`.
 
-A shot holds the content only. The camera, the pointer, and the timing belong to its script in `tools/promo`.
-
-## Capture
-
-A script films its shot in `openStudio` from `tools/promo/promo.mjs`: Chrome's headless shell with begin frame control and virtual time. Each `frame()` advances time by one frame, sends that frame's mouse input, and draws. The page's transitions, animations, timers and coroutines run on that time unaltered, so a script never freezes or seeks the page's clock.
-
-The page renders its whole viewport at the quality scale. A script frames the shot with a camera, a rectangle in page pixels that `frameWriter` crops and scales to the output size, so the viewport is sized for the widest frame and the scale for the closest.
+A shot holds the content only. The camera, the pointer, and the timing belong to its script in `tools/promo`, specified in `tools.promo.md`.
 
 ## Building
 
