@@ -67,6 +67,7 @@ val AppBodyCss get() = with(AppBody) { """
 $Viewport {
     width: 100%;
     isolation: isolate;
+    overflow-x: clip;
 }
 
 $PanelGrid {

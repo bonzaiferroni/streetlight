@@ -14,7 +14,7 @@ fun FlowContent.locationShell(
 ) {
     val location = content.location
     val routeNow = LocationRoute(location.slug)
-    mainBody("locationShell.kt") {
+    mainBody("locationShell.kt", header = null) {
         setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
         renderLayout(content)
     }

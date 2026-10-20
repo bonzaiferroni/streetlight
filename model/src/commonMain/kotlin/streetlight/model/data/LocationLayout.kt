@@ -13,7 +13,7 @@ data class LocationLayout(
 object DefaultLayout {
     val location = PageLayout(
         blocks = listOf(
-            HeaderBlock,
+            HeaderBlock(),
             TabsBlock(listOf(
                 TabContent("events", listOf(EventsBlock)),
                 TabContent("directions", listOf(MapBlock))
@@ -22,19 +22,19 @@ object DefaultLayout {
     )
     val media = PageLayout(
         blocks = listOf(
-            HeaderBlock,
+            HeaderBlock(),
             CommentsBlock,
         )
     )
     val star = PageLayout(
         blocks = listOf(
-            HeaderBlock,
+            HeaderBlock(),
             PostsBlock,
         )
     )
     val galaxy = PageLayout(
         blocks = listOf(
-            HeaderBlock,
+            HeaderBlock(),
             PostsBlock,
         )
     )

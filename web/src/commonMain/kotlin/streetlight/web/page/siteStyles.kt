@@ -3,6 +3,7 @@ package streetlight.web.page
 import koala.modifier.*
 import koala.model.MarkerSheet
 import streetlight.web.layout.CellGridCss
+import streetlight.web.layout.HeroHeaderCss
 import streetlight.web.layout.EntityDialogCss
 import streetlight.web.layout.FeedRowCss
 import streetlight.web.layout.EntityBodyCss
@@ -83,6 +84,7 @@ private val KtStyles = listOf(
     EntityBodyCss,
     FeedSectionCss,
     CellGridCss,
+    HeroHeaderCss,
     StarToggleCss,
     MarkerSheet,
     TextDeltaCss,

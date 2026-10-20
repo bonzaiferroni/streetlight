@@ -13,8 +13,9 @@ import streetlight.web.page.appHeader
 fun FlowContent.mainBody(
     sourceFile: String,
     mod: Modifier? = null,
+    header: (DIV.() -> Unit)? = { appHeader() },
     content: SECTION.() -> Unit
-) = pageBody(sourcePathShell(sourceFile), mod, { appHeader() }, content)
+) = pageBody(sourcePathShell(sourceFile), mod, header, content)
 
 /**
  * The shape every body shares: what [header] builds, then [content] in a body section closed by a footer linking
@@ -23,11 +24,11 @@ fun FlowContent.mainBody(
 fun FlowContent.pageBody(
     sourcePath: String,
     mod: Modifier?,
-    header: DIV.() -> Unit,
+    header: (DIV.() -> Unit)?,
     content: SECTION.() -> Unit,
 ) {
     column(modify(BodyStyle.ShellColumn, mod)) {
-        header()
+        header?.invoke(this)
         section(BodyStyle.MainColumn) {
             content()
             appFooter(sourcePath)

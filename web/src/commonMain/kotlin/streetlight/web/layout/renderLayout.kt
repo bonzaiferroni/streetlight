@@ -29,7 +29,7 @@ fun FlowContent.renderColumn(blocks: List<LayoutBlock>, content: DesignContent) 
 
 fun FlowContent.renderBlock(block: LayoutBlock, content: DesignContent) {
     when (block) {
-        HeaderBlock -> renderHeader(content)
+        is HeaderBlock -> renderHeader(block, content)
         EventsBlock -> renderEvents(content)
         CommentsBlock -> renderComments()
         PostsBlock -> renderPosts(content)
@@ -70,14 +70,16 @@ fun FlowContent.renderEvents(content: DesignContent) {
     }
 }
 
-fun FlowContent.renderHeader(content: DesignContent) {
+/** The header of [content], laid out by [block]. A medium has one layout of its own. */
+fun FlowContent.renderHeader(block: HeaderBlock, content: DesignContent) {
     when (content) {
         is LocationContent -> headerOf(
             location = content.location,
+            header = block,
         )
         is Media -> headerOf(content)
-        is StarContent -> headerOf(content.star)
-        is GalaxyContent -> headerOf(content.galaxy)
+        is StarContent -> headerOf(content.star, block)
+        is GalaxyContent -> headerOf(content.galaxy, block)
     }
 }
 

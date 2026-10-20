@@ -32,7 +32,7 @@ fun ViewScope.blockBuilder(blockId: BlockId) {
     val editor = model.getBlock(blockId)
     context(editor) {
         when (val block = editor.blockState.now) {
-            HeaderBlock, EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder()
+            is HeaderBlock, EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder()
             is HeadingBlock -> headingBuilder()
             is ImageBlock -> imageBuilder()
             is GalleryBlock -> galleryBuilder()

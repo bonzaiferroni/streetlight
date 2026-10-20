@@ -38,10 +38,25 @@ data class HeadingBlock(
     override val blockType get() = BlockType.Heading
 }
 
-/** The layout block where the page's entity header goes. */
+/** The layout block where the page's entity header goes, laid out by its [headerType]. */
 @Serializable
-object HeaderBlock: LayoutBlock {
+data class HeaderBlock(
+    val headerType: HeaderType = HeaderType.Card,
+    val showCells: Boolean = true,
+    val showBody: Boolean = true,
+): LayoutBlock {
     override val blockType get() = BlockType.Header
+}
+
+/** The layout of a page's entity header. */
+enum class HeaderType: Labeled {
+    /** The image beside the title, in a card. */
+    Card,
+
+    /** The image across the width of the page, above the title. */
+    Hero;
+
+    override val label get() = name
 }
 
 /** The layout block where the page's comments go. */

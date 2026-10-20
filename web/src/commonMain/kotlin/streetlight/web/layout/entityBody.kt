@@ -49,7 +49,7 @@ $Base {
     }
 }
 
-$Description { grid-area: description; }
+$Description { grid-area: description; max-width: 800px; }
 
 $Links {
     grid-area: links;

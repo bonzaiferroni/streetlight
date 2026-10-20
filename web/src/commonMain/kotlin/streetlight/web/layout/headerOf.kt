@@ -4,6 +4,7 @@ import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
+import streetlight.model.data.HeaderBlock
 import streetlight.model.data.Location
 import streetlight.model.data.Media
 import streetlight.model.data.Star
@@ -14,6 +15,7 @@ import koala.markdown.*
 
 fun FlowContent.headerOf(
     location: Location,
+    header: HeaderBlock = HeaderBlock(),
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -21,6 +23,7 @@ fun FlowContent.headerOf(
     entityHeader(
         entity = location,
         descriptor = "at",
+        header = header,
         mod = mod,
         block = block
     )
@@ -28,6 +31,7 @@ fun FlowContent.headerOf(
 
 fun FlowContent.headerOf(
     galaxy: Galaxy,
+    header: HeaderBlock = HeaderBlock(),
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -35,6 +39,7 @@ fun FlowContent.headerOf(
         entityHeader(
             entity = galaxy,
             descriptor = "a galaxy",
+            header = header,
             mod = mod,
             // editRoute = GalaxyConfigRoute(galaxy.slug),
             block = block
@@ -47,9 +52,10 @@ fun FlowContent.headerOf(
 }
 
 fun FlowContent.headerOf(
-    star: Star
+    star: Star,
+    header: HeaderBlock = HeaderBlock(),
 ) {
-    entityHeader(star, "a streetlighter")
+    entityHeader(star, "a streetlighter", header = header)
 }
 
 fun FlowContent.headerOf(media: Media) {

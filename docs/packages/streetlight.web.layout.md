@@ -27,6 +27,10 @@ An entity supplies its content as data, such as an `EntityCell`. The component t
 
 A value the entity holds but the header shows differently is a parameter defaulted to the entity's own, as `cells` and `image`.
 
+A header is laid out by the `HeaderType` of its `HeaderBlock`, which `renderHeader` passes through `headerOf` to `entityHeader`. `Card` is `pageHeader` and `Hero` is `heroHeader`; both take the same arguments, so a new layout of the header is one more function of that shape and one more `HeaderType`.
+
+`heroHeader` opens with the image across the body's width, flush with the top of its block. The image dissolves into the page through a mask on the `img`, not an overlay, so the page's theme shows through, and the title sits over the dissolve, lit by the theme's `--rho-color`. The mask is on the `img` alone, so the image's attribution stays visible.
+
 ## Entity Parts
 
 The parts an entity is shown with, shared by `feedRow` and `entityDialog`, are in `entityParts.kt`: `entityImage`, `entityHeading`, `entitySummary`, `entityBadge` and `entityLinks`. Each takes the entity and the classes its caller places it with, so the two layouts render the same markup and differ only in their stylesheets.

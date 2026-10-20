@@ -83,7 +83,7 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
             // containers for depth == 1 to be added
         }
         BlockCategory.Content -> {
-            add(MenuValue("header", HeaderBlock))
+            add(MenuValue("header", HeaderBlock()))
             add(MenuValue("events", EventsBlock))
             add(MenuValue("map", MapBlock))
         }
