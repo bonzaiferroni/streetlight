@@ -71,7 +71,7 @@ enum class ResourceSvg(val svg: SvgPack) {
 
     // Hygiene
     Bathroom(SvgFile.ToiletPaper),
-    Shower(SvgFile.Bath),
+    Shower(SvgFile.Shower),
     Laundry(SvgFile.WashMachine),
     HygieneKit(SvgFile.WashHand),
     Haircut(SvgFile.BarberPole),

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-pier">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M17.5 8.5v-4.5m-1 0h2l-.3 -1.4h-1.4z"/>
+    <path d="M5 10.5v8m5 -8v8m5 -8v8"/>
+    <path d="M2 8.5h17v2h-17"/>
+    <path d="M2 15q1.25 -1 2.5 0t2.5 0q1.25 -1 2.5 0t2.5 0q1.25 -1 2.5 0t2.5 0q1.25 -1 2.5 0t2.5 0"/>
+    <path d="M2 19q1.25 -1 2.5 0t2.5 0q1.25 -1 2.5 0t2.5 0q1.25 -1 2.5 0t2.5 0q1.25 -1 2.5 0t2.5 0"/>
+</svg>

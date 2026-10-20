@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-bagpipes">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M6.405 14.152L4 7.5"/>
+    <path d="M7.093 19.13L5.5 21.5"/>
+    <g transform="translate(10.5 15.5)">
+        <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;1.05 0.93;1 1" dur="2.4s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <g transform="translate(-10.5 -15.5)">
+                <path d="M5.909 17.941A5.2 3.8 -28 1 0 15.091 13.059A5.2 3.8 -28 1 0 5.909 17.941"/>
+            </g>
+        </g>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 9.965 11.627;3 9.965 11.627;0 9.965 11.627;-3 9.965 11.627;0 9.965 11.627" dur="2.4s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M9.965 11.627L12.561 3.638M11.705 3.36L13.417 3.917"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 12.485 11.401;-3 12.485 11.401;0 12.485 11.401;3 12.485 11.401;0 12.485 11.401" dur="2.4s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M12.485 11.401L16.285 4.819M15.506 4.369L17.065 5.269"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 14.473 12.274;3 14.473 12.274;0 14.473 12.274;-3 14.473 12.274;0 14.473 12.274" dur="2.4s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M14.473 12.274L18.889 7.369M18.221 6.767L19.558 7.971"/>
+    </g>
+</svg>

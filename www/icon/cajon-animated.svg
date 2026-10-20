@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-cajon">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g transform="translate(12 21)">
+        <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;1.06 0.94;1 1;1 1;1.03 0.97;1 1;1 1" keyTimes="0;0.04;0.16;0.5;0.53;0.62;1" dur="1.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <g transform="translate(-12 -21)">
+                <path d="M5 8h10v13h-10z"/>
+                <path d="M5 8l4 -3h10l-4 3"/>
+                <path d="M15 8l4 -3v13l-4 3"/>
+                <path d="M6.5 9.5h.01m6.99 0h.01"/>
+                <path d="M16 12.8a1 1.7 0 1 0 2 0a1 1.7 0 1 0 -2 0"/>
+            </g>
+        </g>
+    </g>
+</svg>

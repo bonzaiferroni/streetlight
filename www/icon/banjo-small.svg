@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-banjo">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g transform="rotate(40 12 12)">
+        <path d="M7 16a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/>
+        <path d="M11.3 11.05v-6.85m1.4 0v6.85"/>
+        <path d="M11 4.2l-.3 -2.2h2.6l-.3 2.2z"/>
+        <path d="M11.3 8h-1"/>
+        <path d="M10.9 17.6h2.2"/>
+        <path d="M12 4.2q0 6.7 0 13.4"/>
+    </g>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-shower">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M5 21V7.5a4 4 0 0 1 4 -4h2.5a4 4 0 0 1 4 4v.5"/>
+    <path d="M11.5 11a4 4 0 0 1 8 0z"/>
+    <path d="M12.5 13.5v7.5M15.5 13.5v7.5M18.5 13.5v7.5" stroke-dasharray="1.5 2"/>
+</svg>

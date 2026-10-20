@@ -2,17 +2,17 @@
      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
      class="icon icon-tabler icons-tabler-animated icon-tabler-yoga">
     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M4 20Q7.71 20.26 9.5 17">
-        <animate attributeName="d" values="M4 20Q7.71 20.26 9.5 17;M4 20Q7.9 20.4 9.5 17.75;M4 20Q7.71 20.26 9.5 17" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    <path d="M4.8 20.95Q8.139 21.184 9.75 18.25">
+        <animate attributeName="d" values="M4.8 20.95Q8.139 21.184 9.75 18.25;M4.8 20.95Q8.31 21.31 9.75 18.925;M4.8 20.95Q8.139 21.184 9.75 18.25" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
-    <path d="M17 20Q15.92 15.2 11 15L12 8">
-        <animate attributeName="d" values="M17 20Q15.92 15.2 11 15L12 8;M17 20Q16.1 15.75 11 15.75L12 8.75;M17 20Q15.92 15.2 11 15L12 8" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    <path d="M16.5 20.95Q15.528 16.63 12.72 16.45C11.586 16.45 10.875 15.721 10.92 14.83C10.965 13.93 11.19 11.95 12 10.15">
+        <animate attributeName="d" values="M16.5 20.95Q15.528 16.63 12.72 16.45C11.586 16.45 10.875 15.721 10.92 14.83C10.965 13.93 11.19 11.95 12 10.15;M16.5 20.95Q15.69 17.125 12.72 17.125C11.586 17.125 10.875 16.396 10.92 15.505C10.965 14.605 11.19 12.625 12 10.825;M16.5 20.95Q15.528 16.63 12.72 16.45C11.586 16.45 10.875 15.721 10.92 14.83C10.965 13.93 11.19 11.95 12 10.15" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
-    <path d="M4 10L8 9L12 8L16 9.5L20 11">
-        <animate attributeName="d" values="M4 10L8 9L12 8L16 9.5L20 11;M4 8.6L8 8.675L12 8.75L16 9.075L20 9.4;M4 10L8 9L12 8L16 9.5L20 11" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    <path d="M4.8 11.95C7.23 11.035 9.57 9.998 12 10.15C14.43 10.302 16.77 11.635 19.2 12.85">
+        <animate attributeName="d" values="M4.8 11.95C7.23 11.035 9.57 9.998 12 10.15C14.43 10.302 16.77 11.635 19.2 12.85;M4.8 10.69C7.23 10.42 9.57 10.704 12 10.825C14.43 10.947 16.77 10.9 19.2 11.41;M4.8 11.95C7.23 11.035 9.57 9.998 12 10.15C14.43 10.302 16.77 11.635 19.2 12.85" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0;0 0.75;0 0" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-        <path d="M10.007 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0.675;0 0" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M12 5.923C12.75 4.859 12.054 3.408 11.679 3.048C11.679 4.14 10.96 4.752 10.5 5.204C10.04 5.656 9.75 6.367 9.75 7C9.75 8.191 10.757 9.155 12 9.155C13.243 9.155 14.25 8.191 14.25 7C14.25 6.45 13.854 5.584 13.5 5.204C12.83 6.282 12.454 6.282 12 5.923"/>
     </g>
 </svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-party-hat">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -1;0 0;0 -0.6;0 0;0 0" keyTimes="0;0.15;0.3;0.45;0.6;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 12 19;-5 12 19;0 12 19;4 12 19;0 12 19;0 12 19" keyTimes="0;0.15;0.3;0.45;0.6;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path d="M6.5 19L12 4.6L17.5 19"/>
+            <path d="M6.5 19Q12 21.4 17.5 19"/>
+            <path d="M10.1 9.6Q12 10.4 13.9 9.6M8.4 14.2Q12 15.7 15.6 14.2"/>
+            <path d="M10.7 3.4a1.3 1.3 0 1 0 2.6 0a1.3 1.3 0 1 0 -2.6 0"/>
+        </g>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 4 6.5" to="360 4 6.5" dur="2.4s" repeatCount="indefinite"/>
+        <path d="M3.307 6.1L4.693 6.9"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="360 19.8 5.5" to="0 19.8 5.5" dur="2.4s" repeatCount="indefinite"/>
+        <path d="M19.187 6.014L20.413 4.986"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 3.5 13" to="360 3.5 13" dur="1.2s" repeatCount="indefinite"/>
+        <path d="M2.748 13.274L4.252 12.726"/>
+    </g>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" from="360 20.5 12.5" to="0 20.5 12.5" dur="1.2s" repeatCount="indefinite"/>
+        <path d="M19.986 11.887L21.014 13.113"/>
+    </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-harmonica">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;-1.5 0;0 0;1.5 0;0 0" dur="3.2s" repeatCount="indefinite" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3 10a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1l0 -4"/>
+        <path d="M3 10.8h18m-18 2.4h18"/>
+        <path d="M5.5 11.6v.8M8 11.6v.8M10.5 11.6v.8M13 11.6v.8M15.5 11.6v.8M18 11.6v.8"/>
+    </g>
+</svg>

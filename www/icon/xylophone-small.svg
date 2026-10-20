@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-xylophone">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M4.2 10.2a1.2 1.2 0 0 1 2.4 0v9.6a1.2 1.2 0 0 1 -2.4 0z"/>
+    <path d="M8.2 11.3a1.2 1.2 0 0 1 2.4 0v7.4a1.2 1.2 0 0 1 -2.4 0z"/>
+    <path d="M12.2 12.4a1.2 1.2 0 0 1 2.4 0v5.2a1.2 1.2 0 0 1 -2.4 0z"/>
+    <path d="M16.2 13.5a1.2 1.2 0 0 1 2.4 0v3a1.2 1.2 0 0 1 -2.4 0z"/>
+    <path d="M2.9 2.9L4.35 5.07M3.9 5.9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+    <path d="M19.9 6.2L18.45 8.37M16.9 9.2a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-tambourine">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 12 12;-9 12 12;8 12 12;-6 12 12;4 12 12;0 12 12;0 12 12" keyTimes="0;0.06;0.14;0.22;0.3;0.38;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M4.5 12a7.5 7.5 0 1 0 15 0a7.5 7.5 0 1 0 -15 0"/>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 12 4.5;40 12 4.5;-30 12 4.5;15 12 4.5;0 12 4.5;0 12 4.5" keyTimes="0;0.08;0.18;0.3;0.42;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path d="M10.6 4.5a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0 -2.8 0"/>
+        </g>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 19.133 9.682;40 19.133 9.682;-30 19.133 9.682;15 19.133 9.682;0 19.133 9.682;0 19.133 9.682" keyTimes="0;0.08;0.18;0.3;0.42;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path d="M17.733 9.682a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0 -2.8 0"/>
+        </g>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 16.408 18.068;40 16.408 18.068;-30 16.408 18.068;15 16.408 18.068;0 16.408 18.068;0 16.408 18.068" keyTimes="0;0.08;0.18;0.3;0.42;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path d="M15.008 18.068a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0 -2.8 0"/>
+        </g>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 7.592 18.068;40 7.592 18.068;-30 7.592 18.068;15 7.592 18.068;0 7.592 18.068;0 7.592 18.068" keyTimes="0;0.08;0.18;0.3;0.42;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path d="M6.192 18.068a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0 -2.8 0"/>
+        </g>
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 4.867 9.682;40 4.867 9.682;-30 4.867 9.682;15 4.867 9.682;0 4.867 9.682;0 4.867 9.682" keyTimes="0;0.08;0.18;0.3;0.42;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+            <path d="M3.467 9.682a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0 -2.8 0"/>
+        </g>
+    </g>
+</svg>

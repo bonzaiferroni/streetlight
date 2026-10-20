@@ -2,9 +2,11 @@
      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
      class="icon icon-tabler icons-tabler-animated icon-tabler-pray">
     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M7 20.6C9.67 20.6 14.21 21.51 15 20.6C15.6 19.91 12.17 18.14 11 16C10.39 14.87 10.75 14.08 10.75 12.8C10.75 11.52 10.04 9.69 11 9.6C12.41 9.46 13.4 12.17 14.8 12.4C15.64 12.54 16.27 11.2 17 10.6">
+        <animate attributeName="d" values="M7 20.6C9.67 20.6 14.21 21.51 15 20.6C15.6 19.91 12.17 18.14 11 16C10.39 14.87 10.75 14.08 10.75 12.8C10.75 11.52 10.04 9.69 11 9.6C12.41 9.46 13.4 12.17 14.8 12.4C15.64 12.54 16.27 11.2 17 10.6;M7 20.6C9.67 20.6 14.21 21.51 15 20.6C15.6 19.91 12.12 18.17 11 16C10.41 14.86 10.81 14.06 10.97 12.79C11.14 11.52 10.87 9.68 11.83 9.7C13.25 9.73 13.94 12.54 15.32 12.88C16.14 13.08 16.78 11.68 17.52 11.08;M7 20.6C9.67 20.6 14.21 21.51 15 20.6C15.6 19.91 12.17 18.14 11 16C10.39 14.87 10.75 14.08 10.75 12.8C10.75 11.52 10.04 9.69 11 9.6C12.41 9.46 13.4 12.17 14.8 12.4C15.64 12.54 16.27 11.2 17 10.6" keyTimes="0;0.5;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
     <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0;0.3 0.5;0 0" dur="3s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-        <path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0;1.51 0.28;0 0" keyTimes="0;0.5;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M11.6 4.946C12.333 3.907 11.652 2.488 11.286 2.136C11.286 3.203 10.583 3.802 10.133 4.244C9.684 4.686 9.4 5.382 9.4 6C9.4 7.164 10.385 8.108 11.6 8.108C12.815 8.108 13.8 7.164 13.8 6C13.8 5.462 13.413 4.616 13.067 4.244C12.412 5.298 12.043 5.298 11.6 4.946"/>
     </g>
-    <path d="M7 20h8l-4 -4v-7l4 3l2 -2"/>
 </svg>
