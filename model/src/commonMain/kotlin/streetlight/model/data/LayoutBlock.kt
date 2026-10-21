@@ -54,7 +54,10 @@ enum class HeaderType: Labeled {
     Card,
 
     /** The image across the width of the page, above the title. */
-    Hero;
+    Hero,
+
+    /** The title centered above the image, framed, with the cells along its bottom. */
+    Marquee;
 
     override val label get() = name
 }

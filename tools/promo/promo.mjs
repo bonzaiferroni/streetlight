@@ -2,7 +2,7 @@
 // a studio: Chrome's headless shell with begin frame control and virtual time, so the page runs exactly as in a
 // browser while each frame lands on time. A camera crops each frame, and the frames are encoded to AV1.
 import { chromium } from 'playwright';
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, readFile, rm, stat, symlink } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { homedir, tmpdir } from 'node:os';
@@ -29,6 +29,14 @@ export const progress = (s, start, seconds) => Math.min(Math.max((s - start) / s
 export const bezier = (a, c, b, t) => a.map((_, k) => (1 - t) ** 2 * a[k] + 2 * (1 - t) * t * c[k] + t ** 2 * b[k]);
 export const lerp = (a, b, t) => a.map((v, k) => v + (b[k] - v) * t);
 
+let lapStart = performance.now();
+/** Logs the seconds since the last lap as the time [name] took. */
+export const lap = name => {
+    const now = performance.now();
+    console.log(`${name}: ${((now - lapStart) / 1000).toFixed(1)}s`);
+    lapStart = now;
+};
+
 export const pointerCss = `
     #promo-pointer {
         position: fixed;
@@ -49,9 +57,25 @@ const root = resolve(import.meta.dirname, '../..');
 const promoModule = `${root}/web/build/compileSync/js/promo/promoDevelopmentExecutable/kotlin/streetlight-web-promo.mjs`;
 const bundleDir = `${import.meta.dirname}/bundle`;
 
-/** Compiles the promo shots of `web/src/jsPromo` and bundles them into `bundle/`. `--no-build` skips both. */
+// the sources the promo bundle is compiled from
+const sourceDirs = ['web/src', 'model/src', 'koala/src', 'kabinet/library/src', 'kampfire/src'].map(d => `${root}/${d}`);
+
+// the latest modification time of a file under [dir]
+const newest = async dir => {
+    const files = await readdir(dir, { recursive: true, withFileTypes: true });
+    const times = await Promise.all(files.filter(f => f.isFile()).map(async f => (await stat(join(f.parentPath, f.name))).mtimeMs));
+    return Math.max(0, ...times);
+};
+
+/**
+ * Compiles the promo shots of `web/src/jsPromo` and bundles them into `bundle/`, unless the bundle is newer than
+ * every source it is compiled from. `--build` compiles regardless, and `--no-build` skips both.
+ */
 export const buildShots = async () => {
     if (process.argv.includes('--no-build')) return;
+    const built = await stat(`${bundleDir}/promo.js`).then(s => s.mtimeMs, () => 0);
+    const sources = Math.max(...await Promise.all(sourceDirs.map(newest)));
+    if (!process.argv.includes('--build') && built > sources) return lap('build (fresh)');
     const gradle = spawnSync(`${root}/gradlew`, ['-q', ':web:jsPromoPromoDevelopmentExecutableCompileSync'], { cwd: root, stdio: 'inherit' });
     if (gradle.status !== 0) throw new Error('promo compile failed');
     await rm(bundleDir, { recursive: true, force: true });
@@ -65,6 +89,7 @@ export const buildShots = async () => {
         logLevel: 'warning',
         nodePaths: [`${root}/build/js/node_modules`],
     });
+    lap('build');
 };
 
 const shotPage = `<!doctype html>
@@ -128,9 +153,16 @@ const studioArgs = [
     '--disable-image-animation-resync',
 ];
 
+// a still shot holds every animation where it stands and lets elements enter without a transition, so a frame drawn
+// at any time is the same; the studio leaves an element painted partway through an @starting-style entrance
+const stillCss = `
+    *, ::before, ::after { animation-play-state: paused !important; }
+    .focus-in-slow { transition: none; }
+`;
+
 /**
  * Opens a page of [shot]'s `viewport` at the quality scale in a studio browser, where nothing is drawn unless the
- * studio draws it.
+ * studio draws it. A shot marked `still` is drawn with its animations paused.
  *
  * Until `start()`, the page runs on real time and `until` and `load` draw frames as it goes. From `start()`, time is
  * virtual: each `frame()` advances it by one frame, sends the frame's input, draws, and returns the image. Timers,
@@ -180,7 +212,7 @@ export const openStudio = async shot => {
         until: (predicate, arg) => drawing(page.waitForFunction(predicate, arg, { polling: 50, timeout: 30000 })),
         /** Adds [css] and the drawn pointer to the page and starts virtual time. */
         start: async (css = '') => {
-            await page.addStyleTag({ content: pointerCss + css });
+            await page.addStyleTag({ content: pointerCss + (shot.still ? stillCss : '') + css });
             await page.evaluate(svg => document.body.insertAdjacentHTML('beforeend', svg), pointerSvg);
             await cdp.send('Emulation.setVirtualTimePolicy', { policy: 'pause' });
             started = true;
@@ -212,7 +244,26 @@ export const openStudio = async shot => {
             await Promise.all(input);
             return Buffer.from(screenshotData, 'base64');
         },
+        /**
+         * Draws frames until the page's images are drawn and its finite animations have finished, then returns one
+         * more; the frame drawn as a transition ends still shows it unfinished. It checks every few frames, after at
+         * least half a second.
+         */
+        settle: async function () {
+            const every = Math.max(Math.round(shot.fps / 6), 1);
+            for (let i = 1; i <= shot.fps * 10; i++) {
+                await this.frame();
+                if (i < shot.fps / 2 || i % every) continue;
+                const moving = await page.evaluate(() => [...document.images].some(i => !i.complete) || document.getAnimations()
+                    .some(a => a.playState === 'running' && a.effect.getTiming().iterations !== Infinity));
+                if (!moving) return this.frame();
+            }
+            throw new Error('the page never settled');
+        },
+        /** Scrolls the page to [y]; the studio's page closes on `window.scrollTo`, so it is set on the scrolling element. */
+        scrollTo: y => page.evaluate(y => document.scrollingElement.scrollTop = y, y),
         close: async () => {
+            lap('capture');
             await context.close();
             await rm(profile, { recursive: true, force: true });
         },
@@ -243,6 +294,46 @@ export const frameWriter = (dir, shot) => {
 };
 
 /**
+ * Lays out the frames of [shot] in [dir] from [segments], in order:
+ * - `{ still, seconds }` holds the frame image `still`,
+ * - `{ frames, count }` plays the first `count` numbered frames of the directory `frames`,
+ * - `{ from, to, seconds, blur }` blurs the image `from` as it fades into `to`, which sharpens; `blur` is the strongest
+ *   blur in shot pixels.
+ *
+ * A held or played frame is linked, not copied.
+ */
+export const assemble = async (dir, shot, segments) => {
+    const width = shot.size.width * quality.scale;
+    const height = shot.size.height * quality.scale;
+    const raw = { width, height, channels: 3 };
+    const blurred = (png, sigma) => (sigma < 0.3 ? sharp(png) : sharp(png).blur(sigma)).removeAlpha().raw().toBuffer();
+    const frameName = (dir, i) => `${dir}/${String(i).padStart(4, '0')}.png`;
+    let index = 0;
+    const link = from => symlink(resolve(from), frameName(dir, index++));
+
+    for (const segment of segments) {
+        if (segment.still) {
+            for (let i = 0; i < Math.round(segment.seconds * shot.fps); i++) await link(segment.still);
+        } else if (segment.frames) {
+            for (let i = 0; i < segment.count; i++) await link(frameName(segment.frames, i));
+        } else {
+            const [a, b] = await Promise.all([readFile(segment.from), readFile(segment.to)]);
+            const sigma = segment.blur * quality.scale;
+            const frames = Math.round(segment.seconds * shot.fps);
+            for (let i = 1; i <= frames; i++) {
+                const t = i / frames;
+                const mix = easeInOut(t);
+                const [x, y] = await Promise.all([blurred(a, sigma * Math.sin(Math.PI * t / 2)), blurred(b, sigma * Math.cos(Math.PI * t / 2))]);
+                const out = Buffer.alloc(x.length);
+                for (let k = 0; k < x.length; k++) out[k] = x[k] + (y[k] - x[k]) * mix + 0.5;
+                await sharp(out, { raw }).png({ compressionLevel: 1 }).toFile(frameName(dir, index++));
+            }
+        }
+    }
+    lap('assemble');
+};
+
+/**
  * Encodes [inputs] through [filter] into the next numbered take of [shot], so earlier takes stay for comparison.
  *
  * Each input is a frame directory with its frame rate. Without a [filter], the one input is scaled to the shot's
@@ -263,5 +354,6 @@ export const encode = async ({ shot, fps, inputs, filter, seconds }) => {
         '-c:v', 'libsvtav1', ...(arg('svt') ? ['-svtav1-params', arg('svt')] : []), '-preset', arg('preset') ?? String(quality.preset), '-crf', arg('crf') ?? '32', '-pix_fmt', 'yuv420p10le', '-g', String(Math.ceil(seconds * fps)),
         out,
     ], { stdio: 'inherit', env: { ...process.env, SVT_LOG: '1' } });
+    lap('encode');
     console.log(result.status === 0 ? `wrote ${out}` : 'encode failed');
 };

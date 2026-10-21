@@ -57,5 +57,18 @@ fun FlowContent.entityHeader(
             mod = mod,
             block = block,
         )
+        HeaderType.Marquee -> marqueeHeader(
+            title = entity.label,
+            descriptor = descriptor,
+            image = image,
+            subtitle = entity.sublabel,
+            colorScheme = entity.toThemeColor(),
+            description = description,
+            cells = shownCells,
+            buttons = buttons,
+            links = links,
+            mod = mod,
+            block = block,
+        )
     }
 }

@@ -23,4 +23,5 @@ fun main() {
 
 private val shots = mapOf(
     "theme" to themeShot,
+    "layout-showcase" to layoutShowcaseShot,
 )

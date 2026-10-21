@@ -25,7 +25,7 @@ The package is the `promo` compilation of web's js target, in `web/src/jsPromo`.
 
 ## Shots
 
-`PromoShot` holds the shot's `view` and an `api` that returns the fakes it reads. A shot that shows stored records builds them in its own file and hands them to the fakes through `api`.
+`PromoShot` holds the shot's `view` and an `api` that returns the fakes it reads. A shot that shows stored records builds them in its own file and hands them to the fakes through `api`. A shot of a whole page may instead hold the page's content as JSON in a file of its own, as `fizzBuzzContent.kt` holds the data island of FizzBuzz's page from the dev server, decoded with `jsonConfig`.
 
 `main()` adds the site stylesheet from `buildSiteStyles()` and mounts the shot named by the `shot` query parameter as the body. A new shot is added to `shots` in `Main.kt`.
 

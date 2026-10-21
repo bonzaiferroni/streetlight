@@ -27,9 +27,11 @@ An entity supplies its content as data, such as an `EntityCell`. The component t
 
 A value the entity holds but the header shows differently is a parameter defaulted to the entity's own, as `cells` and `image`.
 
-A header is laid out by the `HeaderType` of its `HeaderBlock`, which `renderHeader` passes through `headerOf` to `entityHeader`. `Card` is `pageHeader` and `Hero` is `heroHeader`; both take the same arguments, so a new layout of the header is one more function of that shape and one more `HeaderType`.
+A header is laid out by the `HeaderType` of its `HeaderBlock`, which `renderHeader` passes through `headerOf` to `entityHeader`. `Card` is `pageHeader`, `Hero` is `heroHeader` and `Marquee` is `marqueeHeader`; all take the same arguments, so a new layout of the header is one more function of that shape and one more `HeaderType`.
 
 `heroHeader` opens with the image across the body's width, flush with the top of its block. The image dissolves into the page through a mask on the `img`, not an overlay, so the page's theme shows through, and the title sits over the dissolve, lit by the theme's `--rho-color`. The mask is on the `img` alone, so the image's attribution stays visible.
+
+`marqueeHeader` centers the title above the image, as a sign over a window. The image sits in a frame, darkening toward its bottom, over a blurred copy of itself that fades out evenly on every side; the cells follow below the frame.
 
 ## Entity Parts
 

@@ -4,6 +4,7 @@ import koala.modifier.*
 import koala.model.MarkerSheet
 import streetlight.web.layout.CellGridCss
 import streetlight.web.layout.HeroHeaderCss
+import streetlight.web.layout.MarqueeHeaderCss
 import streetlight.web.layout.EntityDialogCss
 import streetlight.web.layout.FeedRowCss
 import streetlight.web.layout.EntityBodyCss
@@ -85,6 +86,7 @@ private val KtStyles = listOf(
     FeedSectionCss,
     CellGridCss,
     HeroHeaderCss,
+    MarqueeHeaderCss,
     StarToggleCss,
     MarkerSheet,
     TextDeltaCss,

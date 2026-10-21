@@ -57,4 +57,6 @@ object LottieFile : FileSet<Lottie>() {
 
 object VideoFile {
     val MapZoomClick = Video.of("map-zoom-click.webm")
+    val ThemeShowcase = Video.of("theme-showcase.webm")
+    val LayoutShowcase = Video.of("layout-showcase.webm")
 }
