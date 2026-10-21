@@ -17,6 +17,7 @@ ${MarkdownStyle.Container} table {
     background: var(--zen-bg);
     background-clip: padding-box;
     box-shadow: var(--moon-shadow);
+    overflow: clip;
 }
 
 ${MarkdownStyle.Container} th + th,
@@ -26,5 +27,6 @@ ${MarkdownStyle.Container} td + td {
 
 ${MarkdownStyle.Container} th {
     text-align: inherit;
+    background: var(--zen-bg);
 }
 """

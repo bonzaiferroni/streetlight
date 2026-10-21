@@ -4,12 +4,9 @@
     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
     <path d="M5 12l-2 0l9 -9l9 9l-2 0"/>
     <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/>
-    <g transform="translate(9 17)">
-        <g>
-            <animateTransform attributeName="transform" type="scale" values="1 1;1 1;0.35 1;0.35 1;1 1;1 1" keyTimes="0;0.4;0.55;0.75;0.9;1" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
-            <g transform="translate(-9 -17)">
-                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/>
-            </g>
-        </g>
-    </g>
+    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/>
+    <path d="M9 21V15C9 13.9 9.9 13 11 13L12 13">
+        <animate attributeName="d" values="M9 21V15C9 13.9 9.9 13 11 13L12 13;M9 21V15C9 13.9 9.9 13 11 13L12 13;M15 21V15C15 14.33 15 13.67 15 13L15 13;M15 21V15C15 14.33 15 13.67 15 13L15 13;M9 21V15C9 13.9 9.9 13 11 13L12 13;M9 21V15C9 13.9 9.9 13 11 13L12 13" keyTimes="0;0.15;0.6;0.8;0.801;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.6;0.8;0.801;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+    </path>
 </svg>

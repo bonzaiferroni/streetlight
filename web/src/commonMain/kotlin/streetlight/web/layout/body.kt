@@ -39,6 +39,7 @@ fun FlowContent.pageBody(
 object BodyStyle {
     val ShellColumn = modify(Gap0)
     val MainColumn = modify(Gap(4))
+    val ZenColumn = modify(Gap(8))
     val FormRow = Class("form-row")
 }
 
