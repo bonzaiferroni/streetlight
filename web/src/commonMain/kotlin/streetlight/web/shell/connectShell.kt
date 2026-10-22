@@ -15,6 +15,7 @@ import koala.markdown.lazyMarkdown
 import koala.markdown.markdown
 import koala.model.AppRoute
 import koala.modifier.*
+import koala.modifier.AccentFg
 import koala.page.Id
 import koala.page.setId
 import kotlinx.css.pct
@@ -69,24 +70,28 @@ fun FlowContent.connectBusiness() {
                 iconCard(
                     SvgFile.MapPinShare,
                     "Get on the map",
-                    "Our interactive map shows everything that is happening in your neighborhood."
+                    "Our interactive map shows everything that is happening in your neighborhood.",
+                    SystemFg,
                 )
                 iconCard(
                     SvgFile.CalendarRepeat,
                     "Automatically share events",
-                    "We will read an existing calendar page once a day and share your events."
+                    "We will read an existing calendar page once a day and share your events.",
+                    AccentFg,
                 )
             }
             row(modify(FlexItems1, Gap2Px)) {
                 iconCard(
                     SvgFile.Home,
                     "Web hosting and more",
-                    "Point users to an existing website or build one with our simple tools."
+                    "Point users to an existing website or build one with our simple tools.",
+                    PrimaryFg,
                 )
                 iconCard(
                     SvgFile.Seedling,
                     "Evolving platform",
-                    "We are just getting started, share your ideas and shape the direction of Streetlight."
+                    "We are just getting started, share your ideas and shape the direction of Streetlight.",
+                    ValidFg
                 )
             }
         }
@@ -125,10 +130,10 @@ private fun FlowContent.videoBox(video: Video) {
     }
 }
 
-private fun FlowContent.iconCard(svg: SvgPack, title: String, text: String) {
+private fun FlowContent.iconCard(svg: SvgPack, title: String, text: String, colorMod: Class) {
     column(modify(AlignItemsCenter, TextAlignCenter, Gap(2), Padding(2), ZenBg)) {
-        box(modify(ConnectStyle.IconBadge, PlaceItemsCenter, Width(16), Aspect1)) {
-            icon(svg.animated, modify(AccentFg, Width(8)))
+        box(modify(ConnectStyle.IconBadge, PlaceItemsCenter, Width(16), Aspect1, colorMod)) {
+            icon(svg.animated, modify(Width(8)))
         }
         box(modify(Height(4), PlaceItemsCenter)) {
             heading6(title)
@@ -178,3 +183,7 @@ private val supportPathInfo by lazyMarkdown("""
 | We'll connect you to a web developer from your area. |
 | **Scaled to meet your needs.** We'll work with you to find a solution that fits your business. |
 """)
+
+private val noAds = """
+No ads, no paid prioritization. Events are listed in the order they are scheduled. Events can be shared within Streetlight and on other sites.
+"""

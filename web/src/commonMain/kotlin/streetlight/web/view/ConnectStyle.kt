@@ -21,7 +21,7 @@ ${OnboardType.entries.joinToString(",\n") { "${AppAttribute.OnboardType.selector
 /* the glowing ring the icon sits in */
 $IconBadge {
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(var(--accent), .22), transparent);
-    box-shadow: inset 0 0 0 1px rgba(var(--accent), .35);
+    background: radial-gradient(closest-side, color-mix(in srgb, currentColor 22%, transparent), transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
 }
 """ }
