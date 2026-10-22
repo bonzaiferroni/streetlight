@@ -13,6 +13,7 @@ import koala.modifier.*
 import streetlight.model.data.toCentsLabel
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.dashEntity
+import streetlight.web.dom.layout.dashSection
 import streetlight.web.dom.layout.dashSectionHeading
 import streetlight.web.model.Merchant
 
@@ -26,10 +27,9 @@ fun ViewScope.merchantDash() {
 
 /** The star's offerings, each with buttons that stage its edit or an invoice for it, under a button for a new one. */
 context(model: Merchant)
-private fun ViewScope.offeringsSection() = section {
-    dashSectionHeading("Offerings", listOf(
-        MenuAction("New", onClick = model::startNewOffering)
-    ))
+private fun ViewScope.offeringsSection() = dashSection("Offerings", listOf(
+    MenuAction("New", onClick = model::startNewOffering)
+)) {
     flowBlock(model.offeringsState) { offerings ->
         if (offerings == null) return@flowBlock
         if (offerings.isEmpty()) {
@@ -49,8 +49,7 @@ private fun ViewScope.offeringsSection() = section {
 
 /** The payments the star has requested, newest first, each with its customer, amount, status and age. */
 context(model: Merchant)
-private fun ViewScope.paymentsSection() = section {
-    dashSectionHeading("Payments")
+private fun ViewScope.paymentsSection() = dashSection("Payments") {
     flowBlock(model.paymentsState) { payments ->
         if (payments == null) return@flowBlock
         if (payments.isEmpty()) {
@@ -74,8 +73,7 @@ private fun ViewScope.paymentsSection() = section {
 
 /** The star's customers, each by name and email. */
 context(model: Merchant)
-private fun ViewScope.customersSection() = section {
-    dashSectionHeading("Customers")
+private fun ViewScope.customersSection() = dashSection("Customers") {
     flowBlock(model.customersState) { customers ->
         if (customers == null) return@flowBlock
         if (customers.isEmpty()) {
