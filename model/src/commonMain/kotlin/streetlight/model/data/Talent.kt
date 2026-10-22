@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.Labeled
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -27,10 +28,12 @@ value class TalentId(override val value: Uuid): RecordId {
 }
 
 /** The level of a [Talent]. */
-enum class TalentLevel {
+enum class TalentLevel: Labeled {
     Beginner,
     Intermediate,
-    Professional,
+    Professional;
+
+    override val label get() = name
 }
 
 /** The fields of a talent a form sends. */

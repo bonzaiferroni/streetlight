@@ -26,6 +26,7 @@ import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.CityConfigRoute
 import streetlight.model.ui.CityRoute
+import streetlight.model.ui.ConnectRoute
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute

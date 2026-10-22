@@ -1,10 +1,11 @@
 package streetlight.model.data
 
+import kampfire.model.Labeled
 import koala.SvgFile
 import koala.SvgPack
 
 /** A talent a star offers, with its icon. */
-enum class TalentTag(val svg: SvgPack) {
+enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     // Music
     Singer(SvgFile.MicrophoneHandheld),
     Rapper(SvgFile.Microphone),
@@ -131,5 +132,7 @@ enum class TalentTag(val svg: SvgPack) {
     DanceInstructor(SvgFile.Dance),
     Childcare(SvgFile.ToyBlocks),
     MassageTherapist(SvgFile.Massage),
-    TarotReader(SvgFile.Cards)
+    TarotReader(SvgFile.Cards);
+
+    override val label = label ?: name
 }

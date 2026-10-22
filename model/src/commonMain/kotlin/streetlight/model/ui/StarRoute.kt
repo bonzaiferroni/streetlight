@@ -68,6 +68,7 @@ enum class StarConfigTab(val svg: SvgPack, label: String? = null): Labeled {
 enum class StarDashTab(val svg: SvgPack, label: String? = null): Labeled {
     Overview(SvgFile.Dashboard),
     ECommerce(SvgFile.BuildingStore, "e-commerce"),
+    Talents(SvgFile.Award),
     Sandbox(SvgFile.Flask);
 
     override val label = label ?: name

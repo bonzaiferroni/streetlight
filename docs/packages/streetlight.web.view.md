@@ -59,7 +59,7 @@ context(model.designer.theme) {
 
 A view rendered directly by a route has a second function taking `RouteScope`, named with a `Route` suffix. The route function calls the plain view function, so the view itself stays reachable from anywhere.
 
-Every route function builds its view inside `routeBlock`, which scrolls a route other than the initial one to its remembered position once the content is built. A route that fetches nothing takes `NullContent`. A view that reads the route declares it as a context parameter, which `routeBlock` provides.
+Every route function builds its view inside `routeBlock`, which scrolls a route other than the initial one to its remembered position once the content is built. A route that fetches nothing takes `NullContent`. On a screen with a shell, which is not fetched on the initial load, such a route supplies it directly, as `routeBlock<FooRoute, NullContent>({ NullContent })`. A view that reads the route declares it as a context parameter, which `routeBlock` provides.
 
 ```kotlin
 fun RouteScope.viewFrontDeskRoute() {
@@ -86,12 +86,12 @@ A view model constructed inside a view is given `contentScope`, so its coroutine
 
 ## Staged Edits
 
-A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the form hands it to the config model, which ends the edit. `sellerConfigPanel` is the example, with `SellerConfig`, `OfferingEditor` and `PaymentEditor`.
+A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the form hands it to the config model, which ends the edit. `sellerDash` is the example, with `Merchant`, `OfferingEditor` and `PaymentEditor`; `talentDash`, with `TalentConfig` and `TalentEditor`, is the same shape with a single kind of edit.
 
 ```kotlin
 flowBlock(config.focusState) { focus ->
     when (focus) {
-        null -> formRow { sellerDash() }
+        null -> formRow { merchantDash() }
         is OfferingEdit -> context(OfferingEditor(focus, api)) { offeringEditForm() }
         is PaymentEdit -> context(PaymentEditor(focus, api)) { paymentEditForm() }
         else -> error("unknown seller focus: $focus")

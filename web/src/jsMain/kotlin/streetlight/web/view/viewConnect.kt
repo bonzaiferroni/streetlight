@@ -39,7 +39,7 @@ fun ViewScope.viewConnect() {
 }
 
 fun RouteScope.viewConnectRoute() {
-    routeBlock<ConnectRoute, NullContent> {
+    routeBlock<ConnectRoute, NullContent>({ NullContent }) {
         viewConnect()
     }
 }
