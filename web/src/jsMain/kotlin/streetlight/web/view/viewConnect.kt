@@ -18,7 +18,7 @@ import streetlight.web.shell.connectShell
 import streetlight.web.utility.setTitle
 import web.dom.document
 
-/** The connect page, opened on [type], following the route as its type changes. */
+/** The connect page, opened on [route], following the route as its type changes. */
 context(route: ConnectRoute)
 fun ViewScope.viewConnect() {
     shellBox {

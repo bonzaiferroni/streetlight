@@ -13,7 +13,7 @@ data class Talent(
     val description: String?,
     val imageUrl: String?,
     val experience: Int,
-    val talentType: TalentType,
+    val tags: List<TalentTag>?,
     val talentLevel: TalentLevel,
     val yearStarted: Int,
     val updatedAt: Instant,
@@ -24,17 +24,6 @@ data class Talent(
 @Serializable
 value class TalentId(override val value: Uuid): RecordId {
     companion object { fun random() = TalentId(Uuid.random()) }
-}
-
-/** The kinds of [Talent]. */
-enum class TalentType {
-    Music,
-    Performance,
-    Promotion,
-    Food,
-    Technical,
-    Host,
-    Other,
 }
 
 /** The level of a [Talent]. */
@@ -51,7 +40,7 @@ data class TalentEdit(
     val name: String = "",
     val description: String? = null,
     val imageUrl: String? = null,
-    val talentType: TalentType = TalentType.Music,
+    val tags: List<TalentTag> = emptyList(),
     val talentLevel: TalentLevel = TalentLevel.Beginner,
     val yearStarted: Int = 2025,
 )
@@ -62,7 +51,7 @@ fun Talent.toEdit() = TalentEdit(
     name = name,
     description = description,
     imageUrl = imageUrl,
-    talentType = talentType,
+    tags = tags.orEmpty(),
     talentLevel = talentLevel,
     yearStarted = yearStarted,
 )

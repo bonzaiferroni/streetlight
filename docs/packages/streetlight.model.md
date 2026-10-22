@@ -56,7 +56,7 @@ A `RawEntity` holds the text of each `ParseProperty` read from a page, not yet p
 
 ## Tags
 
-A tag enum is stored by ordinal, so an entry is renamed in place and a new entry is added at the end. Each `EventTag` carries a `specificity`, rising as it names an event more narrowly; a view showing one tag of several shows the most specific.
+A tag enum is stored by name, as a text array, so entries are ordered freely and a renamed entry needs its stored rows renamed with it. A cursor still carries a tag as its ordinal, which the query converts to the name. Each `EventTag` carries a `specificity`, rising as it names an event more narrowly; a view showing one tag of several shows the most specific.
 
 | Specificity | Names | Example |
 |---|---|---|
