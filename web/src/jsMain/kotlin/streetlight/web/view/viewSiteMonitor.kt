@@ -4,6 +4,7 @@ import koala.SiteImage
 import koala.modifier.*
 import koala.dom.*
 import koala.external.ECharts
+import koala.model.NullContent
 import streetlight.model.ui.SiteMonitorRoute
 import web.dom.document
 import koala.dom.component.*
@@ -14,7 +15,7 @@ import streetlight.web.layout.mainBody
 import streetlight.web.layout.pageHeader
 import streetlight.web.utility.setTitle
 
-fun RouteScope.viewSiteMonitor() {
+fun ViewScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(contentScope)
     mainBody("viewSiteMonitor.kt") {
         pageHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom)
@@ -35,4 +36,10 @@ fun RouteScope.viewSiteMonitor() {
     }
 
     document.setTitle(SiteMonitorRoute)
+}
+
+fun RouteScope.viewSiteMonitorRoute() {
+    routeBlock<SiteMonitorRoute, NullContent> {
+        viewSiteMonitor()
+    }
 }

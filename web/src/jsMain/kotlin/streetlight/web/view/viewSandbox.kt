@@ -3,6 +3,7 @@ package streetlight.web.view
 import koala.dom.*
 import koala.dom.component.*
 import koala.dom.layout.*
+import koala.model.NullContent
 import koala.modifier.*
 import streetlight.model.ui.SandboxAccountRoute
 import streetlight.model.ui.SandboxIndexRoute
@@ -14,7 +15,7 @@ import streetlight.web.dom.layout.configBody
 import streetlight.web.dom.layout.formSection
 
 /** The sandbox, where the [subrouter] is tried out on the [SandboxRoute]s. */
-fun RouteScope.viewSandbox() = configBody("Sand", "Box", "viewSandbox.kt") {
+fun ViewScope.viewSandbox() = configBody("Sand", "Box", "viewSandbox.kt") {
     subrouter(
         label = "Sandbox",
         index = SandboxIndexRoute,
@@ -33,6 +34,12 @@ fun RouteScope.viewSandbox() = configBody("Sand", "Box", "viewSandbox.kt") {
                 textBlock(route.itemId?.let { "The editor of item $it would go here." } ?: "A new item would start here.")
             }
         }
+    }
+}
+
+fun RouteScope.viewSandboxRoute() {
+    routeBlock<SandboxRoute, NullContent> {
+        viewSandbox()
     }
 }
 

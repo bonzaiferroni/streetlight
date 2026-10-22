@@ -4,6 +4,8 @@ import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.page.shellBox
 import koala.dom.getElementOrNullById
+import koala.dom.routeBlock
+import koala.model.NullContent
 import koala.modifier.setAttribute
 import kotlinx.coroutines.flow.drop
 import streetlight.model.data.OnboardType
@@ -17,12 +19,13 @@ import streetlight.web.utility.setTitle
 import web.dom.document
 
 /** The connect page, opened on [type], following the route as its type changes. */
-fun ViewScope.viewConnect(type: OnboardType) {
+context(route: ConnectRoute)
+fun ViewScope.viewConnect() {
     shellBox {
-        connectShell(type)
+        connectShell(route.type)
     }
 
-    document.setTitle(ConnectRoute(type))
+    document.setTitle(route)
     applyTheme(null)
 
     launchEffect {
@@ -36,6 +39,7 @@ fun ViewScope.viewConnect(type: OnboardType) {
 }
 
 fun RouteScope.viewConnectRoute() {
-    val route = state.route as ConnectRoute
-    viewConnect(route.type)
+    routeBlock<ConnectRoute, NullContent> {
+        viewConnect()
+    }
 }

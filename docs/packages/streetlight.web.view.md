@@ -57,11 +57,15 @@ context(model.designer.theme) {
 }
 ```
 
-A view rendered directly by a route has a second function taking `RouteScope`, named with a `Route` suffix. The route function reads route arguments and calls the plain view function, so the view itself stays reachable from anywhere.
+A view rendered directly by a route has a second function taking `RouteScope`, named with a `Route` suffix. The route function calls the plain view function, so the view itself stays reachable from anywhere.
+
+Every route function builds its view inside `routeBlock`, which scrolls a route other than the initial one to its remembered position once the content is built. A route that fetches nothing takes `NullContent`. A view that reads the route declares it as a context parameter, which `routeBlock` provides.
 
 ```kotlin
 fun RouteScope.viewFrontDeskRoute() {
-    viewFrontDesk()
+    routeBlock<FrontDeskRoute, NullContent> {
+        viewFrontDesk()
+    }
 }
 ```
 

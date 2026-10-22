@@ -13,7 +13,7 @@ fun RouteScope.viewStudioPortal() {
         Screen.Onboard -> viewOnboardRoute()
         Screen.StarDash -> viewStarDashRoute()
         Screen.Inbox -> viewInboxRoute()
-        Screen.Chat -> viewChatRoom()
+        Screen.Chat -> viewChatRoomRoute()
         Screen.Feedback -> viewFrontDeskRoute()
 
         // location
@@ -37,8 +37,8 @@ fun RouteScope.viewStudioPortal() {
 
         // other
         Screen.SiteConfig -> viewSiteConfig()
-        Screen.SiteMonitor -> viewSiteMonitor()
-        Screen.Sandbox -> viewSandbox()
+        Screen.SiteMonitor -> viewSiteMonitorRoute()
+        Screen.Sandbox -> viewSandboxRoute()
         Screen.Docs -> viewSiteDocRoute()
         Screen.Talk -> viewTalkRoute()
         else -> textBlock("Coming soon: $screen")

@@ -4,6 +4,8 @@ import koala.SiteImage
 import koala.dom.*
 import koala.dom.component.*
 import koala.dom.layout.*
+import koala.model.NullContent
+import streetlight.model.ui.FrontDeskRoute
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.layout.mainBody
 import streetlight.web.layout.pageHeader
@@ -27,5 +29,7 @@ fun ViewScope.viewFrontDesk() {
 }
 
 fun RouteScope.viewFrontDeskRoute() {
-    viewFrontDesk()
+    routeBlock<FrontDeskRoute, NullContent> {
+        viewFrontDesk()
+    }
 }

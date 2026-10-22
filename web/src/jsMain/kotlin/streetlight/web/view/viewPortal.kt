@@ -54,7 +54,7 @@ private fun RouteScope.viewCorePortal() {
     when (val screen = state.route.screen) {
         Screen.Home -> viewHomeRoute()
         Screen.Earth -> viewEarthRoute()
-        Screen.SongProfile -> viewSongProfile()
+        Screen.SongProfile -> viewSongProfileRoute()
 
         // star
         Screen.Star -> viewStarRoute()
