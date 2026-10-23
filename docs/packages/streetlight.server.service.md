@@ -25,3 +25,14 @@ An operation is a function on the narrowest scope it uses, following `streetligh
 ## Outside the Process
 
 An operation reaches the outside through `client`, never through a client of its own. `ImageService.kt` downloads through `client.image`, so a test replaces the download with a fake.
+
+## Image Intake
+
+An image comes in as an upload or as a url the server downloads, and both are bounded before anything decodes them.
+
+| Guard | Where | Rule |
+|---|---|---|
+| Address | `HttpImageClient` | `http` or `https`, every resolved address public; each redirect hop checked again, at most 3 |
+| Time | `HttpImageClient` | Connect, socket and request timeouts |
+| Bytes | `HttpImageClient`, `UploadImage` | `MAX_IMAGE_BYTES`, checked against `Content-Length` and enforced while reading |
+| Pixels | `encodeImage` | The header's dimensions and frame count against `MAX_FRAME_PIXELS` and `MAX_TOTAL_PIXELS`; an unreadable header is refused |
