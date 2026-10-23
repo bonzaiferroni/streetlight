@@ -1,6 +1,7 @@
 package streetlight.web.layout
 
 import koala.component.column
+import koala.component.row
 import koala.component.section
 import koala.modifier.*
 import kotlinx.html.DIV
@@ -36,16 +37,25 @@ fun FlowContent.pageBody(
     }
 }
 
+fun FlowContent.columnRow(
+    mod: Modifier? = null,
+    content: DIV.() -> Unit,
+) {
+    row(modify(BodyStyle.ColumnRow, mod)) {
+        content()
+    }
+}
+
 object BodyStyle {
     val ShellColumn = modify(Gap0)
     val MainColumn = modify(Gap(4))
     val ZenColumn = modify(Gap(8))
-    val FormRow = Class("form-row")
+    val ColumnRow = Class("column-row")
 }
 
 //language="CSS"
 val BodyCss = with(BodyStyle) { """
-$FormRow {
+$ColumnRow {
     display: flex;
     flex-wrap: wrap;
     gap: var(--unit-2);

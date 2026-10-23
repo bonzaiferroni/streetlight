@@ -41,11 +41,12 @@ data class GalaxyContent(
     override val geoPoint get() = galaxy.geoPoint
 }
 
-/** The content of a user's page: the user, their feed, and whether it is the caller's own. */
+/** The content of a user's page: the user, their feed, their skills, and whether it is the caller's own. */
 @Serializable
 data class StarContent(
     val star: Star,
     val feed: EntityFeed,
+    val skills: List<Skill>,
     val isCaller: Boolean,
 ): RouteContent, DesignContent {
     override val geoPoint get() = null

@@ -23,7 +23,7 @@ data class PageLayout(
 
 /** The kinds of [LayoutBlock]. */
 enum class BlockType(label: String? = null): Labeled {
-    Header, Comments, Posts, Events, Map,
+    Header, Comments, Posts, Events, Map, Skills,
     Heading, Text, RichText("Rich Text"),
     Image, Gallery,
     Tabs, Columns;

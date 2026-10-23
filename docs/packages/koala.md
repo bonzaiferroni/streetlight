@@ -86,6 +86,8 @@ An icon from any other source is a file in `www/svg`, declared with `svgOf`, whi
 
 An icon from an outside source is listed in `docs/sources` under that source, its variants together as `foo-*.svg`, for attribution.
 
+New and reworked icons are made in `tools/svg`, specified in `tools.svg.md`: the animation rules, the strategies an icon's shape comes from, and the workflow. `tools/svg/notes.md` records each round of work.
+
 ## Markers
 
 A marker's body is the indicator that rests on its point, centered on it, such as the thumb of a `ThumbMarker`, the icon of an `IconMarker` or the whole of a `TravelMarker`. The marker's base sits on the point at zero size, with `BodySize` set inline from `bodySize`. `MarkerStyle.Body` shifts its element up and left by half of `BodySize`, so a body of that size, leading the element, is centered on the point, and anything after it, such as a label, trails to its right.

@@ -40,7 +40,11 @@ val PrimaryLightFg = Class("primary-light-fg")
 val AccentPrimaryGradientFg = Class("accent-primary-gradient-fg")
 val WhiteFg = Class("white-fg")
 val SystemFg = Class("editor-fg")
-val ErrorFg = Class("red-fg")
+val ErrorFg = Class("error-fg")
+val SeaGreenFg = Class("sea-green-fg")
+val GoldFg = Class("gold-fg")
+val CyanFg = Class("cyan-fg")
+val MagentaFg = Class("magenta-fg")
 val CautionFg = Class("caution-fg")
 val ValidFg = Class("valid-fg")
 val InkDimFg = Class("dim")
@@ -151,6 +155,10 @@ $SystemFg        { color:            var(--system-fg); }
 $ErrorFg         { color:            var(--error-fg); }
 $CautionFg       { color:            var(--caution-fg); }
 $ValidFg         { color:            var(--valid-fg); }
+$SeaGreenFg      { color:            var(--sea-green-fg); }
+$GoldFg          { color:            var(--gold-fg); }
+$CyanFg          { color:            var(--cyan-fg); }
+$MagentaFg       { color:            var(--magenta-fg); }
 $InkDimFg        { color:            rgba(var(--ink), 0.6); }
 $ColorSchemeFg   { color:            var(--color-scheme, currentColor); }
 $ColorSchemeBg   { background-color: var(--color-scheme, currentColor); }

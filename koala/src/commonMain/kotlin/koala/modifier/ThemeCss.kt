@@ -76,9 +76,16 @@ val ThemeCss get() = with(Koala) { """
     --caution-fg: color-mix(in srgb, rgb(var(--yellow)) 75%, rgb(var(--ink)));
     
     --gold: $gold;
+    --gold-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     --lamp-bg: color-mix(in srgb, rgb(var(--gold)) 50%, rgb(var(--paper)));
     
+    --cyan: $cyan;
+    --cyan-fg: color-mix(in srgb, rgb(var(--cyan)) 75%, rgb(var(--ink)));
+
+    --magenta: $magenta;
+    --magenta-fg: color-mix(in srgb, rgb(var(--magenta)) 75%, rgb(var(--ink)));
+
     --purple: $purple;
     --selection-overlay: rgba(var(--purple), .2);
     --system-bg: color-mix(in srgb, rgb(var(--purple)) 50%, var(--void-bg));

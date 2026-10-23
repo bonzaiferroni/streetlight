@@ -55,7 +55,7 @@ fun ViewScope.formSection(
 fun ViewScope.formRow(
     mod: Modifier? = null,
     content: DIV.() -> Unit
-) = row(modify(BodyStyle.FormRow, mod), content = content)
+) = row(modify(BodyStyle.ColumnRow, mod), content = content)
 
 fun ViewScope.formHeading(
     text: String

@@ -6,6 +6,8 @@ Read this first, then `docs/package-documentation.md`.
 
 `docs/packages/` holds one document per package, named for the fully qualified package. A package document specifies where things go. The code says what they are.
 
+Each tool in `tools/` is documented there too, as `tools.<folder>.md`, such as `tools.promo.md` for `tools/promo` and `tools.svg.md` for `tools/svg`. A tool's folder holds no specification of its own; a record of work, such as `tools/svg/notes.md`, may live beside its scripts.
+
 `docs/package-documentation.md` states what a package document contains, how it is written, and the style it follows. This document states when to read one and when to amend one.
 
 A package document is specification only. It brings a reader up to speed on the package as it stands, not on the decisions that shaped it. It assumes the reader knows Kotlin, including source sets.

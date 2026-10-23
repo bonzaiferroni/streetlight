@@ -29,6 +29,7 @@ object DefaultLayout {
     val star = PageLayout(
         blocks = listOf(
             HeaderBlock(),
+            SkillsBlock,
             PostsBlock,
         )
     )

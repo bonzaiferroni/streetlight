@@ -39,5 +39,6 @@ enum class BlockSvg(val svg: SvgPack) {
     Contact(SvgFile.AddressBook),
     Social(SvgFile.Share),
     Donate(SvgFile.HeartDollar),
-    Tickets(SvgFile.Ticket)
+    Tickets(SvgFile.Ticket),
+    Skills(SvgFile.Award)
 }

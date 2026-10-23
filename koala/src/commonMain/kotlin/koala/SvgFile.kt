@@ -510,6 +510,7 @@ object SvgFile {
     val Skull = svgPackOf("skull")
     val Snowflake = svgPackOf("snowflake")
     val Social = svgPackOf("social")
+    val Songwriting = svgPackOf("songwriting")
     val Soup = svgPackOf("soup")
     val SpacingVertical = svgPackOf("spacing-vertical")
     val Speakeasy = svgPackOf("speakeasy")

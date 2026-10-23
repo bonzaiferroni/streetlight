@@ -11,15 +11,17 @@ data class KoalaTheme(
     val bg: Rgb = Rgb(9, 13, 13),
     val fg: Rgb = Rgb(245, 246, 246),
     val void: Rgb = Rgb(24, 31, 31),
-    val accent: Rgb = rgbOf("#EC2E6A"),  // Rgb(200, 87, 178)
-    val primary: Rgb = rgbOf("#1abcc8"), // Rgb(58, 158, 200)
     val gray: Rgb = Rgb(60, 62, 64),
     val red: Rgb = Rgb(255, 99, 132),
-    val seaGreen: Rgb = Rgb(58, 200, 158),
+    val seaGreen: Rgb = Palette.SeaGreen.rgb,
     val green: Rgb = Rgb(99, 255, 132),
     val yellow: Rgb = Rgb(255, 240, 32),
-    val gold: Rgb = Rgb(200, 178, 87),
+    val gold: Rgb = Palette.Gold.rgb,
     val purple: Rgb = Rgb(158, 87, 200),
+    val cyan: Rgb = Palette.Cyan.rgb,
+    val magenta: Rgb = Palette.Magenta.rgb,
+    val accent: Rgb = magenta,
+    val primary: Rgb = cyan,
 
     val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 39), 25, 0),
     val beta: Glow = Glow(Rgb(88, 164, 255), GlowPosition(82, 20, 39), 25, 0),
@@ -31,6 +33,19 @@ data class KoalaTheme(
         const val MaxEnergy = 50
         const val MaxFocus = 99
         val ThemeTransitionSeconds = 1.2
+    }
+}
+
+/** Assorted colors for any display that wants one, and the defaults of their [KoalaTheme] colors. [mod] colors text with it. */
+enum class Palette(val rgb: Rgb, val mod: Class) {
+    Magenta(Rgb(236, 46, 106), MagentaFg),
+    Cyan(Rgb(26, 188, 200), CyanFg),
+    Gold(Rgb(200, 178, 87), GoldFg),
+    SeaGreen(Rgb(58, 200, 158), SeaGreenFg);
+
+    companion object {
+        /** The color at [index], wrapping around the palette, so a list can color its items in turn. */
+        fun cycle(index: Int) = entries[index.mod(entries.size)]
     }
 }
 

@@ -41,6 +41,8 @@ users.json
 tools/benchmark/node_modules/
 tools/benchmark/traces/
 tools/benchmark/server
+tools/svg/preview.html
+tools/svg/**/__pycache__/
 
 # generated API reference, published by CI
 /docs/kdoc/

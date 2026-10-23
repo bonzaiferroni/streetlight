@@ -33,7 +33,7 @@ fun ViewScope.blockBuilder(blockId: BlockId) {
     context(editor) {
         when (val block = editor.blockState.now) {
             is HeaderBlock -> headerBuilder()
-            is EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder()
+            is EventsBlock, PostsBlock, MapBlock, CommentsBlock, SkillsBlock -> blockBuilder()
             is HeadingBlock -> headingBuilder()
             is ImageBlock -> imageBuilder()
             is GalleryBlock -> galleryBuilder()
@@ -299,7 +299,7 @@ fun ViewScope.columnBuilder() {
     column {
         editorRow()
         flowBlock(container.blockIdsField) { blockIds ->
-            row(BodyStyle.FormRow) {
+            row(BodyStyle.ColumnRow) {
                 context(editor.model) {
                     blockIds.forEach { blockId ->
                         blockBuilder(blockId)

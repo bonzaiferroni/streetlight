@@ -86,6 +86,12 @@ object EventsBlock: LayoutBlock {
     override val blockType get() = BlockType.Events
 }
 
+/** The layout block where a star's skills go. */
+@Serializable
+object SkillsBlock: LayoutBlock {
+    override val blockType get() = BlockType.Skills
+}
+
 /** A layout block of tabs, each holding its own blocks. */
 @Serializable
 data class TabsBlock(

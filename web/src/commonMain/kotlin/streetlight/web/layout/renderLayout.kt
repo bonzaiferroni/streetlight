@@ -5,7 +5,6 @@ import koala.component.textBlock
 import kotlinx.css.pct
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
-import streetlight.model.ui.LocationUpdateRoute
 import streetlight.web.page.appFooter
 import streetlight.web.shell.MediaShell
 import koala.component.*
@@ -34,6 +33,7 @@ fun FlowContent.renderBlock(block: LayoutBlock, content: DesignContent) {
         CommentsBlock -> renderComments()
         PostsBlock -> renderPosts(content)
         MapBlock -> renderMap(content)
+        SkillsBlock -> renderSkills(content)
         is TextBlock -> renderText(block)
         is RichTextBlock -> renderRichText(block)
         is HeadingBlock -> renderHeading(block)
@@ -67,6 +67,14 @@ fun FlowContent.renderEvents(content: DesignContent) {
     when (content) {
         is LocationContent -> feedSection(content.feed)
         else -> error("not events content")
+    }
+}
+
+/** The star's skills, nothing when they have none. */
+fun FlowContent.renderSkills(content: DesignContent) {
+    when (content) {
+        is StarContent -> if (content.skills.isNotEmpty()) skillsSection(content.skills)
+        else -> error("not skills content")
     }
 }
 
@@ -131,7 +139,7 @@ fun FlowContent.renderFooter() {
 }
 
 fun FlowContent.renderColumn(block: ColumnsBlock, content: DesignContent) {
-    row(BodyStyle.FormRow) {
+    row(BodyStyle.ColumnRow) {
         block.blocks.forEach {
             renderBlock(it, content)
         }

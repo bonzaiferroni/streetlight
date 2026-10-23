@@ -9,7 +9,7 @@ enum class SkillTag(val svg: SvgPack, label: String? = null): Labeled {
     // Music
     Singer(SvgFile.MicrophoneHandheld),
     Rapper(SvgFile.Microphone),
-    Songwriter(SvgFile.Writing),
+    Songwriter(SvgFile.Songwriting),
     Composer(SvgFile.FileMusic),
     Choir(SvgFile.Social),
     Guitarist(SvgFile.AcousticGuitar),

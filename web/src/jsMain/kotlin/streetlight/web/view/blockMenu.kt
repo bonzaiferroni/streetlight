@@ -86,6 +86,7 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
             add(MenuValue("header", HeaderBlock()))
             add(MenuValue("events", EventsBlock))
             add(MenuValue("map", MapBlock))
+            add(MenuValue("skills", SkillsBlock))
         }
     }
 }
