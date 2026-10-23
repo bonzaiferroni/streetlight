@@ -22,6 +22,8 @@ import streetlight.model.data.EventTag
 import streetlight.model.data.FeedRequest
 import streetlight.model.data.FeedSource
 import streetlight.web.layout.FeedSection
+import koala.dom.component.column
+import streetlight.web.layout.emptyFeedContent
 import streetlight.web.model.toCells
 import streetlight.web.page.AppAttribute
 import streetlight.web.view.RouteView
@@ -53,7 +55,7 @@ fun sortByMark(element: HTMLElement) {
         mount.unmodify(OpacityHigh)
         mount.clear()
         mount.append {
-            appendFeed(feed)
+            appendFeed(feed, isFirstPage = true)
         }
     }
 }
@@ -117,7 +119,7 @@ private fun refreshFeed(section: Element, wait: Duration = Duration.ZERO) {
         mount.unmodify(OpacityHigh)
         mount.clear()
         mount.append {
-            appendFeed(feed)
+            appendFeed(feed, isFirstPage = true)
         }
     }
 }
@@ -131,8 +133,11 @@ private fun Element.feedSection() = closest(AppAttribute.FeedSource.selector) ?:
 /** The page at [cursor] of the feed from [source]. */
 suspend fun AppFacade.readFeed(source: FeedSource, cursor: EntityCursor) = api.feed.readFeed(FeedRequest(source, cursor))
 
-/** Appends the rows of [feed], and a more button when it continues. */
-fun AppendScope.appendFeed(feed: EntityFeed) {
+/** Appends the rows of [feed], and a more button when it continues; an empty [isFirstPage] shows the empty message. */
+fun AppendScope.appendFeed(feed: EntityFeed, isFirstPage: Boolean = false) {
+    if (isFirstPage && feed.entities.isEmpty()) {
+        column(FeedSection.EmptyMod) { emptyFeedContent() }
+    }
     feed.entities.forEach { entity ->
         feedRow(entity, feed.curatorOf(entity), entity.toCells(feed.source?.context))
     }

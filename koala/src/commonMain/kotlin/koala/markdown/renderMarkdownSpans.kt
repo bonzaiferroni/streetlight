@@ -35,7 +35,12 @@ fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis) {
     }
 }
 
+/** Renders [span] as a link when its url is safe to follow, and as plain text otherwise. */
 fun FlowOrPhrasingContent.renderLink(span: MarkdownLink) {
+    if (!isSafeMarkdownUrl(span.url.value)) {
+        +span.text
+        return
+    }
     a {
         href = span.url.value
         +span.text
@@ -91,8 +96,9 @@ fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
     }
 }
 
-/** Renders [span] as a Lottie animation. */
+/** Renders [span] as a Lottie animation, only when it names one of the site's own. */
 fun FlowContent.renderLottieImage(span: MarkdownImage) {
+    if (!isSiteLottiePath(span.url.value)) return
     div {
         addModifiers(LottieClass.Core)
         attributes["data-lottie"] = span.url.value

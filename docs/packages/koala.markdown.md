@@ -37,3 +37,14 @@ Markdown parsed into blocks and spans, and rendered as HTML without the bundle.
 | [`MarkdownStyle`](../../koala/src/commonMain/kotlin/koala/markdown/MarkdownStyle.kt) | The stylesheet of rendered markdown |
 | [`TableCss`](../../koala/src/commonMain/kotlin/koala/markdown/table.kt) | The stylesheet of prose tables |
 | [`EditorStyle`](../../koala/src/commonMain/kotlin/koala/markdown/EditorStyle.kt) | The stylesheet of the editors in `koala.dom.markdown` |
+
+### Urls
+
+Markdown comes from users, so a url it carries is checked before it reaches the page, in [`markdownUrls`](../../koala/src/commonMain/kotlin/koala/markdown/markdownUrls.kt).
+
+| Span | Rendered when | Otherwise |
+|---|---|---|
+| Link | `isSafeMarkdownUrl`: `http`, `https`, `mailto`, or no scheme | Its text, unlinked |
+| Lottie image (`.json`) | `isSiteLottiePath`: a file under `lottiePath` | Nothing; the caption stays |
+
+`initLottie` applies the same path check, so a Lottie loads only from the site's own files whatever wrote the attribute. The full Lottie build is loaded because the site's own animations use expressions; the path check is what keeps outside animations off the page.

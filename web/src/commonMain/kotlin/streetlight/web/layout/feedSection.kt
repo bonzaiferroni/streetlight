@@ -4,6 +4,7 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.interop.JsSignature
 import koala.interop.ThisElement
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import kotlinx.html.onInput
@@ -74,7 +75,7 @@ fun FlowContent.feedSection(
         }
 
         layoutFeed {
-            // td: message when empty
+            if (feed.entities.isEmpty()) emptyFeed()
             feed.entities.forEach { entity ->
                 feedRow(entity, feed.curatorOf(entity), entity.toCells(source.context))
             }
@@ -89,6 +90,15 @@ fun FlowContent.feedSection(
     }
 }
 
+/** The message in place of an empty feed: an animated icon over a line of text, centered in its height. */
+fun FlowContent.emptyFeed() = column(FeedSection.EmptyMod) { emptyFeedContent() }
+
+/** The icon and text of [emptyFeed], shared with the feed's client-side append. */
+fun DIV.emptyFeedContent() {
+    icon(SvgFile.Binoculars.animated, Height(10))
+    textBlock("Nothing to show!", OpacityHigh)
+}
+
 /** The column that feed rows mount in, and that more rows append to. */
 fun FlowContent.layoutFeed(
     block: FlowContent.() -> Unit
@@ -99,6 +109,7 @@ fun FlowContent.layoutFeed(
 }
 
 object FeedSection {
+    val EmptyMod = modify(AlignItemsCenter, JustifyContentCenter, Height(24))
     val MountId = Id("feed-layout")
     val Search = Class("feed-search")
 
