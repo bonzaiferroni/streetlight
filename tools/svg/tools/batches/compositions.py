@@ -18,20 +18,34 @@ round2.PACKS.clear()
 EDIT_BADGE = 'M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39'  # Tabler's -edit pencil
 
 
-# ---------- songwriting: Tabler's music with its right note cut back for the -edit pencil; the pencil writes ----------
-NOTE_HEAD = 'M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0'
-NOTE_STEMS = 'M9 17v-13h10v7'
-NOTE_BEAM = 'M9 8h10'
+# ---------- songwriting: a detailed pencil, the main idea, with a note in the corner; the pencil writes, the note hops ----------
+# The pencil is drawn lying along x with its point at the left, then turned -45° about PENCIL_AT, its axis on x + y = 23
+# so its lower edge clears the corner by 1.5.
+PENCIL_AT = (11.5, 11.5)
+PENCIL_BODY = 'M-7 -2H5V2H-7Z'
+PENCIL_POINT = 'M-7 -2L-10.5 0L-7 2'
+PENCIL_LEAD = 'M-9.2 -.75V.75'
+PENCIL_FERRULE = 'M6.5 -2V2'
+PENCIL_ERASER = 'M6.5 -2H7.5A2 2 0 0 1 7.5 2H6.5'
+NOTE_HEAD = 'M15 19.6a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0'
+NOTE_STEM = 'M18.2 19.6V14.6'
+NOTE_FLAG = 'M18.2 14.6c1.4 .4 2.6 1.4 2.6 3.2'
+
+
+def pencil(*anims):
+    parts = [p(PENCIL_BODY), p(PENCIL_POINT), p(PENCIL_LEAD), p(PENCIL_FERRULE), p(PENCIL_ERASER)]
+    turned = group(parts, attrs='transform="rotate(-45)"')
+    return group([group([turned], *anims)], attrs=f'transform="translate({PENCIL_AT[0]} {PENCIL_AT[1]})"')
 
 
 @pack('songwriting')
 def songwriting():
-    note = [p(NOTE_HEAD), p(NOTE_STEMS), p(NOTE_BEAM)]
-    static = note + [p(EDIT_BADGE)]
+    note = [p(NOTE_HEAD), p(NOTE_STEM), p(NOTE_FLAG)]
+    static = [pencil()] + note
     dur = 2.4
-    write = keys('transform', [(0, '0 0'), (0.1, '-.6 .5'), (0.2, '.3 -.2'), (0.3, '-.5 .4'), (0.4, '0 0'), (1, '0 0')], dur, kind='translate')
-    bob = keys('transform', [(0, '0 0'), (0.5, '0 0'), (0.6, '0 -.6'), (0.7, '0 0'), (0.8, '0 -.4'), (0.9, '0 0'), (1, '0 0')], dur, kind='translate')
-    return static, [group(note, bob), group([p(EDIT_BADGE)], write)]
+    write = keys('transform', [(0, '0 0'), (0.08, '-.7 .3'), (0.16, '.2 .5'), (0.24, '-.5 .1'), (0.32, '.1 .4'), (0.42, '0 0'), (1, '0 0')], dur, kind='translate')
+    hop = keys('transform', [(0, '0 0'), (0.5, '0 0'), (0.6, '0 -1'), (0.7, '0 0'), (0.8, '0 -.6'), (0.9, '0 0'), (1, '0 0')], dur, kind='translate')
+    return static, [pencil(write), group(note, hop)]
 
 
 if __name__ == '__main__':

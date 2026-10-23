@@ -26,7 +26,7 @@ fun FlowContent.skillsSection(skills: List<Skill>) {
 private fun FlowContent.skillCard(skill: Skill, colorMod: Class) {
     val svg = skill.tags?.firstOrNull()?.svg ?: SvgFile.Award
     navigation(SkillProfileRoute(skill.skillId)) {
-        column(modify(AlignItemsCenter, TextAlignCenter, Gap(2), Padding(2), ZenBg, Width(24), Height(48))) {
+        column(modify(AlignItemsCenter, TextAlignCenter, Gap(2), Padding(2), ZenBg, Width(20), Height(40))) {
             box(modify(ConnectStyle.IconBadge, PlaceItemsCenter, Width(16), Aspect1, colorMod)) {
                 icon(svg.animated, modify(Width(8)))
             }
@@ -34,7 +34,7 @@ private fun FlowContent.skillCard(skill: Skill, colorMod: Class) {
                 heading6(skill.name)
             }
             skill.description?.let {
-                markdown(it, modify(Flex1, OpacityHigh, MaxHeight(6), OverflowHidden, FadeBottom))
+                markdown(it, modify(Flex1, OpacityHigh, OverflowHidden, FadeBottom, TextSmall))
             }
         }
     }

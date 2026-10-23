@@ -1,11 +1,12 @@
 package koala.component
 
 import kampfire.model.Url
-import koala.SvgFile
 import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.*
 import koala.model.AppRoute
+import koala.model.flairOf
+import koala.model.labelFlairs
 import koala.page.Id
 
 /**
@@ -92,27 +93,3 @@ fun FlowContent.btn(
     flair: SvgPack? = flairOf(text, href.value),
     block: A.() -> Unit = {},
 ) = btn(text, href.value, mod, id, flair, block)
-
-/** The host of [url] without a leading `www.`, or `null`. */
-fun domainOf(url: String): String? =
-    Regex("""^(?:[a-zA-Z][a-zA-Z\d+\-.]*://)?(?:[^@/\n]+@)?([^:/\n?#]+)""")
-        .find(url.trim())
-        ?.groupValues?.get(1)
-        ?.removePrefix("www.")
-        ?.takeIf { it.isNotBlank() }
-
-/** The flair of the label [text], or of the domain of [href], or a link icon. */
-private fun flairOf(text: String, href: String): SvgPack =
-    labelFlairs[text.lowercase()] ?: domainOf(href)?.let { domainFlairs[it] } ?: SvgFile.Link
-
-private val domainFlairs = mapOf(
-    "youtube.com" to SvgFile.BrandYoutube,
-    "en.wikipedia.org" to SvgFile.Book,
-)
-
-private val labelFlairs = mapOf(
-    "tickets" to SvgFile.Ticket,
-    "edit" to SvgFile.Edit,
-    "website" to SvgFile.World,
-    "calendar" to SvgFile.Calendar,
-)

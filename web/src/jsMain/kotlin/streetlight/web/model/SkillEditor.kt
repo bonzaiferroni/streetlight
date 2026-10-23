@@ -33,6 +33,7 @@ class SkillEditor(
         copy(description = it.takeIf(Markdown::isNotBlank))
     }
     val imageState = editState.mutableTapOf({ it.image }) { copy(image = it) }
+    val linksState = editState.mutableTapOf({ it.links ?: emptyList() }) { copy(links = it.takeIf { it.isNotEmpty() }) }
     val levelState = editState.mutableTapOf({ it.skillLevel }) { copy(skillLevel = it) }
     val yearState = state.mutableTapOf({ it.yearText }) {
         copy(yearText = it, edit = this.edit.copy(yearStarted = it.toIntOrNull() ?: this.edit.yearStarted))

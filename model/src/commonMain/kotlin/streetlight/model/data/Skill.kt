@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import koala.model.ExtraLink
 import kampfire.api.Markdown
 import kampfire.model.Labeled
 import koala.Image
@@ -18,6 +19,7 @@ data class Skill(
     val experience: Int,
     val tags: List<SkillTag>?,
     val interview: List<InterviewQuestion>,
+    val links: List<ExtraLink>?,
     val skillLevel: SkillLevel,
     val yearStarted: Int,
     val updatedAt: Instant,
@@ -48,6 +50,7 @@ data class SkillEdit(
     val image: Image? = null,
     val tags: List<SkillTag> = emptyList(),
     val interview: List<InterviewQuestion> = emptyList(),
+    val links: List<ExtraLink>? = null,
     val skillLevel: SkillLevel = SkillLevel.Beginner,
     val yearStarted: Int = 2025,
 )
@@ -60,6 +63,7 @@ fun Skill.toEdit() = SkillEdit(
     image = image,
     tags = tags.orEmpty(),
     interview = interview,
+    links = links,
     skillLevel = skillLevel,
     yearStarted = yearStarted,
 )

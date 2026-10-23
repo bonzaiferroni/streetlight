@@ -3,7 +3,7 @@ package streetlight.web.layout
 import kampfire.api.Markdown
 import koala.modifier.*
 import kotlinx.html.FlowContent
-import streetlight.model.data.ExtraLink
+import koala.model.ExtraLink
 import koala.component.*
 import koala.markdown.*
 

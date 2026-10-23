@@ -35,6 +35,21 @@ fun String.isValidAbsoluteUrl(): Boolean = absoluteUrlRegex.matches(this)
 /** A [Url] of the text when [isValidAbsoluteUrl], and `null` otherwise. */
 fun String.toValidAbsoluteUrlOrNull(): Url? = if (isValidAbsoluteUrl()) Url(this) else null
 
+/**
+ * A [Url] of the trimmed text when it is a valid absolute URL, or when it becomes one with `https://` in front.
+ *
+ * The scheme is added only to text with none whose first part, before any `/`, `?` or `#`, holds a dot and no `:`
+ * before it, as `google.com/events`.
+ */
+fun String.toAbsoluteUrlOrNull(): Url? {
+    val text = trim()
+    text.toValidAbsoluteUrlOrNull()?.let { return it }
+    val host = text.substringBefore('/').substringBefore('?').substringBefore('#')
+    val dot = host.indexOf('.')
+    if (dot <= 0 || ':' in host.substring(0, dot)) return null
+    return "https://$text".toValidAbsoluteUrlOrNull()
+}
+
 /** Inserts [appended] before the file extension, joined by a hyphen, as `photo-lg.jpg`. */
 fun String.appendToFilename(appended: String) = buildString {
     val parts = this@appendToFilename.split('.')

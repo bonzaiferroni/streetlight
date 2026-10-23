@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import koala.model.ExtraLink
 import kampfire.api.toMarkdown
 import kampfire.api.Markdown
 import kampfire.api.Slug

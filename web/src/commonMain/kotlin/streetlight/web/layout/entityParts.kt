@@ -5,7 +5,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
-import streetlight.model.data.ExtraLink
+import koala.model.ExtraLink
 import streetlight.web.component.curatorBadge
 import koala.component.*
 import koala.markdown.*

@@ -117,5 +117,7 @@ Round 4, TalentTag (tools/batches/round4.py [labels]):
 - Removed from TalentTag the same day: Band, Conductor, CircusPerformer, DragPerformer, Volunteer.
 
 Composition, SkillTag (tools/batches/compositions.py):
-- songwriting (Songwriter, was writing): Tabler's music, its right note head dropped and stem stopped at y 11, with
-  Tabler's -edit pencil in the corner. The pencil scribbles, then the note bobs twice.
+- songwriting (Songwriter, was writing): first drawn as Tabler's music (right note head dropped, stem stopped at
+  y 11) with Tabler's -edit pencil in the corner. Reworked so the pencil is the subject: a forged pencil at -45°
+  (body, point, lead, ferrule, rounded eraser) on the axis x + y = 23, with an eighth note in the corner. The pencil
+  scribbles, then the note hops twice.

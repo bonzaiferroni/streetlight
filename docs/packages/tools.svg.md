@@ -65,7 +65,7 @@ An icon's shape comes from the first strategy that carries its idea. Strategies 
 
 ### Tabler
 
-Tabler geometry also serves the other strategies: as the main idea of a composition (songwriting is Tabler's music), as its sub icon (Tabler's `-edit` pencil), or as a prop beside a forged figure (lectern is Tabler's podium).
+Tabler geometry also serves the other strategies: as the main idea or sub icon of a composition (Tabler's `-edit` pencil as a sub icon), or as a prop beside a forged figure (lectern is Tabler's podium).
 
 ### Forged
 
@@ -76,9 +76,10 @@ A forged icon follows Tabler's drawing: the 24 grid, a live area of 2 to 22, rou
 A main idea with a sub icon in the lower right corner, as Tabler's `music-plus` or `user-edit`.
 
 - The sub icon sits in x 14 to 22 and y 14 to 22.
-- The main idea is cut back so nothing comes within about 1.5 units of the sub icon: parts that reach into the corner are dropped or shortened.
-- The sub icon is one of Tabler's own badge shapes (`-edit`, `-plus`, `-heart`, `-check`), kept as constants in `tools/batches/compositions.py`.
-- In the animation one of the two acts and the other answers, as the pencil writes and the note bobs.
+- The main idea is cut back or placed so nothing comes within about 1.5 units of the sub icon: parts that reach into the corner are dropped or shortened, or the whole shape moves away from it.
+- The main idea is the subject and can carry detail; the sub icon is a simple shape that qualifies it. Songwriting is a pencil with a note in the corner, the pencil drawn with its point, lead, ferrule and eraser.
+- A sub icon that is a Tabler badge shape (`-edit`, `-plus`, `-heart`, `-check`) is kept as a constant in `tools/batches/compositions.py`.
+- In the animation one of the two acts and the other answers, as the pencil writes and the note hops.
 
 ### Stick Figures
 

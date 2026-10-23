@@ -13,7 +13,7 @@ import koala.component.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.img
-import streetlight.model.data.ExtraLink
+import koala.model.ExtraLink
 import streetlight.web.model.ThemeColor
 
 /**

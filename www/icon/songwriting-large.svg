@@ -2,8 +2,18 @@
      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
      class="icon icon-streetlight icons-streetlight-outline icon-streetlight-songwriting">
     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-    <path d="M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
-    <path d="M9 17v-13h10v7"/>
-    <path d="M9 8h10"/>
-    <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39"/>
+    <g transform="translate(11.5 11.5)">
+        <g>
+            <g transform="rotate(-45)">
+                <path d="M-7 -2H5V2H-7Z"/>
+                <path d="M-7 -2L-10.5 0L-7 2"/>
+                <path d="M-9.2 -.75V.75"/>
+                <path d="M6.5 -2V2"/>
+                <path d="M6.5 -2H7.5A2 2 0 0 1 7.5 2H6.5"/>
+            </g>
+        </g>
+    </g>
+    <path d="M15 19.6a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0"/>
+    <path d="M18.2 19.6V14.6"/>
+    <path d="M18.2 14.6c1.4 .4 2.6 1.4 2.6 3.2"/>
 </svg>

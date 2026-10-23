@@ -14,7 +14,7 @@ import kotlinx.css.px
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.span
-import streetlight.model.data.ExtraLink
+import koala.model.ExtraLink
 import kotlin.time.Instant
 import koala.component.*
 import streetlight.web.model.ThemeColor

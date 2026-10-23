@@ -13,7 +13,7 @@ import kotlinx.css.px
 import kotlinx.html.img
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import streetlight.model.data.ExtraLink
+import koala.model.ExtraLink
 import streetlight.web.model.ThemeColor
 
 /**

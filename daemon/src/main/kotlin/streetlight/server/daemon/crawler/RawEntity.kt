@@ -8,7 +8,7 @@ import kampfire.model.toUrl
 import koala.Image
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventRead
-import streetlight.model.data.ExtraLink
+import koala.model.ExtraLink
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseMode
 import streetlight.model.data.ParseProperty

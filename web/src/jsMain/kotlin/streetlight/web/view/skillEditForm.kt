@@ -43,6 +43,7 @@ fun ViewScope.skillEditForm() = formColumn {
     formSection("Description") {
         markdownEditor(model.descriptionState, "description", MinHeight(32))
     }
+    linksFormSection(model.linksState)
     context(model.interviewEditor) {
         interviewForm()
     }

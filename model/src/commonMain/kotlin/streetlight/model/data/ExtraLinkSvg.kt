@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import koala.model.ExtraLink
 import koala.SvgFile
 import koala.SvgPack
 
