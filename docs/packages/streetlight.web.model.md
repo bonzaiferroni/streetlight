@@ -63,6 +63,8 @@ A model holds one `Store` of a single state class, and exposes lenses onto it.
 
 A control binds to the narrowest lens that covers it, so editing one field leaves the rest of the state untouched.
 
+A lens is named for its value with the suffix `State`, read or write alike, as `nameState` and `focusState`. A function returning one, such as the lens of one tag among many, follows the same rule, as `tagState(tag)`.
+
 ### Route Filters
 
 A filter a route carries, such as the tag of `EventsMapRoute`, is read from the route as a lens on `Portal.routeState`. A control that sets it calls a model method, which navigates with the new value. A filter change replaces the current route rather than appending to the backstack.

@@ -5,16 +5,14 @@ import koala.dom.ViewScope
 import koala.dom.component.column
 import koala.component.heading5
 import koala.dom.component.row
-import koala.dom.component.section
 import koala.dom.component.textBlock
 import koala.dom.layout.flowBlock
 import koala.model.MenuAction
 import koala.modifier.*
 import streetlight.model.data.toCentsLabel
 import streetlight.web.dom.layout.centeredText
-import streetlight.web.dom.layout.dashEntity
-import streetlight.web.dom.layout.dashSection
-import streetlight.web.dom.layout.dashSectionHeading
+import streetlight.web.dom.layout.actionRow
+import streetlight.web.dom.layout.actionSection
 import streetlight.web.model.Merchant
 
 /** The star's offerings, the payments they have requested, and their customers. */
@@ -27,7 +25,7 @@ fun ViewScope.merchantDash() {
 
 /** The star's offerings, each with buttons that stage its edit or an invoice for it, under a button for a new one. */
 context(model: Merchant)
-private fun ViewScope.offeringsSection() = dashSection("Offerings", listOf(
+private fun ViewScope.offeringsSection() = actionSection("Offerings", listOf(
     MenuAction("New", onClick = model::startNewOffering)
 )) {
     flowBlock(model.offeringsState) { offerings ->
@@ -38,7 +36,7 @@ private fun ViewScope.offeringsSection() = dashSection("Offerings", listOf(
         }
         column {
             offerings.forEach { offering ->
-                dashEntity(offering, listOf(
+                actionRow(offering, listOf(
                     MenuAction("Edit") { model.startOfferingEdit(offering) },
                     MenuAction("send invoice") { model.startPaymentEdit(offering) },
                 ))
@@ -49,7 +47,7 @@ private fun ViewScope.offeringsSection() = dashSection("Offerings", listOf(
 
 /** The payments the star has requested, newest first, each with its customer, amount, status and age. */
 context(model: Merchant)
-private fun ViewScope.paymentsSection() = dashSection("Payments") {
+private fun ViewScope.paymentsSection() = actionSection("Payments") {
     flowBlock(model.paymentsState) { payments ->
         if (payments == null) return@flowBlock
         if (payments.isEmpty()) {
@@ -73,7 +71,7 @@ private fun ViewScope.paymentsSection() = dashSection("Payments") {
 
 /** The star's customers, each by name and email. */
 context(model: Merchant)
-private fun ViewScope.customersSection() = dashSection("Customers") {
+private fun ViewScope.customersSection() = actionSection("Customers") {
     flowBlock(model.customersState) { customers ->
         if (customers == null) return@flowBlock
         if (customers.isEmpty()) {

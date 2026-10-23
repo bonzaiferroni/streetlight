@@ -70,20 +70,5 @@ private fun ViewScope.sandboxContent() {
                 button("galaxy list", { portal.go(GalaxyFeedRoute()) }, Accent)
             }
         }
-
-//        card {
-//            row {
-//                textBlock("Share and grow your talents.", modify(Flex1))
-//                button("add talent", { portal.go(EditTalentRoute()) }, modify(Accent))
-//            }
-//        }
-
-//        itemsBlock(userCache.talent.flow) { talent ->
-//            navigation(TalentProfileRoute(talent.talentId)) {
-//                card {
-//                    textBlock(talent.name)
-//                }
-//            }
-//        }
     }
 }

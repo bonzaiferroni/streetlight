@@ -22,16 +22,15 @@ import koala.modifier.Magic
 import koala.modifier.ValidFg
 import koala.modifier.modify
 import streetlight.model.data.CapabilityStatus
+import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.centeredText
-import streetlight.web.dom.layout.dashSectionHeading
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.SellerConnector
 import streetlight.web.model.SellerStage
 
 context(model: SellerConnector)
 fun ViewScope.stripeConnectForm() {
-    section {
-        dashSectionHeading("Stripe")
+    actionSection("Stripe") {
         val isDialogOpen = storeOf(false)
 
         row(AlignItemsCenter) {

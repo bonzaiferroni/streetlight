@@ -19,7 +19,7 @@ enum class LocationTag(val svg: SvgPack, label: String? = null): Labeled {
     Cidery(SvgFile.Apple),
     BeerGarden(SvgFile.Beer, "Beer Garden"),
     CocktailBar(SvgFile.GlassCocktail, "Cocktail Bar"),
-    Speakeasy(SvgFile.Key),
+    Speakeasy(SvgFile.Speakeasy),
     SportsBar(SvgFile.DeviceTv, "Sports Bar"),
     Lounge(SvgFile.Armchair),
     FoodHall(SvgFile.ToolsKitchen3, "Food Hall"),
@@ -63,7 +63,7 @@ enum class LocationTag(val svg: SvgPack, label: String? = null): Labeled {
     TrampolinePark(SvgFile.Trampoline, "Trampoline Park"),
     Circus(SvgFile.BuildingCircus),
     AmusementPark(SvgFile.FerrisWheel, "Amusement Park"),
-    WaterPark(SvgFile.Swimming, "Water Park"),
+    WaterPark(SvgFile.WaterSlide, "Water Park"),
 
     // Arts & Culture
     Museum(SvgFile.BuildingBank),
@@ -174,7 +174,7 @@ enum class LocationTag(val svg: SvgPack, label: String? = null): Labeled {
     IceRink(SvgFile.IceSkating, "Ice Rink"),
     RollerRink(SvgFile.RollerSkating, "Roller Rink"),
     SkiResort(SvgFile.SkiJumping, "Ski Resort"),
-    Racetrack(SvgFile.SteeringWheel),
+    Racetrack(SvgFile.RaceFlag),
     EquestrianCenter(SvgFile.Horse, "Equestrian Center"),
     Boathouse(SvgFile.Kayak),
 

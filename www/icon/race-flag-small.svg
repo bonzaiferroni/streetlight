@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-race-flag">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M5 21V3"/>
+    <path d="M5 4L6.246 4.034L7.487 4.121L8.728 4.222L9.977 4.285L11.235 4.265L12.496 4.139L13.749 3.918L14.975 3.647L16.158 3.399L17.292 3.25L18.383 3.265L19.457 3.471L19.457 12.471L18.383 12.265L17.292 12.25L16.158 12.399L14.975 12.647L13.749 12.918L12.496 13.139L11.235 13.265L9.977 13.285L8.728 13.222L7.487 13.121L6.246 13.034L5 13Z"/>
+    <path stroke="none" fill="currentColor" d="M5 4L6.246 4.034L7.487 4.121L8.728 4.222L8.728 7.222L7.487 7.121L6.246 7.034L5 7Z"/>
+    <path stroke="none" fill="currentColor" d="M5 10L6.246 10.034L7.487 10.121L8.728 10.222L8.728 13.222L7.487 13.121L6.246 13.034L5 13Z"/>
+    <path stroke="none" fill="currentColor" d="M8.728 7.222L9.977 7.285L11.235 7.265L12.496 7.139L12.496 10.139L11.235 10.265L9.977 10.285L8.728 10.222Z"/>
+    <path stroke="none" fill="currentColor" d="M12.496 4.139L13.749 3.918L14.975 3.647L16.158 3.399L16.158 6.399L14.975 6.647L13.749 6.918L12.496 7.139Z"/>
+    <path stroke="none" fill="currentColor" d="M12.496 10.139L13.749 9.918L14.975 9.647L16.158 9.399L16.158 12.399L14.975 12.647L13.749 12.918L12.496 13.139Z"/>
+    <path stroke="none" fill="currentColor" d="M16.158 6.399L17.292 6.25L18.383 6.265L19.457 6.471L19.457 9.471L18.383 9.265L17.292 9.25L16.158 9.399Z"/>
+</svg>

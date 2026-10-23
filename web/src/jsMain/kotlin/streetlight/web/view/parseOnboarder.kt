@@ -8,7 +8,6 @@ import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.markdown.markdown
 import koala.markdown.lazyMarkdown
-import koala.markdown.toParsedMarkdown
 import koala.model.MessageStore
 import koala.modifier.*
 import streetlight.model.data.GatherEventStatus
@@ -17,8 +16,7 @@ import streetlight.model.data.LinkContent
 import streetlight.model.data.ParseConfig
 import streetlight.model.data.ParseMode
 import streetlight.web.dom.layout.centeredText
-import streetlight.web.dom.layout.dashSection
-import streetlight.web.dom.layout.dashSectionHeading
+import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
@@ -66,7 +64,7 @@ private fun ViewScope.parsePermissionSection(configState: MutableTap<ParseConfig
 
 // td: move to dashboard
 /** What the crawler has gathered from the events page so far. */
-private fun ViewScope.gatherStatusSection(status: GatherEventStatus) = dashSection("Gathered Events") {
+private fun ViewScope.gatherStatusSection(status: GatherEventStatus) = actionSection("Gathered Events") {
     when (status) {
         GatherEventStatus.Url -> centeredText("Add the url of your events page so our crawler can find it.")
         GatherEventStatus.Unchecked -> centeredText("Our crawler hasn't read your events page yet. Check back soon.")

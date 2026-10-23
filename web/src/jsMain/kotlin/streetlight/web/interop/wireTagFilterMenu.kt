@@ -4,12 +4,10 @@ import kampfire.model.storeOf
 import koala.dom.*
 import koala.modifier.*
 import streetlight.model.data.EventTag
-import streetlight.web.interop.filterFeedByTag
 import web.dom.document
 import koala.dom.component.*
 import koala.dom.layout.*
 import streetlight.model.data.EventCategory
-import streetlight.web.page.PopoverId
 import streetlight.web.component.TagFilterMenu
 import streetlight.web.dom.component.popoverMenu
 import streetlight.web.utility.requireElement
@@ -22,7 +20,7 @@ fun ViewScope.wireTagFilterMenu() {
     popoverMenu(TagFilterMenu.PopoverId, { it }) { invoker ->
         val selected = invoker.getAttribute(TagFilterMenu.Tag)
         // the selected button drops Zen for the default button style
-        tagMenu(selected) { tag ->
+        eventTagMenu(selected) { tag ->
             document.requireElement(TagFilterMenu.PopoverId).closePopover()
             filterFeedByTag(invoker, tag)
         }
@@ -32,7 +30,7 @@ fun ViewScope.wireTagFilterMenu() {
 val categoryState = storeOf(EventCategory.General)
 
 /** The categories in [sideTabs], each showing its tags with [selected] set apart, each calling [filterBy]. */
-fun ViewScope.tagMenu(selected: String?, filterBy: (EventTag?) -> Unit) {
+fun ViewScope.eventTagMenu(selected: String?, filterBy: (EventTag?) -> Unit) {
     fun modOf(label: String?) = Zen.takeIf { label != selected }
     sideTabs(categoryState, modify(MaxWidth(72), MaxHeight(48), CardBg)) { category ->
         row(modify(FlexWrap, JustifyContentCenter, Padding(1), ScaleIn)) {

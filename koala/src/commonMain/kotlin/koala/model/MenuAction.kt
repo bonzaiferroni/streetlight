@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.model.Labeled
 import koala.modifier.*
+import kotlinx.html.BUTTON
 
 /** An entry in a menu. */
 sealed interface MenuOption: Labeled
@@ -21,6 +22,7 @@ data class MenuRoute(
 data class MenuAction(
     override val label: String,
     val mod: Modifier? = null,
+    val config: BUTTON.() -> Unit = { },
     val onClick: () -> Unit,
 ): MenuOption
 

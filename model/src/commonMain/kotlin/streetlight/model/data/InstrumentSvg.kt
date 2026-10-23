@@ -26,7 +26,7 @@ enum class InstrumentSvg(val svg: SvgPack) {
     // Keys
     Piano(SvgFile.Piano),
     Keyboard(SvgFile.Synthesizer),
-    Organ(SvgFile.Synthesizer),
+    Organ(SvgFile.Organ),
     Accordion(SvgFile.Accordion),
     Synthesizer(SvgFile.Synthesizer),
 
@@ -43,8 +43,8 @@ enum class InstrumentSvg(val svg: SvgPack) {
 
     // Woodwinds
     Flute(SvgFile.Flute),
-    Clarinet(SvgFile.Flute),
-    Oboe(SvgFile.Flute),
+    Clarinet(SvgFile.Clarinet),
+    Oboe(SvgFile.Clarinet),
     Saxophone(SvgFile.Saxophone),
     Harmonica(SvgFile.Harmonica),
     Bagpipes(SvgFile.Bagpipes),
@@ -52,14 +52,14 @@ enum class InstrumentSvg(val svg: SvgPack) {
     // Brass
     Trumpet(SvgFile.Trumpet),
     Trombone(SvgFile.Trombone),
-    FrenchHorn(SvgFile.Trumpet),
+    FrenchHorn(SvgFile.FrenchHorn),
     Tuba(SvgFile.Tuba),
 
     // Voice
     Vocals(SvgFile.MicrophoneHandheld),
     BackingVocals(SvgFile.Microphone),
     Choir(SvgFile.UsersGroup),
-    Beatbox(SvgFile.WaveSine),
+    Beatbox(SvgFile.Beatbox),
 
     // Electronic
     Turntables(SvgFile.Vinyl),

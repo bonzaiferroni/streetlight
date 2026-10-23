@@ -86,7 +86,18 @@ A view model constructed inside a view is given `contentScope`, so its coroutine
 
 ## Staged Edits
 
-A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the form hands it to the config model, which ends the edit. `sellerDash` is the example, with `Merchant`, `OfferingEditor` and `PaymentEditor`; `talentDash`, with `TalentConfig` and `TalentEditor`, is the same shape with a single kind of edit.
+A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the panel hands it to the config model, which ends the edit. `talentDash` is the example, with `TalentConfig` and `TalentEditor`; `sellerDash`, with `Merchant`, `OfferingEditor` and `PaymentEditor`, is the same shape with two kinds of edit.
+
+A form takes as context only the models whose state it declares UI from, such as its editor. The actions that end the edit, saving and going back, are built by the panel that staged it, around the form, so the form serves any consumer and holds no reference to the config model.
+
+```kotlin
+context(editor) {
+    actionSection(label, listOf(MenuAction("back", onClick = config::cancelFocus))) {
+        talentEditForm()
+    }
+    formSubmit("Save", onClick = { /* editor.submitSuspend, then config.finishTalentEdit */ }, messenger = messages)
+}
+```
 
 ```kotlin
 flowBlock(config.focusState) { focus ->

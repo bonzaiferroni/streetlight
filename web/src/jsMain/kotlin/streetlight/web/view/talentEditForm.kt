@@ -1,50 +1,78 @@
 package streetlight.web.view
 
+import kampfire.model.storeOf
+import koala.component.heading5
 import koala.dom.ViewScope
-import koala.dom.component.checkBox
-import koala.dom.component.dropMenu
-import koala.dom.component.row
-import koala.dom.component.textField
+import koala.dom.component.*
+import koala.dom.layout.flowBlock
+import koala.dom.layout.sideTabs
+import koala.dom.markdown.markdownEditor
 import koala.model.MenuAction
-import koala.model.MessageStore
 import koala.modifier.*
-import streetlight.model.data.TalentTag
+import koala.page.Id
+import streetlight.model.data.TalentCategory
+import streetlight.web.dom.layout.actionRow
+import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.formColumn
+import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
-import streetlight.web.dom.layout.formSubmit
-import streetlight.web.model.TalentConfig
 import streetlight.web.model.TalentEditor
 
-/** The form of the talent [model] edits, which returns to [config]'s list once saved or abandoned. */
-context(model: TalentEditor, config: TalentConfig)
+/** The form of the talent [model] edits. */
+context(model: TalentEditor)
 fun ViewScope.talentEditForm() = formColumn {
-    val messages = MessageStore()
     val heading = if (model.stateNow.edit.talentId == null) "New Talent" else "Edit Talent"
 
-    formSection(heading) {
-        textField(model.nameField, "name", maxLength = 50)
-        row(AlignItemsCenter) {
-            dropMenu(model.levelField)
-            textField(model.yearField, "year started", Flex1)
+    formRow {
+        formSection(heading) {
+            textField(model.nameState, "name", maxLength = 50)
+            row(AlignItemsCenter) {
+                dropMenu(model.levelState)
+                textField(model.yearState, "year started", Flex1)
+            }
+            talentTagMenu()
         }
-        textField(model.descriptionField, "description")
+        context(model.imageEditor) {
+            imageFormSection("This image will appear with the talent.")
+        }
     }
-    formSection("Tags") {
-        row(modify(FlexWrap, AlignItemsCenter)) {
-            TalentTag.entries.forEach { tag ->
-                checkBox(model.tagField(tag), tag.label)
+    formSection("Description") {
+        markdownEditor(model.descriptionState, "description", MinHeight(32))
+    }
+    context(model.interviewEditor) {
+        interviewForm()
+    }
+}
+
+context(model: TalentEditor)
+private fun ViewScope.talentTagMenu() {
+    val id = Id("talent-tag-popover")
+    val categoryState = storeOf(TalentCategory.Music)
+    popover(id) {
+        flowBlock(model.tagsState) { currentTags ->
+            sideTabs(categoryState, modify(MaxWidth(72), MaxHeight(48), CardBg)) { category ->
+                row(modify(FlexWrap, JustifyContentCenter, Padding(1), ScaleIn)) {
+                    category.tags.forEach { tag ->
+                        val buttonMod = if (tag in currentTags) Primary else Zen
+                        button(tag.label, { model.toggleTag(tag) }, buttonMod, flair = tag.svg)
+                    }
+                }
             }
         }
     }
-    formSubmit(
-        label = "Save",
-        onClick = {
-            launchEffect {
-                val talent = model.submitSuspend(messages) ?: return@launchEffect
-                config.finishTalentEdit(talent)
+    card(Padding(2)) {
+        actionSection(
+            label = "Tags",
+            actions = listOf(
+                MenuAction("add new", config = { setPopoverTarget(id, true) }) {  }
+            ),
+            heading = { heading5(it) }
+        ) {
+            flowBlock(model.tagsState) { tags ->
+                tags.forEach { tag ->
+                    actionRow(tag.label, actions = listOf(MenuAction("Remove") { model.toggleTag(tag) }))
+                }
             }
-        },
-        messenger = messages,
-        back = MenuAction("back", onClick = config::cancelFocus),
-    )
+        }
+    }
 }

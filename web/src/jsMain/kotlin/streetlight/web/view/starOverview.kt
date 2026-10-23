@@ -8,26 +8,24 @@ import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.toRoute
-import streetlight.web.dom.layout.dashEntity
+import streetlight.web.dom.layout.actionRow
+import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.dataBlock
-import streetlight.web.dom.layout.dashSectionHeading
 import streetlight.web.model.api
 import streetlight.web.model.portal
 
 fun ViewScope.starOverview() {
     column {
-        section {
-            dashSectionHeading("Locations", emptyList())
+        actionSection("Locations", emptyList()) {
             dataBlock(api.location::readHostedLocations, Gap2Px) { locations ->
                 locations.forEach { location ->
-                    dashEntity(location, listOf(
+                    actionRow(location, listOf(
                         MenuAction("Edit") { portal.go(LocationConfigRoute(location.locationId)) },
                     ))
                 }
             }
         }
-        section {
-            dashSectionHeading("Galaxies", emptyList())
+        actionSection("Galaxies", emptyList()) {
             dataBlock(api.galaxy::readUserGalaxies) { galaxies ->
                 galaxies.forEach { galaxy ->
                     grid(columnsOf(1.fr, LinearDimension.auto)) {

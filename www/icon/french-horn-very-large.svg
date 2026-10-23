@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-french-horn">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3.5 9.5a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0 -11 0"/>
+    <path d="M6.3 9.5a2.7 2.7 0 1 0 5.4 0a2.7 2.7 0 1 0 -5.4 0"/>
+    <path d="M9 15C13 15.2 16 16.5 17.2 20.8M11.4 14.5C14.5 13.8 17.5 13.4 20.8 14.6M17.2 20.8A3.58 1.2 -60 1 0 20.8 14.6A3.58 1.2 -60 1 0 17.2 20.8"/>
+    <path d="M5.1 5.6L3 3.5m-.6 1.2l1.8 -1.8"/>
+</svg>

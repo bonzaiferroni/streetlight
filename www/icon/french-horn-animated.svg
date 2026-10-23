@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-animated icon-streetlight-french-horn">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 9 9.5;0 9 9.5;-3 9 9.5;0 9 9.5;0 9 9.5;-3 9 9.5;0 9 9.5;0 9 9.5" keyTimes="0;0.05;0.13;0.43;0.5;0.58;0.88;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <path d="M3.5 9.5a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0 -11 0"/>
+        <path d="M6.3 9.5a2.7 2.7 0 1 0 5.4 0a2.7 2.7 0 1 0 -5.4 0"/>
+        <g transform="translate(10.5 14.8)">
+            <g>
+                <animateTransform attributeName="transform" type="scale" values="1;1;1.1;1;1;1.1;1;1" keyTimes="0;0.05;0.13;0.43;0.5;0.58;0.88;1" dur="2.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+                <g transform="translate(-10.5 -14.8)">
+                    <path d="M9 15C13 15.2 16 16.5 17.2 20.8M11.4 14.5C14.5 13.8 17.5 13.4 20.8 14.6M17.2 20.8A3.58 1.2 -60 1 0 20.8 14.6A3.58 1.2 -60 1 0 17.2 20.8"/>
+                </g>
+            </g>
+        </g>
+        <path d="M5.1 5.6L3 3.5m-.6 1.2l1.8 -1.8"/>
+    </g>
+</svg>

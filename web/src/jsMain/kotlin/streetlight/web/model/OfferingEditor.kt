@@ -29,23 +29,23 @@ class OfferingEditor(
     val stateNow get() = state.now
 
     val editState = state.mutableTapOf({ it.edit }) { copy(edit = it) }
-    val titleField = editState.mutableTapOf({ it.title ?: "" }) { copy(title = it) }
-    val descriptionField = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) {
+    val titleState = editState.mutableTapOf({ it.title ?: "" }) { copy(title = it) }
+    val descriptionState = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) {
         copy(description = it.takeIf(Markdown::isNotBlank))
     }
-    val imageField = editState.mutableTapOf({ it.image }) { copy(image = it) }
-    val priceField = state.mutableTapOf({ it.priceText }) {
+    val imageState = editState.mutableTapOf({ it.image }) { copy(image = it) }
+    val priceState = state.mutableTapOf({ it.priceText }) {
         copy(priceText = it, edit = this.edit.copy(priceCents = it.toCentsOrNull()))
     }
-    val platformCutField = state.mutableTapOf({ it.platformCutText }) {
+    val platformCutState = state.mutableTapOf({ it.platformCutText }) {
         copy(platformCutText = it, edit = this.edit.copy(platformCut = it.toPlatformCut()))
     }
-    val validityField = editState.tapOf { it.validity }
+    val validityState = editState.tapOf { it.validity }
 
-    val imageEditor = ImageEditor(imageField, ImageTarget.Offering, api)
+    val imageEditor = ImageEditor(imageState, ImageTarget.Offering, api)
 
     /** Whether the edit carries [tag]. */
-    fun tagField(tag: OfferingTag) = editState.mutableTapOf({ tag in it.tags }) { isTagged ->
+    fun tagState(tag: OfferingTag) = editState.mutableTapOf({ tag in it.tags }) { isTagged ->
         copy(tags = if (isTagged) tags + tag else tags - tag)
     }
 
