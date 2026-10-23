@@ -53,7 +53,7 @@ h3 {
 }
 
 h3$Bold {
-    font-weight: 300;
+    font-weight: 400;
 }
 
 h4 {

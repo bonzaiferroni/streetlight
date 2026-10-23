@@ -35,7 +35,7 @@ fun AppendScope.actionSection(
     content()
 }
 
-fun DIV.defaultSectionHeading(label: String) = heading3(label, modify(OpacityHigh))
+fun DIV.defaultSectionHeading(label: String) = heading3(label, modify(OpacityHigh, Bold))
 
 fun AppendScope.actionRow(
     entity: Entity,

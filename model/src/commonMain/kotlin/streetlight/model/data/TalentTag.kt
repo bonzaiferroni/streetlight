@@ -11,7 +11,6 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     Rapper(SvgFile.Microphone),
     Songwriter(SvgFile.Writing),
     Composer(SvgFile.FileMusic),
-    Band(SvgFile.UsersGroup),
     Choir(SvgFile.Social),
     Guitarist(SvgFile.AcousticGuitar),
     Pianist(SvgFile.Piano),
@@ -22,7 +21,6 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     Dj(SvgFile.Vinyl, "DJ"),
     Producer(SvgFile.Headphones),
     SoundEngineer(SvgFile.AdjustmentsHorizontal, "Sound Engineer"),
-    Conductor(SvgFile.Wand),
     Beatboxer(SvgFile.Beatbox),
 
     // Performance
@@ -36,18 +34,16 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     Clown(SvgFile.Clown),
     Mime(SvgFile.HandStop),
     FirePerformer(SvgFile.Fire, "Fire Performer"),
-    DragPerformer(SvgFile.Crown, "Drag Performer"),
-    CircusPerformer(SvgFile.BuildingCircus, "Circus Performer"),
     Poet(SvgFile.Feather),
     Storyteller(SvgFile.Book),
     Puppeteer(SvgFile.Marionette),
     Emcee(SvgFile.Microphone),
-    Speaker(SvgFile.Presentation),
-    Model(SvgFile.CameraSelfie),
+    Speaker(SvgFile.Lectern),
+    Model(SvgFile.ModelPose),
 
     // Visual Arts
     Painter(SvgFile.Brush),
-    Muralist(SvgFile.Spray),
+    Muralist(SvgFile.Palette),
     Illustrator(SvgFile.Pencil),
     Sculptor(SvgFile.Hammer),
     Photographer(SvgFile.Camera),
@@ -57,7 +53,7 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     GraphicDesigner(SvgFile.Vector, "Graphic Designer"),
     TattooArtist(SvgFile.Needle, "Tattoo Artist"),
     FacePainter(SvgFile.MoodSmile, "Face Painter"),
-    Caricaturist(SvgFile.Signature),
+    Caricaturist(SvgFile.Caricature),
     Calligrapher(SvgFile.PenNib),
 
     // Crafts
@@ -65,7 +61,7 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     Crafter(SvgFile.NeedleThread),
     Woodworker(SvgFile.Axe),
     Jeweler(SvgFile.Diamond),
-    Florist(SvgFile.Flower),
+    Florist(SvgFile.Bouquet),
     FashionDesigner(SvgFile.Hanger, "Fashion Designer"),
     BalloonArtist(SvgFile.Balloon, "Balloon Artist"),
 
@@ -116,7 +112,6 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     Coordinator(SvgFile.Social),
     Usher(SvgFile.Ticket),
     Security(SvgFile.Shield),
-    Volunteer(SvgFile.HeartHandshake),
     Fundraiser(SvgFile.PigMoney),
     TourGuide(SvgFile.Flag, "Tour Guide"),
     GameMaster(SvgFile.Dice, "Game Master"),
@@ -140,15 +135,15 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
 /** A group of [TalentTag]s, as a menu presents them. */
 enum class TalentCategory(val tags: List<TalentTag>, label: String? = null): Labeled {
     Music(listOf(
-        TalentTag.Singer, TalentTag.Rapper, TalentTag.Songwriter, TalentTag.Composer, TalentTag.Band,
+        TalentTag.Singer, TalentTag.Rapper, TalentTag.Songwriter, TalentTag.Composer,
         TalentTag.Choir, TalentTag.Guitarist, TalentTag.Pianist, TalentTag.Drummer, TalentTag.Violinist,
         TalentTag.Bassist, TalentTag.Busker, TalentTag.Dj, TalentTag.Producer, TalentTag.SoundEngineer,
-        TalentTag.Conductor, TalentTag.Beatboxer,
+        TalentTag.Beatboxer,
     )),
     Performance(listOf(
         TalentTag.Actor, TalentTag.Comedian, TalentTag.Improviser, TalentTag.Dancer, TalentTag.Magician,
         TalentTag.Juggler, TalentTag.Acrobat, TalentTag.Clown, TalentTag.Mime, TalentTag.FirePerformer,
-        TalentTag.DragPerformer, TalentTag.CircusPerformer, TalentTag.Poet, TalentTag.Storyteller,
+        TalentTag.Poet, TalentTag.Storyteller,
         TalentTag.Puppeteer, TalentTag.Emcee, TalentTag.Speaker, TalentTag.Model,
     )),
     VisualArts(listOf(
@@ -178,7 +173,7 @@ enum class TalentCategory(val tags: List<TalentTag>, label: String? = null): Lab
     )),
     Hosting(listOf(
         TalentTag.Host, TalentTag.EventPlanner, TalentTag.Organizer, TalentTag.Coordinator, TalentTag.Usher,
-        TalentTag.Security, TalentTag.Volunteer, TalentTag.Fundraiser, TalentTag.TourGuide, TalentTag.GameMaster,
+        TalentTag.Security, TalentTag.Fundraiser, TalentTag.TourGuide, TalentTag.GameMaster,
         TalentTag.TriviaHost, TalentTag.Vendor,
     )),
     TeachingAndCare(listOf(

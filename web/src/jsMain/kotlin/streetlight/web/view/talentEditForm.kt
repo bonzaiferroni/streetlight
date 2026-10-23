@@ -51,7 +51,7 @@ private fun ViewScope.talentTagMenu() {
     popover(id) {
         flowBlock(model.tagsState) { currentTags ->
             sideTabs(categoryState, modify(MaxWidth(72), MaxHeight(48), CardBg)) { category ->
-                row(modify(FlexWrap, JustifyContentCenter, Padding(1), ScaleIn)) {
+                row(modify(FlexWrap, JustifyContentCenter, Padding(1))) {
                     category.tags.forEach { tag ->
                         val buttonMod = if (tag in currentTags) Primary else Zen
                         button(tag.label, { model.toggleTag(tag) }, buttonMod, flair = tag.svg)
@@ -71,6 +71,9 @@ private fun ViewScope.talentTagMenu() {
             flowBlock(model.tagsState) { tags ->
                 tags.forEach { tag ->
                     actionRow(tag.label, actions = listOf(MenuAction("Remove") { model.toggleTag(tag) }))
+                }
+                if (tags.isEmpty()) {
+                    textBlock("Add a tag that fits your talent.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
                 }
             }
         }

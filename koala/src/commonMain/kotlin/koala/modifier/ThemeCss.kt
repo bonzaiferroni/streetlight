@@ -148,11 +148,11 @@ body {
     --primary-button: oklch(from rgb(var(--primary)) calc(l * 0.93) calc(c * 0.8) h);
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
     --primary-light-fg: color-mix(in srgb, rgb(var(--primary)) 25%, rgb(var(--ink)));
-    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--paper)));
+    --primary-bg: color-mix(in srgb, var(--primary-button) 30%, rgb(var(--paper)));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
     
-    --accent-button: rgb(var(--accent));
+    --accent-button: oklch(from rgb(var(--accent)) calc(l * 0.93) calc(c * 0.8) h);
     --accent-fg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--ink)));
     --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);

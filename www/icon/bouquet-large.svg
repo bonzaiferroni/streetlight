@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-streetlight icons-streetlight-outline icon-streetlight-bouquet">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path d="M12 3.1A1.44 1.44 0 0 1 14.283 4.758A1.44 1.44 0 0 1 13.411 7.442A1.44 1.44 0 0 1 10.589 7.442A1.44 1.44 0 0 1 9.717 4.758A1.44 1.44 0 0 1 12 3.1M12 5.5v.01"/>
+    <path d="M7.6 6.6A1.2 1.2 0 0 1 9.502 7.982A1.2 1.2 0 0 1 8.776 10.218A1.2 1.2 0 0 1 6.424 10.218A1.2 1.2 0 0 1 5.698 7.982A1.2 1.2 0 0 1 7.6 6.6M7.6 8.6v.01"/>
+    <path d="M16.4 6.6A1.2 1.2 0 0 1 18.302 7.982A1.2 1.2 0 0 1 17.576 10.218A1.2 1.2 0 0 1 15.224 10.218A1.2 1.2 0 0 1 14.498 7.982A1.2 1.2 0 0 1 16.4 6.6M16.4 8.6v.01"/>
+    <path d="M12 8v4.5M8.5 10.5l1.5 2M15.5 10.5l-1.5 2"/>
+    <path d="M6.5 12.5h11l-4.5 8.5h-2z"/>
+    <path d="M12 16.5l-2 -1.2v2.4zm0 0l2 -1.2v2.4z"/>
+</svg>

@@ -7,19 +7,17 @@ val TalentTag.interviewQuestions: List<String> get() = when (this) {
         listOf(MusicStyle, MusicVenues)
     TalentTag.Songwriter, TalentTag.Composer ->
         listOf(MusicStyle, "What have you written that you're proud of?", "Do you collaborate or write for others?")
-    TalentTag.Band ->
-        listOf(MusicStyle, "Who is in the band, and what do they play?", MusicVenues)
     TalentTag.Guitarist, TalentTag.Pianist, TalentTag.Drummer, TalentTag.Violinist, TalentTag.Bassist ->
         listOf(MusicStyle, "Do you play solo, in a group, or both?", GearQuestion)
     TalentTag.Dj, TalentTag.Producer ->
         listOf(MusicStyle, GearQuestion, MusicVenues)
-    TalentTag.SoundEngineer, TalentTag.Conductor ->
+    TalentTag.SoundEngineer ->
         listOf(ExperienceQuestion, GearQuestion)
 
     // Performance
     TalentTag.Actor, TalentTag.Comedian, TalentTag.Improviser, TalentTag.Dancer, TalentTag.Magician,
     TalentTag.Juggler, TalentTag.Acrobat, TalentTag.Clown, TalentTag.Mime, TalentTag.FirePerformer,
-    TalentTag.DragPerformer, TalentTag.CircusPerformer, TalentTag.Puppeteer ->
+    TalentTag.Puppeteer ->
         listOf(PerformanceStyle, PerformanceNeeds, AudienceQuestion)
     TalentTag.Poet, TalentTag.Storyteller ->
         listOf(PerformanceStyle, AudienceQuestion)
@@ -81,7 +79,7 @@ val TalentTag.interviewQuestions: List<String> get() = when (this) {
     // Hosting
     TalentTag.Host, TalentTag.EventPlanner, TalentTag.Organizer, TalentTag.Coordinator ->
         listOf("What kinds of events do you put together?", "How large an event can you handle?")
-    TalentTag.Usher, TalentTag.Security, TalentTag.Volunteer ->
+    TalentTag.Usher, TalentTag.Security ->
         listOf(ExperienceQuestion, AvailabilityQuestion)
     TalentTag.Fundraiser ->
         listOf("What causes have you raised money for?", ExperienceQuestion)
