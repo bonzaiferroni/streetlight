@@ -14,6 +14,7 @@ import koala.page.Id
 import streetlight.model.data.SkillCategory
 import streetlight.model.data.SkillTag
 import streetlight.web.dom.layout.actionSection
+import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
@@ -27,12 +28,13 @@ fun ViewScope.skillEditForm() = formColumn {
 
     formRow {
         formSection(heading) {
-            textField(model.nameState, "name", maxLength = 50)
             row(AlignItemsCenter) {
-                dropMenu(model.levelState)
+                textField(model.nameState, "name", Flex4, maxLength = 50)
                 textField(model.yearState, "year started", Flex1)
             }
             skillTagMenu()
+            centeredText("How would you describe your skill level?")
+            switchMenu(model.levelState)
         }
         context(model.imageEditor) {
             imageFormSection("This image will appear with the skill.")

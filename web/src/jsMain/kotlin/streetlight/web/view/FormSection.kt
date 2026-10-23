@@ -16,7 +16,7 @@ fun ViewScope.imageFormSection(
 ) = formSection("Image", AlignSelfCenter) {
     imageDrop(imageEditor.imageField) {
         box {
-            image(it.url, modify(ObjectFitContain, MaxHeight(64), BorderRadius1))
+            image(it.url, modify(ObjectFitContain, MaxHeight(64), BorderRadius1, JustifySelfCenter))
         }
     }.setBlockLabel("image")
     formBullets(

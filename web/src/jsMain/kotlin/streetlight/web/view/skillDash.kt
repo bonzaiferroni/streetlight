@@ -1,6 +1,8 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import koala.component.heading5
+import koala.component.icon
 import koala.dom.ViewScope
 import koala.dom.component.column
 import koala.dom.component.row
@@ -68,6 +70,8 @@ private fun ViewScope.skillsSection() = actionSection("Skills", listOf(
         column {
             skills.forEach { skill ->
                 row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
+                    val svg = skill.tags?.firstOrNull()?.svg ?: SvgFile.Award
+                    icon(svg.animated, Height(5))
                     column(modify(Flex1, Gap0)) {
                         heading5(skill.name)
                         skill.tags?.let { tags ->
