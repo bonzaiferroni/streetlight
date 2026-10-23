@@ -34,8 +34,8 @@ interface UserClient {
     suspend fun checkUsernameExists(username: Username): Outcome<Boolean>
     suspend fun generateUsername(): Outcome<Username>
     suspend fun uploadImageBlob(blobImage: Image, target: ImageTarget): Outcome<Image>
-    suspend fun readTalents(): Outcome<List<Talent>>
-    suspend fun editTalent(talent: TalentEdit): Outcome<Talent>
+    suspend fun readSkills(): Outcome<List<Skill>>
+    suspend fun editSkill(skill: SkillEdit): Outcome<Skill>
 }
 
 class BrowserUserClient(private val client: FetchClient): UserClient {
@@ -48,6 +48,6 @@ class BrowserUserClient(private val client: FetchClient): UserClient {
     override suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
     override suspend fun uploadImageBlob(blobImage: Image, target: ImageTarget) =
         client.uploadBlob(Api.Users.UploadImage.path, blobImage, target)
-    override suspend fun readTalents() = client.getApi(Api.Users.Talents)
-    override suspend fun editTalent(talent: TalentEdit) = client.postApi(Api.Users.EditTalent, talent)
+    override suspend fun readSkills() = client.getApi(Api.Users.Skills)
+    override suspend fun editSkill(skill: SkillEdit) = client.postApi(Api.Users.EditSkill, skill)
 }

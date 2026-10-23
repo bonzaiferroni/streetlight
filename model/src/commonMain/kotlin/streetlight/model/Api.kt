@@ -123,8 +123,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Users: ApiNode(this) {
         object Files: GetEndpoint<List<Url>>(this)
-        object Talents: GetEndpoint<List<Talent>>(this)
-        object EditTalent: PostEndpoint<TalentEdit, Talent>(this)
+        object Skills: GetEndpoint<List<Skill>>(this)
+        object EditSkill: PostEndpoint<SkillEdit, Skill>(this)
         object UploadAvatar: PostEndpoint<ByteArray, String>(this)
         object UploadImage: PostEndpoint<ByteArray, Image>(this)
     }

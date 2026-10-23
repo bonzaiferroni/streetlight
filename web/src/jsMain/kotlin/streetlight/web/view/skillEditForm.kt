@@ -2,6 +2,7 @@ package streetlight.web.view
 
 import kampfire.model.storeOf
 import koala.component.heading5
+import koala.dom.AppendScope
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
@@ -10,18 +11,19 @@ import koala.dom.markdown.markdownEditor
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
-import streetlight.model.data.TalentCategory
-import streetlight.web.dom.layout.actionRow
+import streetlight.model.data.SkillCategory
+import streetlight.model.data.SkillTag
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
-import streetlight.web.model.TalentEditor
+import streetlight.web.dom.layout.menuActionsRow
+import streetlight.web.model.SkillEditor
 
-/** The form of the talent [model] edits. */
-context(model: TalentEditor)
-fun ViewScope.talentEditForm() = formColumn {
-    val heading = if (model.stateNow.edit.talentId == null) "New Talent" else "Edit Talent"
+/** The form of the skill [model] edits. */
+context(model: SkillEditor)
+fun ViewScope.skillEditForm() = formColumn {
+    val heading = if (model.stateNow.edit.skillId == null) "New Skill" else "Edit Skill"
 
     formRow {
         formSection(heading) {
@@ -30,10 +32,10 @@ fun ViewScope.talentEditForm() = formColumn {
                 dropMenu(model.levelState)
                 textField(model.yearState, "year started", Flex1)
             }
-            talentTagMenu()
+            skillTagMenu()
         }
         context(model.imageEditor) {
-            imageFormSection("This image will appear with the talent.")
+            imageFormSection("This image will appear with the skill.")
         }
     }
     formSection("Description") {
@@ -44,17 +46,21 @@ fun ViewScope.talentEditForm() = formColumn {
     }
 }
 
-context(model: TalentEditor)
-private fun ViewScope.talentTagMenu() {
-    val id = Id("talent-tag-popover")
-    val categoryState = storeOf(TalentCategory.Music)
-    popover(id) {
+context(model: SkillEditor)
+private fun ViewScope.skillTagMenu() {
+    val id = Id("skill-tag-popover")
+    val categoryState = storeOf(SkillCategory.Music)
+    popover(id) { popover ->
         flowBlock(model.tagsState) { currentTags ->
             sideTabs(categoryState, modify(MaxWidth(72), MaxHeight(48), CardBg)) { category ->
                 row(modify(FlexWrap, JustifyContentCenter, Padding(1))) {
                     category.tags.forEach { tag ->
-                        val buttonMod = if (tag in currentTags) Primary else Zen
-                        button(tag.label, { model.toggleTag(tag) }, buttonMod, flair = tag.svg)
+                        val isTagged = tag in currentTags
+                        val buttonMod = if (isTagged) Primary else Zen
+                        button(tag.label, {
+                            model.toggleTag(tag)
+                            if (!isTagged) popover.close()
+                        }, buttonMod, flair = tag.svg)
                     }
                 }
             }
@@ -70,12 +76,22 @@ private fun ViewScope.talentTagMenu() {
         ) {
             flowBlock(model.tagsState) { tags ->
                 tags.forEach { tag ->
-                    actionRow(tag.label, actions = listOf(MenuAction("Remove") { model.toggleTag(tag) }))
+                    skillRow(tag)
                 }
                 if (tags.isEmpty()) {
-                    textBlock("Add a tag that fits your talent.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
+                    textBlock("Add a tag that fits your skill.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
                 }
             }
         }
+    }
+}
+
+context(model: SkillEditor)
+private fun AppendScope.skillRow(tag: SkillTag) {
+    val actions = listOf(MenuAction("Remove") { model.toggleTag(tag) })
+    row(modify(AlignItemsCenter)) {
+        icon(tag.svg.small)
+        heading5(tag.label)
+        menuActionsRow(actions)
     }
 }

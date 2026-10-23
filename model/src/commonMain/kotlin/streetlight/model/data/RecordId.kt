@@ -20,7 +20,7 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     RenditionId::class -> RenditionId(this) as T
     PerformerId::class -> PerformerId(this) as T
     GuestId::class -> GuestId(this) as T
-    TalentId::class -> TalentId(this) as T
+    SkillId::class -> SkillId(this) as T
     PostId::class -> PostId(this) as T
     CommentId::class -> CommentId(this) as T
     EditLogId::class -> EditLogId(this) as T

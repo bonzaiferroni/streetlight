@@ -10,15 +10,15 @@ import kotlin.uuid.Uuid
 
 /** A skill a user offers, with their experience. */
 @Serializable
-data class Talent(
-    val talentId: TalentId,
+data class Skill(
+    val skillId: SkillId,
     val name: String,
     val description: Markdown?,
     val image: Image?,
     val experience: Int,
-    val tags: List<TalentTag>?,
+    val tags: List<SkillTag>?,
     val interview: List<InterviewQuestion>,
-    val talentLevel: TalentLevel,
+    val skillLevel: SkillLevel,
     val yearStarted: Int,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -26,12 +26,12 @@ data class Talent(
 
 @JvmInline
 @Serializable
-value class TalentId(override val value: Uuid): RecordId {
-    companion object { fun random() = TalentId(Uuid.random()) }
+value class SkillId(override val value: Uuid): RecordId {
+    companion object { fun random() = SkillId(Uuid.random()) }
 }
 
-/** The level of a [Talent]. */
-enum class TalentLevel: Labeled {
+/** The level of a [Skill]. */
+enum class SkillLevel: Labeled {
     Beginner,
     Intermediate,
     Professional;
@@ -39,27 +39,27 @@ enum class TalentLevel: Labeled {
     override val label get() = name
 }
 
-/** The fields of a talent a form sends. */
+/** The fields of a skill a form sends. */
 @Serializable
-data class TalentEdit(
-    val talentId: TalentId? = null,
+data class SkillEdit(
+    val skillId: SkillId? = null,
     val name: String = "",
     val description: Markdown? = null,
     val image: Image? = null,
-    val tags: List<TalentTag> = emptyList(),
+    val tags: List<SkillTag> = emptyList(),
     val interview: List<InterviewQuestion> = emptyList(),
-    val talentLevel: TalentLevel = TalentLevel.Beginner,
+    val skillLevel: SkillLevel = SkillLevel.Beginner,
     val yearStarted: Int = 2025,
 )
 
-/** An edit of this talent, starting from its current values. */
-fun Talent.toEdit() = TalentEdit(
-    talentId = talentId,
+/** An edit of this skill, starting from its current values. */
+fun Skill.toEdit() = SkillEdit(
+    skillId = skillId,
     name = name,
     description = description,
     image = image,
     tags = tags.orEmpty(),
     interview = interview,
-    talentLevel = talentLevel,
+    skillLevel = skillLevel,
     yearStarted = yearStarted,
 )

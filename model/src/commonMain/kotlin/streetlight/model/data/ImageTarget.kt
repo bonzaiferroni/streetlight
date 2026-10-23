@@ -10,5 +10,5 @@ enum class ImageTarget {
     Star,
     Offering,
     Block,
-    Talent,
+    Skill,
 }

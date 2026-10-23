@@ -25,12 +25,9 @@ fun AppendScope.actionSection(
     heading: DIV.(String) -> Unit = DIV::defaultSectionHeading,
     content: AppendScope.() -> Unit,
 ) = section {
-    row(modify(BorderBottom2Px, PaddingRight(1), AlignItemsCenter)) {
+    row(modify(BorderBottom2Px, AlignItemsCenter)) {
         heading(label)
-        spacer()
-        actions?.forEach {
-            menuActionButton(it)
-        }
+        menuActionsRow(actions)
     }
     content()
 }
@@ -56,15 +53,19 @@ fun AppendScope.actionRow(
         navigationIfNotNull(route) {
             heading5(label)
         }
-        row(modify(Flex1, JustifyContentEnd)) {
-            actions?.forEach {
-                menuActionButton(it)
-            }
-        }
+        menuActionsRow(actions)
         popoverActions?.let {
             buttonPopover(SvgFile.Dots.filled, Height(3)) {
                 textBlock("hello actions")
             }
+        }
+    }
+}
+
+fun AppendScope.menuActionsRow(actions: List<MenuAction>?) {
+    row(modify(Flex1, JustifyContentEnd)) {
+        actions?.forEach {
+            menuActionButton(it)
         }
     }
 }

@@ -86,16 +86,16 @@ A view model constructed inside a view is given `contentScope`, so its coroutine
 
 ## Staged Edits
 
-A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the panel hands it to the config model, which ends the edit. `talentDash` is the example, with `TalentConfig` and `TalentEditor`; `sellerDash`, with `Merchant`, `OfferingEditor` and `PaymentEditor`, is the same shape with two kinds of edit.
+A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the panel hands it to the config model, which ends the edit. `skillDash` is the example, with `SkillConfig` and `SkillEditor`; `sellerDash`, with `Merchant`, `OfferingEditor` and `PaymentEditor`, is the same shape with two kinds of edit.
 
 A form takes as context only the models whose state it declares UI from, such as its editor. The actions that end the edit, saving and going back, are built by the panel that staged it, around the form, so the form serves any consumer and holds no reference to the config model.
 
 ```kotlin
 context(editor) {
     actionSection(label, listOf(MenuAction("back", onClick = config::cancelFocus))) {
-        talentEditForm()
+        skillEditForm()
     }
-    formSubmit("Save", onClick = { /* editor.submitSuspend, then config.finishTalentEdit */ }, messenger = messages)
+    formSubmit("Save", onClick = { /* editor.submitSuspend, then config.finishSkillEdit */ }, messenger = messages)
 }
 ```
 
@@ -382,7 +382,7 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`viewBugReporter`](../../web/src/jsMain/kotlin/streetlight/web/view/viewBugReporter.kt) | Bug reports |
 | [`viewMusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMusicianHub.kt) | A musician's songs |
 | [`viewSongProfile`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSongProfile.kt) | A song |
-| [`viewTalent`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTalent.kt) | Talent |
+| [`viewSkill`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSkill.kt) | A skill |
 | [`viewSiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteMonitor.kt) | The site's status |
 | [`viewSandbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSandbox.kt) | The sandbox |
 

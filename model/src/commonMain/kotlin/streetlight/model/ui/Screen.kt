@@ -23,7 +23,7 @@ import streetlight.model.data.LocationId
 import streetlight.model.data.OfferingId
 import streetlight.model.data.RecordId
 import streetlight.model.data.SongId
-import streetlight.model.data.TalentId
+import streetlight.model.data.SkillId
 import streetlight.model.data.SpaceType
 import streetlight.model.data.toRecordId
 import kotlin.uuid.Uuid
@@ -51,7 +51,7 @@ enum class Screen(
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
 
     // star
-    TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
+    SkillProfile(UuidParse { SkillProfileRoute(SkillId(it)) }),
     Star(UsernameParse { StarRoute(it) }, "s", true),
     StarDash(StaticParse { StarDashRoute.of(this) }),
     ProfileConfig(StaticParse { ProfileConfigRoute }),
@@ -220,20 +220,20 @@ data class SongProfileRoute(
     override val title get() = "Song"
 }
 
-data class TalentProfileRoute(
-    val talentId: TalentId
+data class SkillProfileRoute(
+    val skillId: SkillId
 ): StreetlightRoute, RecordIdRoute {
-    override val screen get() = Screen.TalentProfile
-    override val recordId get() = talentId
-    override val title get() = "Talent"
+    override val screen get() = Screen.SkillProfile
+    override val recordId get() = skillId
+    override val title get() = "Skill"
 }
 
-//data class EditTalentRoute(
-//    val talentId: TalentId? = null
+//data class EditSkillRoute(
+//    val skillId: SkillId? = null
 //): StreetlightRoute, RecordIdRoute {
-//    override val screen get() = Screen.EditTalent
-//    override val recordId get() = talentId
-//    override val title get() = "Talent"
+//    override val screen get() = Screen.EditSkill
+//    override val recordId get() = skillId
+//    override val title get() = "Skill"
 //}
 
 object SiteConfigRoute: StreetlightRoute {

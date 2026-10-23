@@ -26,7 +26,7 @@ fun FlowContent.aboutAppShell() {
                 lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth(50.pct)))
                 column(Flex3) {
                     column(Gap0) {
-                        textBlock("Do you have a talent to share with passersby?")
+                        textBlock("Do you have a skill to share with passersby?")
                         textBlock("Do you have a business, venue, or message you would like to promote?")
                         textBlock("Are you walking down the street somewhere and looking for something to experience?")
                     }

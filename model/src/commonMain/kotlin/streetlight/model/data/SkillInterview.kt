@@ -1,102 +1,102 @@
 package streetlight.model.data
 
-/** The questions asked of a star who tags a talent with this, shared within its category. */
-val TalentTag.interviewQuestions: List<String> get() = when (this) {
+/** The questions asked of a star who tags a skill with this, shared within its category. */
+val SkillTag.interviewQuestions: List<String> get() = when (this) {
     // Music
-    TalentTag.Singer, TalentTag.Rapper, TalentTag.Choir, TalentTag.Busker, TalentTag.Beatboxer ->
+    SkillTag.Singer, SkillTag.Rapper, SkillTag.Choir, SkillTag.Busker, SkillTag.Beatboxer ->
         listOf(MusicStyle, MusicVenues)
-    TalentTag.Songwriter, TalentTag.Composer ->
+    SkillTag.Songwriter, SkillTag.Composer ->
         listOf(MusicStyle, "What have you written that you're proud of?", "Do you collaborate or write for others?")
-    TalentTag.Guitarist, TalentTag.Pianist, TalentTag.Drummer, TalentTag.Violinist, TalentTag.Bassist ->
+    SkillTag.Guitarist, SkillTag.Pianist, SkillTag.Drummer, SkillTag.Violinist, SkillTag.Bassist ->
         listOf(MusicStyle, "Do you play solo, in a group, or both?", GearQuestion)
-    TalentTag.Dj, TalentTag.Producer ->
+    SkillTag.Dj, SkillTag.Producer ->
         listOf(MusicStyle, GearQuestion, MusicVenues)
-    TalentTag.SoundEngineer ->
+    SkillTag.SoundEngineer ->
         listOf(ExperienceQuestion, GearQuestion)
 
     // Performance
-    TalentTag.Actor, TalentTag.Comedian, TalentTag.Improviser, TalentTag.Dancer, TalentTag.Magician,
-    TalentTag.Juggler, TalentTag.Acrobat, TalentTag.Clown, TalentTag.Mime, TalentTag.FirePerformer,
-    TalentTag.Puppeteer ->
+    SkillTag.Actor, SkillTag.Comedian, SkillTag.Improviser, SkillTag.Dancer, SkillTag.Magician,
+    SkillTag.Juggler, SkillTag.Acrobat, SkillTag.Clown, SkillTag.Mime, SkillTag.FirePerformer,
+    SkillTag.Puppeteer ->
         listOf(PerformanceStyle, PerformanceNeeds, AudienceQuestion)
-    TalentTag.Poet, TalentTag.Storyteller ->
+    SkillTag.Poet, SkillTag.Storyteller ->
         listOf(PerformanceStyle, AudienceQuestion)
-    TalentTag.Emcee, TalentTag.Speaker ->
+    SkillTag.Emcee, SkillTag.Speaker ->
         listOf("What topics or events do you speak at?", AudienceQuestion)
-    TalentTag.Model ->
+    SkillTag.Model ->
         listOf(PortfolioQuestion, ExperienceQuestion)
 
     // Visual Arts
-    TalentTag.Painter, TalentTag.Muralist, TalentTag.Illustrator, TalentTag.Sculptor, TalentTag.GraphicDesigner,
-    TalentTag.Calligrapher ->
+    SkillTag.Painter, SkillTag.Muralist, SkillTag.Illustrator, SkillTag.Sculptor, SkillTag.GraphicDesigner,
+    SkillTag.Calligrapher ->
         listOf(ArtStyle, PortfolioQuestion, CommissionQuestion)
-    TalentTag.Photographer, TalentTag.Videographer, TalentTag.Filmmaker, TalentTag.Animator ->
+    SkillTag.Photographer, SkillTag.Videographer, SkillTag.Filmmaker, SkillTag.Animator ->
         listOf(ArtStyle, PortfolioQuestion, GearQuestion)
-    TalentTag.TattooArtist ->
+    SkillTag.TattooArtist ->
         listOf(ArtStyle, PortfolioQuestion, "Where do you work?")
-    TalentTag.FacePainter, TalentTag.Caricaturist ->
+    SkillTag.FacePainter, SkillTag.Caricaturist ->
         listOf(ArtStyle, AudienceQuestion, PerformanceNeeds)
 
     // Crafts
-    TalentTag.Potter, TalentTag.Crafter, TalentTag.Woodworker, TalentTag.Jeweler, TalentTag.Florist,
-    TalentTag.FashionDesigner ->
+    SkillTag.Potter, SkillTag.Crafter, SkillTag.Woodworker, SkillTag.Jeweler, SkillTag.Florist,
+    SkillTag.FashionDesigner ->
         listOf("What do you make?", CommissionQuestion, "Where can people find your work?")
-    TalentTag.BalloonArtist ->
+    SkillTag.BalloonArtist ->
         listOf("What do you make?", AudienceQuestion, PerformanceNeeds)
 
     // Writing
-    TalentTag.Writer, TalentTag.Journalist, TalentTag.Blogger ->
+    SkillTag.Writer, SkillTag.Journalist, SkillTag.Blogger ->
         listOf("What do you write about?", PortfolioQuestion)
-    TalentTag.Translator ->
+    SkillTag.Translator ->
         listOf("Which languages do you work in?", "What kinds of text do you translate?")
 
     // Food
-    TalentTag.Chef, TalentTag.Baker, TalentTag.Caterer, TalentTag.Pitmaster, TalentTag.FoodVendor ->
+    SkillTag.Chef, SkillTag.Baker, SkillTag.Caterer, SkillTag.Pitmaster, SkillTag.FoodVendor ->
         listOf(FoodStyle, "How many people can you serve?", DietaryQuestion)
-    TalentTag.Bartender, TalentTag.Barista, TalentTag.Brewer, TalentTag.Sommelier ->
+    SkillTag.Bartender, SkillTag.Barista, SkillTag.Brewer, SkillTag.Sommelier ->
         listOf(FoodStyle, ExperienceQuestion)
 
     // Technical
-    TalentTag.SoundTech, TalentTag.LightingTech, TalentTag.Projectionist, TalentTag.Streamer ->
+    SkillTag.SoundTech, SkillTag.LightingTech, SkillTag.Projectionist, SkillTag.Streamer ->
         listOf(ExperienceQuestion, GearQuestion)
-    TalentTag.Stagehand, TalentTag.Electrician, TalentTag.Carpenter, TalentTag.Mechanic ->
+    SkillTag.Stagehand, SkillTag.Electrician, SkillTag.Carpenter, SkillTag.Mechanic ->
         listOf(ExperienceQuestion, "What kinds of jobs do you take on?")
-    TalentTag.VideoEditor ->
+    SkillTag.VideoEditor ->
         listOf(PortfolioQuestion, "What software do you work in?")
-    TalentTag.WebDeveloper, TalentTag.Developer ->
+    SkillTag.WebDeveloper, SkillTag.Developer ->
         listOf("What languages and tools do you work with?", PortfolioQuestion, HelpQuestion)
-    TalentTag.ItSupport ->
+    SkillTag.ItSupport ->
         listOf("What do people usually come to you for?", HelpQuestion)
 
     // Promotion
-    TalentTag.Promoter, TalentTag.Marketer, TalentTag.Publicist, TalentTag.StreetTeam ->
+    SkillTag.Promoter, SkillTag.Marketer, SkillTag.Publicist, SkillTag.StreetTeam ->
         listOf("What have you promoted?", AudienceQuestion)
-    TalentTag.SocialMedia, TalentTag.Influencer ->
+    SkillTag.SocialMedia, SkillTag.Influencer ->
         listOf("Which platforms are you on?", AudienceQuestion)
-    TalentTag.FlyerDesigner ->
+    SkillTag.FlyerDesigner ->
         listOf(ArtStyle, PortfolioQuestion)
 
     // Hosting
-    TalentTag.Host, TalentTag.EventPlanner, TalentTag.Organizer, TalentTag.Coordinator ->
+    SkillTag.Host, SkillTag.EventPlanner, SkillTag.Organizer, SkillTag.Coordinator ->
         listOf("What kinds of events do you put together?", "How large an event can you handle?")
-    TalentTag.Usher, TalentTag.Security ->
+    SkillTag.Usher, SkillTag.Security ->
         listOf(ExperienceQuestion, AvailabilityQuestion)
-    TalentTag.Fundraiser ->
+    SkillTag.Fundraiser ->
         listOf("What causes have you raised money for?", ExperienceQuestion)
-    TalentTag.TourGuide ->
+    SkillTag.TourGuide ->
         listOf("Where do you lead tours?", "What do your tours cover?")
-    TalentTag.GameMaster, TalentTag.TriviaHost ->
+    SkillTag.GameMaster, SkillTag.TriviaHost ->
         listOf("What games do you run?", AudienceQuestion)
-    TalentTag.Vendor ->
+    SkillTag.Vendor ->
         listOf("What do you sell?", PerformanceNeeds)
 
     // Teaching & Care
-    TalentTag.Teacher, TalentTag.Instructor, TalentTag.Coach, TalentTag.PersonalTrainer,
-    TalentTag.YogaInstructor, TalentTag.DanceInstructor ->
+    SkillTag.Teacher, SkillTag.Instructor, SkillTag.Coach, SkillTag.PersonalTrainer,
+    SkillTag.YogaInstructor, SkillTag.DanceInstructor ->
         listOf("What do you teach?", "Who are your students?", ExperienceQuestion)
-    TalentTag.Childcare ->
+    SkillTag.Childcare ->
         listOf("What ages do you care for?", ExperienceQuestion, AvailabilityQuestion)
-    TalentTag.MassageTherapist, TalentTag.TarotReader ->
+    SkillTag.MassageTherapist, SkillTag.TarotReader ->
         listOf(ExperienceQuestion, PerformanceNeeds)
 }
 

@@ -4,8 +4,8 @@ import kampfire.model.Labeled
 import koala.SvgFile
 import koala.SvgPack
 
-/** A talent a star offers, with its icon. */
-enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
+/** A skill a star offers, with its icon. */
+enum class SkillTag(val svg: SvgPack, label: String? = null): Labeled {
     // Music
     Singer(SvgFile.MicrophoneHandheld),
     Rapper(SvgFile.Microphone),
@@ -132,54 +132,54 @@ enum class TalentTag(val svg: SvgPack, label: String? = null): Labeled {
     override val label = label ?: name
 }
 
-/** A group of [TalentTag]s, as a menu presents them. */
-enum class TalentCategory(val tags: List<TalentTag>, label: String? = null): Labeled {
+/** A group of [SkillTag]s, as a menu presents them. */
+enum class SkillCategory(val tags: List<SkillTag>, label: String? = null): Labeled {
     Music(listOf(
-        TalentTag.Singer, TalentTag.Rapper, TalentTag.Songwriter, TalentTag.Composer,
-        TalentTag.Choir, TalentTag.Guitarist, TalentTag.Pianist, TalentTag.Drummer, TalentTag.Violinist,
-        TalentTag.Bassist, TalentTag.Busker, TalentTag.Dj, TalentTag.Producer, TalentTag.SoundEngineer,
-        TalentTag.Beatboxer,
+        SkillTag.Singer, SkillTag.Rapper, SkillTag.Songwriter, SkillTag.Composer,
+        SkillTag.Choir, SkillTag.Guitarist, SkillTag.Pianist, SkillTag.Drummer, SkillTag.Violinist,
+        SkillTag.Bassist, SkillTag.Busker, SkillTag.Dj, SkillTag.Producer, SkillTag.SoundEngineer,
+        SkillTag.Beatboxer,
     )),
     Performance(listOf(
-        TalentTag.Actor, TalentTag.Comedian, TalentTag.Improviser, TalentTag.Dancer, TalentTag.Magician,
-        TalentTag.Juggler, TalentTag.Acrobat, TalentTag.Clown, TalentTag.Mime, TalentTag.FirePerformer,
-        TalentTag.Poet, TalentTag.Storyteller,
-        TalentTag.Puppeteer, TalentTag.Emcee, TalentTag.Speaker, TalentTag.Model,
+        SkillTag.Actor, SkillTag.Comedian, SkillTag.Improviser, SkillTag.Dancer, SkillTag.Magician,
+        SkillTag.Juggler, SkillTag.Acrobat, SkillTag.Clown, SkillTag.Mime, SkillTag.FirePerformer,
+        SkillTag.Poet, SkillTag.Storyteller,
+        SkillTag.Puppeteer, SkillTag.Emcee, SkillTag.Speaker, SkillTag.Model,
     )),
     VisualArts(listOf(
-        TalentTag.Painter, TalentTag.Muralist, TalentTag.Illustrator, TalentTag.Sculptor, TalentTag.Photographer,
-        TalentTag.Videographer, TalentTag.Filmmaker, TalentTag.Animator, TalentTag.GraphicDesigner,
-        TalentTag.TattooArtist, TalentTag.FacePainter, TalentTag.Caricaturist, TalentTag.Calligrapher,
+        SkillTag.Painter, SkillTag.Muralist, SkillTag.Illustrator, SkillTag.Sculptor, SkillTag.Photographer,
+        SkillTag.Videographer, SkillTag.Filmmaker, SkillTag.Animator, SkillTag.GraphicDesigner,
+        SkillTag.TattooArtist, SkillTag.FacePainter, SkillTag.Caricaturist, SkillTag.Calligrapher,
     ), "Visual Arts"),
     Crafts(listOf(
-        TalentTag.Potter, TalentTag.Crafter, TalentTag.Woodworker, TalentTag.Jeweler, TalentTag.Florist,
-        TalentTag.FashionDesigner, TalentTag.BalloonArtist,
+        SkillTag.Potter, SkillTag.Crafter, SkillTag.Woodworker, SkillTag.Jeweler, SkillTag.Florist,
+        SkillTag.FashionDesigner, SkillTag.BalloonArtist,
     )),
     Writing(listOf(
-        TalentTag.Writer, TalentTag.Journalist, TalentTag.Blogger, TalentTag.Translator,
+        SkillTag.Writer, SkillTag.Journalist, SkillTag.Blogger, SkillTag.Translator,
     )),
     Food(listOf(
-        TalentTag.Chef, TalentTag.Baker, TalentTag.Bartender, TalentTag.Barista, TalentTag.Caterer, TalentTag.Brewer,
-        TalentTag.Sommelier, TalentTag.Pitmaster, TalentTag.FoodVendor,
+        SkillTag.Chef, SkillTag.Baker, SkillTag.Bartender, SkillTag.Barista, SkillTag.Caterer, SkillTag.Brewer,
+        SkillTag.Sommelier, SkillTag.Pitmaster, SkillTag.FoodVendor,
     )),
     Technical(listOf(
-        TalentTag.SoundTech, TalentTag.LightingTech, TalentTag.Stagehand, TalentTag.Projectionist,
-        TalentTag.Streamer, TalentTag.VideoEditor, TalentTag.WebDeveloper, TalentTag.Developer, TalentTag.ItSupport,
-        TalentTag.Electrician, TalentTag.Carpenter, TalentTag.Mechanic,
+        SkillTag.SoundTech, SkillTag.LightingTech, SkillTag.Stagehand, SkillTag.Projectionist,
+        SkillTag.Streamer, SkillTag.VideoEditor, SkillTag.WebDeveloper, SkillTag.Developer, SkillTag.ItSupport,
+        SkillTag.Electrician, SkillTag.Carpenter, SkillTag.Mechanic,
     )),
     Promotion(listOf(
-        TalentTag.Promoter, TalentTag.SocialMedia, TalentTag.Marketer, TalentTag.Publicist, TalentTag.FlyerDesigner,
-        TalentTag.StreetTeam, TalentTag.Influencer,
+        SkillTag.Promoter, SkillTag.SocialMedia, SkillTag.Marketer, SkillTag.Publicist, SkillTag.FlyerDesigner,
+        SkillTag.StreetTeam, SkillTag.Influencer,
     )),
     Hosting(listOf(
-        TalentTag.Host, TalentTag.EventPlanner, TalentTag.Organizer, TalentTag.Coordinator, TalentTag.Usher,
-        TalentTag.Security, TalentTag.Fundraiser, TalentTag.TourGuide, TalentTag.GameMaster,
-        TalentTag.TriviaHost, TalentTag.Vendor,
+        SkillTag.Host, SkillTag.EventPlanner, SkillTag.Organizer, SkillTag.Coordinator, SkillTag.Usher,
+        SkillTag.Security, SkillTag.Fundraiser, SkillTag.TourGuide, SkillTag.GameMaster,
+        SkillTag.TriviaHost, SkillTag.Vendor,
     )),
     TeachingAndCare(listOf(
-        TalentTag.Teacher, TalentTag.Instructor, TalentTag.Coach, TalentTag.PersonalTrainer,
-        TalentTag.YogaInstructor, TalentTag.DanceInstructor, TalentTag.Childcare, TalentTag.MassageTherapist,
-        TalentTag.TarotReader,
+        SkillTag.Teacher, SkillTag.Instructor, SkillTag.Coach, SkillTag.PersonalTrainer,
+        SkillTag.YogaInstructor, SkillTag.DanceInstructor, SkillTag.Childcare, SkillTag.MassageTherapist,
+        SkillTag.TarotReader,
     ), "Teaching & Care");
 
     override val label = label ?: name

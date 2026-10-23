@@ -13,35 +13,35 @@ import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.menuActionButton
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.formSubmit
-import streetlight.web.model.TalentConfig
-import streetlight.web.model.TalentEditor
+import streetlight.web.model.SkillConfig
+import streetlight.web.model.SkillEditor
 import streetlight.web.model.api
 import streetlight.web.model.toaster
 
-/** The star's talents, or the editor of the talent [TalentConfig] has staged as its focus. */
-fun ViewScope.talentDash() {
-    val model = TalentConfig(contentScope, api, toaster)
+/** The star's skills, or the editor of the skill [SkillConfig] has staged as its focus. */
+fun ViewScope.skillDash() {
+    val model = SkillConfig(contentScope, api, toaster)
     context(model) {
         flowBlock(model.focusState) { focus ->
             when (focus) {
-                null -> talentsSection()
+                null -> skillsSection()
                 else -> column {
-                    val editor = TalentEditor(focus, contentScope, api)
+                    val editor = SkillEditor(focus, contentScope, api)
                     val messages = MessageStore()
                     context(editor) {
-                        val label = if (focus.talentId == null) "New Talent" else "Update Talent"
+                        val label = if (focus.skillId == null) "New Skill" else "Update Skill"
                         actionSection(label, listOf(
                             MenuAction("back", onClick = model::cancelFocus)
                         )) {
-                            talentEditForm()
+                            skillEditForm()
                         }
 
                         formSubmit(
                             label = "Save",
                             onClick = {
                                 launchEffect {
-                                    val talent = editor.submitSuspend(messages) ?: return@launchEffect
-                                    model.finishTalentEdit(talent)
+                                    val skill = editor.submitSuspend(messages) ?: return@launchEffect
+                                    model.finishSkillEdit(skill)
                                 }
                             },
                             messenger = messages,
@@ -54,28 +54,28 @@ fun ViewScope.talentDash() {
     }
 }
 
-/** The star's talents, each with a button that stages its edit, under a button for a new one. */
-context(config: TalentConfig)
-private fun ViewScope.talentsSection() = actionSection("Talents", listOf(
-    MenuAction("New", onClick = config::startNewTalent)
+/** The star's skills, each with a button that stages its edit, under a button for a new one. */
+context(config: SkillConfig)
+private fun ViewScope.skillsSection() = actionSection("Skills", listOf(
+    MenuAction("New", onClick = config::startNewSkill)
 )) {
-    flowBlock(config.talentsState) { talents ->
-        if (talents == null) return@flowBlock
-        if (talents.isEmpty()) {
-            centeredText("No talents yet.")
+    flowBlock(config.skillsState) { skills ->
+        if (skills == null) return@flowBlock
+        if (skills.isEmpty()) {
+            centeredText("No skills yet.")
             return@flowBlock
         }
         column {
-            talents.forEach { talent ->
+            skills.forEach { skill ->
                 row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
                     column(modify(Flex1, Gap0)) {
-                        heading5(talent.name)
-                        talent.tags?.let { tags ->
+                        heading5(skill.name)
+                        skill.tags?.let { tags ->
                             textBlock(tags.joinToString { it.label }, modify(TextSmall, OpacityHalf))
                         }
                     }
-                    textBlock(talent.talentLevel.label, modify(TextUppercase, TextSmall, OpacityHigh))
-                    menuActionButton(MenuAction("Edit") { config.startTalentEdit(talent) })
+                    textBlock(skill.skillLevel.label, modify(TextUppercase, TextSmall, OpacityHigh))
+                    menuActionButton(MenuAction("Edit") { config.startSkillEdit(skill) })
                 }
             }
         }

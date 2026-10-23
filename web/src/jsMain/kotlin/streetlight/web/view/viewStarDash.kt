@@ -31,7 +31,7 @@ fun ViewScope.viewStarDash() {
                     when (it) {
                         StarDashTab.Overview -> starOverview()
                         StarDashTab.ECommerce -> sellerDash()
-                        StarDashTab.Talents -> talentDash()
+                        StarDashTab.Skills -> skillDash()
                         StarDashTab.Sandbox -> sandboxContent()
                     }
                 }

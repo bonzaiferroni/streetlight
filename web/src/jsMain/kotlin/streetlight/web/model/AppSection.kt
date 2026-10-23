@@ -17,7 +17,7 @@ fun Screen.toAppSection() = when (this) {
     Screen.SongProfile,
     Screen.Contribute,
     Screen.Connect,
-    Screen.TalentProfile,
+    Screen.SkillProfile,
     Screen.Star,
     Screen.PasswordReset,
     Screen.Location,
