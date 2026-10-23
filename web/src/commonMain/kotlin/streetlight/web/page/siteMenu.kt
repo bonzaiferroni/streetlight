@@ -64,7 +64,7 @@ fun FlowContent.siteMenuItems() {
     // radio
     label("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.Question.large)
-    item("Contribute", ContributeRoute, SvgFile.HeartHandshake.large) // td
+    item("Contribute", ContributeRoute, SvgFile.HeartHandshake.large)
     item("Status", SiteMonitorRoute, SvgFile.Chart.large) // td
     item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed.large)
     label("config")

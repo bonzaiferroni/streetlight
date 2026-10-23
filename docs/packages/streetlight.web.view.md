@@ -340,11 +340,13 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`viewLocation`](../../web/src/jsMain/kotlin/streetlight/web/view/viewLocation.kt) | The Location screen |
 | [`viewEvent`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEvent.kt) | The Event screen |
 | [`viewMedia`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMedia.kt) | The Media screen |
+| [`viewSkill`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSkill.kt) | The SkillProfile screen |
 | [`viewCity`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCity.kt) | The City screen |
 | [`viewCityFeed`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCityFeed.kt) | The city feed |
 | [`viewSiteDoc`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteDoc.kt) | The SiteDoc screen |
 | [`viewAboutApp`](../../web/src/jsMain/kotlin/streetlight/web/view/viewAboutApp.kt) | The AboutApp screen |
 | [`viewConnect`](../../web/src/jsMain/kotlin/streetlight/web/view/viewConnect.kt) | The Connect screen |
+| [`viewContribute`](../../web/src/jsMain/kotlin/streetlight/web/view/viewContribute.kt) | The Contribute screen |
 | [`viewOnboard`](../../web/src/jsMain/kotlin/streetlight/web/view/viewOnboard.kt) | The onboarding of a star as an `OnboardType` |
 | [`viewTalkLog`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTalkLog.kt) | The TalkLog screen |
 | [`viewInbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewInbox.kt) | The Inbox screen |
@@ -386,7 +388,6 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`viewBugReporter`](../../web/src/jsMain/kotlin/streetlight/web/view/viewBugReporter.kt) | Bug reports |
 | [`viewMusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMusicianHub.kt) | A musician's songs |
 | [`viewSongProfile`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSongProfile.kt) | A song |
-| [`viewSkill`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSkill.kt) | A skill |
 | [`viewSiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteMonitor.kt) | The site's status |
 | [`viewSandbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSandbox.kt) | The sandbox |
 

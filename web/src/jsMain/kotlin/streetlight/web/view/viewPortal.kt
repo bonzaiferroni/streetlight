@@ -85,6 +85,7 @@ private fun RouteScope.viewCorePortal() {
         // other
         Screen.AboutApp -> viewAboutApp()
         Screen.Connect -> viewConnectRoute()
+        Screen.Contribute -> viewContributeRoute()
         else -> textBlock("Coming soon: $screen")
     }
 }
