@@ -74,7 +74,7 @@ A tag enum is stored by name, as a text array, so entries are ordered freely and
 
 An `EntityFeed` is paged with an `EntityCursor`. A cursor holds the sort value and `recordId` of the last entity on the page, so it pages any table keyed by a `Uuid`. A feed of posts takes its `recordId` from the post; an event feed takes it from the event.
 
-An `EntityFeed` names its `FeedSource`, the feed its next page is read from: a `FeedType` shown in a `FeedContext`. A context is where a feed is shown, `Home`, `City`, `Location`, `Galaxy`, `Star`, `Galaxies` or `Cities`, carrying the id its reads need, and it lists the types it offers. A feed section reads its heading from the type, and every further page, filter and sort is read through `Api.Feeds.Read` with a `FeedRequest` of the source and a cursor. The server answers a type the context does not offer as a bad request. A feed no section pages, such as the map's, has no source.
+An `EntityFeed` names its `FeedSource`, the feed its next page is read from: a `FeedType` shown in a `FeedContext`. A context is where a feed is shown, `Home`, `City`, `Location`, `Galaxy`, `Star`, `Skill`, `Galaxies` or `Cities`, carrying the id its reads need, and it lists the types it offers. A feed section reads its heading from the type, and every further page, filter and sort is read through `Api.Feeds.Read` with a `FeedRequest` of the source and a cursor. The server answers a type the context does not offer as a bad request. A feed no section pages, such as the map's, has no source.
 
 | Context | Types |
 |---|---|

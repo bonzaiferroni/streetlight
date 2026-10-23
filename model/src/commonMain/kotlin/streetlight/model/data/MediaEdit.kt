@@ -17,6 +17,8 @@ data class MediaEdit(
     val geoPoint: GeoPoint? = null,
     val image: Image? = null,
     val design: PageDesign? = null,
+    /** The skills to link the media to; `null` leaves its links as they are. */
+    val skillIds: List<SkillId>? = null,
 ) {
     val isValid get() = true
     val invalidMessage: String? get() = null

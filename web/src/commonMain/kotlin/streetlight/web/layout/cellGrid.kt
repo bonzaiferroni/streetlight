@@ -12,6 +12,7 @@ import koala.SvgFile
 import koala.modifier.*
 import kotlinx.css.px
 import kotlinx.html.DIV
+import kotlinx.html.P
 import kotlinx.html.FlowContent
 import kotlinx.html.span
 import koala.model.ExtraLink
@@ -70,6 +71,19 @@ private fun FlowContent.cellContent(cell: EntityCell) {
                     +" $label"
                 }
             }
+        }
+    }
+}
+
+/**
+ * A cell that fills out the last, wider cell of a grid with quiet extra content, such as spare tags, an owner or a
+ * date, after [icon]. Its text stays on one line and ends in an ellipsis, so it never makes the grid longer.
+ */
+fun FlowContent.fillerCell(icon: Svg, content: P.() -> Unit) {
+    row(CellGrid.CellMod) {
+        row(CellGrid.ContentMod) {
+            icon(icon, CellGrid.IconMod)
+            textBlock(mod = modify(CellGrid.TextMod, OpacityHigh), block = content)
         }
     }
 }

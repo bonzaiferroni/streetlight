@@ -28,4 +28,5 @@ class TestMediaClient: MediaClient {
     override suspend fun readMedia(slug: Slug): Outcome<Media> = TODO()
     override suspend fun createMedia(edit: MediaEdit): Outcome<Media> = TODO()
     override suspend fun updateMedia(edit: MediaEdit): Outcome<Media> = TODO()
+    override suspend fun readSkillIds(mediaId: MediaId): Outcome<List<SkillId>> = TODO()
 }

@@ -81,6 +81,8 @@ A `FooEditor` takes its initial value, usually a `FooEdit`, and its whole role i
 
 A model editing a record holds an edit DTO in its state. On a successful send it clears the fields the sender filled and keeps the choices they made, so a second send starts from the same settings.
 
+A field the record's DTO does not carry, such as `MediaEdit.skillIds`, is nullable on the edit DTO: `null` leaves the stored value alone. The editor loads it in its `init` with its own API call and writes it into the edit only while the field is still `null`, so a choice made during the load wins. `SkillLinkEditor` does this for `skillIds`, given the edit's field and the read of the record's links.
+
 ## Submodels
 
 Functionality two models share lives in a submodel named with the suffix `Editor`, such as `EmailEditor` and `LeadEditor`. A model holds its submodel as a property, built in its own constructor, and the view reaches it through the model. The submodel holds its own state, publishes it, and makes its own API call, so the base models stay clean and the work is written once. What differs between its users, such as a `LeadEditor`'s `LeadType`, is passed through its constructor.

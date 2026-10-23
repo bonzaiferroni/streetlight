@@ -32,7 +32,7 @@ fun ViewScope.sellerDash() {
                     merchantDash()
                 }
                 is OfferingEdit -> column {
-                    val editor = OfferingEditor(focus, api)
+                    val editor = OfferingEditor(focus, contentScope, api, toaster)
                     val messages = MessageStore()
                     context(editor) {
                         val label = if (focus.offeringId == null) "New Offer" else "Update Offer"

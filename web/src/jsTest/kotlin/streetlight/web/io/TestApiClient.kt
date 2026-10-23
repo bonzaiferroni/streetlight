@@ -19,6 +19,7 @@ class TestApiClient(
     override val post: PostClient = TestPostClient(),
     override val seller: SellerClient = TestSellerClient(),
     override val offering: OfferingClient = TestOfferingClient(),
+    override val skill: SkillClient = TestSkillClient(),
     override val payment: PaymentClient = TestPaymentClient(),
     override val customer: CustomerClient = TestCustomerClient(),
     override val song: SongClient = TestSongClient(),

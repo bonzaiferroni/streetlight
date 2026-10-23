@@ -29,10 +29,12 @@ interface MediaClient {
     suspend fun readMedia(slug: Slug): Outcome<Media>
     suspend fun createMedia(edit: MediaEdit): Outcome<Media>
     suspend fun updateMedia(edit: MediaEdit): Outcome<Media>
+    suspend fun readSkillIds(mediaId: MediaId): Outcome<List<SkillId>>
 }
 
 class BrowserMediaClient(private val client: FetchClient): MediaClient {
     override suspend fun readMedia(slug: Slug) = client.getApi(Api.Medias.ReadMedia, slug)
     override suspend fun createMedia(edit: MediaEdit) = client.postApi(Api.Medias.CreateMedia, edit)
     override suspend fun updateMedia(edit: MediaEdit) = client.postApi(Api.Medias.UpdateMedia, edit)
+    override suspend fun readSkillIds(mediaId: MediaId) = client.getApi(Api.Medias.ReadSkillIds, mediaId)
 }

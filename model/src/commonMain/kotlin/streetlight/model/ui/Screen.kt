@@ -51,7 +51,7 @@ enum class Screen(
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
 
     // star
-    SkillProfile(UuidParse { SkillProfileRoute(SkillId(it)) }),
+    SkillProfile(UuidParse { SkillRoute(SkillId(it)) }),
     Star(UsernameParse { StarRoute(it) }, "s", true),
     StarDash(StaticParse { StarDashRoute.of(this) }),
     ProfileConfig(StaticParse { ProfileConfigRoute }),
@@ -220,7 +220,7 @@ data class SongProfileRoute(
     override val title get() = "Song"
 }
 
-data class SkillProfileRoute(
+data class SkillRoute(
     val skillId: SkillId
 ): StreetlightRoute, RecordIdRoute {
     override val screen get() = Screen.SkillProfile

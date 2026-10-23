@@ -2,6 +2,8 @@ package streetlight.model.data
 
 import koala.model.ExtraLink
 import kampfire.api.Markdown
+import kampfire.api.Username
+import kampfire.api.toMarkdown
 import kampfire.model.Labeled
 import koala.Image
 import kotlin.time.Instant
@@ -13,23 +15,31 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Skill(
     val skillId: SkillId,
+    override val username: Username?,
     val name: String,
-    val description: Markdown?,
-    val image: Image?,
+    override val description: Markdown?,
+    override val image: Image?,
     val experience: Int,
     val tags: List<SkillTag>?,
     val interview: List<InterviewQuestion>,
-    val links: List<ExtraLink>?,
+    override val links: List<ExtraLink>?,
     val skillLevel: SkillLevel,
     val yearStarted: Int,
     val updatedAt: Instant,
-    val createdAt: Instant,
-)
+    override val createdAt: Instant,
+): Entity {
+    override val label get() = name
+    override val body get() = description ?: "${skillLevel.label} since $yearStarted".toMarkdown()
+    override val geoPoint get() = null
+    override val markerId get() = skillId.value.toString()
+}
 
 @JvmInline
 @Serializable
 value class SkillId(override val value: Uuid): RecordId {
     companion object { fun random() = SkillId(Uuid.random()) }
+
+    override fun toString() = value.toString()
 }
 
 /** The level of a [Skill]. */

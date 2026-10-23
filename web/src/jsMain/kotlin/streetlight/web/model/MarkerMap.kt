@@ -23,6 +23,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.Offering
+import streetlight.model.data.Skill
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Star
 
@@ -122,6 +123,7 @@ private fun createMarker(post: Entity): StaticMarker? = when (post) {
     is EventGroup -> if (post.startsAt != null) EventInflateMarker(post) else LocationInflateMarker(post)
     is Star -> null
     is Offering -> null
+    is Skill -> null
 }
 
 private fun createMap(posts: List<Entity>): List<StaticMarker> = posts.mapNotNull { createMarker(it) }

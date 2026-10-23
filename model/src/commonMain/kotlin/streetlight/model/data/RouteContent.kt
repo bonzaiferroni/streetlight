@@ -53,6 +53,13 @@ data class StarContent(
     override val design get() = star.design
 }
 
+/** The content of a skill's page: the skill and the feed of media linked to it. */
+@Serializable
+data class SkillContent(
+    val skill: Skill,
+    val feed: EntityFeed,
+): RouteContent
+
 /** The content of the home page: the top galaxies and the universe feed. */
 @Serializable
 data class HomeContent(

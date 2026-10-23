@@ -79,6 +79,9 @@ private fun RouteScope.viewCorePortal() {
         // offering
         Screen.Offering -> viewOfferingRoute()
 
+        // skill
+        Screen.SkillProfile -> viewSkillRoute()
+
         // other
         Screen.AboutApp -> viewAboutApp()
         Screen.Connect -> viewConnectRoute()

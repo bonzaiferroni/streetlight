@@ -110,6 +110,10 @@ flowBlock(config.focusState) { focus ->
 }
 ```
 
+## Form Lists
+
+A list the user builds in a form, such as a skill's tags, a record's links (`linksFormSection`) or the skills a record shows (`skillLinksSection`), is an `actionSectionCard`. Its "add new" action opens a popover through `setPopoverTarget`, each item is a row with its own actions, such as Remove, and an empty list shows one short line of guidance in its place.
+
 ## Rendering State
 
 `flowBlock` renders a value as HTML. It takes a `Tap` or a `Flow`, and its block is rebuilt as a child view whenever the value changes. The previous child view is disposed first.

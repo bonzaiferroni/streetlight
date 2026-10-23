@@ -77,6 +77,11 @@ sealed interface FeedContext {
     }
 
     @Serializable
+    data class Skill(val skillId: SkillId): FeedContext {
+        override val types get() = listOf(FeedType.Media)
+    }
+
+    @Serializable
     data object Galaxies: FeedContext {
         override val types get() = listOf(FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies)
     }

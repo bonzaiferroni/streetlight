@@ -18,6 +18,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.Offering
+import streetlight.model.data.Skill
 import streetlight.model.data.priceLabel
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Entity
@@ -31,6 +32,7 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.OfferingRoute
+import streetlight.model.ui.SkillRoute
 import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.component.postMenu
@@ -69,6 +71,7 @@ fun Entity.toRoute(): AppRoute? = when (this) {
     is Star -> StarRoute(username)
     is EventGroup -> null
     is Offering -> OfferingRoute(offeringId)
+    is Skill -> SkillRoute(skillId)
 }
 
 fun Entity.toThemeColor(): ThemeColor = when (this) {
@@ -89,6 +92,7 @@ fun Entity.toThemeColor(): ThemeColor = when (this) {
     is Star -> ThemeColor.Primary
     is EventGroup -> ThemeColor.Location
     is Offering -> ThemeColor.Primary
+    is Skill -> ThemeColor.Primary
 }
 
 /** The flair badge icon of this entity, the icon of its tag for an event that has one. */
@@ -98,6 +102,7 @@ fun Entity.toFlair(): SvgPack = when (this) {
     is Event -> tag?.svg ?: FlairIcon.Event.svg
     is LocationPost, is Location -> FlairIcon.Location.svg
     is MediaPost, is Media -> FlairIcon.Media.svg
+    is Skill -> tags?.firstOrNull()?.svg ?: SvgFile.Award
     is CustomEntity -> when (recordType) {
         RecordType.Location -> FlairIcon.Location.svg
         RecordType.Event -> FlairIcon.Event.svg
@@ -121,6 +126,7 @@ fun Entity.toEntityRef(): EntityRef? = when (this) {
     is Star -> null
     is EventGroup -> null
     is Offering -> null
+    is Skill -> null
 }
 
 /**
@@ -150,6 +156,10 @@ fun Entity.toCells(context: FeedContext? = null): List<EntityCell>? = when (this
     is Star -> null
     is EventGroup -> null
     is Offering -> listOf(EntityCell(SvgFile.Coin.small, priceLabel, null))
+    is Skill -> listOf(
+        EntityCell(SvgFile.Award.small, skillLevel.label, null),
+        EntityCell(SvgFile.Calendar.small, "since $yearStarted", null),
+    )
 }
 
 /**
@@ -207,6 +217,7 @@ fun Entity.toButtons(): List<EntityButton>? = when (val entity = this) {
     is Star -> null
     is EventGroup -> null
     is Offering -> null
+    is Skill -> null
 }
 
 /** A second route shown under the title, such as the location of an event post. */

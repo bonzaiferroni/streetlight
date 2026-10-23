@@ -3,6 +3,7 @@ package streetlight.web.view
 import koala.SvgFile
 import koala.component.heading5
 import koala.component.icon
+import koala.component.navigation
 import koala.dom.ViewScope
 import koala.dom.component.column
 import koala.dom.component.row
@@ -11,6 +12,7 @@ import koala.dom.layout.flowBlock
 import koala.model.MenuAction
 import koala.model.MessageStore
 import koala.modifier.*
+import streetlight.model.ui.SkillRoute
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.menuActionButton
 import streetlight.web.dom.layout.actionSection
@@ -67,15 +69,17 @@ private fun ViewScope.skillsSection() = actionSection("Skills", listOf(
             centeredText("No skills yet.")
             return@flowBlock
         }
-        column {
+        column(Gap2Px) {
             skills.forEach { skill ->
                 row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
                     val svg = skill.tags?.firstOrNull()?.svg ?: SvgFile.Award
                     icon(svg.animated, Height(5))
-                    column(modify(Flex1, Gap0)) {
-                        heading5(skill.name)
-                        skill.tags?.let { tags ->
-                            textBlock(tags.joinToString { it.label }, modify(TextSmall, OpacityHalf))
+                    navigation(SkillRoute(skill.skillId), modify(Flex1)) {
+                        column(modify(Gap0)) {
+                            heading5(skill.name)
+                            skill.tags?.let { tags ->
+                                textBlock(tags.joinToString { it.label }, modify(TextSmall, OpacityHalf))
+                            }
                         }
                     }
                     textBlock(skill.skillLevel.label, modify(TextUppercase, TextSmall, OpacityHigh))

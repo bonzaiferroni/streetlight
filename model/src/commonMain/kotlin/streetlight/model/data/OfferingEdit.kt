@@ -16,6 +16,8 @@ data class OfferingEdit(
     val priceCents: Int? = null,
     val currency: String? = null,
     val platformCut: Int = 0,
+    /** The skills to link the offering to; `null` leaves its links as they are. */
+    val skillIds: List<SkillId>? = null,
 ) {
     val validity by lazy {
         buildSet {

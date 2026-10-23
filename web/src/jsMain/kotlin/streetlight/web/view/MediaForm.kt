@@ -24,4 +24,8 @@ fun ViewScope.mediaForm() = formCard {
     formSection("content") {
         markdownEditor(model.textField, "content", MinHeight(32))
     }
+
+    context(model.skillLinkEditor) {
+        skillLinksSection()
+    }
 }

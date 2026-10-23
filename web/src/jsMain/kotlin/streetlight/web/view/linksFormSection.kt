@@ -23,7 +23,7 @@ import koala.dom.layout.*
 import koala.model.MenuAction
 import koala.model.toSvg
 import streetlight.model.data.SkillTag
-import streetlight.web.dom.layout.actionSection
+import streetlight.web.dom.layout.actionSectionCard
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.menuActionsRow
@@ -38,21 +38,18 @@ fun ViewScope.linksFormSection(
             val addId = Id(Uuid.random().toString())
             linkPopover(addId, ExtraLink.Empty) { linksState.append(it) }
 
-            card(Padding(2)) {
-                actionSection(
-                    label = "Links",
-                    actions = listOf(
-                        MenuAction("add new", config = { setPopoverTarget(addId, true) }) { }
-                    ),
-                    heading = { heading5(it) }
-                ) {
-                    flowBlock(linksState) { links ->
-                        links.forEachIndexed { index, link ->
-                            linkRow(link, index)
-                        }
-                        if (links.isEmpty()) {
-                            textBlock(instructions, modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-                        }
+            actionSectionCard(
+                label = "Links",
+                actions = listOf(
+                    MenuAction("add new", config = { setPopoverTarget(addId, true) }) { }
+                ),
+            ) {
+                flowBlock(linksState) { links ->
+                    links.forEachIndexed { index, link ->
+                        linkRow(link, index)
+                    }
+                    if (links.isEmpty()) {
+                        textBlock(instructions, modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
                     }
                 }
             }

@@ -128,6 +128,12 @@ An aggregate whose logic is more than one `UPDATE` can carry, such as `location.
 
 A column that copies a value from a referenced row, such as `galaxy.city` from `city.name`, is kept by a `SyncValueTrigger` declared beside the table, and no updater writes it. The trigger fills it when the foreign key changes and cascades a change of the source value to every referencing row.
 
+## Join Tables
+
+A join table that a form edits as a set is written in the transaction of the record's own write. The write keeps only the ids the owner may link, deletes the rows left out, and inserts the missing ones. A `null` set in the edit DTO skips it and leaves the rows as they are.
+
+Join tables of one shape share an interface and the utilities written on it. Each skill link table, such as `SkillMediaTable` and `SkillOfferingTable`, implements `SkillLinkTable` (`skillId`, `recordId`, `createdAt`) in `SkillLinkTable.kt`, and is read and written through `readSkillIds(recordId)` and `linkSkills(recordId, skillIds, ownerId)`.
+
 ## Migrations
 
 Flyway applies migrations in production only. Development raises the schema from the table definitions, so a development database never runs a migration.

@@ -20,6 +20,7 @@ interface ApiClient {
     val post: PostClient
     val seller: SellerClient
     val offering: OfferingClient
+    val skill: SkillClient
     val payment: PaymentClient
     val customer: CustomerClient
     val song: SongClient
@@ -49,6 +50,7 @@ class BrowserApiClient(private val client: FetchClient): ApiClient {
     override val post: PostClient = BrowserPostClient(client)
     override val seller: SellerClient = BrowserSellerClient(client)
     override val offering: OfferingClient = BrowserOfferingClient(client)
+    override val skill: SkillClient = BrowserSkillClient(client)
     override val payment: PaymentClient = BrowserPaymentClient(client)
     override val customer: CustomerClient = BrowserCustomerClient(client)
     override val song: SongClient = BrowserSongClient(client)

@@ -6,6 +6,7 @@ import kampfire.model.Outcome
 import streetlight.model.data.Offering
 import streetlight.model.data.OfferingEdit
 import streetlight.model.data.OfferingId
+import streetlight.model.data.SkillId
 import kotlin.uuid.Uuid
 
 /** Holds the star's [offerings] in memory, as the server would. */
@@ -33,6 +34,8 @@ class TestOfferingClient(
         offerings[index] = offering
         return Ok(offering)
     }
+
+    override suspend fun readSkillIds(offeringId: OfferingId): Outcome<List<SkillId>> = Ok(emptyList())
 }
 
 private fun OfferingEdit.toOffering(offeringId: OfferingId) = Offering(

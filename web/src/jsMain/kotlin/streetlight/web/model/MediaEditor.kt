@@ -39,6 +39,14 @@ class MediaEditor(
     val subtitleField = editField.mutableTapOf({ it.subtitle ?: "" }) { copy(subtitle = it) }
     val textField = editField.mutableTapOf({ it.text ?: "".toMarkdown() }) { copy(text = it.takeIf(Markdown::isNotBlank)) }
 
+    val skillLinkEditor = SkillLinkEditor(
+        skillIdsState = editField.mutableTapOf({ it.skillIds }) { copy(skillIds = it) },
+        readLinked = initialContent.mediaId?.let { mediaId -> { api.media.readSkillIds(mediaId) } },
+        scope = scope,
+        api = api,
+        toaster = toaster,
+    )
+
     val message = MessageStore()
     val imageEditor = ImageEditor(imageField, ImageTarget.Media, api)
 
@@ -86,5 +94,5 @@ class MediaEditor(
 
 data class ContentEditorState(
     val edit: MediaEdit,
-    val slug: Slug? = null
+    val slug: Slug? = null,
 )

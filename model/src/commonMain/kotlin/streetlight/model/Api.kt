@@ -192,6 +192,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadMedia: GetByIdEndpoint<Slug, Media>(this)
         object CreateMedia: PostEndpoint<MediaEdit, Media>(this)
         object UpdateMedia: PostEndpoint<MediaEdit, Media>(this)
+        object ReadSkillIds: GetByIdEndpoint<MediaId, List<SkillId>>(this)
     }
 
     object Cities: ApiNode(this) {
@@ -283,6 +284,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Read: GetByIdEndpoint<OfferingId, Offering>(this)
         object Create: PostEndpoint<OfferingEdit, Offering>(this)
         object Update: PostEndpoint<OfferingEdit, Offering>(this)
+        object ReadSkillIds: GetByIdEndpoint<OfferingId, List<SkillId>>(this)
+    }
+
+    object Skills: ApiNode(this) {
+        object ReadContent: GetByIdEndpoint<SkillId, SkillContent>(this)
     }
 
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)

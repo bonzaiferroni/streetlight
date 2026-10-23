@@ -14,12 +14,15 @@ import streetlight.model.data.OfferingTag
 import streetlight.model.data.toCentsLabel
 import streetlight.model.data.toCentsOrNull
 import streetlight.model.data.toPercentLabel
+import kotlinx.coroutines.CoroutineScope
 import streetlight.web.io.ApiClient
 
 /** Edits [edit], a new offering or one of the star's, and saves it. */
 class OfferingEditor(
     edit: OfferingEdit,
+    scope: CoroutineScope,
     private val api: ApiClient,
+    toaster: Toaster,
 ) {
     private val state = storeOf(OfferingEditorState(
         edit = edit,
@@ -43,6 +46,13 @@ class OfferingEditor(
     val validityState = editState.tapOf { it.validity }
 
     val imageEditor = ImageEditor(imageState, ImageTarget.Offering, api)
+    val skillLinkEditor = SkillLinkEditor(
+        skillIdsState = editState.mutableTapOf({ it.skillIds }) { copy(skillIds = it) },
+        readLinked = edit.offeringId?.let { offeringId -> { api.offering.readSkillIds(offeringId) } },
+        scope = scope,
+        api = api,
+        toaster = toaster,
+    )
 
     /** Whether the edit carries [tag]. */
     fun tagState(tag: OfferingTag) = editState.mutableTapOf({ tag in it.tags }) { isTagged ->

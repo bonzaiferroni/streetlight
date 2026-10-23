@@ -13,7 +13,7 @@ import koala.modifier.*
 import koala.page.Id
 import streetlight.model.data.SkillCategory
 import streetlight.model.data.SkillTag
-import streetlight.web.dom.layout.actionSection
+import streetlight.web.dom.layout.actionSectionCard
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
@@ -69,21 +69,18 @@ private fun ViewScope.skillTagMenu() {
             }
         }
     }
-    card(Padding(2)) {
-        actionSection(
-            label = "Tags",
-            actions = listOf(
-                MenuAction("add new", config = { setPopoverTarget(id, true) }) {  }
-            ),
-            heading = { heading5(it) }
-        ) {
-            flowBlock(model.tagsState) { tags ->
-                tags.forEach { tag ->
-                    skillRow(tag)
-                }
-                if (tags.isEmpty()) {
-                    textBlock("Add a tag that fits your skill.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-                }
+    actionSectionCard(
+        label = "Tags",
+        actions = listOf(
+            MenuAction("add new", config = { setPopoverTarget(id, true) }) {  }
+        ),
+    ) {
+        flowBlock(model.tagsState) { tags ->
+            tags.forEach { tag ->
+                skillRow(tag)
+            }
+            if (tags.isEmpty()) {
+                textBlock("Add a tag that fits your skill.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
             }
         }
     }

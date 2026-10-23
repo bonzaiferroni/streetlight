@@ -34,6 +34,15 @@ fun AppendScope.actionSection(
 
 fun DIV.defaultSectionHeading(label: String) = heading3(label, modify(OpacityHigh, Bold))
 
+/** An [actionSection] in a card with a small heading, as a form shows a list the user adds to and edits. */
+fun AppendScope.actionSectionCard(
+    label: String,
+    actions: List<MenuAction>? = null,
+    content: AppendScope.() -> Unit,
+) = card(Padding(2)) {
+    actionSection(label, actions, heading = { heading5(it) }, content = content)
+}
+
 fun AppendScope.actionRow(
     entity: Entity,
     actions: List<MenuAction>? = null,

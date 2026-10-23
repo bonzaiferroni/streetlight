@@ -22,11 +22,11 @@ import streetlight.model.ui.LocationUpdateRoute
 import streetlight.model.ui.MediaForgeRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.OfferingRoute
+import streetlight.model.ui.SkillRoute
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.CityConfigRoute
 import streetlight.model.ui.CityRoute
-import streetlight.model.ui.ConnectRoute
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
@@ -56,6 +56,7 @@ class AppContentFetcher(
         is MediaRoute -> api.media.readMedia(route.slug)
         is MediaUpdateRoute -> api.media.readMedia(route.slug)
         is OfferingRoute -> api.offering.readOffering(route.offeringId)
+        is SkillRoute -> api.skill.readSkillContent(route.skillId)
         is MediaForgeRoute -> route.slug?.let { api.galaxy.readGalaxy(it) } ?: Ok(NullContent)
         is SiteDocRoute -> api.doc.readSiteDoc(route.docId)
         is StarDashRoute -> Ok(NullContent)
