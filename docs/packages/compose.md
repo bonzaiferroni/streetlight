@@ -13,6 +13,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `androidx.lifecycle` | `ViewModel`, and its store per back stack entry |
 | `koin` | Services and view models, through `koin-compose` |
 | `io.ktor.client` | `AppTransport`, over the CIO engine |
+| `org.maplibre.compose` | The map, through MapLibre Native |
 | `model` | Entities, DTOs, `Api`, and `ApiClient` from `streetlight.model.io` |
 | `kampfire.model` | `Store` and `Tap` |
 | `koala.modifier` | The theme's defaults and types, `Rgb` and `Glow`, through `model` |
@@ -55,6 +56,7 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` |
 | `Icon` | `icon` (`koala.component`) |
+| `MapWindow` | `geoMapMount` (`koala.component`) and `initGeoMap` |
 | `AnimatedIcon` | `magicIcon` (`koala.component`), its animated mask |
 | `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
@@ -110,6 +112,12 @@ The app bundles the site's icons. The build syncs `www/icon`, the files the web 
 `AnimatedIcon` plays an icon's `animated` variant, whose SMIL a browser plays and Skia does not. `streetlight.compose.svg` reads the document once and draws it at the icon's clock, which is read while drawing, so a frame redraws without recomposing. Every shape is drawn in the one color, as the web's mask uses an icon's alpha alone.
 
 The renderer covers what the site's icons use: `g`, `path`, `circle`, `line` and `rect`; `transform` lists; `clipPath` with `clip-rule`, and `fill-rule`; stroke and fill presentation with `pathLength` dashes, which it cuts itself so a dash of no length draws nothing, as in a browser, where Skia's dash effect would draw a dot; and `animate`, `animateTransform` and `animateMotion` with `values`, `keyTimes`, spline `keySplines`, `from`/`to` and `begin`, repeating indefinitely. An animated value interpolates the numbers of its keyframes in place, so path data, transforms and dash arrays share one interpolation. A `mask` is not applied, and a group's `opacity` multiplies into its shapes rather than compositing the group.
+
+## Map
+
+`MapWindow` shows MapLibre's map in the site's style, `www/misc/fjord.json`, read from the server by URL as the web reads it, so the two share one style and a change to it reaches the app without a build. The style carries everything that needs no code, as `koala.md` specifies; what the map draws in code is added through MapLibre Compose's own layers.
+
+The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
 ## Theme
 
@@ -182,6 +190,7 @@ A view declares its view model as the context parameter `model`, and the `Portal
 | Targets | `jvm()` only. An Android target lives in a module of its own |
 | Compose libraries | Catalog entries over direct coordinates, as `libs.compose.foundation`. The plugin's `compose.*` aliases are deprecated, except `compose.desktop.currentOs` |
 | Material | Excluded from `compose.desktop.currentOs`, which otherwise brings in `org.jetbrains.compose.material` |
+| MapLibre | The desktop needs Java 25, the JVM flag `--enable-native-access=ALL-UNNAMED`, and one native runtime: `maplibre-compose-runtime-vulkan-linux-x64` for Linux. Another desktop OS adds its own runtime |
 | Resources | `syncComposeResources` assembles `src/commonMain/composeResources` and `www/icon` into a build directory, which `compose.resources.customDirectory` makes `commonMain`'s resources. A resource is added to `src/commonMain/composeResources`, never to the build directory |
 
 ## Workflows

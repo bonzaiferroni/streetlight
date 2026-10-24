@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicText
@@ -17,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import streetlight.compose.model.HomeModel
 import streetlight.compose.utility.collectAsState
 
-/** The view of [streetlight.compose.model.HomeRoute]: the home feed, each entity a [FeedRow]. */
+/** The view of [streetlight.compose.model.HomeRoute]: the map over the home feed, each entity a [FeedRow]. */
 context(model: HomeModel)
 @Composable
 fun HomeView() {
@@ -35,12 +36,18 @@ fun HomeView() {
     }
 
     LazyColumn(Modifier.fillMaxSize()) {
+        item {
+            MapWindow(Modifier.fillMaxWidth().padding(theme.unit).height(theme.unit * MapHeightUnits))
+        }
         itemsIndexed(entities) { index, entity ->
             if (index > 0) Divider()
             FeedRow(entity)
         }
     }
 }
+
+/** The height of the map in units, as on the web's home page. */
+private const val MapHeightUnits = 48
 
 /** The hairline between two rows. */
 @Composable

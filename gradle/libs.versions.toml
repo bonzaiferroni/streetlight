@@ -11,6 +11,7 @@ coilCompose = "3.6.3"
 compose-multiplatform = "1.12.2"
 compose-navigation = "2.9.0"
 navigation3 = "1.2.0"
+maplibreCompose = "0.20.0"
 dokka = "2.2.0"
 exposedVersion = "1.2.0"
 junit = "4.13.2"
@@ -132,7 +133,8 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
-maplibre-compose = { module = "org.maplibre.compose:maplibre-compose", version = "0.11.1" }
+maplibre-compose = { module = "org.maplibre.compose:maplibre-compose", version.ref = "maplibreCompose" }
+maplibre-compose-runtime-vulkan-linux-x64 = { module = "org.maplibre.compose:maplibre-compose-runtime-vulkan-linux-x64", version.ref = "maplibreCompose" }
 maplibre-android-vulkan = { module = "org.maplibre.gl:android-sdk-vulkan", version = "11.13.0" }
 
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }

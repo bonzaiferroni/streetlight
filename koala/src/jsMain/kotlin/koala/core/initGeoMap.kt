@@ -5,7 +5,6 @@ package koala.core
 import koala.external.ResizeObserver
 import koala.modifier.getAttribute
 import koala.modifier.isModified
-import koala.external.FillExtrusionPaint
 import koala.external.HillshadePaint
 import koala.external.MapLayer
 import koala.external.MapLayerLayout
@@ -49,8 +48,8 @@ fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
 }
 
 /**
- * Creates the map in [mount] with 3D buildings, centered on the mount's point or the last position viewed, and
- * remembers each position it moves to.
+ * Creates the map in [mount] with the fjord style and the marker lights, centered on the mount's point or the last
+ * position viewed, and remembers each position it moves to.
  */
 fun initGeoMap(mount: HTMLElement): HTMLElement {
     console.log("initializing geomap!")
@@ -86,61 +85,8 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     val lightLayer = LightLayer()
     window.asDynamic().lightLayer = lightLayer
 
+    // the style carries the base map and its 3D buildings; the lights are drawn in code
     widget.on("load") {
-
-        val layers = widget.getStyle().layers.orEmpty()
-
-        val labelLayerId = layers.firstOrNull { it.type == "symbol" && it.layout?.textField != null }?.id
-
-        val source = MapSource(
-            type = "vector",
-            url = "https://tiles.openfreemap.org/planet"
-        )
-
-        widget.addSource("openfreemap", source)
-
-        val layer = MapLayer(
-            id = "3d-buildings",
-            source = "openfreemap",
-            sourceLayer = "building",
-            type = "fill-extrusion",
-            minzoom = 14.0,
-            filter = arrayOf("!=", arrayOf("get", "hide_3d"), true),
-            paint = FillExtrusionPaint(
-                fillExtrusionColor = arrayOf(
-                    "interpolate", arrayOf("linear"),
-                    arrayOf("coalesce", arrayOf("get", "render_height"), 0),
-                    0, "hsla(232,47%,18%,0.65)",
-                    6, "hsl(224,22%,45%)",
-                    60, "hsl(224,20%,34%)",
-                    200, "hsl(224,20%,24%)",
-                    500, "hsl(224,22%,16%)"
-                ),
-                fillExtrusionHeight = arrayOf(
-                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
-                    14, 0,
-                    15, arrayOf("get", "render_height")
-                ),
-                fillExtrusionBase = arrayOf(
-                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
-                    14, 0,
-                    15, arrayOf("get", "render_min_height")
-                ),
-                fillExtrusionOpacity = arrayOf(
-                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
-                    14, 0.0,
-                    15, 0.55,
-                    16, 0.75
-                )
-            )
-        )
-
-        if (labelLayerId != null) {
-            widget.addLayer(layer, labelLayerId)
-        } else {
-            widget.addLayer(layer)
-        }
-
         widget.addLayer(lightLayer)
     }
 

@@ -68,6 +68,8 @@ An action that must not run twice at once owns one instance. Two actions never s
 
 A WebGL shader is written in GLSL ES 3.00 as a string in the Kotlin file of the layer that compiles it, marked `// language="GLSL"`. A layer drawn into the map implements `CustomLayerInterface` and is added to the map in `initGeoMap`.
 
+The map's appearance lives in its style, `www/misc/fjord.json`, which the web client and the app both load. A source or layer that needs no code, such as the 3D buildings, is declared there and not added at runtime. `initGeoMap` adds only what must be drawn in code, such as a `CustomLayerInterface` layer.
+
 ## Icons
 
 `SvgFile` declares the site's icons, each an SVG file named in kebab case, in alphabetical order. An icon taken from Tabler is declared once by its label with `svgPackOf`, as an `SvgPack` whose variants are files in `www/icon` named `foo-variant.svg`:

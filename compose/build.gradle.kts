@@ -30,12 +30,14 @@ kotlin {
             implementation(libs.kotlinx.serialization.cbor)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
+            implementation(libs.maplibre.compose)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs) {
                 exclude(group = "org.jetbrains.compose.material")
             }
             implementation(libs.kotlinx.coroutines.swing)
+            runtimeOnly(libs.maplibre.compose.runtime.vulkan.linux.x64)
         }
         jvmTest.dependencies {
             implementation(libs.kotlin.test)
@@ -60,6 +62,8 @@ compose.resources {
 compose.desktop {
     application {
         mainClass = "streetlight.compose.MainKt"
+        // MapLibre's native renderer
+        jvmArgs += "--enable-native-access=ALL-UNNAMED"
 
         nativeDistributions {
             targetFormats(TargetFormat.Deb, TargetFormat.Dmg, TargetFormat.Msi)
