@@ -9,6 +9,3 @@ sealed interface AppRoute : NavKey
 
 @Serializable
 data object HomeRoute : AppRoute
-
-@Serializable
-data object EventFeedRoute : AppRoute

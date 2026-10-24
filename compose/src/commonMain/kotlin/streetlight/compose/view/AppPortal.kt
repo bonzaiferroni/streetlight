@@ -6,8 +6,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import streetlight.compose.model.EventFeed
-import streetlight.compose.model.EventFeedRoute
+import streetlight.compose.model.HomeModel
 import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.Portal
 
@@ -23,9 +22,8 @@ fun AppPortal() {
             rememberViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
-            entry<HomeRoute> { HomeView() }
-            entry<EventFeedRoute> {
-                context(koinViewModel<EventFeed>()) { EventFeedView() }
+            entry<HomeRoute> {
+                context(koinViewModel<HomeModel>()) { HomeView() }
             }
         },
     )

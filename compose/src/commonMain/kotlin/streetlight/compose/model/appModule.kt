@@ -8,10 +8,11 @@ import streetlight.model.io.ApiClient
 
 /** The app's services and view models. */
 val appModule = module {
-    single { AppTransport(DEV_API_URL) }
+    single { AppConfig(apiUrl = DEV_API_URL) }
+    single { AppTransport(get<AppConfig>().apiUrl) }
     single { ApiClient(get<AppTransport>()) }
     singleOf(::ThemeHost)
-    viewModelOf(::EventFeed)
+    viewModelOf(::HomeModel)
 }
 
 /** The API of the server on this machine, where the app points while in development. */

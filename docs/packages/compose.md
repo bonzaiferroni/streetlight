@@ -32,7 +32,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 |---|---|
 | `FooRoute` | A route, a `@Serializable` member of the sealed `AppRoute`, in `AppRoute.kt` |
 | `FooView` | The composable a route renders |
-| `Foo` | A view model, named for its role as in `streetlight.web.model`, such as `EventFeed` |
+| `FooModel` | The view model of `FooView`, such as `HomeModel`. Web names its models by role, since it has no `View` suffix to pair with |
 | `FooState` | The state class a view model holds in its `Store` |
 
 ## Web Counterparts
@@ -49,7 +49,7 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `FooView` | `viewFoo` |
 | `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
 | `AppColors` | The color custom properties of `ThemeCss` |
-| View models, `FooState` | `streetlight.web.model` |
+| `FooModel`, `FooState` | The models of `streetlight.web.model` |
 
 ## Navigation
 
@@ -65,25 +65,31 @@ A service or view model takes its collaborators through its constructor, and Koi
 
 ## API
 
-`AppTransport` is the app's `ApiTransport`, over Ktor with the session's cookies kept in memory. `appModule` registers it with the server's URL and builds `ApiClient` over it. A service or view model that calls the API takes `ApiClient` through its constructor.
+`AppTransport` is the app's `ApiTransport`, over Ktor. `appModule` registers it with the server's URL from `AppConfig` and builds `ApiClient` over it. A service or view model that calls the API takes `ApiClient` through its constructor.
+
+`AppCookieStorage` keeps the cookies in an app-data file, so a session outlives the app. A cookie's `Max-Age` is saved as an absolute expiry. When the base URL is plain `http`, the storage clears `secure` on the cookies it keeps, since Ktor sends a secure cookie only over `https` and makes no exception for `localhost` as a browser does.
 
 ## View Models
 
 A view model extends `ViewModel`, holds one `Store` of its `FooState`, and exposes lenses as `streetlight.web.model` specifies. Its coroutines run in `viewModelScope`.
 
-It is registered in `appModule` with `viewModelOf(::Foo)`. The route's entry gets it with `koinViewModel()`, which scopes it to the entry, and provides it to the view as a context parameter.
+It is registered in `appModule` with `viewModelOf(::FooModel)`. The route's entry gets it with `koinViewModel()`, which scopes it to the entry, and provides it to the view as a context parameter.
 
 ```kotlin
 entry<FooRoute> {
-    context(koinViewModel<Foo>()) { FooView() }
+    context(koinViewModel<FooModel>()) { FooView() }
 }
 ```
 
 A view reads a lens with `collectAsState()` from `TapUtility.kt`.
 
 ```kotlin
-val events by feed.eventsState.collectAsState()
+val entities by model.entitiesState.collectAsState()
 ```
+
+## Images
+
+An image is shown with Coil's `AsyncImage`, given the image's `Url`. The image loader `App()` sets resolves a relative `Url` against `AppConfig.apiUrl`.
 
 ## Theme
 
@@ -97,14 +103,14 @@ A color derived from the theme, such as `accentFg`, is a getter on `AppColors` m
 
 ## Context Parameters
 
-A view declares the `Portal` and its view model as context parameters, following `docs/kotlin-style.md`. `App()` provides the `Portal` once, above `AppPortal`.
+A view declares its view model as the context parameter `model`, and the `Portal` when it navigates, following `docs/kotlin-style.md`. `App()` provides the `Portal` once, above `AppPortal`.
 
 ## Source Sets
 
 | Source set | Holds |
 |---|---|
 | `commonMain` | All UI, starting from `App()` |
-| `jvmMain` | `main()` and anything that reads the desktop platform |
+| `jvmMain` | `main()` and anything that reads the desktop platform, such as the `actual` of `AppFiles.kt` |
 
 ## Build
 

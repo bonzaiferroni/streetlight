@@ -26,6 +26,8 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.cbor)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs) {
