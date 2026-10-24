@@ -38,7 +38,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `FooView` | The composable a route renders |
 | `FooModel` | The view model of `FooView`, such as `HomeModel`. Web names its models by role, since it has no `View` suffix to pair with |
 | `FooState` | The state class a view model holds in its `Store` |
-| `foo` on `LazyListScope` | A part of a list that adds its own items, such as `feedSection`, named in lower case as `items` is |
+| `foo` on `LazyGridScope` or `LazyListScope` | A part of a lazy layout that adds its own items, such as `feedSection`, named in lower case as `items` is |
 
 ## Web Counterparts
 
@@ -129,7 +129,7 @@ The renderer covers what the site's icons use: `g`, `path`, `circle`, `line` and
 
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
-The map is never an item of a lazy list, which disposes an item that scrolls away and so closes the map's native renderer; it would start anew, style and tiles, each time it returned. A view that scrolls a map lays it over a spacer item of its size and moves it with the list's scroll, read in its `offset`, as `HomeView` does.
+The map is never an item of a lazy list, which disposes an item that scrolls away and so closes the map's native renderer; it would start anew, style and tiles, each time it returned. A view that scrolls a map lays it over a spacer item of its size and moves it with the lazy layout's scroll, read in its `offset`, as `HomeView` does over its grid.
 
 ## Theme
 
@@ -172,8 +172,9 @@ The layout is recorded here so its intent survives later changes.
 |---|---|
 | `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis, leaving out those without text. The top details are in their colors; the bottom details are in the ink at `opacityHigh()`, as a description is |
 | `Row` | Padded a unit all around, where the web pads a line at the sides. The main part: the thumbnail, outlined; the title in `heading5` semi-bold on one line over the entity's `body` as markdown in `small` at `opacityHigh()`, both clipped at the row's 10 units with half a unit of inset and fading where they reach the clip; then the flair badge. The `CellGrid` sits below it, or beside it as the row's right half, less half a unit, from 960dp |
+| `Grid` | No padding but a unit below. The image across the top at 3:2, its `medium` variant whole over the backdrop; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart |
 
-A feed is shown with `feedSection`, which adds its heading and rows to the list it is in. The heading sits in a `filigree()` between the type menu, bound to the page model's type, and the `FeedMode` switch, bound to `AppSettings`, both a `MutableTap`. A row carries `zenBg()`, and the feed stands its rows `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
+A feed is shown with `feedSection`, which adds its heading and entries to the `LazyVerticalGrid` it is in: columns of at least 300dp, a line apart both ways, as the web's grid. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. The section takes the mode as a value, so a change of mode lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the page model's type, and the `FeedMode` switch, bound to `AppSettings`, both a `MutableTap`. A row carries `zenBg()`, and the feed stands its rows `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 
 ## Modifiers
 

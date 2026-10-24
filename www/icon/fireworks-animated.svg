@@ -6,56 +6,64 @@
         <animate attributeName="stroke-dashoffset" values="0.7;0.7;-1.05;-1.05" keyTimes="0;0.301;0.562;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M16.9 9Q18.639 8.342 20.379 8.884" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M22.288 9.48v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M16.197 10.697Q17.497 11.1 18.797 12.703" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M20.057 14.256v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M14.5 11.4Q14.739 12.242 14.979 14.284" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M15.212 16.271v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M12.803 10.697Q11.982 11.1 11.16 12.703" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M10.248 14.483v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M12.1 9Q10.839 8.342 9.579 8.884" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M7.742 9.675v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M12.803 7.303Q11.982 5.584 11.16 5.066" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M9.469 3.998v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M14.5 6.6Q14.739 4.442 14.979 3.484" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M15.464 1.544v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0;0 0" keyTimes="0;0.1;0.3;0.301;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M16.197 7.303Q17.497 5.584 18.797 5.066" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0;0" keyTimes="0;0.1;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0;0" keyTimes="0;0.3;0.301;0.45;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.1;0.3;0.301;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M20.655 4.325v.01">
         <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.1;0.3;0.63;0.65;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
@@ -65,38 +73,44 @@
         <animate attributeName="stroke-dashoffset" values="0.7;0.7;-1.05;-1.05" keyTimes="0;0.721;0.894;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M7 16.5Q7.474 16.363 7.948 16.826" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.55;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0" keyTimes="0;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M9.164 18.014v.01">
         <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.55;0.72;0.98;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M6.25 17.799Q6.299 18.398 6.348 19.598" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.55;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0" keyTimes="0;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M6.418 21.296v.01">
         <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.55;0.72;0.98;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M4.75 17.799Q3.949 18.398 3.148 19.598" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.55;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0" keyTimes="0;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M2.204 21.011v.01">
         <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.55;0.72;0.98;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M4 16.5Q2.774 16.363 1.548 16.826" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.55;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0" keyTimes="0;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M4.75 15.201Q3.949 14.328 3.148 14.055" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.55;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0" keyTimes="0;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M1.539 13.507v.01">
         <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.55;0.72;0.98;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 1.2;0 0;0 0" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M6.25 15.201Q6.299 14.328 6.348 14.055" pathLength="1" stroke-dasharray="1 1.1">
-        <animate attributeName="stroke-dashoffset" values="0;0;-1.1;1.1;1.1;0" keyTimes="0;0.55;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="stroke-dashoffset" values="0;0;1.1;1.1;0" keyTimes="0;0.72;0.721;0.82;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
+        <animate attributeName="opacity" values="1;1;0;1;1" keyTimes="0;0.55;0.72;0.721;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>
     </path>
     <path d="M6.649 12.382v.01">
         <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.55;0.72;0.98;1" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1;0.42 0 0.58 1"/>

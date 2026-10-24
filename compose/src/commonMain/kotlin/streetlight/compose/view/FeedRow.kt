@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.Layout
@@ -39,15 +40,16 @@ import streetlight.compose.model.toThemeColor
 import streetlight.compose.model.topDetails
 import streetlight.model.data.Entity
 
-/** The layouts of a feed row, the cousin of the web's `FeedMode`. `Grid` draws as `Minimal` until it is built. */
+/** The layouts of a feed row, the cousin of the web's `FeedMode`. */
 enum class FeedMode { Minimal, Row, Grid }
 
 /** An entity in a feed, laid out by [mode]. The cousin of the web's `feedRow`. */
 @Composable
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
     when (mode) {
-        FeedMode.Minimal, FeedMode.Grid -> MinimalFeedRow(entity)
+        FeedMode.Minimal -> MinimalFeedRow(entity)
         FeedMode.Row -> RowFeedRow(entity)
+        FeedMode.Grid -> GridFeedRow(entity)
     }
 }
 
@@ -92,27 +94,17 @@ private fun MinimalFeedRow(entity: Entity) {
 private fun RowFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
-    val summary = remember(entity.body, theme.colors.primaryFg) { annotatedMarkdownOf(entity.body, theme.colors.primaryFg) }
 
     Layout(
         content = {
             Row(horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
                 Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1).outline(radius = 1))
-                Column(Modifier.weight(1f).fadeClip(RowHeightUnits, inset = TextInsetUnits).padding(vertical = theme.unit * TextInsetUnits)) {
-                    BasicText(
-                        text = entity.label,
-                        style = theme.text.heading5.copy(fontWeight = FontWeight.SemiBold, lineHeight = 1.15.em),
-                        color = { theme.colors.ink },
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    BasicText(
-                        text = summary,
-                        modifier = Modifier.padding(top = theme.line).opacityHigh(),
-                        style = theme.text.small.copy(lineHeight = 1.15.em),
-                        color = { theme.colors.ink },
-                    )
-                }
+                EntityText(
+                    entity = entity,
+                    modifier = Modifier.weight(1f)
+                        .fadeClip(RowHeightUnits, inset = TextInsetUnits)
+                        .padding(vertical = theme.unit * TextInsetUnits),
+                )
                 FlairBadge(entity, rowHeight)
             }
             CellGrid(entity.topDetails, entity.bottomDetails)
@@ -148,15 +140,73 @@ private fun RowFeedRow(entity: Entity) {
     }
 }
 
-/** The entity's image, cropped to fill, over a backdrop of its color so a row without one keeps its shape. */
+/**
+ * An entry of a grid: the image across the top at 3:2, whole over its backdrop; the title over the description, clipped
+ * and fading as in the row, beside the flair badge; then the cells. The parts below the image are inset a unit at the
+ * sides and stand a unit apart. The cousin of the web's `Grid` mode.
+ */
 @Composable
-private fun Thumbnail(entity: Entity, modifier: Modifier) {
+private fun GridFeedRow(entity: Entity) {
+    val theme = currentTheme
+    val rowHeight = theme.unit * RowHeightUnits
+
+    Column(
+        modifier = Modifier.fillMaxWidth().zenBg().padding(bottom = theme.unit),
+        verticalArrangement = Arrangement.spacedBy(theme.unit),
+    ) {
+        Thumbnail(
+            entity = entity,
+            modifier = Modifier.fillMaxWidth().aspectRatio(GridImageRatio),
+            url = entity.image?.let { it.medium ?: it.url },
+            scale = ContentScale.Fit,
+        )
+        Row(Modifier.padding(horizontal = theme.unit), horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
+            EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
+            FlairBadge(entity, rowHeight)
+        }
+        CellGrid(entity.topDetails, entity.bottomDetails, Modifier.padding(horizontal = theme.unit))
+    }
+}
+
+/** The title on one line over the description as markdown, with [modifier] setting how they are clipped. */
+@Composable
+private fun EntityText(entity: Entity, modifier: Modifier) {
+    val theme = currentTheme
+    val summary = remember(entity.body, theme.colors.primaryFg) { annotatedMarkdownOf(entity.body, theme.colors.primaryFg) }
+    Column(modifier) {
+        BasicText(
+            text = entity.label,
+            style = theme.text.heading5.copy(fontWeight = FontWeight.SemiBold, lineHeight = 1.15.em),
+            color = { theme.colors.ink },
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        BasicText(
+            text = summary,
+            modifier = Modifier.padding(top = theme.line).opacityHigh(),
+            style = theme.text.small.copy(lineHeight = 1.15.em),
+            color = { theme.colors.ink },
+        )
+    }
+}
+
+/**
+ * The entity's image at [url], scaled by [scale], over a backdrop of its color so an entity without one keeps its
+ * shape.
+ */
+@Composable
+private fun Thumbnail(
+    entity: Entity,
+    modifier: Modifier,
+    url: Any? = entity.image?.let { it.thumb ?: it.url },
+    scale: ContentScale = ContentScale.Crop,
+) {
     val theme = currentTheme
     Box(modifier.background(theme.colors.colorOf(entity.toThemeColor()).copy(alpha = 0.2f))) {
         AsyncImage(
-            model = entity.image?.let { it.thumb ?: it.url },
+            model = url,
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = scale,
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -202,3 +252,6 @@ private const val TextInsetUnits = 0.5f
 
 /** The width from which a row's cells sit beside it rather than below: the web's 960px container query. */
 private val WideRowWidth = 960.dp
+
+/** The shape of a grid entry's image: the web's `aspect-ratio: 3 / 2`. */
+private const val GridImageRatio = 3f / 2f

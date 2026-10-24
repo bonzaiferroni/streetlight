@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,22 +32,24 @@ import streetlight.model.data.EntityFeed
 import streetlight.model.data.FeedType
 
 /**
- * Adds the feed section to this list: the heading of the [feed]'s type in a filigree, between the menu of the types its
- * context offers, bound to [typeState], and the switch of [FeedMode], bound to [modeState]; then the feed's rows, or
- * a message when it has none. The cousin of the web's `feedSection`.
+ * Adds the feed section to this grid: the heading of the [feed]'s type in a filigree, between the menu of the types its
+ * context offers, bound to [typeState], and the switch of [FeedMode], bound to [modeState]; then the feed's entries in
+ * [mode], or a message when it has none. The cousin of the web's `feedSection`.
+ *
+ * The heading and the message span the grid's row. An entry takes one column in `Grid` mode, and the row otherwise.
  */
-fun LazyListScope.feedSection(
+fun LazyGridScope.feedSection(
     feed: EntityFeed,
     typeState: MutableTap<FeedType>,
+    mode: FeedMode,
     modeState: MutableTap<FeedMode>,
 ) {
     val source = feed.source
     val types = feed.types ?: source?.context?.types.orEmpty()
 
-    item { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
-    if (feed.entities.isEmpty()) item { EmptyFeed() }
-    items(feed.entities) { entity ->
-        val mode by modeState.collectAsState()
+    item(span = { GridItemSpan(maxLineSpan) }) { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
+    if (feed.entities.isEmpty()) item(span = { GridItemSpan(maxLineSpan) }) { EmptyFeed() }
+    items(feed.entities, span = { GridItemSpan(if (mode == FeedMode.Grid) 1 else maxLineSpan) }) { entity ->
         FeedRow(entity, mode)
     }
 }

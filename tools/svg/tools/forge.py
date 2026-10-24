@@ -597,16 +597,16 @@ def fireworks(animated):
             out += [p(trail)] + [p(d) for arc in placed if clear_of(arc[0], trail) for d in arc if d]
             continue
         # the trail rises as a comet, its tail gone by the time the burst has bloomed;
-        # the sparks draw away from where they started, the points fall and fade, then the sparks draw out again
+        # the sparks fade where they hang as the points fall and fade, hide once faded, then draw out again
         start = gone + 0.001
         end = start + (risen - start) * COMET_SPAN
         out.append(dashed(trail, keys('stroke-dashoffset', held([(0, COMET_HIDDEN[0]), (start, COMET_HIDDEN[0]), (end, COMET_HIDDEN[1])]), 3), COMET_DASHES))
-        away = [(0, '0'), (fall, '0'), (gone, '-1.1'), (gone + 0.001, '1.1')]
-        line = keys('stroke-dashoffset', held(away + [(risen, '1.1'), (bloomed, '0')]), 3)
+        line = keys('stroke-dashoffset', held([(0, '0'), (gone, '0'), (gone + 0.001, '1.1'), (risen, '1.1'), (bloomed, '0')]), 3)
+        dim = keys('opacity', held([(0, '1'), (fall, '1'), (gone, '0'), (gone + 0.001, '1')]), 3)
         fade = keys('opacity', held([(0, '1'), (fall, '1'), (gone, '0'), (bloomed - 0.02, '0'), (bloomed, '1')]), 3)
         drop = keys('transform', held([(0, '0 0'), (fall, '0 0'), (gone, '0 1.2'), (gone + 0.001, '0 0'), (bloomed, '0 0')]), 3, kind='translate')
         for arc, dot in placed:
-            out.append(dashed(arc, line))
+            out.append(dashed(arc, line + '\n    ' + dim))
             if dot:
                 out.append(f'<path d="{dot}">\n    {fade}\n    {drop}\n</path>')
     return out
