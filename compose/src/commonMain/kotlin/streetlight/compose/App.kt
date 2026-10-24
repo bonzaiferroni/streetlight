@@ -7,13 +7,16 @@ import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.appModule
 import streetlight.compose.model.rememberPortal
 import streetlight.compose.view.AppPortal
+import streetlight.compose.view.AppTheme
 
 /** The root of the app. */
 @Composable
 fun App() {
     KoinApplication(configuration = koinConfiguration { modules(appModule) }) {
-        context(rememberPortal(HomeRoute)) {
-            AppPortal()
+        AppTheme {
+            context(rememberPortal(HomeRoute)) {
+                AppPortal()
+            }
         }
     }
 }

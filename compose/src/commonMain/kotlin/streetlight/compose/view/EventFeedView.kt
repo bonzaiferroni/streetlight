@@ -16,10 +16,11 @@ context(portal: Portal, feed: EventFeed)
 @Composable
 fun EventFeedView() {
     val events by feed.eventsState.collectAsState()
+    val colors = LocalAppColors.current
 
     Column(Modifier.fillMaxSize()) {
-        BasicText("Back", Modifier.clickable { portal.back() })
-        if (events.isEmpty()) BasicText("No events yet")
-        events.forEach { BasicText(it.title) }
+        BasicText("Back", Modifier.clickable { portal.back() }, color = { colors.accentFg })
+        if (events.isEmpty()) BasicText("No events yet", color = { colors.ink })
+        events.forEach { BasicText(it.title, color = { colors.ink }) }
     }
 }

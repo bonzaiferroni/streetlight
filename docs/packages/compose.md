@@ -14,6 +14,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `koin` | Services and view models, through `koin-compose` |
 | `model` | Entities, DTOs and `Api` |
 | `kampfire.model` | `Store` and `Tap` |
+| `koala.modifier` | The theme's defaults and types, `Rgb` and `Glow`, through `model` |
 
 ## Packages
 
@@ -21,7 +22,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 |---|---|
 | `streetlight.compose.model` | Routes, `Portal`, `appModule`, services and view models |
 | `streetlight.compose.view` | Composables that take a model or the `Portal`, including the view of each route |
-| `streetlight.compose.utility` | Utilities whose target is not a compose type, such as `TapUtility.kt` |
+| `streetlight.compose.utility` | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
 
 ## Naming
 
@@ -43,6 +44,8 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `AppPortal` | `viewPortal` |
 | `appModule` | `webModule` |
 | `FooView` | `viewFoo` |
+| `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
+| `AppColors` | The color custom properties of `ThemeCss` |
 | View models, `FooState` | `streetlight.web.model` |
 
 ## Navigation
@@ -74,6 +77,16 @@ A view reads a lens with `collectAsState()` from `TapUtility.kt`.
 ```kotlin
 val events by feed.eventsState.collectAsState()
 ```
+
+## Theme
+
+`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides its colors as `LocalAppColors`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
+
+A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
+
+Every value that animates is read inside a draw lambda, never in composition, so an animation frame redraws and does not recompose. A composable reads a color from `LocalAppColors` and passes it as a lambda where the API takes one, as `BasicText(text, color = { colors.ink })`.
+
+A color derived from the theme, such as `accentFg`, is a getter on `AppColors` mixing its sources the way `ThemeCss` does.
 
 ## Context Parameters
 

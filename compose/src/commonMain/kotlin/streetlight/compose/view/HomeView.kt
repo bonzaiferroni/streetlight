@@ -15,12 +15,14 @@ import streetlight.compose.model.Portal
 context(portal: Portal)
 @Composable
 fun HomeView() {
+    val colors = LocalAppColors.current
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        BasicText("Ahoy, Streetlight")
-        BasicText("Events", Modifier.clickable { portal.open(EventFeedRoute) })
+        BasicText("Ahoy, Streetlight", color = { colors.ink })
+        BasicText("Events", Modifier.clickable { portal.open(EventFeedRoute) }, color = { colors.accentFg })
     }
 }

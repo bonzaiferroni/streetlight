@@ -29,7 +29,7 @@ kotlin {
                 implementation(libs.ktor.http)
                 api(project(":kampfire"))
                 implementation(project(":kabinet"))
-                implementation(project(":koala"))
+                api(project(":koala"))
             }
         }
         val commonTest by getting {
