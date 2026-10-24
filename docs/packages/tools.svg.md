@@ -49,6 +49,7 @@ A pack built with `round2.build` gets all four from one function that returns it
 - `animateMotion` that keeps time with another animation sets `calcMode="linear"` or `spline`. The default, `paced`, ignores `keyPoints` and `keyTimes`.
 - keyTimes run from 0 to 1. A staggered beat ends by 1, or the browser drops the whole animation.
 - A dash that hides a line fully uses `pathLength="1"` with `stroke-dasharray="1 1.1"`, so no round cap is left behind.
+- A comet, a line whose tail follows its head along it, is one dash shorter than the line, swept with `stroke-dashoffset` from just before the line to just past it, so no offset leaves a dash of no length at an end. The fireworks' launch trails use `0.667 2`, swept from 0.7 to -1.05.
 - A reveal, such as paint or a page, is a clipPath whose edge carries the same `animateTransform` values as the tool that makes it.
 - A layer is swapped for an identical copy only under a fully opaque cover: the cover returns first, then the layer beneath hides. Two identical layers at frame 0 are not drawn at once; the copy beneath stays hidden until it is needed.
 
@@ -157,7 +158,7 @@ The shapes are checked for what they say before the idea is attached.
 2. Write its pack in a batch script and run the script with the label.
 3. Check it:
    - `python3 tools/contact.py out.png foo` shows the large and small statics.
-   - `node tools/sheet.js out.png foo` shows frames across one period and flags `FRAME0!=STATIC`, `SEAM` and `NO-MOTION`. A frame 0 difference is expected when the animation adds a feature.
+   - `node tools/sheet.js out.png foo` shows frames across one period and flags `FRAME0!=STATIC`, `SEAM` and `NO-MOTION`. A frame 0 difference is expected when the animation adds a feature, or shows in turn parts the static icon shows together.
    - `node tools/blip.js foo` steps through the loop and prints sudden jumps between frames.
    - `xmllint --noout` on each file.
 4. Register the pack in `SvgFile` in alphabetical order and repoint the enum value. The old pack stays.

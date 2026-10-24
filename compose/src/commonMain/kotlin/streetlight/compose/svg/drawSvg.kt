@@ -7,7 +7,9 @@ import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -78,14 +80,24 @@ private fun DrawScope.drawShape(path: Path, node: SvgNode, time: Float, color: C
     }
 }
 
-/** Runs [block] clipped to the clip path [reference] names, as `url(#id)`, or unclipped. */
+/**
+ * Runs [block] clipped to the clip path [reference] names, as `url(#id)`, or unclipped. The region is the union of the
+ * clip path's shapes, each filled by its own `clip-rule`, so an `evenodd` shape can clip to what lies outside it.
+ */
 private fun DrawScope.withClip(reference: String?, document: SvgDocument, time: Float, block: DrawScope.() -> Unit) {
     val id = reference?.substringAfter("url(#", "")?.substringBefore(")")
     val clip = id?.let { document.clips[it] }
     if (clip == null) return block()
 
-    val path = Path().apply { clip.children.forEach { child -> shapeOf(child, time)?.let { addPath(it) } } }
-    clipPath(path) { block() }
+    val regions = clip.children.mapNotNull { child ->
+        val shape = shapeOf(child, time) ?: return@mapNotNull null
+        Path().apply {
+            addPath(shape)
+            fillType = fillTypeOf(child.attributeAt("clip-rule", time))
+        }
+    }
+    val region = regions.reduceOrNull { union, next -> Path().apply { op(union, next, PathOperation.Union) } } ?: Path()
+    clipPath(region) { block() }
 }
 
 /** Applies the transform functions of [text] in order, such as `translate(2 3) rotate(45 12 12)`. */
@@ -130,6 +142,7 @@ private fun shapeOf(node: SvgNode, time: Float): Path? {
         }
         else -> return null
     }
+    path.fillType = fillTypeOf(node.attributeAt("fill-rule", time))
     if (!node.isShapeAnimated) node.staticShape = path
     return path
 }
@@ -196,6 +209,9 @@ private fun SvgStyle.inheritedBy(node: SvgNode, time: Float): SvgStyle {
         dashOffset = number("stroke-dashoffset") ?: dashOffset,
     )
 }
+
+/** The fill type a `fill-rule` or `clip-rule` names, `nonzero` unless it is `evenodd`. */
+private fun fillTypeOf(rule: String?) = if (rule?.trim() == "evenodd") PathFillType.EvenOdd else PathFillType.NonZero
 
 private val transformRegex = Regex("""(\w+)\s*\(([^)]*)\)""")
 

@@ -5,6 +5,7 @@ Each design is a list of element strings on the 24 grid; `wrap` may rotate the w
 """
 import math
 import os
+import re
 import sys
 sys.path.insert(0, os.path.dirname(__file__))
 from anim import SVG_DIR, EASE, fmt, group, osc, spin
@@ -502,64 +503,109 @@ def toy_blocks(animated):
 
 
 # ---------- fireworks: two bursts of sparks arcing down under gravity, each on the trail it rose by ----------
-# in turn, each burst falls away, its trail rises again, and it blooms
+# in turn, each burst falls away, its trail rises again, and it blooms. Each spark carries the rocket's heading on top of
+# its own throw, so those thrown ahead fly farther than those thrown back.
 BURSTS = [  # center, spark radii (start, end), gravity drop at the end, gap to the end's point, angles,
-            # trail angle, launch point and bend, angles left out for the trail, angles whose point is left out
+            # trail angle, launch point and bend, momentum along the rocket's heading
     # the trails launch side by side at the bottom center, each bending over toward its burst
-    ((14.5, 9), (2.4, 5.4), 1.2, 2, range(0, 360, 45), 110, (11.6, 21), 5.1, {90, 135}, {180}),
-    ((5.5, 16.5), (1.5, 3.2), 0.6, 1.7, range(0, 360, 60), 20, (10.4, 21), 2.5, {0}, {300}),
+    ((14.5, 9), (2.4, 5.4), 1.2, 2, range(0, 360, 45), 110, (11.6, 21), 5.1, 1.4),
+    ((5.5, 16.5), (1.5, 3.2), 0.6, 1.7, range(0, 360, 60), 20, (10.4, 21), 2.5, 0.8),
 ]
 FIREWORK_TIMES = [(0.1, 0.3, 0.45, 0.65), (0.55, 0.72, 0.82, 1)]  # fall, gone, risen, bloomed
+POINT_CLEAR = 2.5  # how near a spark's point may come to another before it is left out
+POINT_AREA = (1, 23)  # the area a point stays inside
+TRAIL_CLEAR = 1.5  # how near a spark may come to its launch trail in the static icon, where both show
 
 
-def sparks(center, radii, drop, gap, angles, trail, launch, bend, skipped, pointless):
-    """The sparks of a burst, each leaving the center straight out and falling by [drop] at its end, its point following
-    on at [gap] unless its angle is [pointless]; and the trail curving up from [launch] to meet the center at angle
-    [trail], [bend] setting how far it carries that heading back. Angles [skipped] give way to the trail."""
+def sparks(center, radii, drop, gap, angles, trail, launch, bend, momentum):
+    """The sparks of a burst, each leaving the center at [radii][0] and thrown out to [radii][1] plus [momentum] along
+    the rocket's heading, falling by [drop] at its end, its point following on at [gap]; and the trail curving up from
+    [launch] to meet the center at angle [trail], [bend] setting how far it carries that heading back. The rocket's
+    heading is the trail's at the center."""
     (cx, cy), (r0, r1) = center, radii
+    hx, hy = -math.cos(math.radians(trail)), -math.sin(math.radians(trail))
     out = []
     for a in angles:
-        if a in skipped:
-            continue
         ux, uy = math.cos(math.radians(a)), math.sin(math.radians(a))
-        # p(t) = center + u(r0 + (r1 - r0)t) + (0, drop t^2), a quadratic curve
+        # p(t) = start + v t + (0, drop t^2), a quadratic curve, v the throw plus the momentum
         x0, y0 = cx + r0 * ux, cy + r0 * uy
-        bx, by = cx + (r0 + r1) / 2 * ux, cy + (r0 + r1) / 2 * uy
-        x1, y1 = cx + r1 * ux, cy + r1 * uy + drop
-        tx, ty = (r1 - r0) * ux, (r1 - r0) * uy + 2 * drop
+        vx, vy = (r1 - r0) * ux + momentum * hx, (r1 - r0) * uy + momentum * hy
+        bx, by = x0 + vx / 2, y0 + vy / 2
+        x1, y1 = x0 + vx, y0 + vy + drop
+        tx, ty = vx, vy + 2 * drop
         n = math.hypot(tx, ty)
-        dot = None if a in pointless else f'M{fmt(x1 + gap * tx / n)} {fmt(y1 + gap * ty / n)}v.01'
-        out.append((f'M{fmt(x0)} {fmt(y0)}Q{fmt(bx)} {fmt(by)} {fmt(x1)} {fmt(y1)}', dot))
+        out.append((f'M{fmt(x0)} {fmt(y0)}Q{fmt(bx)} {fmt(by)} {fmt(x1)} {fmt(y1)}', (x1 + gap * tx / n, y1 + gap * ty / n)))
     ux, uy = math.cos(math.radians(trail)), math.sin(math.radians(trail))
     ex, ey = cx + r0 * ux, cy + r0 * uy
     trail_d = f'M{fmt(launch[0])} {fmt(launch[1])}Q{fmt(ex + bend * ux)} {fmt(ey + bend * uy)} {fmt(ex)} {fmt(ey)}'
     return out, trail_d
 
 
+def placed_points(bursts):
+    """Each burst's arcs with their points, a point left out where it would come within [POINT_CLEAR] of one kept before
+    it, or leave [POINT_AREA]."""
+    kept, out = [], []
+    for arcs in bursts:
+        placed = []
+        for d, (x, y) in arcs:
+            inside = all(POINT_AREA[0] <= v <= POINT_AREA[1] for v in (x, y))
+            clear = all(math.hypot(x - kx, y - ky) >= POINT_CLEAR for kx, ky in kept)
+            if inside and clear:
+                kept.append((x, y))
+                placed.append((d, f'M{fmt(x)} {fmt(y)}v.01'))
+            else:
+                placed.append((d, None))
+        out.append(placed)
+    return out
+
+
+def quad_points(d, steps=24):
+    """Points along a path of one quadratic, `Mx yQbx by x1 y1`."""
+    x0, y0, bx, by, x1, y1 = map(float, re.findall(r'-?\d*\.?\d+', d))
+    return [((1 - t) ** 2 * x0 + 2 * (1 - t) * t * bx + t * t * x1, (1 - t) ** 2 * y0 + 2 * (1 - t) * t * by + t * t * y1)
+            for t in (i / steps for i in range(steps + 1))]
+
+
+def clear_of(d, trail):
+    """Whether the spark [d] keeps [TRAIL_CLEAR] from the [trail]."""
+    path = quad_points(trail)
+    return all(math.hypot(x - a, y - b) >= TRAIL_CLEAR for x, y in quad_points(d) for a, b in path)
+
+
 def held(pairs):
     return pairs + ([(1, pairs[-1][1])] if pairs[-1][0] < 1 else [])
 
 
-def dashed(d, anim):
-    return f'<path d="{d}" pathLength="1" stroke-dasharray="1 1.1">\n    {anim}\n</path>'
+def dashed(d, anim, dashes='1 1.1'):
+    return f'<path d="{d}" pathLength="1" stroke-dasharray="{dashes}">\n    {anim}\n</path>'
+
+
+# a comet: a dash two thirds the trail's length swept along it, so its tail follows its head two thirds of the way behind
+COMET_DASHES = '0.667 2'
+COMET_HIDDEN = ('0.7', '-1.05')  # before and after the sweep, clear of the path's ends
+COMET_SPAN = 1.75  # the sweep's length over the head's travel; the head reaches the end 0.553 of the way through
 
 
 @design('fireworks')
 def fireworks(animated):
     out = []
-    for burst, (fall, gone, risen, bloomed) in zip(BURSTS, FIREWORK_TIMES):
-        arcs, trail = sparks(*burst)
+    shapes = [sparks(*burst) for burst in BURSTS]
+    points = placed_points([arcs for arcs, _ in shapes])
+    for (arcs, trail), placed, (fall, gone, risen, bloomed) in zip(shapes, points, FIREWORK_TIMES):
         if not animated:
-            out += [p(trail)] + [p(d) for arc in arcs for d in arc if d]
+            # the trail and the sparks show together only here, so a spark thrown back across the trail gives way
+            out += [p(trail)] + [p(d) for arc in placed if clear_of(arc[0], trail) for d in arc if d]
             continue
-        # the trail and sparks draw away from where they started, the points fall and fade;
-        # the trail rises again, then the sparks draw out and the points return
+        # the trail rises as a comet, its tail gone by the time the burst has bloomed;
+        # the sparks draw away from where they started, the points fall and fade, then the sparks draw out again
+        start = gone + 0.001
+        end = start + (risen - start) * COMET_SPAN
+        out.append(dashed(trail, keys('stroke-dashoffset', held([(0, COMET_HIDDEN[0]), (start, COMET_HIDDEN[0]), (end, COMET_HIDDEN[1])]), 3), COMET_DASHES))
         away = [(0, '0'), (fall, '0'), (gone, '-1.1'), (gone + 0.001, '1.1')]
-        out.append(dashed(trail, keys('stroke-dashoffset', held(away + [(risen, '0')]), 3)))
         line = keys('stroke-dashoffset', held(away + [(risen, '1.1'), (bloomed, '0')]), 3)
         fade = keys('opacity', held([(0, '1'), (fall, '1'), (gone, '0'), (bloomed - 0.02, '0'), (bloomed, '1')]), 3)
         drop = keys('transform', held([(0, '0 0'), (fall, '0 0'), (gone, '0 1.2'), (gone + 0.001, '0 0'), (bloomed, '0 0')]), 3, kind='translate')
-        for arc, dot in arcs:
+        for arc, dot in placed:
             out.append(dashed(arc, line))
             if dot:
                 out.append(f'<path d="{dot}">\n    {fade}\n    {drop}\n</path>')
