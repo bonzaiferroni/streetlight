@@ -156,7 +156,7 @@ The fonts are in `composeResources/font`, with their license in `composeResource
 
 ## Theme Colors
 
-A color that depends on what it shows is a `ThemeColor`, resolved with `KoalaColors.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`. `accentFg` mixes the accent half and half with the ink, lighter than the web's `--accent-fg` at 75%.
+A color that depends on what it shows is a `ThemeColor`, resolved with `KoalaColors.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`.
 
 ## Entities
 

@@ -26,7 +26,7 @@ class KoalaColors(
     val primary get() = primaryState.value
     val accentFg get() = accent.mixSrgb(ink, 0.5f)
     val accentBg get() = accent.mixSrgb(paper, 0.75f)
-    val primaryFg get() = primary.mixSrgb(ink, 0.75f)
+    val primaryFg get() = primary.mixSrgb(ink, 0.5f)
     val primaryLightFg get() = primary.mixSrgb(ink, 0.25f)
     val muted = ink.copy(alpha = opacity.high)
     val outlineLow = ink.copy(alpha = 0.2f)
