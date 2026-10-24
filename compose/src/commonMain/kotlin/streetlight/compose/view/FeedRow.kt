@@ -21,6 +21,7 @@ import coil3.compose.AsyncImage
 import streetlight.compose.model.EntityDetail
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.opacityLow
+import streetlight.compose.modifier.zenBg
 import streetlight.compose.model.bottomDetails
 import streetlight.compose.model.toFlair
 import streetlight.compose.model.toThemeColor
@@ -50,7 +51,7 @@ private fun MinimalFeedRow(entity: Entity) {
     val rowHeight = theme.unit * RowHeightUnits
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(theme.unit),
+        modifier = Modifier.fillMaxWidth().zenBg().padding(theme.unit),
         horizontalArrangement = Arrangement.spacedBy(theme.unit),
     ) {
         Box(

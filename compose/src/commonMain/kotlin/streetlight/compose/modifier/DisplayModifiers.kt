@@ -35,6 +35,9 @@ fun Modifier.outline(radius: Int = 0) = this then OutlineElement(radius)
 /** Casts the soft glow the web calls `MoonShadow` behind the content, its corners rounded to [radius] units. */
 fun Modifier.moonShadow(radius: Int = 0) = this then MoonShadowElement(radius)
 
+/** Paints the theme's quiet background behind the content. The web's `ZenBg`. */
+fun Modifier.zenBg() = this then ZenBgElement
+
 /** Draws the content at the theme's low opacity. The web's `OpacityLow`. */
 fun Modifier.opacityLow() = this then OpacityLowElement
 
@@ -70,7 +73,7 @@ private data class OutlineElement(val radius: Int) : ModifierNodeElement<Outline
 private class OutlineNode(var radius: Int) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     override fun ContentDrawScope.draw() {
         drawContent()
-        val width = OutlineWidth.toPx()
+        val width = theme.line.toPx()
         val corner = (theme.unit * radius).toPx()
         // the stroke runs inside the edge, its corners following the edge's, as a CSS border does
         drawRoundRect(
@@ -109,6 +112,18 @@ private class MoonShadowNode(var radius: Int) : Modifier.Node(), DrawModifierNod
     }
 }
 
+private data object ZenBgElement : ModifierNodeElement<ZenBgNode>() {
+    override fun create() = ZenBgNode()
+    override fun update(node: ZenBgNode) = Unit
+}
+
+private class ZenBgNode : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+    override fun ContentDrawScope.draw() {
+        drawRect(theme.colors.zenBg)
+        drawContent()
+    }
+}
+
 private data object OpacityLowElement : ModifierNodeElement<OpacityLowNode>() {
     override fun create() = OpacityLowNode()
     override fun update(node: OpacityLowNode) = Unit
@@ -123,9 +138,6 @@ private class OpacityLowNode : Modifier.Node(), LayoutModifierNode, CompositionL
         }
     }
 }
-
-/** The width of the web's `--outline-low`. */
-private val OutlineWidth = 2.dp
 
 /** The web's `--moon-shadow`: two soft rings of black at 5%. */
 private val moonShadows = listOf(

@@ -163,11 +163,11 @@ The layout is recorded here so its intent survives later changes.
 |---|---|
 | `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis |
 
-A feed separates its rows with a 1dp line in `outlineLow`.
+A row carries `zenBg()`, and the feed stands its rows `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 
 ## Modifiers
 
-A styling the web gives with a `koala.modifier` class, such as `BorderRadius2` or `MoonShadow`, is an extension on Compose's `Modifier` in `streetlight.compose.modifier`, named for its web cousin in Compose's camel case: `borderRadius(2)`, `outline()`, `moonShadow()`, `opacityLow()`. A length the web gives in units is given in units. The set holds what the app uses; it is not a copy of `koala.modifier`, and a styling Compose already gives plainly, such as a text color or a padding of `currentTheme.unit`, has none.
+A styling the web gives with a `koala.modifier` class, such as `BorderRadius2` or `MoonShadow`, is an extension on Compose's `Modifier` in `streetlight.compose.modifier`, named for its web cousin in Compose's camel case: `borderRadius(2)`, `outline()`, `moonShadow()`, `zenBg()`, `opacityLow()`. A length the web gives in units is given in units. The set holds what the app uses; it is not a copy of `koala.modifier`, and a styling Compose already gives plainly, such as a text color or a padding of `currentTheme.unit`, has none.
 
 Each is a `Modifier.Node` that reads the theme with `currentValueOf(LocalKoalaAppTheme)`, so a call site needs no theme in hand and chains like any modifier. The theme holds the values, such as `KoalaOpacity`, and the node holds only how they are applied. A node that reshapes or fades its content places it with a layer; one that draws around it is a `DrawModifierNode`.
 
@@ -183,7 +183,7 @@ Spacing is a whole multiple of `currentTheme.unit`, the shortest distance that s
 
 `AppTheme` sizes the type and the unit from a rem chosen by the window's width: 16sp, and 14sp below 600dp, as the web's `html` drops to `87.5%` below 600px. It measures the window once, at the root. A layout that adapts to its own width measures that instead.
 
-The unit builds the hierarchy of grouping. The elements of an item are one unit apart and the item has one unit of padding, so the content of two adjacent items is two units apart. A multiple is written `unit * 2`. A spacing that is not a whole unit is a named value.
+The unit builds the hierarchy of grouping. The elements of an item are one unit apart and the item has one unit of padding, so the content of two adjacent items is two units apart. A multiple is written `unit * 2`. A spacing that is not a whole unit is a named value. The one the theme holds is `line`, 2dp, the web's 2px: the gap between rows and the width of an outline, where a unit is too much and a single pixel too sharp. A CSS px and a dp are both reference pixels, and Compose lays out on whole device pixels, so 2px translates directly to 2.dp. Spacing between children is the parent's `Arrangement`, as `spacedBy(currentTheme.line)`, not a modifier.
 
 ## Context Parameters
 
