@@ -24,6 +24,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `streetlight.compose.model` | Routes, `Portal`, `appModule`, services and view models |
 | `streetlight.compose.io` | `AppTransport` |
 | `streetlight.compose.view` | Composables that take a model or the `Portal`, including the view of each route |
+| `streetlight.compose.svg` | The renderer of animated icons: an XML reader, the SVG document and its SMIL animations, and their drawing |
 | `streetlight.compose.utility` | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
 
 ## Naming
@@ -54,6 +55,8 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` |
 | `Icon` | `icon` (`koala.component`) |
+| `AnimatedIcon` | `magicIcon` (`koala.component`), its animated mask |
+| `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
 | `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
@@ -102,7 +105,11 @@ An image is shown with Coil's `AsyncImage`, given the image's `Url`. The image l
 
 The app bundles the site's icons. The build syncs `www/icon`, the files the web serves, into the app's resources as `files/icon`, so an `Svg` from the shared code, such as a variant of an `SvgFile` pack, names its bundled file: `/www/icon/foo.svg` is `files/icon/foo.svg`.
 
-`Icon` draws an `Svg` tinted with a color read while drawing, filling the icon's shape as the web's mask does. `rememberSvgPainter` reads an icon's file once, keeps its bytes, and is empty while it loads. An animated variant draws its first frame.
+`Icon` draws an `Svg` tinted with a color read while drawing, filling the icon's shape as the web's mask does. `rememberSvgPainter` reads an icon's file once, keeps its bytes, and is empty while it loads.
+
+`AnimatedIcon` plays an icon's `animated` variant, whose SMIL a browser plays and Skia does not. `streetlight.compose.svg` reads the document once and draws it at the icon's clock, which is read while drawing, so a frame redraws without recomposing. Every shape is drawn in the one color, as the web's mask uses an icon's alpha alone.
+
+The renderer covers what the site's icons use: `g`, `path`, `circle`, `line` and `rect`; `transform` lists; `clipPath`; stroke and fill presentation with `pathLength` dashes, which it cuts itself so a dash of no length draws nothing, as in a browser, where Skia's dash effect would draw a dot; and `animate`, `animateTransform` and `animateMotion` with `values`, `keyTimes`, spline `keySplines`, `from`/`to` and `begin`, repeating indefinitely. An animated value interpolates the numbers of its keyframes in place, so path data, transforms and dash arrays share one interpolation. A `mask` is not applied, and a group's `opacity` multiplies into its shapes rather than compositing the group.
 
 ## Theme
 
@@ -123,7 +130,7 @@ A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors`
 
 ## Typography
 
-`KoalaTypography`, read as `currentTheme.text`, holds the web's text styles, each a multiple of the rem as in `TypographyCss`: `heading1` to `heading6`, `paragraph`, `regular`, `small` and `large`, in Fira Sans. `regular` is the rem itself, the size of text with no style of its own. A style is named for its web class or tag, so `heading5` is `h5` and `small` is `TextSmall`. The web's `Bold` is `FontWeight.SemiBold`. Every style has the web body's 1.4 line height, its leading split evenly above and below the line as CSS does. A use that differs from a style copies it, as a feed row's title copies `regular` with the semi-bold weight and a 1.15 line height.
+`KoalaTypography`, read as `currentTheme.text`, holds the web's text styles, each a multiple of the rem as in `TypographyCss`: `heading1` to `heading6`, `paragraph`, `regular`, `small` and `large`, in Fira Sans. `regular` is the rem itself, the size of text with no style of its own. A style is named for its web class or tag, so `heading5` is `h5` and `small` is `TextSmall`. The web's `Bold` is `FontWeight.SemiBold`. Every style has the web body's 1.4 line height, its leading split evenly above and below the line as CSS does. A use that differs from a style copies it, as a feed row's title copies `regular` with a 1.15 line height.
 
 The fonts are in `composeResources/font`, with their license in `composeResources/files`, and are built into a `FontFamily` by `firaSans()`.
 
@@ -143,7 +150,7 @@ The layout is recorded here so its intent survives later changes.
 
 | Mode | Entry |
 |---|---|
-| `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` semi-bold on up to two lines, and the bottom details, held to the top of the row. The thumbnail and column are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis |
+| `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis |
 
 A feed separates its rows with a 1dp line in `outlineLow`.
 

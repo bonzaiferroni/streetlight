@@ -4,6 +4,8 @@ import kabinet.utils.format
 import kabinet.utils.toFutureFormat
 import kabinet.utils.toMetricString
 import kabinet.utils.toTimeFormat
+import koala.SvgFile
+import koala.SvgPack
 import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.Entity
@@ -49,6 +51,22 @@ fun Entity.toThemeColor(): ThemeColor = when (this) {
     is EventGroup -> ThemeColor.Location
     is Offering -> ThemeColor.Primary
     is Skill -> ThemeColor.Primary
+}
+
+/** The flair badge icon of this entity, the icon of its tag for an event that has one. */
+fun Entity.toFlair(): SvgPack = when (this) {
+    is EventLocation -> tag?.svg ?: FlairIcon.Event.svg
+    is EventPost -> tag?.svg ?: FlairIcon.Event.svg
+    is Event -> tag?.svg ?: FlairIcon.Event.svg
+    is LocationPost, is Location -> FlairIcon.Location.svg
+    is MediaPost, is Media -> FlairIcon.Media.svg
+    is Skill -> tags?.firstOrNull()?.svg ?: SvgFile.Award
+    is CustomEntity -> when (recordType) {
+        RecordType.Location -> FlairIcon.Location.svg
+        RecordType.Event -> FlairIcon.Event.svg
+        else -> FlairIcon.Default.svg
+    }
+    else -> FlairIcon.Default.svg
 }
 
 /** The details shown above this entity's title: when it happens, or what kind of thing it is. */

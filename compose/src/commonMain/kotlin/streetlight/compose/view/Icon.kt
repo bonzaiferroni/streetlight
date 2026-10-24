@@ -3,7 +3,11 @@ package streetlight.compose.view
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -18,6 +22,9 @@ import koala.Svg
 import koala.iconPath
 import org.jetbrains.compose.resources.decodeToSvgPainter
 import streetlight.compose.resources.Res
+import streetlight.compose.svg.SvgDocument
+import streetlight.compose.svg.drawSvg
+import streetlight.compose.svg.readSvg
 
 /**
  * Draws [svg] in [color], filling its shape as the web's mask does. The cousin of koala's `icon`.
@@ -35,6 +42,34 @@ fun Icon(
     Spacer(
         modifier.size(size).drawBehind {
             with(painter) { draw(this@drawBehind.size, colorFilter = ColorFilter.tint(color())) }
+        }
+    )
+}
+
+/**
+ * Draws [svg] in [color] as it moves, playing the SMIL animation of an icon's `animated` variant.
+ *
+ * The animation's clock and [color] are read while drawing, so each frame redraws the icon without recomposing it.
+ */
+@Composable
+fun AnimatedIcon(
+    svg: Svg,
+    color: () -> Color,
+    modifier: Modifier = Modifier,
+    size: Dp = currentTheme.unit * 3,
+) {
+    val document by produceState<SvgDocument?>(null, svg) {
+        value = readIconDocument(svg)
+    }
+    val time = remember { mutableFloatStateOf(0f) }
+    LaunchedEffect(Unit) {
+        val start = withFrameNanos { it }
+        while (true) withFrameNanos { time.floatValue = (it - start) / 1_000_000_000f }
+    }
+
+    Spacer(
+        modifier.size(size).drawBehind {
+            document?.let { drawSvg(it, time.floatValue, color()) }
         }
     )
 }
@@ -61,7 +96,14 @@ private fun Svg.toResourcePath(): String {
     return "files/icon/$name"
 }
 
+/** The document of [svg], read from its bundled file once and kept. */
+private suspend fun readIconDocument(svg: Svg): SvgDocument {
+    val path = svg.toResourcePath()
+    return iconDocuments[path] ?: readSvg(readIconBytes(svg).decodeToString()).also { iconDocuments[path] = it }
+}
+
 private val iconBytes = mutableMapOf<String, ByteArray>()
+private val iconDocuments = mutableMapOf<String, SvgDocument>()
 
 /** A painter that draws nothing, shown while an icon loads. */
 private object EmptyPainter : Painter() {
