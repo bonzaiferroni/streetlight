@@ -135,7 +135,7 @@ $Base {
     --row-height: calc(var(--unit) * 10);
     --text-inset: calc(var(--unit) / 2);
     container-type: inline-size;
-    padding: 2px;
+    padding: var(--unit) 2px;
 }
 
 $Content {

@@ -49,6 +49,10 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `FooView` | `viewFoo` |
 | `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
 | `KoalaAppTheme` | `KoalaTheme`, and the custom properties `ThemeCss` builds from it |
+| `KoalaTypography` | `TypographyCss` and the text classes, such as `TextSmall` |
+| `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
+| `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` |
+| `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
 | `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
 
@@ -100,18 +104,48 @@ The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 
-Every value that animates is read inside a draw lambda, never in composition, so an animation frame redraws and does not recompose. A composable that passes a color as a lambda, where the API takes one, first holds the theme in a local, since `currentTheme` is read only in composition:
+Every value that animates is read inside a draw lambda, never in composition, so an animation frame redraws and does not recompose. A composable reads `currentTheme` directly where it uses a value in composition, as `Modifier.padding(currentTheme.unit)`. An animated color read there recomposes its reader on each frame of a transition, so a color that animates is passed as a lambda where the API takes one. `currentTheme` is read only in composition, so a composable handing it to a lambda captures it first:
 
 ```kotlin
 val theme = currentTheme
-BasicText(text, color = { theme.ink })
+BasicText(text, color = { theme.accent })
 ```
 
 A color derived from the theme, such as `accentFg`, is a getter on `KoalaAppTheme` mixing its sources the way `ThemeCss` does.
 
+## Typography
+
+`KoalaTypography`, read as `currentTheme.text`, holds the web's text styles, each a multiple of the rem as in `TypographyCss`: `heading1` to `heading6`, `paragraph`, `regular`, `small` and `large`, in Fira Sans. `regular` is the rem itself, the size of text with no style of its own. A style is named for its web class or tag, so `heading5` is `h5` and `small` is `TextSmall`. The web's `Bold` is `FontWeight.SemiBold`. Every style has the web body's 1.4 line height, its leading split evenly above and below the line as CSS does. A use that differs from a style copies it, as a feed row's title copies `regular` with the semi-bold weight and a 1.15 line height.
+
+The fonts are in `composeResources/font`, with their license in `composeResources/files`, and are built into a `FontFamily` by `firaSans()`.
+
+## Theme Colors
+
+A color that depends on what it shows is a `ThemeColor`, resolved with `KoalaAppTheme.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`. `accentFg` mixes the accent half and half with the ink, lighter than the web's `--accent-fg` at 75%.
+
+## Entities
+
+`EntityUtility.kt` holds the properties of an entity that depend on its type, each a `when` over every entity type, as the web's does. `topDetails` and `bottomDetails` are the `EntityDetail`s a feed row shows above and below its title, each a `ThemeColor` and a text.
+
+## Feed Rows
+
+`FeedRow` shows any `Entity`, laid out by `FeedMode`. It has only `Minimal` so far.
+
+The layout is recorded here so its intent survives later changes.
+
+| Mode | Entry |
+|---|---|
+| `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` semi-bold on up to two lines, and the bottom details, held to the top of the row. The thumbnail and column are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis |
+
+A feed separates its rows with a 1dp line in `outlineLow`.
+
 ## Unit Spacing
 
-Spacing is a whole multiple of `currentTheme.unit`, the shortest distance that shows two elements are separate. It is `8.dp`, the web's `0.5rem`. Changing it sets the density of the whole app.
+Spacing is a whole multiple of `currentTheme.unit`, the shortest distance that shows two elements are separate. It is half the rem, as the web's `0.5rem`. Changing it sets the density of the whole app.
+
+## Rem
+
+`AppTheme` sizes the type and the unit from a rem chosen by the window's width: 16sp, and 14sp below 600dp, as the web's `html` drops to `87.5%` below 600px. It measures the window once, at the root. A layout that adapts to its own width measures that instead.
 
 The unit builds the hierarchy of grouping. The elements of an item are one unit apart and the item has one unit of padding, so the content of two adjacent items is two units apart. A multiple is written `unit * 2`. A spacing that is not a whole unit is a named value.
 

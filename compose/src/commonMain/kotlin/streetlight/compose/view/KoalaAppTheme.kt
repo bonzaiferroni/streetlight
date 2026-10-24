@@ -7,11 +7,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import koala.modifier.Koala
+import streetlight.compose.model.ThemeColor
 import streetlight.compose.utility.mixSrgb
+import streetlight.compose.utility.toColor
 
 /**
- * The app's theme: the spacing [unit] and the theme's colors, the counterpart of the web's `KoalaTheme`.
+ * The app's theme: the spacing [unit], the [text] styles and the theme's colors, the counterpart of the web's
+ * `KoalaTheme`.
  *
  * An animated color is read from state, so reading it subscribes the reader to that color alone, and a reader in
  * a draw lambda redraws without recomposing.
@@ -19,6 +24,7 @@ import streetlight.compose.utility.mixSrgb
 @Stable
 class KoalaAppTheme(
     val unit: Dp,
+    val text: KoalaTypography,
     val paper: Color,
     val ink: Color,
     private val accentState: State<Color>,
@@ -26,11 +32,30 @@ class KoalaAppTheme(
 ) {
     val accent get() = accentState.value
     val primary get() = primaryState.value
-    val accentFg get() = accent.mixSrgb(ink, 0.75f)
+    val accentFg get() = accent.mixSrgb(ink, 0.5f)
     val accentBg get() = accent.mixSrgb(paper, 0.75f)
     val primaryFg get() = primary.mixSrgb(ink, 0.75f)
     val primaryLightFg get() = primary.mixSrgb(ink, 0.25f)
+    val muted get() = ink.copy(alpha = OpacityHigh)
+    val outlineLow get() = ink.copy(alpha = 0.2f)
+    val seaGreenFg = Koala.seaGreen.toColor().mixSrgb(ink, 0.5f)
+    val greenFg = Koala.green.toColor().mixSrgb(ink, 0.25f)
+    val yellowFg = Koala.yellow.toColor().mixSrgb(ink, 0.25f)
+
+    /** The color [color] names, as the web's `ThemeColor` maps to its custom properties. */
+    fun colorOf(color: ThemeColor): Color = when (color) {
+        ThemeColor.Ink -> ink
+        ThemeColor.Muted -> muted
+        ThemeColor.Accent, ThemeColor.Event -> accentFg
+        ThemeColor.Primary, ThemeColor.Media -> primaryFg
+        ThemeColor.Galaxy -> seaGreenFg
+        ThemeColor.Location -> greenFg
+        ThemeColor.City -> yellowFg
+    }
 }
+
+/** The web's `--opacity-high`, for text a step quieter than the ink. */
+private const val OpacityHigh = 0.85f
 
 val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No KoalaAppTheme provided") }
 
@@ -38,5 +63,5 @@ val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No Koa
 val currentTheme: KoalaAppTheme
     @Composable @ReadOnlyComposable get() = LocalKoalaAppTheme.current
 
-/** The spacing unit: the shortest distance that shows two elements are separate, the web's `0.5rem`. */
-val DefaultUnit = 8.dp
+/** The spacing unit of [rem]: the shortest distance that shows two elements are separate, the web's `0.5rem`. */
+fun unitOf(rem: TextUnit) = (rem.value * 0.5f).dp

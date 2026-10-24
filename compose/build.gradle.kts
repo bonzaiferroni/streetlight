@@ -15,6 +15,7 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
             implementation(libs.navigation3.ui)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.navigation3)
@@ -22,6 +23,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(project(":model"))
+            implementation(project(":kabinet"))
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
             implementation(libs.kotlinx.serialization.json)
@@ -36,6 +38,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
+}
+
+compose.resources {
+    packageOfResClass = "streetlight.compose.resources"
 }
 
 compose.desktop {
