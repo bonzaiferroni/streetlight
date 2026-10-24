@@ -33,6 +33,7 @@ include(":klutch")
 project(":klutch").projectDir = file("klutch/library")
 
 include(":app")
+include(":compose")
 include(":model")
 include(":server")
 include(":kampfire")
