@@ -27,32 +27,29 @@ fun HomeView() {
     val entities by model.entitiesState.collectAsState()
     val isLoading by model.isLoadingState.collectAsState()
     val problem by model.problemState.collectAsState()
-    val colors = LocalAppColors.current
+    val theme = currentTheme
 
     val message = problem ?: if (isLoading) "Loading…" else null
     if (message != null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            BasicText(message, color = { colors.ink })
+            BasicText(message, color = { theme.ink })
         }
         return
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
+    LazyColumn(Modifier.fillMaxSize()) {
         items(entities) { entity -> EntityRow(entity) }
     }
 }
 
-/** One entity of the feed: its thumbnail, when it has an image, and its label. */
+/** One entity of the feed: its thumbnail, when it has an image, and its label, a unit apart and a unit in. */
 @Composable
 private fun EntityRow(entity: Entity) {
-    val colors = LocalAppColors.current
+    val theme = currentTheme
 
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.padding(theme.unit),
+        horizontalArrangement = Arrangement.spacedBy(theme.unit),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
@@ -61,6 +58,6 @@ private fun EntityRow(entity: Entity) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(48.dp),
         )
-        BasicText(entity.label, color = { colors.ink })
+        BasicText(entity.label, color = { theme.ink })
     }
 }

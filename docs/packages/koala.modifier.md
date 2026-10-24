@@ -71,6 +71,8 @@ A stylesheet is served only once it is listed in `KtStyles` in `web/src/commonMa
 
 `CssUtility.kt` holds `InlineStyle` vals, each one a `Property` from `Css` bound to a value. Each is named for the property followed by the value, in PascalCase.
 
+`--unit` is the spacing unit, `KoalaTheme.spacingUnit`: the shortest distance that shows two elements are separate. Spacing is a whole multiple of it, building the hierarchy of grouping: an item's elements are one unit apart and the item has one unit of padding, so two items' content is two units apart. Its value sets the density of the page.
+
 A `Property<LinearDimension>` invoked with an `Int` yields a multiple of `--unit`. Invoked with a `LinearDimension` it yields that dimension unchanged.
 
 `Css` lists the standard descriptors first and the custom ones after.

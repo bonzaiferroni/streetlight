@@ -48,7 +48,8 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `AppTransport` | `WebTransport` |
 | `FooView` | `viewFoo` |
 | `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
-| `AppColors` | The color custom properties of `ThemeCss` |
+| `KoalaAppTheme` | `KoalaTheme`, and the custom properties `ThemeCss` builds from it |
+| `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
 
 ## Navigation
@@ -93,13 +94,26 @@ An image is shown with Coil's `AsyncImage`, given the image's `Url`. The image l
 
 ## Theme
 
-`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides its colors as `LocalAppColors`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
+The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
+
+`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads, flat, as `currentTheme.unit` and `currentTheme.primary`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 
-Every value that animates is read inside a draw lambda, never in composition, so an animation frame redraws and does not recompose. A composable reads a color from `LocalAppColors` and passes it as a lambda where the API takes one, as `BasicText(text, color = { colors.ink })`.
+Every value that animates is read inside a draw lambda, never in composition, so an animation frame redraws and does not recompose. A composable that passes a color as a lambda, where the API takes one, first holds the theme in a local, since `currentTheme` is read only in composition:
 
-A color derived from the theme, such as `accentFg`, is a getter on `AppColors` mixing its sources the way `ThemeCss` does.
+```kotlin
+val theme = currentTheme
+BasicText(text, color = { theme.ink })
+```
+
+A color derived from the theme, such as `accentFg`, is a getter on `KoalaAppTheme` mixing its sources the way `ThemeCss` does.
+
+## Unit Spacing
+
+Spacing is a whole multiple of `currentTheme.unit`, the shortest distance that shows two elements are separate. It is `8.dp`, the web's `0.5rem`. Changing it sets the density of the whole app.
+
+The unit builds the hierarchy of grouping. The elements of an item are one unit apart and the item has one unit of padding, so the content of two adjacent items is two units apart. A multiple is written `unit * 2`. A spacing that is not a whole unit is a named value.
 
 ## Context Parameters
 

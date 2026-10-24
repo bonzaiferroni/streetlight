@@ -35,30 +35,31 @@ import streetlight.compose.utility.collectAsState
 import streetlight.compose.utility.rotateHue
 import streetlight.compose.utility.toColor
 import streetlight.model.data.PageBackgroundMode
+import streetlight.model.data.PageTheme
 import kotlin.math.hypot
 
-/** Shows [content] over the background lights of the current theme, and provides its [AppColors]. */
+/** Shows [content] over the background lights of the current [PageTheme], and provides the [KoalaAppTheme] read as [currentTheme]. */
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
-    val theme by koinInject<ThemeHost>().themeState.collectAsState()
+    val pageTheme by koinInject<ThemeHost>().themeState.collectAsState()
 
-    val accentState = animateColorAsState(theme.accent.toColor(), themeTransition())
-    val primaryState = animateColorAsState(theme.primary.toColor(), themeTransition())
+    val accentState = animateColorAsState(pageTheme.accent.toColor(), themeTransition())
+    val primaryState = animateColorAsState(pageTheme.primary.toColor(), themeTransition())
     val paper = Koala.paper.toColor()
-    val colors = remember(accentState, primaryState) {
-        AppColors(paper, Koala.ink.toColor(), accentState, primaryState)
+    val koalaAppTheme = remember(accentState, primaryState) {
+        KoalaAppTheme(DefaultUnit, paper, Koala.ink.toColor(), accentState, primaryState)
     }
 
-    val isLit = theme.backgroundMode != PageBackgroundMode.None
-    val rho = animateGlow(theme.rho, isLit)
-    val beta = animateGlow(theme.beta, isLit)
-    val gamma = animateGlow(theme.gamma, isLit)
-    val hueState = when (theme.backgroundMode) {
+    val isLit = pageTheme.backgroundMode != PageBackgroundMode.None
+    val rho = animateGlow(pageTheme.rho, isLit)
+    val beta = animateGlow(pageTheme.beta, isLit)
+    val gamma = animateGlow(pageTheme.gamma, isLit)
+    val hueState = when (pageTheme.backgroundMode) {
         PageBackgroundMode.Flux -> animateFlux()
         else -> remember { mutableFloatStateOf(0f) }
     }
 
-    CompositionLocalProvider(LocalAppColors provides colors) {
+    CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme) {
         Box(Modifier.fillMaxSize().background(paper)) {
             Spacer(
                 Modifier.fillMaxSize()
