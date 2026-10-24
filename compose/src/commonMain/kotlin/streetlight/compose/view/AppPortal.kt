@@ -1,7 +1,7 @@
 package streetlight.compose.view
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -25,7 +25,7 @@ fun AppPortal() {
         entryProvider = entryProvider {
             entry<HomeRoute> { HomeView() }
             entry<EventFeedRoute> {
-                context(viewModel { EventFeed() }) { EventFeedView() }
+                context(koinViewModel<EventFeed>()) { EventFeedView() }
             }
         },
     )
