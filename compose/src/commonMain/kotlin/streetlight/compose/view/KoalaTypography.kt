@@ -39,7 +39,7 @@ class KoalaTypography(private val family: FontFamily, rem: TextUnit) {
         fontFamily = family,
         fontSize = size,
         fontWeight = weight,
-        lineHeight = 1.4.em,
+        lineHeight = 1.5.em,
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None),
     )
 }

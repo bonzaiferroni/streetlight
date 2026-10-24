@@ -55,7 +55,7 @@ private fun MinimalFeedRow(entity: Entity) {
         Box(
             Modifier.size(rowHeight)
                 .clip(RoundedCornerShape(theme.unit))
-                .background(theme.colorOf(entity.toThemeColor()).copy(alpha = 0.2f))
+                .background(theme.colors.colorOf(entity.toThemeColor()).copy(alpha = 0.2f))
         ) {
             AsyncImage(
                 model = entity.image?.let { it.thumb ?: it.url },
@@ -69,7 +69,7 @@ private fun MinimalFeedRow(entity: Entity) {
             BasicText(
                 text = entity.label,
                 style = theme.text.regular.copy(fontWeight = FontWeight.SemiBold, lineHeight = 1.15.em),
-                color = { theme.ink },
+                color = { theme.colors.ink },
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -86,8 +86,8 @@ private fun EntityDetails(details: List<EntityDetail>) {
 
     val text = buildAnnotatedString {
         details.forEachIndexed { index, detail ->
-            if (index > 0) withStyle(SpanStyle(color = theme.muted)) { append(" · ") }
-            withStyle(SpanStyle(color = theme.colorOf(detail.color))) { append(detail.text) }
+            if (index > 0) withStyle(SpanStyle(color = theme.colors.muted)) { append(" · ") }
+            withStyle(SpanStyle(color = theme.colors.colorOf(detail.color))) { append(detail.text) }
         }
     }
     BasicText(text, style = theme.text.small, maxLines = 1, overflow = TextOverflow.Ellipsis)

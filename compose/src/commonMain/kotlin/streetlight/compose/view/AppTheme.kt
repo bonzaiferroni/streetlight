@@ -66,7 +66,7 @@ fun AppTheme(content: @Composable () -> Unit) {
         val rem = if (maxWidth < NarrowMaxWidth) NarrowRem else WideRem
         val text = remember(family, rem) { KoalaTypography(family, rem) }
         val koalaAppTheme = remember(accentState, primaryState, text) {
-            KoalaAppTheme(unitOf(rem), text, paper, Koala.ink.toColor(), accentState, primaryState)
+            KoalaAppTheme(unitOf(rem), text, KoalaColors(paper, Koala.ink.toColor(), accentState, primaryState))
         }
 
         CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme) {

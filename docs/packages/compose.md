@@ -48,7 +48,8 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `AppTransport` | `WebTransport` |
 | `FooView` | `viewFoo` |
 | `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
-| `KoalaAppTheme` | `KoalaTheme`, and the custom properties `ThemeCss` builds from it |
+| `KoalaAppTheme` | `KoalaTheme`, and the stylesheets built from it |
+| `KoalaColors` | The color custom properties of `ThemeCss` |
 | `KoalaTypography` | `TypographyCss` and the text classes, such as `TextSmall` |
 | `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` |
@@ -100,7 +101,7 @@ An image is shown with Coil's `AsyncImage`, given the image's `Url`. The image l
 
 The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
 
-`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads, flat, as `currentTheme.unit` and `currentTheme.primary`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
+`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`. A new group of values is a class of its own, named `KoalaFoo`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 
@@ -108,10 +109,10 @@ Every value that animates is read inside a draw lambda, never in composition, so
 
 ```kotlin
 val theme = currentTheme
-BasicText(text, color = { theme.accent })
+BasicText(text, color = { theme.colors.accent })
 ```
 
-A color derived from the theme, such as `accentFg`, is a getter on `KoalaAppTheme` mixing its sources the way `ThemeCss` does.
+A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does.
 
 ## Typography
 
@@ -121,7 +122,7 @@ The fonts are in `composeResources/font`, with their license in `composeResource
 
 ## Theme Colors
 
-A color that depends on what it shows is a `ThemeColor`, resolved with `KoalaAppTheme.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`. `accentFg` mixes the accent half and half with the ink, lighter than the web's `--accent-fg` at 75%.
+A color that depends on what it shows is a `ThemeColor`, resolved with `KoalaColors.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`. `accentFg` mixes the accent half and half with the ink, lighter than the web's `--accent-fg` at 75%.
 
 ## Entities
 

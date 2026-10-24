@@ -29,7 +29,7 @@ fun HomeView() {
     val message = problem ?: if (isLoading) "Loading…" else null
     if (message != null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            BasicText(message, color = { theme.ink })
+            BasicText(message, color = { theme.colors.ink })
         }
         return
     }
@@ -46,5 +46,5 @@ fun HomeView() {
 @Composable
 private fun Divider() {
     val theme = currentTheme
-    Spacer(Modifier.fillMaxWidth().height(1.dp).background(theme.outlineLow))
+    Spacer(Modifier.fillMaxWidth().height(1.dp).background(theme.colors.outlineLow))
 }
