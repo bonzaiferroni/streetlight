@@ -66,7 +66,7 @@ fun AppTheme(content: @Composable () -> Unit) {
         val rem = if (maxWidth < NarrowMaxWidth) NarrowRem else WideRem
         val text = remember(family, rem) { KoalaTypography(family, rem) }
         val koalaAppTheme = remember(accentState, primaryState, text) {
-            KoalaAppTheme(unitOf(rem), text, KoalaColors(paper, Koala.ink.toColor(), accentState, primaryState))
+            KoalaAppTheme(unitOf(rem), text, KoalaColors(paper, Koala.ink.toColor(), Opacity, accentState, primaryState), Opacity)
         }
 
         CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme) {
@@ -86,6 +86,8 @@ fun AppTheme(content: @Composable () -> Unit) {
 }
 
 /** The rem of a window narrower than [NarrowMaxWidth], the web's `87.5%` below 600px. */
+private val Opacity = KoalaOpacity()
+
 private val NarrowRem = 14.sp
 private val WideRem = 16.sp
 private val NarrowMaxWidth = 600.dp

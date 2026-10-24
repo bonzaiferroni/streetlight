@@ -1,0 +1,134 @@
+package streetlight.compose.modifier
+
+// the cousins of the web's DisplayCss: borders, shadows and opacity
+
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.shadow.DropShadowPainter
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.MeasureResult
+import androidx.compose.ui.layout.MeasureScope
+import androidx.compose.ui.node.CompositionLocalConsumerModifierNode
+import androidx.compose.ui.node.DrawModifierNode
+import androidx.compose.ui.node.LayoutModifierNode
+import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.node.invalidateDraw
+import androidx.compose.ui.node.invalidateLayer
+import androidx.compose.ui.node.requireGraphicsContext
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
+/** Rounds the corners to [units] of the theme's unit and clips the content to them. The web's `BorderRadius(n)`. */
+fun Modifier.borderRadius(units: Int) = this then BorderRadiusElement(units)
+
+/** Draws the theme's low outline inside the edge, its corners rounded to [radius] units. The web's `--outline-low`. */
+fun Modifier.outline(radius: Int = 0) = this then OutlineElement(radius)
+
+/** Casts the soft glow the web calls `MoonShadow` behind the content, its corners rounded to [radius] units. */
+fun Modifier.moonShadow(radius: Int = 0) = this then MoonShadowElement(radius)
+
+/** Draws the content at the theme's low opacity. The web's `OpacityLow`. */
+fun Modifier.opacityLow() = this then OpacityLowElement
+
+private data class BorderRadiusElement(val units: Int) : ModifierNodeElement<BorderRadiusNode>() {
+    override fun create() = BorderRadiusNode(units)
+    override fun update(node: BorderRadiusNode) {
+        node.units = units
+        node.invalidateLayer()
+    }
+}
+
+private class BorderRadiusNode(var units: Int) : Modifier.Node(), LayoutModifierNode, CompositionLocalConsumerModifierNode {
+    override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
+        val placeable = measurable.measure(constraints)
+        val corner = theme.unit * units
+        return layout(placeable.width, placeable.height) {
+            placeable.placeWithLayer(0, 0) {
+                shape = RoundedCornerShape(corner)
+                clip = true
+            }
+        }
+    }
+}
+
+private data class OutlineElement(val radius: Int) : ModifierNodeElement<OutlineNode>() {
+    override fun create() = OutlineNode(radius)
+    override fun update(node: OutlineNode) {
+        node.radius = radius
+        node.invalidateDraw()
+    }
+}
+
+private class OutlineNode(var radius: Int) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+    override fun ContentDrawScope.draw() {
+        drawContent()
+        val width = OutlineWidth.toPx()
+        val corner = (theme.unit * radius).toPx()
+        // the stroke runs inside the edge, its corners following the edge's, as a CSS border does
+        drawRoundRect(
+            color = theme.colors.outlineLow,
+            topLeft = Offset(width / 2, width / 2),
+            size = Size(size.width - width, size.height - width),
+            cornerRadius = CornerRadius((corner - width / 2).coerceAtLeast(0f)),
+            style = Stroke(width),
+        )
+    }
+}
+
+private data class MoonShadowElement(val radius: Int) : ModifierNodeElement<MoonShadowNode>() {
+    override fun create() = MoonShadowNode(radius)
+    override fun update(node: MoonShadowNode) {
+        node.radius = radius
+        node.painters = null
+        node.invalidateDraw()
+    }
+}
+
+private class MoonShadowNode(var radius: Int) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+    var painters: List<DropShadowPainter>? = null
+    private var paintedUnit: Dp? = null
+
+    override fun ContentDrawScope.draw() {
+        val unit = theme.unit
+        val shadows = painters?.takeIf { paintedUnit == unit } ?: moonShadows.map { shadow ->
+            requireGraphicsContext().shadowContext.createDropShadowPainter(RoundedCornerShape(unit * radius), shadow)
+        }.also {
+            painters = it
+            paintedUnit = unit
+        }
+        shadows.forEach { with(it) { draw(size) } }
+        drawContent()
+    }
+}
+
+private data object OpacityLowElement : ModifierNodeElement<OpacityLowNode>() {
+    override fun create() = OpacityLowNode()
+    override fun update(node: OpacityLowNode) = Unit
+}
+
+private class OpacityLowNode : Modifier.Node(), LayoutModifierNode, CompositionLocalConsumerModifierNode {
+    override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
+        val placeable = measurable.measure(constraints)
+        val opacity = theme.opacity.low
+        return layout(placeable.width, placeable.height) {
+            placeable.placeWithLayer(0, 0) { alpha = opacity }
+        }
+    }
+}
+
+/** The width of the web's `--outline-low`. */
+private val OutlineWidth = 2.dp
+
+/** The web's `--moon-shadow`: two soft rings of black at 5%. */
+private val moonShadows = listOf(
+    Shadow(radius = 4.dp, color = Color.Black.copy(alpha = 0.05f), spread = 4.dp),
+    Shadow(radius = 12.dp, color = Color.Black.copy(alpha = 0.05f), spread = 12.dp),
+)

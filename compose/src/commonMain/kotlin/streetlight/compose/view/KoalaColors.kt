@@ -18,6 +18,7 @@ import streetlight.compose.utility.toColor
 class KoalaColors(
     val paper: Color,
     val ink: Color,
+    opacity: KoalaOpacity,
     private val accentState: State<Color>,
     private val primaryState: State<Color>,
 ) {
@@ -27,7 +28,7 @@ class KoalaColors(
     val accentBg get() = accent.mixSrgb(paper, 0.75f)
     val primaryFg get() = primary.mixSrgb(ink, 0.75f)
     val primaryLightFg get() = primary.mixSrgb(ink, 0.25f)
-    val muted = ink.copy(alpha = OpacityHigh)
+    val muted = ink.copy(alpha = opacity.high)
     val outlineLow = ink.copy(alpha = 0.2f)
     val seaGreenFg = Koala.seaGreen.toColor().mixSrgb(ink, 0.5f)
     val greenFg = Koala.green.toColor().mixSrgb(ink, 0.25f)
@@ -44,6 +45,3 @@ class KoalaColors(
         ThemeColor.City -> yellowFg
     }
 }
-
-/** The web's `--opacity-high`, for text a step quieter than the ink. */
-private const val OpacityHigh = 0.85f

@@ -8,12 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,6 +19,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.em
 import coil3.compose.AsyncImage
 import streetlight.compose.model.EntityDetail
+import streetlight.compose.modifier.borderRadius
+import streetlight.compose.modifier.opacityLow
 import streetlight.compose.model.bottomDetails
 import streetlight.compose.model.toFlair
 import streetlight.compose.model.toThemeColor
@@ -56,7 +55,7 @@ private fun MinimalFeedRow(entity: Entity) {
     ) {
         Box(
             Modifier.size(rowHeight)
-                .clip(RoundedCornerShape(theme.unit))
+                .borderRadius(1)
                 .background(theme.colors.colorOf(entity.toThemeColor()).copy(alpha = 0.2f))
         ) {
             AsyncImage(
@@ -80,7 +79,7 @@ private fun MinimalFeedRow(entity: Entity) {
         AnimatedIcon(
             svg = entity.toFlair().animated,
             color = { theme.colors.colorOf(entity.toThemeColor()) },
-            modifier = Modifier.graphicsLayer { alpha = OpacityLow },
+            modifier = Modifier.opacityLow(),
             size = rowHeight,
         )
     }
@@ -100,9 +99,6 @@ private fun EntityDetails(details: List<EntityDetail>) {
     }
     BasicText(text, style = theme.text.small, maxLines = 1, overflow = TextOverflow.Ellipsis)
 }
-
-/** The web's `--opacity-low`, at which the flair badge is drawn. */
-private const val OpacityLow = 0.25f
 
 /** The height of a row in units, the web's `--row-height`, which the thumbnail fills. */
 private const val RowHeightUnits = 10

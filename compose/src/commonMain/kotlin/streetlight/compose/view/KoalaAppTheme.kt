@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 /**
- * The app's theme: the spacing [unit], the [text] styles and the [colors]. The counterpart of the web's `KoalaTheme`
+ * The app's theme: the spacing [unit], the [text] styles, the [colors] and the [opacity] levels. The counterpart of the web's `KoalaTheme`
  * and the stylesheets built from it, grouped as they are.
  */
 @Stable
@@ -17,6 +17,7 @@ class KoalaAppTheme(
     val unit: Dp,
     val text: KoalaTypography,
     val colors: KoalaColors,
+    val opacity: KoalaOpacity,
 )
 
 val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No KoalaAppTheme provided") }
