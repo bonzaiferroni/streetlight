@@ -47,14 +47,16 @@ import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * The app's [ApiTransport]: calls the Streetlight API at [baseUrl] with Ktor, keeping the session's cookies.
+ * The app's [ApiTransport]: calls the Streetlight API at [baseUrl] with Ktor, keeping its cookies in [AppCookieStorage].
  *
  * A call returns an [Outcome]: the response decoded from CBOR, or a [Problem] for a failed status or a request
  * that could not be made.
  */
 class AppTransport(private val baseUrl: String) : ApiTransport {
     private val client = HttpClient(CIO) {
-        install(HttpCookies)
+        install(HttpCookies) {
+            storage = AppCookieStorage(relaxSecure = baseUrl.startsWith("http://"))
+        }
         install(SSE)
         install(WebSockets)
     }
