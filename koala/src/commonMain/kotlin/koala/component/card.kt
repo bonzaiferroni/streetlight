@@ -7,7 +7,7 @@ import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent
 import kotlinx.html.div
-import koala.model.AppRoute
+import koala.model.WebRoute
 
 /** A container with a card's background and corners. */
 inline fun FlowContent.card(
@@ -44,7 +44,7 @@ fun FlowContent.cardOf(
 
 /** A card showing a thumbnail beside a title and description, linking to [route] when it is not `null`. */
 fun FlowContent.cardOf(
-    route: AppRoute?,
+    route: WebRoute?,
     title: String,
     thumbUrl: Url?,
     description: String?,

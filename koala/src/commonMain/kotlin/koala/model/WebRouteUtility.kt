@@ -4,8 +4,8 @@ import io.ktor.http.Parameters
 import kampfire.api.PathBuilder
 import io.ktor.http.formUrlEncode
 
-/** The route's [AppRoute.basePath] followed by [nodes], then [extra] as query [Parameters] or a last segment. */
-fun AppRoute.buildRelativePath(nodes: List<String> = emptyList(), extra: Any? = null) = buildString {
+/** The route's [WebRoute.basePath] followed by [nodes], then [extra] as query [Parameters] or a last segment. */
+fun WebRoute.buildRelativePath(nodes: List<String> = emptyList(), extra: Any? = null) = buildString {
     append(basePath)
     nodes.forEach {
         if (!endsWith('/')) append('/')
@@ -26,8 +26,8 @@ fun AppRoute.buildRelativePath(nodes: List<String> = emptyList(), extra: Any? = 
     }
 }
 
-/** The route's [AppRoute.basePath] followed by [nodes], with the query parameters [block] writes. */
-fun AppRoute.buildRelativePath(nodes: List<String> = emptyList(), block: PathBuilder.() -> Unit) =
+/** The route's [WebRoute.basePath] followed by [nodes], with the query parameters [block] writes. */
+fun WebRoute.buildRelativePath(nodes: List<String> = emptyList(), block: PathBuilder.() -> Unit) =
     PathBuilder(buildRelativePath(nodes)).apply(block).build()
 
 fun <T> Parameters.getAll(name: String, toValue: (String) -> T?) = getAll(name)

@@ -14,7 +14,7 @@ import koala.model.*
 import streetlight.web.model.route
 
 /** The comments of [route] as threads. */
-fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
+fun FlowContent.layoutTalkPreview(route: WebRoute, comments: List<Comment>) {
     val comments = comments.sortedBy { it.createdAt }
     val childIds = mutableListOf<CommentId>()
 

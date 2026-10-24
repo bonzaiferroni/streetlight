@@ -2,7 +2,7 @@ package streetlight.web.view
 
 import koala.modifier.*
 import koala.dom.*
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.component.btn
 import koala.component.containImage
 import koala.component.filigree
@@ -75,8 +75,8 @@ private fun ViewScope.markerRow(marker: PointMarker) {
 
 private fun ViewScope.focusPanel(
     post: Entity,
-    route: AppRoute,
-    subroute: AppRoute? = null,
+    route: WebRoute,
+    subroute: WebRoute? = null,
     colorScheme: ThemeColor = ThemeColor.Primary,
 ) {
     val extraLinks = post.links

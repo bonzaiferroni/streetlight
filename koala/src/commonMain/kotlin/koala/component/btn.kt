@@ -4,7 +4,7 @@ import kampfire.model.Url
 import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.*
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.flairOf
 import koala.model.labelFlairs
 import koala.page.Id
@@ -16,7 +16,7 @@ import koala.page.Id
  */
 fun FlowContent.btn(
     text: String,
-    route: AppRoute,
+    route: WebRoute,
     mod: Modifier? = null,
     flair: SvgPack? = labelFlairs[text.lowercase()],
     block: A.() -> Unit = {}
@@ -36,7 +36,7 @@ fun FlowContent.btn(
 /** A link styled as a button, to [route], over a blurred [background] image. */
 fun FlowContent.btn(
     text: String,
-    route: AppRoute,
+    route: WebRoute,
     background: Url?,
     mod: Modifier? = null,
     flair: SvgPack? = null,

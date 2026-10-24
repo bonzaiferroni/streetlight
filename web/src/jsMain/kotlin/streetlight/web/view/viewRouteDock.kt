@@ -2,7 +2,7 @@ package streetlight.web.view
 
 import koala.SvgFile
 import koala.dom.*
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.component.navigation
 import koala.component.textBlock
 import koala.modifier.*
@@ -31,7 +31,7 @@ fun ViewScope.wireRouteDock() {
 
 fun ViewScope.viewRouteDock() {
     val model = dock
-    fun isRouteNow(route: AppRoute) = portal.routeState.tapOf { it.dockRoute == route }
+    fun isRouteNow(route: WebRoute) = portal.routeState.tapOf { it.dockRoute == route }
 
     column(modify(RouteDockStyle.Container, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
         flowBlock(model.titleState, modify(Magic, Height(3))) { title ->
@@ -75,7 +75,7 @@ fun ViewScope.viewRouteDock() {
     }.flowModifier(model.isVisibleState.tapOf { !it }, RouteDockStyle.Hidden, contentScope)
 }
 
-private fun iconOf(route: AppRoute) = when(route) {
+private fun iconOf(route: WebRoute) = when(route) {
     is EarthRoute -> SvgFile.Earth.large
     is HomeRoute -> SvgFile.Home.small
     is CityConfigRoute, is GalaxyConfigRoute, is LocationConfigRoute, is ProfileConfigRoute, is StarConfigRoute -> SvgFile.Gear.small

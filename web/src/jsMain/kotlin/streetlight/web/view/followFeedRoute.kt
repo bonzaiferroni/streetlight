@@ -2,7 +2,7 @@ package streetlight.web.view
 
 import koala.dom.ViewScope
 import koala.dom.createDiv
-import koala.model.AppRoute
+import koala.model.WebRoute
 import kotlinx.coroutines.flow.drop
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.FeedType
@@ -18,7 +18,7 @@ import streetlight.web.model.portal
  * having delivered its problem, leaves the section as it is.
  */
 inline fun <reified Route : FeedRoute> ViewScope.followFeedRoute(
-    noinline typeRoute: (FeedType) -> AppRoute,
+    noinline typeRoute: (FeedType) -> WebRoute,
     noinline onFeed: (EntityFeed) -> Unit = {},
     noinline readFeed: suspend (Route) -> EntityFeed?,
 ) {

@@ -82,7 +82,7 @@ private fun FlowContent.label(label: String) {
     }
 }
 
-private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
+private fun FlowContent.item(label: String, route: WebRoute, svg: Svg) {
     navigation(route) {
         setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
         closePopoverOnClick(SiteHelm.popoverId)

@@ -9,7 +9,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Star
 import streetlight.model.ui.EventScoutRoute
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.FetcherContent
 import koala.model.toContentOrNull
 import koala.modifier.AlignItemsEnd
@@ -36,7 +36,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?) {
     val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
     val model = app.getEventScout(galaxy, editor, locationScout, contentScope)
-    val doneRoute: AppRoute = galaxy?.route ?: HomeRoute()
+    val doneRoute: WebRoute = galaxy?.route ?: HomeRoute()
     val routeFlow = model.stateFlow.dedupNotNull { state -> doneRoute.takeIf { state.isPosted } }
     goOnRoute(routeFlow)
 

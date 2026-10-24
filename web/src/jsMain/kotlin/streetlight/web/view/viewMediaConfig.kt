@@ -3,7 +3,7 @@ package streetlight.web.view
 import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.utility.dedupNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -45,7 +45,7 @@ fun RouteScope.viewMediaConfigRoute() {
 }
 
 /** Goes to each route [routeFlow] emits. */
-fun ViewScope.goOnRoute(routeFlow: Flow<AppRoute>) {
+fun ViewScope.goOnRoute(routeFlow: Flow<WebRoute>) {
     contentScope.launch {
         routeFlow.collect { route ->
             portal.go(route)

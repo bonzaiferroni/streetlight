@@ -2,7 +2,7 @@ package koala.dom.component
 
 import koala.SvgPack
 import koala.modifier.*
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.page.Id
 import kotlinx.html.A
 import kotlinx.html.a
@@ -23,7 +23,7 @@ fun AppendScope.navigation(
 
 /** A link to [route]. */
 fun AppendScope.navigation(
-    route: AppRoute,
+    route: WebRoute,
     mod: Modifier? = null,
     block: A.() -> Unit = {},
 ) = navigation(route.toRelativePath(), mod, block = block)

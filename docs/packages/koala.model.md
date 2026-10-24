@@ -15,7 +15,7 @@ Classes and interfaces not bound to their point of use: routes, menus, documents
 
 ## Route Labels
 
-An `AppRoute` carries no label. A link that shows a route as text takes a `LabeledRoute`, which pairs the route with the label of that link and defaults it to the route's `title`. Two links to one route may label it differently while the route stays equal to the one parsed from the path.
+An `WebRoute` carries no label. A link that shows a route as text takes a `LabeledRoute`, which pairs the route with the label of that link and defaults it to the route's `title`. Two links to one route may label it differently while the route stays equal to the one parsed from the path.
 
 ## History
 
@@ -31,8 +31,8 @@ Only `Portal` writes the browser's history. Code that sets a query parameter of 
 
 | Model | Role |
 |---|---|
-| [`AppRoute`, `AppScreen`, `RouteParse`](../../koala/src/commonMain/kotlin/koala/model/AppRoute.kt) | A place in the app, the screen that renders it, and how its path is parsed |
-| [`AppRouteUtility`](../../koala/src/commonMain/kotlin/koala/model/AppRouteUtility.kt) | Relative paths built from route parts |
+| [`WebRoute`, `AppScreen`, `RouteParse`](../../koala/src/commonMain/kotlin/koala/model/WebRoute.kt) | A place in the app, the screen that renders it, and how its path is parsed |
+| [`WebRouteUtility`](../../koala/src/commonMain/kotlin/koala/model/WebRouteUtility.kt) | Relative paths built from route parts |
 | [`SubRoute`](../../koala/src/commonMain/kotlin/koala/model/SubRoute.kt) | A route among several one screen shows, beneath its parent |
 | [`LabeledRoute`](../../koala/src/commonMain/kotlin/koala/model/LabeledRoute.kt) | A route with the label that links to it |
 | [`RouteContent`](../../koala/src/commonMain/kotlin/koala/model/RouteContent.kt) | The content a `ContentFetcher` returns for a route |

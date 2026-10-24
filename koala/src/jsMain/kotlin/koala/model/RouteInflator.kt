@@ -35,7 +35,7 @@ class RouteInflator(
     }
 
     /** The content fetched for [route]. Throws, after telling the user, when it is missing or another type. */
-    suspend inline fun <reified T: FetcherContent> contentFor(route: AppRoute): T {
+    suspend inline fun <reified T: FetcherContent> contentFor(route: WebRoute): T {
         val delivered = delivery?.await()
         val content = (if (delivered?.route == route) delivered.content else null) as? T
         if (content == null) {
@@ -52,11 +52,11 @@ class RouteInflator(
 
 /** The content fetched for a route. */
 data class RouteDelivery(
-    val route: AppRoute,
+    val route: WebRoute,
     val content: FetcherContent?
 )
 
 /** Maps a route to the call that fetches its content. The app implements it. */
 interface ContentFetcher {
-    suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent>
+    suspend fun fetchContent(route: WebRoute): Outcome<FetcherContent>
 }

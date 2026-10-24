@@ -9,7 +9,7 @@ import io.ktor.http.parseQueryString
 import kotlin.uuid.Uuid
 
 /** A place in the app, with the [screen] that renders it and the path that reaches it. */
-interface AppRoute {
+interface WebRoute {
     val screen: AppScreen
     val origin: String
     fun toRelativePath() = basePath
@@ -25,7 +25,7 @@ interface AppRoute {
          * The route [path] and its raw [query] lead to, parsed by the [AppScreen] whose path root it starts with,
          * or `null` when none matches.
          */
-        fun routeOf(path: String, query: String, screens: List<AppScreen>): AppRoute? {
+        fun routeOf(path: String, query: String, screens: List<AppScreen>): WebRoute? {
             val pathNodes = path.dropStart('/').split('/')
             val parameters = parseQueryString(query)
             val rootNode = pathNodes[0].lowercase()
@@ -60,44 +60,44 @@ interface AppScreen {
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this
 
-/** Turns the segments of a path into an [AppRoute], by the shape of its argument, with its query parameters in reach. */
+/** Turns the segments of a path into an [WebRoute], by the shape of its argument, with its query parameters in reach. */
 sealed interface RouteParse {
     val label: String get() = "id"
 }
 
 /** A route with no argument. */
 data class StaticParse(
-    val block: Parameters.() -> AppRoute
+    val block: Parameters.() -> WebRoute
 ): RouteParse
 
 /** A route with a [Uuid] argument. */
 data class UuidParse(
-    val block: Parameters.(Uuid) -> AppRoute
+    val block: Parameters.(Uuid) -> WebRoute
 ): RouteParse
 
 /** A route with a text id argument. */
 data class IdParse(
-    val block: Parameters.(String) -> AppRoute
+    val block: Parameters.(String) -> WebRoute
 ): RouteParse
 
 /** A route with an optional [Slug] argument. */
 data class SlugOrNullParse(
-    val block: Parameters.(Slug?) -> AppRoute
+    val block: Parameters.(Slug?) -> WebRoute
 ): RouteParse
 
 /** A route with a [Slug] argument. */
 data class SlugParse(
-    val block: Parameters.(Slug) -> AppRoute
+    val block: Parameters.(Slug) -> WebRoute
 ): RouteParse
 
 /** A route with a [Username] argument. */
 data class UsernameParse(
-    val block: Parameters.(Username) -> AppRoute
+    val block: Parameters.(Username) -> WebRoute
 ): RouteParse
 
 /** A route read from all its path segments, reachable under each of [roots]. */
 data class PathParse(
     val roots: List<String>,
-    val block: Parameters.(List<String>) -> AppRoute
+    val block: Parameters.(List<String>) -> WebRoute
 ): RouteParse
 

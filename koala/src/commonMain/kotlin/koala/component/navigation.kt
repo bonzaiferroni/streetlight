@@ -11,7 +11,7 @@ import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.onClick
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.page.Id
 import koala.page.setId
 
@@ -57,7 +57,7 @@ fun FlowContent.navigation(
 
 /** A link to [route]. */
 fun FlowContent.navigation(
-    route: AppRoute,
+    route: WebRoute,
     mod: Modifier? = null,
     id: Id? = null,
     flair: SvgPack? = null,
@@ -74,7 +74,7 @@ fun FlowContent.navigation(
 
 /** A link to [route], or a plain [box] around the same content when it is `null`. */
 fun FlowContent.navigationIfNotNull(
-    route: AppRoute? = null,
+    route: WebRoute? = null,
     mod: Modifier? = null,
     id: Id? = null,
     block: FlowContent.() -> Unit = {}

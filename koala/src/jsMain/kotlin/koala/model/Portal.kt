@@ -39,7 +39,7 @@ import koala.utility.dedupBy
  * It reads the route from the address on load and on browser navigation, and intercepts clicks on local links.
  */
 class Portal(
-    initialRoute: AppRoute,
+    initialRoute: WebRoute,
     val screens: List<AppScreen>,
 ) {
     private val state = storeOf(PortalState(queryRoute() ?: routeOf(URL(window.location.href)) ?: initialRoute))
@@ -64,7 +64,7 @@ class Portal(
         // known issue: this prevents scroll restoration on refresh
         history.scrollRestoration = ScrollRestoration.manual
 
-        fun handleRoute(route: AppRoute, isClick: Boolean) {
+        fun handleRoute(route: WebRoute, isClick: Boolean) {
             if (route == stateNow.route) {
                 if (isClick) {
                     refresh()
@@ -108,7 +108,7 @@ class Portal(
     }
 
     /** A flow of the routes of type [T]. */
-    inline fun <reified T : AppRoute> routeFlowOf(emitDistinct: Boolean = true): Flow<T> {
+    inline fun <reified T : WebRoute> routeFlowOf(emitDistinct: Boolean = true): Flow<T> {
         val base = stateFlow.mapNotNull { it.route as? T }
 
         return if (emitDistinct) base.distinctUntilChanged() else base
@@ -117,10 +117,10 @@ class Portal(
     /**
      * Navigates to [route], remembering the current one and its scroll position.
      *
-     * A [route] with the [AppRoute.screenKey] of the current one takes its place, in the backstack and in the browser's
+     * A [route] with the [WebRoute.screenKey] of the current one takes its place, in the backstack and in the browser's
      * history.
      */
-    fun go(route: AppRoute) {
+    fun go(route: WebRoute) {
         val navigation = Navigation(route, 0.0)
         when (route.screenKey != stateNow.route.screenKey) {
             true -> go(navigation, backstack + Navigation(stateNow.route, window.scrollY), true)
@@ -177,11 +177,11 @@ class Portal(
         }
     }
 
-    private fun routeOf(url: URL): AppRoute? {
-        return AppRoute.routeOf(url.pathname, url.search.removePrefix("?"), screens)
+    private fun routeOf(url: URL): WebRoute? {
+        return WebRoute.routeOf(url.pathname, url.search.removePrefix("?"), screens)
     }
 
-    private fun queryRoute(): AppRoute? {
+    private fun queryRoute(): WebRoute? {
         return document.queryAttribute(Attribute.RoutePath)?.let { routeOf(URL(it, window.location.href)) }
     }
 }
@@ -189,7 +189,7 @@ class Portal(
 // Portal's state should change if and only if the route changes
 /** The current route, whether it is the one the page loaded with, and the scroll position to restore. */
 data class PortalState(
-    val route: AppRoute,
+    val route: WebRoute,
     val canGoBack: Boolean = false,
     val initialScrollY: Double = window.scrollY,
     val isInitialRoute: Boolean = true,
@@ -197,7 +197,7 @@ data class PortalState(
 )
 
 private data class Navigation(
-    val route: AppRoute,
+    val route: WebRoute,
     val initialScrollY: Double,
 )
 

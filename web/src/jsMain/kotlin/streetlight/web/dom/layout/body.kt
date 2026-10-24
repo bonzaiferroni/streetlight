@@ -3,7 +3,7 @@ package streetlight.web.dom.layout
 import koala.dom.AppendScope
 import koala.dom.component.column
 import koala.component.section
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
@@ -31,7 +31,7 @@ fun AppendScope.configBody(
     titleFirst: String,
     titleSecond: String,
     sourceFile: String,
-    route: AppRoute = HomeRoute(),
+    route: WebRoute = HomeRoute(),
     mod: Modifier? = null,
     content: SECTION.() -> Unit
 ) = pageBody(sourcePathView(sourceFile), mod, { configHeader(titleFirst, titleSecond, route) }, content)

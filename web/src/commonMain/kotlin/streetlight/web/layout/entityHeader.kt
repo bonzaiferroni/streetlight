@@ -1,7 +1,7 @@
 package streetlight.web.layout
 
 import koala.Image
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

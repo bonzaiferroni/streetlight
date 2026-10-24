@@ -13,7 +13,7 @@ import koala.model.MenuAction
 import koala.modifier.*
 import koala.modifier.invoke
 import kampfire.model.Url
-import koala.model.AppRoute
+import koala.model.WebRoute
 import kotlinx.html.DIV
 import streetlight.model.data.Entity
 import streetlight.model.ui.HomeRoute
@@ -53,7 +53,7 @@ fun AppendScope.actionRow(
 fun AppendScope.actionRow(
     label: String,
     imageUrl: Url? = null,
-    route: AppRoute? = null,
+    route: WebRoute? = null,
     actions: List<MenuAction>? = null,
     popoverActions: List<MenuAction>? = null
 ) {

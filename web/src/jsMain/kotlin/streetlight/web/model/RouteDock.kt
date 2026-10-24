@@ -4,7 +4,7 @@ import kampfire.model.reactIn
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import kampfire.model.tapOf
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.LabeledRoute
 import koala.model.withLabel
 import koala.model.Portal
@@ -28,11 +28,11 @@ import streetlight.model.ui.StarRoute
  * The navigation dock of the current route: a title and main, left, and right route links.
  *
  * A page can add to the dock with [mergeState]; a merge for a route not yet current waits for that route. A merge
- * holds across a change to a route with the same [AppRoute.screenKey], since the page that made it stays.
+ * holds across a change to a route with the same [WebRoute.screenKey], since the page that made it stays.
  */
 class RouteDock(scope: CoroutineScope, val portal: Portal) {
     private val state = storeOf<RouteDockState?>(null)
-    private var stateRoute: AppRoute? = null
+    private var stateRoute: WebRoute? = null
     private var routeDockMerge: RouteDockMerge? = null
     private val visible = storeOf(true)
 
@@ -55,7 +55,7 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     }
 
     /** Sets the non-null parts of [merge] on the dock of [route]. */
-    fun mergeState(route: AppRoute, merge: RouteDockState) {
+    fun mergeState(route: WebRoute, merge: RouteDockState) {
         when (route.dockRoute) {
             stateRoute -> applyMerge(merge)
             else -> routeDockMerge = RouteDockMerge(route.dockRoute, merge)
@@ -77,8 +77,8 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
 data class RouteDockState(
     val mainRoutes: List<LabeledRoute>? = null,
     val title: String? = null,
-    val leftRoutes: List<AppRoute>? = null,
-    val rightRoutes: List<AppRoute>? = null,
+    val leftRoutes: List<WebRoute>? = null,
+    val rightRoutes: List<WebRoute>? = null,
 )
 
 /** This state with the non-null parts of [merge] set over it. */
@@ -90,11 +90,11 @@ private fun RouteDockState.mergedWith(merge: RouteDockState) = copy(
 )
 
 private data class RouteDockMerge(
-    val route: AppRoute,
+    val route: WebRoute,
     val state: RouteDockState,
 )
 
-private fun stateOf(route: AppRoute): RouteDockState? {
+private fun stateOf(route: WebRoute): RouteDockState? {
     return when (route) {
         // universe
         is HomeRoute -> universeStateOf(EventsMapRoute())
@@ -146,11 +146,11 @@ private fun stateOf(route: AppRoute): RouteDockState? {
     }
 }
 
-private fun universeStateOf(mapRoute: AppRoute) = RouteDockState(
+private fun universeStateOf(mapRoute: WebRoute) = RouteDockState(
     mainRoutes = listOf(HomeRoute().withLabel(), GalaxyFeedRoute().withLabel(), CityFeedRoute().withLabel()),
     title = "Streetlight",
     rightRoutes = listOf(mapRoute),
 )
 
 /** This route as the dock knows it: a feed route showing its default feed, so it is one route whichever feed it shows. */
-internal val AppRoute.dockRoute get() = (this as? FeedRoute)?.defaultFeedRoute ?: this
+internal val WebRoute.dockRoute get() = (this as? FeedRoute)?.defaultFeedRoute ?: this

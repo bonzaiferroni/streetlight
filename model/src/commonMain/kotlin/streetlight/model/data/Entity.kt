@@ -9,7 +9,7 @@ import kabinet.utils.toAgoFormat
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Image
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.MarkerId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
@@ -56,7 +56,7 @@ data class CustomEntity(
     override val sublabel: String? = null,
     override val description: Markdown? = null,
     override val body: Markdown = description ?: label.toMarkdown(),
-    val route: AppRoute? = null,
+    val route: WebRoute? = null,
     override val links: List<ExtraLink>? = null,
     override val createdAt: Instant? = null,
     val recordType: RecordType? = null,

@@ -5,7 +5,7 @@ import kampfire.api.SlugValue
 import kampfire.api.TableId
 import kampfire.model.Token
 import kampfire.utils.pascalToKebabCase
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.AppScreen
 import koala.model.IdParse
 import koala.model.RouteParse
@@ -32,7 +32,7 @@ import kotlin.uuid.Uuid
  * The screens of the app, each with the parse that turns its path into a route.
  *
  * A screen with a shell is rendered by the server on the initial load. A route keeps its screen's view across a
- * change to another route with its [AppRoute.screenKey].
+ * change to another route with its [WebRoute.screenKey].
  */
 enum class Screen(
     override val routeParse: RouteParse,
@@ -111,7 +111,7 @@ enum class Screen(
 
 // interfaces
 /** A route of the Streetlight app. */
-sealed interface StreetlightRoute: AppRoute {
+sealed interface StreetlightRoute: WebRoute {
     // td: gather as build parameter
     override val origin get() = "http://localhost:8080"
 }
@@ -263,8 +263,8 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
 }
 
 /** The route's base path followed by [id], or the base path alone when it is `null`. */
-fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
-fun AppRoute.toIdSitePath(id: SlugValue?) = toIdSitePath(id?.value)
-fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
-fun AppRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())
-fun AppRoute.toIdSitePath(id: Int?) = toIdSitePath(id?.toString())
+fun WebRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
+fun WebRoute.toIdSitePath(id: SlugValue?) = toIdSitePath(id?.value)
+fun WebRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
+fun WebRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())
+fun WebRoute.toIdSitePath(id: Int?) = toIdSitePath(id?.toString())

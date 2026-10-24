@@ -20,7 +20,7 @@ The base set of components and functionality for web apps. It declares `View`, a
 |---|---|
 | `koala.component` | Components, such as `switch`, `column` and `icon` |
 | `koala.layout` | Layouts, such as `tabs` and `messageBox` |
-| `koala.model` | Classes and interfaces not bound to their point of use, such as `AppRoute` |
+| `koala.model` | Classes and interfaces not bound to their point of use, such as `WebRoute` |
 | `koala.page` | The frame a page is built on: its head, scripts, ids, mounts and data islands |
 | `koala.markdown` | Markdown parsing and rendering |
 | `koala.interop` | Calls between markup and the bundle, and the `wire` functions that bind a view to server markup |

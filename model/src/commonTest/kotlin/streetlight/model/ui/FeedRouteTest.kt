@@ -1,7 +1,7 @@
 package streetlight.model.ui
 
 import kampfire.api.Slug
-import koala.model.AppRoute
+import koala.model.WebRoute
 import streetlight.model.data.FeedType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,7 +13,7 @@ class FeedRouteTest {
         val route = HomeRoute(FeedType.Events)
         val (path, query) = route.toRelativePath().split('?')
 
-        assertEquals(route, AppRoute.routeOf(path, query, Screen.entries))
+        assertEquals(route, WebRoute.routeOf(path, query, Screen.entries))
     }
 
     @Test
@@ -21,7 +21,7 @@ class FeedRouteTest {
         val route = CityRoute(Slug("denver-colorado"), FeedType.Locations)
         val (path, query) = route.toRelativePath().split('?')
 
-        assertEquals(route, AppRoute.routeOf(path, query, Screen.entries))
+        assertEquals(route, WebRoute.routeOf(path, query, Screen.entries))
     }
 
     @Test
@@ -31,6 +31,6 @@ class FeedRouteTest {
 
     @Test
     fun `an unknown feed name reads as the default feed`() {
-        assertEquals(HomeRoute(), AppRoute.routeOf("/", "feed=Nonsense", Screen.entries))
+        assertEquals(HomeRoute(), WebRoute.routeOf("/", "feed=Nonsense", Screen.entries))
     }
 }

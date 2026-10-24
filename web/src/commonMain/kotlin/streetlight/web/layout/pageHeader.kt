@@ -3,7 +3,7 @@ package streetlight.web.layout
 import kampfire.api.Markdown
 import koala.Image
 import koala.modifier.*
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.component.card
 import koala.component.column
 import koala.component.filigree

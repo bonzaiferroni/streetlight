@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.page.Id
 import koala.model.FetcherContent
 import koala.model.PortalState
@@ -23,7 +23,7 @@ class RouteScope(
  * The content replaces what the view held. A route other than the initial one is scrolled to its remembered
  * position.
  */
-inline fun <reified Route: AppRoute, Data: FetcherContent> RouteScope.routeBlock(
+inline fun <reified Route: WebRoute, Data: FetcherContent> RouteScope.routeBlock(
     crossinline provideData: suspend (Route) -> Data,
     crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) {
@@ -47,7 +47,7 @@ inline fun <reified Route: AppRoute, Data: FetcherContent> RouteScope.routeBlock
  * Builds the route's view with [block], reading the content from the shell's data island with [shellId] on the
  * initial route and fetching it otherwise.
  */
-inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.routeBlock(
+inline fun <reified Route: WebRoute, reified Data: FetcherContent> RouteScope.routeBlock(
     shellId: Id,
     crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) = routeBlock<Route, Data>(
@@ -62,7 +62,7 @@ inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.ro
 )
 
 /** Builds the route's view with [block] from content fetched for the route. */
-inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.routeBlock(
+inline fun <reified Route: WebRoute, reified Data: FetcherContent> RouteScope.routeBlock(
     crossinline block: context(Route) ViewScope.(Data) -> Unit
 ) = routeBlock<Route, Data>(
     provideData = { inflator.contentFor<Data>(it) },
@@ -70,7 +70,7 @@ inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.ro
 )
 
 /** Builds a view for the route in [state] with [block], from content fetched by [inflator]. */
-inline fun <reified Route: AppRoute, reified Data: FetcherContent> ViewScope.routeBlock(
+inline fun <reified Route: WebRoute, reified Data: FetcherContent> ViewScope.routeBlock(
     inflator: RouteInflator,
     state: PortalState,
     crossinline block: context(Route) ViewScope.(Data) -> Unit

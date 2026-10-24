@@ -5,7 +5,7 @@ import koala.modifier.*
 import koala.component.hr
 import koala.component.navigation
 import koala.component.row
-import koala.model.AppRoute
+import koala.model.WebRoute
 import kotlinx.css.pct
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -31,7 +31,7 @@ fun FlowContent.appHeader(
 fun FlowContent.configHeader(
     titleFirst: String,
     titleSecond: String,
-    route: AppRoute
+    route: WebRoute
 ) {
     rayHeader {
         navigation(route) {

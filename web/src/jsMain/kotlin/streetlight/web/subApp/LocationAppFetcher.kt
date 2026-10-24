@@ -3,7 +3,7 @@ package streetlight.web.subApp
 import kampfire.api.toSlug
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.ContentFetcher
 import koala.model.FetcherContent
 import koala.model.NullContent
@@ -21,7 +21,7 @@ class LocationAppFetcher(
 ): ContentFetcher {
     private val subdomain = window.location.hostname.substringBefore('.').toSlug()
 
-    override suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent> = when (route) {
+    override suspend fun fetchContent(route: WebRoute): Outcome<FetcherContent> = when (route) {
         is LocationAppRoute -> api.location.readSubdomainContent(subdomain)
         is EventRoute -> api.event.readEventSlug(route.slug)
         else -> Ok(NullContent)

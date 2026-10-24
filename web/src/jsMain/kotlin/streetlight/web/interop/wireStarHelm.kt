@@ -4,7 +4,7 @@ import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.component.button
 import koala.component.heading3
 import koala.component.icon
@@ -100,7 +100,7 @@ private fun ViewScope.starPanel() {
     }
 }
 
-private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
+private fun ViewScope.routeItem(route: WebRoute, text: String, svg: Svg) {
     navigation(route) { // filler content
         closePopoverOnClick(StarHelm.PopoverId)
 

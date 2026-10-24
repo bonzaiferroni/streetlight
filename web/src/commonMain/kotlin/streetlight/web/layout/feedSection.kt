@@ -26,7 +26,7 @@ import streetlight.web.model.toCells
  */
 fun FlowContent.feedSection(
     feed: EntityFeed,
-    typeRoute: ((FeedType) -> AppRoute)? = null,
+    typeRoute: ((FeedType) -> WebRoute)? = null,
 ) {
     val source = feed.source ?: error("a feed section shows a feed with a source")
     val types = feed.types ?: source.context.types

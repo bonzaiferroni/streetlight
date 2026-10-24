@@ -1,7 +1,7 @@
 package streetlight.model.ui
 
 import kampfire.utils.pascalToKebabCase
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.AppScreen
 import koala.model.RouteParse
 import koala.model.StaticParse
@@ -24,7 +24,7 @@ enum class LocationAppScreen(
 }
 
 /** The home of a LocationApp: the location's page. */
-data object LocationAppRoute: AppRoute {
+data object LocationAppRoute: WebRoute {
     override val screen get() = LocationAppScreen.Home
     override val title get() = "Home"
     override val origin get() = ""

@@ -9,7 +9,7 @@ sealed interface IconButton
 /** An icon that navigates to [route]. */
 data class IconRoute(
     val svg: Svg,
-    val route: AppRoute
+    val route: WebRoute
 ): IconButton
 
 /** An icon that runs [action]. */

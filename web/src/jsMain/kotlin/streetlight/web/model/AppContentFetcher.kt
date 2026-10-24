@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.model.ContentFetcher
 import koala.model.FetcherContent
 import koala.model.NullContent
@@ -37,7 +37,7 @@ import streetlight.web.io.ApiClient
 class AppContentFetcher(
     val api: ApiClient
 ): ContentFetcher {
-    override suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent> = when (route) {
+    override suspend fun fetchContent(route: WebRoute): Outcome<FetcherContent> = when (route) {
         is HomeRoute -> api.content.readHomeContent(route.feed)
         is CityFeedRoute -> api.content.readCityFeedContent()
         is GalaxyFeedRoute -> api.content.readGalaxyFeedContent(route.feed)

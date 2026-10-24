@@ -185,7 +185,7 @@ The navigator may open a *long bounty*: a body of work mapped in a document at `
 
 ## Scratch Points
 
-A scratch point is a moment when a shape already in the code would not be the one written from scratch, now that the code has seen some action. A first shape often serves best by showing what shape the work really wants. When the agent recognizes one, it raises it as a question, naming the shape it would write and what it replaces, rather than growing the old shape in ways it was not meant for. `AppRoute.screenKey`, which replaced `retainWithinScreen` once routes gained parameters that change content within a view, is an example.
+A scratch point is a moment when a shape already in the code would not be the one written from scratch, now that the code has seen some action. A first shape often serves best by showing what shape the work really wants. When the agent recognizes one, it raises it as a question, naming the shape it would write and what it replaces, rather than growing the old shape in ways it was not meant for. `WebRoute.screenKey`, which replaced `retainWithinScreen` once routes gained parameters that change content within a view, is an example.
 
 ## Scope
 

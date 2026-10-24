@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import koala.SvgPack
 import koala.SvgFile
-import koala.model.AppRoute
+import koala.model.WebRoute
 import kampfire.model.Url
 import koala.model.Doc
 import streetlight.model.data.EventGroup
@@ -57,7 +57,7 @@ val Media.route get() = MediaRoute(slug)
 val Galaxy.route get() = GalaxyRoute(slug)
 
 /** The page of this entity, the event's for an event at a location. */
-fun Entity.toRoute(): AppRoute? = when (this) {
+fun Entity.toRoute(): WebRoute? = when (this) {
     is City -> CityRoute(slug)
     is EventLocation -> eventRoute
     is EventPost -> event.eventRoute
@@ -172,7 +172,7 @@ fun eventCells(
     purchaseUrl: Url?,
     tag: EventTag?,
     locationName: String?,
-    locationRoute: AppRoute? = null,
+    locationRoute: WebRoute? = null,
 ) = buildList {
     startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
     cost?.let { add(costCell(it, purchaseUrl)) }
@@ -221,7 +221,7 @@ fun Entity.toButtons(): List<EntityButton>? = when (val entity = this) {
 }
 
 /** A second route shown under the title, such as the location of an event post. */
-fun Entity.toSubRoute(): AppRoute? = when (this) {
+fun Entity.toSubRoute(): WebRoute? = when (this) {
     is MediaPost -> null
     is EventPost -> event.locationRoute
     is LocationPost -> null

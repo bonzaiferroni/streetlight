@@ -1,7 +1,7 @@
 package koala.model
 
 /** A route among the several of type [R] that one screen shows, beneath its [parent]. */
-interface SubRoute<R: SubRoute<R>>: AppRoute {
+interface SubRoute<R: SubRoute<R>>: WebRoute {
     /** The route above this one, or `null` for the screen's index. */
     val parent: R?
 }

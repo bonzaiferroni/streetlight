@@ -13,7 +13,7 @@ import koala.component.section
 import koala.markdown.ParsedBlock
 import koala.markdown.lazyMarkdown
 import koala.markdown.markdown
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.modifier.*
 import koala.modifier.AccentFg
 import koala.page.Id
@@ -142,7 +142,7 @@ private fun FlowContent.iconCard(svg: SvgPack, title: String, text: String, colo
     }
 }
 
-private fun FlowContent.actionCard(svg: SvgPack, buttonLabel: String, buttonClass: Class, route: AppRoute, description: List<ParsedBlock>) {
+private fun FlowContent.actionCard(svg: SvgPack, buttonLabel: String, buttonClass: Class, route: WebRoute, description: List<ParsedBlock>) {
     column {
         icon(svg.animated, modify(AlignSelfCenter, Width(8)))
         btn(buttonLabel, route, modify(buttonClass, AlignSelfCenter))

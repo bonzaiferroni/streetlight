@@ -2,7 +2,7 @@
 
 package streetlight.web.utility
 
-import koala.model.AppRoute
+import koala.model.WebRoute
 import koala.page.Id
 import web.dom.Document
 import web.dom.ElementId
@@ -13,5 +13,5 @@ fun Document.setTitle(title: String) {
     this.title = "$title | Streetlight"
 }
 
-fun Document.setTitle(route: AppRoute) = setTitle(route.title)
+fun Document.setTitle(route: WebRoute) = setTitle(route.title)
 fun Document.requireElement(id: Id) = getElementById(ElementId(id.identifier)) ?: error("element with id not found: $id")
