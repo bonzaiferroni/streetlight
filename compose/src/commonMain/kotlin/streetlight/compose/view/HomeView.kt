@@ -6,7 +6,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,13 +40,31 @@ fun HomeView() {
         return
     }
 
-    // the parts stand a line apart on their quiet background, so the theme behind draws the line between them
-    LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(theme.line)) {
-        item {
-            MapWindow(Modifier.fillMaxWidth().padding(theme.unit).height(theme.unit * MapHeightUnits))
+    val listState = rememberLazyListState()
+    val mapHeight = theme.unit * MapHeightUnits
+
+    Box(Modifier.fillMaxSize()) {
+        // the parts stand a line apart on their quiet background, so the theme behind draws the line between them
+        LazyColumn(Modifier.fillMaxSize(), state = listState, verticalArrangement = Arrangement.spacedBy(theme.line)) {
+            item { Spacer(Modifier.fillMaxWidth().padding(theme.unit).height(mapHeight)) }
+            feed?.let { feedSection(it, model.feedTypeState, settings.feedModeState) }
         }
-        feed?.let { feedSection(it, model.feedTypeState, settings.feedModeState) }
+
+        // the map stays out of the list, which would dispose it when it scrolls away and start its renderer anew when
+        // it returns; it lies over the list's first item and moves with its scroll, read while placing
+        MapWindow(
+            Modifier.fillMaxWidth()
+                .offset { IntOffset(0, -mapScrollOf(listState, (mapHeight + theme.unit * 2).roundToPx())) }
+                .padding(theme.unit)
+                .height(mapHeight)
+        )
     }
+}
+
+/** How far the list has scrolled the map's place up: its scroll, or the place's whole [height] once it has left. */
+private fun mapScrollOf(listState: LazyListState, height: Int): Int = when (listState.firstVisibleItemIndex) {
+    0 -> listState.firstVisibleItemScrollOffset
+    else -> height
 }
 
 /** The height of the map in units, as on the web's home page. */

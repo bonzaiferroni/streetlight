@@ -31,6 +31,7 @@ class KoalaColors(
     val muted = ink.copy(alpha = opacity.high)
     val outlineLow = ink.copy(alpha = 0.2f)
     val zenBg = paper.copy(alpha = 0.25f)
+    val cardBg = paper.copy(alpha = 0.4f)
     val seaGreenFg = Koala.seaGreen.toColor().mixSrgb(ink, 0.5f)
     val greenFg = Koala.green.toColor().mixSrgb(ink, 0.25f)
     val yellowFg = Koala.yellow.toColor().mixSrgb(ink, 0.25f)

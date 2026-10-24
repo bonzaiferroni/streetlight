@@ -25,6 +25,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `streetlight.compose.model` | Routes, `Portal`, `appModule`, services and view models |
 | `streetlight.compose.io` | `AppTransport` |
 | `streetlight.compose.view` | Composables that take a model or the `Portal`, including the view of each route |
+| `streetlight.compose.markdown` | Markdown rendered for Compose from koala's parsed blocks |
 | `streetlight.compose.modifier` | `Modifier` extensions for the theme's styling, the cousins of `koala.modifier` |
 | `streetlight.compose.svg` | The renderer of animated icons: an XML reader, the SVG document and its SMIL animations, and their drawing |
 | `streetlight.compose.utility` | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
@@ -60,6 +61,8 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` |
 | `feedSection` | `feedSection` |
+| `CellGrid` | `cellGrid` |
+| `annotatedMarkdownOf` | `renderMarkdownBlocks` (`koala.markdown`), as a feed row's summary styles it |
 | `filigree()` | `filigree` (`koala.component`) and its `ParticleRay` |
 | `AppSettings` | The root switches, such as `FeedRowStyle.Mode` |
 | `Icon` | `icon` (`koala.component`) |
@@ -126,6 +129,8 @@ The renderer covers what the site's icons use: `g`, `path`, `circle`, `line` and
 
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
+The map is never an item of a lazy list, which disposes an item that scrolls away and so closes the map's native renderer; it would start anew, style and tiles, each time it returned. A view that scrolls a map lays it over a spacer item of its size and moves it with the list's scroll, read in its `offset`, as `HomeView` does.
+
 ## Theme
 
 The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
@@ -155,7 +160,7 @@ A color that depends on what it shows is a `ThemeColor`, resolved with `KoalaCol
 
 ## Entities
 
-`EntityUtility.kt` holds the properties of an entity that depend on its type, each a `when` over every entity type, as the web's does. `topDetails` and `bottomDetails` are the `EntityDetail`s a feed row shows above and below its title, each a `ThemeColor` and a text.
+`EntityUtility.kt` holds the properties of an entity that depend on its type, each a `when` over every entity type, as the web's does. `topDetails` and `bottomDetails` are the `EntityDetail`s a feed row shows, each a `ThemeColor`, an icon and a text. An entity type always gives the same details, in the same order; a fact the entity lacks keeps its detail with `null` text, so its cell still shows. A fact of the entity itself takes the entity's color, as an event's cost and tag take the event's; a fact drawn from another entity takes that entity's, as an event's location takes the location's.
 
 ## Feed Rows
 
@@ -165,19 +170,30 @@ The layout is recorded here so its intent survives later changes.
 
 | Mode | Entry |
 |---|---|
-| `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis |
+| `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis, leaving out those without text. The top details are in their colors; the bottom details are in the ink at `opacityHigh()`, as a description is |
+| `Row` | Padded a unit all around, where the web pads a line at the sides. The main part: the thumbnail, outlined; the title in `heading5` semi-bold on one line over the entity's `body` as markdown in `small` at `opacityHigh()`, both clipped at the row's 10 units with half a unit of inset and fading where they reach the clip; then the flair badge. The `CellGrid` sits below it, or beside it as the row's right half, less half a unit, from 960dp |
 
 A feed is shown with `feedSection`, which adds its heading and rows to the list it is in. The heading sits in a `filigree()` between the type menu, bound to the page model's type, and the `FeedMode` switch, bound to `AppSettings`, both a `MutableTap`. A row carries `zenBg()`, and the feed stands its rows `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 
 ## Modifiers
 
-A styling the web gives with a `koala.modifier` class, such as `BorderRadius2` or `MoonShadow`, is an extension on Compose's `Modifier` in `streetlight.compose.modifier`, named for its web cousin in Compose's camel case: `borderRadius(2)`, `outline()`, `moonShadow()`, `zenBg()`, `opacityLow()`, `filigree()`. A length the web gives in units is given in units. The set holds what the app uses; it is not a copy of `koala.modifier`, and a styling Compose already gives plainly, such as a text color or a padding of `currentTheme.unit`, has none.
+A styling the web gives with a `koala.modifier` class, such as `BorderRadius2` or `MoonShadow`, is an extension on Compose's `Modifier` in `streetlight.compose.modifier`, named for its web cousin in Compose's camel case: `borderRadius(2)`, `outline()`, `moonShadow()`, `zenBg()`, `cardBg()`, `fadeClip()`, `opacityLow()`, `opacityHigh()`, `filigree()`. A length the web gives in units is given in units. The set holds what the app uses; it is not a copy of `koala.modifier`, and a styling Compose already gives plainly, such as a text color or a padding of `currentTheme.unit`, has none.
 
 Each is a `Modifier.Node` that reads the theme with `currentValueOf(LocalKoalaAppTheme)`, so a call site needs no theme in hand and chains like any modifier. The theme holds the values, such as `KoalaOpacity`, and the node holds only how they are applied. A node that reshapes or fades its content places it with a layer; one that draws around it is a `DrawModifierNode`.
 
 A modifier lives in the file that corresponds to its web cousin's stylesheet: `DisplayModifiers.kt` for `DisplayCss`, as borders, shadows and opacity, `MagicModifiers.kt` for `MagicCss`, as `filigree()` and its rays, and `TextModifiers.kt` for `TextCss` when one is needed. `ModifierUtility.kt` holds what the nodes share, such as their read of the theme.
 
 Compose's `Modifier` is the only one in this module: `koala.modifier.Modifier` is never imported here.
+
+## Cell Grid
+
+`CellGrid` shows an entity's top and bottom details as cells, on one line when every cell gets at least 128dp, otherwise the top details over the bottom ones. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon in the detail's color at its start and its text centered in the rest; a detail without text shows its icon alone at `opacityLow()`, in the same place. The cells stand a line apart, so the background draws the grid's lines, inside a container rounded two units, outlined, and in the moon's shadow.
+
+A layout that changes with its width, such as `CellGrid` or the `Row` feed row, decides in its own `Layout`'s measure, from the width it is given. It needs no subcomposition, so it costs nothing per row.
+
+## Markdown
+
+`annotatedMarkdownOf` renders markdown, parsed by koala's `markdownBlocksOf`, as one `AnnotatedString` for text read as prose: each block on its own line, headings at the text's size a step heavier, emphasis, strong, code and struck text styled, and links in the color given. Images and rules are left out.
 
 ## Unit Spacing
 
