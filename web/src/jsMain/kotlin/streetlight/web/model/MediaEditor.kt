@@ -16,7 +16,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostType
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Creates or updates media. */
 class MediaEditor(

@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.CapabilityStatus
 import streetlight.model.data.SellerStatus
 import streetlight.model.data.SellerOnboarding
-import streetlight.web.io.SellerClient
+import streetlight.model.io.SellerClient
 import web.window.window
 
 /**

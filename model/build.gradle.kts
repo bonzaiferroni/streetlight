@@ -27,6 +27,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.ktor.http)
+                implementation(libs.kotlinx.coroutines.core)
                 api(project(":kampfire"))
                 implementation(project(":kabinet"))
                 api(project(":koala"))

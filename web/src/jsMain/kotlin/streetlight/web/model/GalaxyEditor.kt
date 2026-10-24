@@ -26,7 +26,7 @@ import streetlight.model.data.GalaxyMark
 import streetlight.model.data.MarkId
 import streetlight.model.data.slugOf
 import streetlight.model.ui.GalaxyRoute
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
 

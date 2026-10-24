@@ -13,7 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit
 import streetlight.model.data.Platform
-import streetlight.web.io.FeedbackClient
+import streetlight.model.io.FeedbackClient
 
 /** Lists feedback and sends new feedback. */
 class FeedbackHub(

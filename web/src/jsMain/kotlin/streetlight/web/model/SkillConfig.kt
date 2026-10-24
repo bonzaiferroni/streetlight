@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Skill
 import streetlight.model.data.SkillEdit
 import streetlight.model.data.toEdit
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /**
  * The star's skills, and the [SkillConfigState.focus] the panel shows in place of them: a [SkillEdit] for a

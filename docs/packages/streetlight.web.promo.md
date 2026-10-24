@@ -10,7 +10,7 @@ The content of promo videos. A shot mounts real views of the app over the test f
 |---|---|
 | `koala.dom` | Mounting the shot |
 | `streetlight.web.integration` | `buildTestApp` |
-| `streetlight.web.io` | `TestApiClient` and the `Test*Client` fakes |
+| `streetlight.model.testing` | `TestApiClient` and the `answerFoos` fixtures |
 | `streetlight.web.view` and the rest of web | The views a shot shows |
 
 The package is the `promo` compilation of web's js target, in `web/src/jsPromo`. It is associated with `main` and `test`, so it sees both, and nothing in either sees it.

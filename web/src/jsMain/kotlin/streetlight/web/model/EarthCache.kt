@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.MapQuery
 import streetlight.model.data.EntityCursor
 import streetlight.model.data.EventTag
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
 /** Loads the events of each settled map view, so a view already covered by a completed query is not asked again. */

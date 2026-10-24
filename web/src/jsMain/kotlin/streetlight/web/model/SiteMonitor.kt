@@ -20,7 +20,7 @@ import streetlight.model.data.MetricResolution
 import streetlight.model.data.SiteEvent
 import streetlight.model.data.SiteMetric
 import streetlight.model.data.SiteStatus
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Charts the site's status over a time frame, and polls for new points at the frame's resolution. */
 class SiteMonitor(

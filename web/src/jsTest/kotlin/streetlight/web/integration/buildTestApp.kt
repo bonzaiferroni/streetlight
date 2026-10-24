@@ -7,7 +7,7 @@ import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.model.Toaster
 
 fun buildTestApp(

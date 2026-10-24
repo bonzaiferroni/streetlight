@@ -3,7 +3,7 @@ package streetlight.web.model
 import koala.model.GeoCamera
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.io.OSMClient
 import streetlight.web.io.OmniClient
 import streetlight.web.io.TransitClient

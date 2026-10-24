@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Shows and edits one song. */
 class SongProfile(

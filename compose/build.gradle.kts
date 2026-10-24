@@ -22,6 +22,10 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(project(":model"))
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.cbor)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs) {

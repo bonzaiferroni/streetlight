@@ -3,7 +3,7 @@ package streetlight.web.model
 import koala.dom.AppFacade
 import koala.model.GeoCamera
 import koala.model.Portal
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.model.MarkerMap
 import streetlight.web.model.RouteDock
 import streetlight.web.model.Toaster

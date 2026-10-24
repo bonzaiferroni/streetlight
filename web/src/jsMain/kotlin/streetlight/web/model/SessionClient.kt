@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Star
 import streetlight.model.ui.HomeRoute
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
 

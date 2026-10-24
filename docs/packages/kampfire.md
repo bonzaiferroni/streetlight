@@ -15,7 +15,7 @@ Utilities and types for apps that communicate with a server in a multiplatform c
 
 | Package | Holds |
 |---|---|
-| `kampfire.api` | Value types that cross the wire, such as `Markdown`, `Username`, `Slug`, and endpoint definitions |
+| `kampfire.api` | Value types that cross the wire, such as `Markdown`, `Username`, `Slug`, endpoint definitions, and the transport calls go through |
 | `kampfire.model` | Requests, results, and the state and messaging types built on them, such as `Outcome`, `Messenger`, `Store`, and `Tap` |
 | `kampfire.utils` | General extensions with no domain in them |
 
@@ -34,3 +34,16 @@ A call that can fail returns `Outcome`. It is either `Ok` with data and an optio
 ## Interface Here, Implementation Elsewhere
 
 A type that describes a behavior the UI performs is declared here as an interface, and the implementation that binds to the DOM lives in `koala`. `Messenger` is declared here, and `MessageStore` implements it in `koala.model`.
+
+## Transport
+
+`ApiTransport` carries calls to an API and opens its streams over a platform's HTTP. An app implements it once per platform, and its clients are written once against it.
+
+| Part | Role |
+|---|---|
+| `ApiCall` | One call: the endpoint, the id or body sent, the query parameters, a form when it uploads, and the serializers of both ends |
+| `getApi`, `postApi`, `postForm` | Build an `ApiCall` from an endpoint and send it |
+| `openEvents`, `openSocket` | Open an event stream as a `Flow`, or a socket as a `MessageSocket`, carrying JSON |
+| `TestTransport` | The transport of tests, answering each endpoint with the block given to `answer` |
+
+A transport decodes a response as the CBOR `Outcome` the server writes, and sends a body as JSON. A socket holds sends until it opens.

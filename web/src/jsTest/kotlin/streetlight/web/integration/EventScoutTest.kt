@@ -4,10 +4,10 @@ import koala.model.GeoCamera
 import koala.model.GeoMap
 import streetlight.model.data.EventEdit
 import streetlight.model.data.LocationEdit
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.io.OSMClient
-import streetlight.web.io.TestApiClient
-import streetlight.web.io.TestLocationClient
+import streetlight.model.testing.TestApiClient
+import streetlight.model.testing.answerLocations
 import streetlight.web.model.EventEditor
 import streetlight.web.model.EventPostMode
 import streetlight.web.model.EventScout
@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 class EventScoutTest: ViewTest() {
 
     private val location = testLocation()
-    private val api = TestApiClient(location = TestLocationClient(listOf(location)))
+    private val api = TestApiClient { answerLocations(listOf(location)) }
 
     override fun api(): ApiClient = api
 

@@ -1,15 +1,14 @@
 package streetlight.web.io
 
+import kampfire.api.MessageSocket
 import kampfire.model.GeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritFrame
-import web.events.EventHandler
-import web.sockets.WebSocket
+import streetlight.model.io.ApiClient
 
 /** The spirit socket: announces this visitor's spirit and position, and emits the frames of the others. */
 class SpiritSocket(
@@ -19,25 +18,17 @@ class SpiritSocket(
     private val _spiritFlow = MutableSharedFlow<SpiritFrame>(1)
     val spiritFlow: Flow<SpiritFrame> = _spiritFlow
     
-    private var socket: WebSocket? = null
+    private var socket: MessageSocket<SpiritFrame, SpiritFrame>? = null
     private var spirit: Spirit? = null
     
     /** Opens the socket and announces [spirit]. */
     fun connect(spirit: Spirit) {
         this.spirit = spirit
         val socket = api.post.connectSpiritVision().also { this.socket = it }
-        socket.onmessage = EventHandler { event ->
-            scope.launch {
-                val data = event.data
-                if (data is String) {
-                    val frame = data.decode() ?: return@launch
-                    _spiritFlow.emit(frame)
-                }
-            }
+        scope.launch {
+            socket.messages.collect { _spiritFlow.emit(it) }
         }
-        socket.onopen = EventHandler {
-            socket.send(SpiritFrame.Initial(spirit).encode())
-        }
+        socket.send(SpiritFrame.Initial(spirit))
     }
 
     fun disconnect() {
@@ -54,17 +45,6 @@ class SpiritSocket(
 
     private fun send(delta: SpiritFrame) {
         val socket = socket ?: return
-        socket.send(delta.encode())
-    }
-}
-
-private fun SpiritFrame.encode() = Json.encodeToString(this)
-
-private fun String.decode(): SpiritFrame? {
-    return try {
-        Json.decodeFromString<SpiritFrame>(this)
-    } catch (e: Exception) {
-        console.log(e.message)
-        null
+        socket.send(delta)
     }
 }

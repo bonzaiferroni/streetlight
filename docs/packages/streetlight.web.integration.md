@@ -98,4 +98,4 @@ Leave the shape of a request to the server to `streetlight.server.e2e`.
 
 ## Scout Fixtures
 
-`ScoutUtility.kt` builds stored records for scout tests: `testLocation` in Denver and `testEventLocation` at a given location. `TestLocationClient` takes the locations it holds and finds them by name.
+`ScoutUtility.kt` builds stored records for scout tests: `testLocation` in Denver and `testEventLocation` at a given location. `answerLocations` (`streetlight.model.testing`) takes the locations it holds and finds them by name.

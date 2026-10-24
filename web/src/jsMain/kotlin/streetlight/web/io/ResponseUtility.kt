@@ -9,6 +9,8 @@ import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.utility.jsonConfig
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.serializer
 import web.http.Response
 import streetlight.model.data.RecordId
@@ -70,16 +72,16 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
  * The response decoded from the CBOR [Outcome] the server writes, or a [Problem] for a failed status or a body
  * that does not decode.
  */
-suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> {
+suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> = decodeBytes(serializer<T>())
+
+/** The response decoded with [serializer] from the CBOR [Outcome] the server writes, as [decodeBytes] does. */
+suspend fun <T> Response.decodeBytes(serializer: KSerializer<T>): Outcome<T> {
     return when (status.toInt()) {
         200 -> {
             val buffer = arrayBuffer()
             val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
             try {
-                defaultCbor.decodeFromByteArray(
-                    OutcomeSerializer(serializer<T>()),
-                    bytes
-                )
+                defaultCbor.decodeFromByteArray(OutcomeSerializer(serializer), bytes)
             } catch (e: Exception) {
                 console.log("failed to parse response:\n${e}\n${url}")
                 Problem("Unable to parse response.")
@@ -89,6 +91,9 @@ suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> {
         else -> Problem("Unhandled error: $status")
     }
 }
+
+/** The CBOR format of the server's responses. */
+val defaultCbor = Cbor.Default
 
 /** The encodings a response can be asked for in. */
 enum class EncodingType(val headerValue: String) {

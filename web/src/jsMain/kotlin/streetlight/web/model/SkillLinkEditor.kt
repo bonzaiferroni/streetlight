@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Skill
 import streetlight.model.data.SkillId
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /**
  * Links an edited record to the caller's skills through [skillIdsState], the edit's `skillIds`.

@@ -7,8 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import streetlight.model.data.ChatMessage
-import streetlight.web.io.ApiClient
-import streetlight.web.io.WebChatSocket
+import kampfire.api.MessageSocket
+import streetlight.model.io.ApiClient
 
 /** A live chat over a socket, opened the first time the room becomes active. */
 class ChatRoom(
@@ -22,14 +22,14 @@ class ChatRoom(
     val messagesState = state.tapOf { it.messages }
     val messageState = state.mutableTapOf({ it.message }) { copy(message = it) }
 
-    private var socket: WebChatSocket? = null
+    private var socket: MessageSocket<ChatMessage, ChatMessage>? = null
 
     fun setIsActive(value: Boolean) {
         if (value) {
             if (socket == null) {
-                val socket = client.message.connectChat(scope)
+                val socket = client.message.connectChat()
                 scope.launch {
-                    socket.messageFlow.collect { message ->
+                    socket.messages.collect { message ->
                         state.set { copy(messages = stateNow.messages + message) }
                     }
                 }

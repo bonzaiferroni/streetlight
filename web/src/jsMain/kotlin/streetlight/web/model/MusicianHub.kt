@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Lists songs and adds new ones. */
 class MusicianHub(

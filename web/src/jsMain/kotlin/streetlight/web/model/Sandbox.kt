@@ -7,7 +7,7 @@ import kampfire.model.storeOf
 import koala.utility.dedup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.model.Toaster
 import koala.utility.launch
 import kotlin.random.Random

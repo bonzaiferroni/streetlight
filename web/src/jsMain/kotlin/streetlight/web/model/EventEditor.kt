@@ -19,7 +19,7 @@ import streetlight.model.data.Event
 import streetlight.model.data.LocationId
 import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeRight
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Creates or updates an event. */
 class EventEditor(

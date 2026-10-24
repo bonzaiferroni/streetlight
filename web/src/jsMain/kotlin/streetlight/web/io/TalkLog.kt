@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.*
+import streetlight.model.io.ApiClient
 import streetlight.web.view.CommentView
 import kotlin.uuid.Uuid
 
@@ -22,10 +23,6 @@ class TalkLog(
     private val spaceType: SpaceType,
     private val api: ApiClient,
 ) {
-    private val client: SSEClient<TalkMessage> = sseClientOf(scope) {
-        api.talk.connectTalkLog(spaceId, spaceType)
-    }
-
     private val state = storeOf(TalkLogState())
 
     val stateFlow = state.flow
@@ -40,19 +37,11 @@ class TalkLog(
     val comments = mutableListOf<Comment>()
 
     init {
-
-
         scope.launch("collect messages") {
-            client.messageFlow.collect {
+            api.talk.connectTalkLog(spaceId, spaceType).collect {
                 takeMessage(it)
             }
         }
-
-        scope.coroutineContext[Job]?.invokeOnCompletion {
-            client.disconnect()
-        }
-
-        client.connect()
     }
 
     /** The comments of the space so far. */

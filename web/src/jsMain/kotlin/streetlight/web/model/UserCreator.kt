@@ -17,7 +17,7 @@ import koala.SvgFile
 import koala.SvgPack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Creates a guest or registered account and signs in. */
 class UserCreator(

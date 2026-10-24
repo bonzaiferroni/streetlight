@@ -5,9 +5,11 @@ import kampfire.model.Url
 import koala.dom.View
 import streetlight.model.data.CapabilityStatus
 import streetlight.model.data.SellerStatus
-import streetlight.web.io.ApiClient
-import streetlight.web.io.TestApiClient
-import streetlight.web.io.TestSellerClient
+import streetlight.model.io.ApiClient
+import kampfire.api.TestTransport
+import streetlight.model.io.SellerClient
+import streetlight.model.testing.TestApiClient
+import streetlight.model.testing.answerSellers
 import streetlight.web.model.SellerConnector
 import streetlight.web.model.toaster
 import streetlight.web.view.stripeConnectForm
@@ -24,7 +26,7 @@ class StripeConnectFormTest: ViewTest() {
 
     @Test
     fun `a ready seller sees their status without opening the dialog`() = runViewTest {
-        val view = mountWith(TestSellerClient(statusOf(CapabilityStatus.Active, statusReason = null)))
+        val view = mountWith { answerSellers(statusOf(CapabilityStatus.Active, statusReason = null)) }
 
         view.awaitText("Ready")
         assertFalse(view.showsText("Stripe Dashboard"), "the dialog content should stay hidden until it is opened")
@@ -32,7 +34,7 @@ class StripeConnectFormTest: ViewTest() {
 
     @Test
     fun `a star who has not started selling is sent to the onboarding link`() = runViewTest {
-        val view = mountWith(TestSellerClient())
+        val view = mountWith { answerSellers() }
 
         view.awaitText("Not connected")
         view.clickButton("Manage")
@@ -46,7 +48,7 @@ class StripeConnectFormTest: ViewTest() {
     @Test
     fun `a restricted seller sees the reason`() = runViewTest {
         val status = statusOf(CapabilityStatus.Restricted, statusReason = "rejected_other")
-        val view = mountWith(TestSellerClient(status))
+        val view = mountWith { answerSellers(status) }
 
         view.awaitText("Restricted")
         view.clickButton("Manage")
@@ -56,7 +58,7 @@ class StripeConnectFormTest: ViewTest() {
 
     @Test
     fun `a seller under review is offered nothing to do`() = runViewTest {
-        val view = mountWith(TestSellerClient(statusOf(CapabilityStatus.Pending, statusReason = null)))
+        val view = mountWith { answerSellers(statusOf(CapabilityStatus.Pending, statusReason = null)) }
 
         view.awaitText("Under review")
         view.clickButton("Manage")
@@ -67,7 +69,7 @@ class StripeConnectFormTest: ViewTest() {
 
     @Test
     fun `a failed onboarding request shows its problem and opens nothing`() = runViewTest {
-        val view = mountWith(TestSellerClient(onOnboard = { CoreProblem.Something }))
+        val view = mountWith { answerSellers(onOnboard = { CoreProblem.Something }) }
 
         view.awaitText("Not connected")
         view.clickButton("Manage")
@@ -78,8 +80,8 @@ class StripeConnectFormTest: ViewTest() {
         assertTrue(opened.isEmpty(), "a failed request should not leave the app")
     }
 
-    private fun mountWith(sellers: TestSellerClient): View = mount {
-        context(SellerConnector(contentScope, sellers, toaster) { opened.add(it) }) {
+    private fun mountWith(configure: TestTransport.() -> Unit): View = mount {
+        context(SellerConnector(contentScope, SellerClient(TestTransport(configure)), toaster) { opened.add(it) }) {
             stripeConnectForm()
         }
     }

@@ -73,6 +73,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.cbor)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.ktor.http)
             implementation(libs.kotlinx.html)
             implementation(kotlinWrappers.css)
             implementation(project(":model"))

@@ -9,7 +9,10 @@ import kampfire.model.toDataOr
 import koala.Image
 import kampfire.model.MutableTap
 import streetlight.model.data.ImageTarget
-import streetlight.web.io.ApiClient
+import js.typedarrays.Int8Array
+import streetlight.model.io.ApiClient
+import web.http.arrayBuffer
+import web.http.fetch
 
 /** Uploads the image in [imageField] when it is still a local blob, at the sizes of [target]. */
 class ImageEditor(
@@ -38,5 +41,6 @@ suspend fun uploadImage(image: Image, target: ImageTarget, messenger: Messenger?
 suspend fun uploadImage(image: Image, target: ImageTarget, api: ApiClient): Outcome<Image> {
     if (!image.url.isBlob) error("is not a blob")
     println("uploading image: $image")
-    return api.user.uploadImageBlob(image, target)
+    val buffer = fetch(image.url.value).arrayBuffer()
+    return api.user.uploadImage(image, Int8Array(buffer).unsafeCast<ByteArray>(), target)
 }

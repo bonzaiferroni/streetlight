@@ -5,7 +5,7 @@ import streetlight.model.data.DefaultLayout
 import streetlight.model.data.PageDesign
 import streetlight.model.data.PageLayout
 import streetlight.model.data.PageTheme
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Edits the layout and theme of a page's design. */
 class DesignEditor(

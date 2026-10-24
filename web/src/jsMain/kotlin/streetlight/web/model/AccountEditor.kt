@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Account
 import streetlight.model.data.EmailStatus
 import streetlight.model.data.viableEmail
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /**
  * Edits the signed-in account: completing a guest registration, and adding, verifying, removing, or changing its

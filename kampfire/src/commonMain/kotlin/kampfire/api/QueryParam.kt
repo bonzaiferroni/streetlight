@@ -144,6 +144,9 @@ class PathBuilder(
         value?.let { params.append(param.key, param.toString(it)) }
     }
 
+    /** The parameters written so far. */
+    fun buildParameters(): Parameters = params.build()
+
     /** The base path followed by the encoded query string of the parameters written so far. */
     fun build(): String {
         val query = params.build().formUrlEncode()

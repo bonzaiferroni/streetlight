@@ -9,7 +9,7 @@ import koala.model.FetcherContent
 import koala.model.NullContent
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.LocationAppRoute
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import web.window.window
 
 /**

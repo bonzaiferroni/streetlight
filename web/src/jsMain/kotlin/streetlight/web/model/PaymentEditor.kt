@@ -10,7 +10,7 @@ import streetlight.model.data.PaymentEdit
 import streetlight.model.data.toCentsLabel
 import streetlight.model.data.toCentsOrNull
 import streetlight.model.data.toPercentLabel
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /**
  * Edits [edit], a new payment for one of the star's offerings, and creates it. A customer's email and name that

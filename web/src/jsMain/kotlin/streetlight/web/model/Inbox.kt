@@ -24,7 +24,7 @@ import kampfire.model.TimeCursor
 import streetlight.model.data.ReplyMessage
 import streetlight.model.data.Star
 import kampfire.model.requestWithCursor
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.io.OmniClient
 
 /**

@@ -14,16 +14,15 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import streetlight.model.ui.LocationAppRoute
 import streetlight.model.ui.LocationAppScreen
-import streetlight.web.io.ApiClient
-import streetlight.web.io.BrowserApiClient
-import streetlight.web.io.FetchClient
+import streetlight.model.io.ApiClient
+import streetlight.web.io.WebTransport
 import streetlight.web.model.Toaster
 
 /** The services of a LocationApp, one of each, created on first use. */
 val locationAppModule = module {
     single { MainScope() + appExceptionHandler + LaunchTelemetry("LocationApp") }
-    single { FetchClient() }
-    single<ApiClient> { BrowserApiClient(get()) }
+    single { WebTransport() }
+    single { ApiClient(get<WebTransport>()) }
 
     single { Toaster(get()) } bind Messenger::class
     single { Portal(LocationAppRoute, LocationAppScreen.portalScreens) }

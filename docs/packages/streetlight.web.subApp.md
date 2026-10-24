@@ -10,7 +10,7 @@ The browser half of each sub-app: its start, its portal, its Koin module and its
 |---|---|
 | `streetlight.web.shell` | The sub-app's shells |
 | `streetlight.web.interop` | The `wire` functions and the global functions a sub-app takes from the app |
-| `streetlight.web.io` | `ApiClient` |
+| `streetlight.model.io` | `ApiClient` |
 | `streetlight.model.ui` | The sub-app's screens and routes |
 | `koala.dom`, `koala.model` | Views, `Portal`, `RouteInflator` |
 

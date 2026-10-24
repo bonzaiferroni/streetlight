@@ -18,7 +18,7 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.toEdit
 import streetlight.model.data.toEditOrNull
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.io.OSMClient
 
 /** The onboarding of a location's owner, finding their location in Streetlight or in OpenStreetMap, then editing it. */

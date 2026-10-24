@@ -9,7 +9,7 @@ View models, each holding the state behind one view and the calls that change it
 | Package | Provides |
 |---|---|
 | `streetlight.model` | DTOs and routes |
-| `streetlight.web.io` | `ApiClient` |
+| `streetlight.model.io` | `ApiClient` |
 | `kampfire.model` | `Store`, `Tap`, `Messenger` and `Outcome` |
 | `koala.model` | `Portal` and `GeoCamera` |
 | `kotlinx.coroutines` | View model work |

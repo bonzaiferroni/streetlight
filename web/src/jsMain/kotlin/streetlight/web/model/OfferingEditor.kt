@@ -15,7 +15,7 @@ import streetlight.model.data.toCentsLabel
 import streetlight.model.data.toCentsOrNull
 import streetlight.model.data.toPercentLabel
 import kotlinx.coroutines.CoroutineScope
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Edits [edit], a new offering or one of the star's, and saves it. */
 class OfferingEditor(

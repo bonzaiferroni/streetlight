@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.BugEdit
 import streetlight.model.data.Platform
 import streetlight.model.ui.Screen
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Sends the bug report being written, with the screen, path, and device it came from. */
 class BugReporter(private val scope: CoroutineScope, private val api: ApiClient) {

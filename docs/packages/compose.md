@@ -12,7 +12,8 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `androidx.navigation3` | The back stack and `NavDisplay` |
 | `androidx.lifecycle` | `ViewModel`, and its store per back stack entry |
 | `koin` | Services and view models, through `koin-compose` |
-| `model` | Entities, DTOs and `Api` |
+| `io.ktor.client` | `AppTransport`, over the CIO engine |
+| `model` | Entities, DTOs, `Api`, and `ApiClient` from `streetlight.model.io` |
 | `kampfire.model` | `Store` and `Tap` |
 | `koala.modifier` | The theme's defaults and types, `Rgb` and `Glow`, through `model` |
 
@@ -21,6 +22,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | Package | Holds |
 |---|---|
 | `streetlight.compose.model` | Routes, `Portal`, `appModule`, services and view models |
+| `streetlight.compose.io` | `AppTransport` |
 | `streetlight.compose.view` | Composables that take a model or the `Portal`, including the view of each route |
 | `streetlight.compose.utility` | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
 
@@ -43,6 +45,7 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `Portal` | `Portal` (`koala.model`) |
 | `AppPortal` | `viewPortal` |
 | `appModule` | `webModule` |
+| `AppTransport` | `WebTransport` |
 | `FooView` | `viewFoo` |
 | `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
 | `AppColors` | The color custom properties of `ThemeCss` |
@@ -59,6 +62,10 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 `appModule` is the Koin module holding the app's services and view models. `App()` starts Koin with it through `KoinApplication`, above the `Portal`. A composable reaches a service with `koinInject()`.
 
 A service or view model takes its collaborators through its constructor, and Koin supplies them. `Portal` is not in Koin, since it is Compose saved state.
+
+## API
+
+`AppTransport` is the app's `ApiTransport`, over Ktor with the session's cookies kept in memory. `appModule` registers it with the server's URL and builds `ApiClient` over it. A service or view model that calls the API takes `ApiClient` through its constructor.
 
 ## View Models
 

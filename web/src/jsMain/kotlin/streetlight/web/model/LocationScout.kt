@@ -21,7 +21,7 @@ import streetlight.model.data.PostId
 import streetlight.model.data.PostType
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.toEditOrNull
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import streetlight.web.io.OSMClient
 
 /**

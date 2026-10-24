@@ -3,9 +3,9 @@ package streetlight.web.integration
 import koala.dom.View
 import streetlight.model.data.Offering
 import streetlight.model.data.OfferingId
-import streetlight.web.io.ApiClient
-import streetlight.web.io.TestApiClient
-import streetlight.web.io.TestOfferingClient
+import streetlight.model.io.ApiClient
+import streetlight.model.testing.TestApiClient
+import streetlight.model.testing.answerOfferings
 import streetlight.web.view.sellerDash
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,9 +15,9 @@ import kotlin.uuid.Uuid
 
 class OfferingsTest: ViewTest() {
 
-    private val offerings = TestOfferingClient()
+    private val offerings = mutableListOf<Offering>()
 
-    override fun api(): ApiClient = TestApiClient(offering = offerings)
+    override fun api(): ApiClient = TestApiClient { answerOfferings(offerings) }
 
     @Test
     fun `a star creates an offering and sees it in their list`() = runViewTest {
@@ -31,12 +31,12 @@ class OfferingsTest: ViewTest() {
         view.clickButton("Save")
 
         view.awaitText("Website Build")
-        assertEquals("Website Build", offerings.offerings.single().title, "the offering should be created")
+        assertEquals("Website Build", offerings.single().title, "the offering should be created")
     }
 
     @Test
     fun `a star edits an offering and the list shows the change`() = runViewTest {
-        offerings.offerings.add(offeringOf("Website Build"))
+        offerings.add(offeringOf("Website Build"))
         val view = mountPanel()
 
         view.awaitText("Website Build")
@@ -47,7 +47,7 @@ class OfferingsTest: ViewTest() {
 
         view.awaitText("Site Rescue")
         assertFalse(view.showsText("Website Build"), "the list should show the new title in place of the old")
-        assertEquals(1, offerings.offerings.size, "the edit should update the offering rather than add one")
+        assertEquals(1, offerings.size, "the edit should update the offering rather than add one")
     }
 
     @Test
@@ -61,7 +61,7 @@ class OfferingsTest: ViewTest() {
         view.clickButton("Save")
 
         view.awaitText("missing: price")
-        assertTrue(offerings.offerings.isEmpty(), "an offering without a price should not be created")
+        assertTrue(offerings.isEmpty(), "an offering without a price should not be created")
     }
 
     private fun mountPanel(): View = mount {

@@ -31,7 +31,7 @@ import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.model.ui.StarConfigRoute
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Fetches the content of each route from the API, or [NullContent] for a route that needs none. */
 class AppContentFetcher(

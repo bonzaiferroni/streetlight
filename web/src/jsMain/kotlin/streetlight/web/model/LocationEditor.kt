@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.external.Address
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Creates or updates a location. */
 class LocationEditor(

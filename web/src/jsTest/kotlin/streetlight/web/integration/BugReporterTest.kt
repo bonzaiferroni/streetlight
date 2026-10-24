@@ -5,9 +5,11 @@ import koala.dom.View
 import koala.model.Portal
 import streetlight.model.ui.FrontDeskRoute
 import streetlight.model.ui.Screen
-import streetlight.web.io.ApiClient
-import streetlight.web.io.TestApiClient
-import streetlight.web.io.TestBugClient
+import streetlight.model.io.ApiClient
+import kampfire.api.TestTransport
+import streetlight.model.data.BugEdit
+import streetlight.model.testing.TestApiClient
+import streetlight.model.testing.answerBugs
 import streetlight.web.view.viewBugReporter
 import web.window.window
 import kotlin.test.Test
@@ -17,9 +19,9 @@ import kotlin.test.assertTrue
 
 class BugReporterTest: ViewTest() {
 
-    private val bug = TestBugClient()
+    private val sentBugs = mutableListOf<BugEdit>()
 
-    override fun api(): ApiClient = TestApiClient(bug = bug)
+    override fun api(): ApiClient = TestApiClient { answerBugs(sentBugs) }
 
     @Test
     fun `a reported bug reaches the client and clears the editor`() = runViewTest {
@@ -28,8 +30,8 @@ class BugReporterTest: ViewTest() {
         view.writeIn("bug", DESCRIPTION)
         view.clickButton("Send")
 
-        awaitUntil("the report to reach the client") { bug.sent.isNotEmpty() }
-        assertEquals(DESCRIPTION, bug.sent.single().description.value)
+        awaitUntil("the report to reach the client") { sentBugs.isNotEmpty() }
+        assertEquals(DESCRIPTION, sentBugs.single().description.value)
         view.awaitText("Bug Reported.")
         view.awaitEditorCleared("bug")
     }
@@ -40,13 +42,13 @@ class BugReporterTest: ViewTest() {
 
         view.clickButton("Send")
 
-        assertTrue(bug.sent.isEmpty(), "a blank report should not reach the client")
+        assertTrue(sentBugs.isEmpty(), "a blank report should not reach the client")
         assertFalse(view.showsText("Bug Reported."), "a blank report should not report a sent bug")
     }
 
     @Test
     fun `a failed send keeps the description in the editor`() = runViewTest {
-        val view = mountWith(TestBugClient(onReport = { CoreProblem.Something }))
+        val view = mountWith { answerBugs(onReport = { CoreProblem.Something }) }
 
         view.writeIn("bug", DESCRIPTION)
         view.clickButton("Send")
@@ -65,7 +67,7 @@ class BugReporterTest: ViewTest() {
         view.clickButton("Send")
 
         view.awaitText("Bug Reported.")
-        assertEquals(1, bug.sent.size, "the second press should have been dropped")
+        assertEquals(1, sentBugs.size, "the second press should have been dropped")
     }
 
     @Test
@@ -76,15 +78,15 @@ class BugReporterTest: ViewTest() {
         view.writeIn("bug", DESCRIPTION)
         view.clickButton("Send")
 
-        awaitUntil("the report to reach the client") { bug.sent.isNotEmpty() }
-        val sent = bug.sent.single()
+        awaitUntil("the report to reach the client") { sentBugs.isNotEmpty() }
+        val sent = sentBugs.single()
         assertEquals(Screen.Feedback, sent.screen)
         assertEquals(window.location.pathname, sent.path)
         assertTrue(sent.deviceAgent?.contains("viewport=") == true, "the device agent should carry the viewport, was: ${sent.deviceAgent}")
     }
 
-    private fun mountWith(client: TestBugClient): View {
-        app = buildTestApp(scope, TestApiClient(bug = client))
+    private fun mountWith(configure: TestTransport.() -> Unit): View {
+        app = buildTestApp(scope, TestApiClient(configure))
         return mount { viewBugReporter() }
     }
 }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LeadType
 import streetlight.model.data.StarLead
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** The lead field of a scout: a url of [leadType] sent for the crawler to read, from [galaxy] when there is one. */
 class LeadEditor(

@@ -11,7 +11,7 @@ import koala.utility.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.StarEdit
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Edits the signed-in star's profile and its design. */
 class ProfileEditor(

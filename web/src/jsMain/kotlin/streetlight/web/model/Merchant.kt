@@ -12,7 +12,7 @@ import streetlight.model.data.Payment
 import streetlight.model.data.PaymentEdit
 import streetlight.model.data.toPaymentEdit
 import streetlight.model.data.toEdit
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /**
  * The star's offerings, payments and customers, and the [SellerConfigState.focus] the panel shows in place of them: an [OfferingEdit] for an

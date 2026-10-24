@@ -13,7 +13,7 @@ import streetlight.model.data.PageLayout
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
 import streetlight.model.data.TabsBlock
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import kotlin.uuid.Uuid
 
 /** Edits a page layout as a tree of block and container editors, with blocks moved by a start and finish. */

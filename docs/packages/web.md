@@ -25,7 +25,7 @@ The module follows the map in `koala.md` under Packages.
 | `streetlight.web.model` | View models and services, and the models the server renders from |
 | `streetlight.web.view` | Views and the parts of views that take a model, and the stylesheets of views |
 | `streetlight.web.interop` | Global functions markup calls, and the `wire` functions |
-| `streetlight.web.io` | Clients of the server and of outside services |
+| `streetlight.web.io` | The browser's transport to the server, services built on its streams, and clients of outside services |
 | `streetlight.web.subApp` | The views, services and fetchers of sub-apps |
 | `streetlight.web.utility` | Utilities whose target is not a web type |
 

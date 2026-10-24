@@ -3,8 +3,10 @@ package streetlight.web.io
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import streetlight.model.data.OmniHistory
+import streetlight.model.io.ApiClient
 import streetlight.model.data.OmniMessage
 import streetlight.model.data.OmniRecord
 
@@ -13,24 +15,25 @@ class OmniClient(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
-    private val client: SSEClient<OmniMessage> = sseClientOf(scope) { api.omniLog.connectOmniLog() }
-
     private val state = storeOf(OmniLogState())
     val recordsState = state.tapOf { it.records }
     val lastRecordState = recordsState.tapOf { it.lastOrNull() }
 
     private val records = mutableListOf<OmniRecord>()
 
-    init {
-        scope.launch {
-            client.messageFlow.collect {
-                takeMessage(it)
-            }
+    private var job: Job? = null
+
+    /** Follows the log until [disconnect]. */
+    fun connect() {
+        job = scope.launch {
+            api.omniLog.connectOmniLog().collect { takeMessage(it) }
         }
     }
 
-    fun connect() = client.connect()
-    fun disconnect() = client.disconnect()
+    fun disconnect() {
+        job?.cancel()
+        job = null
+    }
 
     private fun takeMessage(message: OmniMessage) {
         when (message) {

@@ -8,9 +8,11 @@ import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackId
 import streetlight.model.data.FeedbackType
 import streetlight.model.data.Platform
-import streetlight.web.io.ApiClient
-import streetlight.web.io.TestApiClient
-import streetlight.web.io.TestFeedbackClient
+import streetlight.model.io.ApiClient
+import kampfire.api.TestTransport
+import streetlight.model.data.FeedbackEdit
+import streetlight.model.testing.TestApiClient
+import streetlight.model.testing.answerFeedback
 import streetlight.web.model.Toaster
 import streetlight.web.view.viewFeedbackHub
 import kotlin.test.Test
@@ -21,9 +23,9 @@ import kotlin.time.Instant
 
 class FeedbackHubTest: ViewTest() {
 
-    private val feedback = TestFeedbackClient()
+    private val sentFeedback = mutableListOf<FeedbackEdit>()
 
-    override fun api(): ApiClient = TestApiClient(feedback = feedback)
+    override fun api(): ApiClient = TestApiClient { answerFeedback(sentFeedback) }
 
     @Test
     fun `a sent note reaches the client and clears the editor`() = runViewTest {
@@ -32,8 +34,8 @@ class FeedbackHubTest: ViewTest() {
         view.writeIn("feedback", NOTE)
         view.clickButton("Send")
 
-        awaitUntil("the note to reach the client") { feedback.sent.isNotEmpty() }
-        assertEquals(NOTE, feedback.sent.single().text.value)
+        awaitUntil("the note to reach the client") { sentFeedback.isNotEmpty() }
+        assertEquals(NOTE, sentFeedback.single().text.value)
         view.awaitText("Feedback Sent.")
         view.awaitEditorCleared("feedback")
     }
@@ -44,13 +46,13 @@ class FeedbackHubTest: ViewTest() {
 
         view.clickButton("Send")
 
-        assertTrue(feedback.sent.isEmpty(), "a blank note should not reach the client")
+        assertTrue(sentFeedback.isEmpty(), "a blank note should not reach the client")
         assertFalse(view.showsText("Feedback Sent."), "a blank note should not report a sent note")
     }
 
     @Test
     fun `a failed send keeps the note in the editor`() = runViewTest {
-        val view = mountWith(TestFeedbackClient(onCreate = { CoreProblem.Something }))
+        val view = mountWith { answerFeedback(onCreate = { CoreProblem.Something }) }
 
         view.writeIn("feedback", NOTE)
         view.clickButton("Send")
@@ -62,14 +64,14 @@ class FeedbackHubTest: ViewTest() {
 
     @Test
     fun `the public feed lists existing feedback`() = runViewTest {
-        val view = mountWith(TestFeedbackClient(feed = mutableListOf(publicFeedback(NOTE))))
+        val view = mountWith { answerFeedback(feed = listOf(publicFeedback(NOTE))) }
 
         view.awaitText(NOTE)
     }
 
     @Test
     fun `a failed feed load is reported to the user`() = runViewTest {
-        mountWith(TestFeedbackClient(onFeed = { CoreProblem.Something }))
+        mountWith { answerFeedback(onFeed = { CoreProblem.Something }) }
 
         awaitUntil("the problem to reach the toaster") {
             app.get<Toaster>().stateNow.messages.any {
@@ -85,7 +87,7 @@ class FeedbackHubTest: ViewTest() {
         view.chooseIn("sharing", "Share Publicly")
         view.sendNote()
 
-        assertFalse(feedback.sent.single().isPrivate, "a note shared publicly should not be sent as private")
+        assertFalse(sentFeedback.single().isPrivate, "a note shared publicly should not be sent as private")
     }
 
     @Test
@@ -94,7 +96,7 @@ class FeedbackHubTest: ViewTest() {
 
         view.sendNote()
 
-        assertTrue(feedback.sent.single().isPrivate, "a note should be private by default")
+        assertTrue(sentFeedback.single().isPrivate, "a note should be private by default")
     }
 
     @Test
@@ -104,7 +106,7 @@ class FeedbackHubTest: ViewTest() {
         view.chooseIn("type", FeedbackType.Issue.label)
         view.sendNote()
 
-        assertEquals(FeedbackType.Issue, feedback.sent.single().feedbackType)
+        assertEquals(FeedbackType.Issue, sentFeedback.single().feedbackType)
     }
 
     @Test
@@ -116,8 +118,8 @@ class FeedbackHubTest: ViewTest() {
         view.writeIn("feedback", SECOND_NOTE)
         view.clickButton("Send")
 
-        awaitUntil("the second note to reach the client") { feedback.sent.size == 2 }
-        assertEquals(SECOND_NOTE, feedback.sent.last().text.value)
+        awaitUntil("the second note to reach the client") { sentFeedback.size == 2 }
+        assertEquals(SECOND_NOTE, sentFeedback.last().text.value)
     }
 
     @Test
@@ -129,17 +131,17 @@ class FeedbackHubTest: ViewTest() {
         view.clickButton("Send")
 
         view.awaitText("Feedback Sent.")
-        assertEquals(1, feedback.sent.size, "the second press should have been dropped")
+        assertEquals(1, sentFeedback.size, "the second press should have been dropped")
     }
 
     private suspend fun View.sendNote(note: String = NOTE) {
         writeIn("feedback", note)
         clickButton("Send")
-        awaitUntil("the note to reach the client") { feedback.sent.isNotEmpty() }
+        awaitUntil("the note to reach the client") { sentFeedback.isNotEmpty() }
     }
 
-    private fun mountWith(client: TestFeedbackClient): View {
-        app = buildTestApp(scope, TestApiClient(feedback = client))
+    private fun mountWith(configure: TestTransport.() -> Unit): View {
+        app = buildTestApp(scope, TestApiClient(configure))
         return mount { viewFeedbackHub() }
     }
 }

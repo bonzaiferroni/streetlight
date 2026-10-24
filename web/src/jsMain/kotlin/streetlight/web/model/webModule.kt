@@ -25,9 +25,8 @@ import streetlight.model.data.StarEdit
 import streetlight.model.ui.EarthMap
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
-import streetlight.web.io.ApiClient
-import streetlight.web.io.BrowserApiClient
-import streetlight.web.io.FetchClient
+import streetlight.model.io.ApiClient
+import streetlight.web.io.WebTransport
 import streetlight.web.io.OSMClient
 import streetlight.web.io.OmniClient
 import streetlight.web.io.TransitClient
@@ -38,11 +37,11 @@ val webModule = module {
     single { MainScope() + appExceptionHandler + LaunchTelemetry("App") }
     single { SiteConfig(get()) }
     single { CredentialStore() }
-    single { FetchClient() }
+    single { WebTransport() }
 
     // clients
     single { TransitClient(get()) }
-    single<ApiClient> { BrowserApiClient(get()) }
+    single { ApiClient(get<WebTransport>()) }
     single { OSMClient() }
 
     single { DataCache(get()) }

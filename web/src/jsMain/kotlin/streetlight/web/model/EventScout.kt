@@ -18,7 +18,7 @@ import streetlight.model.data.LeadType
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostId
 import streetlight.model.data.PostType
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /**
  * Posts an event to [galaxy] in stages: find or create its location with [LocationScout], then find or create

@@ -13,7 +13,7 @@ import streetlight.model.data.SkillEdit
 import streetlight.model.data.SkillTag
 import streetlight.model.data.interviewQuestions
 import kotlinx.coroutines.CoroutineScope
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Edits [edit], a new skill or one of the star's, and saves it, its interview following its tags in [scope]. */
 class SkillEditor(

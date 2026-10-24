@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kotlinx.coroutines.CoroutineScope
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 
 /** Data loaded once per session and cleared at sign-out. */
 class DataCache(val api: ApiClient) {

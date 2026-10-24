@@ -2,42 +2,24 @@
 
 ## Introduction
 
-The web client's communication with the Streetlight server and with external services.
+The web client's transport to the Streetlight server, the services built on its streams, and the clients of external services.
 
 ## Dependencies
 
 | Package | Provides |
 |---|---|
+| `streetlight.model.io` | `ApiClient` |
 | `streetlight.model` | `Api` endpoints and DTOs |
-| `kampfire.api` | Endpoint and parameter types |
+| `kampfire.api` | `ApiTransport` and the endpoint and parameter types |
 | `kampfire.model` | `Outcome` |
-| `kotlinx.coroutines` | Asynchronous calls |
+| `kotlinx.coroutines` | Asynchronous calls and streams |
 
-## Naming
+## Transport
 
-| Type | Pattern |
-|---|---|
-| `FooClient` | The interface holding the calls of one model |
-| `BrowserFooClient` | Its implementation against `FetchClient` |
-| `TestFooClient` | Its test implementation, in `jsTest` |
+`WebTransport` is the browser's `ApiTransport`: calls go through `fetch`, event streams through `EventSource`, and sockets through `WebSocket`. Its cousin in the app is `AppTransport`.
 
-## Clients
+A call that only the browser makes, such as the GTFS protobuf feed `TransitClient` reads, is a member of `WebTransport` and is reached through a client outside `ApiClient`.
 
-`ApiClient` is a facade holding one client per model, as `api.event`. It mirrors `DaoFacade` on the server. A client covers a model, not an endpoint root.
+## Streams
 
-`FetchClient` performs every HTTP call to the Streetlight API. A service outside that API, such as OpenStreetMap, has its own client outside the facade.
-
-## Workflows
-
-CreateApiFunction(Foo):
-* Add the suspend function to the `FooClient` interface, returning `Outcome<T>`.
-* Implement it in `BrowserFooClient` with `client.getApi()` or `client.postApi()`, passing the `Api` endpoint and any parameters or body.
-* Add it to `TestFooClient`.
-
-CreateApiClient(Foo):
-* Create `FooClient`, `BrowserFooClient` and `TestFooClient` for the endpoints under `Api.Foos`.
-* Add a `foo` property to `ApiClient`, `BrowserApiClient` and `TestApiClient`. The property name is singular.
-
-## Known Issues
-
-The endpoints under `Api.Posts` are served by `PostClient` together with mark and curator endpoints that live under other roots. A client covers a model, not an endpoint root, and these have not been sorted against that rule.
+A service that follows a stream, such as `TalkLog` or `OmniClient`, collects the `Flow` or `MessageSocket` its client returns in its scope. Cancelling the collection closes the stream.

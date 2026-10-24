@@ -9,7 +9,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.promise
 import kotlinx.coroutines.withTimeout
-import streetlight.web.io.ApiClient
+import streetlight.model.io.ApiClient
 import web.dom.document
 import web.html.HTMLElement
 import kotlin.js.Promise
