@@ -33,8 +33,8 @@ import streetlight.web.io.OmniClient
 import streetlight.web.io.TransitClient
 import streetlight.web.model.*
 
-/** The app's services, one of each, created on first use. */
-val appModule = module {
+/** The web client's services, one of each, created on first use. */
+val webModule = module {
     single { MainScope() + appExceptionHandler + LaunchTelemetry("App") }
     single { SiteConfig(get()) }
     single { CredentialStore() }

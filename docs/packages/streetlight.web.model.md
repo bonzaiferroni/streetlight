@@ -16,7 +16,7 @@ View models, each holding the state behind one view and the calls that change it
 
 ## Services
 
-`appModule` is the Koin module holding every browser-side service. `AppContainer` wraps the resulting Koin instance and is reached through `ViewScope.app`.
+`webModule` is the Koin module holding every browser-side service. `AppContainer` wraps the resulting Koin instance and is reached through `ViewScope.app`.
 
 A view model with per-view state is not registered in the module. It is built by a factory extension on `AppContainer` that takes the scope and any starting value, so each view gets its own.
 
@@ -46,7 +46,7 @@ fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())
 ```
 
-`RouteDock` is an app-wide model, registered in `appModule` and documented in `streetlight.web.view.md`.
+`RouteDock` is an app-wide model, registered in `webModule` and documented in `streetlight.web.view.md`.
 
 ## Scope
 
@@ -122,7 +122,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 
 | Model | Role |
 |---|---|
-| [`appModule`](../../web/src/jsMain/kotlin/streetlight/web/model/appModule.kt) | The app's services, and the factories of per-view models |
+| [`webModule`](../../web/src/jsMain/kotlin/streetlight/web/model/webModule.kt) | The web client's services, and the factories of per-view models |
 | [`AppFacade.api, AppFacade.portal…`](../../web/src/jsMain/kotlin/streetlight/web/model/StreetlightFacade.kt) | Services reached from any `AppFacade` |
 | [`SessionClient`](../../web/src/jsMain/kotlin/streetlight/web/model/SessionClient.kt) | The signed-in star, and sign-in and sign-out |
 | [`AppContentFetcher`](../../web/src/jsMain/kotlin/streetlight/web/model/AppContentFetcher.kt) | The content of each route |

@@ -31,7 +31,7 @@ testcontainers = "2.0.5"
 room = "2.8.1"
 ksp = "2.2.10-2.0.2"
 sqlite = "2.6.1"
-koin-bom = "4.1.1"  # Stable version
+koin-bom = "4.2.2"  # Stable version
 
 ksoup = "0.2.6"
 playwright = "1.61.0"

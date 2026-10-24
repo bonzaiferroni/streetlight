@@ -17,7 +17,7 @@ import koala.utility.launch
 import streetlight.web.interop.appGlobalFunctions
 import streetlight.web.page.AppOverlay
 import web.dom.document
-import streetlight.web.model.appModule
+import streetlight.web.model.webModule
 import streetlight.web.utility.element
 import streetlight.web.model.portal
 import streetlight.web.interop.wireBadge
@@ -41,7 +41,7 @@ fun viewApp() {
     // val app = createStreetlight(scope)
 
     val koin = koinApplication {
-        modules(appModule)
+        modules(webModule)
     }.koin
 
     val app = AppContainer(koin)
