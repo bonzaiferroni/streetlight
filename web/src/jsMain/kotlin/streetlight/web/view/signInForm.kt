@@ -87,7 +87,7 @@ fun ViewScope.guestSignInForm(username: Username) {
             checkBox(cred.stayLoggedInField, "Stay signed in")
         }
         formSubmit("Sign in", {
-            val request = LoginRequest(username.value, cred.stateNow.stayLoggedIn)
+            val request = LoginRequest(username.value, isTemp = !cred.stateNow.stayLoggedIn)
             gate.signIn(request, messages)
         }, messages)
     }

@@ -26,6 +26,10 @@ An operation is a function on the narrowest scope it uses, following `streetligh
 
 An operation reaches the outside through `client`, never through a client of its own. `ImageService.kt` downloads through `client.image`, so a test replaces the download with a fake.
 
+## Credential Changes
+
+An account that has a viable email confirms a change to its email or password with its current password. An account without one changes either on its session alone: declining an email never costs a star control of their account's security.
+
 ## Image Intake
 
 An image comes in as an upload or as a url the server downloads, and both are bounded before anything decodes them.
