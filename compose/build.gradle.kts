@@ -40,8 +40,18 @@ kotlin {
     }
 }
 
+// the app's resources, with the site's icons from www/icon as files/icon
+val syncComposeResources by tasks.registering(Sync::class) {
+    from("src/commonMain/composeResources")
+    from(rootProject.layout.projectDirectory.dir("www/icon")) {
+        into("files/icon")
+    }
+    into(layout.buildDirectory.dir("generated/appComposeResources"))
+}
+
 compose.resources {
     packageOfResClass = "streetlight.compose.resources"
+    customDirectory("commonMain", layout.dir(syncComposeResources.map { it.destinationDir }))
 }
 
 compose.desktop {

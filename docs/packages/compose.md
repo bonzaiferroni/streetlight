@@ -53,6 +53,7 @@ A part with a counterpart in `web` follows that counterpart's specification, exc
 | `KoalaTypography` | `TypographyCss` and the text classes, such as `TextSmall` |
 | `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` |
+| `Icon` | `icon` (`koala.component`) |
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
 | `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
@@ -96,6 +97,12 @@ val entities by model.entitiesState.collectAsState()
 ## Images
 
 An image is shown with Coil's `AsyncImage`, given the image's `Url`. The image loader `App()` sets resolves a relative `Url` against `AppConfig.apiUrl`.
+
+## Icons
+
+The app bundles the site's icons. The build syncs `www/icon`, the files the web serves, into the app's resources as `files/icon`, so an `Svg` from the shared code, such as a variant of an `SvgFile` pack, names its bundled file: `/www/icon/foo.svg` is `files/icon/foo.svg`.
+
+`Icon` draws an `Svg` tinted with a color read while drawing, filling the icon's shape as the web's mask does. `rememberSvgPainter` reads an icon's file once, keeps its bytes, and is empty while it loads. An animated variant draws its first frame.
 
 ## Theme
 
@@ -168,6 +175,7 @@ A view declares its view model as the context parameter `model`, and the `Portal
 | Targets | `jvm()` only. An Android target lives in a module of its own |
 | Compose libraries | Catalog entries over direct coordinates, as `libs.compose.foundation`. The plugin's `compose.*` aliases are deprecated, except `compose.desktop.currentOs` |
 | Material | Excluded from `compose.desktop.currentOs`, which otherwise brings in `org.jetbrains.compose.material` |
+| Resources | `syncComposeResources` assembles `src/commonMain/composeResources` and `www/icon` into a build directory, which `compose.resources.customDirectory` makes `commonMain`'s resources. A resource is added to `src/commonMain/composeResources`, never to the build directory |
 
 ## Workflows
 
