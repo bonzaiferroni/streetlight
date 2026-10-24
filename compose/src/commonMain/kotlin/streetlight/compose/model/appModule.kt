@@ -12,6 +12,7 @@ val appModule = module {
     single { AppTransport(get<AppConfig>().apiUrl) }
     single { ApiClient(get<AppTransport>()) }
     singleOf(::ThemeHost)
+    singleOf(::AppSettings)
     viewModelOf(::HomeModel)
 }
 

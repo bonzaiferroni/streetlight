@@ -28,14 +28,14 @@ import streetlight.compose.model.toThemeColor
 import streetlight.compose.model.topDetails
 import streetlight.model.data.Entity
 
-/** The layouts of a feed row. The cousin of the web's `FeedMode`, which also has `Row` and `Grid`. */
-enum class FeedMode { Minimal }
+/** The layouts of a feed row, the cousin of the web's `FeedMode`. `Row` and `Grid` draw as `Minimal` until they are built. */
+enum class FeedMode { Minimal, Row, Grid }
 
 /** An entity in a feed, laid out by [mode]. The cousin of the web's `feedRow`. */
 @Composable
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
     when (mode) {
-        FeedMode.Minimal -> MinimalFeedRow(entity)
+        FeedMode.Minimal, FeedMode.Row, FeedMode.Grid -> MinimalFeedRow(entity)
     }
 }
 

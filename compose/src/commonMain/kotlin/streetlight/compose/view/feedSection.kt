@@ -1,0 +1,116 @@
+package streetlight.compose.view
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.em
+import kampfire.model.MutableTap
+import koala.Svg
+import koala.SvgFile
+import streetlight.compose.model.heading
+import streetlight.compose.model.toSvg
+import streetlight.compose.modifier.filigree
+import streetlight.compose.modifier.opacityHigh
+import streetlight.compose.utility.collectAsState
+import streetlight.model.data.EntityFeed
+import streetlight.model.data.FeedType
+
+/**
+ * Adds the feed section to this list: the heading of the [feed]'s type in a filigree, between the menu of the types its
+ * context offers, bound to [typeState], and the switch of [FeedMode], bound to [modeState]; then the feed's rows, or
+ * a message when it has none. The cousin of the web's `feedSection`.
+ */
+fun LazyListScope.feedSection(
+    feed: EntityFeed,
+    typeState: MutableTap<FeedType>,
+    modeState: MutableTap<FeedMode>,
+) {
+    val source = feed.source
+    val types = feed.types ?: source?.context?.types.orEmpty()
+
+    item { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
+    if (feed.entities.isEmpty()) item { EmptyFeed() }
+    items(feed.entities) { entity ->
+        val mode by modeState.collectAsState()
+        FeedRow(entity, mode)
+    }
+}
+
+/** The heading of a feed of [type] in a filigree, the type menu left of it and the mode switch right of it. */
+@Composable
+private fun FeedHeading(type: FeedType, types: List<FeedType>, typeState: MutableTap<FeedType>, modeState: MutableTap<FeedMode>) {
+    val theme = currentTheme
+    val selectedType by typeState.collectAsState()
+    val selectedMode by modeState.collectAsState()
+
+    // the menu and the switch are the same width, so the heading stays centered
+    Row(Modifier.fillMaxWidth().padding(theme.unit), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.width(theme.unit * SwitchUnits).opacityHigh(), horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
+            types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { typeState.set(option) } }
+        }
+        BasicText(
+            text = type.heading,
+            modifier = Modifier.weight(1f).filigree(),
+            style = theme.text.heading2.copy(
+                lineHeight = 1.em,
+                textAlign = TextAlign.Center,
+                shadow = Shadow(theme.colors.paper, Offset(0f, 2f), 8f),
+            ),
+            color = { theme.colors.ink },
+            maxLines = 1,
+            softWrap = false,
+        )
+        Row(
+            Modifier.width(theme.unit * SwitchUnits).opacityHigh(),
+            horizontalArrangement = Arrangement.spacedBy(theme.unit, Alignment.End),
+        ) {
+            FeedMode.entries.forEach { option -> SwitchIcon(option.toSvg(), option == selectedMode) { modeState.set(option) } }
+        }
+    }
+}
+
+/** An option of a switch, drawn as [svg], in the primary color when [isSelected]. */
+@Composable
+private fun SwitchIcon(svg: Svg, isSelected: Boolean, onSelect: () -> Unit) {
+    val theme = currentTheme
+    Icon(
+        svg = svg,
+        color = { if (isSelected) theme.colors.primaryFg else theme.colors.ink },
+        modifier = Modifier.clickable(onClick = onSelect),
+    )
+}
+
+/** The message in place of an empty feed: an animated icon over a line of text, centered in its height. */
+@Composable
+private fun EmptyFeed() {
+    val theme = currentTheme
+    Column(
+        Modifier.fillMaxWidth().height(theme.unit * EmptyUnits),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        AnimatedIcon(SvgFile.Binoculars.animated, color = { theme.colors.ink }, size = theme.unit * 10)
+        BasicText("Nothing to show!", Modifier.opacityHigh(), style = theme.text.regular, color = { theme.colors.ink })
+    }
+}
+
+/** The width of the type menu and of the mode switch, in units: the web's `FeedSection.SwitchWidth`. */
+private const val SwitchUnits = 12
+
+/** The height of the empty feed's message, in units. */
+private const val EmptyUnits = 24

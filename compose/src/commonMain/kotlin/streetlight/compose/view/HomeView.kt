@@ -7,20 +7,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.koin.compose.koinInject
+import streetlight.compose.model.AppSettings
 import streetlight.compose.model.HomeModel
 import streetlight.compose.utility.collectAsState
 
-/** The view of [streetlight.compose.model.HomeRoute]: the map over the home feed, each entity a [FeedRow]. */
+/** The view of [streetlight.compose.model.HomeRoute]: the map over the home feed's [feedSection]. */
 context(model: HomeModel)
 @Composable
 fun HomeView() {
-    val entities by model.entitiesState.collectAsState()
+    val feed by model.feedState.collectAsState()
+    val settings = koinInject<AppSettings>()
     val isLoading by model.isLoadingState.collectAsState()
     val problem by model.problemState.collectAsState()
     val theme = currentTheme
@@ -33,14 +35,12 @@ fun HomeView() {
         return
     }
 
-    // the rows stand a line apart on their quiet background, so the theme behind draws the line between them
+    // the parts stand a line apart on their quiet background, so the theme behind draws the line between them
     LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(theme.line)) {
         item {
             MapWindow(Modifier.fillMaxWidth().padding(theme.unit).height(theme.unit * MapHeightUnits))
         }
-        items(entities) { entity ->
-            FeedRow(entity)
-        }
+        feed?.let { feedSection(it, model.feedTypeState, settings.feedModeState) }
     }
 }
 

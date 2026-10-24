@@ -39,7 +39,13 @@ fun Modifier.moonShadow(radius: Int = 0) = this then MoonShadowElement(radius)
 fun Modifier.zenBg() = this then ZenBgElement
 
 /** Draws the content at the theme's low opacity. The web's `OpacityLow`. */
-fun Modifier.opacityLow() = this then OpacityLowElement
+fun Modifier.opacityLow() = this then OpacityElement(Opacity.Low)
+
+/** Draws the content at the theme's high opacity, a step quieter than full. The web's `OpacityHigh`. */
+fun Modifier.opacityHigh() = this then OpacityElement(Opacity.High)
+
+/** The theme's opacity levels a modifier applies. */
+private enum class Opacity { Low, High }
 
 private data class BorderRadiusElement(val units: Int) : ModifierNodeElement<BorderRadiusNode>() {
     override fun create() = BorderRadiusNode(units)
@@ -124,15 +130,21 @@ private class ZenBgNode : Modifier.Node(), DrawModifierNode, CompositionLocalCon
     }
 }
 
-private data object OpacityLowElement : ModifierNodeElement<OpacityLowNode>() {
-    override fun create() = OpacityLowNode()
-    override fun update(node: OpacityLowNode) = Unit
+private data class OpacityElement(val level: Opacity) : ModifierNodeElement<OpacityNode>() {
+    override fun create() = OpacityNode(level)
+    override fun update(node: OpacityNode) {
+        node.level = level
+        node.invalidateLayer()
+    }
 }
 
-private class OpacityLowNode : Modifier.Node(), LayoutModifierNode, CompositionLocalConsumerModifierNode {
+private class OpacityNode(var level: Opacity) : Modifier.Node(), LayoutModifierNode, CompositionLocalConsumerModifierNode {
     override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
         val placeable = measurable.measure(constraints)
-        val opacity = theme.opacity.low
+        val opacity = when (level) {
+            Opacity.Low -> theme.opacity.low
+            Opacity.High -> theme.opacity.high
+        }
         return layout(placeable.width, placeable.height) {
             placeable.placeWithLayer(0, 0) { alpha = opacity }
         }
