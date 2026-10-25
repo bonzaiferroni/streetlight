@@ -37,6 +37,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `KoalaTypography` | `TypographyCss` and the text classes, such as `TextSmall` |
 | `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
 | `currentTheme.line` | The 2px of `Gap2Px` and `--outline-low` |
+| `Column(gap)`, `Row(gap)` | `Column`, `Row` with `Gap(n)` |
 | `feedSection` | `feedSection` (`streetlight.web.layout`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` (`streetlight.web.layout`) |
 | `CellGrid` | `cellGrid` (`streetlight.web.layout`) |
@@ -95,7 +96,7 @@ The fonts are in `composeResources/font`, with their license in `composeResource
 
 Spacing is a whole multiple of `currentTheme.unit`, the shortest distance that shows two elements are separate. It is half the rem, as the web's `0.5rem`. Changing it sets the density of the whole app.
 
-The unit builds the hierarchy of grouping. The elements of an item are one unit apart and the item has one unit of padding, so the content of two adjacent items is two units apart. A multiple is written `unit * 2`. A spacing that is not a whole unit is a named value. The one the theme holds is `line`, 2dp, the web's 2px: the gap between rows and the width of an outline, where a unit is too much and a single pixel too sharp. A CSS px and a dp are both reference pixels, and Compose lays out on whole device pixels, so 2px translates directly to 2.dp. Spacing between children is the parent's `Arrangement`, as `spacedBy(currentTheme.line)`, not a modifier.
+The unit builds the hierarchy of grouping. The elements of an item are one unit apart and the item has one unit of padding, so the content of two adjacent items is two units apart. A multiple is written `unit * 2`. A spacing that is not a whole unit is a named value. The one the theme holds is `line`, 2dp, the web's 2px: the gap between rows and the width of an outline, where a unit is too much and a single pixel too sharp. A CSS px and a dp are both reference pixels, and Compose lays out on whole device pixels, so 2px translates directly to 2.dp. Spacing between children is the parent's `Arrangement`, not a modifier. A gap in units is the `gap` of the `Column` and `Row` overloads in `Lines.kt`, as `Row(1)`, which take the place of foundation's where a gap is given and resolve to it where none is; any other spacing is foundation's `spacedBy`, as `spacedBy(currentTheme.line)`.
 
 ## Icons
 

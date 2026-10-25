@@ -63,7 +63,7 @@ private fun FeedHeading(type: FeedType, types: List<FeedType>, typeState: Mutabl
 
     // the menu and the switch are the same width, so the heading stays centered
     Row(Modifier.fillMaxWidth().padding(theme.unit), verticalAlignment = Alignment.CenterVertically) {
-        Row(Modifier.width(theme.unit * SwitchUnits).opacityHigh(), horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
+        Row(1, Modifier.width(theme.unit * SwitchUnits).opacityHigh()) {
             types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { typeState.set(option) } }
         }
         BasicText(

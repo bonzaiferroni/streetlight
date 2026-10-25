@@ -1,7 +1,6 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,10 +64,7 @@ private fun MinimalFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
-    Row(
-        modifier = FeedRowMod.Base.padding(theme.unit),
-        horizontalArrangement = Arrangement.spacedBy(theme.unit),
-    ) {
+    Row(1, FeedRowMod.Base.padding(theme.unit)) {
         Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1))
         Column(Modifier.weight(1f)) {
             EntityDetails(entity.topDetails, isColored = true)
@@ -97,7 +93,7 @@ private fun RowFeedRow(entity: Entity) {
 
     Layout(
         content = {
-            Row(horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
+            Row(1) {
                 Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1, outline = true))
                 EntityText(
                     entity = entity,
@@ -150,17 +146,14 @@ private fun GridFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
-    Column(
-        modifier = FeedRowMod.Base.padding(bottom = theme.unit),
-        verticalArrangement = Arrangement.spacedBy(theme.unit),
-    ) {
+    Column(1, FeedRowMod.Base.padding(bottom = theme.unit)) {
         Thumbnail(
             entity = entity,
             modifier = Modifier.fillMaxWidth().aspectRatio(GridImageRatio),
             url = entity.image?.let { it.medium ?: it.url },
             scale = ContentScale.Fit,
         )
-        Row(Modifier.padding(horizontal = theme.unit), horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
+        Row(1, Modifier.padding(horizontal = theme.unit)) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
         }
