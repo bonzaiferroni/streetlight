@@ -33,7 +33,7 @@ import streetlight.compose.model.EntityDetail
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.zenBg
-import streetlight.compose.modifier.shineSurface
+import streetlight.compose.modifier.shineBg
 import streetlight.compose.model.bottomDetails
 import streetlight.compose.model.toFlair
 import streetlight.compose.model.toThemeColor
@@ -253,5 +253,5 @@ private const val GridImageRatio = 3f / 2f
 /** The modifiers the feed rows share. */
 private object FeedRowMod {
     val Base = Modifier.fillMaxWidth().zenBg()
-    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = true).shineSurface()
+    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = true).shineBg()
 }

@@ -52,25 +52,16 @@ private fun DrawScope.drawGlow(glow: GlowState, hue: Float) {
 /** The radius of [glow] on a page of [pageSize]. */
 internal fun glowRadius(glow: GlowState, pageSize: Size) = hypot(pageSize.width, pageSize.height) * glow.radius.value
 
-/**
- * The stops of a glow in [color], solid up to [focus] and fading to transparent from there, its alpha at 30%, 55%, 75%
- * and 90% of the fade given by [falloff], the web's glows by default.
- */
-internal fun glowStops(color: Color, focus: Float, falloff: GlowFalloff = PageFalloff): Array<Pair<Float, Color>> {
+/** The stops of the web's glows in [color], solid up to [focus] and fading to transparent from there. */
+private fun glowStops(color: Color, focus: Float): Array<Pair<Float, Color>> {
     val solid = focus.coerceIn(0f, 0.99f)
     fun stop(fraction: Float, alpha: Float) = solid + (1 - solid) * fraction to color.copy(alpha = color.alpha * alpha)
     return arrayOf(
         solid to color,
-        stop(0.30f, falloff.at30),
-        stop(0.55f, falloff.at55),
-        stop(0.75f, falloff.at75),
-        stop(0.90f, falloff.at90),
+        stop(0.30f, 0.55f),
+        stop(0.55f, 0.28f),
+        stop(0.75f, 0.12f),
+        stop(0.90f, 0.04f),
         1f to Color.Transparent,
     )
 }
-
-/** The alphas of a glow's fade at its fixed stops, as fractions of its color's alpha. */
-internal class GlowFalloff(val at30: Float, val at55: Float, val at75: Float, val at90: Float)
-
-/** The fade of the web's glows. */
-private val PageFalloff = GlowFalloff(0.55f, 0.28f, 0.12f, 0.04f)

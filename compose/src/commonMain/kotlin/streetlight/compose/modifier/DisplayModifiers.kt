@@ -42,6 +42,9 @@ fun Modifier.borderRadius(units: Number, moonShadow: Boolean = false, outline: B
 /** Paints the theme's quiet background behind the content. The web's `ZenBg`. */
 fun Modifier.zenBg() = this then BackgroundElement(Background.Zen)
 
+/** Paints a faint wash of ink behind the content. The web's `InkBg`. */
+fun Modifier.inkBg() = this then BackgroundElement(Background.Ink)
+
 /** Paints the theme's card background behind the content, a step firmer than [zenBg]. The web's `CardBg`. */
 fun Modifier.cardBg() = this then BackgroundElement(Background.Card)
 
@@ -121,7 +124,7 @@ private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var ou
 }
 
 /** The theme's backgrounds a modifier paints. */
-private enum class Background { Zen, Card }
+private enum class Background { Zen, Ink, Card }
 
 private data class BackgroundElement(val background: Background) : ModifierNodeElement<BackgroundNode>() {
     override fun create() = BackgroundNode(background)
@@ -135,6 +138,7 @@ private class BackgroundNode(var background: Background) : Modifier.Node(), Draw
     override fun ContentDrawScope.draw() {
         val color = when (background) {
             Background.Zen -> theme.colors.zenBg
+            Background.Ink -> theme.colors.inkBg
             Background.Card -> theme.colors.cardBg
         }
         drawRect(color)

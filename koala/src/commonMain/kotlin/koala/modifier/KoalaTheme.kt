@@ -34,6 +34,15 @@ data class KoalaTheme(
         const val MaxEnergy = 50
         const val MaxFocus = 99
         val ThemeTransitionSeconds = 1.2
+
+        /** The multiple of a glow's radius a shine surface reaches, half of it falling beyond the edge. */
+        const val ShineSpread = 3.0
+
+        /** The fraction of a glow's energy a shine surface casts. */
+        const val ShineIntensity = 1.0
+
+        /** The opacity of the ink over paper in `--ink-bg`, the background of `InkBg` and of a shine surface below its glows. */
+        const val ShineInk = 0.1
     }
 }
 

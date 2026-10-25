@@ -32,7 +32,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     }
                     textBlock(galaxy.description?.value ?: "Too mysterious for a description", modifiers)
                 }
-                cellGrid(galaxy.toCells(), galaxy.toButtons(), modify(Height(5), MoonShadow))
+                // cellGrid(galaxy.toCells(), galaxy.toButtons(), modify(Height(5), MoonShadow))
             }
         }
     }

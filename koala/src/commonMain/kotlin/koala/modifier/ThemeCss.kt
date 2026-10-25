@@ -17,6 +17,7 @@ val ThemeCss get() = with(Koala) { """
     /* color-mix(in srgb, var(--paper-bg) 95%, var(--ink-fg)); */
     --body-bg: var(--paper-bg);   
     --card-bg: rgba(var(--paper), .4);
+    --ink-bg: rgba(var(--ink), .05);
     --dialog-bg: rgba(var(--paper), .8);
     --zen-bg: rgba(var(--paper), .25);
     --tabs-bg: rgba(var(--paper), .5);

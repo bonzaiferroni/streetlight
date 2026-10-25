@@ -40,7 +40,7 @@ fun ViewScope.themeForm() {
                 centeredText("Flux makes the background colors slowly drift.", TextSmall)
             }
             formSection("How it works") {
-                card(modify(ShineSurface, Padding(2), Outline, MoonShadow)) {
+                card(modify(ShineBg, Padding(2), Outline, MoonShadow)) {
                     markdown(tipsInfo)
                 }
             }

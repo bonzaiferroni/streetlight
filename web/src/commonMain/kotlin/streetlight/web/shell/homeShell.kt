@@ -35,8 +35,6 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 leadingSection(content.galaxies)
 
-                navigation("sandbox", SandboxIndexRoute.toRelativePath())
-
                 feedSection(content.feed) { HomeRoute(it) }
 
                 appFooter(HomeShell.SOURCE)

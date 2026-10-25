@@ -1,11 +1,12 @@
 package streetlight.compose.modifier
 
-// a surface lit by the page's lights, the cousin of the web's ShineSurface
+// a surface lit by the page's lights, the cousin of the web's ShineBg
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.scale
@@ -13,40 +14,40 @@ import androidx.compose.ui.node.CompositionLocalConsumerModifierNode
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
+import koala.modifier.KoalaTheme
 import streetlight.compose.utility.rotateHue
-import streetlight.compose.view.GlowFalloff
 import streetlight.compose.view.GlowState
 import streetlight.compose.view.KoalaLights
 import streetlight.compose.view.glowRadius
-import streetlight.compose.view.glowStops
 import kotlin.math.abs
 
 /**
  * Paints paper behind the content with the page's lights shining on it from around it: each pools on the edge its
  * direction from the page's center points to, as far as [reach] says.
  */
-fun Modifier.shineSurface(reach: ShineReach = ShineReach.Surface) = this then ShineSurfaceElement(reach)
+fun Modifier.shineBg(reach: ShineReach = ShineReach.Surface) = this then ShineBgElement(reach)
 
-/** How far each light of a [shineSurface] reaches. */
+/** How far each light of a [shineBg] reaches. */
 enum class ShineReach {
     /** The light's radius on the page, a circle. */
     Glow,
 
-    /** Four times the light's radius as a fraction of the surface's width and of its height, an ellipse. */
+    /** [KoalaTheme.ShineSpread] times the light's radius as a fraction of the surface's width and of its height, an ellipse. */
     Surface,
 }
 
-private data class ShineSurfaceElement(val reach: ShineReach) : ModifierNodeElement<ShineSurfaceNode>() {
-    override fun create() = ShineSurfaceNode(reach)
-    override fun update(node: ShineSurfaceNode) {
+private data class ShineBgElement(val reach: ShineReach) : ModifierNodeElement<ShineBgNode>() {
+    override fun create() = ShineBgNode(reach)
+    override fun update(node: ShineBgNode) {
         node.reach = reach
         node.invalidateDraw()
     }
 }
 
-private class ShineSurfaceNode(var reach: ShineReach) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+private class ShineBgNode(var reach: ShineReach) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     override fun ContentDrawScope.draw() {
         drawRect(theme.colors.paper)
+        drawRect(theme.colors.ink.copy(alpha = KoalaTheme.ShineInk.toFloat()))
         drawShine(theme.lights, reach)
         drawContent()
     }
@@ -69,20 +70,19 @@ private fun DrawScope.drawShineGlow(glow: GlowState, hue: Float, pageSize: Size)
     val radius = glowRadius(glow, pageSize)
     if (radius < 1f) return
 
-    val color = glow.color.value.rotateHue(hue).let { it.copy(alpha = it.alpha * ShineIntensity) }
-    val brush = Brush.radialGradient(*glowStops(color, glow.focus.value, ShineFalloff), center = anchorOf(glow), radius = radius)
-    drawRect(brush)
+    val color = glow.color.value.rotateHue(hue).let { it.copy(alpha = it.alpha * KoalaTheme.ShineIntensity.toFloat()) }
+    drawRect(Brush.radialGradient(glow.focus.value to color, 1f to Color.Transparent, center = anchorOf(glow), radius = radius))
 }
 
 /** Draws [glow] as an ellipse, its radius a fraction of the surface's sides, centered on the edge its direction points to. */
 private fun DrawScope.drawShineSurface(glow: GlowState, hue: Float) {
-    val radiusX = size.width * glow.radius.value * ShineSpread
-    val radiusY = size.height * glow.radius.value * ShineSpread
+    val radiusX = size.width * glow.radius.value * KoalaTheme.ShineSpread.toFloat()
+    val radiusY = size.height * glow.radius.value * KoalaTheme.ShineSpread.toFloat()
     if (radiusX < 1f || radiusY < 1f) return
 
     val anchor = anchorOf(glow)
-    val color = glow.color.value.rotateHue(hue).let { it.copy(alpha = it.alpha * ShineIntensity) }
-    val brush = Brush.radialGradient(*glowStops(color, glow.focus.value, ShineFalloff), center = anchor, radius = radiusX)
+    val color = glow.color.value.rotateHue(hue).let { it.copy(alpha = it.alpha * KoalaTheme.ShineIntensity.toFloat()) }
+    val brush = Brush.radialGradient(glow.focus.value to color, 1f to Color.Transparent, center = anchor, radius = radiusX)
     val scaleY = radiusY / radiusX
     // a circle squashed about the anchor into the ellipse, over a rect that covers the surface once squashed
     scale(1f, scaleY, pivot = anchor) {
@@ -98,12 +98,3 @@ private fun DrawScope.anchorOf(glow: GlowState): Offset {
     val norm = maxOf(abs(dx), abs(dy))
     return if (norm == 0f) center else center + Offset(dx / norm * size.width / 2, dy / norm * size.height / 2)
 }
-
-/** The fade of a shine, gentler than the page's so its color holds further across a small surface. */
-private val ShineFalloff = GlowFalloff(0.80f, 0.55f, 0.30f, 0.12f)
-
-/** The multiple of a light's radius a [ShineReach.Surface] shine reaches, half of it falling beyond the edge. */
-private const val ShineSpread = 3f
-
-/** The fraction of a light's energy its shine casts. */
-private const val ShineIntensity = 1.25f

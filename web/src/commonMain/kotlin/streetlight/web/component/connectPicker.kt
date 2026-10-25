@@ -24,7 +24,7 @@ import streetlight.web.page.AppAttribute
 fun FlowContent.connectPicker(mod: Modifier? = null) {
     grid(
         GridTemplateColumns("repeat(2, minmax(0, 1fr))"),
-        modify(Outline, MoonShadow, Aspect4By3, Gap2Px, BorderRadius2, OverflowClip, mod),
+        modify(ShineBg, Outline, MoonShadow, Aspect4By3, Gap2Px, BorderRadius2, OverflowClip, mod),
         GridTemplateRows("repeat(2, minmax(0, 1fr))")
     ) {
         OnboardType.entries.forEach { type ->

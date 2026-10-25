@@ -44,7 +44,7 @@ fun DIV.configureFeedRow(
     curator: CuratorStatus? = null,
     cells: List<EntityCell>? = entity.toCells(),
 ) {
-    addModifiers(modify(FeedRowStyle.Base, ZenBg))
+    addModifiers(modify(FeedRowStyle.Base, CardBg))
 
     val colorScheme = entity.toThemeColor()
     val buttons = entity.toButtons()
@@ -135,7 +135,7 @@ $Base {
     --row-height: calc(var(--unit) * 10);
     --text-inset: calc(var(--unit) / 2);
     container-type: inline-size;
-    padding: var(--unit) 2px;
+    padding: var(--unit);
 }
 
 $Content {
@@ -188,7 +188,7 @@ $Badge { grid-area: badge; }
 /* a block, so the badge holds no line box below the icon */
 $Flair { display: block; width: var(--row-height); }
 
-$Cells { grid-area: cells; }
+$Cells { grid-area: cells; margin-inline: var(--unit); }
 
 ${Mode.selector(FeedMode.Grid)} $Feed {
     display: grid;
@@ -205,7 +205,7 @@ $grid, $minimal {
 /* a featured entry takes the Grid layout in any feed */
 $grid {
     --text-inset: 0px;
-    padding: 0 0 var(--unit);
+    padding: 0 0 var(--unit-2);
 
     /* the zero-width outer columns and the gap inset the text and cells from the edges */
     $Content {
@@ -223,6 +223,8 @@ $grid {
     }
 
     $Image $Feature { object-fit: contain; }
+
+    $Cells { margin-inline: 0; }
 }
 
 $Featured $Text { --clip: calc(var(--unit) * 24); }

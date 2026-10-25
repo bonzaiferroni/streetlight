@@ -114,7 +114,7 @@ object FeedSection {
     val Search = Class("feed-search")
 
     val Attribute = slugAttributeOf("feed-slug")
-    val FeedColumnMod = modify(Gap2Px, MoonShadow)
+    val FeedColumnMod = modify(Gap2Px, InkBg, MoonShadow, BorderRadius1, OverflowClip)
     val NextCursor = jsonAttributeOf<EntityCursor>("next-post-cursor")
 
     val SortByMark = JsSignature("sortByMark")
