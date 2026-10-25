@@ -47,8 +47,8 @@ fun LazyGridScope.feedSection(
     val source = feed.source
     val types = feed.types ?: source?.context?.types.orEmpty()
 
-    item(span = { GridItemSpan(maxLineSpan) }) { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
-    if (feed.entities.isEmpty()) item(span = { GridItemSpan(maxLineSpan) }) { EmptyFeed() }
+    fullItem { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
+    if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
     items(feed.entities, span = { GridItemSpan(if (mode == FeedMode.Grid) 1 else maxLineSpan) }) { entity ->
         FeedRow(entity, mode)
     }

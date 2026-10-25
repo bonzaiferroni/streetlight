@@ -68,7 +68,7 @@ private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNo
         val unit = theme.unit.toPx()
         val line = theme.line.toPx()
         val longest = unit * RuleUnits
-        val color = theme.colors.ink
+        val color = RuleColor
         val top = (size.height - line) / 2
 
         val leftLength = (contentLeft - unit).coerceAtMost(longest)
@@ -92,9 +92,9 @@ private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNo
                 val start = if (outwardLeft) rule.left - shift else rule.left + shift
                 drawRect(
                     Brush.horizontalGradient(
-                        0f to Color.Transparent,
-                        0.5f to color.copy(alpha = RayAlpha * RuleOpacity),
-                        1f to Color.Transparent,
+                        0f to color.copy(alpha = 0f),
+                        0.5f to color.copy(alpha = RayPeakAlpha),
+                        1f to color.copy(alpha = 0f),
                         startX = start,
                         endX = start + rule.width,
                     ),
@@ -109,12 +109,23 @@ private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNo
 /** The longest a rule runs, in units: the web's `MaxWidth(16)`. */
 private const val RuleUnits = 16
 
-/** The rule's own opacity, under its rays, and the opacity of a ray: the web's `opacity: .8`. */
-private const val RuleAlpha = 0.35f
-private const val RayAlpha = 0.8f
+/** The rule's own opacity, under its rays: the web's `hr` at half its color. */
+private const val RuleAlpha = 0.5f
 
 /** The web's `OpacityHalf` over the whole rule. */
 private const val RuleOpacity = 0.5f
+
+/** The opacity of a ray: the web's `opacity: .8`. */
+private const val RayAlpha = 0.8f
+
+/**
+ * The alpha of a ray drawn over the rule at [RuleOpacity] that composites as the web's does, where the opacity applies
+ * to the rule and its rays together.
+ */
+private const val RayPeakAlpha = RuleOpacity * RayAlpha * (1 - RuleAlpha) / (1 - RuleOpacity * RuleAlpha)
+
+/** The color of the rule and its rays: the gray a browser gives an `hr`. */
+private val RuleColor = Color(0xFF808080)
 
 /** Each ray's duration and delay in seconds, before the rule's seed is added: the web's `::before` and `::after`. */
 private val rays = listOf(4f to 2f, 2f to 2f)
