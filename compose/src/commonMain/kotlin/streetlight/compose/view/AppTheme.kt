@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.runtime.State
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
@@ -20,10 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,11 +29,9 @@ import koala.modifier.KoalaTheme
 import org.koin.compose.koinInject
 import streetlight.compose.model.ThemeHost
 import streetlight.compose.utility.collectAsState
-import streetlight.compose.utility.rotateHue
 import streetlight.compose.utility.toColor
 import streetlight.model.data.PageBackgroundMode
 import streetlight.model.data.PageTheme
-import kotlin.math.hypot
 
 /**
  * Shows [content] over the background lights of the current [PageTheme], and provides the [KoalaAppTheme] read as
@@ -61,24 +54,21 @@ fun AppTheme(content: @Composable () -> Unit) {
         PageBackgroundMode.Flux -> animateFlux()
         else -> remember { mutableFloatStateOf(0f) }
     }
+    val lights = remember(hueState) { KoalaLights(listOf(rho, beta, gamma), hueState) }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(paper)) {
         val rem = if (maxWidth < NarrowMaxWidth) NarrowRem else WideRem
         val text = remember(family, rem) { KoalaTypography(family, rem) }
-        val koalaAppTheme = remember(accentState, primaryState, text) {
-            KoalaAppTheme(unitOf(rem), text, KoalaColors(paper, Koala.ink.toColor(), Opacity, accentState, primaryState), Opacity)
+        val koalaAppTheme = remember(accentState, primaryState, text, lights) {
+            val colors = KoalaColors(paper, Koala.ink.toColor(), Opacity, accentState, primaryState)
+            KoalaAppTheme(unitOf(rem), text, colors, Opacity, lights)
         }
 
         CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme) {
             Spacer(
                 Modifier.fillMaxSize()
                     .graphicsLayer()
-                    .drawBehind {
-                        val hue = hueState.value
-                        drawGlow(rho, hue)
-                        drawGlow(beta, hue)
-                        drawGlow(gamma, hue)
-                    }
+                    .drawBehind { drawLights(lights) }
             )
             content()
         }
@@ -91,15 +81,6 @@ private val Opacity = KoalaOpacity()
 private val NarrowRem = 14.sp
 private val WideRem = 16.sp
 private val NarrowMaxWidth = 600.dp
-
-/** The animated values of one background glow, read while drawing. */
-private class GlowState(
-    val color: State<Color>,
-    val x: State<Float>,
-    val y: State<Float>,
-    val radius: State<Float>,
-    val focus: State<Float>,
-)
 
 @Composable
 private fun animateGlow(glow: Glow, isLit: Boolean) = GlowState(
@@ -117,27 +98,6 @@ private fun animateFlux() = rememberInfiniteTransition().animateFloat(
     targetValue = 360f,
     animationSpec = infiniteRepeatable(tween(FluxMillis, easing = LinearEasing)),
 )
-
-/** Draws [glow] as a radial gradient, its color turned by [hue], with the stops of the web's glows. */
-private fun DrawScope.drawGlow(glow: GlowState, hue: Float) {
-    val radius = hypot(size.width, size.height) * glow.radius.value
-    if (radius < 1f) return
-
-    val color = glow.color.value.rotateHue(hue)
-    val focus = glow.focus.value.coerceIn(0f, 0.99f)
-    fun stop(fraction: Float, alpha: Float) = focus + (1 - focus) * fraction to color.copy(alpha = color.alpha * alpha)
-    val brush = Brush.radialGradient(
-        focus to color,
-        stop(0.30f, 0.55f),
-        stop(0.55f, 0.28f),
-        stop(0.75f, 0.12f),
-        stop(0.90f, 0.04f),
-        1f to Color.Transparent,
-        center = Offset(size.width * glow.x.value, size.height * glow.y.value),
-        radius = radius,
-    )
-    drawRect(brush)
-}
 
 private fun <T> themeTransition(): AnimationSpec<T> = tween(
     durationMillis = (KoalaTheme.ThemeTransitionSeconds * 1000).toInt(),

@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 /**
- * The app's theme: the spacing [unit], the [text] styles, the [colors] and the [opacity] levels, and the [line]:
+ * The app's theme: the spacing [unit], the [text] styles, the [colors], the [opacity] levels, the page's [lights], and the [line]:
  * the two pixels the web uses where a unit is too much, such as the gap between feed rows and the width of an outline. The counterpart of the web's `KoalaTheme`
  * and the stylesheets built from it, grouped as they are.
  */
@@ -19,6 +19,7 @@ class KoalaAppTheme(
     val text: KoalaTypography,
     val colors: KoalaColors,
     val opacity: KoalaOpacity,
+    val lights: KoalaLights,
 ) {
     val line: Dp = 2.dp
 }

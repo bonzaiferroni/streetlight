@@ -17,6 +17,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 |---|---|
 | `borderRadius(n)` | `BorderRadius(n)`; its `moonShadow` and `outline` flags give `MoonShadow` and `Outline`, `--outline-low` |
 | `zenBg()`, `cardBg()` | `ZenBg`, `CardBg` |
+| `shineSurface()` | None: paper with the page's glows drawn within the bounds, as if the lights that make the page's background shine on it |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
 | `filigree()` | `filigree` (`koala.component`) and its `ParticleRay` |
