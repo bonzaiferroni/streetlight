@@ -106,7 +106,7 @@ private fun RowFeedRow(entity: Entity) {
             }
             CellGrid(entity.topDetails, entity.bottomDetails, FeedRowMod.Cells)
         },
-        modifier = FeedRowMod.Base.padding(start = 1, top = 1, end = 1, bottom = 2),
+        modifier = FeedRowMod.Base.padding(1),
     ) { measurables, constraints ->
         val (main, cells) = measurables
         val width = constraints.maxWidth

@@ -43,6 +43,10 @@ Compose's `Modifier` is the only one in this module: `koala.modifier.Modifier` i
 | `commonMain` | All UI, starting from `App()` |
 | `jvmMain` | `main()` and anything that reads the desktop platform, such as the `actual` of `AppFiles.kt` |
 
+## Window
+
+The desktop window reopens at the frame it last settled on, kept in the app files as `window.json` and read before the window opens.
+
 ## Build
 
 | Rule | Detail |

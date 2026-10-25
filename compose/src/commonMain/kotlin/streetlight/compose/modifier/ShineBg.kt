@@ -22,7 +22,7 @@ import streetlight.compose.view.glowRadius
 import kotlin.math.abs
 
 /**
- * Paints paper behind the content with the page's lights shining on it from around it: each pools on the edge its
+ * Paints [inkBg] behind the content with the page's lights shining on it from around it: each pools on the edge its
  * direction from the page's center points to, as far as [reach] says.
  */
 fun Modifier.shineBg(reach: ShineReach = ShineReach.Surface) = this then ShineBgElement(reach)
@@ -46,8 +46,7 @@ private data class ShineBgElement(val reach: ShineReach) : ModifierNodeElement<S
 
 private class ShineBgNode(var reach: ShineReach) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     override fun ContentDrawScope.draw() {
-        drawRect(theme.colors.paper)
-        drawRect(theme.colors.ink.copy(alpha = KoalaTheme.ShineInk.toFloat()))
+        drawRect(theme.colors.inkBg)
         drawShine(theme.lights, reach)
         drawContent()
     }
