@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,6 +23,7 @@ import org.koin.compose.koinInject
 import streetlight.compose.model.AppSettings
 import streetlight.compose.model.HomeModel
 import streetlight.compose.modifier.borderRadius
+import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 
 /** The view of [streetlight.compose.model.HomeRoute]: the map over the home feed's [feedSection]. */
@@ -57,7 +57,7 @@ fun HomeView() {
             verticalArrangement = Arrangement.spacedBy(theme.line),
             horizontalArrangement = Arrangement.spacedBy(theme.line),
         ) {
-            item(span = { GridItemSpan(maxLineSpan) }) { Spacer(Modifier.fillMaxWidth().padding(theme.unit).height(mapHeight)) }
+            item(span = { GridItemSpan(maxLineSpan) }) { Spacer(Modifier.fillMaxWidth().padding(1).height(mapHeight)) }
             feed?.let { feedSection(it, model.feedTypeState, mode, settings.feedModeState) }
         }
 
@@ -66,7 +66,7 @@ fun HomeView() {
         MapWindow(
             Modifier.fillMaxWidth()
                 .offset { IntOffset(0, -mapScrollOf(gridState, (mapHeight + theme.unit * 2).roundToPx())) }
-                .padding(theme.unit)
+                .padding(1)
                 .height(mapHeight)
                 .borderRadius(2, moonShadow = true, outline = true)
         )

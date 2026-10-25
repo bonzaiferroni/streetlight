@@ -17,7 +17,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 |---|---|
 | `borderRadius(n)` | `BorderRadius(n)`; its `moonShadow` and `outline` flags give `MoonShadow` and `Outline`, `--outline-low` |
 | `zenBg()`, `cardBg()` | `ZenBg`, `CardBg` |
-| `shineSurface()` | None: paper with the page's glows drawn within the bounds, as if the lights that make the page's background shine on it |
+| `shineSurface()` | None: paper lit by the page's glows |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
 | `filigree()` | `filigree` (`koala.component`) and its `ParticleRay` |
@@ -28,7 +28,11 @@ A styling the web gives with a `koala.modifier` class is an extension here, name
 
 Each is a `Modifier.Node` that reads the theme with `currentValueOf(LocalKoalaAppTheme)`, so a call site needs no theme in hand and chains like any modifier. The theme holds the values, such as `KoalaOpacity`, and the node holds only how they are applied. A node that reshapes or fades its content places it with a layer; one that draws around it is a `DrawModifierNode`. A styling that follows the corners, such as a shadow or an outline, is a flag of `borderRadius()` rather than a modifier of its own, so the corners are given once.
 
-A modifier lives in the file that corresponds to its web cousin's stylesheet: `DisplayModifiers.kt` for `DisplayCss`, as borders, backgrounds, shadows, opacity and clips, `MagicModifiers.kt` for `MagicCss`, as `filigree()` and its rays, and `TextModifiers.kt` for `TextCss` when one is needed. `ModifierUtility.kt` holds what the nodes share, such as their read of the theme.
+A modifier lives in the file that corresponds to its web cousin's stylesheet: `DisplayModifiers.kt` for `DisplayCss`, as borders, backgrounds, shadows, opacity and clips, `MagicModifiers.kt` for `MagicCss`, as `filigree()` and its rays, and `TextModifiers.kt` for `TextCss` when one is needed. A modifier with no web cousin and drawing of its own takes a file of its own, as `ShineSurface.kt`. `ModifierUtility.kt` holds what the nodes share, such as their read of the theme.
+
+## Shine Surface
+
+`shineSurface()` paints paper and casts each of the page's lights on it as if shining from around the surface. A light's direction from the page's center, scaled by its max norm, is a point on a square, stretched to the surface's edge, and its glow centers there, fading by a gentler falloff than the page's. `ShineReach` sets how far it reaches: `Surface`, the default, an ellipse whose radii are twice the light's radius as a fraction of the surface's width and of its height, and `Glow`, a circle of the light's radius on the page.
 
 ## Animated Modifiers
 

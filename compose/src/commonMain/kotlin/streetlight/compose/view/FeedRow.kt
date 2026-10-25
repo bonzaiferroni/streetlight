@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import streetlight.compose.markdown.annotatedMarkdownOf
 import streetlight.compose.modifier.fadeClip
 import streetlight.compose.modifier.opacityHigh
+import streetlight.compose.modifier.padding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
@@ -64,7 +65,7 @@ private fun MinimalFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
-    Row(1, FeedRowMod.Base.padding(theme.unit)) {
+    Row(1, FeedRowMod.Base.padding(1)) {
         Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1))
         Column(Modifier.weight(1f)) {
             EntityDetails(entity.topDetails, isColored = true)
@@ -99,13 +100,13 @@ private fun RowFeedRow(entity: Entity) {
                     entity = entity,
                     modifier = Modifier.weight(1f)
                         .fadeClip(RowHeightUnits, inset = TextInsetUnits)
-                        .padding(vertical = theme.unit * TextInsetUnits),
+                        .padding(vertical = TextInsetUnits),
                 )
                 FlairBadge(entity, rowHeight)
             }
             CellGrid(entity.topDetails, entity.bottomDetails, FeedRowMod.Cells)
         },
-        modifier = FeedRowMod.Base.padding(theme.unit),
+        modifier = FeedRowMod.Base.padding(start = 1, top = 1, end = 1, bottom = 2),
     ) { measurables, constraints ->
         val (main, cells) = measurables
         val width = constraints.maxWidth
@@ -146,22 +147,18 @@ private fun GridFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
-    Column(1, FeedRowMod.Base.padding(bottom = theme.unit)) {
+    Column(1, FeedRowMod.Base.padding(bottom = 2)) {
         Thumbnail(
             entity = entity,
             modifier = Modifier.fillMaxWidth().aspectRatio(GridImageRatio),
             url = entity.image?.let { it.medium ?: it.url },
             scale = ContentScale.Fit,
         )
-        Row(1, Modifier.padding(horizontal = theme.unit)) {
+        Row(1, Modifier.padding(horizontal = 1)) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
         }
-        CellGrid(
-            entity.topDetails,
-            entity.bottomDetails,
-            Modifier.padding(horizontal = theme.unit).then(FeedRowMod.Cells),
-        )
+        CellGrid(entity.topDetails, entity.bottomDetails, FeedRowMod.Cells)
     }
 }
 
@@ -256,5 +253,5 @@ private const val GridImageRatio = 3f / 2f
 /** The modifiers the feed rows share. */
 private object FeedRowMod {
     val Base = Modifier.fillMaxWidth().zenBg()
-    val Cells = Modifier.borderRadius(2.5, moonShadow = true, outline = true).shineSurface()
+    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = true).shineSurface()
 }

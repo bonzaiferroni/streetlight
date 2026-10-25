@@ -3,7 +3,6 @@ package streetlight.compose.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import streetlight.compose.model.EntityDetail
 import streetlight.compose.modifier.cardBg
 import streetlight.compose.modifier.opacityLow
+import streetlight.compose.modifier.padding
 
 /**
  * The details of an entity as cells: the [top] details and the [bottom] details on one line when every cell gets at
@@ -69,7 +69,7 @@ private fun Cell(detail: EntityDetail) {
     val theme = currentTheme
     val text = detail.text
     Row(
-        modifier = Modifier.fillMaxSize().cardBg().padding(theme.unit),
+        modifier = Modifier.fillMaxSize().cardBg().padding(1),
         horizontalArrangement = Arrangement.spacedBy(IconGap),
         verticalAlignment = Alignment.CenterVertically,
     ) {

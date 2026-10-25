@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
@@ -27,6 +26,7 @@ import streetlight.compose.model.heading
 import streetlight.compose.model.toSvg
 import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.opacityHigh
+import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.FeedType
@@ -62,7 +62,7 @@ private fun FeedHeading(type: FeedType, types: List<FeedType>, typeState: Mutabl
     val selectedMode by modeState.collectAsState()
 
     // the menu and the switch are the same width, so the heading stays centered
-    Row(Modifier.fillMaxWidth().padding(theme.unit), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().padding(1), verticalAlignment = Alignment.CenterVertically) {
         Row(1, Modifier.width(theme.unit * SwitchUnits).opacityHigh()) {
             types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { typeState.set(option) } }
         }

@@ -17,11 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.draw.drawBehind
 import koala.modifier.Glow
 import koala.modifier.Koala
@@ -54,9 +58,10 @@ fun AppTheme(content: @Composable () -> Unit) {
         PageBackgroundMode.Flux -> animateFlux()
         else -> remember { mutableFloatStateOf(0f) }
     }
-    val lights = remember(hueState) { KoalaLights(listOf(rho, beta, gamma), hueState) }
+    val pageSize = remember { mutableStateOf(Size.Zero) }
+    val lights = remember(hueState) { KoalaLights(listOf(rho, beta, gamma), hueState, pageSize) }
 
-    BoxWithConstraints(Modifier.fillMaxSize().background(paper)) {
+    BoxWithConstraints(Modifier.fillMaxSize().onSizeChanged { pageSize.value = it.toSize() }.background(paper)) {
         val rem = if (maxWidth < NarrowMaxWidth) NarrowRem else WideRem
         val text = remember(family, rem) { KoalaTypography(family, rem) }
         val koalaAppTheme = remember(accentState, primaryState, text, lights) {

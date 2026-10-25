@@ -29,7 +29,6 @@ import androidx.compose.ui.node.requireGraphicsContext
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import streetlight.compose.view.drawLights
 
 /**
  * Rounds the corners to [units] of the theme's unit and clips the content to them. The web's `BorderRadius(n)`.
@@ -51,12 +50,6 @@ fun Modifier.cardBg() = this then BackgroundElement(Background.Card)
  * web's text clip with its mask of fixed stops: only content that reaches the clip fades.
  */
 fun Modifier.fadeClip(height: Number, inset: Number = 0) = this then FadeClipElement(height.toFloat(), inset.toFloat())
-
-/**
- * Paints paper behind the content with the page's lights shining on it, their positions and reach taken within its
- * bounds.
- */
-fun Modifier.shineSurface() = this then ShineSurfaceElement
 
 /** Draws the content at the theme's low opacity. The web's `OpacityLow`. */
 fun Modifier.opacityLow() = this then OpacityElement(Opacity.Low)
@@ -145,19 +138,6 @@ private class BackgroundNode(var background: Background) : Modifier.Node(), Draw
             Background.Card -> theme.colors.cardBg
         }
         drawRect(color)
-        drawContent()
-    }
-}
-
-private data object ShineSurfaceElement : ModifierNodeElement<ShineSurfaceNode>() {
-    override fun create() = ShineSurfaceNode()
-    override fun update(node: ShineSurfaceNode) = Unit
-}
-
-private class ShineSurfaceNode : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
-    override fun ContentDrawScope.draw() {
-        drawRect(theme.colors.paper)
-        drawLights(theme.lights)
         drawContent()
     }
 }
