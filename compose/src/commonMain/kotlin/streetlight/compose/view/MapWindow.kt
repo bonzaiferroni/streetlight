@@ -23,8 +23,6 @@ import org.maplibre.compose.style.BaseStyle
 import org.maplibre.spatialk.geojson.Position
 import streetlight.compose.model.AppConfig
 import streetlight.compose.modifier.borderRadius
-import streetlight.compose.modifier.moonShadow
-import streetlight.compose.modifier.outline
 import kotlin.math.hypot
 
 /**
@@ -42,7 +40,7 @@ fun MapWindow(modifier: Modifier = Modifier) {
 
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
     MaplibreMap(
-        modifier = modifier.moonShadow(radius = 2).borderRadius(2).outline(radius = 2),
+        modifier = modifier.borderRadius(2, moonShadow = true, outline = true),
         state = state,
         overlay = {
             Spacer(Modifier.fillMaxSize().drawBehind { drawVignette() })

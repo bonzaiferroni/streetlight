@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import streetlight.compose.markdown.annotatedMarkdownOf
 import streetlight.compose.modifier.fadeClip
 import streetlight.compose.modifier.opacityHigh
-import streetlight.compose.modifier.outline
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
@@ -98,7 +97,7 @@ private fun RowFeedRow(entity: Entity) {
     Layout(
         content = {
             Row(horizontalArrangement = Arrangement.spacedBy(theme.unit)) {
-                Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1).outline(radius = 1))
+                Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1, outline = true))
                 EntityText(
                     entity = entity,
                     modifier = Modifier.weight(1f)

@@ -15,9 +15,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 
 | Compose | Web |
 |---|---|
-| `borderRadius(n)` | `BorderRadius(n)` |
-| `outline()` | `Outline`, `--outline-low` |
-| `moonShadow()` | `MoonShadow` |
+| `borderRadius(n)` | `BorderRadius(n)`; its `moonShadow` and `outline` flags give `MoonShadow` and `Outline`, `--outline-low` |
 | `zenBg()`, `cardBg()` | `ZenBg`, `CardBg` |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
@@ -27,7 +25,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 
 A styling the web gives with a `koala.modifier` class is an extension here, named for its web cousin in Compose's camel case. A length the web gives in units is given in units, as a `Number` the extension turns to a `Float`, so a whole or fractional count reads plainly. The set holds what the app uses; it is not a copy of `koala.modifier`, and a styling Compose already gives plainly, such as a text color or a padding of `currentTheme.unit`, has none.
 
-Each is a `Modifier.Node` that reads the theme with `currentValueOf(LocalKoalaAppTheme)`, so a call site needs no theme in hand and chains like any modifier. The theme holds the values, such as `KoalaOpacity`, and the node holds only how they are applied. A node that reshapes or fades its content places it with a layer; one that draws around it is a `DrawModifierNode`.
+Each is a `Modifier.Node` that reads the theme with `currentValueOf(LocalKoalaAppTheme)`, so a call site needs no theme in hand and chains like any modifier. The theme holds the values, such as `KoalaOpacity`, and the node holds only how they are applied. A node that reshapes or fades its content places it with a layer; one that draws around it is a `DrawModifierNode`. A styling that follows the corners, such as a shadow or an outline, is a flag of `borderRadius()` rather than a modifier of its own, so the corners are given once.
 
 A modifier lives in the file that corresponds to its web cousin's stylesheet: `DisplayModifiers.kt` for `DisplayCss`, as borders, backgrounds, shadows, opacity and clips, `MagicModifiers.kt` for `MagicCss`, as `filigree()` and its rays, and `TextModifiers.kt` for `TextCss` when one is needed. `ModifierUtility.kt` holds what the nodes share, such as their read of the theme.
 
