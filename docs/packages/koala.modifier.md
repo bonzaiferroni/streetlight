@@ -67,6 +67,10 @@ A stylesheet is served only once it is listed in `KtStyles` in `web/src/commonMa
 
 `KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance. A base color in `ThemeCss`, such as `--green`, is written from an `Rgb` in `KoalaTheme`, never as literal channels, so Kotlin code can read the same color. Its `-fg` and `-bg` variants are mixed from it in CSS.
 
+## Shine Surface
+
+`ShineSurface` is paper lit by the page's glows as if they shone on the element from around it, the cousin of compose's `shineSurface()` and kept in step with it. Each glow pools on the edge its direction from the page's center points to. That point is computed in Kotlin, as CSS cannot, and set by the theme beside the glow's other properties.
+
 ## Inline Style Utilities
 
 `CssUtility.kt` holds `InlineStyle` vals, each one a `Property` from `Css` bound to a value. Each is named for the property followed by the value, in PascalCase.

@@ -16,6 +16,6 @@ data class InlineStyle<T: Any>(val property: Property<T>, val value: T): Modifie
 }
 
 /** The property set to [value] multiples of `--unit`. */
-operator fun Property<LinearDimension>.invoke(value: Int) = of(LinearDimension("calc(var(--unit) * $value)"))
+operator fun Property<LinearDimension>.invoke(value: Number) = of(LinearDimension("calc(var(--unit) * $value)"))
 /** The property set to [value]. */
 operator fun Property<LinearDimension>.invoke(value: LinearDimension) = of(value)

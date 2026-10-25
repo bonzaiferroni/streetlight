@@ -121,6 +121,12 @@ val ThemeCss get() = with(Koala) { """
     --rho-focus: ${rho.focus}%;
     --beta-focus: ${beta.focus}%;
     --gamma-focus: ${gamma.focus}%;
+    --rho-shine-x: ${rho.position.shineAnchor().first}%;
+    --beta-shine-x: ${beta.position.shineAnchor().first}%;
+    --gamma-shine-x: ${gamma.position.shineAnchor().first}%;
+    --rho-shine-y: ${rho.position.shineAnchor().second}%;
+    --beta-shine-y: ${beta.position.shineAnchor().second}%;
+    --gamma-shine-y: ${gamma.position.shineAnchor().second}%;
     --color-flux: hueSpin 30s linear infinite;
     
     --opacity-low: 0.25;
@@ -143,6 +149,12 @@ val ThemeCss get() = with(Koala) { """
 @property --rho-focus { syntax: '<percentage>'; inherits: true; initial-value: ${rho.focus}%; }
 @property --beta-focus { syntax: '<percentage>'; inherits: true; initial-value: ${beta.focus}%; }
 @property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.focus}%; }
+@property --rho-shine-x { syntax: '<percentage>'; inherits: true; initial-value: ${rho.position.shineAnchor().first}%; }
+@property --beta-shine-x { syntax: '<percentage>'; inherits: true; initial-value: ${beta.position.shineAnchor().first}%; }
+@property --gamma-shine-x { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.position.shineAnchor().first}%; }
+@property --rho-shine-y { syntax: '<percentage>'; inherits: true; initial-value: ${rho.position.shineAnchor().second}%; }
+@property --beta-shine-y { syntax: '<percentage>'; inherits: true; initial-value: ${beta.position.shineAnchor().second}%; }
+@property --gamma-shine-y { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.position.shineAnchor().second}%; }
 
 :root {
     scrollbar-color: var(--ink-fg) var(--void-bg);

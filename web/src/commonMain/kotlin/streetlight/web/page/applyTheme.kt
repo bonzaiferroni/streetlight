@@ -7,6 +7,7 @@ import koala.modifier.Glow
 import koala.modifier.KoalaStyle
 import koala.modifier.rgba
 import koala.modifier.setStyle
+import koala.modifier.shineAnchor
 import koala.modifier.styleOf
 import kotlinx.css.pct
 import kotlinx.html.BODY
@@ -35,6 +36,12 @@ fun PageTheme.toStyleSet() = styleOf(
     KoalaStyle.RhoFocus.of(rho.focus.pct),
     KoalaStyle.BetaFocus.of(beta.focus.pct),
     KoalaStyle.GammaFocus.of(gamma.focus.pct),
+    KoalaStyle.RhoShineX.of(rho.position.shineAnchor().first.pct),
+    KoalaStyle.BetaShineX.of(beta.position.shineAnchor().first.pct),
+    KoalaStyle.GammaShineX.of(gamma.position.shineAnchor().first.pct),
+    KoalaStyle.RhoShineY.of(rho.position.shineAnchor().second.pct),
+    KoalaStyle.BetaShineY.of(beta.position.shineAnchor().second.pct),
+    KoalaStyle.GammaShineY.of(gamma.position.shineAnchor().second.pct),
     if (backgroundMode != PageBackgroundMode.Flux) KoalaStyle.ColorFlux.of("none") else null
 )
 

@@ -4,6 +4,7 @@ import koala.modifier.KoalaStyle
 import koala.modifier.rgba
 import koala.modifier.removeStyle
 import koala.modifier.setStyle
+import koala.modifier.shineAnchor
 import kotlinx.css.pct
 import streetlight.model.data.PageBackgroundMode
 import streetlight.model.data.PageTheme
@@ -30,6 +31,12 @@ fun applyTheme(theme: PageTheme?) {
     body.setStyle(KoalaStyle.RhoFocus, theme?.rho?.focus?.pct)
     body.setStyle(KoalaStyle.BetaFocus, theme?.beta?.focus?.pct)
     body.setStyle(KoalaStyle.GammaFocus, theme?.gamma?.focus?.pct)
+    body.setStyle(KoalaStyle.RhoShineX, theme?.rho?.position?.shineAnchor()?.first?.pct)
+    body.setStyle(KoalaStyle.BetaShineX, theme?.beta?.position?.shineAnchor()?.first?.pct)
+    body.setStyle(KoalaStyle.GammaShineX, theme?.gamma?.position?.shineAnchor()?.first?.pct)
+    body.setStyle(KoalaStyle.RhoShineY, theme?.rho?.position?.shineAnchor()?.second?.pct)
+    body.setStyle(KoalaStyle.BetaShineY, theme?.beta?.position?.shineAnchor()?.second?.pct)
+    body.setStyle(KoalaStyle.GammaShineY, theme?.gamma?.position?.shineAnchor()?.second?.pct)
 
     when (theme?.backgroundMode) {
         null, PageBackgroundMode.Flux -> body.removeStyle(KoalaStyle.ColorFlux)

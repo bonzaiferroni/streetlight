@@ -66,7 +66,7 @@ fun DIV.configureFeedRow(
             entitySummary(entity, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
         }
         entityBadge(entity, curator, FeedRowStyle.Badge, FeedRowStyle.Flair)
-        cellGrid(cells, buttons, modify(FeedRowStyle.Cells, BorderRadius2, OverflowClip, Outline))
+        cellGrid(cells, buttons, modify(FeedRowStyle.Cells, BorderRadius25, OverflowClip, Outline))
     }
 }
 

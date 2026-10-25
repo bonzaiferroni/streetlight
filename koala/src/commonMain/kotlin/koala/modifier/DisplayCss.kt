@@ -88,6 +88,8 @@ val BackgroundImage = Class("background-image")
 val HoverBg = Class("hover-bg")
 val BlurBackdrop = Class("blur-backdrop")
 val BlurBackdropBig = Class("blur-backdrop-big")
+/** Paper lit by the page's glows, each pooling on the edge its direction from the page's center points to. */
+val ShineSurface = Class("shine-surface")
 
 // Transform
 val FlipX = Class("flip-x")
@@ -212,6 +214,29 @@ $BlurBackdropBig {
     -webkit-backdrop-filter: var(--stronger-blur);
 }
 
+/* the lights paint a layer behind the content, so the flux turns their hue alone */
+$ShineSurface {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--paper-bg);
+}
+
+$ShineSurface::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: ${shineGradient("rho")}, ${shineGradient("beta")}, ${shineGradient("gamma")};
+    animation: var(--color-flux);
+    transition-property:
+        --rho-color, --rho-shine-x, --rho-shine-y, --rho-radius, --rho-focus,
+        --beta-color, --beta-shine-x, --beta-shine-y, --beta-radius, --beta-focus,
+        --gamma-color, --gamma-shine-x, --gamma-shine-y, --gamma-radius, --gamma-focus;
+    transition-duration: ${KoalaTheme.ThemeTransitionSeconds}s;
+    transition-timing-function: var(--magic-cubic-bounce);
+}
+
 /* Transform */
 $FlipX { transform: scaleX(-1); }
 
@@ -248,3 +273,29 @@ $PointerEventsAuto { pointer-events: auto; }
 $PointerEventsNone { pointer-events: none; }
 $AspectAuto        { aspect-ratio:   auto; }
 """
+
+/**
+ * The gradient [light] casts on a [ShineSurface], read from its glow's custom properties, as `rho`: an ellipse whose
+ * radii are [ShineSpread] times the glow's radius as a percentage of the surface's width and of its height.
+ */
+private fun shineGradient(light: String): String {
+    val color = "rgb(from var(--$light-color) r g b / calc(alpha * $ShineIntensity))"
+    val focus = "var(--$light-focus)"
+    fun stop(fraction: Double, transparency: Int) =
+        "color-mix(in oklab, $color, transparent $transparency%) calc($focus + (100% - $focus) * $fraction)"
+    return """
+    radial-gradient(ellipse calc(var(--$light-radius) * $ShineSpread%) calc(var(--$light-radius) * $ShineSpread%)
+        at var(--$light-shine-x) var(--$light-shine-y),
+        $color $focus,
+        ${stop(0.30, 20)},
+        ${stop(0.55, 45)},
+        ${stop(0.75, 70)},
+        ${stop(0.90, 88)},
+        transparent 100%)"""
+}
+
+/** The multiple of a glow's radius a [ShineSurface] reaches, half of it falling beyond the edge. */
+private const val ShineSpread = 3
+
+/** The fraction of a glow's energy a [ShineSurface] casts. */
+private const val ShineIntensity = 1

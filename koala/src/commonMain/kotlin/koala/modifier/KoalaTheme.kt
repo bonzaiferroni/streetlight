@@ -2,6 +2,7 @@ package koala.modifier
 
 import kotlinx.css.*
 import kotlinx.serialization.Serializable
+import kotlin.math.abs
 
 /** The colors, spacing unit and background glows a Koala stylesheet is built from. */
 data class KoalaTheme(
@@ -72,6 +73,12 @@ object KoalaStyle {
     val RhoFocus = Property<LinearDimension>("rho-focus", true)
     val BetaFocus = Property<LinearDimension>("beta-focus", true)
     val GammaFocus = Property<LinearDimension>("gamma-focus", true)
+    val RhoShineX = Property<LinearDimension>("rho-shine-x", true)
+    val BetaShineX = Property<LinearDimension>("beta-shine-x", true)
+    val GammaShineX = Property<LinearDimension>("gamma-shine-x", true)
+    val RhoShineY = Property<LinearDimension>("rho-shine-y", true)
+    val BetaShineY = Property<LinearDimension>("beta-shine-y", true)
+    val GammaShineY = Property<LinearDimension>("gamma-shine-y", true)
 
     val all = listOf(
         Accent, Primary, ColorFlux,
@@ -80,6 +87,8 @@ object KoalaStyle {
         RhoY, BetaY, GammaY,
         RhoRadius, BetaRadius, GammaRadius,
         RhoFocus, BetaFocus, GammaFocus,
+        RhoShineX, BetaShineX, GammaShineX,
+        RhoShineY, BetaShineY, GammaShineY,
     )
 }
 
@@ -92,6 +101,17 @@ data class GlowPosition(
 ) {
     override fun toString() =
         "circle ${radius.coerceIn(0, 200)}vw at ${x.coerceIn(0, 200)}% ${y.coerceIn(0, 200)}%"
+}
+
+/**
+ * Where a shine surface centers this glow, as percentages of the surface's sides: the point on its edge that the glow's
+ * direction from the page's center points to, that direction scaled by its max norm and stretched to the surface.
+ */
+fun GlowPosition.shineAnchor(): Pair<Double, Double> {
+    val dx = x - 50.0
+    val dy = y - 50.0
+    val norm = maxOf(abs(dx), abs(dy))
+    return if (norm == 0.0) 50.0 to 50.0 else 50 + dx / norm * 50 to 50 + dy / norm * 50
 }
 
 /** A background glow: its color, position, strength and focus. */

@@ -1,6 +1,6 @@
 package streetlight.compose.modifier
 
-// a surface lit by the page's lights, which has no web cousin
+// a surface lit by the page's lights, the cousin of the web's ShineSurface
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
