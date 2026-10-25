@@ -22,6 +22,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `FooView` | The composable a route renders |
 | `foo` on `LazyGridScope` or `LazyListScope` | A part of a lazy layout that adds its own items, such as `feedSection`, named in lower case as `items` is |
 | `KoalaFoo` | A group of the theme's values, such as `KoalaColors` |
+| `FooMod` | The fixed modifiers of the composable `Foo`, the cousin of the web's `FooStyle` |
 
 ## Web Counterparts
 
@@ -57,7 +58,9 @@ entry<FooRoute> {
 
 ## Composables
 
-A composable draws its content and leaves its framing to the caller. It takes a `modifier` and applies it to its root, and the call site gives the corners, shadow, outline and surface, as `CellGrid(top, bottom, Modifier.borderRadius(2.5, moonShadow = true, outline = true).shineSurface())`. The composable keeps a styling of its own only where its content depends on it, as the cells of `CellGrid` need a background behind them for their gaps to draw its lines.
+A composable draws its content and leaves its framing to the caller. It takes a `modifier` and applies it to its root, and the call site gives the corners, shadow, outline and surface, as `CellGrid(top, bottom, FeedRowMod.Cells)`. The composable keeps a styling of its own only where its content depends on it, as the cells of `CellGrid` need a background behind them for their gaps to draw its lines.
+
+A modifier whose arguments do not change in composition is declared once, as a `val` of a `FooMod` object named for the composable that applies it, the cousin of the web's `FooStyle` objects: `FeedRowMod.Base`, `FeedRowMod.Cells`. A val is a whole chain, and a call site extends it, as `FeedRowMod.Base.padding(theme.unit)`, or adds it to its own, as `.then(FeedRowMod.Cells)`. A modifier that takes a theme value in composition, as `padding(currentTheme.unit)`, stays at the call site. The object sits in the composable's file, private while only that file uses it.
 
 ## Theme
 

@@ -66,7 +66,7 @@ private fun MinimalFeedRow(entity: Entity) {
     val rowHeight = theme.unit * RowHeightUnits
 
     Row(
-        modifier = Modifier.fillMaxWidth().zenBg().padding(theme.unit),
+        modifier = FeedRowMod.Base.padding(theme.unit),
         horizontalArrangement = Arrangement.spacedBy(theme.unit),
     ) {
         Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1))
@@ -107,13 +107,9 @@ private fun RowFeedRow(entity: Entity) {
                 )
                 FlairBadge(entity, rowHeight)
             }
-            CellGrid(
-                entity.topDetails,
-                entity.bottomDetails,
-                Modifier.borderRadius(2.5, moonShadow = true, outline = true).shineSurface(),
-            )
+            CellGrid(entity.topDetails, entity.bottomDetails, FeedRowMod.Cells)
         },
-        modifier = Modifier.fillMaxWidth().zenBg().padding(theme.unit),
+        modifier = FeedRowMod.Base.padding(theme.unit),
     ) { measurables, constraints ->
         val (main, cells) = measurables
         val width = constraints.maxWidth
@@ -155,7 +151,7 @@ private fun GridFeedRow(entity: Entity) {
     val rowHeight = theme.unit * RowHeightUnits
 
     Column(
-        modifier = Modifier.fillMaxWidth().zenBg().padding(bottom = theme.unit),
+        modifier = FeedRowMod.Base.padding(bottom = theme.unit),
         verticalArrangement = Arrangement.spacedBy(theme.unit),
     ) {
         Thumbnail(
@@ -171,7 +167,7 @@ private fun GridFeedRow(entity: Entity) {
         CellGrid(
             entity.topDetails,
             entity.bottomDetails,
-            Modifier.padding(horizontal = theme.unit).borderRadius(2.5, moonShadow = true, outline = true).shineSurface(),
+            Modifier.padding(horizontal = theme.unit).then(FeedRowMod.Cells),
         )
     }
 }
@@ -263,3 +259,9 @@ private val WideRowWidth = 960.dp
 
 /** The shape of a grid entry's image: the web's `aspect-ratio: 3 / 2`. */
 private const val GridImageRatio = 3f / 2f
+
+/** The modifiers the feed rows share. */
+private object FeedRowMod {
+    val Base = Modifier.fillMaxWidth().zenBg()
+    val Cells = Modifier.borderRadius(2.5, moonShadow = true, outline = true).shineSurface()
+}
