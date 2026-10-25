@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import org.koin.compose.koinInject
 import streetlight.compose.model.AppSettings
 import streetlight.compose.model.HomeModel
+import streetlight.compose.modifier.borderRadius
 import streetlight.compose.utility.collectAsState
 
 /** The view of [streetlight.compose.model.HomeRoute]: the map over the home feed's [feedSection]. */
@@ -67,6 +68,7 @@ fun HomeView() {
                 .offset { IntOffset(0, -mapScrollOf(gridState, (mapHeight + theme.unit * 2).roundToPx())) }
                 .padding(theme.unit)
                 .height(mapHeight)
+                .borderRadius(2, moonShadow = true, outline = true)
         )
     }
 }

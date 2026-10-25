@@ -102,7 +102,7 @@ The app bundles the site's icons. The build syncs `www/icon`, the files the web 
 
 ## Map
 
-`MapWindow` shows MapLibre's map in the site's style, `www/misc/fjord.json`, read from the server by URL as the web reads it, so the two share one style and a change to it reaches the app without a build. The style carries everything that needs no code, as `koala.md` specifies. The window is framed as on the web's home and darkened toward its edges as the web's map overlay is, with MapLibre's controls but not its logo.
+`MapWindow` shows MapLibre's map in the site's style, `www/misc/fjord.json`, read from the server by URL as the web reads it, so the two share one style and a change to it reaches the app without a build. The style carries everything that needs no code, as `koala.md` specifies. The window is darkened toward its edges as the web's map overlay is, and `HomeView` frames it as on the web's home, with MapLibre's controls but not its logo.
 
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
@@ -128,4 +128,4 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 
 ### Cell Grid
 
-`CellGrid` shows an entity's top and bottom details as cells, on one line when every cell gets at least 128dp, otherwise the top details over the bottom ones. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon in the detail's color at its start and its text centered in the rest; a detail without text shows its icon alone at `opacityLow()`, in the same place. The cells stand a line apart, so the background draws the grid's lines, inside a container rounded two units, outlined, and in the moon's shadow.
+`CellGrid` shows an entity's top and bottom details as cells, on one line when every cell gets at least 128dp, otherwise the top details over the bottom ones. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon in the detail's color at its start and its text centered in the rest; a detail without text shows its icon alone at `opacityLow()`, in the same place. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `shineSurface()`.

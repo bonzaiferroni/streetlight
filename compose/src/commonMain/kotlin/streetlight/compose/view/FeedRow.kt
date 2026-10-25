@@ -33,6 +33,7 @@ import streetlight.compose.model.EntityDetail
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.zenBg
+import streetlight.compose.modifier.shineSurface
 import streetlight.compose.model.bottomDetails
 import streetlight.compose.model.toFlair
 import streetlight.compose.model.toThemeColor
@@ -106,7 +107,11 @@ private fun RowFeedRow(entity: Entity) {
                 )
                 FlairBadge(entity, rowHeight)
             }
-            CellGrid(entity.topDetails, entity.bottomDetails)
+            CellGrid(
+                entity.topDetails,
+                entity.bottomDetails,
+                Modifier.borderRadius(2.5, moonShadow = true, outline = true).shineSurface(),
+            )
         },
         modifier = Modifier.fillMaxWidth().zenBg().padding(theme.unit),
     ) { measurables, constraints ->
@@ -163,7 +168,11 @@ private fun GridFeedRow(entity: Entity) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
         }
-        CellGrid(entity.topDetails, entity.bottomDetails, Modifier.padding(horizontal = theme.unit))
+        CellGrid(
+            entity.topDetails,
+            entity.bottomDetails,
+            Modifier.padding(horizontal = theme.unit).borderRadius(2.5, moonShadow = true, outline = true).shineSurface(),
+        )
     }
 }
 

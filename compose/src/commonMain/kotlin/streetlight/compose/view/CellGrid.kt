@@ -14,10 +14,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import streetlight.compose.model.EntityDetail
-import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.cardBg
 import streetlight.compose.modifier.opacityLow
-import streetlight.compose.modifier.shineSurface
 
 /**
  * The details of an entity as cells: the [top] details and the [bottom] details on one line when every cell gets at
@@ -32,7 +30,7 @@ fun CellGrid(top: List<EntityDetail>, bottom: List<EntityDetail>, modifier: Modi
 
     Layout(
         content = { cells.forEach { Cell(it) } },
-        modifier = modifier.borderRadius(2.5, moonShadow = true, outline = true).shineSurface(),
+        modifier = modifier,
     ) { measurables, constraints ->
         val width = constraints.maxWidth
         val gap = theme.line.roundToPx()

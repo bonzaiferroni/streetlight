@@ -22,13 +22,12 @@ import org.maplibre.compose.overlay.MapOverlay
 import org.maplibre.compose.style.BaseStyle
 import org.maplibre.spatialk.geojson.Position
 import streetlight.compose.model.AppConfig
-import streetlight.compose.modifier.borderRadius
 import kotlin.math.hypot
 
 /**
  * The map in the site's fjord style, read from the server as the web reads it, looking over Denver at the web's
- * pitch. The cousin of the web's `geoMapMount`, framed as on the web's home, rounded two units, outlined, cast in the moon's shadow and darkened toward
- * its edges, with MapLibre's scale bar, compass and attribution and without its logo.
+ * pitch. The cousin of the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar, compass and
+ * attribution and without its logo.
  */
 @Composable
 fun MapWindow(modifier: Modifier = Modifier) {
@@ -40,7 +39,7 @@ fun MapWindow(modifier: Modifier = Modifier) {
 
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
     MaplibreMap(
-        modifier = modifier.borderRadius(2, moonShadow = true, outline = true),
+        modifier = modifier,
         state = state,
         overlay = {
             Spacer(Modifier.fillMaxSize().drawBehind { drawVignette() })
