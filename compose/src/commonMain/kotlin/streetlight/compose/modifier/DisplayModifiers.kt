@@ -31,13 +31,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /** Rounds the corners to [units] of the theme's unit and clips the content to them. The web's `BorderRadius(n)`. */
-fun Modifier.borderRadius(units: Int) = this then BorderRadiusElement(units)
+fun Modifier.borderRadius(units: Number) = this then BorderRadiusElement(units.toFloat())
 
 /** Draws the theme's low outline inside the edge, its corners rounded to [radius] units. The web's `--outline-low`. */
-fun Modifier.outline(radius: Int = 0) = this then OutlineElement(radius)
+fun Modifier.outline(radius: Number = 0) = this then OutlineElement(radius.toFloat())
 
 /** Casts the soft glow the web calls `MoonShadow` behind the content, its corners rounded to [radius] units. */
-fun Modifier.moonShadow(radius: Int = 0) = this then MoonShadowElement(radius)
+fun Modifier.moonShadow(radius: Number = 0) = this then MoonShadowElement(radius.toFloat())
 
 /** Paints the theme's quiet background behind the content. The web's `ZenBg`. */
 fun Modifier.zenBg() = this then BackgroundElement(Background.Zen)
@@ -49,7 +49,7 @@ fun Modifier.cardBg() = this then BackgroundElement(Background.Card)
  * Clips the content at [height] units and fades it over the two units that end [inset] units above the clip, as the
  * web's text clip with its mask of fixed stops: only content that reaches the clip fades.
  */
-fun Modifier.fadeClip(height: Int, inset: Float = 0f) = this then FadeClipElement(height, inset)
+fun Modifier.fadeClip(height: Number, inset: Number = 0) = this then FadeClipElement(height.toFloat(), inset.toFloat())
 
 /** Draws the content at the theme's low opacity. The web's `OpacityLow`. */
 fun Modifier.opacityLow() = this then OpacityElement(Opacity.Low)
@@ -60,7 +60,7 @@ fun Modifier.opacityHigh() = this then OpacityElement(Opacity.High)
 /** The theme's opacity levels a modifier applies. */
 private enum class Opacity { Low, High }
 
-private data class BorderRadiusElement(val units: Int) : ModifierNodeElement<BorderRadiusNode>() {
+private data class BorderRadiusElement(val units: Float) : ModifierNodeElement<BorderRadiusNode>() {
     override fun create() = BorderRadiusNode(units)
     override fun update(node: BorderRadiusNode) {
         node.units = units
@@ -68,7 +68,7 @@ private data class BorderRadiusElement(val units: Int) : ModifierNodeElement<Bor
     }
 }
 
-private class BorderRadiusNode(var units: Int) : Modifier.Node(), LayoutModifierNode, CompositionLocalConsumerModifierNode {
+private class BorderRadiusNode(var units: Float) : Modifier.Node(), LayoutModifierNode, CompositionLocalConsumerModifierNode {
     override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
         val placeable = measurable.measure(constraints)
         val corner = theme.unit * units
@@ -81,7 +81,7 @@ private class BorderRadiusNode(var units: Int) : Modifier.Node(), LayoutModifier
     }
 }
 
-private data class OutlineElement(val radius: Int) : ModifierNodeElement<OutlineNode>() {
+private data class OutlineElement(val radius: Float) : ModifierNodeElement<OutlineNode>() {
     override fun create() = OutlineNode(radius)
     override fun update(node: OutlineNode) {
         node.radius = radius
@@ -89,7 +89,7 @@ private data class OutlineElement(val radius: Int) : ModifierNodeElement<Outline
     }
 }
 
-private class OutlineNode(var radius: Int) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+private class OutlineNode(var radius: Float) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     override fun ContentDrawScope.draw() {
         drawContent()
         val width = theme.line.toPx()
@@ -105,7 +105,7 @@ private class OutlineNode(var radius: Int) : Modifier.Node(), DrawModifierNode, 
     }
 }
 
-private data class MoonShadowElement(val radius: Int) : ModifierNodeElement<MoonShadowNode>() {
+private data class MoonShadowElement(val radius: Float) : ModifierNodeElement<MoonShadowNode>() {
     override fun create() = MoonShadowNode(radius)
     override fun update(node: MoonShadowNode) {
         node.radius = radius
@@ -114,7 +114,7 @@ private data class MoonShadowElement(val radius: Int) : ModifierNodeElement<Moon
     }
 }
 
-private class MoonShadowNode(var radius: Int) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+private class MoonShadowNode(var radius: Float) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     var painters: List<DropShadowPainter>? = null
     private var paintedUnit: Dp? = null
 
@@ -153,7 +153,7 @@ private class BackgroundNode(var background: Background) : Modifier.Node(), Draw
     }
 }
 
-private data class FadeClipElement(val height: Int, val inset: Float) : ModifierNodeElement<FadeClipNode>() {
+private data class FadeClipElement(val height: Float, val inset: Float) : ModifierNodeElement<FadeClipNode>() {
     override fun create() = FadeClipNode(height, inset)
     override fun update(node: FadeClipNode) {
         node.height = height
@@ -162,7 +162,7 @@ private data class FadeClipElement(val height: Int, val inset: Float) : Modifier
     }
 }
 
-private class FadeClipNode(var height: Int, var inset: Float) :
+private class FadeClipNode(var height: Float, var inset: Float) :
     Modifier.Node(), LayoutModifierNode, DrawModifierNode, CompositionLocalConsumerModifierNode {
     private var clipHeight = 0f
 
