@@ -77,7 +77,7 @@ fun FlowContent.leadingSection(galaxies: List<Galaxy>) {
                     "Connect to your community through Streetlight.",
                     modify(Italic, OpacityHigh, TextAlignCenter, MarginTop(1)),
                 )
-                connectPicker(modify(Width(60.pct), AlignSelfCenter))
+                connectPicker(modify(Width(100), MaxWidth(40), AlignSelfCenter))
             }
         }
         row {

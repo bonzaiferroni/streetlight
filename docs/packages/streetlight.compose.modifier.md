@@ -37,7 +37,7 @@ A modifier lives in the file that corresponds to its web cousin's stylesheet: `D
 
 ## Shine Surface
 
-`shineBg()` paints the ink wash of `inkBg()` lit by the page's lights as if they shone on it from around it, each pooling on the edge its direction from the page's center points to. `ShineReach` sets how far a light reaches. The web's `ShineBg` is kept in step with it.
+`shineBg()` paints paper tinted with ink, lit by the page's lights as if they shone on it from around it, each pooling on the edge its direction from the page's center points to. `ShineReach` sets how far a light reaches. The web's `ShineBg` is kept in step with it.
 
 ## Animated Modifiers
 

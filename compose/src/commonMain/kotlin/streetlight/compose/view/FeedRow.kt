@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
@@ -148,12 +149,7 @@ private fun GridFeedRow(entity: Entity) {
     val rowHeight = theme.unit * RowHeightUnits
 
     Column(1, FeedRowMod.Base.padding(bottom = 2)) {
-        Thumbnail(
-            entity = entity,
-            modifier = Modifier.fillMaxWidth().aspectRatio(GridImageRatio),
-            url = entity.image?.let { it.medium ?: it.url },
-            scale = ContentScale.Fit,
-        )
+        ContainImage(entity.image, Modifier.fillMaxWidth().aspectRatio(GridImageRatio).background(entity.tint))
         Row(1, Modifier.padding(horizontal = 1)) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
@@ -184,27 +180,22 @@ private fun EntityText(entity: Entity, modifier: Modifier) {
     }
 }
 
-/**
- * The entity's image at [url], scaled by [scale], over a backdrop of its color so an entity without one keeps its
- * shape.
- */
+/** The entity's image cropped to fill, over its [tint] so an entity without one keeps its shape. */
 @Composable
-private fun Thumbnail(
-    entity: Entity,
-    modifier: Modifier,
-    url: Any? = entity.image?.let { it.thumb ?: it.url },
-    scale: ContentScale = ContentScale.Crop,
-) {
-    val theme = currentTheme
-    Box(modifier.background(theme.colors.colorOf(entity.toThemeColor()).copy(alpha = 0.2f))) {
+private fun Thumbnail(entity: Entity, modifier: Modifier) {
+    Box(modifier.background(entity.tint)) {
         AsyncImage(
-            model = url,
+            model = entity.image?.let { it.thumb ?: it.url },
             contentDescription = null,
-            contentScale = scale,
+            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
     }
 }
+
+/** The entity's color, faint, behind its image. */
+private val Entity.tint
+    @Composable @ReadOnlyComposable get() = currentTheme.colors.colorOf(toThemeColor()).copy(alpha = 0.2f)
 
 /** The entity's flair, animated, in its color at low opacity, [size] square. */
 @Composable

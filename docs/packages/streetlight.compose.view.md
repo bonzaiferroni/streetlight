@@ -42,6 +42,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` (`streetlight.web.layout`) |
 | `CellGrid` | `cellGrid` (`streetlight.web.layout`) |
 | `Icon` | `icon` (`koala.component`) |
+| `ContainImage` | `containImage` (`koala.component`) |
 | `AnimatedIcon` | `magicIcon` (`koala.component`), its animated mask |
 | `MapWindow` | `geoMapMount` (`koala.component`) and `initGeoMap` |
 
@@ -130,7 +131,7 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 |---|---|
 | `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis, leaving out those without text. The top details are in their colors; the bottom details are in the ink at `opacityHigh()`, as a description is |
 | `Row` | Padded a unit all around, where the web pads a line at the sides. The main part: the thumbnail, outlined; the title in `heading5` semi-bold on one line over the entity's `body` as markdown in `small` at `opacityHigh()`, both clipped at the row's 10 units with half a unit of inset and fading where they reach the clip; then the flair badge. The `CellGrid` sits below it, or beside it as the row's right half, less half a unit, from 960dp |
-| `Grid` | No padding but a unit below. The image across the top at 3:2, its `medium` variant whole over the backdrop; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart |
+| `Grid` | No padding but two units below. A `ContainImage` across the top at 3:2; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart |
 
 ### Cell Grid
 

@@ -33,7 +33,7 @@ fun FlowContent.cellGrid(
     mod: Modifier? = null,
 ) {
     if (cells.isNullOrEmpty() && buttons.isNullOrEmpty()) return
-    div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, ShineBg, mod)) {
+    div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, SchemeBg, mod)) {
         cells?.forEach { cell ->
             when (val url = cell.url) {
                 null -> row(CellGrid.CellMod) {

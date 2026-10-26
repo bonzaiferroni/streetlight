@@ -2,6 +2,7 @@ package streetlight.web.component
 
 import koala.SvgFile
 import koala.SvgPack
+import koala.component.IconStyle
 import koala.component.icon
 import koala.component.navigation
 import koala.component.textBlock
@@ -58,6 +59,10 @@ $Option {
 
 /* the option of the type chosen on an ancestor */
 ${OnboardType.entries.joinToString(",\n") { "${AppAttribute.OnboardType.selector(it)} $Option${AppAttribute.ConnectOption.selector(it)}" }} {
-    background-color: var(--primary-bg);
+    background-color: var(--ink-bg);
+    
+    ${IconStyle.Icon} {
+        color: var(--accent-fg);
+    }
 }
 """ }

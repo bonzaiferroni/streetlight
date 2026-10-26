@@ -90,6 +90,9 @@ val BlurBackdrop = Class("blur-backdrop")
 val BlurBackdropBig = Class("blur-backdrop-big")
 /** Paper lit by the page's glows, each pooling on the edge its direction from the page's center points to. */
 val ShineBg = Class("shine-bg")
+val LightedBg = Class("lighted-bg")
+val AccentBg = Class("accent-bg")
+val SchemeBg = Class("scheme-bg")
 
 // Transform
 val FlipX = Class("flip-x")
@@ -98,6 +101,7 @@ val FlipX = Class("flip-x")
 val MoonShadow = Class("moon-shadow")
 val MoonShadowText = Class("moon-shadow-text")
 val MoonDropShadow = Class("moon-drop-shadow")
+val AccentHalo = Class("accent-halo")
 
 // Button
 val ButtonPadding = Class("btn-padding")
@@ -167,6 +171,15 @@ $ColorSchemeBg   { background-color: var(--color-scheme, currentColor); }
 $PaperGradientBg { background:       var(--paper-gradient-bg); }
 $CardGradientBg  { background:       var(--card-gradient-bg); }
 
+$LightedBg       { background:       var(--gold-bg); }
+$AccentBg        { background:       var(--accent-bg); }
+
+$SchemeBg {
+    background: radial-gradient(circle farthest-side,
+        color-mix(in srgb, var(--color-scheme) 25%, var(--paper-bg)), 70%,
+        color-mix(in srgb, var(--color-scheme) 15%, var(--paper-bg)));
+}
+
 $InkGradientBg {
     background: color-mix(in srgb, currentColor 50%, transparent);
     mask-image: var(--ink-gradient-bg);
@@ -218,7 +231,7 @@ $BlurBackdropBig {
 $ShineBg {
     position: relative;
     isolation: isolate;
-    background-color: var(--ink-bg);
+    background-color: color-mix(in srgb, var(--ink-fg) 10%, var(--paper-bg));
 }
 
 $ShineBg::before {
@@ -230,9 +243,9 @@ $ShineBg::before {
     background: ${shineGradient("rho")}, ${shineGradient("beta")}, ${shineGradient("gamma")};
     animation: var(--color-flux);
     transition-property:
-        --rho-color, --rho-shine-x, --rho-shine-y, --rho-radius, --rho-focus,
-        --beta-color, --beta-shine-x, --beta-shine-y, --beta-radius, --beta-focus,
-        --gamma-color, --gamma-shine-x, --gamma-shine-y, --gamma-radius, --gamma-focus;
+        --rho-color, --rho-shine-x, --rho-shine-y, --rho-radius,
+        --beta-color, --beta-shine-x, --beta-shine-y, --beta-radius,
+        --gamma-color, --gamma-shine-x, --gamma-shine-y, --gamma-radius;
     transition-duration: ${KoalaTheme.ThemeTransitionSeconds}s;
     transition-timing-function: var(--magic-cubic-bounce);
 }
@@ -244,6 +257,7 @@ $FlipX { transform: scaleX(-1); }
 $MoonShadow     { box-shadow:  var(--moon-shadow); }
 $MoonShadowText { text-shadow: var(--moon-shadow-text); }
 $MoonDropShadow { filter:      var(--moon-drop-shadow); }
+$AccentHalo     { box-shadow:  0 0 1rem 0 color-mix(in srgb, var(--accent-fg) 10%, transparent); }
 
 /* Button */
 $ButtonPadding      { padding:       var(--btn-padding); }
@@ -279,11 +293,7 @@ $AspectAuto        { aspect-ratio:   auto; }
  * radii are [KoalaTheme.ShineSpread] times the glow's radius as a percentage of the surface's width and of its height.
  */
 private fun shineGradient(light: String): String {
+    val radius = "calc(var(--$light-radius) * ${KoalaTheme.ShineSpread}%)"
     val color = "rgb(from var(--$light-color) r g b / calc(alpha * ${KoalaTheme.ShineIntensity}))"
-    val focus = "var(--$light-focus)"
-    return """
-    radial-gradient(ellipse calc(var(--$light-radius) * ${KoalaTheme.ShineSpread}%) calc(var(--$light-radius) * ${KoalaTheme.ShineSpread}%)
-        at var(--$light-shine-x) var(--$light-shine-y),
-        $color $focus,
-        transparent 100%)"""
+    return "radial-gradient(ellipse $radius $radius at var(--$light-shine-x) var(--$light-shine-y), $color, transparent)"
 }

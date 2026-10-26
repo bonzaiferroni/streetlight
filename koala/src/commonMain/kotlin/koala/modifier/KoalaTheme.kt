@@ -41,7 +41,7 @@ data class KoalaTheme(
         /** The fraction of a glow's energy a shine surface casts. */
         const val ShineIntensity = 1.0
 
-        /** The opacity of the ink over paper in `--ink-bg`, the background of `InkBg` and of a shine surface below its glows. */
+        /** The opacity of the ink over paper in a shine surface's opaque background, below its glows. */
         const val ShineInk = 0.1
     }
 }

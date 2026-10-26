@@ -78,6 +78,9 @@ val ThemeCss get() = with(Koala) { """
     
     --gold: $gold;
     --gold-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
+    --gold-bg: radial-gradient(circle farthest-side,
+        color-mix(in srgb, var(--gold-fg) 25%, var(--paper-bg)), 70%,
+        color-mix(in srgb, var(--gold-fg) 15%, var(--paper-bg)));
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     --lamp-bg: color-mix(in srgb, rgb(var(--gold)) 50%, rgb(var(--paper)));
     
@@ -174,7 +177,9 @@ body {
     
     --accent-button: oklch(from rgb(var(--accent)) calc(l * 0.93) calc(c * 0.8) h);
     --accent-fg: color-mix(in srgb, rgb(var(--accent)) 50%, rgb(var(--ink)));
-    --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
+    --accent-bg: radial-gradient(circle farthest-side,
+        color-mix(in srgb, var(--accent-fg) 25%, var(--paper-bg)), 70%,
+        color-mix(in srgb, var(--accent-fg) 15%, var(--paper-bg)));
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
     
     --rho-bg: rgb(var(--rho-rgb));

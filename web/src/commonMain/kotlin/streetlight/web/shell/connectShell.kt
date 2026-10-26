@@ -41,7 +41,7 @@ fun FlowContent.connectShell(initialType: OnboardType) {
             column(modify(ContainerMdRow, FlexItems1, TextAlignCenter)) {
                 column {
                     heading4("Connect to your community.")
-                    connectPicker(modify(Width(80.pct), AlignSelfCenter))
+                    connectPicker(modify(Width(75.pct), AlignSelfCenter))
                     textBlock("Find out what Streetlight can offer.", modify(Italic, Padding(1), OpacityHigh))
                 }
                 videoBox(VideoFile.MapZoomClick)
@@ -63,7 +63,12 @@ fun FlowContent.connectShell(initialType: OnboardType) {
 
 fun FlowContent.connectBusiness() {
     column(modify(BodyStyle.ZenColumn, ContainerTypeInlineSize)) {
-        markdown(businessIntro, modify(MaxWidth(80.pct), AlignSelfCenter, PaddingX2, Prose, TextAlignCenter))
+        column(MarginTop(4)) {
+            filigree {
+                heading2("Put your events on the map")
+            }
+            markdown(businessIntro, modify(MaxWidth(80.pct), AlignSelfCenter, PaddingX2, Prose, TextAlignCenter))
+        }
 
         column(modify(ContainerMdRow, FlexItems1, Gap2Px, BorderRadius2, OverflowClip, Outline)) {
             row(modify(FlexItems1, Gap2Px)) {
@@ -155,8 +160,6 @@ object ConnectShell {
 }
 
 private val businessIntro by lazyMarkdown("""
-### Put your events on the map ---
-
 *Streetlight is built upon the idea that the fullest human experience begins shoulder to shoulder, face to face, in a warm and friendly place. You've worked hard to create a place for people to gather, and we've made it easy for people to discover.* 
 """)
 
