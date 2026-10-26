@@ -83,8 +83,8 @@ $Image {
     aspect-ratio: 4 / 3;
     max-height: 50dvh;
     grid-template-rows: minmax(0, 1fr);
-    border-inline: var(--outline-low);
-    border-image: linear-gradient(var(--outline-low-fg), transparent) 1;
+    border-inline: var(--outline-mid);
+    border-image: linear-gradient(var(--outline-mid-fg), transparent) 1;
 
     @container (width >= 640px) { aspect-ratio: 21 / 9; }
 

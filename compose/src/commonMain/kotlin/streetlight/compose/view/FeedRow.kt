@@ -32,6 +32,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.em
 import coil3.compose.AsyncImage
 import streetlight.compose.model.EntityDetail
+import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.zenBg
@@ -100,7 +101,7 @@ private fun RowFeedRow(entity: Entity) {
     Layout(
         content = {
             Row(1) {
-                Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1, outline = true))
+                Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1, outline = Outline.Mid))
                 EntityText(
                     entity = entity,
                     modifier = Modifier.weight(1f)
@@ -255,6 +256,6 @@ private const val MaxImageRatio = 4f
 /** The modifiers the feed rows share. */
 private object FeedRowMod {
     val Base = Modifier.fillMaxWidth().zenBg()
-    val GridBase = Modifier.fillMaxWidth().borderRadius(3, outline = true).heavyCardBg()
-    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = true).schemeBg()
+    val GridBase = Modifier.fillMaxWidth().borderRadius(3, outline = Outline.Low).heavyCardBg()
+    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = Outline.Mid).schemeBg()
 }

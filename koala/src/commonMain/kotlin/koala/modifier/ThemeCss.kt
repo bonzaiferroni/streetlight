@@ -23,9 +23,11 @@ val ThemeCss get() = with(Koala) { """
     --tabs-bg: rgba(var(--paper), .5);
     --ink-dim: rgba(var(--ink), .8);
     --ink-disabled: color-mix(in srgb, var(--ink-fg) 50%, var(--paper-bg));
-    --outline-low-fg: rgba(var(--ink), .2);
-    --outline-mid-fg: rgba(var(--ink), .5);
+    --outline-low-fg: rgba(var(--ink), .1);
+    --outline-mid-fg: rgba(var(--ink), .2);
+    --outline-high-fg: rgba(var(--ink), .5);
     --outline-low: 2px solid var(--outline-low-fg);
+    --outline-mid: 2px solid var(--outline-mid-fg);
     
     --gray: $gray;
     --gray-fg: rgb(var(--gray));

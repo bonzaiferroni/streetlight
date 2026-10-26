@@ -25,7 +25,7 @@ $Class {
     scrollbar-width: none;
     
     $Card {
-        border: var(--outline-low);
+        border: var(--outline-mid);
         outline-offset: -2px;
     }
 }

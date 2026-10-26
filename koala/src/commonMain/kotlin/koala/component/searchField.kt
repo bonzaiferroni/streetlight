@@ -49,7 +49,7 @@ val SearchFieldCss get() = with(SearchField) { """
 $Container {
     color: var(--ink-fg);
     background: var(--zen-bg);
-    outline: var(--outline-low);
+    outline: var(--outline-mid);
     outline-offset: -2px;
     transition: var(--transition-outline-color);
 

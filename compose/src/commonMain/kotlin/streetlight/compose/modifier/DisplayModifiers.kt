@@ -38,11 +38,20 @@ import kotlin.math.pow
 /**
  * Rounds the corners to [units] of the theme's unit and clips the content to them. The web's `BorderRadius(n)`.
  *
- * [moonShadow] casts the web's `MoonShadow` behind the content and [outline] draws the theme's low outline, the web's
- * `--outline-low`, inside the edge, both following the corners.
+ * [moonShadow] casts the web's `MoonShadow` behind the content and [outline] draws the theme's outline of that level
+ * inside the edge, both following the corners.
  */
-fun Modifier.borderRadius(units: Number, moonShadow: Boolean = false, outline: Boolean = false) =
+fun Modifier.borderRadius(units: Number, moonShadow: Boolean = false, outline: Outline? = null) =
     this then BorderRadiusElement(units.toFloat(), moonShadow, outline)
+
+/** The level of an outline a [borderRadius] draws. */
+enum class Outline {
+    /** The web's `--outline-low`. */
+    Low,
+
+    /** The web's `--outline-mid`. */
+    Mid,
+}
 
 /** Paints the theme's quiet background behind the content. The web's `ZenBg`. */
 fun Modifier.zenBg() = this then BackgroundElement(Background.Zen)
@@ -80,7 +89,7 @@ private enum class Opacity { Low, High }
 private data class BorderRadiusElement(
     val units: Float,
     val moonShadow: Boolean,
-    val outline: Boolean,
+    val outline: Outline?,
 ) : ModifierNodeElement<BorderRadiusNode>() {
     override fun create() = BorderRadiusNode(units, moonShadow, outline)
     override fun update(node: BorderRadiusNode) {
@@ -93,7 +102,7 @@ private data class BorderRadiusElement(
     }
 }
 
-private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var outline: Boolean) :
+private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var outline: Outline?) :
     Modifier.Node(), LayoutModifierNode, DrawModifierNode, CompositionLocalConsumerModifierNode {
     var painters: List<DropShadowPainter>? = null
     private var paintedUnit: Dp? = null
@@ -122,12 +131,15 @@ private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var ou
             shadows.forEach { with(it) { draw(size) } }
         }
         drawContent()
-        if (outline) {
+        outline?.let { level ->
             val width = theme.line.toPx()
             val corner = (unit * units).toPx()
             // the stroke runs inside the edge, its corners following the edge's, as a CSS border does
             drawRoundRect(
-                color = theme.colors.outlineLow,
+                color = when (level) {
+                    Outline.Low -> theme.colors.outlineLow
+                    Outline.Mid -> theme.colors.outlineMid
+                },
                 topLeft = Offset(width / 2, width / 2),
                 size = Size(size.width - width, size.height - width),
                 cornerRadius = CornerRadius((corner - width / 2).coerceAtLeast(0f)),

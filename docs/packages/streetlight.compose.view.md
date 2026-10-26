@@ -36,7 +36,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `KoalaOpacity` | `--opacity-low`, `--opacity-half`, `--opacity-high` |
 | `KoalaTypography` | `TypographyCss` and the text classes, such as `TextSmall` |
 | `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
-| `currentTheme.line` | The 2px of `Gap2Px` and `--outline-low` |
+| `currentTheme.line` | The 2px of `Gap2Px` and `--outline-mid` |
 | `Column(gap)`, `Row(gap)` | `Column`, `Row` with `Gap(n)` |
 | `feedSection` | `feedSection` (`streetlight.web.layout`) |
 | `FeedRow`, `FeedMode` | `feedRow`, `FeedMode` (`streetlight.web.layout`) |

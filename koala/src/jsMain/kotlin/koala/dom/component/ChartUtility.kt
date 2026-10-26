@@ -50,7 +50,7 @@ object ChartUtility {
     fun buildTheme(): EChartsTheme {
         val ink = cssVar("--ink-fg")
         val muted = cssVar("--ink-dim")
-        val grid = cssVar("--outline-low-fg")
+        val grid = cssVar("--outline-mid-fg")
         val font = cssVar("--font-family")
 
 

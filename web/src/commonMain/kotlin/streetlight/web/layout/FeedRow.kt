@@ -158,7 +158,7 @@ $Image {
     align-self: start;
     width: var(--row-height);
     aspect-ratio: 1;
-    border: var(--outline-low);
+    border: var(--outline-mid);
     border-radius: var(--unit);
 }
 

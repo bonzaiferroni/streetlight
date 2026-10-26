@@ -21,6 +21,7 @@ val BorderSolid2Px = Class("border-solid")
 val BorderRadiusTop1 = Class("border-radius-top-1")
 val BorderRadiusBottom1 = Class("border-radius-bottom-1")
 val Outline = Class("outline-solid")
+val OutlineLow = Class("outline-low")
 val OutlineEditorFg = Class("outline-editor-fg")
 val Chopped = Class("chopped")
 
@@ -136,11 +137,12 @@ $CircleShape {
 }
 
 /* Border Radius */
-$BorderDashed2Px     { border:        2px dashed var(--outline-low-fg); }
-$BorderSolid2Px      { border:        var(--outline-low); }
+$BorderDashed2Px     { border:        2px dashed var(--outline-mid-fg); }
+$BorderSolid2Px      { border:        var(--outline-mid); }
 $BorderRadiusTop1    { border-radius: var(--unit) var(--unit) 0 0; }
 $BorderRadiusBottom1 { border-radius: 0 0 var(--unit) var(--unit); }
-$Outline             { outline:       var(--outline-low); outline-offset: -2px; }
+$Outline             { outline:       var(--outline-mid); outline-offset: -2px; }
+$OutlineLow          { outline:       var(--outline-low); outline-offset: -2px; }
 $OutlineEditorFg     { outline:       2px solid var(--system-fg); outline-offset: -2px; }
 
 $Chopped {

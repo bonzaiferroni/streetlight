@@ -7,7 +7,7 @@
     width: 100%;
     text-transform: uppercase;
     font-size: var(--text-small);
-    outline: var(--outline-low);
+    outline: var(--outline-mid);
 }
 
 .tabs-button {

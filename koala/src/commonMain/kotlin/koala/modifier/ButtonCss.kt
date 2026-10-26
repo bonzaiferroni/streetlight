@@ -47,7 +47,7 @@ ${ButtonStyle.Class} {
     &$Editor {
         box-shadow: none;
         background: var(--system-bg);
-        outline: var(--outline-low);
+        outline: var(--outline-mid);
         outline-offset: -2px;
     }
 }
@@ -75,7 +75,7 @@ ${ButtonStyle.Class}$Zen {
     background: var(--zen-bg);
     box-shadow: none;
     text-shadow: none;
-    outline: var(--outline-low);
+    outline: var(--outline-mid);
     outline-offset: -2px;
 
     &$PrimaryBg {

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import streetlight.compose.model.AppSettings
 import streetlight.compose.model.HomeModel
+import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
@@ -51,7 +52,7 @@ fun HomeView() {
                 Modifier.fillMaxWidth()
                     .padding(if (isGrid) 0 else 1)
                     .height(theme.unit * MapHeightUnits)
-                    .borderRadius(2, moonShadow = true, outline = true)
+                    .borderRadius(2, moonShadow = true, outline = Outline.Mid)
             )
         }
         feed?.let { feedSection(it, model.feedTypeState, mode, settings.feedModeState) }

@@ -12,7 +12,7 @@ ${MarkdownStyle.Container} td {
 ${MarkdownStyle.Container} table {
     border-collapse: separate;
     border-spacing: 0;
-    border: 2px solid var(--outline-low-fg);
+    border: 2px solid var(--outline-mid-fg);
     border-radius: var(--unit);
     background: var(--zen-bg);
     background-clip: padding-box;
@@ -22,7 +22,7 @@ ${MarkdownStyle.Container} table {
 
 ${MarkdownStyle.Container} th + th,
 ${MarkdownStyle.Container} td + td {
-    border-left: 2px solid var(--outline-low-fg);
+    border-left: 2px solid var(--outline-mid-fg);
 }
 
 ${MarkdownStyle.Container} th {
