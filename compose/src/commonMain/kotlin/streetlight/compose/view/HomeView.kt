@@ -1,7 +1,6 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.widthIn
@@ -13,7 +12,6 @@ import streetlight.compose.modifier.opacityHigh
 import streetlight.model.data.Galaxy
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicText
@@ -27,26 +25,30 @@ import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
+import streetlight.compose.model.currentPortal
+import streetlight.compose.model.GalaxyRoute
+import streetlight.compose.modifier.pointerClick
+import streetlight.compose.model.HomeRoute
+import streetlight.model.data.HomeContent
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+/** The screen of [HomeRoute]: its content once inflated, shown in the [HomeView]. */
+@Composable
+fun HomeScreen() = Inflated<HomeContent>(HomeRoute) { content ->
+    context(koinViewModel<HomeModel> { parametersOf(content) }) { HomeView() }
+}
 
 /**
- * The view of [streetlight.compose.model.HomeRoute]: the header, the map, the menus, the galaxies beside the connect picker, the home feed's
+ * The view of [HomeRoute]: the header, the map, the menus, the galaxies beside the connect picker, the home feed's
  * [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
  */
 @Composable
 context(model: HomeModel)
 fun HomeView() {
     val page by model.feed.feedState.collectAsState()
-    val isLoading by model.isLoadingState.collectAsState()
-    val problem by model.problemState.collectAsState()
     val theme = currentTheme
-
-    val message = problem ?: if (isLoading) "Loading…" else null
-    if (message != null) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            BasicText(message, color = { theme.colors.ink })
-        }
-        return
-    }
+    PageThemeEffect(null)
 
     val mode by model.feed.modeState.collectAsState()
 
@@ -69,7 +71,7 @@ fun HomeView() {
         }
         fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }
         fullItem { LeadingSection(Modifier.padding(horizontal = if (isGrid) 0 else 1, vertical = 4)) }
-        page?.let { context(model.feed) { feedSection(it, mode) } }
+        context(model.feed) { feedSection(page, mode) }
         fullItem { AppFooter(HomeViewSource, Modifier.padding(top = 8)) }
     }
 }
@@ -96,13 +98,16 @@ private fun HomeMenus(modifier: Modifier) {
 @Composable
 context(model: HomeModel)
 private fun LeadingSection(modifier: Modifier) {
-    val galaxies by model.galaxiesState.collectAsState()
+    val galaxies = model.content.galaxies
     val theme = currentTheme
+    val portal = currentPortal
     BoxWithConstraints(modifier) {
         val galaxyColumn = @Composable { columnModifier: Modifier ->
             Column(1, columnModifier) {
                 NotedHeading("Galaxies", "Communities with a particular focus.")
-                galaxies.forEach { SmallGalaxyCard(it) }
+                galaxies.forEach { galaxy ->
+                    SmallGalaxyCard(galaxy, Modifier.pointerClick { portal.open(GalaxyRoute(galaxy.slug)) })
+                }
             }
         }
         val connectColumn = @Composable { columnModifier: Modifier ->

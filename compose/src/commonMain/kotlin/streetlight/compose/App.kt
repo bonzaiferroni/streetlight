@@ -1,6 +1,7 @@
 package streetlight.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import coil3.compose.setSingletonImageLoaderFactory
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -8,6 +9,7 @@ import org.koin.dsl.koinConfiguration
 import streetlight.compose.io.buildImageLoader
 import streetlight.compose.model.AppConfig
 import streetlight.compose.model.HomeRoute
+import streetlight.compose.model.LocalPortal
 import streetlight.compose.model.appModule
 import streetlight.compose.model.rememberPortal
 import streetlight.compose.view.AppPortal
@@ -21,7 +23,7 @@ fun App() {
         setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
 
         AppTheme {
-            context(rememberPortal(HomeRoute)) {
+            CompositionLocalProvider(LocalPortal provides rememberPortal(HomeRoute)) {
                 AppPortal()
             }
         }

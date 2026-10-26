@@ -7,6 +7,7 @@ import streetlight.model.data.Entity
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
+import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
@@ -28,4 +29,13 @@ fun Entity.toFlair(): SvgPack = when (this) {
         else -> FlairIcon.Default.svg
     }
     else -> FlairIcon.Default.svg
+}
+
+/** The route of this entity's page, the event's for an event at a location, or `null` while the app has no page for it. */
+fun Entity.toRoute(): AppRoute? = when (this) {
+    is EventLocation -> EventRoute(eventSlug)
+    is EventPost -> event.toRoute()
+    is Event -> EventRoute(slug)
+    is Galaxy -> GalaxyRoute(slug)
+    else -> null
 }

@@ -37,7 +37,8 @@ import androidx.compose.foundation.layout.Spacer
 import streetlight.compose.model.isSearched
 
 /**
- * Adds the feed section of the [feed] model to this grid, showing [page], the feed as the view last read it, in [mode]:
+ * Adds the feed section of the [feed] model to this grid, showing [page], the feed as the view last read it, in [mode],
+ * its entries opening their pages:
  * the heading of its type in a filigree, between the menu of the types its context offers and the switch of
  * [FeedMode]; for a type that is searched, the tag filter of an events feed and the search; then the entries, or a
  * message when it has none. The cousin of the web's `feedSection`.

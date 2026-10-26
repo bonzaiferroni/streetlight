@@ -19,7 +19,8 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 
 | Type | Pattern |
 |---|---|
-| `FooView` | The composable a route renders |
+| `FooScreen` | The composable a route renders: it inflates the route's content and shows the `FooView` |
+| `FooView` | The composable that shows a route's content |
 | `foo` on `LazyGridScope`, `LazyStaggeredGridScope` or `LazyListScope` | A part of a lazy layout that adds its own items, such as `feedSection`, named in lower case as `items` is |
 | `KoalaFoo` | A group of the theme's values, such as `KoalaColors` |
 | `FooMod` | The fixed modifiers of the composable `Foo`, the cousin of the web's `FooStyle` |
@@ -29,7 +30,8 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | Compose | Web |
 |---|---|
 | `AppPortal` | `viewPortal` |
-| `FooView` | `viewFoo` |
+| `FooScreen` | `viewFooRoute` and its `RouteBlock` |
+| `FooView` | `viewFoo`, and the shell it renders |
 | `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
 | `KoalaAppTheme` | `KoalaTheme`, and the stylesheets built from it |
 | `KoalaColors` | The color custom properties of `ThemeCss` |
@@ -49,6 +51,10 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `SmallGalaxyCard` | `smallGalaxyCard` (`streetlight.web.layout`) |
 | `ConnectPicker` | `connectPicker` (`streetlight.web.component`) |
 | `AppFooter` | `appFooter` (`streetlight.web.page`), without its lottie |
+| `EntityHeader` | `entityHeader` and its `pageHeader` card (`streetlight.web.layout`) |
+| `Tabs` | `tabs` (`koala.layout`) |
+| `GalaxyView`, its `layoutBlock` | `galaxyShell` and `renderLayout` (`streetlight.web.layout`) |
+| `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
 | `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
@@ -68,21 +74,20 @@ A web link to a page the app has no route for, such as a galaxy card's or the fo
 
 ## Views
 
-`AppPortal` maps each route to its view with one `entry` in its `entryProvider`. Each entry gets its own saved state and its own view model store, so a view model lives while its route is on the back stack.
+`AppPortal` maps each route to its screen with one `entry` in its `entryProvider`. Each entry gets its own saved state and its own view model store, so what a screen keeps lives while its route is on the back stack.
 
-A view declares its view model as the context parameter `model`, and the `Portal` when it navigates, following `docs/kotlin-style.md`. `App()` provides the `Portal` once, above `AppPortal`. A view reads a lens with `collectAsState()` from `TapUtility.kt`.
+A route's `FooScreen` is where the app arrives at it. It inflates the route's content with `Inflated<Content>(route)`, which shows a message while it loads or when a problem keeps it, then builds the view's model from the content in hand and shows the `FooView`. The view and its model never see the inflation: a model is built with its content, and a view shows what its model holds, as the web's `view*Route` hands its content to the shell.
 
 ```kotlin
-entry<FooRoute> {
-    context(koinViewModel<FooModel>()) { FooView() }
+@Composable
+fun GalaxyScreen(route: GalaxyRoute) = Inflated<GalaxyContent>(route) { content ->
+    context(koinViewModel<GalaxyModel> { parametersOf(content) }) { GalaxyView() }
 }
 ```
 
-## State
+A view declares its view model as the context parameter `model`, following `docs/kotlin-style.md`, and reads a lens with `collectAsState()` from `TapUtility.kt`. A view with no state of its own takes its content as an argument, as `EventView(event)`.
 
-A part of a view that shows a model's state declares the model as a context parameter, as `docs/kotlin-style.md` specifies, and reads the taps it needs where it shows them, as `FeedHeading` reads its `FeedModel`. A control that could serve any state, such as `TagFilter` or `SearchField`, takes the one `MutableTap` it binds instead, so it stays reusable. A value is an argument where it is what the part is about, or where the part cannot read state, as a lazy layout's builder cannot: its view reads the page and the mode and passes them in.
-
-Reading a tap where it is shown keeps recomposition to that part. Passing a tap or a model costs nothing, since the same instance reaches each call and the call skips. A part that grows or shrinks when its state changes is measured again, and so is each parent its size depends on, so the parts below it move as they would on the web.
+The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that opens a page reads `currentPortal` and calls it from `pointerClick`, as a feed row opens its entity's `toRoute()` and the logo of `AppHeader` returns `home()`. An entity the app has no page for opens nothing.
 
 ## Composables
 
@@ -96,7 +101,7 @@ A modifier whose arguments do not change in composition is declared once, as a `
 
 The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
 
-`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
+`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. Each view shows its page's theme with `PageThemeEffect`, its content's theme or `null` for the default, so returning to a view restores its own.
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. `KoalaLights` holds the glows and the flux hue as states, `drawLights` draws them as the page background, its size the frame of their positions and radii; `KoalaLights.pageSize`, set as the root is laid out, gives a light's radius on the page to a surface drawn elsewhere, and `shineBg()` casts them on a surface. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 

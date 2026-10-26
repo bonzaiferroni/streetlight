@@ -23,18 +23,23 @@ import org.maplibre.compose.style.BaseStyle
 import org.maplibre.spatialk.geojson.Position
 import streetlight.compose.model.AppConfig
 import kotlin.math.hypot
+import kampfire.model.GeoPoint
 
 /**
- * The map in the site's fjord style, read from the server as the web reads it, looking over Denver at the web's
- * pitch. The cousin of the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar, compass and
- * attribution and without its logo.
+ * The map in the site's fjord style, read from the server as the web reads it, looking over [center], or Denver without
+ * one, at the web's pitch. The cousin of the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar,
+ * compass and attribution and without its logo.
  */
 @Composable
-fun MapWindow(modifier: Modifier = Modifier) {
+fun MapWindow(modifier: Modifier = Modifier, center: GeoPoint? = null) {
     val config = koinInject<AppConfig>()
     val state = rememberMapState(
         baseStyle = BaseStyle.Uri(config.apiUrl + FjordStylePath),
-        initialCameraPosition = CameraPosition(center = Denver, zoom = 11.0, pitch = 45.0),
+        initialCameraPosition = CameraPosition(
+            center = center?.let { Position(longitude = it.lng, latitude = it.lat) } ?: Denver,
+            zoom = if (center != null) PointZoom else 11.0,
+            pitch = 45.0,
+        ),
     )
 
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
@@ -77,3 +82,6 @@ private const val FjordStylePath = "/www/misc/fjord.json"
 
 /** The web's starting point when it has none of its own. */
 private val Denver = Position(longitude = -104.95, latitude = 39.75)
+
+/** The zoom of a map looking over a single place. */
+private const val PointZoom = 15.0

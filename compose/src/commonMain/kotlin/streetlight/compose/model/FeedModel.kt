@@ -21,16 +21,17 @@ import streetlight.model.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * A feed shown in a view, with its type, the [modeState] it is laid out in, and the tag and search that filter it. The
- * feed is read again in [scope] when the tag or the search changes, the search once it rests. A view model holds one per
- * feed it shows.
+ * A feed shown in a view, starting from [page], with its type, the [modeState] it is laid out in, and the tag and search
+ * that filter it. The feed is read again in [scope] when the tag or the search changes, the search once it rests. A view
+ * model holds one per feed it shows.
  */
 class FeedModel(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     val modeState: MutableTap<FeedMode>,
+    page: EntityFeed,
 ) {
-    private val store = storeOf(FeedState())
+    private val store = storeOf(FeedState(feed = page, type = page.source?.type ?: FeedType.Events))
 
     val feedState = store.tapOf { it.feed }
     val typeState = store.mutableTapOf({ it.type }) { copy(type = it) }
@@ -47,15 +48,12 @@ class FeedModel(
         }
     }
 
-    /** Shows [feed], read with the rest of a view's content, and takes its type. */
-    fun show(feed: EntityFeed) = store.set { copy(feed = feed, type = feed.source?.type ?: type) }
-
     /** Reads the first page of the feed again, filtered by the tag and search; a newer read cancels one in flight. */
     private fun read() {
         readJob?.cancel()
         readJob = scope.launch {
             val state = store.now
-            val source = state.feed?.source ?: return@launch
+            val source = state.feed.source ?: return@launch
             val search = state.search.trim().takeIf { it.isNotEmpty() }
             val cursor = EntityCursor.Upcoming.copy(tag = state.tag?.ordinal, search = search)
             // a failed read keeps the feed shown, as the view has no toaster yet
@@ -69,8 +67,8 @@ class FeedModel(
 
 /** The state of a [FeedModel]. */
 data class FeedState(
-    val feed: EntityFeed? = null,
-    val type: FeedType = FeedType.Events,
+    val feed: EntityFeed,
+    val type: FeedType,
     val tag: EventTag? = null,
     val search: String = "",
 )

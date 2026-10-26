@@ -43,22 +43,29 @@ import streetlight.compose.model.toFlair
 import streetlight.model.data.toEntityType
 import streetlight.model.data.Entity
 import streetlight.model.data.FeedContext
+import streetlight.compose.model.currentPortal
+import streetlight.compose.model.toRoute
+import streetlight.compose.modifier.pointerClick
 
 /** The layouts of a feed row, the cousin of the web's `FeedMode`. */
 enum class FeedMode { Minimal, Row, Grid }
 
 /**
- * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in.
- * The cousin of the web's `feedRow`.
+ * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in,
+ * opening the entity's page when the app has one. The cousin of the web's `feedRow`.
  */
 @Composable
 context(feed: FeedContext?)
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
+    val route = entity.toRoute()
+    val portal = currentPortal
     CompositionLocalProvider(LocalSchemeColor provides entity.toEntityType()) {
-        when (mode) {
-            FeedMode.Minimal -> MinimalFeedRow(entity)
-            FeedMode.Row -> RowFeedRow(entity)
-            FeedMode.Grid -> GridFeedRow(entity)
+        Box(if (route != null) Modifier.pointerClick { portal.open(route) } else Modifier) {
+            when (mode) {
+                FeedMode.Minimal -> MinimalFeedRow(entity)
+                FeedMode.Row -> RowFeedRow(entity)
+                FeedMode.Grid -> GridFeedRow(entity)
+            }
         }
     }
 }

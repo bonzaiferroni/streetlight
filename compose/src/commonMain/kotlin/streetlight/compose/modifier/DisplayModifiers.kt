@@ -2,6 +2,9 @@ package streetlight.compose.modifier
 
 // the cousins of the web's DisplayCss: borders, shadows and opacity
 
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -76,6 +79,10 @@ fun Modifier.schemeBg() = this then SchemeBgElement
  * web's text clip with its mask of fixed stops: only content that reaches the clip fades.
  */
 fun Modifier.fadeClip(height: Number, inset: Number = 0) = this then FadeClipElement(height.toFloat(), inset.toFloat())
+
+/** Calls [onClick] when the content is clicked, under the hand pointer and without a press effect. The web's `Clickable`. */
+fun Modifier.pointerClick(onClick: () -> Unit) =
+    this.clickable(interactionSource = null, indication = null, onClick = onClick).pointerHoverIcon(PointerIcon.Hand)
 
 /** Draws the content at the theme's low opacity. The web's `OpacityLow`. */
 fun Modifier.opacityLow() = this then OpacityElement(Opacity.Low)
