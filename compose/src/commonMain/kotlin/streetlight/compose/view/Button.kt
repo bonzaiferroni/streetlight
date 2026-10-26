@@ -5,7 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -21,6 +24,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -74,12 +78,16 @@ fun Button(
     val textStyle = theme.text.small.copy(
         fontWeight = FontWeight.Medium,
         lineHeight = 1.em / 0.9f,
+        textAlign = TextAlign.Center,
         shadow = if (isQuiet || !isEnabled) null else Shadow(Color.Black.copy(alpha = 0.8f), Offset(0f, 1f), 2f),
     )
 
+    // as wide as its content, at least the minimum, so the text centers in whatever room the flair leaves
     Row(
         modifier
             .defaultMinSize(minWidth = theme.unit * MinWidthUnits)
+            .width(IntrinsicSize.Max)
+            .height(theme.unit * HeightUnits)
             .then(
                 if (glow == null) Modifier
                 else Modifier
@@ -91,12 +99,19 @@ fun Button(
             .then(if (isQuiet) Modifier.border(theme.line, colors.outlineMid, shape) else Modifier)
             .clickable(enabled = isEnabled, role = Role.Button, interactionSource = null, indication = null, onClick = onClick)
             .then(if (isEnabled) Modifier.pointerHoverIcon(PointerIcon.Hand) else Modifier)
-            .padding(start = PaddingXUnits, top = PaddingTopUnits, end = PaddingXUnits, bottom = PaddingBottomUnits),
-        horizontalArrangement = Arrangement.spacedBy(theme.unit, Alignment.CenterHorizontally),
+            .padding(horizontal = PaddingXUnits),
+        horizontalArrangement = Arrangement.spacedBy(theme.unit),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        flair?.let { Icon(it.small, color = { textColor }, modifier = Modifier.alpha(FlairAlpha), size = theme.unit * 2) }
-        BasicText(text.uppercase(), style = textStyle, color = { textColor }, maxLines = 1, softWrap = false)
+        flair?.let { Icon(it.small, color = { textColor }, modifier = Modifier.alpha(FlairAlpha), size = theme.unit * FlairUnits) }
+        BasicText(
+            text.uppercase(),
+            modifier = Modifier.weight(1f),
+            style = textStyle,
+            color = { textColor },
+            maxLines = 1,
+            softWrap = false,
+        )
     }
 }
 
@@ -127,10 +142,14 @@ private const val MinWidthUnits = 16
 /** The reach of a button's glow in units, the web's `.8rem`. */
 private const val GlowUnits = 1.6f
 
-/** The padding in units, the web's `--btn-padding` of `.72rem 1rem .78rem`. */
-private const val PaddingTopUnits = 1.44f
+/** The height of a button in units, as every button and field is: the web's padding around its 1rem line. */
+private const val HeightUnits = 5
+
+/** The padding at a button's sides in units, the web's `1rem`. */
 private const val PaddingXUnits = 2
-private const val PaddingBottomUnits = 1.56f
+
+/** The height of a flair in units, the web's `SmallIconHeight`. */
+private const val FlairUnits = 3
 
 /** The opacity of a button's flair, the web's `.75`. */
 private const val FlairAlpha = 0.75f

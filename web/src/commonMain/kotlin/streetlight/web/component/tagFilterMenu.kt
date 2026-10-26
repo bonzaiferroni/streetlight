@@ -22,7 +22,7 @@ fun FlowContent.tagFilterMenu() {
     }
     button(modify(TagFilterMenu.Clear, AlignSelfCenter)) {
         onClick = TagFilterMenu.ClearTag.invokeJs(ThisElement)
-        icon(SvgFile.Restore.small, SmallIconHeight)
+        icon(SvgFile.X.small, SmallIconHeight)
     }
 }
 

@@ -23,20 +23,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.text.font.FontStyle
 import kampfire.model.MutableTap
 import koala.SvgFile
 import streetlight.compose.modifier.cardBg
-import streetlight.compose.modifier.opacityHigh
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 import streetlight.model.data.EventCategory
 import streetlight.model.data.EventTag
 
 /**
- * The tag that filters a feed, bound to [state]: the label icon and the tag, or a prompt without one, opening the
- * [EventTagMenu] in a [Popover], then a button that clears the tag while one is set. The cousin of the web's
- * `tagFilterMenu`.
+ * The tag that filters a feed, bound to [state]: a quiet button reading the tag with its flair, or "filter" with the
+ * label flair without one, opening the [EventTagMenu] in a [Popover], then a control that clears the tag while one is
+ * set. The cousin of the web's `tagFilterMenu`.
  */
 @Composable
 fun TagFilter(state: MutableTap<EventTag?>, modifier: Modifier = Modifier) {
@@ -47,31 +45,17 @@ fun TagFilter(state: MutableTap<EventTag?>, modifier: Modifier = Modifier) {
 
     Row(1, modifier, verticalAlignment = Alignment.CenterVertically) {
         Box {
-            Row(
-                1,
-                Modifier.clickable { isOpen = true }.pointerHoverIcon(PointerIcon.Hand),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(SvgFile.Label.small, color = { theme.colors.ink })
-                BasicText(
-                    text = tag?.label ?: "filter by type",
-                    modifier = if (tag == null) Modifier.opacityHigh() else Modifier,
-                    style = theme.text.regular.copy(fontStyle = if (tag == null) FontStyle.Italic else null),
-                    color = { theme.colors.ink },
-                )
-            }
-            if (isOpen) {
-                Popover(onDismiss = { isOpen = false }) {
-                    EventTagMenu(tag, category, onCategory = { category = it }) { chosen ->
-                        state.set(chosen)
-                        isOpen = false
-                    }
+            Button(tag?.label ?: "filter", onClick = { isOpen = true }, style = ButtonStyle.Zen, flair = tag?.svg ?: SvgFile.Label)
+            Popover(isOpen, onDismiss = { isOpen = false }) {
+                EventTagMenu(tag, category, onCategory = { category = it }) { chosen ->
+                    state.set(chosen)
+                    isOpen = false
                 }
             }
         }
         if (tag != null) {
             Icon(
-                SvgFile.Restore.small,
+                SvgFile.X.small,
                 color = { theme.colors.ink },
                 modifier = Modifier.clickable { state.set(null) }.pointerHoverIcon(PointerIcon.Hand),
             )

@@ -8,9 +8,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import streetlight.model.data.EntityType
+import dev.chrisbanes.haze.HazeState
 
 /**
- * The app's theme: the spacing [unit], the [text] styles, the [colors], the [opacity] levels, the page's [lights], and the [line]:
+ * The app's theme: the spacing [unit], the [text] styles, the [colors], the [opacity] levels, the page's [lights], its [magic], and the [line]:
  * the two pixels the web uses where a unit is too much, such as the gap between feed rows and the width of an outline. The counterpart of the web's `KoalaTheme`
  * and the stylesheets built from it, grouped as they are.
  */
@@ -21,6 +22,7 @@ class KoalaAppTheme(
     val colors: KoalaColors,
     val opacity: KoalaOpacity,
     val lights: KoalaLights,
+    val magic: KoalaMagic,
 ) {
     val line: Dp = 2.dp
 }
@@ -29,6 +31,9 @@ val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No Koa
 
 /** The entity type whose color is the scheme color of the content within, as the web's `--color-scheme`, or `null`. */
 val LocalSchemeColor = staticCompositionLocalOf<EntityType?> { null }
+
+/** The page whose drawing a floating card blurs behind itself, captured where [AppTheme] draws the page. */
+val LocalPageHaze = staticCompositionLocalOf<HazeState> { error("No page HazeState provided") }
 
 /** The theme [AppTheme] provides. */
 val currentTheme: KoalaAppTheme

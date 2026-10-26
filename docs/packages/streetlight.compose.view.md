@@ -34,6 +34,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `KoalaAppTheme` | `KoalaTheme`, and the stylesheets built from it |
 | `KoalaColors` | The color custom properties of `ThemeCss` |
 | `KoalaOpacity` | `--opacity-low`, `--opacity-half`, `--opacity-high` |
+| `KoalaMagic` | `MagicStyle` and the motion of `MagicCss`: `--magic-interval`, `--magic-easing`, `--magic-cubic-bounce` |
 | `KoalaTypography` | `TypographyCss` and the text classes, such as `TextSmall` |
 | `currentTheme.unit` | `--unit`, `KoalaTheme.spacingUnit` |
 | `currentTheme.line` | The 2px of `Gap2Px` and `--outline-mid` |
@@ -57,7 +58,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 
 A button is a `Button` whatever its click does. The web's `btn` exists to dress a link as a button; compose has no such split, so a button that navigates and one that acts are one composable, built on foundation's `clickable` with no Material indication.
 
-A menu opened by a click is a `Popover`, composed inside what opens it while it is open. It places itself below its opener when it fits, above when only that fits, and otherwise on the side with more room, kept inside the window, and it closes on a click outside.
+A menu opened by a click is a `Popover`, composed inside what opens it while it is open. It places itself below its opener when it fits, above when only that fits, and otherwise on the side with more room, kept inside the window, and it closes on a click outside. It grows from the web's initial scale with the magic bounce out of the corner nearest its opener, fading in, and shrinks back into it as it closes; the `Popup` stays composed until its exit ends.
+
+A floating card blurs the page behind it, as the web's `BlurBackdrop` does, with Haze. `AppTheme` captures the page, lights and all, as the `hazeSource` of `LocalPageHaze`, and the card reads it with `hazeBlur(HazeInput.Sources(…))`, which reaches across the composition root of a `Popup`. The card's tint goes over the blur.
 
 A filter is state on the view model, bound to its control as a `MutableTap`; the model reads the feed again when the state changes. A feed section shows the filters of a type that `isSearched`.
 
@@ -87,7 +90,7 @@ A modifier whose arguments do not change in composition is declared once, as a `
 
 The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
 
-`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
+`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. A view whose content carries a theme passes it to `ThemeHost.setTheme`.
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. `KoalaLights` holds the glows and the flux hue as states, `drawLights` draws them as the page background, its size the frame of their positions and radii; `KoalaLights.pageSize`, set as the root is laid out, gives a light's radius on the page to a surface drawn elsewhere, and `shineBg()` casts them on a surface. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 

@@ -10,6 +10,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,8 @@ import streetlight.compose.utility.collectAsState
 import streetlight.compose.utility.toColor
 import streetlight.model.data.PageBackgroundMode
 import streetlight.model.data.PageTheme
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 
 /**
  * Shows [content] over the background lights of the current [PageTheme], and provides the [KoalaAppTheme] read as
@@ -61,27 +64,33 @@ fun AppTheme(content: @Composable () -> Unit) {
     val pageSize = remember { mutableStateOf(Size.Zero) }
     val lights = remember(hueState) { KoalaLights(listOf(rho, beta, gamma), hueState, pageSize) }
 
-    BoxWithConstraints(Modifier.fillMaxSize().onSizeChanged { pageSize.value = it.toSize() }.background(paper)) {
+    BoxWithConstraints(Modifier.fillMaxSize().onSizeChanged { pageSize.value = it.toSize() }) {
         val rem = if (maxWidth < NarrowMaxWidth) NarrowRem else WideRem
         val text = remember(family, rem) { KoalaTypography(family, rem) }
         val koalaAppTheme = remember(accentState, primaryState, text, lights) {
             val colors = KoalaColors(paper, Koala.ink.toColor(), Opacity, accentState, primaryState)
-            KoalaAppTheme(unitOf(rem), text, colors, Opacity, lights)
+            KoalaAppTheme(unitOf(rem), text, colors, Opacity, lights, Magic)
         }
 
-        CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme) {
-            Spacer(
-                Modifier.fillMaxSize()
-                    .graphicsLayer()
-                    .drawBehind { drawLights(lights) }
-            )
-            content()
+        val pageHaze = rememberHazeState()
+        CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme, LocalPageHaze provides pageHaze) {
+            // the page, paper and lights and all, is what a floating card blurs behind itself; the paper keeps the capture
+            // opaque, so the blur covers what lies behind the card
+            Box(Modifier.fillMaxSize().hazeSource(pageHaze).background(paper)) {
+                Spacer(
+                    Modifier.fillMaxSize()
+                        .graphicsLayer()
+                        .drawBehind { drawLights(lights) }
+                )
+                content()
+            }
         }
     }
 }
 
 /** The rem of a window narrower than [NarrowMaxWidth], the web's `87.5%` below 600px. */
 private val Opacity = KoalaOpacity()
+private val Magic = KoalaMagic()
 
 private val NarrowRem = 14.sp
 private val WideRem = 16.sp

@@ -5,7 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.Layout
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -26,14 +30,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.rememberTextMeasurer
 import kampfire.model.MutableTap
 import koala.SvgFile
-import streetlight.compose.modifier.opacityHigh
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 
 /**
- * A pill holding the search icon before a field bound to [state], showing [placeholder] while empty and a clear button
- * while it holds text. The field takes focus only when tapped, so the keyboard stays down until wanted. The cousin of
- * the web's `searchField`.
+ * A pill five units tall holding the search icon before a field bound to [state], showing [placeholder] while empty and
+ * unfocused, fading it out when focused, and a clear button while it holds text. It keeps the width of its placeholder
+ * and the clear button until its text outgrows them. The field takes focus only when tapped, so the keyboard stays down
+ * until wanted. The cousin of the web's `searchField`.
  */
 @Composable
 fun SearchField(state: MutableTap<String>, modifier: Modifier = Modifier, placeholder: String = "search") {
@@ -44,23 +48,26 @@ fun SearchField(state: MutableTap<String>, modifier: Modifier = Modifier, placeh
     val shape = RoundedCornerShape(percent = 50)
     val textStyle = theme.text.regular.copy(color = theme.colors.ink)
     val placeholderStyle = textStyle.copy(fontStyle = FontStyle.Italic)
-    // the field is as wide as its text or its placeholder, and the cursor after it
+    // the field is as wide as its placeholder or its text, whichever is wider, and the cursor after it
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
     val fieldWidth = with(density) {
-        val measured = when (text) {
-            "" -> textMeasurer.measure(placeholder, placeholderStyle)
-            else -> textMeasurer.measure(text, textStyle)
-        }
-        measured.size.width.toDp() + theme.line
+        val placeholderWidth = textMeasurer.measure(placeholder, placeholderStyle).size.width
+        val textWidth = textMeasurer.measure(text, textStyle).size.width
+        maxOf(placeholderWidth, textWidth).toDp() + theme.line
     }
+    val placeholderAlpha by animateFloatAsState(
+        targetValue = if (text.isEmpty() && !isFocused) theme.opacity.high else 0f,
+        animationSpec = theme.magic.eased(),
+    )
 
     Row(
         1,
         modifier.clip(shape)
             .background(theme.colors.zenBg)
             .border(theme.line, if (isFocused) theme.colors.primary else theme.colors.outlineMid, shape)
-            .padding(horizontal = 2, vertical = 1),
+            .height(theme.unit * HeightUnits)
+            .padding(horizontal = 2),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(SvgFile.Search.small, color = { theme.colors.ink })
@@ -74,23 +81,43 @@ fun SearchField(state: MutableTap<String>, modifier: Modifier = Modifier, placeh
             interactionSource = interactionSource,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             decorationBox = { field ->
-                Box {
-                    if (text.isEmpty()) {
-                        BasicText(placeholder, Modifier.opacityHigh(), style = placeholderStyle, maxLines = 1, softWrap = false)
+                // the placeholder sits on the field's baseline, as the two lay out their lines differently
+                Layout(
+                    content = {
+                        BasicText(
+                            placeholder,
+                            Modifier.graphicsLayer { alpha = placeholderAlpha },
+                            style = placeholderStyle,
+                            maxLines = 1,
+                            softWrap = false,
+                        )
+                        field()
+                    },
+                ) { measurables, constraints ->
+                    val placeholderText = measurables[0].measure(constraints.copy(minWidth = 0, minHeight = 0))
+                    val input = measurables[1].measure(constraints)
+                    val shift = input[FirstBaseline] - placeholderText[FirstBaseline]
+                    layout(input.width, input.height) {
+                        placeholderText.place(0, shift)
+                        input.place(0, 0)
                     }
-                    field()
                 }
             },
         )
-        if (text.isNotEmpty()) {
-            Icon(
-                SvgFile.X.small,
-                color = { theme.colors.ink },
-                modifier = Modifier.clickable { state.set("") }.pointerHoverIcon(PointerIcon.Hand),
-            )
-        }
+        // the clear button keeps its place while hidden, so the pill holds its width as typing starts
+        val hasText = text.isNotEmpty()
+        Icon(
+            SvgFile.X.small,
+            color = { theme.colors.ink },
+            modifier = Modifier.graphicsLayer { alpha = if (hasText) 1f else 0f }
+                .clickable(enabled = hasText) { state.set("") }
+                .then(if (hasText) Modifier.pointerHoverIcon(PointerIcon.Hand) else Modifier),
+        )
     }
 }
+
+/** The height of the pill in units, as every button and field is. */
+private const val HeightUnits = 5
 
 /** The widest the field grows in units, the web's `24ch`. */
 private const val MaxWidthUnits = 24
