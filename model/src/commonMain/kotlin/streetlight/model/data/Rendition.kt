@@ -31,7 +31,6 @@ data class NewRendition(
     val rating: SelfRating?,
 )
 
-/** A user's rating of their own rendition. */
 enum class SelfRating(override val label: String): Labeled {
     FirstSteps("First Steps"),
     NeedsWork("Needs Work"),

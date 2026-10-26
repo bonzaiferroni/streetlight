@@ -92,9 +92,5 @@ sealed interface FeedContext {
     }
 }
 
-/**
- * The kind of list a feed shows: upcoming events, locations newest first, the posts of the galaxies a star follows, a
- * galaxy's posts, media, the galaxies a star follows by name, galaxies by star count or newest first, or cities by name.
- */
 @Serializable
 enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media, StarGalaxies, TopGalaxies, NewGalaxies, Cities }

@@ -24,7 +24,6 @@ data class PageTheme(
     val backgroundMode: PageBackgroundMode = PageBackgroundMode.Flux,
 )
 
-/** The way a page shows its background lights. */
 enum class PageBackgroundMode: Labeled {
     /** No lights. */
     None,
