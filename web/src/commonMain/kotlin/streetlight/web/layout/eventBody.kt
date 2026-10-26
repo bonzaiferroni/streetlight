@@ -6,6 +6,7 @@ import streetlight.model.data.EventLocation
 import koala.component.*
 import koala.layout.*
 import koala.markdown.*
+import streetlight.model.data.costDetailOf
 
 /** The page of [event]: its header, and its location and comments in tabs. */
 fun FlowContent.eventBody(event: EventLocation) {
@@ -14,7 +15,7 @@ fun FlowContent.eventBody(event: EventLocation) {
         descriptor = "at",
         cells = listOfNotNull(
             event.startsAt?.let { startsAtCell(it) },
-            event.cost?.let { costCell(it, event.url) },
+            event.cost?.let { costDetailOf(it, event.url) },
             starCell(event.host),
         ),
     )

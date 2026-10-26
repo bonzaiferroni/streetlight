@@ -15,12 +15,12 @@ import kotlinx.html.hr
 import streetlight.model.data.Entity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
-import streetlight.web.model.ThemeColor
+import streetlight.model.data.EntityType
 import streetlight.web.layout.FeedRowStyle
 import streetlight.web.layout.FeedSection
 import streetlight.web.layout.configureFeedRow
 import streetlight.web.layout.cellGrid
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
 import streetlight.web.model.toButtons
 import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
@@ -32,6 +32,7 @@ import koala.dom.component.*
 import koala.dom.layout.*
 import koala.dom.markdown.*
 import streetlight.web.dom.layout.feedRow
+import streetlight.web.model.cssValue
 
 context(model: Earth)
 fun ViewScope.earthFocus() {
@@ -77,14 +78,14 @@ private fun ViewScope.focusPanel(
     post: Entity,
     route: WebRoute,
     subroute: WebRoute? = null,
-    colorScheme: ThemeColor = ThemeColor.Primary,
+    colorScheme: EntityType? = null,
 ) {
     val extraLinks = post.links
     card(modify(Gap0, Padding(0), BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(Gap0) {
             containImage(post.image, Flex1)
-            cellGrid(post.toCells(), post.toButtons())
+            cellGrid(post.toDetails(), post.toButtons())
         }
         column(Padding(1)) {
             column(modify(Gap0, TextAlignCenter)) {

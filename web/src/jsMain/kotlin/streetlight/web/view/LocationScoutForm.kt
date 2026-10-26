@@ -5,7 +5,7 @@ import koala.modifier.*
 import koala.dom.*
 import kampfire.model.tapOf
 import koala.component.spacer
-import streetlight.web.model.ThemeColor
+import streetlight.model.data.EntityType
 import streetlight.web.model.LocationScout
 import koala.dom.component.*
 import koala.dom.layout.*
@@ -15,10 +15,11 @@ import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
+import streetlight.web.model.cssValue
 
 context(model: LocationScout)
 fun ViewScope.locationFinder() = formCard("Location Finder") {
-    setStyle(Css.ColorScheme.of(ThemeColor.Location.cssValue))
+    setStyle(Css.ColorScheme.of(EntityType.Location.cssValue))
 
     formRow {
         formSection("search") {

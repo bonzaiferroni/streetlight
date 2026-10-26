@@ -183,7 +183,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Entities: ApiNode(this) {
         /** The whole entity of the record of [type] at [slug]. */
         object Read: GetEndpoint<Entity>(this) {
-            val type = enumParamOf<EntityType>("type")
+            val type = enumParamOf<PostType>("type")
             val slug = stringParamOf("slug")
         }
     }

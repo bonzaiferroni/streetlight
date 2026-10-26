@@ -19,8 +19,10 @@ import koala.component.*
 import koala.markdown.*
 import streetlight.web.model.toButtons
 import streetlight.web.model.flair
-import streetlight.web.model.toCells
-import streetlight.web.model.toThemeColor
+import streetlight.model.data.toDetails
+import streetlight.model.data.toEntityType
+import streetlight.web.model.cssValue
+import streetlight.model.data.EntityDetail
 
 /**
  * An entity in a feed. Its layout follows the page's [FeedMode].
@@ -30,7 +32,7 @@ import streetlight.web.model.toThemeColor
 fun FlowContent.feedRow(
     entity: Entity,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell>? = entity.toCells(),
+    cells: List<EntityDetail>? = entity.toDetails(),
     mod: Modifier? = null,
 ) {
     div(mod) {
@@ -42,11 +44,11 @@ fun FlowContent.feedRow(
 fun DIV.configureFeedRow(
     entity: Entity,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell>? = entity.toCells(),
+    cells: List<EntityDetail>? = entity.toDetails(),
 ) {
     addModifiers(modify(FeedRowStyle.Base, CardBg))
 
-    val colorScheme = entity.toThemeColor()
+    val colorScheme = entity.toEntityType()
     val buttons = entity.toButtons()
 
     entity.post?.postId?.let {

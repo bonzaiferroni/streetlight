@@ -8,9 +8,10 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Entity
 import streetlight.model.data.HeaderBlock
 import streetlight.model.data.HeaderType
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
 import streetlight.web.model.toButtons
-import streetlight.web.model.toThemeColor
+import streetlight.model.data.toEntityType
+import streetlight.model.data.EntityDetail
 
 /**
  * The header of [entity] in the layout of [header], described by [descriptor], such as "a galaxy". The cells and
@@ -19,7 +20,7 @@ import streetlight.web.model.toThemeColor
 fun FlowContent.entityHeader(
     entity: Entity,
     descriptor: String,
-    cells: List<EntityCell>? = entity.toCells(),
+    cells: List<EntityDetail>? = entity.toDetails(),
     image: Image? = entity.image,
     header: HeaderBlock = HeaderBlock(),
     mod: Modifier? = null,
@@ -36,7 +37,7 @@ fun FlowContent.entityHeader(
             descriptor = descriptor,
             image = image,
             subtitle = entity.sublabel,
-            colorScheme = entity.toThemeColor(),
+            colorScheme = entity.toEntityType(),
             description = description,
             cells = shownCells,
             buttons = buttons,
@@ -49,7 +50,7 @@ fun FlowContent.entityHeader(
             descriptor = descriptor,
             image = image,
             subtitle = entity.sublabel,
-            colorScheme = entity.toThemeColor(),
+            colorScheme = entity.toEntityType(),
             description = description,
             cells = shownCells,
             buttons = buttons,
@@ -62,7 +63,7 @@ fun FlowContent.entityHeader(
             descriptor = descriptor,
             image = image,
             subtitle = entity.sublabel,
-            colorScheme = entity.toThemeColor(),
+            colorScheme = entity.toEntityType(),
             description = description,
             cells = shownCells,
             buttons = buttons,

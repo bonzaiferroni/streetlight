@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,14 +8,14 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import streetlight.compose.model.EntityDetail
+import streetlight.model.data.EntityDetail
 import streetlight.compose.modifier.cardBg
-import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.padding
 
 /**
@@ -62,33 +63,42 @@ fun CellGrid(details: List<EntityDetail>, modifier: Modifier = Modifier) {
 }
 
 /**
- * A cell: the detail's icon in its color at the start, then its text centered in the rest; the icon alone at low
- * opacity when the entity lacks it, so every cell's icon stands in the same place.
+ * A cell: the detail's icon, or else its label, in its color or the scheme color at the start, then its text centered
+ * in the rest. A cell whose url leaves the app opens it when clicked; a url within the app waits for routes.
  */
 @Composable
 private fun Cell(detail: EntityDetail) {
     val theme = currentTheme
-    val text = detail.text
+    val color = detail.type ?: LocalSchemeColor.current
+    val uriHandler = LocalUriHandler.current
+    val url = detail.url?.value?.takeIf { it.startsWith("http") }
     Row(
-        modifier = Modifier.fillMaxSize().cardBg().padding(1),
+        modifier = Modifier.fillMaxSize()
+            .then(if (url != null) Modifier.clickable { uriHandler.openUri(url) } else Modifier)
+            .cardBg()
+            .padding(1),
         horizontalArrangement = Arrangement.spacedBy(IconGap),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            svg = detail.svg,
-            color = { theme.colors.colorOf(detail.color) },
-            modifier = if (text == null) Modifier.opacityLow() else Modifier,
-        )
-        if (text != null) {
-            BasicText(
-                text = text,
-                modifier = Modifier.weight(1f),
-                style = theme.text.small.copy(textAlign = TextAlign.Center),
-                color = { theme.colors.ink },
+        val svg = detail.svg
+        val label = detail.label
+        when {
+            svg != null -> Icon(svg = svg, color = { theme.colors.colorOf(color) })
+            label != null -> BasicText(
+                text = label,
+                style = theme.text.small,
+                color = { theme.colors.colorOf(color) },
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
         }
+        BasicText(
+            text = detail.text,
+            modifier = Modifier.weight(1f),
+            style = theme.text.small.copy(textAlign = TextAlign.Center),
+            color = { theme.colors.ink },
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

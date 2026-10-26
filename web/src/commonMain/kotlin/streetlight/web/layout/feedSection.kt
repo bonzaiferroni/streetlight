@@ -15,7 +15,7 @@ import streetlight.web.component.tagFilterMenu
 import koala.component.*
 import koala.model.*
 import koala.page.*
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
 
 /**
  * The feed section of a page: a heading with the [FeedMode] switch, a tag filter and search field for an event feed,
@@ -77,7 +77,7 @@ fun FlowContent.feedSection(
         layoutFeed {
             if (feed.entities.isEmpty()) emptyFeed()
             feed.entities.forEach { entity ->
-                feedRow(entity, feed.curatorOf(entity), entity.toCells(source.context))
+                feedRow(entity, feed.curatorOf(entity), entity.toDetails(source.context))
             }
 
             feed.nextCursor?.let {

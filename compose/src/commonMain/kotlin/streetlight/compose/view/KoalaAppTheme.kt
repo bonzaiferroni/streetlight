@@ -7,7 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import streetlight.compose.model.SchemeColor
+import streetlight.model.data.EntityType
 
 /**
  * The app's theme: the spacing [unit], the [text] styles, the [colors], the [opacity] levels, the page's [lights], and the [line]:
@@ -27,8 +27,8 @@ class KoalaAppTheme(
 
 val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No KoalaAppTheme provided") }
 
-/** The scheme color of the content within, as the web's `--color-scheme`: the ink unless provided. */
-val LocalSchemeColor = staticCompositionLocalOf { SchemeColor.Ink }
+/** The entity type whose color is the scheme color of the content within, as the web's `--color-scheme`, or `null`. */
+val LocalSchemeColor = staticCompositionLocalOf<EntityType?> { null }
 
 /** The theme [AppTheme] provides. */
 val currentTheme: KoalaAppTheme

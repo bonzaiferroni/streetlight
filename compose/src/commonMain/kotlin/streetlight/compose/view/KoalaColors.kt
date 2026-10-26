@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
 import koala.modifier.Koala
-import streetlight.compose.model.SchemeColor
+import streetlight.model.data.EntityType
 import streetlight.compose.utility.mixSrgb
 import streetlight.compose.utility.toColor
 
@@ -39,14 +39,12 @@ class KoalaColors(
     val greenFg = Koala.green.toColor().mixSrgb(ink, 0.25f)
     val yellowFg = Koala.yellow.toColor().mixSrgb(ink, 0.25f)
 
-    /** The color [color] names, as the web's `ThemeColor` maps to its custom properties. */
-    fun colorOf(color: SchemeColor): Color = when (color) {
-        SchemeColor.Ink -> ink
-        SchemeColor.Muted -> muted
-        SchemeColor.Accent, SchemeColor.Event -> accentFg
-        SchemeColor.Primary, SchemeColor.Media -> primaryFg
-        SchemeColor.Galaxy -> seaGreenFg
-        SchemeColor.Location -> greenFg
-        SchemeColor.City -> yellowFg
+    /** The color of [type], as the web maps it to its custom properties, or the primary color without a type. */
+    fun colorOf(type: EntityType?): Color = when (type) {
+        null, EntityType.Media, EntityType.Star, EntityType.Offering, EntityType.Skill -> primaryFg
+        EntityType.Event -> accentFg
+        EntityType.Galaxy -> seaGreenFg
+        EntityType.Location -> greenFg
+        EntityType.City -> yellowFg
     }
 }

@@ -13,7 +13,9 @@ import koala.component.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import koala.model.ExtraLink
-import streetlight.web.model.ThemeColor
+import streetlight.model.data.EntityType
+import streetlight.web.model.cssValue
+import streetlight.model.data.EntityDetail
 
 /**
  * The header card of a page: an image beside the title panel, then the cells, buttons, description, and links.
@@ -25,9 +27,9 @@ fun FlowContent.pageHeader(
     descriptor: String,
     image: Image?,
     subtitle: String? = null,
-    colorScheme: ThemeColor = ThemeColor.Primary,
+    colorScheme: EntityType? = null,
     description: Markdown? = null,
-    cells: List<EntityCell>? = null,
+    cells: List<EntityDetail>? = null,
     buttons: List<EntityButton>? = null,
     links: List<ExtraLink>? = null,
     mod: Modifier? = null,

@@ -19,7 +19,7 @@ Layouts declared on `FlowContent`, which the server renders, and the `Style` obj
 
 A layout that shows an entity takes the `Entity` and reads its content from the entity properties. Content that no property holds, or that differs from what the property holds, is a parameter.
 
-An entity supplies its content as data, such as an `EntityCell`. The component that shows the content declares its markup, so every entity is rendered the same way.
+An entity supplies its content as data, such as an `EntityDetail`. The component that shows the content declares its markup, so every entity is rendered the same way.
 
 ## Entity Header
 
@@ -93,16 +93,14 @@ The layout is described here so its intent survives later changes. `cellGrid` is
 
 | Type | Holds |
 |---|---|
-| `EntityCell` | An icon, a text value, an optional `Url` and an optional label. A cell with a `Url` is a link |
+| `EntityDetail` (`streetlight.model.data`) | A text after an icon, or after a label in the scheme color, or alone, with an optional `Url`. A cell with a `Url` is a link |
 | `EntityButton` | A block that builds its own element |
 
-A cell for a single property, such as `costCell`, is a function in `cellGrid.kt` returning an `EntityCell`.
-
-A cell whose text does not name its subject, such as a count, carries a label.
+An entity's cells are its `toDetails()`. A cell shown outside an entity's details, such as `starCell`, is a function in `cellGrid.kt` returning an `EntityDetail`.
 
 ## Previews
 
-A preview of an edit, in `postRow.kt`, is a `feedRow` of a `CustomEntity` carrying the edit's `recordType`, which gives it the color and flair of the record. It passes the cells from the builder its record's `toCells()` branch uses, such as `eventCells`, and is posted by the signed-in star just now, as other viewers will see it.
+A preview of an edit, in `postRow.kt`, is a `feedRow` of a `CustomEntity` carrying the edit's `recordType`, which gives it the color and flair of the record. It passes the cells from the builder its record's `toDetails()` branch uses, such as `eventDetailsOf`, and is posted by the signed-in star just now, as other viewers will see it.
 
 ## Layouts
 

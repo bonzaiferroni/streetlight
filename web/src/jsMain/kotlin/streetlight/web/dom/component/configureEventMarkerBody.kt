@@ -23,7 +23,8 @@ import koala.modifier.invoke
 import koala.modifier.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import streetlight.web.model.ThemeColor
+import streetlight.model.data.EntityType
+import streetlight.web.model.cssValue
 
 /** The body of an event [marker], its sublabel reading tag · time bulleted above [locationName]. */
 internal fun DIV.configureEventMarkerBody(marker: ThumbMarker, locationName: String?) {
@@ -50,4 +51,4 @@ internal fun DIV.configureEventMarkerBody(marker: ThumbMarker, locationName: Str
     }
 }
 
-private val LocationScheme = Css.ColorScheme.of(ThemeColor.Location.cssValue)
+private val LocationScheme = Css.ColorScheme.of(EntityType.Location.cssValue)

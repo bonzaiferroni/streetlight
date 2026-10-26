@@ -9,12 +9,13 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
-import streetlight.model.data.EntityType
+import streetlight.model.data.PostType
 import koala.component.*
 import streetlight.web.model.toButtons
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
 import streetlight.web.model.toRoute
-import streetlight.web.model.toThemeColor
+import streetlight.model.data.toEntityType
+import streetlight.web.model.cssValue
 
 /**
  * All of [entity]: its image, heading and cells joined edge to edge as one part, then its whole body and links, as
@@ -22,14 +23,14 @@ import streetlight.web.model.toThemeColor
  */
 fun FlowContent.entityDialog(entity: Entity) {
     div(modify(EntityDialogStyle.Base, VoidBg)) {
-        setStyle(Css.ColorScheme.of(entity.toThemeColor().cssValue))
+        setStyle(Css.ColorScheme.of(entity.toEntityType().cssValue))
         containImage(entity.image, modify(EntityDialogStyle.Image, CardBg), isNative = true)
         div(modify(CardBg, TextAlignCenter, PaddingX2, PaddingY2)) {
             navigationIfNotNull(entity.url?.value ?: entity.toRoute()?.toRelativePath()) {
                 heading2(entity.label, modify(LineHeight115, Bold))
             }
         }
-        cellGrid(entity.toCells(), entity.toButtons())
+        cellGrid(entity.toDetails(), entity.toButtons())
         entityBody(entity.body, entity.links)
     }
 }
@@ -44,7 +45,7 @@ fun DIV.setEntityRef(ref: EntityRef) {
 /** The dialog that reads and shows the whole entity of a record, and the attributes that name the record. */
 object EntityDialog {
     val Open = JsSignature("openEntityDialog")
-    val Type = enumAttributeOf<EntityType>("entity-type")
+    val Type = enumAttributeOf<PostType>("entity-type")
     val Slug = slugAttributeOf("entity-slug")
 }
 

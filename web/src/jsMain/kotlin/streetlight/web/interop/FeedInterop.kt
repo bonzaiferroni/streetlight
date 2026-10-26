@@ -24,7 +24,7 @@ import streetlight.model.data.FeedSource
 import streetlight.web.layout.FeedSection
 import koala.dom.component.column
 import streetlight.web.layout.emptyFeedContent
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
 import streetlight.web.page.AppAttribute
 import streetlight.web.view.RouteView
 import streetlight.web.component.TagFilterMenu
@@ -139,7 +139,7 @@ fun AppendScope.appendFeed(feed: EntityFeed, isFirstPage: Boolean = false) {
         column(FeedSection.EmptyMod) { emptyFeedContent() }
     }
     feed.entities.forEach { entity ->
-        feedRow(entity, feed.curatorOf(entity), entity.toCells(feed.source?.context))
+        feedRow(entity, feed.curatorOf(entity), entity.toDetails(feed.source?.context))
     }
     feed.nextCursor?.let {
         button("more", mod = Zen) {

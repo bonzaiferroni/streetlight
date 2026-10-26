@@ -5,15 +5,16 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.ui.toRoute
 import koala.component.*
-import streetlight.web.model.ThemeColor
+import streetlight.model.data.EntityType
 import streetlight.web.model.toButtons
 import streetlight.web.model.route
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
+import streetlight.web.model.cssValue
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
     card(modify(Padding(0), OverflowClip, MoonShadow)) {
-        setStyle(Css.ColorScheme.of(ThemeColor.Galaxy.cssValue))
+        setStyle(Css.ColorScheme.of(EntityType.Galaxy.cssValue))
 
         row(modify(Gap0, Height(16))) {
             navigation(route, Flex1) {
@@ -32,7 +33,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     }
                     textBlock(galaxy.description?.value ?: "Too mysterious for a description", modifiers)
                 }
-                // cellGrid(galaxy.toCells(), galaxy.toButtons(), modify(Height(5), MoonShadow))
+                cellGrid(galaxy.toDetails(), galaxy.toButtons(), modify(Height(5), MoonShadow))
             }
         }
     }

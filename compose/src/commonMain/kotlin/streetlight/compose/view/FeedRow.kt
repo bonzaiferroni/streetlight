@@ -31,25 +31,30 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.em
 import coil3.compose.AsyncImage
-import streetlight.compose.model.EntityDetail
+import streetlight.model.data.EntityDetail
 import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.zenBg
 import streetlight.compose.modifier.heavyCardBg
 import streetlight.compose.modifier.schemeBg
-import streetlight.compose.model.details
+import streetlight.model.data.toDetails
 import streetlight.compose.model.toFlair
-import streetlight.compose.model.toSchemeColor
+import streetlight.model.data.toEntityType
 import streetlight.model.data.Entity
+import streetlight.model.data.FeedContext
 
 /** The layouts of a feed row, the cousin of the web's `FeedMode`. */
 enum class FeedMode { Minimal, Row, Grid }
 
-/** An entity in a feed, laid out by [mode], within the entity's scheme color. The cousin of the web's `feedRow`. */
+/**
+ * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in.
+ * The cousin of the web's `feedRow`.
+ */
+context(feed: FeedContext?)
 @Composable
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
-    CompositionLocalProvider(LocalSchemeColor provides entity.toSchemeColor()) {
+    CompositionLocalProvider(LocalSchemeColor provides entity.toEntityType()) {
         when (mode) {
             FeedMode.Minimal -> MinimalFeedRow(entity)
             FeedMode.Row -> RowFeedRow(entity)
@@ -65,11 +70,12 @@ fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
  *
  * The row has a unit of padding and its parts are a unit apart.
  */
+context(feed: FeedContext?)
 @Composable
 private fun MinimalFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
-    val (priority, rest) = entity.details.partition { it.isPriority }
+    val (priority, rest) = entity.toDetails(feed).partition { it.isPriority }
 
     Row(1, FeedRowMod.Base.padding(1)) {
         Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1))
@@ -93,6 +99,7 @@ private fun MinimalFeedRow(entity: Entity) {
  * clipped at the row's height and fading where it reaches it; and the flair badge. The cells sit beside it as the
  * row's right half from [WideRowWidth], below it otherwise. The cousin of the web's `Row` mode.
  */
+context(feed: FeedContext?)
 @Composable
 private fun RowFeedRow(entity: Entity) {
     val theme = currentTheme
@@ -110,7 +117,7 @@ private fun RowFeedRow(entity: Entity) {
                 )
                 FlairBadge(entity, rowHeight)
             }
-            CellGrid(entity.details, FeedRowMod.Cells)
+            CellGrid(entity.toDetails(feed), FeedRowMod.Cells)
         },
         modifier = FeedRowMod.Base.padding(1),
     ) { measurables, constraints ->
@@ -148,6 +155,7 @@ private fun RowFeedRow(entity: Entity) {
  * title over the description, clipped and fading as in the row, beside the flair badge; then the cells. The parts below the image are inset a unit at the
  * sides and stand a unit apart, and the entry's corners are rounded three units. The cousin of the web's `Grid` mode.
  */
+context(feed: FeedContext?)
 @Composable
 private fun GridFeedRow(entity: Entity) {
     val theme = currentTheme
@@ -159,7 +167,7 @@ private fun GridFeedRow(entity: Entity) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
         }
-        CellGrid(entity.details, FeedRowMod.Cells)
+        CellGrid(entity.toDetails(feed), FeedRowMod.Cells)
     }
 }
 
@@ -203,7 +211,7 @@ private val Entity.imageRatio get() = (image?.aspect ?: GridImageRatio).coerceIn
 
 /** The entity's color, faint, behind its image. */
 private val Entity.tint
-    @Composable @ReadOnlyComposable get() = currentTheme.colors.colorOf(toSchemeColor()).copy(alpha = 0.2f)
+    @Composable @ReadOnlyComposable get() = currentTheme.colors.colorOf(toEntityType()).copy(alpha = 0.2f)
 
 /** The entity's flair, animated, in its color at low opacity, [size] square. */
 @Composable
@@ -211,27 +219,30 @@ private fun FlairBadge(entity: Entity, size: Dp) {
     val theme = currentTheme
     AnimatedIcon(
         svg = entity.toFlair().animated,
-        color = { theme.colors.colorOf(entity.toSchemeColor()) },
+        color = { theme.colors.colorOf(entity.toEntityType()) },
         modifier = Modifier.opacityLow(),
         size = size,
     )
 }
 
 /**
- * The [details] the entity has on one line, joined by a dot and cut with an ellipsis: each in its own color when
- * [isColored], otherwise all in the ink.
+ * The [details] on one line, each after its label, joined by a dot and cut with an ellipsis: each in its color, or the
+ * scheme color, when [isColored], otherwise all in the ink.
  */
 @Composable
 private fun EntityDetails(details: List<EntityDetail>, isColored: Boolean, modifier: Modifier = Modifier) {
-    val known = details.filter { it.text != null }
-    if (known.isEmpty()) return
+    if (details.isEmpty()) return
     val theme = currentTheme
+    val scheme = LocalSchemeColor.current
 
     val text = buildAnnotatedString {
-        known.forEachIndexed { index, detail ->
+        details.forEachIndexed { index, detail ->
             if (index > 0) withStyle(SpanStyle(color = theme.colors.muted)) { append(" · ") }
-            val color = if (isColored) theme.colors.colorOf(detail.color) else theme.colors.ink
-            withStyle(SpanStyle(color = color)) { append(detail.text.orEmpty()) }
+            val color = if (isColored) theme.colors.colorOf(detail.type ?: scheme) else theme.colors.ink
+            withStyle(SpanStyle(color = color)) {
+                detail.label?.let { append("$it ") }
+                append(detail.text)
+            }
         }
     }
     BasicText(text, modifier, style = theme.text.small, maxLines = 1, overflow = TextOverflow.Ellipsis)

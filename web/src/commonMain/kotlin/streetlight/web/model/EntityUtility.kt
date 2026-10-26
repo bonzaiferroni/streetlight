@@ -3,14 +3,11 @@ package streetlight.web.model
 import koala.SvgPack
 import koala.SvgFile
 import koala.model.WebRoute
-import kampfire.model.Url
 import koala.model.Doc
 import streetlight.model.data.EventGroup
 import streetlight.model.data.City
 import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
-import streetlight.model.data.EventTag
-import streetlight.model.data.FeedContext
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Galaxy
@@ -19,11 +16,10 @@ import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.Offering
 import streetlight.model.data.Skill
-import streetlight.model.data.priceLabel
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityRef
-import streetlight.model.data.EntityType
+import streetlight.model.data.PostType
 import streetlight.model.data.RecordType
 import streetlight.model.data.Star
 import streetlight.model.ui.CityRoute
@@ -37,16 +33,13 @@ import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.component.postMenu
 import streetlight.web.component.starToggle
-import kotlin.time.Instant
 import streetlight.web.layout.EntityButton
-import streetlight.web.layout.EntityCell
 import streetlight.web.layout.EntityDialog
 import streetlight.web.layout.cellGrid
-import streetlight.web.layout.costCell
-import streetlight.web.layout.dateCell
-import streetlight.web.layout.eventCountCell
-import streetlight.web.layout.locationCountCell
-import streetlight.web.layout.startsAtCell
+import koala.modifier.Koala
+import koala.modifier.Rgb
+import koala.modifier.mix
+import streetlight.model.data.EntityType
 
 val Location.route get() = LocationRoute(slug)
 val Event.route get() = EventRoute(slug)
@@ -74,27 +67,6 @@ fun Entity.toRoute(): WebRoute? = when (this) {
     is Skill -> SkillRoute(skillId)
 }
 
-fun Entity.toThemeColor(): ThemeColor = when (this) {
-    is City -> ThemeColor.City
-    is EventLocation -> ThemeColor.Event
-    is EventPost -> ThemeColor.Event
-    is Event -> ThemeColor.Event
-    is Galaxy -> ThemeColor.Galaxy
-    is LocationPost -> ThemeColor.Location
-    is Location -> ThemeColor.Location
-    is MediaPost -> ThemeColor.Media
-    is Media -> ThemeColor.Media
-    is CustomEntity -> when (recordType) {
-        RecordType.Location -> ThemeColor.Location
-        RecordType.Event -> ThemeColor.Event
-        else -> ThemeColor.Primary
-    }
-    is Star -> ThemeColor.Primary
-    is EventGroup -> ThemeColor.Location
-    is Offering -> ThemeColor.Primary
-    is Skill -> ThemeColor.Primary
-}
-
 /** The flair badge icon of this entity, the icon of its tag for an event that has one. */
 fun Entity.toFlair(): SvgPack = when (this) {
     is EventLocation -> tag?.svg ?: FlairIcon.Event.svg
@@ -113,13 +85,13 @@ fun Entity.toFlair(): SvgPack = when (this) {
 
 /** The record whose whole entity the [EntityDialog] reads, or `null` for an entity it does not show. */
 fun Entity.toEntityRef(): EntityRef? = when (this) {
-    is EventLocation -> EntityRef(EntityType.Event, eventSlug)
+    is EventLocation -> EntityRef(PostType.Event, eventSlug)
     is EventPost -> event.toEntityRef()
-    is Event -> EntityRef(EntityType.Event, slug)
+    is Event -> EntityRef(PostType.Event, slug)
     is LocationPost -> location.toEntityRef()
-    is Location -> EntityRef(EntityType.Location, slug)
+    is Location -> EntityRef(PostType.Location, slug)
     is MediaPost -> media.toEntityRef()
-    is Media -> EntityRef(EntityType.Media, slug)
+    is Media -> EntityRef(PostType.Media, slug)
     is City -> null
     is Galaxy -> null
     is CustomEntity -> null
@@ -127,67 +99,6 @@ fun Entity.toEntityRef(): EntityRef? = when (this) {
     is EventGroup -> null
     is Offering -> null
     is Skill -> null
-}
-
-/**
- * The facts shown in this entity's [cellGrid], or `null` when it has none. Shown in the feed of a location's own page,
- * as [context] says, an event leaves out its location.
- */
-fun Entity.toCells(context: FeedContext? = null): List<EntityCell>? = when (this) {
-    is City -> buildList {
-        if (locationCount > 0) add(locationCountCell(locationCount))
-        if (eventCount > 0) add(eventCountCell(eventCount))
-    }
-    is EventLocation -> when (context) {
-        is FeedContext.Location -> eventCells(startsAt, cost, url, tag, null)
-        else -> eventCells(startsAt, cost, url, tag, locationLabel, locationRoute)
-    }
-    is EventPost -> event.toCells(context)
-    is Event -> eventCells(startsAt, cost, url, tag, null)
-    is Galaxy -> buildList {
-        if (locationCount > 0) add(locationCountCell(locationCount))
-        if (eventCount > 0) add(eventCountCell(eventCount))
-    }
-    is LocationPost -> location.toCells()
-    is MediaPost -> null
-    is Location -> locationCells(mapType, city, eventCount)
-    is Media -> null
-    is CustomEntity -> null
-    is Star -> null
-    is EventGroup -> null
-    is Offering -> listOf(EntityCell(SvgFile.Coin.small, priceLabel, null))
-    is Skill -> listOf(
-        EntityCell(SvgFile.Award.small, skillLevel.label, null),
-        EntityCell(SvgFile.Calendar.small, "since $yearStarted", null),
-    )
-}
-
-/**
- * The cells of an event: its date, time, cost linking to [purchaseUrl], its [tag], and [locationName]
- * linking to [locationRoute].
- */
-fun eventCells(
-    startsAt: Instant?,
-    cost: Float?,
-    purchaseUrl: Url?,
-    tag: EventTag?,
-    locationName: String?,
-    locationRoute: WebRoute? = null,
-) = buildList {
-    startsAt?.let { add(dateCell(it)); add(startsAtCell(it)) }
-    cost?.let { add(costCell(it, purchaseUrl)) }
-    tag?.let { add(EntityCell(SvgFile.Label.small, it.label, null)) }
-    locationName?.let {
-        val locationUrl = locationRoute?.let { route -> Url(route.toRelativePath()) }
-        add(EntityCell(SvgFile.MapPin.small, it, locationUrl, themeColor = ThemeColor.Location))
-    }
-}
-
-/** The cells of a location: its [mapType], [city], and [eventCount] when it has events. */
-fun locationCells(mapType: String?, city: String?, eventCount: Int) = buildList {
-    add(EntityCell(SvgFile.MapPin.small, mapType ?: "Location", null))
-    city?.let { add(EntityCell(SvgFile.City.small, it, null)) }
-    if (eventCount > 0) add(eventCountCell(eventCount))
 }
 
 /** The buttons of this entity's [cellGrid]: its star toggle, and the post menu of a post. */
@@ -233,4 +144,31 @@ fun Entity.toSubtitle(): String? = when (this) {
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine
     else -> null
+}
+
+/** The CSS value of this type's color, the custom property that holds it, or the primary color without a type. */
+val EntityType?.cssValue get() = when (this) {
+    null, EntityType.Media, EntityType.Star, EntityType.Offering, EntityType.Skill -> "var(--primary-fg)"
+    EntityType.Event -> "var(--accent-fg)"
+    EntityType.Galaxy -> "var(--sea-green-fg)"
+    EntityType.Location -> "var(--green-fg)"
+    EntityType.City -> "var(--yellow-fg)"
+}
+
+/** The color this type's color is mixed from, or the primary color without a type. */
+val EntityType?.rgb: Rgb get() = when (this) {
+    null, EntityType.Media, EntityType.Star, EntityType.Offering, EntityType.Skill -> Koala.primary
+    EntityType.Event -> Koala.accent
+    EntityType.Galaxy -> Koala.seaGreen
+    EntityType.Location -> Koala.green
+    EntityType.City -> Koala.yellow
+}
+
+/** The color of a marker's light: near white, with a hint of this type's color. */
+val EntityType?.light get() = rgb.mix(Rgb.White, .8f)
+
+val PostType.entityType get() = when (this) {
+    PostType.Event -> EntityType.Event
+    PostType.Location -> EntityType.Location
+    PostType.Media -> EntityType.Media
 }

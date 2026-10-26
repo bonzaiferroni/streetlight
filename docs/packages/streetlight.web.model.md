@@ -2,7 +2,7 @@
 
 ## Introduction
 
-View models, each holding the state behind one view and the calls that change it, and the app's services, in `jsMain`. Models the server also renders from, such as the entity properties, `FlairIcon` and `ThemeColor`, live in `commonMain`.
+View models, each holding the state behind one view and the calls that change it, and the app's services, in `jsMain`. Models the server also renders from, such as the entity properties, `FlairIcon` and the CSS of `EntityType`, live in `commonMain`.
 
 ## Dependencies
 
@@ -26,7 +26,7 @@ A property that depends on the entity type is an `Entity` extension function in 
 
 | Form | Used when | Example |
 |---|---|---|
-| `toFoo()` extension function | The entity alone decides the value | `Entity.toCells()` |
+| `toFoo()` extension function | The entity alone decides the value | `Entity.toButtons()` |
 | `fooOf(entity, …)` function | The value also depends on where it is shown | |
 
 A property returns `null` for content the entity does not have, and a parameter that receives it is nullable.
@@ -113,9 +113,8 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 
 | Model | Role |
 |---|---|
-| [`toCells`, `toButtons`…](../../web/src/commonMain/kotlin/streetlight/web/model/EntityUtility.kt) | The entity properties, as specified under Entity Properties |
+| [`toButtons`, `toFlair`…](../../web/src/commonMain/kotlin/streetlight/web/model/EntityUtility.kt) | The entity properties, as specified under Entity Properties, and the custom property and rgb of each `EntityType`'s color |
 | [`FlairIcon`](../../web/src/commonMain/kotlin/streetlight/web/model/FlairIcon.kt) | The icon badge of an entity type |
-| [`ThemeColor`](../../web/src/commonMain/kotlin/streetlight/web/model/ThemeColor.kt) | The color of an entity type |
 | [`SiteDoc`](../../web/src/commonMain/kotlin/streetlight/web/model/SiteDoc.kt) | The site's own docs, such as About and Privacy |
 
 ### Services

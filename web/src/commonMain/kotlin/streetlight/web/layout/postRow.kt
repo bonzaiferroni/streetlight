@@ -9,8 +9,8 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.RecordType
 import kotlin.time.Clock
-import streetlight.web.model.eventCells
-import streetlight.web.model.locationCells
+import streetlight.model.data.eventDetailsOf
+import streetlight.model.data.locationDetailsOf
 
 // previews
 
@@ -28,7 +28,7 @@ fun FlowContent.postRow(edit: LocationEdit, username: Username) {
             createdAt = Clock.System.now(),
             recordType = RecordType.Location,
         ),
-        cells = locationCells(edit.mapType, edit.city, 0),
+        cells = locationDetailsOf(edit.mapType, edit.city, 0),
     )
 }
 
@@ -46,6 +46,6 @@ fun FlowContent.postRow(event: EventEdit, location: Location, username: Username
             createdAt = Clock.System.now(),
             recordType = RecordType.Event,
         ),
-        cells = eventCells(event.startsAt, event.cost, event.website, event.tags?.firstOrNull(), location.name),
+        cells = eventDetailsOf(event.startsAt, event.cost, event.website, event.tags?.firstOrNull(), location.name),
     )
 }

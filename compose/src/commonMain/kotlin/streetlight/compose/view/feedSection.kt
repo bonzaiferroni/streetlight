@@ -53,7 +53,7 @@ fun LazyGridScope.feedSection(
     fullItem { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
     if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
     items(feed.entities, span = { GridItemSpan(if (mode == FeedMode.Grid) 1 else maxLineSpan) }) { entity ->
-        FeedRow(entity, mode)
+        context(source?.context) { FeedRow(entity, mode) }
     }
 }
 
@@ -73,7 +73,7 @@ fun LazyStaggeredGridScope.feedSection(
     fullItem { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState, isInset = mode == FeedMode.Grid) }
     if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
     items(feed.entities, span = { if (mode == FeedMode.Grid) StaggeredGridItemSpan.SingleLane else StaggeredGridItemSpan.FullLine }) { entity ->
-        FeedRow(entity, mode)
+        context(source?.context) { FeedRow(entity, mode) }
     }
 }
 

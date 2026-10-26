@@ -8,7 +8,7 @@ A rule sets the properties that do the job, and no more. A property that changes
 
 ## Stylesheets in Kotlin
 
-A `*Css.kt` file is a hybrid Kotlin and CSS file. It declares each class it styles as a `Class` val at the top, followed by the stylesheet text as a raw string in a `val FooCss get()`, annotated `// language="CSS"`.
+A `*Css.kt` file is a hybrid Kotlin and CSS file. It declares each class it styles as a `Class` val at the top, followed by the stylesheet text as a raw string in a `val FooCss get()`, annotated `// language="CSS"`. The `Css` suffix is reserved for these files; a file of CSS values without a stylesheet, such as the custom property of a color, takes another name.
 
 ```kotlin
 val Foo = Class("foo")

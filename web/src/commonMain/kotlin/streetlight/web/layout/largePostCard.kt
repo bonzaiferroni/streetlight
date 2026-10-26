@@ -5,10 +5,11 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Entity
 import koala.component.*
 import streetlight.web.model.toButtons
-import streetlight.web.model.toCells
+import streetlight.model.data.toDetails
 import streetlight.web.model.toRoute
 import streetlight.web.model.toSubRoute
 import streetlight.web.model.toSubtitle
+
 
 fun FlowContent.largePostCard(
     entity: Entity,
@@ -59,7 +60,7 @@ fun FlowContent.largePostCard(
             }
 
             // grid content
-            cellGrid(entity.toCells(), entity.toButtons(), modify(Flex1, ContainerLgColumn, MinHeight(8)))
+            cellGrid(entity.toDetails(), entity.toButtons(), modify(Flex1, ContainerLgColumn, MinHeight(8)))
         }
     }
 }

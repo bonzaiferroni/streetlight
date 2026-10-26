@@ -14,7 +14,9 @@ import kotlinx.html.img
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import koala.model.ExtraLink
-import streetlight.web.model.ThemeColor
+import streetlight.model.data.EntityType
+import streetlight.web.model.cssValue
+import streetlight.model.data.EntityDetail
 
 /**
  * The header of a page opened by its image across the body's width, the image dissolving into the page where the
@@ -27,9 +29,9 @@ fun FlowContent.heroHeader(
     descriptor: String,
     image: Image?,
     subtitle: String? = null,
-    colorScheme: ThemeColor = ThemeColor.Primary,
+    colorScheme: EntityType? = null,
     description: Markdown? = null,
-    cells: List<EntityCell>? = null,
+    cells: List<EntityDetail>? = null,
     buttons: List<EntityButton>? = null,
     links: List<ExtraLink>? = null,
     mod: Modifier? = null,

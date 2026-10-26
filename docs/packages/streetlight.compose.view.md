@@ -83,9 +83,9 @@ BasicText(text, color = { theme.colors.accent })
 
 ### Colors
 
-A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. A `SchemeColor` is resolved with `KoalaColors.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`.
+A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. An `EntityType` is given its color by `KoalaColors.colorOf`, as the web gives it a custom property, and no type the primary color. `muted` is the ink at the web's `--opacity-high`.
 
-The scheme color of a part of the page is a context, as the web's `--color-scheme`: `LocalSchemeColor` holds it, the ink unless provided, and a view whose content belongs to an entity provides the entity's, as `FeedRow` does. A modifier that paints in it, such as `schemeBg()`, reads it while drawing.
+The scheme color of a part of the page is a context, as the web's `--color-scheme`: `LocalSchemeColor` holds the entity type that gives it, none unless provided, and a view whose content belongs to an entity provides the entity's, as `FeedRow` does. A modifier that paints in it, such as `schemeBg()`, reads it while drawing.
 
 ### Typography
 
@@ -137,4 +137,4 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 
 ### Cell Grid
 
-`CellGrid` shows an entity's details as cells, on one line when every cell gets at least 128dp, otherwise the priority details over the others. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon in the detail's color at its start and its text centered in the rest; a detail without text shows its icon alone at `opacityLow()`, in the same place. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `schemeBg()` in the entity's scheme color.
+`CellGrid` shows an entity's details as cells, on one line when every cell gets at least 128dp, otherwise the priority details over the others. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon, or else its label, at its start in the detail's color or the scheme color, and its text centered in the rest. A cell whose url leaves the app opens it when clicked; a url within the app waits for routes. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `schemeBg()` in the entity's scheme color.

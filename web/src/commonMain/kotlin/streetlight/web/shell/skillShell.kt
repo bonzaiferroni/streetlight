@@ -6,8 +6,8 @@ import streetlight.model.data.SkillContent
 import streetlight.web.layout.feedSection
 import streetlight.web.layout.mainBody
 import streetlight.web.layout.pageHeader
-import streetlight.web.model.toCells
-import streetlight.web.model.toThemeColor
+import streetlight.model.data.toDetails
+import streetlight.model.data.toEntityType
 
 /** A skill's page: its header, then the feed of media linked to it. */
 fun FlowContent.skillShell(content: SkillContent) {
@@ -17,9 +17,9 @@ fun FlowContent.skillShell(content: SkillContent) {
             title = skill.name,
             descriptor = skill.username?.let { "a skill of $it" } ?: "a skill",
             image = skill.image,
-            colorScheme = skill.toThemeColor(),
+            colorScheme = skill.toEntityType(),
             description = skill.description,
-            cells = skill.toCells(),
+            cells = skill.toDetails(),
             links = skill.links,
         )
         feedSection(content.feed)

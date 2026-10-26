@@ -18,8 +18,9 @@ import kotlinx.html.span
 import koala.model.ExtraLink
 import kotlin.time.Instant
 import koala.component.*
-import streetlight.web.model.ThemeColor
-import streetlight.web.model.themeColor
+import streetlight.model.data.EntityType
+import streetlight.web.model.cssValue
+import streetlight.model.data.EntityDetail
 
 /**
  * The facts of an entity as a grid of icon cells, followed by a cell of [buttons] that fills the rest of its row.
@@ -28,7 +29,7 @@ import streetlight.web.model.themeColor
  * A cell with a url is a link.
  */
 fun FlowContent.cellGrid(
-    cells: List<EntityCell>?,
+    cells: List<EntityDetail>?,
     buttons: List<EntityButton>?,
     mod: Modifier? = null,
 ) {
@@ -37,13 +38,13 @@ fun FlowContent.cellGrid(
         cells?.forEach { cell ->
             when (val url = cell.url) {
                 null -> row(CellGrid.CellMod) {
-                    cell.themeColor?.let {
+                    cell.type?.let {
                         setStyle(Css.ColorScheme.of(it.cssValue))
                     }
                     cellContent(cell)
                 }
                 else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) {
-                    cell.themeColor?.let {
+                    cell.type?.let {
                         setStyle(Css.ColorScheme.of(it.cssValue))
                     }
                     cellContent(cell)
@@ -60,18 +61,19 @@ fun FlowContent.cellGrid(
     }
 }
 
-private fun FlowContent.cellContent(cell: EntityCell) {
+/** The detail's icon, or else its label, in the scheme color, then its text. */
+private fun FlowContent.cellContent(cell: EntityDetail) {
     row(CellGrid.ContentMod) {
-        icon(cell.icon, CellGrid.IconMod)
-        textBlock(mod = CellGrid.TextMod) {
-            +cell.text
-            cell.label?.let { label ->
-                span {
-                    addModifiers(CellGrid.LabelMod)
-                    +" $label"
-                }
+        val svg = cell.svg
+        val label = cell.label
+        when {
+            svg != null -> icon(svg, CellGrid.IconMod)
+            label != null -> span {
+                addModifiers(CellGrid.LabelMod)
+                +label
             }
         }
+        textBlock(cell.text, CellGrid.TextMod)
     }
 }
 
@@ -96,7 +98,7 @@ object CellGrid {
     val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
     val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1, TextAlignCenter)
-    val LabelMod = modify(OpacityHigh)
+    val LabelMod = modify(TextSmall, MarginRight(4.px), ColorSchemeFg)
 }
 
 //language="CSS"
@@ -134,47 +136,13 @@ $Base {
 """ }
 
 /** The time of day [startsAt]. */
-fun startsAtCell(startsAt: Instant) = EntityCell(SvgFile.Clock.small, startsAt.toTimeFormat(), null)
+fun startsAtCell(startsAt: Instant) = EntityDetail(startsAt.toTimeFormat(), SvgFile.Clock.small)
 
-fun dateCell(startsAt: Instant) = EntityCell(SvgFile.Calendar.small, startsAt.toFutureFormat(), null)
+fun starCell(username: Username?) = EntityDetail(username?.value ?: "Guest", SvgFile.SomeoneSmall)
 
-fun FlowContent.exampleStartsAtCell() {
-//    cell {
-//        textBlock("[Day]", modify(CellContent.TextMod, ColorSchemeFg))
-//        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft(1)))
-//    }
-}
+fun postedAtCell(postedAt: Instant) = EntityDetail(postedAt.toAgoFormat(), SvgFile.Clock.small)
 
-/** The cost, or FREE, linking to [purchaseUrl] when there is a cost. */
-fun costCell(cost: Float, purchaseUrl: Url?): EntityCell {
-    val ticketsUrl = cost.takeIf { it != 0f }?.let {
-        purchaseUrl
-    }
-    val costText = when (cost) {
-        0f -> "FREE"
-        else -> "$${cost.format(2, true)}"
-    }
-    return EntityCell(SvgFile.Ticket.small, costText, ticketsUrl)
-}
-
-fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.value ?: "Guest", null)
-
-fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock.small, postedAt.toAgoFormat(), null)
-
-fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link.small, link.label, link.url)
-
-fun locationCountCell(count: Int) = EntityCell(SvgFile.MapPin.small, count.toMetricString(), null, "locations")
-
-fun eventCountCell(count: Int) = EntityCell(SvgFile.Calendar.small, count.toMetricString(), null, "events")
-
-/** One cell of a [cellGrid]: an icon, a text with an optional dimmer [label], and a link when [url] is given. */
-data class EntityCell(
-    val icon: Svg,
-    val text: String,
-    val url: Url?,
-    val label: String? = null,
-    val themeColor: ThemeColor? = null
-)
+fun linkCell(link: ExtraLink) = EntityDetail(link.label, SvgFile.Link.small, url = link.url)
 
 data class EntityButton(
     val block: DIV.() -> Unit

@@ -38,9 +38,17 @@ A DTO lists its id first, then its non-nullable properties, its nullable propert
 
 `Entity` is a sealed interface for content shown in a feed, a header, or anywhere else an entity appears. Its members name general content: `label`, `sublabel`, `description`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val sublabel get() = tagline`, and leaves a member it does not hold at its default.
 
-The whole entity of a location, media or event is read by its `EntityRef`, its `EntityType` and slug, through `Api.Entities.Read`, which the server answers from a `when` over the type.
+The whole entity of a location, media or event is read by its `EntityRef`, its `PostType` and slug, through `Api.Entities.Read`, which the server answers from a `when` over the type.
 
 `body` is required. It is the entity's `description` when there is one, and otherwise a summary built from its other properties, such as an address line or when it was added. A view that shows the entity's own description, such as a page header, reads `description`; a view that always wants a line of text reads `body`.
+
+## Entity Details
+
+The facts shown with an entity are `EntityDetail`s, built for both ships by `Entity.toDetails(context)` in `EntityDetail.kt`, for the `FeedContext` the entity is shown in, `null` outside a feed. A detail is a text after an icon, or after a label when it has no icon, or the text alone, with an optional link. Only known facts are given, so an entity's details vary with what it holds. The priority details come first and are marked `isPriority`: when the entity happens or what kind of thing it is.
+
+A detail's `type` is `null` for a fact of the entity itself, which takes the scheme color of where it is shown, and names the `EntityType` of another entity for a fact drawn from it, as an event's location, which takes that type's color. Quieting a detail, such as muting it, is the view's choice, not the detail's. A builder an edit's preview also uses, such as `eventDetailsOf`, is public beside `toDetails`.
+
+`EntityType` names the type of an entity, given by `Entity.toEntityType()`, which is `null` only for a custom entity of a record without a type. Each ship gives a type its color, and gives no type the primary color. A post is a type of its record, and an event group is an `Event`.
 
 ## Edits
 
