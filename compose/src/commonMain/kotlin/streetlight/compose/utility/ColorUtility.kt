@@ -1,6 +1,7 @@
 package streetlight.compose.utility
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
 import koala.modifier.Glow
 import koala.modifier.Rgb
 import kotlin.math.PI
@@ -19,6 +20,16 @@ fun Color.mixSrgb(other: Color, amount: Float) = Color(
     blue = blue * amount + other.blue * (1 - amount),
     alpha = alpha * amount + other.alpha * (1 - amount),
 )
+
+/**
+ * This color with its lightness scaled by [lightness] and its chroma by [chroma], as CSS
+ * `oklch(from color calc(l * lightness) calc(c * chroma) h)` does.
+ */
+fun Color.scaleOklch(lightness: Float, chroma: Float): Color {
+    val oklab = convert(ColorSpaces.Oklab)
+    return Color(oklab.red * lightness, oklab.green * chroma, oklab.blue * chroma, oklab.alpha, ColorSpaces.Oklab)
+        .convert(ColorSpaces.Srgb)
+}
 
 /** The color turned [degrees] around the hue wheel, as CSS `hue-rotate()` does. */
 fun Color.rotateHue(degrees: Float): Color {

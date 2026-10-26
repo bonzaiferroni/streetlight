@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import koala.modifier.Koala
 import streetlight.model.data.EntityType
 import streetlight.compose.utility.mixSrgb
+import streetlight.compose.utility.scaleOklch
 import streetlight.compose.utility.toColor
 
 /**
@@ -28,6 +29,12 @@ class KoalaColors(
     val accentBg get() = accent.mixSrgb(paper, 0.75f)
     val primaryFg get() = primary.mixSrgb(ink, 0.5f)
     val primaryLightFg get() = primary.mixSrgb(ink, 0.25f)
+    val primaryButton get() = primary.scaleOklch(0.93f, 0.8f)
+    val accentButton get() = accent.scaleOklch(0.93f, 0.8f)
+    val grayBg = Koala.gray.toColor().mixSrgb(paper, 0.5f)
+    val red = Koala.red.toColor()
+    val dangerBg = red.mixSrgb(paper, 0.75f)
+    val inkDisabled = ink.mixSrgb(paper, 0.5f)
     val muted = ink.copy(alpha = opacity.high)
     val outlineLow = ink.copy(alpha = 0.1f)
     val outlineMid = ink.copy(alpha = 0.2f)

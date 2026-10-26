@@ -30,7 +30,10 @@ fun FlowContent.homeShell(content: HomeContent) {
             column(Gap(8)) {
                 row(JustifyContentSpaceBetween) {
                     galaxyMenu()
-                    createPostMenu(null)
+                    row {
+                        btn("Create Galaxy", GalaxyFoundryRoute, Zen)
+                        createPostMenu(null)
+                    }
                 }
 
                 leadingSection(content.galaxies)
@@ -62,10 +65,6 @@ fun FlowContent.leadingSection(galaxies: List<Galaxy>) {
                 notedHeading("Get Involved", "Connect to your community through Streetlight.")
                 connectPicker(modify(MarginTop(1), Width(100), MaxWidth(40), AlignSelfCenter))
             }
-        }
-        row {
-            spacer(Flex1)
-            btn("➕ Create a Galaxy", GalaxyFoundryRoute, Zen)
         }
     }
 }

@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.opacityHigh
 import streetlight.model.data.Galaxy
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,7 +31,7 @@ import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 
 /**
- * The view of [streetlight.compose.model.HomeRoute]: the header, the map, the galaxies beside the connect picker, the home feed's
+ * The view of [streetlight.compose.model.HomeRoute]: the header, the map, the menus, the galaxies beside the connect picker, the home feed's
  * [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
  */
 context(model: HomeModel)
@@ -69,9 +71,25 @@ fun HomeView() {
                     .borderRadius(2, moonShadow = true, outline = Outline.Mid)
             )
         }
+        fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }
         fullItem { LeadingSection(galaxies, Modifier.padding(horizontal = if (isGrid) 0 else 1, vertical = 4)) }
         feed?.let { feedSection(it, model.feedTypeState, mode, settings.feedModeState) }
         fullItem { AppFooter(HomeViewSource, Modifier.padding(top = 8)) }
+    }
+}
+
+/**
+ * The galaxy menu at the start, and the buttons to create a galaxy and a post at the end, which do nothing until the
+ * app has their menus and routes. The cousin of the web's `galaxyMenu`, its Create Galaxy button and `createPostMenu`.
+ */
+@Composable
+private fun HomeMenus(modifier: Modifier) {
+    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
+        Row(1) {
+            Button("Create Galaxy", onClick = {}, style = ButtonStyle.Zen)
+            Button("Create Post", onClick = {}, style = ButtonStyle.Zen)
+        }
     }
 }
 

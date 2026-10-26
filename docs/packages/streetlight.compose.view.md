@@ -50,6 +50,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `AppFooter` | `appFooter` (`streetlight.web.page`), without its lottie |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
+| `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
+
+A button is a `Button` whatever its click does. The web's `btn` exists to dress a link as a button; compose has no such split, so a button that navigates and one that acts are one composable, built on foundation's `clickable` with no Material indication.
 
 A web link to a page the app has no route for, such as a galaxy card's or the footer's about link, is shown unlinked until the route exists. A link that leaves the site, such as the footer's source link, opens in the browser.
 
