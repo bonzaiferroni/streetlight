@@ -20,6 +20,8 @@ A variable is named from its type, in whole words:
 
 A name never drops the type for a word that names only where the value came from, such as `declared` for an `LdEvent`, or for a role alone, such as `validated` for a schema.
 
+A `Modifier` is named in the singular, as `noteMod`, however many modifiers it combines, since a combination of modifiers is itself a modifier.
+
 ## Functions
 
 A function's name follows a verbNoun shape and names the noun it acts on.

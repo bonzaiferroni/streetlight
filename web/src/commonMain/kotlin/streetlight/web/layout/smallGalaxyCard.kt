@@ -13,7 +13,7 @@ import streetlight.web.model.cssValue
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
-    card(modify(Padding(0), OverflowClip, MoonShadow)) {
+    card(modify(Padding(0), OverflowClip, MoonShadow, OutlineLow)) {
         setStyle(Css.ColorScheme.of(EntityType.Galaxy.cssValue))
 
         row(modify(Gap0, Height(16))) {

@@ -270,6 +270,6 @@ private const val MaxImageRatio = 4f
 /** The modifiers the feed rows share. */
 private object FeedRowMod {
     val Base = Modifier.fillMaxWidth().zenBg()
-    val GridBase = Modifier.fillMaxWidth().borderRadius(3, outline = Outline.Low).heavyCardBg()
+    val GridBase = Modifier.fillMaxWidth().borderRadius(3, moonShadow = true, outline = Outline.Low).heavyCardBg()
     val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = Outline.Mid).schemeBg()
 }

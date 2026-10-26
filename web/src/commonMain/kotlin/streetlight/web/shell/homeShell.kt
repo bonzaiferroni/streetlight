@@ -47,21 +47,10 @@ fun FlowContent.homeShell(content: HomeContent) {
 
 fun FlowContent.leadingSection(galaxies: List<Galaxy>) {
     section(ContainerTypeInlineSize) {
-        column(Gap0) {
-            heading2("Galaxies", SectionHeadingMod)
-            textBlock(
-                content = "Galaxies are Streetlight communities, each with a particular focus.",
-                mod = modify(InkDimFg, TextAlignCenter)
-            )
-        }
-
         column(modify(ContainerMdRow, FlexItems1)) {
-            val subHeadingMods = modify(LineHeight1, OpacityHigh)
             column {
-                filigree {
-                    heading4("Top Galaxies", subHeadingMods)
-                }
-                ulist {
+                notedHeading("Galaxies", "Streetlight communities with a particular focus.")
+                ulist(MarginTop(1)) {
                     galaxies.forEach { galaxy ->
                         listItem {
                             smallGalaxyCard(galaxy)
@@ -70,20 +59,24 @@ fun FlowContent.leadingSection(galaxies: List<Galaxy>) {
                 }
             }
             column(modify(MarginTop(4), ContainerMdMarginTop0)) {
-                filigree {
-                    heading4("Get Involved", subHeadingMods)
-                }
-                textBlock(
-                    "Connect to your community through Streetlight.",
-                    modify(Italic, OpacityHigh, TextAlignCenter, MarginTop(1)),
-                )
-                connectPicker(modify(Width(100), MaxWidth(40), AlignSelfCenter))
+                notedHeading("Get Involved", "Connect to your community through Streetlight.")
+                connectPicker(modify(MarginTop(1), Width(100), MaxWidth(40), AlignSelfCenter))
             }
         }
         row {
             spacer(Flex1)
             btn("➕ Create a Galaxy", GalaxyFoundryRoute, Zen)
         }
+    }
+}
+
+/** A [heading] in a filigree with its [note] close below it. */
+private fun FlowContent.notedHeading(heading: String, note: String) {
+    column {
+        filigree {
+            heading4(heading, modify(LineHeight1, OpacityHigh, Bold, TextShadow))
+        }
+        textBlock(note, modify(Italic, OpacityHigh, TextAlignCenter, TextSmall))
     }
 }
 

@@ -221,11 +221,12 @@ $Feed {
     box-shadow: var(--moon-shadow);
 }
 
-/* Grid sets its entries apart, each a card of its own */
+/* Grid sets its entries apart, each a card of its own in the moon's shadow, which the feed no longer casts or clips */
 ${Mode.selector(FeedMode.Grid)} $Feed {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--unit);
+    overflow: visible;
     box-shadow: none;
 
     > :not($Base) { grid-column: 1 / -1; }
@@ -234,6 +235,7 @@ ${Mode.selector(FeedMode.Grid)} $Feed {
         border: var(--outline-low);
         border-radius: calc(var(--unit) * 3);
         overflow: clip;
+        box-shadow: var(--moon-shadow);
     }
 }
 
