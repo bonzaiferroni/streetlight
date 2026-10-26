@@ -49,4 +49,6 @@ A default that a modifier on the child may override is written with the containe
 
 ## Inline Styles
 
+A modifier is for a static style. A style that changes, such as one a mode switches, is declared in the stylesheet, since an inline style outranks every rule that would change it.
+
 Converting a class to an inline style is preceded by an analysis of the DOM structure and the stylesheets, for any rule that sets the same property on an element that carries the modifier.

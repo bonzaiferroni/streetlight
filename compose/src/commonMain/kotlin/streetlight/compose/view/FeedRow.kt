@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -34,23 +35,26 @@ import streetlight.compose.model.EntityDetail
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.zenBg
-import streetlight.compose.modifier.shineBg
+import streetlight.compose.modifier.heavyCardBg
+import streetlight.compose.modifier.schemeBg
 import streetlight.compose.model.bottomDetails
 import streetlight.compose.model.toFlair
-import streetlight.compose.model.toThemeColor
+import streetlight.compose.model.toSchemeColor
 import streetlight.compose.model.topDetails
 import streetlight.model.data.Entity
 
 /** The layouts of a feed row, the cousin of the web's `FeedMode`. */
 enum class FeedMode { Minimal, Row, Grid }
 
-/** An entity in a feed, laid out by [mode]. The cousin of the web's `feedRow`. */
+/** An entity in a feed, laid out by [mode], within the entity's scheme color. The cousin of the web's `feedRow`. */
 @Composable
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
-    when (mode) {
-        FeedMode.Minimal -> MinimalFeedRow(entity)
-        FeedMode.Row -> RowFeedRow(entity)
-        FeedMode.Grid -> GridFeedRow(entity)
+    CompositionLocalProvider(LocalSchemeColor provides entity.toSchemeColor()) {
+        when (mode) {
+            FeedMode.Minimal -> MinimalFeedRow(entity)
+            FeedMode.Row -> RowFeedRow(entity)
+            FeedMode.Grid -> GridFeedRow(entity)
+        }
     }
 }
 
@@ -139,17 +143,17 @@ private fun RowFeedRow(entity: Entity) {
 }
 
 /**
- * An entry of a grid: the image across the top at 3:2, whole over its backdrop; the title over the description, clipped
- * and fading as in the row, beside the flair badge; then the cells. The parts below the image are inset a unit at the
- * sides and stand a unit apart. The cousin of the web's `Grid` mode.
+ * An entry of a grid: the image across the top in its own shape, held between 1:2 and 4:1, whole over its backdrop; the
+ * title over the description, clipped and fading as in the row, beside the flair badge; then the cells. The parts below the image are inset a unit at the
+ * sides and stand a unit apart, and the entry's corners are rounded three units. The cousin of the web's `Grid` mode.
  */
 @Composable
 private fun GridFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
-    Column(1, FeedRowMod.Base.padding(bottom = 2)) {
-        ContainImage(entity.image, Modifier.fillMaxWidth().aspectRatio(GridImageRatio).background(entity.tint))
+    Column(1, FeedRowMod.GridBase.padding(bottom = 1)) {
+        ContainImage(entity.image, Modifier.fillMaxWidth().aspectRatio(entity.imageRatio).background(entity.tint))
         Row(1, Modifier.padding(horizontal = 1)) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
@@ -193,9 +197,12 @@ private fun Thumbnail(entity: Entity, modifier: Modifier) {
     }
 }
 
+/** The shape of the entity's image in a grid entry: its own, held between [MinImageRatio] and [MaxImageRatio]. */
+private val Entity.imageRatio get() = (image?.aspect ?: GridImageRatio).coerceIn(MinImageRatio, MaxImageRatio)
+
 /** The entity's color, faint, behind its image. */
 private val Entity.tint
-    @Composable @ReadOnlyComposable get() = currentTheme.colors.colorOf(toThemeColor()).copy(alpha = 0.2f)
+    @Composable @ReadOnlyComposable get() = currentTheme.colors.colorOf(toSchemeColor()).copy(alpha = 0.2f)
 
 /** The entity's flair, animated, in its color at low opacity, [size] square. */
 @Composable
@@ -203,7 +210,7 @@ private fun FlairBadge(entity: Entity, size: Dp) {
     val theme = currentTheme
     AnimatedIcon(
         svg = entity.toFlair().animated,
-        color = { theme.colors.colorOf(entity.toThemeColor()) },
+        color = { theme.colors.colorOf(entity.toSchemeColor()) },
         modifier = Modifier.opacityLow(),
         size = size,
     )
@@ -238,11 +245,16 @@ private const val TextInsetUnits = 0.5f
 /** The width from which a row's cells sit beside it rather than below: the web's 960px container query. */
 private val WideRowWidth = 960.dp
 
-/** The shape of a grid entry's image: the web's `aspect-ratio: 3 / 2`. */
+/** The shape of a grid entry's image when it has none of its own: the web's `aspect-ratio: 3 / 2`. */
 private const val GridImageRatio = 3f / 2f
+
+/** The tallest and the widest a grid entry's image may be, as width over height. */
+private const val MinImageRatio = 1f / 2f
+private const val MaxImageRatio = 4f
 
 /** The modifiers the feed rows share. */
 private object FeedRowMod {
     val Base = Modifier.fillMaxWidth().zenBg()
-    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = true).shineBg()
+    val GridBase = Modifier.fillMaxWidth().borderRadius(3, outline = true).heavyCardBg()
+    val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = true).schemeBg()
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.node.CompositionLocalConsumerModifierNode
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.LayoutModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.node.currentValueOf
 import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.node.invalidateLayer
 import androidx.compose.ui.node.invalidateMeasurement
@@ -29,6 +30,10 @@ import androidx.compose.ui.node.requireGraphicsContext
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import streetlight.compose.utility.mixSrgb
+import streetlight.compose.view.LocalSchemeColor
+import kotlin.math.ln
+import kotlin.math.pow
 
 /**
  * Rounds the corners to [units] of the theme's unit and clips the content to them. The web's `BorderRadius(n)`.
@@ -47,6 +52,15 @@ fun Modifier.inkBg() = this then BackgroundElement(Background.Ink)
 
 /** Paints the theme's card background behind the content, a step firmer than [zenBg]. The web's `CardBg`. */
 fun Modifier.cardBg() = this then BackgroundElement(Background.Card)
+
+/** Paints the theme's heavy card background behind the content, nearly paper. The web's `HeavyCardBg`. */
+fun Modifier.heavyCardBg() = this then BackgroundElement(Background.HeavyCard)
+
+/**
+ * Paints the context's [LocalSchemeColor] over paper behind the content, brighter in a circle at the center that
+ * fades out toward the farther sides. The web's `SchemeBg`.
+ */
+fun Modifier.schemeBg() = this then SchemeBgElement
 
 /**
  * Clips the content at [height] units and fades it over the two units that end [inset] units above the clip, as the
@@ -124,7 +138,7 @@ private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var ou
 }
 
 /** The theme's backgrounds a modifier paints. */
-private enum class Background { Zen, Ink, Card }
+private enum class Background { Zen, Ink, Card, HeavyCard }
 
 private data class BackgroundElement(val background: Background) : ModifierNodeElement<BackgroundNode>() {
     override fun create() = BackgroundNode(background)
@@ -140,8 +154,31 @@ private class BackgroundNode(var background: Background) : Modifier.Node(), Draw
             Background.Zen -> theme.colors.zenBg
             Background.Ink -> theme.colors.inkBg
             Background.Card -> theme.colors.cardBg
+            Background.HeavyCard -> theme.colors.heavyCardBg
         }
         drawRect(color)
+        drawContent()
+    }
+}
+
+private data object SchemeBgElement : ModifierNodeElement<SchemeBgNode>() {
+    override fun create() = SchemeBgNode()
+    override fun update(node: SchemeBgNode) = Unit
+}
+
+private class SchemeBgNode : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+    override fun ContentDrawScope.draw() {
+        val colors = theme.colors
+        val scheme = colors.colorOf(currentValueOf(LocalSchemeColor))
+        val inner = scheme.mixSrgb(colors.paper, SchemeCenterMix)
+        val outer = scheme.mixSrgb(colors.paper, SchemeEdgeMix)
+        // the web's color hint, its curve traced in stops
+        val stops = Array(SchemeHintStops + 1) { index ->
+            val position = index.toFloat() / SchemeHintStops
+            position to inner.mixSrgb(outer, 1 - position.pow(SchemeHintExponent))
+        }
+        // the web's circle farthest-side, holding the edge's color past it
+        drawRect(Brush.radialGradient(*stops, center = center, radius = maxOf(size.width, size.height) / 2))
         drawContent()
     }
 }
@@ -205,6 +242,17 @@ private class OpacityNode(var level: Opacity) : Modifier.Node(), LayoutModifierN
 
 /** The length of the fade at a clip, in units: the web's `1rem`. */
 private const val FadeUnits = 2
+
+/** The scheme color's share of a [schemeBg] at its center and at its edge, over paper. */
+private const val SchemeCenterMix = 0.25f
+private const val SchemeEdgeMix = 0.15f
+
+/** Where a [schemeBg] is halfway from its center to its edge, the web's color hint, and the stops that trace it. */
+private const val SchemeHint = 0.7f
+private const val SchemeHintStops = 8
+
+/** The curve of the web's color hint: a position raised to it gives the progress toward the edge's color. */
+private val SchemeHintExponent = ln(0.5f) / ln(SchemeHint)
 
 /** The web's `--moon-shadow`: two soft rings of black at 5%. */
 private val moonShadows = listOf(

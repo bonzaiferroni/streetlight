@@ -9,15 +9,16 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 | Package | Provides |
 |---|---|
 | `androidx.compose.ui.node` | `Modifier.Node` and its kinds |
-| `streetlight.compose.view` | `LocalKoalaAppTheme` |
+| `streetlight.compose.view` | `LocalKoalaAppTheme`, `LocalSchemeColor` |
 
 ## Web Counterparts
 
 | Compose | Web |
 |---|---|
 | `borderRadius(n)` | `BorderRadius(n)`; its `moonShadow` and `outline` flags give `MoonShadow` and `Outline`, `--outline-low` |
-| `zenBg()`, `inkBg()`, `cardBg()` | `ZenBg`, `InkBg`, `CardBg` |
+| `zenBg()`, `inkBg()`, `cardBg()`, `heavyCardBg()` | `ZenBg`, `InkBg`, `CardBg`, `HeavyCardBg` |
 | `shineBg()` | `ShineBg` |
+| `schemeBg()` | `SchemeBg` |
 | `padding(n)` | `padding: var(--unit)`, `PaddingX1`, `PaddingY1` |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
@@ -34,6 +35,10 @@ A modifier lives in the file that corresponds to its web cousin's stylesheet: `D
 ## Padding
 
 `padding()` takes units, read while measuring. A padding in `Dp` is foundation's, and a file using both imports both.
+
+## Scheme Surface
+
+`schemeBg()` paints the context's scheme color over paper, a circle at the center reaching the farther sides, fading from a stronger mix to a fainter one. Compose's gradients take no color hint, so the hint's curve is traced in stops. The web's `SchemeBg` is kept in step with it.
 
 ## Shine Surface
 

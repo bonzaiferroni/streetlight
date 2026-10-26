@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,15 +57,44 @@ fun LazyGridScope.feedSection(
     }
 }
 
-/** The heading of a feed of [type] in a filigree, the type menu left of it and the mode switch right of it. */
+/**
+ * Adds the feed section to this staggered grid, as [LazyGridScope.feedSection] does to a grid. An entry takes one column
+ * in `Grid` mode, its height its own, and the row otherwise.
+ */
+fun LazyStaggeredGridScope.feedSection(
+    feed: EntityFeed,
+    typeState: MutableTap<FeedType>,
+    mode: FeedMode,
+    modeState: MutableTap<FeedMode>,
+) {
+    val source = feed.source
+    val types = feed.types ?: source?.context?.types.orEmpty()
+
+    fullItem { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState, isInset = mode == FeedMode.Grid) }
+    if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
+    items(feed.entities, span = { if (mode == FeedMode.Grid) StaggeredGridItemSpan.SingleLane else StaggeredGridItemSpan.FullLine }) { entity ->
+        FeedRow(entity, mode)
+    }
+}
+
+/**
+ * The heading of a feed of [type] in a filigree, the type menu left of it and the mode switch right of it, a unit in
+ * from the sides unless [isInset], when the grid already holds it in.
+ */
 @Composable
-private fun FeedHeading(type: FeedType, types: List<FeedType>, typeState: MutableTap<FeedType>, modeState: MutableTap<FeedMode>) {
+private fun FeedHeading(
+    type: FeedType,
+    types: List<FeedType>,
+    typeState: MutableTap<FeedType>,
+    modeState: MutableTap<FeedMode>,
+    isInset: Boolean = false,
+) {
     val theme = currentTheme
     val selectedType by typeState.collectAsState()
     val selectedMode by modeState.collectAsState()
 
     // the menu and the switch are the same width, so the heading stays centered
-    Row(Modifier.fillMaxWidth().padding(1), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().padding(horizontal = if (isInset) 0 else 1, vertical = 1), verticalAlignment = Alignment.CenterVertically) {
         Row(1, Modifier.width(theme.unit * SwitchUnits).opacityHigh()) {
             types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { typeState.set(option) } }
         }

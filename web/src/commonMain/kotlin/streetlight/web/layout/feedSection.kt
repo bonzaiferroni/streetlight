@@ -103,7 +103,7 @@ fun DIV.emptyFeedContent() {
 fun FlowContent.layoutFeed(
     block: FlowContent.() -> Unit
 ) {
-    column(FeedSection.MountId, modify(FeedRowStyle.Feed, FeedSection.FeedColumnMod)) {
+    column(FeedSection.MountId, FeedRowStyle.Feed) {
         block()
     }
 }

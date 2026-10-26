@@ -20,7 +20,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | Type | Pattern |
 |---|---|
 | `FooView` | The composable a route renders |
-| `foo` on `LazyGridScope` or `LazyListScope` | A part of a lazy layout that adds its own items, such as `feedSection`, named in lower case as `items` is |
+| `foo` on `LazyGridScope`, `LazyStaggeredGridScope` or `LazyListScope` | A part of a lazy layout that adds its own items, such as `feedSection`, named in lower case as `items` is |
 | `KoalaFoo` | A group of the theme's values, such as `KoalaColors` |
 | `FooMod` | The fixed modifiers of the composable `Foo`, the cousin of the web's `FooStyle` |
 
@@ -60,7 +60,7 @@ entry<FooRoute> {
 
 ## Composables
 
-A view that scrolls is a `LazyGridView`, one lazy grid for the whole view, filled with sections built on `LazyGridScope`. `fullItem` spans every column, and `pinnedItem` also stays composed off screen, for content costly to start anew.
+A view that scrolls is a `LazyGridView`, one lazy grid for the whole view, filled with sections built on `LazyGridScope`. `LazyStaggeredGridView` is its masonry cousin, each column stacking items of their own heights, filled with sections built on `LazyStaggeredGridScope`; a section is written for each scope it serves. On either, `fullItem` spans every column, and `pinnedItem` also stays composed off screen, for content costly to start anew. The home view is a `LazyStaggeredGridView`, its items a unit apart and a unit from its edges in `Grid` mode, so the rounded entries stand clear, and a line apart otherwise. The map and the feed heading stay where they are in either mode.
 
 A composable draws its content and leaves its framing to the caller. It takes a `modifier` and applies it to its root, and the call site gives the corners, shadow, outline and surface, as `CellGrid(top, bottom, FeedRowMod.Cells)`. The composable keeps a styling of its own only where its content depends on it, as the cells of `CellGrid` need a background behind them for their gaps to draw its lines.
 
@@ -83,7 +83,9 @@ BasicText(text, color = { theme.colors.accent })
 
 ### Colors
 
-A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. A `ThemeColor` is resolved with `KoalaColors.colorOf`, as the web's is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`.
+A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. A `SchemeColor` is resolved with `KoalaColors.colorOf`, as the web's `ThemeColor` is resolved through its custom properties. `Muted` is the ink at the web's `--opacity-high`.
+
+The scheme color of a part of the page is a context, as the web's `--color-scheme`: `LocalSchemeColor` holds it, the ink unless provided, and a view whose content belongs to an entity provides the entity's, as `FeedRow` does. A modifier that paints in it, such as `schemeBg()`, reads it while drawing.
 
 ### Typography
 
@@ -117,7 +119,7 @@ A lazy layout disposes an item that scrolls away, which would close the map's na
 
 ## Feed
 
-A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. The section takes the mode as a value, so a change of mode lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the page model's type, and the `FeedMode` switch, bound to `AppSettings`, both a `MutableTap`.
+A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. The section takes the mode as a value, so a change of mode lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the page model's type, and the `FeedMode` switch, bound to `AppSettings`, both a `MutableTap`.
 
 An entry carries `zenBg()`, and the feed stands its entries `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 
@@ -131,8 +133,8 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 |---|---|
 | `Minimal` | One row with a unit of padding: a square thumbnail of 10 units over a backdrop of the entity's color, then a column of the top details, the title in `regular` on up to two lines, and the bottom details, held to the top of the row, then the flair badge: the entity's `toFlair()` animated, in its color at the web's `--opacity-low`, as tall as the thumbnail. The parts are a unit apart. Details are `small`, on one line each, joined by a muted dot and cut with an ellipsis, leaving out those without text. The top details are in their colors; the bottom details are in the ink at `opacityHigh()`, as a description is |
 | `Row` | Padded a unit all around, where the web pads a line at the sides. The main part: the thumbnail, outlined; the title in `heading5` semi-bold on one line over the entity's `body` as markdown in `small` at `opacityHigh()`, both clipped at the row's 10 units with half a unit of inset and fading where they reach the clip; then the flair badge. The `CellGrid` sits below it, or beside it as the row's right half, less half a unit, from 960dp |
-| `Grid` | No padding but two units below. A `ContainImage` across the top at 3:2; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart |
+| `Grid` | No padding but a unit below. A `ContainImage` across the top in the image's own `aspect`, held between 1:2 and 4:1, or 3:2 when it has none; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart. The entry's corners are rounded three units |
 
 ### Cell Grid
 
-`CellGrid` shows an entity's top and bottom details as cells, on one line when every cell gets at least 128dp, otherwise the top details over the bottom ones. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon in the detail's color at its start and its text centered in the rest; a detail without text shows its icon alone at `opacityLow()`, in the same place. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `shineBg()`.
+`CellGrid` shows an entity's top and bottom details as cells, on one line when every cell gets at least 128dp, otherwise the top details over the bottom ones. The cells of a line share its width evenly, the pixels left over going to its first cells, so a line never ends in a cell of another width. Each cell is 5 units tall on `cardBg()`, its icon in the detail's color at its start and its text centered in the rest; a detail without text shows its icon alone at `opacityLow()`, in the same place. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `schemeBg()` in the entity's scheme color.

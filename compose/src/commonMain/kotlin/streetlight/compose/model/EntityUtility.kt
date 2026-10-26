@@ -32,31 +32,31 @@ import kotlin.time.Instant
  * another entity, such as an event's location, takes that entity's.
  */
 data class EntityDetail(
-    val color: ThemeColor,
+    val color: SchemeColor,
     val svg: Svg,
     val text: String?,
 )
 
 /** The color of this entity's type. */
-fun Entity.toThemeColor(): ThemeColor = when (this) {
-    is City -> ThemeColor.City
-    is EventLocation -> ThemeColor.Event
-    is EventPost -> ThemeColor.Event
-    is Event -> ThemeColor.Event
-    is Galaxy -> ThemeColor.Galaxy
-    is LocationPost -> ThemeColor.Location
-    is Location -> ThemeColor.Location
-    is MediaPost -> ThemeColor.Media
-    is Media -> ThemeColor.Media
+fun Entity.toSchemeColor(): SchemeColor = when (this) {
+    is City -> SchemeColor.City
+    is EventLocation -> SchemeColor.Event
+    is EventPost -> SchemeColor.Event
+    is Event -> SchemeColor.Event
+    is Galaxy -> SchemeColor.Galaxy
+    is LocationPost -> SchemeColor.Location
+    is Location -> SchemeColor.Location
+    is MediaPost -> SchemeColor.Media
+    is Media -> SchemeColor.Media
     is CustomEntity -> when (recordType) {
-        RecordType.Location -> ThemeColor.Location
-        RecordType.Event -> ThemeColor.Event
-        else -> ThemeColor.Primary
+        RecordType.Location -> SchemeColor.Location
+        RecordType.Event -> SchemeColor.Event
+        else -> SchemeColor.Primary
     }
-    is Star -> ThemeColor.Primary
-    is EventGroup -> ThemeColor.Location
-    is Offering -> ThemeColor.Primary
-    is Skill -> ThemeColor.Primary
+    is Star -> SchemeColor.Primary
+    is EventGroup -> SchemeColor.Location
+    is Offering -> SchemeColor.Primary
+    is Skill -> SchemeColor.Primary
 }
 
 /** The flair badge icon of this entity, the icon of its tag for an event that has one. */
@@ -77,20 +77,20 @@ fun Entity.toFlair(): SvgPack = when (this) {
 
 /** The details shown above this entity's title: when it happens, or what kind of thing it is. */
 val Entity.topDetails: List<EntityDetail> get() = when (this) {
-    is City -> listOf(EntityDetail(ThemeColor.City, SvgFile.Map.small, state))
+    is City -> listOf(EntityDetail(SchemeColor.City, SvgFile.Map.small, state))
     is EventLocation -> startsAtDetails(startsAt)
     is EventPost -> event.topDetails
     is Event -> startsAtDetails(startsAt)
-    is Galaxy -> listOf(EntityDetail(ThemeColor.Galaxy, SvgFile.Planet.small, tagline))
+    is Galaxy -> listOf(EntityDetail(SchemeColor.Galaxy, SvgFile.Planet.small, tagline))
     is LocationPost -> location.topDetails
-    is Location -> listOf(EntityDetail(ThemeColor.Location, SvgFile.MapPin.small, mapType ?: "Location"))
+    is Location -> listOf(EntityDetail(SchemeColor.Location, SvgFile.MapPin.small, mapType ?: "Location"))
     is MediaPost -> media.topDetails
-    is Media -> listOf(EntityDetail(ThemeColor.Media, SvgFile.Quote.small, subtitle))
-    is CustomEntity -> listOf(EntityDetail(toThemeColor(), SvgFile.Tag.small, sublabel))
-    is Star -> listOf(EntityDetail(ThemeColor.Primary, SvgFile.Star.small, tagline))
+    is Media -> listOf(EntityDetail(SchemeColor.Media, SvgFile.Quote.small, subtitle))
+    is CustomEntity -> listOf(EntityDetail(toSchemeColor(), SvgFile.Tag.small, sublabel))
+    is Star -> listOf(EntityDetail(SchemeColor.Primary, SvgFile.Star.small, tagline))
     is EventGroup -> startsAtDetails(startsAt)
     is Offering -> emptyList()
-    is Skill -> listOf(EntityDetail(ThemeColor.Primary, SvgFile.Award.small, skillLevel.label))
+    is Skill -> listOf(EntityDetail(SchemeColor.Primary, SvgFile.Award.small, skillLevel.label))
 }
 
 /** The details shown below this entity's title: where it is, and what it costs or holds. */
@@ -98,49 +98,49 @@ val Entity.bottomDetails: List<EntityDetail> get() = when (this) {
     is City -> countDetails(locationCount, eventCount)
     is EventLocation -> listOf(
         costDetail(cost),
-        EntityDetail(ThemeColor.Location, SvgFile.MapPin.small, locationName),
+        EntityDetail(SchemeColor.Location, SvgFile.MapPin.small, locationName),
     )
     is EventPost -> event.bottomDetails
     is Event -> listOf(
         costDetail(cost),
-        EntityDetail(ThemeColor.Event, SvgFile.Label.small, tag?.label),
+        EntityDetail(SchemeColor.Event, SvgFile.Label.small, tag?.label),
     )
     is Galaxy -> countDetails(locationCount, eventCount)
     is LocationPost -> location.bottomDetails
     is Location -> listOf(
-        EntityDetail(ThemeColor.Muted, SvgFile.City.small, city),
+        EntityDetail(SchemeColor.Muted, SvgFile.City.small, city),
         eventCountDetail(eventCount),
     )
     is MediaPost -> media.bottomDetails
-    is Media -> listOf(EntityDetail(ThemeColor.Muted, SvgFile.User.small, username.value))
+    is Media -> listOf(EntityDetail(SchemeColor.Muted, SvgFile.User.small, username.value))
     is CustomEntity -> emptyList()
-    is Star -> listOf(EntityDetail(ThemeColor.Muted, SvgFile.User.small, username.value))
+    is Star -> listOf(EntityDetail(SchemeColor.Muted, SvgFile.User.small, username.value))
     is EventGroup -> listOf(
-        EntityDetail(ThemeColor.Location, SvgFile.MapPin.small, locationName),
+        EntityDetail(SchemeColor.Location, SvgFile.MapPin.small, locationName),
         eventCountDetail(eventCount),
     )
-    is Offering -> listOf(EntityDetail(ThemeColor.Muted, SvgFile.Coin.small, priceLabel))
-    is Skill -> listOf(EntityDetail(ThemeColor.Muted, SvgFile.Calendar.small, "since $yearStarted"))
+    is Offering -> listOf(EntityDetail(SchemeColor.Muted, SvgFile.Coin.small, priceLabel))
+    is Skill -> listOf(EntityDetail(SchemeColor.Muted, SvgFile.Calendar.small, "since $yearStarted"))
 }
 
 /** The day and time an event starts, as "Today" and "7:30 PM". */
 private fun startsAtDetails(startsAt: Instant?) = listOf(
-    EntityDetail(ThemeColor.Event, SvgFile.Calendar.small, startsAt?.toFutureFormat()),
-    EntityDetail(ThemeColor.Event, SvgFile.Clock.small, startsAt?.toTimeFormat()),
+    EntityDetail(SchemeColor.Event, SvgFile.Calendar.small, startsAt?.toFutureFormat()),
+    EntityDetail(SchemeColor.Event, SvgFile.Clock.small, startsAt?.toTimeFormat()),
 )
 
 /** The cost of an event: "FREE", the price, or `null` when it is not known. */
 private fun costDetail(cost: Float?) = EntityDetail(
-    color = ThemeColor.Event,
+    color = SchemeColor.Event,
     svg = SvgFile.Ticket.small,
     text = cost?.let { if (it == 0f) "FREE" else "$${it.format(2, true)}" },
 )
 
 /** The location and event counts of a place. */
 private fun countDetails(locationCount: Int, eventCount: Int) = listOf(
-    EntityDetail(ThemeColor.Muted, SvgFile.MapPin.small, locationCount.takeIf { it > 0 }?.let { "${it.toMetricString()} locations" }),
+    EntityDetail(SchemeColor.Muted, SvgFile.MapPin.small, locationCount.takeIf { it > 0 }?.let { "${it.toMetricString()} locations" }),
     eventCountDetail(eventCount),
 )
 
 private fun eventCountDetail(eventCount: Int) =
-    EntityDetail(ThemeColor.Muted, SvgFile.Calendar.small, eventCount.takeIf { it > 0 }?.let { "${it.toMetricString()} events" })
+    EntityDetail(SchemeColor.Muted, SvgFile.Calendar.small, eventCount.takeIf { it > 0 }?.let { "${it.toMetricString()} events" })

@@ -190,11 +190,28 @@ $Flair { display: block; width: var(--row-height); }
 
 $Cells { grid-area: cells; margin-inline: var(--unit); }
 
+/* the feed is one card, its rows a line apart */
+$Feed {
+    gap: 2px;
+    border-radius: var(--unit);
+    overflow: clip;
+    box-shadow: var(--moon-shadow);
+}
+
+/* Grid sets its entries apart, each a card of its own */
 ${Mode.selector(FeedMode.Grid)} $Feed {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--unit);
+    box-shadow: none;
 
     > :not($Base) { grid-column: 1 / -1; }
+
+    > $Base {
+        border: var(--outline-low);
+        border-radius: calc(var(--unit) * 3);
+        overflow: clip;
+    }
 }
 
 /* Grid and Minimal drop the border of Row */
@@ -205,7 +222,7 @@ $grid, $minimal {
 /* a featured entry takes the Grid layout in any feed */
 $grid {
     --text-inset: 0px;
-    padding: 0 0 var(--unit-2);
+    padding: 0 0 var(--unit);
 
     /* the zero-width outer columns and the gap inset the text and cells from the edges */
     $Content {

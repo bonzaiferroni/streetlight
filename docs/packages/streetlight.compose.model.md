@@ -33,7 +33,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `AppSettings` | The root switches, such as `FeedRowStyle.Mode` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
-| `ThemeColor` | `ThemeColor` (`streetlight.web.model`) |
+| `SchemeColor` | `ThemeColor` (`streetlight.web.model`) |
 | `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
 | `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
 
@@ -61,6 +61,6 @@ It is registered in `appModule` with `viewModelOf(::FooModel)`. The route's entr
 
 `EntityUtility.kt` holds the properties of an entity that depend on its type, each a `when` over every entity type, as the web's does.
 
-`topDetails` and `bottomDetails` are the `EntityDetail`s a feed row shows, each a `ThemeColor`, an icon and a text. An entity type always gives the same details, in the same order; a fact the entity lacks keeps its detail with `null` text, so its cell still shows. A fact of the entity itself takes the entity's color, as an event's cost and tag take the event's; a fact drawn from another entity takes that entity's, as an event's location takes the location's.
+`topDetails` and `bottomDetails` are the `EntityDetail`s a feed row shows, each a `SchemeColor`, an icon and a text. An entity type always gives the same details, in the same order; a fact the entity lacks keeps its detail with `null` text, so its cell still shows. A fact of the entity itself takes the entity's color, as an event's cost and tag take the event's; a fact drawn from another entity takes that entity's, as an event's location takes the location's.
 
-A color that depends on what it shows is a `ThemeColor`, resolved by the theme in `streetlight.compose.view`.
+A color that depends on what it shows is a `SchemeColor`, resolved by the theme in `streetlight.compose.view`.
