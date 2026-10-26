@@ -33,3 +33,9 @@ fun FeedMode.toSvg() = when (this) {
     FeedMode.Row -> SvgFile.LayoutRow.small
     FeedMode.Grid -> SvgFile.LayoutGrid.small
 }
+
+/** Whether a feed of this type has a search field, as the web's. */
+val FeedType.isSearched get() = when (this) {
+    FeedType.Events, FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies, FeedType.Cities -> true
+    FeedType.Locations, FeedType.GalaxyPosts, FeedType.Posts, FeedType.Media -> false
+}

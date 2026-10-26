@@ -33,11 +33,15 @@ import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.FeedType
+import androidx.compose.foundation.layout.Spacer
+import streetlight.model.data.EventTag
+import streetlight.compose.model.isSearched
 
 /**
  * Adds the feed section to this grid: the heading of the [feed]'s type in a filigree, between the menu of the types its
- * context offers, bound to [typeState], and the switch of [FeedMode], bound to [modeState]; then the feed's entries in
- * [mode], or a message when it has none. The cousin of the web's `feedSection`.
+ * context offers, bound to [typeState], and the switch of [FeedMode], bound to [modeState]; for a type that is searched,
+ * the tag filter of an events feed, bound to [tagState], and the search, bound to [searchState]; then the feed's entries
+ * in [mode], or a message when it has none. The cousin of the web's `feedSection`.
  *
  * The heading and the message span the grid's row. An entry takes one column in `Grid` mode, and the row otherwise.
  */
@@ -46,11 +50,16 @@ fun LazyGridScope.feedSection(
     typeState: MutableTap<FeedType>,
     mode: FeedMode,
     modeState: MutableTap<FeedMode>,
+    tagState: MutableTap<EventTag?>,
+    searchState: MutableTap<String>,
 ) {
     val source = feed.source
     val types = feed.types ?: source?.context?.types.orEmpty()
 
-    fullItem { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState) }
+    val type = source?.type ?: FeedType.Events
+
+    fullItem { FeedHeading(type, types, typeState, modeState) }
+    if (type.isSearched) fullItem { FeedFilters(type, tagState, searchState) }
     if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
     items(feed.entities, span = { GridItemSpan(if (mode == FeedMode.Grid) 1 else maxLineSpan) }) { entity ->
         context(source?.context) { FeedRow(entity, mode) }
@@ -66,11 +75,17 @@ fun LazyStaggeredGridScope.feedSection(
     typeState: MutableTap<FeedType>,
     mode: FeedMode,
     modeState: MutableTap<FeedMode>,
+    tagState: MutableTap<EventTag?>,
+    searchState: MutableTap<String>,
 ) {
     val source = feed.source
     val types = feed.types ?: source?.context?.types.orEmpty()
 
-    fullItem { FeedHeading(source?.type ?: FeedType.Events, types, typeState, modeState, isInset = mode == FeedMode.Grid) }
+    val type = source?.type ?: FeedType.Events
+    val isInset = mode == FeedMode.Grid
+
+    fullItem { FeedHeading(type, types, typeState, modeState, isInset) }
+    if (type.isSearched) fullItem { FeedFilters(type, tagState, searchState, isInset) }
     if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
     items(feed.entities, span = { if (mode == FeedMode.Grid) StaggeredGridItemSpan.SingleLane else StaggeredGridItemSpan.FullLine }) { entity ->
         context(source?.context) { FeedRow(entity, mode) }
@@ -116,6 +131,27 @@ private fun FeedHeading(
         ) {
             FeedMode.entries.forEach { option -> SwitchIcon(option.toSvg(), option == selectedMode) { modeState.set(option) } }
         }
+    }
+}
+
+/**
+ * The filters of a feed of [type]: the tag filter at the start for events, and the search at the end, a unit in from the
+ * sides unless [isInset], and a unit above the entries.
+ */
+@Composable
+private fun FeedFilters(
+    type: FeedType,
+    tagState: MutableTap<EventTag?>,
+    searchState: MutableTap<String>,
+    isInset: Boolean = false,
+) {
+    Row(
+        Modifier.fillMaxWidth().padding(start = if (isInset) 0 else 1, end = if (isInset) 0 else 1, bottom = 1),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (type == FeedType.Events) TagFilter(tagState) else Spacer(Modifier)
+        SearchField(searchState)
     }
 }
 

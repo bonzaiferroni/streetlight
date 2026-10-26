@@ -73,7 +73,7 @@ fun HomeView() {
         }
         fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }
         fullItem { LeadingSection(galaxies, Modifier.padding(horizontal = if (isGrid) 0 else 1, vertical = 4)) }
-        feed?.let { feedSection(it, model.feedTypeState, mode, settings.feedModeState) }
+        feed?.let { feedSection(it, model.feedTypeState, mode, settings.feedModeState, model.tagState, model.searchState) }
         fullItem { AppFooter(HomeViewSource, Modifier.padding(top = 8)) }
     }
 }
