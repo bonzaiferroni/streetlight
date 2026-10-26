@@ -26,7 +26,10 @@ import streetlight.web.layout.cardOf
 import streetlight.web.model.LocationOnboarder
 import streetlight.web.model.ParseModeFocus
 
-/** How the crawler reads the events of the [focus] location: the host's permission, and what it has gathered. */
+/**
+ * The section of how the crawler reads the events of the [focus] location: the host's permission, and what it has
+ * gathered.
+ */
 context(model: LocationOnboarder)
 fun ViewScope.parseOnboarder(focus: ParseModeFocus) {
     val configState = storeOf(
@@ -63,7 +66,7 @@ private fun ViewScope.parsePermissionSection(configState: MutableTap<ParseConfig
 }
 
 // td: move to dashboard
-/** What the crawler has gathered from the events page so far. */
+/** The section of what the crawler has gathered from the events page so far. */
 private fun ViewScope.gatherStatusSection(status: GatherEventStatus) = actionSection("Gathered Events") {
     when (status) {
         GatherEventStatus.Url -> centeredText("Add the url of your events page so our crawler can find it.")

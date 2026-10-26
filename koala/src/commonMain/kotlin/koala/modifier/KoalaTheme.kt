@@ -101,7 +101,7 @@ object KoalaStyle {
     )
 }
 
-/** Where a background glow sits, as percentages of the viewport, and its radius. */
+/** The place a background glow sits, as percentages of the viewport, and its radius. */
 @Serializable
 data class GlowPosition(
     val x: Int, // 0-100% of viewport
@@ -113,8 +113,9 @@ data class GlowPosition(
 }
 
 /**
- * Where a shine surface centers this glow, as percentages of the surface's sides: the point on its edge that the glow's
- * direction from the page's center points to, that direction scaled by its max norm and stretched to the surface.
+ * The point where a shine surface centers this glow, as percentages of the surface's sides: the point on its edge that
+ * the glow's direction from the page's center points to, that direction scaled by its max norm and stretched to the
+ * surface.
  */
 fun GlowPosition.shineAnchor(): Pair<Double, Double> {
     val dx = x - 50.0

@@ -4,7 +4,7 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** How often a recurring event repeats. */
+/** The rate at which a recurring event repeats. */
 @Serializable
 sealed interface RepeatInterval {
 
@@ -52,7 +52,7 @@ sealed interface RepeatInterval {
 //    ) : Repeat
 }
 
-/** Which week of the month a monthly event falls in. */
+/** The week of the month a monthly event falls in. */
 @Serializable
 enum class WeekOrdinal {
     First,

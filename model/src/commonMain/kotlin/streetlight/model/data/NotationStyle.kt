@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-/** How pitches are written: as letters, or as degrees of the scale. */
+/** The way pitches are written: as letters, or as degrees of the scale. */
 enum class NotationStyle(val label: String) {
     Letters("Letters"),
     Degrees("Degrees"),

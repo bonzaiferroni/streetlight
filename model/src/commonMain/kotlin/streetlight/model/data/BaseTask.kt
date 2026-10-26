@@ -79,7 +79,7 @@ data class EditTask(
     val editLogId get() = EditLogId(recordId)
 }
 
-/** What a task view shows for a task. */
+/** The content a task view shows for a task. */
 @Serializable
 sealed interface TaskContent: Labeled
 

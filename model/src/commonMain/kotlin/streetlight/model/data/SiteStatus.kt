@@ -53,7 +53,7 @@ enum class SiteMetric(
     override val label = name.pascalToTitle()
 }
 
-/** How a metric is gathered over a period. */
+/** The way a metric is gathered over a period. */
 enum class MetricType {
     Count,
     Average,

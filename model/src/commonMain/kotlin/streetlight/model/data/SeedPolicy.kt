@@ -89,7 +89,7 @@ enum class SeedPolicy(
     ),
 }
 
-/** Where a policy applies: the whole site, only outside galaxies, or one galaxy. */
+/** The reach of a policy: the whole site, only outside galaxies, or one galaxy. */
 enum class PolicyScope { Universe, UniverseOnly, Galaxy }
 /** Whether a policy forbids or asks for something. */
 enum class PolicyType { Dont, Do }

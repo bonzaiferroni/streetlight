@@ -59,7 +59,7 @@ data class TransitTrip(
 
 // trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled,timepoint
 // 115699058,11:34:00,11:34:00,26175,1,,0,1,,1
-/** When a trip reaches a stop. */
+/** The time a trip reaches a stop. */
 data class TransitStopTime(
     val tripId: String,
     val arrivalTime: String,

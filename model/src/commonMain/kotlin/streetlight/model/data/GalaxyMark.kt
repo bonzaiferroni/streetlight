@@ -26,7 +26,7 @@ value class MarkId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
-/** How far a mark leans a post in its galaxy's feed. */
+/** The amount a mark leans a post in its galaxy's feed. */
 enum class Lean(override val label: String, val value: Int): Labeled {
     StrongPositive("+2", +2),
     Positive("+1", +1),
@@ -43,7 +43,7 @@ data class MarkTally(
     val isMarked: Boolean,
 )
 
-/** How a galaxy's marks are placed: a single mark, a positive and negative pair, or several. */
+/** The arrangement of a galaxy's marks: a single mark, a positive and negative pair, or several. */
 enum class CuratorType { Single, Polar, Multi }
 
 /** The [CuratorType] of these marks, or `null` when there are none. */

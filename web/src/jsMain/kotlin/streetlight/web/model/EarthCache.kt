@@ -123,7 +123,7 @@ class EarthCache(
     }
 }
 
-/** Where the query of one view left off. */
+/** The point where the query of one view left off. */
 data class MapCursor(
     val cursor: EntityCursor.Score?,
     val isComplete: Boolean,

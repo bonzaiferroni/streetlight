@@ -17,7 +17,7 @@ data class TransitVehicle(
 
 typealias TransitVehicleId = String
 
-/** Where a vehicle is relative to its next stop. */
+/** The position of a vehicle relative to its next stop. */
 enum class StopStatus {
     IncomingAt,
     StoppedAt,

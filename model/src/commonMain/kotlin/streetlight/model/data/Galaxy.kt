@@ -52,7 +52,7 @@ value class GalaxyId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
-/** Who may post to a galaxy. */
+/** The stars who may post to a galaxy. */
 enum class PostPermission(label: String? = null): Labeled {
     Everyone,
     Accounts("Streetlight accounts"),

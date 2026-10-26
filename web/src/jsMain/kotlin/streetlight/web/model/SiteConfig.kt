@@ -59,14 +59,14 @@ enum class SiteTheme: Labeled {
     override val label get() = name
 }
 
-/** What the location scout does after a post. */
+/** The location scout's action after a post. */
 @Serializable
 enum class LocationPostMode(override val label: String): Labeled {
     ResetLocation("post and find another location"),
     Return("post and return"),
 }
 
-/** What the event scout does after a post. */
+/** The event scout's action after a post. */
 @Serializable
 enum class EventPostMode(override val label: String): Labeled {
     ResetLocation("post and find another location"),

@@ -69,5 +69,5 @@ suspend fun WindowState.saveFrames(frame: WindowFrame) {
 
 private const val WINDOW_FILE = "window.json"
 
-/** How long a frame holds before it is saved, so a drag writes once. */
+/** The time a frame holds before it is saved, so a drag writes once. */
 private const val SAVE_DELAY_MILLIS = 500L

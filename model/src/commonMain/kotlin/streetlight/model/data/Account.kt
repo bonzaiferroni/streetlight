@@ -15,7 +15,7 @@ data class Account(
     val emailStatus: EmailStatus?,
 ): RouteContent
 
-/** Who may see a user's identity. */
+/** The viewers who may see a user's identity. */
 enum class IdentityVisibility {
     Private,
     Contacts,

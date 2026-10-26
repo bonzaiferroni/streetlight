@@ -4,7 +4,7 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 
 /**
- * When an animation is at a time: repeating every [duration] seconds from [begin], through keyframes at [keyTimes],
+ * The timing of an animation: repeating every [duration] seconds from [begin], through keyframes at [keyTimes],
  * each step eased by its spline from [splines], or held when [isDiscrete].
  */
 internal class SvgTiming(

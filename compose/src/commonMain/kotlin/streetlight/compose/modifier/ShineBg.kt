@@ -26,7 +26,7 @@ import kotlin.math.abs
  */
 fun Modifier.shineBg(reach: ShineReach = ShineReach.Surface) = this then ShineBgElement(reach)
 
-/** How far each light of a [shineBg] reaches. */
+/** The reach of each light of a [shineBg]. */
 enum class ShineReach {
     /** The light's radius on the page, a circle. */
     Glow,

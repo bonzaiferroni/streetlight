@@ -25,7 +25,7 @@ enum class ImageShape: Labeled {
     }
 }
 
-/** How an image fills its frame in a layout. */
+/** The way an image fills its frame in a layout. */
 enum class ObjectFit(label: String? = null): Labeled {
     Fill, Stretch, Contain, Cover, ScaleDown("Scale Down");
     override val label = label ?: name
