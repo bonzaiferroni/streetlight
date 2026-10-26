@@ -13,6 +13,8 @@ import streetlight.web.model.flair
 import streetlight.web.model.toEntityRef
 import streetlight.web.model.toFlair
 import streetlight.web.model.toRoute
+import streetlight.model.data.EntityDetail
+import streetlight.web.model.cssValue
 
 /**
  * The image of [entity], with [featureMod] on the image itself. It opens the [EntityDialog] for [ref], and links
@@ -38,7 +40,28 @@ fun FlowContent.entityImage(
 /** The heading of [entity], linking to its source when it has one and to its page otherwise. */
 fun FlowContent.entityHeading(entity: Entity, mod: Modifier? = null) {
     navigationIfNotNull(entity.url?.value ?: entity.toRoute()?.toRelativePath(), mod) {
-        heading5(entity.label, modify(LineHeight115, SingleLine, Bold))
+        heading5(entity.label, modify(LineHeight115, Bold))
+    }
+}
+
+/**
+ * The [details] on one line, each after its label, joined by a quiet dot: each in its type's color, or the scheme
+ * color, when [isColored].
+ */
+fun FlowContent.entityDetails(details: List<EntityDetail>, isColored: Boolean, mod: Modifier? = null) {
+    if (details.isEmpty()) return
+    div(mod) {
+        details.forEachIndexed { index, detail ->
+            if (index > 0) span(OpacityHigh) { +" · " }
+            span {
+                if (isColored) {
+                    addModifiers(ColorSchemeFg)
+                    detail.type?.let { setStyle(Css.ColorScheme.of(it.cssValue)) }
+                }
+                detail.label?.let { +"$it " }
+                +detail.text
+            }
+        }
     }
 }
 

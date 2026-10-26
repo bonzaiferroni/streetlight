@@ -64,7 +64,7 @@ fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
 }
 
 /**
- * The thumbnail beside a column of the entity's priority details, its title on up to two lines, and its other
+ * The thumbnail beside a column of the entity's priority details, its title on one line, and its other
  * details, then the flair badge, as tall as the thumbnail, in the entity's color at low opacity. The other details are
  * in the ink at high opacity, as a description is, so the minimal row stays quiet.
  *
@@ -74,7 +74,7 @@ context(feed: FeedContext?)
 @Composable
 private fun MinimalFeedRow(entity: Entity) {
     val theme = currentTheme
-    val rowHeight = theme.unit * RowHeightUnits
+    val rowHeight = theme.unit * MinimalRowHeightUnits
     val (priority, rest) = entity.toDetails(feed).partition { it.isPriority }
 
     Row(1, FeedRowMod.Base.padding(1)) {
@@ -83,9 +83,9 @@ private fun MinimalFeedRow(entity: Entity) {
             EntityDetails(priority, isColored = true)
             BasicText(
                 text = entity.label,
-                style = theme.text.regular.copy(lineHeight = 1.15.em),
+                style = theme.text.heading5.copy(fontWeight = FontWeight.SemiBold, lineHeight = 1.15.em),
                 color = { theme.colors.ink },
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             EntityDetails(rest, isColored = false, Modifier.opacityHigh())
@@ -250,6 +250,9 @@ private fun EntityDetails(details: List<EntityDetail>, isColored: Boolean, modif
 
 /** The height of a row in units, the web's `--row-height`, which the thumbnail fills and the text is clipped at. */
 private const val RowHeightUnits = 10
+
+/** The height of a minimal row in units, the web's `--row-height` in `Minimal`. */
+private const val MinimalRowHeightUnits = 8
 
 /** The space above and below a row's text, in units: the web's `--text-inset`. */
 private const val TextInsetUnits = 0.5f

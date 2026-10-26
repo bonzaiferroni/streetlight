@@ -50,6 +50,7 @@ fun DIV.configureFeedRow(
 
     val colorScheme = entity.toEntityType()
     val buttons = entity.toButtons()
+    val (priority, rest) = cells.orEmpty().partition { it.isPriority }
 
     entity.post?.postId?.let {
         setAttribute(AppAttribute.PostId.to(it))
@@ -64,8 +65,10 @@ fun DIV.configureFeedRow(
         // td: make the image placeholder depend on post type
         entityImage(entity, modify(FeedRowStyle.Image, OverflowClip, MoonShadow), modify(FeedRowStyle.Feature, Size100P, FocusInSlow))
         column(modify(FeedRowStyle.Text, Gap(0), TextShadow, OverflowHidden)) {
-            entityHeading(entity)
-            entitySummary(entity, modify(MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
+            entityDetails(priority, isColored = true, modify(FeedRowStyle.Details, TextSmall, SingleLine))
+            entityHeading(entity, FeedRowStyle.Heading)
+            entitySummary(entity, modify(FeedRowStyle.Summary, MarginTop(2.px), TextSmall, OpacityHigh, LineHeight115))
+            entityDetails(rest, isColored = false, modify(FeedRowStyle.Details, TextSmall, SingleLine, OpacityHigh))
         }
         entityBadge(entity, curator, FeedRowStyle.Badge, FeedRowStyle.Flair)
         cellGrid(cells, buttons, modify(FeedRowStyle.Cells, BorderRadius25, OverflowClip, Outline))
@@ -119,6 +122,9 @@ object FeedRowStyle {
     val Content = Base.withBemElement("content")
     val Image = Base.withBemElement("image")
     val Text = Base.withBemElement("text")
+    val Heading = Base.withBemElement("heading")
+    val Summary = Base.withBemElement("summary")
+    val Details = Base.withBemElement("details")
     val Badge = Base.withBemElement("badge")
     val Flair = Base.withBemElement("flair")
     val Feature = Base.withBemElement("feature")
@@ -164,16 +170,31 @@ $Image {
     border-radius: var(--unit);
 }
 
-/* the fade has fixed stops, so only text that reaches the clip fades; it ends at the inset */
 $Text {
-    --clip: var(--row-height);
-    --fade-end: calc(var(--clip) - var(--text-inset));
     grid-area: text;
     align-self: start;
+}
+
+/*
+ * a mode that shows the summary clips the text at the row height; the fade has fixed stops, so only text that
+ * reaches the clip fades, and it ends at the inset
+ */
+$Text:not(:where($minimal $Text)) {
+    --clip: var(--row-height);
+    --fade-end: calc(var(--clip) - var(--text-inset));
     max-height: var(--clip);
     padding-block: var(--text-inset);
     mask-image: linear-gradient(to bottom, black calc(var(--fade-end) - 1rem), transparent var(--fade-end));
 }
+
+/* the title holds one line, and the detail lines show only in Minimal */
+$Heading h5 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+$Details { display: none; }
 
 /* the body sets its blocks close and its headings at its size, a step heavier than its text */
 $Text ${MarkdownStyle.Container} {
@@ -248,8 +269,13 @@ $grid {
 
 $Featured $Text { --clip: calc(var(--unit) * 24); }
 
+/* the title sits between the detail lines, in place of the summary */
 $minimal {
     --row-height: calc(var(--unit) * 8);
+
+    $Details { display: block; }
+
+    $Summary { display: none; }
 
     $Content {
         grid-template-columns: auto 1fr auto;

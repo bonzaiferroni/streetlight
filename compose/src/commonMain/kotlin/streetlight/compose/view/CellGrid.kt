@@ -19,44 +19,41 @@ import streetlight.compose.modifier.cardBg
 import streetlight.compose.modifier.padding
 
 /**
- * The [details] of an entity as cells, on one line when every cell gets at least [MinCellWidth], otherwise the priority
- * details over the others. The cells of a line share its width evenly, a line
- * apart, so the background between them draws the lines of the grid. The cousin of the web's `cellGrid`.
+ * The [details] of an entity as cells in as many equal columns of at least [MinCellWidth] as fit, up to [MaxColumns],
+ * wrapping onto more lines as needed. The last cell stretches to the end of its line, so the details can save a wide
+ * fact for last. The cells stand a line apart, so the background between them draws the lines of the grid. The cousin
+ * of the web's `cellGrid`.
  */
 @Composable
 fun CellGrid(details: List<EntityDetail>, modifier: Modifier = Modifier) {
     if (details.isEmpty()) return
     val theme = currentTheme
-    val (top, bottom) = details.partition { it.isPriority }
-    val cells = top + bottom
 
     Layout(
-        content = { cells.forEach { Cell(it) } },
+        content = { details.forEach { Cell(it) } },
         modifier = modifier,
     ) { measurables, constraints ->
         val width = constraints.maxWidth
         val gap = theme.line.roundToPx()
         val cellHeight = (theme.unit * CellUnits).roundToPx()
-        val fitsOneLine = width >= cells.size * MinCellWidth.roundToPx() + (cells.size - 1) * gap
-        val lines = if (fitsOneLine) listOf(measurables) else listOf(measurables.take(top.size), measurables.drop(top.size))
-            .filter { it.isNotEmpty() }
+        val columns = ((width + gap) / (MinCellWidth.roundToPx() + gap)).coerceIn(1, MaxColumns)
 
-        // each line shares its width evenly, the pixels left over going one each to its first cells
-        val placed = lines.map { line ->
-            val space = width - (line.size - 1) * gap
-            line.mapIndexed { index, measurable ->
-                val cellWidth = space / line.size + if (index < space % line.size) 1 else 0
-                measurable.measure(Constraints.fixed(cellWidth, cellHeight))
-            }
+        // the columns share the width evenly, the pixels left over going one each to the first columns
+        val space = width - (columns - 1) * gap
+        val columnWidths = List(columns) { space / columns + if (it < space % columns) 1 else 0 }
+        val columnStarts = columnWidths.runningFold(0) { x, columnWidth -> x + columnWidth + gap }
+
+        val placed = measurables.mapIndexed { index, measurable ->
+            val column = index % columns
+            val x = columnStarts[column]
+            val cellWidth = if (index == measurables.lastIndex) width - x else columnWidths[column]
+            measurable.measure(Constraints.fixed(cellWidth, cellHeight)) to x
         }
-        val height = lines.size * cellHeight + (lines.size - 1) * gap
+        val lines = (measurables.size + columns - 1) / columns
+        val height = lines * cellHeight + (lines - 1) * gap
         layout(width, height) {
-            placed.forEachIndexed { lineIndex, line ->
-                var x = 0
-                line.forEach { placeable ->
-                    placeable.place(x, lineIndex * (cellHeight + gap))
-                    x += placeable.width + gap
-                }
+            placed.forEachIndexed { index, (placeable, x) ->
+                placeable.place(x, index / columns * (cellHeight + gap))
             }
         }
     }
@@ -102,8 +99,11 @@ private fun Cell(detail: EntityDetail) {
     }
 }
 
-/** The narrowest a cell may be on a line of all the details: the web's column of 128px. */
+/** The narrowest column of the grid: the web's 128px. */
 private val MinCellWidth = 128.dp
+
+/** The most columns the grid takes: the web's 7. */
+private const val MaxColumns = 7
 
 /** The height of a cell in units. */
 private const val CellUnits = 5

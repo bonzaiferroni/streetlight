@@ -61,11 +61,11 @@ A feed whose type `isSearched` shows a search field under the heading, beside th
 
 ### Feed Modes
 
-A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRowStyle.Mode`. A feed opts in with the `FeedRowStyle.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedRowCss` alone places it.
+A feed is laid out by `FeedMode`, a site-wide setting held on the root element as `FeedRowStyle.Mode`. A feed opts in with the `FeedRowStyle.Feed` class, which `layoutFeed` sets. Every mode renders the same markup, and the mode selector in `FeedRowCss` alone places it, showing or hiding a part, such as the detail lines only `Minimal` shows.
 
 An entry marked `FeedRowStyle.Featured` takes the `Grid` entry layout in any feed or mode, sharing the `Grid` rules.
 
-An entry's size is set by `--row-height` on `FeedRowStyle.Base`: 10 units, and 8 in `Minimal`. The square image, the flair and the clip of the text all read it, so a mode changes the size of its entries by setting it alone. A featured entry clips its text at 24 units. Text that reaches the clip fades over its last rem; shorter text does not fade. Text is left-aligned in every mode, and starts at the top of its area.
+An entry's size is set by `--row-height` on `FeedRowStyle.Base`: 10 units, and 8 in `Minimal`. The square image, the flair and the clip of the text all read it, so a mode changes the size of its entries by setting it alone. A mode that shows the summary clips its text at the row height, and a featured entry at 24 units. Text that reaches the clip fades over its last rem; shorter text does not fade. `Minimal` shows no summary and does not clip. Text is left-aligned in every mode, and starts at the top of its area.
 
 An entry's flair is the icon of its tag for an event that has one, and the `FlairIcon` of its record otherwise. The badge shows the `animated` variant, and the `large` variant when the viewer prefers reduced motion.
 
@@ -79,7 +79,7 @@ The table records each mode's intended layout in more detail than a specificatio
 |---|---|---|
 | `Row` | One column | Thumbnail, text and badge in a row, cells below; one row from 960px with the cells as its right half |
 | `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2, contained over its backdrop, with no padding, text and badge below, then cells |
-| `Minimal` | One column | One row with no padding: an 8-unit square image, text clipped to the same height, and the flair badge. Cells are hidden |
+| `Minimal` | One column | One row with no padding: an 8-unit square image, then the priority details in their colors, the title on one line, and the other details at high opacity, and the flair badge. The summary and the cells are hidden |
 
 In `Grid`, a child of the mount that is not an entry, such as the more button, spans the full width.
 
