@@ -45,11 +45,14 @@ kotlin {
     }
 }
 
-// the app's resources, with the site's icons from www/icon as files/icon
+// the app's resources, with the site's icons from www/icon as files/icon and its drawings from www/svg as files/svg
 val syncComposeResources by tasks.registering(Sync::class) {
     from("src/commonMain/composeResources")
     from(rootProject.layout.projectDirectory.dir("www/icon")) {
         into("files/icon")
+    }
+    from(rootProject.layout.projectDirectory.dir("www/svg")) {
+        into("files/svg")
     }
     into(layout.buildDirectory.dir("generated/appComposeResources"))
 }

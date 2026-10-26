@@ -22,7 +22,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 | `padding(n)` | `padding: var(--unit)`, `PaddingX1`, `PaddingY1` |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
-| `filigree()` | `filigree` (`koala.component`) and its `ParticleRay` |
+| `filigree()`, `filigree(FiligreeStyle.Ray)` | `filigree` (`koala.component`) and its `ParticleRay`; the rays of `rayHeader` (`streetlight.web.page`) |
 
 ## Modifiers
 

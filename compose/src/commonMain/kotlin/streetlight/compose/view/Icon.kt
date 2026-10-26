@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import koala.Svg
 import koala.iconPath
+import koala.svgPath
 import org.jetbrains.compose.resources.decodeToSvgPainter
 import streetlight.compose.resources.Res
 import streetlight.compose.svg.SvgDocument
@@ -90,10 +91,14 @@ private suspend fun readIconBytes(svg: Svg): ByteArray {
     return iconBytes[path] ?: Res.readBytes(path).also { iconBytes[path] = it }
 }
 
-/** The resource of an icon served from `/www/icon/`, which the build bundles as `files/icon/`. */
+/** The resource of an svg served from `/www/icon/` or `/www/svg/`, which the build bundles as `files/icon/` and `files/svg/`. */
 private fun Svg.toResourcePath(): String {
-    val name = url.value.removePrefix(iconPath).takeIf { it != url.value } ?: error("not a bundled icon: $url")
-    return "files/icon/$name"
+    val path = url.value
+    return when {
+        path.startsWith(iconPath) -> "files/icon/${path.removePrefix(iconPath)}"
+        path.startsWith(svgPath) -> "files/svg/${path.removePrefix(svgPath)}"
+        else -> error("not a bundled svg: $url")
+    }
 }
 
 /** The document of [svg], read from its bundled file once and kept. */

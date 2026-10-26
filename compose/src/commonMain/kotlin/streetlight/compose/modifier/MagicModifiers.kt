@@ -26,17 +26,30 @@ import androidx.compose.runtime.withFrameNanos
 import kotlin.random.Random
 
 /**
- * Centers the content in the width it is given and draws a rule on either side of it, each at most 16 units long, with
- * the particle rays of the web's `filigree` drifting outward along it.
+ * Centers the content in the width it is given and draws a rule on either side of it, rigged as [style] says, with the
+ * particle rays of the web's `filigree` drifting outward along it.
  */
-fun Modifier.filigree() = this then FiligreeElement
+fun Modifier.filigree(style: FiligreeStyle = FiligreeStyle.Rule) = this then FiligreeElement(style)
 
-private data object FiligreeElement : ModifierNodeElement<FiligreeNode>() {
-    override fun create() = FiligreeNode()
-    override fun update(node: FiligreeNode) = Unit
+/** The rigging of a [filigree]'s rules. */
+enum class FiligreeStyle {
+    /** The web's `filigree`: gray rules at half opacity, each at most 16 units long. */
+    Rule,
+
+    /** The web's `rayHeader`: the accent rule on the left and the primary on the right, each at most 24 units long. */
+    Ray,
 }
 
-private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNode, CompositionLocalConsumerModifierNode {
+private data class FiligreeElement(val style: FiligreeStyle) : ModifierNodeElement<FiligreeNode>() {
+    override fun create() = FiligreeNode(style)
+    override fun update(node: FiligreeNode) {
+        node.style = style
+        node.invalidateDraw()
+    }
+}
+
+private class FiligreeNode(var style: FiligreeStyle) :
+    Modifier.Node(), LayoutModifierNode, DrawModifierNode, CompositionLocalConsumerModifierNode {
     // each rule has its own seed, as each of the web's rules sets its own
     private val seeds = floatArrayOf(Random.nextFloat(), Random.nextFloat())
     private var time = 0f
@@ -67,21 +80,31 @@ private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNo
         drawContent()
         val unit = theme.unit.toPx()
         val line = theme.line.toPx()
-        val longest = unit * RuleUnits
-        val color = RuleColor
+        val isRay = style == FiligreeStyle.Ray
+        val longest = unit * if (isRay) RayUnits else RuleUnits
+        val leftColor = if (isRay) theme.colors.accentFg else RuleColor
+        val rightColor = if (isRay) theme.colors.primaryFg else RuleColor
+        val opacity = if (isRay) 1f else RuleOpacity
         val top = (size.height - line) / 2
 
         val leftLength = (contentLeft - unit).coerceAtMost(longest)
-        if (leftLength > 0) drawRule(Rect(-unit - leftLength, top, -unit, top + line), color, seeds[0], outwardLeft = true)
+        if (leftLength > 0) {
+            drawRule(Rect(-unit - leftLength, top, -unit, top + line), leftColor, opacity, seeds[0], outwardLeft = true)
+        }
 
         val rightStart = contentWidth + unit
         val rightLength = (width - contentLeft - rightStart).coerceAtMost(longest)
-        if (rightLength > 0) drawRule(Rect(rightStart, top, rightStart + rightLength, top + line), color, seeds[1], outwardLeft = false)
+        if (rightLength > 0) {
+            drawRule(Rect(rightStart, top, rightStart + rightLength, top + line), rightColor, opacity, seeds[1], outwardLeft = false)
+        }
     }
 
-    /** A rule in [color] at half opacity, its rays drifting away from the content, toward the left when [outwardLeft]. */
-    private fun DrawScope.drawRule(rule: Rect, color: Color, seed: Float, outwardLeft: Boolean) {
-        drawRect(color.copy(alpha = RuleAlpha * RuleOpacity), rule.topLeft, rule.size)
+    /**
+     * A rule in [color] at [opacity], its rays drifting away from the content, toward the left when [outwardLeft].
+     */
+    private fun DrawScope.drawRule(rule: Rect, color: Color, opacity: Float, seed: Float, outwardLeft: Boolean) {
+        val rayPeakAlpha = rayPeakAlphaOf(opacity)
+        drawRect(color.copy(alpha = RuleAlpha * opacity), rule.topLeft, rule.size)
         clipRect(rule.left, rule.top, rule.right, rule.bottom) {
             rays.forEach { (duration, delay) ->
                 val elapsed = time - (delay + seed)
@@ -93,7 +116,7 @@ private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNo
                 drawRect(
                     Brush.horizontalGradient(
                         0f to color.copy(alpha = 0f),
-                        0.5f to color.copy(alpha = RayPeakAlpha),
+                        0.5f to color.copy(alpha = rayPeakAlpha),
                         1f to color.copy(alpha = 0f),
                         startX = start,
                         endX = start + rule.width,
@@ -109,6 +132,9 @@ private class FiligreeNode : Modifier.Node(), LayoutModifierNode, DrawModifierNo
 /** The longest a rule runs, in units: the web's `MaxWidth(16)`. */
 private const val RuleUnits = 16
 
+/** The longest a header's ray runs, in units: the web's `MaxWidth(24)`. */
+private const val RayUnits = 24
+
 /** The rule's own opacity, under its rays: the web's `hr` at half its color. */
 private const val RuleAlpha = 0.5f
 
@@ -119,10 +145,10 @@ private const val RuleOpacity = 0.5f
 private const val RayAlpha = 0.8f
 
 /**
- * The alpha of a ray drawn over the rule at [RuleOpacity] that composites as the web's does, where the opacity applies
- * to the rule and its rays together.
+ * The alpha of a ray drawn over a rule at [opacity] that composites as the web's does, where the opacity applies to the
+ * rule and its rays together.
  */
-private const val RayPeakAlpha = RuleOpacity * RayAlpha * (1 - RuleAlpha) / (1 - RuleOpacity * RuleAlpha)
+private fun rayPeakAlphaOf(opacity: Float) = opacity * RayAlpha * (1 - RuleAlpha) / (1 - opacity * RuleAlpha)
 
 /** The color of the rule and its rays: the gray a browser gives an `hr`. */
 private val RuleColor = Color(0xFF808080)

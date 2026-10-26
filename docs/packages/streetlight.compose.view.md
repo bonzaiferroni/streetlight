@@ -45,6 +45,13 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `ContainImage` | `containImage` (`koala.component`) |
 | `AnimatedIcon` | `magicIcon` (`koala.component`), its animated mask |
 | `MapWindow` | `geoMapMount` (`koala.component`) and `initGeoMap` |
+| `SmallGalaxyCard` | `smallGalaxyCard` (`streetlight.web.layout`) |
+| `ConnectPicker` | `connectPicker` (`streetlight.web.component`) |
+| `AppFooter` | `appFooter` (`streetlight.web.page`), without its lottie |
+| `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
+| `TextLogo` | `textLogo` (`streetlight.web.component`) |
+
+A web link to a page the app has no route for, such as a galaxy card's or the footer's about link, is shown unlinked until the route exists. A link that leaves the site, such as the footer's source link, opens in the browser.
 
 ## Views
 
@@ -91,7 +98,7 @@ The scheme color of a part of the page is a context, as the web's `--color-schem
 
 `KoalaTypography`, read as `currentTheme.text`, holds the web's text styles, each a multiple of the rem as in `TypographyCss`: `heading1` to `heading6`, `paragraph`, `regular`, `small` and `large`, in Fira Sans. `regular` is the rem itself, the size of text with no style of its own. A style is named for its web class or tag, so `heading5` is `h5` and `small` is `TextSmall`. The web's `Bold` is `FontWeight.SemiBold`. Every style has the web body's 1.4 line height, its leading split evenly above and below the line as CSS does. A use that differs from a style copies it, as a feed row's title copies `regular` with a 1.15 line height.
 
-The fonts are in `composeResources/font`, with their license in `composeResources/files`, and are built into a `FontFamily` by `firaSans()`.
+The fonts are in `composeResources/font`, with their license in `composeResources/files`, and are built into a `FontFamily` by `firaSans()`: each weight the web uses, upright and italic, so italic text takes Fira's own italic rather than a slanted upright.
 
 ### Rem
 
@@ -105,7 +112,7 @@ The unit builds the hierarchy of grouping. The elements of an item are one unit 
 
 ## Icons
 
-The app bundles the site's icons. The build syncs `www/icon`, the files the web serves, into the app's resources as `files/icon`, so an `Svg` from the shared code, such as a variant of an `SvgFile` pack, names its bundled file: `/www/icon/foo.svg` is `files/icon/foo.svg`.
+The app bundles the site's icons and drawings. The build syncs `www/icon` and `www/svg`, the files the web serves, into the app's resources as `files/icon` and `files/svg`, so an `Svg` from the shared code, such as a variant of an `SvgFile` pack or the logo, names its bundled file: `/www/icon/foo.svg` is `files/icon/foo.svg`, and `/www/svg/foo.svg` is `files/svg/foo.svg`.
 
 `Icon` draws an `Svg` tinted with a color read while drawing, filling the icon's shape as the web's mask does. `rememberSvgPainter` reads an icon's file once, keeps its bytes, and is empty while it loads. `AnimatedIcon` plays an icon's `animated` variant through `streetlight.compose.svg`, at a clock read while drawing.
 
