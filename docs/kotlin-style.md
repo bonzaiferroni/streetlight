@@ -52,6 +52,14 @@ A model is a type that declares UI state and never references its implementation
 
 A context parameter is named like a variable, after the rules above, and keeps the name it had as an argument.
 
+An annotation on the function, such as `@Composable`, comes before its context parameters:
+
+```kotlin
+@Composable
+context(model: HomeModel)
+fun HomeView()
+```
+
 ```kotlin
 context(model: Inbox, star: Star)
 private fun ViewScope.chatList()

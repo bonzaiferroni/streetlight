@@ -22,9 +22,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
-import kampfire.model.MutableTap
 import koala.Svg
 import koala.SvgFile
+import streetlight.compose.model.FeedModel
 import streetlight.compose.model.heading
 import streetlight.compose.model.toSvg
 import streetlight.compose.modifier.filigree
@@ -34,84 +34,67 @@ import streetlight.compose.utility.collectAsState
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.FeedType
 import androidx.compose.foundation.layout.Spacer
-import streetlight.model.data.EventTag
 import streetlight.compose.model.isSearched
 
 /**
- * Adds the feed section to this grid: the heading of the [feed]'s type in a filigree, between the menu of the types its
- * context offers, bound to [typeState], and the switch of [FeedMode], bound to [modeState]; for a type that is searched,
- * the tag filter of an events feed, bound to [tagState], and the search, bound to [searchState]; then the feed's entries
- * in [mode], or a message when it has none. The cousin of the web's `feedSection`.
+ * Adds the feed section of the [feed] model to this grid, showing [page], the feed as the view last read it, in [mode]:
+ * the heading of its type in a filigree, between the menu of the types its context offers and the switch of
+ * [FeedMode]; for a type that is searched, the tag filter of an events feed and the search; then the entries, or a
+ * message when it has none. The cousin of the web's `feedSection`.
  *
- * The heading and the message span the grid's row. An entry takes one column in `Grid` mode, and the row otherwise.
+ * A lazy grid's builder cannot read state, so the view reads [page] and [mode] and passes them in; the controls read the
+ * rest from [feed]. The heading and the message span the grid's row. An entry takes one column in `Grid` mode, and the
+ * row otherwise.
  */
-fun LazyGridScope.feedSection(
-    feed: EntityFeed,
-    typeState: MutableTap<FeedType>,
-    mode: FeedMode,
-    modeState: MutableTap<FeedMode>,
-    tagState: MutableTap<EventTag?>,
-    searchState: MutableTap<String>,
-) {
-    val source = feed.source
-    val types = feed.types ?: source?.context?.types.orEmpty()
-
+context(feed: FeedModel)
+fun LazyGridScope.feedSection(page: EntityFeed, mode: FeedMode) {
+    val source = page.source
     val type = source?.type ?: FeedType.Events
+    val types = page.types ?: source?.context?.types.orEmpty()
 
-    fullItem { FeedHeading(type, types, typeState, modeState) }
-    if (type.isSearched) fullItem { FeedFilters(type, tagState, searchState) }
-    if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
-    items(feed.entities, span = { GridItemSpan(if (mode == FeedMode.Grid) 1 else maxLineSpan) }) { entity ->
+    fullItem { FeedHeading(type, types, Modifier.padding(horizontal = 1, vertical = 1)) }
+    if (type.isSearched) fullItem { FeedFilter(type, Modifier.padding(start = 1, end = 1, bottom = 1)) }
+    if (page.entities.isEmpty()) fullItem { EmptyFeed() }
+    items(page.entities, span = { GridItemSpan(if (mode == FeedMode.Grid) 1 else maxLineSpan) }) { entity ->
         context(source?.context) { FeedRow(entity, mode) }
     }
 }
 
 /**
- * Adds the feed section to this staggered grid, as [LazyGridScope.feedSection] does to a grid. An entry takes one column
- * in `Grid` mode, its height its own, and the row otherwise.
+ * Adds the feed section of the [feed] model to this staggered grid, as [LazyGridScope.feedSection] does to a grid. An
+ * entry takes one column in `Grid` mode, its height its own, and the row otherwise.
  */
-fun LazyStaggeredGridScope.feedSection(
-    feed: EntityFeed,
-    typeState: MutableTap<FeedType>,
-    mode: FeedMode,
-    modeState: MutableTap<FeedMode>,
-    tagState: MutableTap<EventTag?>,
-    searchState: MutableTap<String>,
-) {
-    val source = feed.source
-    val types = feed.types ?: source?.context?.types.orEmpty()
-
+context(feed: FeedModel)
+fun LazyStaggeredGridScope.feedSection(page: EntityFeed, mode: FeedMode) {
+    val source = page.source
     val type = source?.type ?: FeedType.Events
-    val isInset = mode == FeedMode.Grid
+    val types = page.types ?: source?.context?.types.orEmpty()
+    // in grid mode the grid holds its items a unit in, in place of their own side padding
+    val side = if (mode == FeedMode.Grid) 0 else 1
 
-    fullItem { FeedHeading(type, types, typeState, modeState, isInset) }
-    if (type.isSearched) fullItem { FeedFilters(type, tagState, searchState, isInset) }
-    if (feed.entities.isEmpty()) fullItem { EmptyFeed() }
-    items(feed.entities, span = { if (mode == FeedMode.Grid) StaggeredGridItemSpan.SingleLane else StaggeredGridItemSpan.FullLine }) { entity ->
+    fullItem { FeedHeading(type, types, Modifier.padding(horizontal = side, vertical = 1)) }
+    if (type.isSearched) fullItem { FeedFilter(type, Modifier.padding(start = side, end = side, bottom = 1)) }
+    if (page.entities.isEmpty()) fullItem { EmptyFeed() }
+    items(page.entities, span = { if (mode == FeedMode.Grid) StaggeredGridItemSpan.SingleLane else StaggeredGridItemSpan.FullLine }) { entity ->
         context(source?.context) { FeedRow(entity, mode) }
     }
 }
 
 /**
- * The heading of a feed of [type] in a filigree, the type menu left of it and the mode switch right of it, a unit in
- * from the sides unless [isInset], when the grid already holds it in.
+ * The heading of a feed of [type] in a filigree, the menu of [types] left of it, bound to the [feed]'s type, and the
+ * switch of its mode right of it.
  */
 @Composable
-private fun FeedHeading(
-    type: FeedType,
-    types: List<FeedType>,
-    typeState: MutableTap<FeedType>,
-    modeState: MutableTap<FeedMode>,
-    isInset: Boolean = false,
-) {
+context(feed: FeedModel)
+private fun FeedHeading(type: FeedType, types: List<FeedType>, modifier: Modifier = Modifier) {
     val theme = currentTheme
-    val selectedType by typeState.collectAsState()
-    val selectedMode by modeState.collectAsState()
+    val selectedType by feed.typeState.collectAsState()
+    val selectedMode by feed.modeState.collectAsState()
 
     // the menu and the switch are the same width, so the heading stays centered
-    Row(Modifier.fillMaxWidth().padding(horizontal = if (isInset) 0 else 1, vertical = 1), verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Row(1, Modifier.width(theme.unit * SwitchUnits).opacityHigh()) {
-            types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { typeState.set(option) } }
+            types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { feed.typeState.set(option) } }
         }
         BasicText(
             text = type.heading,
@@ -129,49 +112,44 @@ private fun FeedHeading(
             Modifier.width(theme.unit * SwitchUnits).opacityHigh(),
             horizontalArrangement = Arrangement.spacedBy(theme.unit, Alignment.End),
         ) {
-            FeedMode.entries.forEach { option -> SwitchIcon(option.toSvg(), option == selectedMode) { modeState.set(option) } }
+            FeedMode.entries.forEach { option -> SwitchIcon(option.toSvg(), option == selectedMode) { feed.modeState.set(option) } }
         }
     }
 }
 
 /**
- * The filters of a feed of [type]: the tag filter at the start for events, and the search at the end, a unit in from the
- * sides unless [isInset], and a unit above the entries.
+ * The filters of the [feed], of [type]: the tag filter at the start for events, and the search at the end.
  */
 @Composable
-private fun FeedFilters(
-    type: FeedType,
-    tagState: MutableTap<EventTag?>,
-    searchState: MutableTap<String>,
-    isInset: Boolean = false,
-) {
+context(feed: FeedModel)
+private fun FeedFilter(type: FeedType, modifier: Modifier = Modifier) {
     Row(
-        Modifier.fillMaxWidth().padding(start = if (isInset) 0 else 1, end = if (isInset) 0 else 1, bottom = 1),
+        modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (type == FeedType.Events) TagFilter(tagState) else Spacer(Modifier)
-        SearchField(searchState)
+        if (type == FeedType.Events) TagFilter(feed.tagState) else Spacer(Modifier)
+        SearchField(feed.searchState)
     }
 }
 
 /** An option of a switch, drawn as [svg], in the primary color when [isSelected]. */
 @Composable
-private fun SwitchIcon(svg: Svg, isSelected: Boolean, onSelect: () -> Unit) {
+private fun SwitchIcon(svg: Svg, isSelected: Boolean, modifier: Modifier = Modifier, onSelect: () -> Unit) {
     val theme = currentTheme
     Icon(
         svg = svg,
         color = { if (isSelected) theme.colors.primaryFg else theme.colors.ink },
-        modifier = Modifier.clickable(onClick = onSelect),
+        modifier = modifier.clickable(onClick = onSelect),
     )
 }
 
 /** The message in place of an empty feed: an animated icon over a line of text, centered in its height. */
 @Composable
-private fun EmptyFeed() {
+private fun EmptyFeed(modifier: Modifier = Modifier) {
     val theme = currentTheme
     Column(
-        Modifier.fillMaxWidth().height(theme.unit * EmptyUnits),
+        modifier.fillMaxWidth().height(theme.unit * EmptyUnits),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

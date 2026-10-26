@@ -22,8 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.compose.koinInject
-import streetlight.compose.model.AppSettings
 import streetlight.compose.model.HomeModel
 import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
@@ -34,12 +32,10 @@ import streetlight.compose.utility.collectAsState
  * The view of [streetlight.compose.model.HomeRoute]: the header, the map, the menus, the galaxies beside the connect picker, the home feed's
  * [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
  */
-context(model: HomeModel)
 @Composable
+context(model: HomeModel)
 fun HomeView() {
-    val feed by model.feedState.collectAsState()
-    val galaxies by model.galaxiesState.collectAsState()
-    val settings = koinInject<AppSettings>()
+    val page by model.feed.feedState.collectAsState()
     val isLoading by model.isLoadingState.collectAsState()
     val problem by model.problemState.collectAsState()
     val theme = currentTheme
@@ -52,7 +48,7 @@ fun HomeView() {
         return
     }
 
-    val mode by settings.feedModeState.collectAsState()
+    val mode by model.feed.modeState.collectAsState()
 
     // in grid mode the grid holds its items a unit from the edges, in place of the map's own padding
     val isGrid = mode == FeedMode.Grid
@@ -72,8 +68,8 @@ fun HomeView() {
             )
         }
         fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }
-        fullItem { LeadingSection(galaxies, Modifier.padding(horizontal = if (isGrid) 0 else 1, vertical = 4)) }
-        feed?.let { feedSection(it, model.feedTypeState, mode, settings.feedModeState, model.tagState, model.searchState) }
+        fullItem { LeadingSection(Modifier.padding(horizontal = if (isGrid) 0 else 1, vertical = 4)) }
+        page?.let { context(model.feed) { feedSection(it, mode) } }
         fullItem { AppFooter(HomeViewSource, Modifier.padding(top = 8)) }
     }
 }
@@ -94,11 +90,13 @@ private fun HomeMenus(modifier: Modifier) {
 }
 
 /**
- * The [galaxies] beside the connect picker, each under its noted heading, side by side from the web's 600px container
- * width and stacked below it. The cousin of the web's `leadingSection`.
+ * The [model]'s top galaxies beside the connect picker, each under its noted heading, side by side from the web's 600px
+ * container width and stacked below it. The cousin of the web's `leadingSection`.
  */
 @Composable
-private fun LeadingSection(galaxies: List<Galaxy>, modifier: Modifier) {
+context(model: HomeModel)
+private fun LeadingSection(modifier: Modifier) {
+    val galaxies by model.galaxiesState.collectAsState()
     val theme = currentTheme
     BoxWithConstraints(modifier) {
         val galaxyColumn = @Composable { columnModifier: Modifier ->
@@ -129,9 +127,9 @@ private fun LeadingSection(galaxies: List<Galaxy>, modifier: Modifier) {
 
 /** A [heading] in a filigree with its [note] close below it. The cousin of the web's `notedHeading`. */
 @Composable
-private fun NotedHeading(heading: String, note: String) {
+private fun NotedHeading(heading: String, note: String, modifier: Modifier = Modifier) {
     val theme = currentTheme
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         BasicText(
             text = heading,
             modifier = Modifier.fillMaxWidth().filigree().opacityHigh(),

@@ -75,7 +75,7 @@ fun DIV.configureFeedRow(
     }
 }
 
-/** Who posted [entity] and when, and to which galaxy when [isUniverse]. */
+/** The line naming who posted [entity] and when, and to which galaxy when [isUniverse]. */
 fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     when (isUniverse) {
         true -> {

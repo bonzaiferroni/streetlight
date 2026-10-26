@@ -78,11 +78,17 @@ entry<FooRoute> {
 }
 ```
 
+## State
+
+A part of a view that shows a model's state declares the model as a context parameter, as `docs/kotlin-style.md` specifies, and reads the taps it needs where it shows them, as `FeedHeading` reads its `FeedModel`. A control that could serve any state, such as `TagFilter` or `SearchField`, takes the one `MutableTap` it binds instead, so it stays reusable. A value is an argument where it is what the part is about, or where the part cannot read state, as a lazy layout's builder cannot: its view reads the page and the mode and passes them in.
+
+Reading a tap where it is shown keeps recomposition to that part. Passing a tap or a model costs nothing, since the same instance reaches each call and the call skips. A part that grows or shrinks when its state changes is measured again, and so is each parent its size depends on, so the parts below it move as they would on the web.
+
 ## Composables
 
 A view that scrolls is a `LazyGridView`, one lazy grid for the whole view, filled with sections built on `LazyGridScope`. `LazyStaggeredGridView` is its masonry cousin, each column stacking items of their own heights, filled with sections built on `LazyStaggeredGridScope`; a section is written for each scope it serves. On either, `fullItem` spans every column, and `pinnedItem` also stays composed off screen, for content costly to start anew. The home view is a `LazyStaggeredGridView`, its items a unit apart and a unit from its edges in `Grid` mode, so the rounded entries stand clear, and a line apart otherwise. The map and the feed heading stay where they are in either mode.
 
-A composable draws its content and leaves its framing to the caller. It takes a `modifier` and applies it to its root, and the call site gives the corners, shadow, outline and surface, as `CellGrid(top, bottom, FeedRowMod.Cells)`. The composable keeps a styling of its own only where its content depends on it, as the cells of `CellGrid` need a background behind them for their gaps to draw its lines.
+A composable draws its content and leaves its framing to the caller. It takes a `modifier` and applies it to its root, and the call site gives the corners, shadow, outline and surface, as `CellGrid(details, FeedRowMod.Cells)`. The composable keeps a styling of its own only where its content depends on it, as the cells of `CellGrid` need a background behind them for their gaps to draw its lines.
 
 A modifier whose arguments do not change in composition is declared once, as a `val` of a `FooMod` object named for the composable that applies it, the cousin of the web's `FooStyle` objects: `FeedRowMod.Base`, `FeedRowMod.Cells`. A val is a whole chain, and a call site extends it, as `FeedRowMod.Base.padding(1)`, or adds it to its own, as `.then(FeedRowMod.Cells)`. A modifier that takes a theme value in composition, as `padding(top = currentTheme.line)`, stays at the call site. The object sits in the composable's file, private while only that file uses it.
 
@@ -139,7 +145,7 @@ A lazy layout disposes an item that scrolls away, which would close the map's na
 
 ## Feed
 
-A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. The section takes the mode as a value, so a change of mode lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the page model's type, and the `FeedMode` switch, bound to `AppSettings`, both a `MutableTap`.
+A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. It reads its controls' state from the `FeedModel` it takes as a context parameter. A lazy layout's builder cannot read state, so the view reads the page and the mode and passes them as values, and a change of either lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the model's type, and the `FeedMode` switch, bound to the mode the model takes from `AppSettings`.
 
 An entry carries `zenBg()`, and the feed stands its entries `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 

@@ -45,7 +45,7 @@ data class FeedSource(val context: FeedContext, val type: FeedType)
 @Serializable
 data class FeedRequest(val source: FeedSource, val cursor: EntityCursor)
 
-/** Where a feed is shown, with the id its reads need. */
+/** The place a feed is shown, with the id its reads need. */
 @Serializable
 sealed interface FeedContext {
     /** The types of feed this context offers. */
@@ -93,8 +93,8 @@ sealed interface FeedContext {
 }
 
 /**
- * What a feed lists: upcoming events, locations newest first, the posts of the galaxies a star follows, a galaxy's
- * posts, media, the galaxies a star follows by name, galaxies by star count or newest first, or cities by name.
+ * The kind of list a feed shows: upcoming events, locations newest first, the posts of the galaxies a star follows, a
+ * galaxy's posts, media, the galaxies a star follows by name, galaxies by star count or newest first, or cities by name.
  */
 @Serializable
 enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media, StarGalaxies, TopGalaxies, NewGalaxies, Cities }

@@ -259,7 +259,10 @@ private const val FadeUnits = 2
 private const val SchemeCenterMix = 0.25f
 private const val SchemeEdgeMix = 0.15f
 
-/** Where a [schemeBg] is halfway from its center to its edge, the web's color hint, and the stops that trace it. */
+/**
+ * The point where a [schemeBg] is halfway from its center to its edge, the web's color hint, and the stops that trace
+ * it.
+ */
 private const val SchemeHint = 0.7f
 private const val SchemeHintStops = 8
 

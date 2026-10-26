@@ -51,8 +51,8 @@ enum class FeedMode { Minimal, Row, Grid }
  * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in.
  * The cousin of the web's `feedRow`.
  */
-context(feed: FeedContext?)
 @Composable
+context(feed: FeedContext?)
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
     CompositionLocalProvider(LocalSchemeColor provides entity.toEntityType()) {
         when (mode) {
@@ -70,8 +70,8 @@ fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
  *
  * The row has a unit of padding and its parts are a unit apart.
  */
-context(feed: FeedContext?)
 @Composable
+context(feed: FeedContext?)
 private fun MinimalFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * MinimalRowHeightUnits
@@ -99,8 +99,8 @@ private fun MinimalFeedRow(entity: Entity) {
  * clipped at the row's height and fading where it reaches it; and the flair badge. The cells sit beside it as the
  * row's right half from [WideRowWidth], below it otherwise. The cousin of the web's `Row` mode.
  */
-context(feed: FeedContext?)
 @Composable
+context(feed: FeedContext?)
 private fun RowFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
@@ -155,8 +155,8 @@ private fun RowFeedRow(entity: Entity) {
  * title over the description, clipped and fading as in the row, beside the flair badge; then the cells. The parts below the image are inset a unit at the
  * sides and stand a unit apart, and the entry's corners are rounded three units. The cousin of the web's `Grid` mode.
  */
-context(feed: FeedContext?)
 @Composable
+context(feed: FeedContext?)
 private fun GridFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits

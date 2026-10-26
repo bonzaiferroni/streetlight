@@ -11,8 +11,8 @@ import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.Portal
 
 /** Renders the route on top of the back stack, each entry with its own saved state and view models. */
-context(portal: Portal)
 @Composable
+context(portal: Portal)
 fun AppPortal() {
     NavDisplay(
         backStack = portal.backStack,
