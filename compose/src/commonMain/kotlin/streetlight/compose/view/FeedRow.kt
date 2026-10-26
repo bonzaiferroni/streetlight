@@ -38,10 +38,9 @@ import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.zenBg
 import streetlight.compose.modifier.heavyCardBg
 import streetlight.compose.modifier.schemeBg
-import streetlight.compose.model.bottomDetails
+import streetlight.compose.model.details
 import streetlight.compose.model.toFlair
 import streetlight.compose.model.toSchemeColor
-import streetlight.compose.model.topDetails
 import streetlight.model.data.Entity
 
 /** The layouts of a feed row, the cousin of the web's `FeedMode`. */
@@ -60,9 +59,9 @@ fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
 }
 
 /**
- * The thumbnail beside a column of the entity's top details, its title on up to two lines, and its bottom details,
- * then the flair badge, as tall as the thumbnail, in the entity's color at low opacity. The bottom details are in the
- * ink at high opacity, as a description is, so the minimal row stays quiet.
+ * The thumbnail beside a column of the entity's priority details, its title on up to two lines, and its other
+ * details, then the flair badge, as tall as the thumbnail, in the entity's color at low opacity. The other details are
+ * in the ink at high opacity, as a description is, so the minimal row stays quiet.
  *
  * The row has a unit of padding and its parts are a unit apart.
  */
@@ -70,11 +69,12 @@ fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
 private fun MinimalFeedRow(entity: Entity) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
+    val (priority, rest) = entity.details.partition { it.isPriority }
 
     Row(1, FeedRowMod.Base.padding(1)) {
         Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1))
         Column(Modifier.weight(1f)) {
-            EntityDetails(entity.topDetails, isColored = true)
+            EntityDetails(priority, isColored = true)
             BasicText(
                 text = entity.label,
                 style = theme.text.regular.copy(lineHeight = 1.15.em),
@@ -82,7 +82,7 @@ private fun MinimalFeedRow(entity: Entity) {
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            EntityDetails(entity.bottomDetails, isColored = false, Modifier.opacityHigh())
+            EntityDetails(rest, isColored = false, Modifier.opacityHigh())
         }
         FlairBadge(entity, rowHeight)
     }
@@ -110,7 +110,7 @@ private fun RowFeedRow(entity: Entity) {
                 )
                 FlairBadge(entity, rowHeight)
             }
-            CellGrid(entity.topDetails, entity.bottomDetails, FeedRowMod.Cells)
+            CellGrid(entity.details, FeedRowMod.Cells)
         },
         modifier = FeedRowMod.Base.padding(1),
     ) { measurables, constraints ->
@@ -159,7 +159,7 @@ private fun GridFeedRow(entity: Entity) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
         }
-        CellGrid(entity.topDetails, entity.bottomDetails, FeedRowMod.Cells)
+        CellGrid(entity.details, FeedRowMod.Cells)
     }
 }
 

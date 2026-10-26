@@ -18,14 +18,15 @@ import streetlight.compose.modifier.opacityLow
 import streetlight.compose.modifier.padding
 
 /**
- * The details of an entity as cells: the [top] details and the [bottom] details on one line when every cell gets at
- * least [MinCellWidth], otherwise the top line over the bottom. The cells of a line share its width evenly, a line
+ * The [details] of an entity as cells, on one line when every cell gets at least [MinCellWidth], otherwise the priority
+ * details over the others. The cells of a line share its width evenly, a line
  * apart, so the background between them draws the lines of the grid. The cousin of the web's `cellGrid`.
  */
 @Composable
-fun CellGrid(top: List<EntityDetail>, bottom: List<EntityDetail>, modifier: Modifier = Modifier) {
-    if (top.isEmpty() && bottom.isEmpty()) return
+fun CellGrid(details: List<EntityDetail>, modifier: Modifier = Modifier) {
+    if (details.isEmpty()) return
     val theme = currentTheme
+    val (top, bottom) = details.partition { it.isPriority }
     val cells = top + bottom
 
     Layout(
