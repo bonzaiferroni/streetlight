@@ -37,13 +37,16 @@ The app's routes and back stack, its services and view models, and the propertie
 | `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
 | `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
+| `EarthModel`, `EarthCache` | `Earth`, `EarthCache` (`streetlight.web.model`) |
 | `MapMarker`, `ThumbMarker`, `IconMarker`, `EventMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
 
 ## Submodels
 
 State and logic that several view models share is a submodel: a plain class, not a `ViewModel`, that a view model builds with its `viewModelScope` and the collaborators it needs, and holds as a property. `FeedModel` is one: a feed shown in a view, starting from the page its view's content holds, its type, the mode it is laid out in, and the tag and search that filter it, read again in the scope it was given. A view model holds one per feed, as `HomeModel.feed`, and a view passes it to the parts that show it as a context parameter.
 
-`MarkerMap` is another: the markers a view shows on the map and the one in focus, built with `GeoMap`. A view model sets its markers, as from its feed's entities, and never clears them; the map shows them only while the view's map is in sight. Focus belongs to the `MarkerMap`. Culling to the camera is the renderer's, not the view model's.
+`MarkerMap` is another: the markers a view shows on the map and the one in focus, built with `GeoMap`. A view model sets its markers, as from its feed's entities, and never clears them; the map shows them only while the view's map is in sight. Focus belongs to the `MarkerMap`. Culling to the camera is the renderer's, not the view model's. `GeoCamera` reports whichever map is shown, so a submodel that reads the camera, such as `EarthCache`, acts only while `GeoMap` shows its own `MarkerMap`.
+
+The web's earth routes change the address bar; the app has none, so a route is a place the viewer goes, and a refinement of what it shows, such as a tag or a search, is state on its model. Each earth route is its own entry with its own model.
 
 A marker is a `MapMarker`, a plain description of what to draw, built from an entity by `toMarker()`.
 
