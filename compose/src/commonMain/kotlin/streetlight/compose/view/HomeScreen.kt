@@ -156,7 +156,7 @@ private val SideBySideWidth = 600.dp
 private const val PickerMaxUnits = 40
 
 /** The path of this view's source, linked from its footer. */
-private const val HomeViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/HomeView.kt"
+private const val HomeViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/HomeScreen.kt"
 
 /** The height of the map in units, as on the web's home page. */
 private const val MapHeightUnits = 48

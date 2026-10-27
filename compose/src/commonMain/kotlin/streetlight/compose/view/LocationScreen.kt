@@ -44,4 +44,4 @@ fun LocationView() {
 }
 
 /** The path of this view's source, linked from its footer. */
-private const val LocationViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/LocationView.kt"
+private const val LocationViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/LocationScreen.kt"

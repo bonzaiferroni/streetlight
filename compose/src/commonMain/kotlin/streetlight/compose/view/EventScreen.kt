@@ -101,4 +101,4 @@ private const val MapHeightUnits = 48
 private const val ImageHeightUnits = 16
 
 /** The path of this view's source, linked from its footer. */
-private const val EventViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/EventView.kt"
+private const val EventViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/EventScreen.kt"

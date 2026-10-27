@@ -21,6 +21,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 |---|---|
 | `FooScreen` | The composable a route renders: it inflates the route's content and shows the `FooView` |
 | `FooView` | The composable that shows a route's content |
+| `FooScreen.kt` | The file of a route's `FooScreen` and its `FooView` |
 | `foo` on `LazyGridScope`, `LazyStaggeredGridScope` or `LazyListScope` | A part of a lazy layout that adds its own items, such as `feedSection`, named in lower case as `items` is |
 | `KoalaFoo` | A group of the theme's values, such as `KoalaColors` |
 | `FooMod` | The fixed modifiers of the composable `Foo`, the cousin of the web's `FooStyle` |

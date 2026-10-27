@@ -147,4 +147,4 @@ private const val MapHeightUnits = 48
 private const val ImageHeightUnits = 48
 
 /** The path of this view's source, linked from its footer. */
-private const val GalaxyViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/GalaxyView.kt"
+private const val GalaxyViewSource = "compose/src/commonMain/kotlin/streetlight/compose/view/GalaxyScreen.kt"
