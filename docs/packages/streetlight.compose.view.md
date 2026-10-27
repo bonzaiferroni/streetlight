@@ -48,7 +48,10 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `Icon` | `icon` (`koala.component`) |
 | `ContainImage` | `containImage` (`koala.component`) |
 | `AnimatedIcon` | `magicIcon` (`koala.component`), its animated mask |
-| `MapWindow` | `geoMapMount` (`koala.component`) and `initGeoMap` |
+| `MapWindow` | `initGeoMap` |
+| `MapMount` | `geoMapMount` (`koala.dom.component`) |
+| `MapHost` | `wireGeoMap` and `wireMapContext` (`koala.interop`), with `GeoCameraController` and `GeoRender` |
+| `Marker`, `Markers` | `configureThumbMarker`, `configureIconMarker` (`koala.model`) and `GeoLayerAdapter` |
 | `SmallGalaxyCard` | `smallGalaxyCard` (`streetlight.web.layout`) |
 | `ConnectPicker` | `connectPicker` (`streetlight.web.component`) |
 | `AppFooter` | `appFooter` (`streetlight.web.page`), without its lottie |
@@ -165,7 +168,11 @@ The app bundles the site's icons and drawings. The build syncs `www/icon` and `w
 
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
-The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapSlot` where the map goes, its center and the radius of its corners; the slot holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's slot, fading out, moving and looking over the slot's center, then fading in, in step with the page. A slot leaves the host as soon as its page starts to leave, so the map fades out with it. A page never composes a map of its own, and a slot needs no pinning, since its leaving the composition costs nothing.
+The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapMount` where the map goes, its center and the radius of its corners; the mount holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's mount, fading out, moving and looking over the mount's center, then fading in, in step with the page. A mount leaves the host as soon as its page starts to leave, so the map fades out with it. A page never composes a map of its own, and a mount needs no pinning, since its leaving the composition costs nothing.
+
+`MapHost` is the link between the map and `GeoMap`. As a mount becomes the one shown, the host hands its `MarkerMap`, or `null`, to `GeoMap`, so a page's markers show only while its map is in sight. The host applies `GeoCamera`'s pans to the map and reports the camera back into it.
+
+A marker is a composable in the map's overlay, placed at its point with MapLibre's `placedAt` in the layout phase, so a camera move places it again without recomposing. `Markers` composes one `Marker` per marker, keyed by its id; its body is centered on its point and its label sits beside it. A click focuses it, and a focused marker grows by half. Markers outside the view are not placed or drawn, but are composed; culling their composition to the camera waits for a map with many.
 
 ## Feed
 

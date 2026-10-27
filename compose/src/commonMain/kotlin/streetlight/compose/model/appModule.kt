@@ -17,8 +17,10 @@ val appModule = module {
     singleOf(::ThemeHost)
     singleOf(::AppSettings)
     single { Inflator(get()) }
+    single { GeoCamera() }
+    single { GeoMap(get()) }
     viewModel { (route: AppRoute) -> InflationModel(route, get()) }
-    viewModel { (content: HomeContent) -> HomeModel(content, get(), get()) }
+    viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
     viewModel { (content: LocationContent) -> LocationModel(content, get(), get()) }
 }

@@ -23,6 +23,7 @@ import org.maplibre.compose.overlay.MapOverlay
 import org.maplibre.compose.style.BaseStyle
 import org.maplibre.spatialk.geojson.Position
 import streetlight.compose.model.AppConfig
+import streetlight.compose.model.MarkerMap
 import kotlin.math.hypot
 import kampfire.model.GeoPoint
 
@@ -38,23 +39,24 @@ fun rememberAppMapState(): MapState {
 
 /** The camera looking over [center], or over Denver without one, at the web's pitch. */
 fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
-    center = center?.let { Position(longitude = it.lng, latitude = it.lat) } ?: Denver,
+    center = center?.toPosition() ?: Denver,
     zoom = if (center != null) PointZoom else 11.0,
     pitch = 45.0,
 )
 
 /**
- * The map of [state]. The cousin of the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar,
- * compass and attribution and without its logo.
+ * The map of [state] with the markers of [markerMap], if any. The cousin of the web's `geoMapMount`, darkened toward its
+ * edges, with MapLibre's scale bar, compass and attribution and without its logo.
  */
 @Composable
-fun MapWindow(state: MapState, modifier: Modifier = Modifier) {
+fun MapWindow(state: MapState, markerMap: MarkerMap?, modifier: Modifier = Modifier) {
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
     MaplibreMap(
         modifier = modifier,
         state = state,
         overlay = {
             Spacer(Modifier.fillMaxSize().drawBehind { drawVignette() })
+            markerMap?.let { Markers(it) }
             Box(Modifier.fillMaxSize().padding(MapOverlay.Spacing)) {
                 DisappearingScaleBar(
                     metersPerDp = { state.viewport?.metersPerDpAtCenter ?: 0.0 },
@@ -92,3 +94,6 @@ private val Denver = Position(longitude = -104.95, latitude = 39.75)
 
 /** The zoom of a map looking over a single place. */
 private const val PointZoom = 15.0
+
+/** The position of this point on the map. */
+fun GeoPoint.toPosition() = Position(longitude = lng, latitude = lat)

@@ -70,7 +70,7 @@ private val EventLocation.headerDetails get() = listOfNotNull(
 private fun EventLocationTab(event: EventLocation) {
     val theme = currentTheme
     Column(0, Modifier.fillMaxWidth().borderRadius(2, outline = Outline.Mid).cardBg()) {
-        MapSlot(Modifier.fillMaxWidth().height(theme.unit * MapHeightUnits), center = event.geoPoint)
+        MapMount(Modifier.fillMaxWidth().height(theme.unit * MapHeightUnits), center = event.geoPoint)
         Column(1, Modifier.fillMaxWidth().padding(2), horizontalAlignment = Alignment.CenterHorizontally) {
             event.locationImage?.let { ContainImage(it, Modifier.height(theme.unit * ImageHeightUnits).fillMaxWidth()) }
             BasicText(

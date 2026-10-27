@@ -35,10 +35,17 @@ The app's routes and back stack, its services and view models, and the propertie
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
 | `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
 | `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
+| `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
+| `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
+| `MapMarker`, `ThumbMarker`, `IconMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
 
 ## Submodels
 
 State and logic that several view models share is a submodel: a plain class, not a `ViewModel`, that a view model builds with its `viewModelScope` and the collaborators it needs, and holds as a property. `FeedModel` is one: a feed shown in a view, starting from the page its view's content holds, its type, the mode it is laid out in, and the tag and search that filter it, read again in the scope it was given. A view model holds one per feed, as `HomeModel.feed`, and a view passes it to the parts that show it as a context parameter.
+
+`MarkerMap` is another: the markers a view shows on the map and the one in focus, built with `GeoMap`. A view model sets its markers, as from its feed's entities, and never clears them; the map shows them only while the view's map is in sight. Focus belongs to the `MarkerMap`. Culling to the camera is the renderer's, not the view model's.
+
+A marker is a `MapMarker`, a plain description of what to draw, built from an entity by `toMarker()`.
 
 ## Inflation
 
@@ -58,6 +65,8 @@ State and logic that several view models share is a submodel: a plain class, not
 | `AppSettings` | The viewer's settings that hold across the app, each a lens, such as the feed mode |
 | `ThemeHost` | The `PageTheme` the app shows |
 | `Inflator` | The read of each route's content |
+| `GeoMap` | The app's one map: its `GeoCamera` and the `MarkerMap` it shows |
+| `GeoCamera` | The requests to pan the map, and where it looks as the map reports it |
 
 ## View Models
 

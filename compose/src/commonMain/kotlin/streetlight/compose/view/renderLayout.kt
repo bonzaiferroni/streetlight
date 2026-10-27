@@ -136,7 +136,7 @@ private fun GalaxyButtons() {
 /** The map of [content], looking over its point. The web's `renderMap`. */
 @Composable
 fun RenderMap(content: DesignContent, modifier: Modifier = Modifier) {
-    MapSlot(
+    MapMount(
         modifier.fillMaxWidth().height(currentTheme.unit * MapHeightUnits).borderRadius(2, moonShadow = true),
         center = content.geoPoint,
     )

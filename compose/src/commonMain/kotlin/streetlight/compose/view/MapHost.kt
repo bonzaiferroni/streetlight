@@ -27,21 +27,32 @@ import kampfire.model.GeoPoint
 import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
+import androidx.compose.runtime.snapshotFlow
+import kampfire.model.GeoRect
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.koinInject
+import org.maplibre.compose.camera.CameraUpdate
+import org.maplibre.spatialk.geojson.Position
+import streetlight.compose.model.GeoCameraState
+import streetlight.compose.model.GeoMap
+import streetlight.compose.model.MarkerMap
+import streetlight.compose.utility.collectAsState
 
 /**
- * A place on a page where the app's one map shows: its [bounds] in the root, the [center] the map looks over there, and
- * the [radius] of its corners in units.
+ * A place on a page where the app's one map shows: its [bounds] in the root, the [center] the map looks over there, the
+ * [radius] of its corners in units, and the page's [markerMap], if any.
  */
-class MapSlotState(center: GeoPoint?, radius: Float) {
+class MapMountState(center: GeoPoint?, radius: Float, markerMap: MarkerMap?) {
     var bounds by mutableStateOf(Rect.Zero)
     var center by mutableStateOf(center)
     var radius by mutableStateOf(radius)
+    var markerMap by mutableStateOf(markerMap)
 }
 
-/** The slots of the pages that show the map, the latest the one it shows in. */
+/** The mounts of the pages that show the map, the latest the one it shows in. */
 class MapHostState {
-    val slots = mutableStateListOf<MapSlotState>()
-    val active get() = slots.lastOrNull()
+    val mounts = mutableStateListOf<MapMountState>()
+    val active get() = mounts.lastOrNull()
 }
 
 /** The [MapHostState] of the app's one map, provided by [MapHost]. */
@@ -49,37 +60,65 @@ val LocalMapHost = staticCompositionLocalOf<MapHostState> { error("No MapHost pr
 
 /**
  * Holds the app's one map above [content] for as long as the app runs, so a page that shows the map never starts its
- * renderer. The map shows in the slot of the latest page that holds one, in its rounded frame and outline: it fades
- * out, moves to the slot and looks over its center, then fades in, as a page does. Without a slot it stays, unseen.
+ * renderer. The map shows in the mount of the latest page that holds one, in its rounded frame and outline: it fades
+ * out, moves to the mount, shows the mount's markers through [GeoMap] and looks over its center, then fades in, as a page
+ * does. Without a mount it stays, unseen. It applies the camera's pans and reports where it looks, the cousin of the
+ * web's `wireGeoMap`.
  */
 @Composable
 fun MapHost(content: @Composable () -> Unit) {
     val host = remember { MapHostState() }
     val magic = currentTheme.magic
     val state = rememberAppMapState()
+    val geoMap = koinInject<GeoMap>()
+    val markerMap by geoMap.markerMapState.collectAsState()
     val active = host.active
-    var shown by remember { mutableStateOf<MapSlotState?>(null) }
-    // the slots report their bounds in the root, and the map is placed in the host, which may sit below a bar
+    var shown by remember { mutableStateOf<MapMountState?>(null) }
+    // the mounts report their bounds in the root, and the map is placed in the host, which may sit below a bar
     var origin by remember { mutableStateOf(Offset.Zero) }
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(active) {
         alpha.animateTo(0f, magic.eased())
         shown = active
+        geoMap.show(active?.markerMap)
         active?.let { state.setCameraPosition(cameraPositionOf(it.center)) }
         if (active != null) alpha.animateTo(1f, magic.eased())
+    }
+
+    LaunchedEffect(state) {
+        geoMap.camera.panFlow.collectLatest { pan ->
+            state.animateCamera(CameraUpdate(center = pan.point.toPosition(), zoom = pan.zoom))
+        }
+    }
+
+    LaunchedEffect(state) {
+        snapshotFlow { state.viewport to state.isCameraMoving }.collect { (viewport, isMoving) ->
+            viewport ?: return@collect
+            val camera = viewport.cameraPosition
+            val bounds = viewport.visibleBounds
+            geoMap.camera.report(
+                GeoCameraState(
+                    center = camera.center.toGeoPoint(),
+                    bounds = GeoRect(bounds.southwest.toGeoPoint(), bounds.northeast.toGeoPoint()),
+                    zoom = camera.zoom,
+                    isMoving = isMoving,
+                )
+            )
+        }
     }
 
     CompositionLocalProvider(LocalMapHost provides host) {
         Box(Modifier.onGloballyPositioned { origin = it.positionInRoot() }) {
             content()
-            val slot = shown
+            val mount = shown
             MapWindow(
                 state,
+                markerMap,
                 Modifier
                     .layout { measurable, constraints ->
-                        // the map takes its slot's size and place, or a sliver while it has none
-                        val bounds = slot?.bounds ?: Rect(0f, 0f, 1f, 1f)
+                        // the map takes its mount's size and place, or a sliver while it has none
+                        val bounds = mount?.bounds ?: Rect(0f, 0f, 1f, 1f)
                         val width = bounds.width.toInt().coerceAtLeast(1)
                         val height = bounds.height.toInt().coerceAtLeast(1)
                         val placeable = measurable.measure(Constraints.fixed(width, height))
@@ -88,27 +127,31 @@ fun MapHost(content: @Composable () -> Unit) {
                         }
                     }
                     .graphicsLayer { this.alpha = alpha.value }
-                    .borderRadius(slot?.radius ?: 0f, outline = Outline.Mid),
+                    .borderRadius(mount?.radius ?: 0f, outline = Outline.Mid),
             )
         }
     }
 }
 
 /**
- * A slot where the app's one map shows on this page, looking over [center], or Denver without one, with corners of
- * [radius] units. The slot holds the map's place in the page's layout; the [MapHost] draws the map into it. It leaves
- * the host as its page starts to leave, so the map fades out with the page.
+ * A mount where the app's one map shows on this page, looking over [center], or Denver without one, with corners of
+ * [radius] units, showing the markers of [markerMap]. The mount holds the map's place in the page's layout; the [MapHost]
+ * draws the map into it. It leaves the host as its page starts to leave, so the map fades out with the page.
  */
 @Composable
-fun MapSlot(modifier: Modifier = Modifier, center: GeoPoint? = null, radius: Number = 2) {
+fun MapMount(modifier: Modifier = Modifier, center: GeoPoint? = null, radius: Number = 2, markerMap: MarkerMap? = null) {
     val host = LocalMapHost.current
-    val slot = remember { MapSlotState(center, radius.toFloat()) }
-    slot.center = center
-    slot.radius = radius.toFloat()
+    val mount = remember { MapMountState(center, radius.toFloat(), markerMap) }
+    mount.center = center
+    mount.radius = radius.toFloat()
+    mount.markerMap = markerMap
     val isLeaving = LocalNavAnimatedContentScope.current.transition.targetState == EnterExitState.PostExit
-    DisposableEffect(slot, isLeaving) {
-        if (!isLeaving) host.slots.add(slot)
-        onDispose { host.slots.remove(slot) }
+    DisposableEffect(mount, isLeaving) {
+        if (!isLeaving) host.mounts.add(mount)
+        onDispose { host.mounts.remove(mount) }
     }
-    Spacer(modifier.onGloballyPositioned { slot.bounds = Rect(it.positionInRoot(), it.size.toSize()) })
+    Spacer(modifier.onGloballyPositioned { mount.bounds = Rect(it.positionInRoot(), it.size.toSize()) })
 }
+
+/** The point of this position. */
+private fun Position.toGeoPoint() = GeoPoint(lng = longitude, lat = latitude)

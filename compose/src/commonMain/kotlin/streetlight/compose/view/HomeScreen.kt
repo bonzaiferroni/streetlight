@@ -61,11 +61,12 @@ fun HomeView() {
     ) {
         fullItem { AppHeader() }
         fullItem {
-            MapSlot(
+            MapMount(
                 Modifier.fillMaxWidth()
                     .padding(if (isGrid) 0 else 1)
                     .height(theme.unit * MapHeightUnits)
-                    .borderRadius(2, moonShadow = true)
+                    .borderRadius(2, moonShadow = true),
+                markerMap = model.markerMap,
             )
         }
         fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }
