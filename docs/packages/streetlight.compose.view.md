@@ -172,7 +172,11 @@ The app has one map. Starting MapLibre's renderer stalls the UI thread for most 
 
 `MapHost` is the link between the map and `GeoMap`. As a mount becomes the one shown, the host hands its `MarkerMap`, or `null`, to `GeoMap`, so a page's markers show only while its map is in sight. The host applies `GeoCamera`'s pans to the map and reports the camera back into it.
 
-A marker is a composable in the map's overlay, placed at its point with MapLibre's `placedAt` in the layout phase, so a camera move places it again without recomposing. `Markers` composes one `Marker` per marker, keyed by its id; its body is centered on its point and its label sits beside it. A click focuses it, and a focused marker grows by half. Markers outside the view are not placed or drawn, but are composed; culling their composition to the camera waits for a map with many.
+A marker is a composable in the map's overlay, placed at its point with MapLibre's `placedAt` in the layout phase, so a camera move places it again without recomposing. `Markers` composes one `Marker` per marker, keyed by its id; its body is centered on its point and its label sits beside it. A click focuses it, and a focused marker grows by half.
+
+A crowded map stays readable by revealing markers by zoom, as the web's `GeoLayerAdapter` does. When the markers change, each is given a reveal zoom: stepping in from zoom 0 by half a zoom, each step reveals, in list order, the markers farther than 160dp on screen from every marker already revealed. The list's order is its priority. A marker is composed only from its reveal zoom, or while it is focused, read through `derivedStateOf` so a zoom recomposes only when the revealed set changes.
+
+Every marker has a light, revealed or not, so a hidden marker shows as its light alone. The lights are one `Spacer` beneath the markers, drawn in its draw lambda: each light projected to the screen and drawn as a dot in its type's color near white, twinkling on a phase steady for its id, against a frame clock read only while drawing. It is the cousin of the web's `LightLayer` shader, and like it, redraws every frame while the map shows and never recomposes. Markers outside the view are not placed or drawn, but are composed; culling their composition to the camera waits for a map with many.
 
 ## Feed
 

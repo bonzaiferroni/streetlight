@@ -56,7 +56,7 @@ fun MapWindow(state: MapState, markerMap: MarkerMap?, modifier: Modifier = Modif
         state = state,
         overlay = {
             Spacer(Modifier.fillMaxSize().drawBehind { drawVignette() })
-            markerMap?.let { Markers(it) }
+            markerMap?.let { Markers(it, state) }
             Box(Modifier.fillMaxSize().padding(MapOverlay.Spacing)) {
                 DisappearingScaleBar(
                     metersPerDp = { state.viewport?.metersPerDpAtCenter ?: 0.0 },
