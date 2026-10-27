@@ -14,6 +14,13 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.koin.compose.koinInject
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.map.MaplibreMap
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
+import org.maplibre.compose.interaction.ClickResult
+import org.maplibre.compose.interaction.MapInteractions
 import org.maplibre.compose.map.MapState
 import org.maplibre.compose.map.rememberMapState
 import org.maplibre.compose.overlay.DisappearingCompassButton
@@ -46,15 +53,39 @@ fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
 
 /**
  * The map of [state] with the markers of [markerMap], if any, and the page's [overlay] above all else. The cousin of
- * the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar, compass and attribution and without its
- * logo.
+ * the web's `geoMapMount`, darkened toward its edges, its focus cleared by a click on the map itself, with MapLibre's
+ * scale bar, compass and attribution and without its logo. The map and its markers are the [LocalMapHaze] source, so
+ * the overlay, drawn beside the map rather than within it, may blur what lies beneath.
  */
 @Composable
 fun MapWindow(state: MapState, markerMap: MarkerMap?, overlay: (@Composable () -> Unit)?, modifier: Modifier = Modifier) {
+    val mapHaze = rememberHazeState()
+    Box(modifier) {
+        MapContent(state, markerMap, Modifier.fillMaxSize().hazeSource(mapHaze))
+        overlay?.let {
+            CompositionLocalProvider(LocalMapHaze provides mapHaze) { Box(Modifier.fillMaxSize()) { it() } }
+        }
+    }
+}
+
+/** The map of [state] with the markers of [markerMap] and MapLibre's controls. */
+@Composable
+private fun MapContent(state: MapState, markerMap: MarkerMap?, modifier: Modifier) {
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
     MaplibreMap(
         modifier = modifier,
         state = state,
+        // a click on the map itself clears the focus, as the web's `GeoRender` does
+        interactions = MapInteractions {
+            callbacks {
+                click {
+                    onUnhandled {
+                        markerMap?.setFocus(null)
+                        ClickResult.Pass
+                    }
+                }
+            }
+        },
         overlay = {
             Spacer(Modifier.fillMaxSize().drawBehind { drawVignette() })
             markerMap?.let { Markers(it, state) }
@@ -67,7 +98,6 @@ fun MapWindow(state: MapState, markerMap: MarkerMap?, overlay: (@Composable () -
                 DisappearingCompassButton(Modifier.align(Alignment.TopEnd))
                 ExpandingAttributionButton(Modifier.align(Alignment.BottomEnd))
             }
-            overlay?.let { Box(Modifier.fillMaxSize()) { it() } }
         },
     )
 }
@@ -87,6 +117,9 @@ private fun DrawScope.drawVignette() {
         )
     )
 }
+
+/** The haze of the map beneath a page's overlay, for a part of the overlay that blurs the map behind it. */
+val LocalMapHaze = staticCompositionLocalOf<HazeState> { error("No map HazeState provided") }
 
 /** The path of the map style the server serves, as the web's `initGeoMap` loads it. */
 private const val FjordStylePath = "/www/misc/fjord.json"

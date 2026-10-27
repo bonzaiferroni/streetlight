@@ -48,7 +48,7 @@ State and logic that several view models share is a submodel: a plain class, not
 
 The web's earth routes change the address bar; the app has none, so a route is a place the viewer goes, and a refinement of what it shows, such as a tag or a search, is state on its model. Each earth route is its own entry with its own model.
 
-A marker is a `MapMarker`, a plain description of what to draw, built from an entity by `toMarker()`.
+A marker is a `MapMarker`, a plain description of what to draw, built from an entity by `toMarker()`, and carrying that entity, so a focus can show it or, for an `EventGroup`, read the location's events.
 
 ## Inflation
 

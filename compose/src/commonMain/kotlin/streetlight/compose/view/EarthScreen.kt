@@ -1,7 +1,28 @@
 package streetlight.compose.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.dp
+import streetlight.compose.modifier.Outline
+import streetlight.compose.modifier.borderRadius
+import streetlight.compose.modifier.zenBg
+import streetlight.model.data.FeedContext
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.blur.HazeBlurStyle
+import dev.chrisbanes.haze.blur.hazeBlur
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,13 +52,59 @@ fun EarthScreen() = context(koinViewModel<EarthModel>()) { EarthView() }
 
 /**
  * The view of [EarthRoute]: the map across the whole page, with the events of each view it settles on, under the
- * [EarthHeader]. The cousin of the web's `viewEarth`.
+ * [EarthHeader], and the [EarthFocus] below it. The cousin of the web's `viewEarth`.
  */
 @Composable
 context(model: EarthModel)
 fun EarthView() {
     PageThemeEffect(null)
-    MapMount(Modifier.fillMaxSize(), radius = 0, markerMap = model.markerMap, overlay = { EarthHeader() })
+    MapMount(Modifier.fillMaxSize(), radius = 0, markerMap = model.markerMap, overlay = { EarthOverlay() })
+}
+
+/**
+ * The header across the top of the map, then the focus in the space below it, held to its bottom and to the web's
+ * 600px. A narrow map leaves a sixth of that space to the map, as the web's `EarthStyle.Grid` does below 800px; a wide
+ * one gives the focus its full height.
+ */
+@Composable
+context(model: EarthModel)
+private fun EarthOverlay() {
+    Column(0, Modifier.fillMaxSize()) {
+        EarthHeader()
+        BoxWithConstraints(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.BottomStart) {
+            val share = if (maxWidth < WideWidth) NarrowFocusShare else 1f
+            EarthFocus(Modifier.widthIn(max = FocusWidth).heightIn(max = maxHeight * share))
+        }
+    }
+}
+
+/**
+ * The entities of the marker in focus, each a [FeedRow] in the `Row` mode, in a column that scrolls over the blurred
+ * map, fading in and out with the focus. The cousin of the web's `earthFocus`.
+ */
+@Composable
+context(model: EarthModel)
+fun EarthFocus(modifier: Modifier = Modifier) {
+    val theme = currentTheme
+    val entities by model.focusEntitiesState.collectAsState()
+    // the last entities stay while the panel fades out
+    var shown by remember { mutableStateOf(entities.orEmpty()) }
+    entities?.let { shown = it }
+
+    val magic = theme.magic
+    AnimatedVisibility(entities != null, modifier, enter = fadeIn(magic.eased()), exit = fadeOut(magic.eased())) {
+        Column(
+            Modifier.borderRadius(0, moonShadow = true, outline = Outline.Mid)
+                .hazeBlur(HazeInput.Sources(LocalMapHaze.current), FocusBlur)
+                .zenBg()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(theme.line),
+        ) {
+            shown.forEach { entity ->
+                context(null as FeedContext?) { FeedRow(entity, FeedMode.Row) }
+            }
+        }
+    }
 }
 
 /**
@@ -78,6 +145,18 @@ fun EarthHeader() {
         }
     }
 }
+
+/** The width below which the focus leaves part of the map's height to the map, the web's `EarthStyle.MinifiedWidth`. */
+private val WideWidth = 800.dp
+
+/** The widest the focus runs, as the web's. */
+private val FocusWidth = 600.dp
+
+/** The share of the space below the header the focus may take on a narrow map, the web's `minmax(0, 5fr)` by `1fr`. */
+private const val NarrowFocusShare = 5f / 6
+
+/** The blur of the map behind the focus, twice the web's `--strong-blur` of 10px. */
+private val FocusBlur = HazeBlurStyle { blurRadius(20.dp) }
 
 /** The height of the title's band in units, the web's `Height(8)`. */
 private const val TitleHeightUnits = 8

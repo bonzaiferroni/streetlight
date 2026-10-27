@@ -33,6 +33,8 @@ class EarthCache(
     private var search: String? = null
     // a query started before a restart is dropped when it lands
     private var generation = 0
+    // the markers from before a restart stay until the first query after it lands
+    private var isReplacing = false
 
     init {
         scope.launch {
@@ -47,13 +49,16 @@ class EarthCache(
         }
     }
 
-    /** Starts over with the events carrying [tag] and matching [search], when given, querying the view the map holds. */
+    /**
+     * Starts over with the events carrying [tag] and matching [search], when given, querying the view the map holds. The
+     * markers shown stay until the first query lands and takes their place, so a marker it holds again is kept.
+     */
     fun restart(tag: EventTag?, search: String?) {
         this.tag = tag
         this.search = search
         generation++
         queries.clear()
-        markerMap.setPoints(emptyList())
+        isReplacing = true
         val camera = geoMap.camera.cameraState.now
         val view = camera.bounds?.takeIf { geoMap.markerMapState.now === markerMap } ?: return
         scope.launch { query(view) }
@@ -72,7 +77,8 @@ class EarthCache(
         }
         if (generation != start) return
         queries[query.view] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
-        markerMap.addPoints(feed.entities)
+        if (isReplacing) markerMap.setPoints(feed.entities) else markerMap.addPoints(feed.entities)
+        isReplacing = false
     }
 
     /**

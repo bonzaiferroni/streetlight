@@ -20,10 +20,9 @@ class MarkerMap(private val geoMap: GeoMap) {
     /** Adds the markers of the [entities] not yet shown. */
     fun addPoints(entities: List<Entity>) = setMarkers(entities.toMarkers(store.now.markers))
 
-    /** Focuses [marker] and pans to it, or clears the focus when it is `null`. */
+    /** Focuses [marker], leaving the camera where it is, or clears the focus when it is `null`. */
     fun setFocus(marker: MapMarker?) {
         store.set(store.now.copy(focus = marker))
-        marker?.let { geoMap.camera.pan(it.geoPoint) }
     }
 
     private fun setMarkers(markers: List<MapMarker>) {
