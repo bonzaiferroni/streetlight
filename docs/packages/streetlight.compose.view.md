@@ -64,6 +64,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
 | `LocationView` | `locationShell` (`streetlight.web.shell`) |
 | `EarthView` | `viewEarth` (`streetlight.web.view`) |
+| `EarthHeader` | `earthHeader` and `earthControls` (`streetlight.web.view`) |
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
@@ -173,6 +174,8 @@ The app bundles the site's icons and drawings. The build syncs `www/icon` and `w
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
 The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapMount` where the map goes, its center and the radius of its corners; the mount holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's mount. When the mount it leaves and the new one both lie within the window, its frame grows or shrinks from one to the other over the pages' two fades, its corners following and its camera gliding to the new center, and the new mount's markers take the old ones' place as it starts. Otherwise it fades out, moves and looks over the mount's center, then fades in, in step with the page. A mount leaves the host as soon as its page starts to leave, so the map fades out with it. A page never composes a map of its own, and a mount needs no pinning, since its leaving the composition costs nothing.
+
+The map is drawn above the page, so whatever a page shows over its map, such as the earth's controls, is the mount's `overlay`, which the host draws in the map's frame above the markers; it fades and changes frame with the map. A page never lays out its own parts over a mount.
 
 `MapHost` is the link between the map and `GeoMap`. As a mount becomes the one shown, the host hands its `MarkerMap`, or `null`, to `GeoMap`, so a page's markers show only while its map is in sight. The host applies `GeoCamera`'s pans to the map and reports the camera back into it.
 

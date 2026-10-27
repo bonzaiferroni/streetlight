@@ -45,11 +45,12 @@ fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
 )
 
 /**
- * The map of [state] with the markers of [markerMap], if any. The cousin of the web's `geoMapMount`, darkened toward its
- * edges, with MapLibre's scale bar, compass and attribution and without its logo.
+ * The map of [state] with the markers of [markerMap], if any, and the page's [overlay] above all else. The cousin of
+ * the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar, compass and attribution and without its
+ * logo.
  */
 @Composable
-fun MapWindow(state: MapState, markerMap: MarkerMap?, modifier: Modifier = Modifier) {
+fun MapWindow(state: MapState, markerMap: MarkerMap?, overlay: (@Composable () -> Unit)?, modifier: Modifier = Modifier) {
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
     MaplibreMap(
         modifier = modifier,
@@ -66,6 +67,7 @@ fun MapWindow(state: MapState, markerMap: MarkerMap?, modifier: Modifier = Modif
                 DisappearingCompassButton(Modifier.align(Alignment.TopEnd))
                 ExpandingAttributionButton(Modifier.align(Alignment.BottomEnd))
             }
+            overlay?.let { Box(Modifier.fillMaxSize()) { it() } }
         },
     )
 }

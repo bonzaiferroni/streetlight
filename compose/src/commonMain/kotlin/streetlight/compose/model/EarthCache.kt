@@ -12,13 +12,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import streetlight.model.data.EntityCursor
+import streetlight.model.data.EventTag
 import streetlight.model.data.MapQuery
 import streetlight.model.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Loads the events of each settled view of the map into [markerMap] while the map shows it, so a view already covered
- * by a completed query is not asked again. The web's `EarthCache`.
+ * by a completed query is not asked again. The events are limited to those carrying its tag and matching its search
+ * when given, and a search first queries the whole earth. The web's `EarthCache`.
  */
 class EarthCache(
     private val scope: CoroutineScope,
@@ -27,6 +29,10 @@ class EarthCache(
     private val markerMap: MarkerMap,
 ) {
     private val queries = mutableMapOf<GeoRect, MapCursor>()
+    private var tag: EventTag? = null
+    private var search: String? = null
+    // a query started before a restart is dropped when it lands
+    private var generation = 0
 
     init {
         scope.launch {
@@ -41,24 +47,41 @@ class EarthCache(
         }
     }
 
+    /** Starts over with the events carrying [tag] and matching [search], when given, querying the view the map holds. */
+    fun restart(tag: EventTag?, search: String?) {
+        this.tag = tag
+        this.search = search
+        generation++
+        queries.clear()
+        markerMap.setPoints(emptyList())
+        val camera = geoMap.camera.cameraState.now
+        val view = camera.bounds?.takeIf { geoMap.markerMapState.now === markerMap } ?: return
+        scope.launch { query(view) }
+    }
+
     /** Queries [view] unless it is covered, and adds its events to the map. */
     private suspend fun query(view: GeoRect) {
+        val start = generation
         val query = getQuery(view) ?: return
         // held as incomplete while in flight, so an overlapping view at this zoom is not queried again
         queries[query.view] = MapCursor(null, false)
         // a failed read leaves the view to be asked again, as the view has no toaster yet
         val feed = (api.earth.readMapEntities(query) as? Ok)?.data ?: run {
-            queries.remove(query.view)
+            if (generation == start) queries.remove(query.view)
             return
         }
+        if (generation != start) return
         queries[query.view] = MapCursor(feed.nextCursor as? EntityCursor.Score, feed.isCompleted)
         markerMap.addPoints(feed.entities)
     }
 
-    /** The query for [view], reaching past it by [Overscan], or `null` when [view] is already covered. */
+    /**
+     * The query for [view], reaching past it by [Overscan], or `null` when [view] is already covered. The first query of
+     * a search reaches the whole earth.
+     */
     private fun getQuery(view: GeoRect): MapQuery? {
         if (isCovered(view)) return null
-        val queriedRect = view.scaleBy(Overscan)
+        val queriedRect = if (search != null && queries.isEmpty()) GeoRect.World else view.scaleBy(Overscan)
         val containing = queries.filterKeys { it.contains(queriedRect) }
 
         val seen = queries.keys
@@ -67,7 +90,7 @@ class EarthCache(
             .take(MaxViewed)
 
         val cursor = containing.values.mapNotNull { it.cursor }.minWithOrNull(compareBy(nullsLast()) { it.score })
-            ?: EntityCursor.Score.Default
+            ?: EntityCursor.Score.Default.copy(tag = tag?.ordinal, search = search)
         return MapQuery(queriedRect, seen, cursor)
     }
 

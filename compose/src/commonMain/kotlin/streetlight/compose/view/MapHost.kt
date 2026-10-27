@@ -45,13 +45,14 @@ import streetlight.compose.utility.collectAsState
 
 /**
  * A place on a page where the app's one map shows: its [bounds] in the root, the [center] the map looks over there, the
- * [radius] of its corners in units, and the page's [markerMap], if any.
+ * [radius] of its corners in units, the page's [markerMap], if any, and the [overlay] the page draws over the map.
  */
-class MapMountState(center: GeoPoint?, radius: Float, markerMap: MarkerMap?) {
+class MapMountState(center: GeoPoint?, radius: Float, markerMap: MarkerMap?, overlay: (@Composable () -> Unit)?) {
     var bounds by mutableStateOf(Rect.Zero)
     var center by mutableStateOf(center)
     var radius by mutableStateOf(radius)
     var markerMap by mutableStateOf(markerMap)
+    var overlay by mutableStateOf(overlay)
 }
 
 /** The mounts of the pages that show the map, the latest the one it shows in. */
@@ -142,6 +143,7 @@ fun MapHost(content: @Composable () -> Unit) {
             MapWindow(
                 state,
                 markerMap,
+                mount?.overlay,
                 Modifier
                     .layout { measurable, constraints ->
                         // the map takes its mount's size and place, or a sliver while it has none
@@ -162,16 +164,24 @@ fun MapHost(content: @Composable () -> Unit) {
 
 /**
  * A mount where the app's one map shows on this page, looking over [center], or Denver without one, with corners of
- * [radius] units, showing the markers of [markerMap]. The mount holds the map's place in the page's layout; the [MapHost]
- * draws the map into it. It leaves the host as its page starts to leave, so the map fades out with the page.
+ * [radius] units, showing the markers of [markerMap] and the page's [overlay] above them, such as its controls. The
+ * mount holds the map's place in the page's layout; the [MapHost] draws the map into it, and the overlay with it, since
+ * the map is drawn above the page. It leaves the host as its page starts to leave, so the map fades out with the page.
  */
 @Composable
-fun MapMount(modifier: Modifier = Modifier, center: GeoPoint? = null, radius: Number = 2, markerMap: MarkerMap? = null) {
+fun MapMount(
+    modifier: Modifier = Modifier,
+    center: GeoPoint? = null,
+    radius: Number = 2,
+    markerMap: MarkerMap? = null,
+    overlay: (@Composable () -> Unit)? = null,
+) {
     val host = LocalMapHost.current
-    val mount = remember { MapMountState(center, radius.toFloat(), markerMap) }
+    val mount = remember { MapMountState(center, radius.toFloat(), markerMap, overlay) }
     mount.center = center
     mount.radius = radius.toFloat()
     mount.markerMap = markerMap
+    mount.overlay = overlay
     val isLeaving = LocalNavAnimatedContentScope.current.transition.targetState == EnterExitState.PostExit
     DisposableEffect(mount, isLeaving) {
         if (!isLeaving) host.mounts.add(mount)
