@@ -55,6 +55,8 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `Tabs`, `TabScope`, `tab` | `tabs`, its `TabScope` and `tab` (`koala.layout`) |
 | `GalaxyView`, its `layoutBlock` | `galaxyShell` and `renderLayout` (`streetlight.web.layout`) |
 | `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
+| `LocationView` | `locationShell` (`streetlight.web.shell`) |
+| `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
 | `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
@@ -88,6 +90,12 @@ fun GalaxyScreen(route: GalaxyRoute) = Inflated<GalaxyContent>(route) { content 
 A view declares its view model as the context parameter `model`, following `docs/kotlin-style.md`, and reads a lens with `collectAsState()` from `TapUtility.kt`. A view with no state of its own takes its content as an argument, as `EventView(event)`.
 
 The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that opens a page reads `currentPortal` and calls it from `pointerClick`, as a feed row opens its entity's `toRoute()` and the logo of `AppHeader` returns `home()`. An entity the app has no page for opens nothing.
+
+## Page Layouts
+
+A page with a design, such as a galaxy's or a location's, lays out its `PageLayout` with `renderLayout`, which adds each block to the view's lazy grid with `renderBlock`. The family keeps the web's names: the functions on the lazy scope are lower case, and the composable of each block is `RenderFoo`, after the web's `renderFoo`. A feed block is a `feedSection` of the grid; every other block is a full item showing `RenderBlock`.
+
+A feed is available only at the top level of a layout. Within a tab, whose blocks are a `RenderColumn`, a feed block adds nothing. A block the app does not yet lay out shows `RenderPlaceholder`.
 
 ## Tabs
 
@@ -178,4 +186,4 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 
 ### Cell Grid
 
-`CellGrid` lays out an entity's details as the web's `cellGrid` does: in as many equal columns of at least 128dp as fit, up to 7, wrapping onto more lines, the last cell stretching to the end of its line. The columns share the width evenly, the pixels left over going to the first columns. Each cell is 5 units tall on `cardBg()`, its icon, or else its label, at its start in the detail's color or the scheme color, and its text centered in the rest. A cell whose url leaves the app opens it when clicked; a url within the app waits for routes. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `schemeBg()` in the entity's scheme color.
+`CellGrid` lays out an entity's details as the web's `cellGrid` does: in as many equal columns of at least 128dp as fit, up to 7, wrapping onto more lines, the last cell stretching to the end of its line. The columns share the width evenly, the pixels left over going to the first columns. Each cell is 5 units tall on `cardBg()`, its icon, or else its label, at its start in the detail's color or the scheme color, and its text centered in the rest. A cell with a route opens the app's page of it, by `toAppRoute()`; a cell whose url leaves the app opens it. The cells stand a line apart, so the background draws the grid's lines. A feed row frames it rounded two and a half units, outlined, in the moon's shadow, on `schemeBg()` in the entity's scheme color.

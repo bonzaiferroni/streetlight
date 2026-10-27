@@ -17,11 +17,13 @@ import streetlight.compose.model.FeedModel
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.padding
+import streetlight.model.data.ColumnsBlock
 import streetlight.model.data.CommentsBlock
 import streetlight.model.data.DesignContent
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.EventsBlock
+import streetlight.model.data.GalleryBlock
 import streetlight.model.data.GalaxyContent
 import streetlight.model.data.HeaderBlock
 import streetlight.model.data.HeadingBlock
@@ -35,7 +37,9 @@ import streetlight.model.data.PageLayout
 import streetlight.model.data.PostsBlock
 import streetlight.model.data.RichTextBlock
 import streetlight.model.data.Size3
+import streetlight.model.data.SkillsBlock
 import streetlight.model.data.StarContent
+import streetlight.model.data.TabsBlock
 import streetlight.model.data.TextBlock
 import streetlight.model.data.toDetails
 
@@ -49,7 +53,10 @@ fun LazyStaggeredGridScope.renderLayout(content: DesignContent, page: EntityFeed
     layout.blocks.forEach { renderBlock(it, content, page, mode, side) }
 }
 
-/** Adds [block] of the page of [content] to the grid, as [renderLayout] does. The cousin of the web's `renderBlock`. */
+/**
+ * Adds [block] of the page of [content] to the grid, as [renderLayout] does: a feed as its own section, any other block
+ * as a full item. The cousin of the web's `renderBlock`.
+ */
 context(feed: FeedModel)
 fun LazyStaggeredGridScope.renderBlock(
     block: LayoutBlock,
@@ -58,17 +65,45 @@ fun LazyStaggeredGridScope.renderBlock(
     mode: FeedMode,
     side: Int,
 ) {
-    val sideMod = Modifier.padding(horizontal = side)
     when (block) {
-        is HeaderBlock -> fullItem { RenderHeader(block, content, sideMod.padding(vertical = 1)) }
         PostsBlock, EventsBlock -> feedSection(page, mode)
-        MapBlock -> fullItem { RenderMap(content, sideMod) }
-        is HeadingBlock -> fullItem { RenderHeading(block, sideMod) }
-        is TextBlock -> fullItem { RenderText(block, sideMod) }
-        is RichTextBlock -> fullItem { RenderRichText(block, sideMod) }
-        is ImageBlock -> fullItem { RenderImage(block, sideMod) }
-        // comments, skills, galleries, tabs and columns wait for their own bounty
-        else -> fullItem { RenderPlaceholder(block, sideMod) }
+        else -> fullItem { RenderBlock(block, content, Modifier.padding(horizontal = side)) }
+    }
+}
+
+/**
+ * The [blocks] of the page of [content] in a column, as within a tab, where a feed is not available and adds nothing.
+ * The web's `renderColumn`.
+ */
+@Composable
+fun RenderColumn(blocks: List<LayoutBlock>, content: DesignContent, modifier: Modifier = Modifier) {
+    Column(2, modifier.fillMaxWidth()) {
+        blocks.forEach { RenderBlock(it, content) }
+    }
+}
+
+/** The [block] of the page of [content] that is not a feed, which adds nothing here. The web's `renderBlock`. */
+@Composable
+fun RenderBlock(block: LayoutBlock, content: DesignContent, modifier: Modifier = Modifier) {
+    when (block) {
+        is HeaderBlock -> RenderHeader(block, content, modifier.padding(vertical = 1))
+        PostsBlock, EventsBlock -> Unit
+        MapBlock -> RenderMap(content, modifier)
+        is HeadingBlock -> RenderHeading(block, modifier)
+        is TextBlock -> RenderText(block, modifier)
+        is RichTextBlock -> RenderRichText(block, modifier)
+        is ImageBlock -> RenderImage(block, modifier)
+        is TabsBlock -> RenderTabs(block, content, modifier)
+        // comments, skills, galleries and columns wait for their own bounty
+        CommentsBlock, SkillsBlock, is GalleryBlock, is ColumnsBlock -> RenderPlaceholder(block, modifier)
+    }
+}
+
+/** The tabs of [block], each showing its blocks of the page of [content], without feeds. The web's `renderTabs`. */
+@Composable
+fun RenderTabs(block: TabsBlock, content: DesignContent, modifier: Modifier = Modifier) {
+    Tabs(modifier) {
+        block.tabs.forEach { tab(it.name) { RenderColumn(it.blocks, content) } }
     }
 }
 

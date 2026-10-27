@@ -93,7 +93,7 @@ The layout is described here so its intent survives later changes. `cellGrid` is
 
 | Type | Holds |
 |---|---|
-| `EntityDetail` (`streetlight.model.data`) | A text after an icon, or after a label in the scheme color, or alone, with an optional `Url`. A cell with a `Url` is a link |
+| `EntityDetail` (`streetlight.model.data`) | A text after an icon, or after a label in the scheme color, or alone, with an optional `WebRoute` or `Url`. A cell with either is a link, the route's path first |
 | `EntityButton` | A block that builds its own element |
 
 An entity's cells are its `toDetails()`. A cell shown outside an entity's details, such as `starCell`, is a function in `cellGrid.kt` returning an `EntityDetail`.

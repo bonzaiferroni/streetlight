@@ -46,7 +46,7 @@ State and logic that several view models share is a submodel: a plain class, not
 
 ## Navigation
 
-`Portal` owns the back stack, which holds `AppRoute`s and is saved with `AppRoute.serializer()`. A view navigates through `Portal`, never by touching the back stack: `open` a route, go `back`, or return `home` to the first. It is ambient, provided as `LocalPortal` and read as `currentPortal`. An entity's page is its `toRoute()`, `null` for a type the app has no page for. It is built by `rememberPortal`, not by Koin, since the back stack is Compose saved state.
+`Portal` owns the back stack, which holds `AppRoute`s and is saved with `AppRoute.serializer()`. A view navigates through `Portal`, never by touching the back stack: `open` a route, go `back`, or return `home` to the first. It is ambient, provided as `LocalPortal` and read as `currentPortal`. An entity's page is its `toRoute()`, `null` for a type the app has no page for. A web route from the shared model, such as a detail's `route`, becomes the app's with `toAppRoute()`, `null` for a page the app does not have. It is built by `rememberPortal`, not by Koin, since the back stack is Compose saved state.
 
 ## Services
 

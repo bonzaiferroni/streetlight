@@ -7,12 +7,13 @@ import kabinet.utils.toTimeFormat
 import kampfire.model.Url
 import koala.Svg
 import koala.SvgFile
+import koala.model.WebRoute
 import streetlight.model.ui.LocationRoute
 import kotlin.time.Instant
 
 /**
- * A fact shown with an entity: its [text] after its [svg], or after its [label] when it has no icon, linking to [url]
- * when given, and placed first when [isPriority]. A fact of the entity itself takes the scheme color of where it is
+ * A fact shown with an entity: its [text] after its [svg], or after its [label] when it has no icon, linking to the
+ * page of [route] or to [url] when given, and placed first when [isPriority]. A fact of the entity itself takes the scheme color of where it is
  * shown, and a fact drawn from another entity, such as an event's location, names that entity's [type] for its color.
  */
 data class EntityDetail(
@@ -21,6 +22,7 @@ data class EntityDetail(
     val label: String? = null,
     val type: EntityType? = null,
     val url: Url? = null,
+    val route: WebRoute? = null,
     val isPriority: Boolean = false,
 )
 
@@ -36,7 +38,7 @@ fun Entity.toDetails(context: FeedContext? = null): List<EntityDetail> = when (t
     is EventLocation -> eventDetailsOf(
         startsAt, cost, url, tag,
         locationName = locationLabel.takeIf { context !is FeedContext.Location },
-        locationUrl = Url(LocationRoute(locationSlug).toRelativePath()),
+        locationRoute = LocationRoute(locationSlug),
     )
     is EventPost -> event.toDetails(context)
     is Event -> eventDetailsOf(startsAt, cost, url, tag, null)
@@ -72,7 +74,7 @@ fun Entity.toDetails(context: FeedContext? = null): List<EntityDetail> = when (t
 
 /**
  * The details of an event that are known: its day and time, its cost linking to [purchaseUrl] when it is not free, its
- * [tag], and [locationName] linking to [locationUrl].
+ * [tag], and [locationName] linking to [locationRoute].
  */
 fun eventDetailsOf(
     startsAt: Instant?,
@@ -80,13 +82,13 @@ fun eventDetailsOf(
     purchaseUrl: Url?,
     tag: EventTag?,
     locationName: String?,
-    locationUrl: Url? = null,
+    locationRoute: WebRoute? = null,
 ) = listOfNotNull(
     startsAt?.let { EntityDetail(it.toFutureFormat(), SvgFile.Calendar.small, isPriority = true) },
     startsAt?.let { EntityDetail(it.toTimeFormat(), SvgFile.Clock.small, isPriority = true) },
     cost?.let { costDetailOf(it, purchaseUrl) },
     tag?.let { EntityDetail(it.label, SvgFile.Label.small) },
-    locationName?.let { EntityDetail(it, SvgFile.MapPin.small, type = EntityType.Location, url = locationUrl) },
+    locationName?.let { EntityDetail(it, SvgFile.MapPin.small, type = EntityType.Location, route = locationRoute) },
 )
 
 /** The details of a location that are known: its [mapType], its [city], and its [eventCount] when it has events. */

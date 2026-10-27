@@ -26,7 +26,7 @@ import streetlight.model.data.EntityDetail
  * The facts of an entity as a grid of icon cells, followed by a cell of [buttons] that fills the rest of its row.
  * Nothing renders when both are empty.
  *
- * A cell with a url is a link.
+ * A cell with a route or a url is a link.
  */
 fun FlowContent.cellGrid(
     cells: List<EntityDetail>?,
@@ -36,14 +36,14 @@ fun FlowContent.cellGrid(
     if (cells.isNullOrEmpty() && buttons.isNullOrEmpty()) return
     div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, SchemeBg, mod)) {
         cells?.forEach { cell ->
-            when (val url = cell.url) {
+            when (val path = cell.route?.toRelativePath() ?: cell.url?.value) {
                 null -> row(CellGrid.CellMod) {
                     cell.type?.let {
                         setStyle(Css.ColorScheme.of(it.cssValue))
                     }
                     cellContent(cell)
                 }
-                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) {
+                else -> navigation(path, modify(FlexRow, CellGrid.CellMod)) {
                     cell.type?.let {
                         setStyle(Css.ColorScheme.of(it.cssValue))
                     }

@@ -44,7 +44,7 @@ The whole entity of a location, media or event is read by its `EntityRef`, its `
 
 ## Entity Details
 
-The facts shown with an entity are `EntityDetail`s, built for both ships by `Entity.toDetails(context)` in `EntityDetail.kt`, for the `FeedContext` the entity is shown in, `null` outside a feed. A detail is a text after an icon, or after a label when it has no icon, or the text alone, with an optional link. Only known facts are given, so an entity's details vary with what it holds. The priority details come first and are marked `isPriority`: when the entity happens or what kind of thing it is.
+The facts shown with an entity are `EntityDetail`s, built for both ships by `Entity.toDetails(context)` in `EntityDetail.kt`, for the `FeedContext` the entity is shown in, `null` outside a feed. A detail is a text after an icon, or after a label when it has no icon, or the text alone, with an optional link: a `WebRoute` for a page of the site, or a `Url` for one that leaves it. Only known facts are given, so an entity's details vary with what it holds. The priority details come first and are marked `isPriority`: when the entity happens or what kind of thing it is.
 
 A detail's `type` is `null` for a fact of the entity itself, which takes the scheme color of where it is shown, and names the `EntityType` of another entity for a fact drawn from it, as an event's location, which takes that type's color. Quieting a detail, such as muting it, is the view's choice, not the detail's. A builder an edit's preview also uses, such as `eventDetailsOf`, is public beside `toDetails`.
 

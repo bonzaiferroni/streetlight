@@ -15,6 +15,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import streetlight.model.data.EntityDetail
+import streetlight.compose.model.currentPortal
+import streetlight.compose.model.toAppRoute
 import streetlight.compose.modifier.cardBg
 import streetlight.compose.modifier.padding
 
@@ -61,17 +63,24 @@ fun CellGrid(details: List<EntityDetail>, modifier: Modifier = Modifier) {
 
 /**
  * A cell: the detail's icon, or else its label, in its color or the scheme color at the start, then its text centered
- * in the rest. A cell whose url leaves the app opens it when clicked; a url within the app waits for routes.
+ * in the rest. A cell opens the app's page of its route when clicked, or else its url when it leaves the app.
  */
 @Composable
 private fun Cell(detail: EntityDetail) {
     val theme = currentTheme
     val color = detail.type?.let { theme.colors.colorOf(it) } ?: LocalSchemeColor.current
     val uriHandler = LocalUriHandler.current
+    val portal = currentPortal
+    val route = detail.route?.toAppRoute()
     val url = detail.url?.value?.takeIf { it.startsWith("http") }
+    val onClick = when {
+        route != null -> { -> portal.open(route) }
+        url != null -> { -> uriHandler.openUri(url) }
+        else -> null
+    }
     Row(
         modifier = Modifier.fillMaxSize()
-            .then(if (url != null) Modifier.clickable { uriHandler.openUri(url) } else Modifier)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .cardBg()
             .padding(1),
         horizontalArrangement = Arrangement.spacedBy(IconGap),
