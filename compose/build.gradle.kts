@@ -47,7 +47,8 @@ kotlin {
     }
 }
 
-// the app's resources, with the site's icons from www/icon as files/icon and its drawings from www/svg as files/svg
+// the app's resources, with the site's icons from www/icon as files/icon, its drawings from www/svg as files/svg, and its
+// favicon from www/favicon as the app's icon
 val syncComposeResources by tasks.registering(Sync::class) {
     from("src/commonMain/composeResources")
     from(rootProject.layout.projectDirectory.dir("www/icon")) {
@@ -55,6 +56,9 @@ val syncComposeResources by tasks.registering(Sync::class) {
     }
     from(rootProject.layout.projectDirectory.dir("www/svg")) {
         into("files/svg")
+    }
+    from(rootProject.layout.projectDirectory.file("www/favicon/foxicon.png")) {
+        into("drawable")
     }
     into(layout.buildDirectory.dir("generated/appComposeResources"))
 }
@@ -74,6 +78,8 @@ compose.desktop {
             targetFormats(TargetFormat.Deb, TargetFormat.Dmg, TargetFormat.Msi)
             packageName = "Streetlight"
             packageVersion = "1.0.0"
+            linux { iconFile.set(rootProject.layout.projectDirectory.file("www/favicon/foxicon.png")) }
+            windows { iconFile.set(rootProject.layout.projectDirectory.file("www/favicon/foxicon.ico")) }
         }
     }
 }

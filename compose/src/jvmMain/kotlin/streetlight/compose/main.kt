@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import org.jetbrains.compose.resources.painterResource
+import streetlight.compose.resources.Res
+import streetlight.compose.resources.foxicon
 import java.awt.Dimension
 import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.rememberPortal
@@ -25,6 +28,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             state = state,
             title = "Streetlight",
+            icon = painterResource(Res.drawable.foxicon),
             undecorated = true,
             onPreviewKeyEvent = portal::backOn,
         ) {

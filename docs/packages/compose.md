@@ -55,7 +55,7 @@ The desktop window reopens at the frame it last settled on, kept in the app file
 | Compose libraries | Catalog entries over direct coordinates, as `libs.compose.foundation`. The plugin's `compose.*` aliases are deprecated, except `compose.desktop.currentOs` |
 | Material | Excluded from `compose.desktop.currentOs`, which otherwise brings in `org.jetbrains.compose.material` |
 | MapLibre | The desktop needs Java 25, the JVM flag `--enable-native-access=ALL-UNNAMED`, and one native runtime: `maplibre-compose-runtime-vulkan-linux-x64` for Linux. Another desktop OS adds its own runtime |
-| Resources | `syncComposeResources` assembles `src/commonMain/composeResources`, `www/icon` and `www/svg` into a build directory, which `compose.resources.customDirectory` makes `commonMain`'s resources. A resource is added to `src/commonMain/composeResources`, never to the build directory |
+| Resources | `syncComposeResources` assembles `src/commonMain/composeResources`, `www/icon`, `www/svg` and the favicon's `www/favicon/foxicon.png`, as the drawable the window and the Linux package take for the app's icon, into a build directory, which `compose.resources.customDirectory` makes `commonMain`'s resources. A resource is added to `src/commonMain/composeResources`, never to the build directory |
 
 ## Workflows
 
