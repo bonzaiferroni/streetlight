@@ -55,18 +55,17 @@ fun HomeView() {
     // in grid mode the grid holds its items a unit from the edges, in place of the map's own padding
     val isGrid = mode == FeedMode.Grid
 
-    // the map is pinned, as the grid would otherwise dispose it when it scrolls away and start its renderer anew
     LazyStaggeredGridView(
         spacing = if (isGrid) theme.unit else theme.line,
         contentPadding = PaddingValues(if (isGrid) theme.unit else 0.dp),
     ) {
         fullItem { AppHeader() }
-        pinnedItem {
-            MapWindow(
+        fullItem {
+            MapSlot(
                 Modifier.fillMaxWidth()
                     .padding(if (isGrid) 0 else 1)
                     .height(theme.unit * MapHeightUnits)
-                    .borderRadius(2, moonShadow = true, outline = Outline.Mid)
+                    .borderRadius(2, moonShadow = true)
             )
         }
         fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }

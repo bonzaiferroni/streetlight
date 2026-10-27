@@ -21,6 +21,7 @@ import streetlight.compose.modifier.schemeBg
 import streetlight.model.data.EntityType
 import streetlight.model.data.Galaxy
 import streetlight.model.data.toDetails
+import streetlight.compose.model.GalaxyRoute
 
 /**
  * A small card of [galaxy], in the galaxy's scheme color: its image beside its name over its description, fading where
@@ -30,18 +31,21 @@ import streetlight.model.data.toDetails
 fun SmallGalaxyCard(galaxy: Galaxy, modifier: Modifier = Modifier) {
     val theme = currentTheme
     val description = galaxy.description?.value
+    val route = GalaxyRoute(galaxy.slug)
     CompositionLocalProvider(LocalSchemeColor provides EntityType.Galaxy) {
         Row(
-            modifier.fillMaxWidth()
+            modifier.sharedPart(route, SharedPart.Frame)
+                .fillMaxWidth()
                 .height(theme.unit * CardUnits)
                 .borderRadius(2, moonShadow = true, outline = Outline.Low)
                 .cardBg()
         ) {
-            ContainImage(galaxy.image, Modifier.weight(1f).fillMaxHeight())
+            ContainImage(galaxy.image, Modifier.weight(1f).fillMaxHeight().sharedPart(route, SharedPart.Image))
             Column(Modifier.weight(2f).fillMaxHeight()) {
                 Column(Modifier.weight(1f).padding(1)) {
                     BasicText(
                         text = galaxy.name,
+                        modifier = Modifier.sharedPart(route, SharedPart.Title),
                         style = theme.text.heading5.copy(lineHeight = 1.em),
                         color = { theme.colors.ink },
                         maxLines = 1,

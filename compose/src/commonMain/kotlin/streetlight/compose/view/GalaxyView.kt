@@ -94,9 +94,9 @@ private fun LazyStaggeredGridScope.layoutBlock(
         }
         PostsBlock, EventsBlock -> feedSection(page, mode)
         MapBlock -> fullItem {
-            MapWindow(
+            MapSlot(
                 Modifier.fillMaxWidth().padding(horizontal = side).height(currentTheme.unit * MapHeightUnits)
-                    .borderRadius(2, moonShadow = true, outline = Outline.Mid),
+                    .borderRadius(2, moonShadow = true),
                 center = content.galaxy.geoPoint,
             )
         }

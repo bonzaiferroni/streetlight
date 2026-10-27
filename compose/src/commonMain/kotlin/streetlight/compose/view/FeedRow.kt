@@ -85,11 +85,12 @@ private fun MinimalFeedRow(entity: Entity) {
     val (priority, rest) = entity.toDetails(feed).partition { it.isPriority }
 
     Row(1, FeedRowMod.Base.padding(1)) {
-        Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1))
+        Thumbnail(entity, Modifier.size(rowHeight).sharedPart(entity.toRoute(), SharedPart.Image).borderRadius(1))
         Column(Modifier.weight(1f)) {
             EntityDetails(priority, isColored = true)
             BasicText(
                 text = entity.label,
+                modifier = Modifier.sharedPart(entity.toRoute(), SharedPart.Title),
                 style = theme.text.heading5.copy(fontWeight = FontWeight.SemiBold, lineHeight = 1.15.em),
                 color = { theme.colors.ink },
                 maxLines = 1,
@@ -115,7 +116,7 @@ private fun RowFeedRow(entity: Entity) {
     Layout(
         content = {
             Row(1) {
-                Thumbnail(entity, Modifier.size(rowHeight).borderRadius(1, outline = Outline.Mid))
+                Thumbnail(entity, Modifier.size(rowHeight).sharedPart(entity.toRoute(), SharedPart.Image).borderRadius(1, outline = Outline.Mid))
                 EntityText(
                     entity = entity,
                     modifier = Modifier.weight(1f)
@@ -169,7 +170,7 @@ private fun GridFeedRow(entity: Entity) {
     val rowHeight = theme.unit * RowHeightUnits
 
     Column(1, FeedRowMod.GridBase.padding(bottom = 1)) {
-        ContainImage(entity.image, Modifier.fillMaxWidth().aspectRatio(entity.imageRatio).background(entity.tint))
+        ContainImage(entity.image, Modifier.fillMaxWidth().aspectRatio(entity.imageRatio).sharedPart(entity.toRoute(), SharedPart.Image).background(entity.tint))
         Row(1, Modifier.padding(horizontal = 1)) {
             EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
             FlairBadge(entity, rowHeight)
@@ -186,6 +187,7 @@ private fun EntityText(entity: Entity, modifier: Modifier) {
     Column(modifier) {
         BasicText(
             text = entity.label,
+            modifier = Modifier.sharedPart(entity.toRoute(), SharedPart.Title),
             style = theme.text.heading5.copy(fontWeight = FontWeight.SemiBold, lineHeight = 1.15.em),
             color = { theme.colors.ink },
             maxLines = 1,

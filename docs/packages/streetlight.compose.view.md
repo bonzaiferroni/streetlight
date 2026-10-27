@@ -89,6 +89,12 @@ A view declares its view model as the context parameter `model`, following `docs
 
 The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that opens a page reads `currentPortal` and calls it from `pointerClick`, as a feed row opens its entity's `toRoute()` and the logo of `AppHeader` returns `home()`. An entity the app has no page for opens nothing.
 
+## Motion
+
+A change of page fades the old page out over one `magic` interval, then the new one in over the next, as the web's portal does, and a return does the same. The new page's content is read from the start of the fade-out, so it is often ready as the page fades in; content that arrives later fades in within the page, and a loading message is held back for a moment so a quick read shows none.
+
+A part that a page shares with the page it opens moves between them, the container transform: `AppPortal` sets the stage, `LocalSharedTransitionScope`, and both pages mark the part with `sharedPart(route, part)`, keyed by the route of the page they lead to, so the two find each other without passing anything. A `Frame` and a `Title` share their bounds, their contents fading between; an `Image` is one element on both pages. A galaxy card's frame, image and name grow into the galaxy's header, and a feed row's image and title into its page's header. A part without a route shares nothing.
+
 ## Composables
 
 A view that scrolls is a `LazyGridView`, one lazy grid for the whole view, filled with sections built on `LazyGridScope`. `LazyStaggeredGridView` is its masonry cousin, each column stacking items of their own heights, filled with sections built on `LazyStaggeredGridScope`; a section is written for each scope it serves. On either, `fullItem` spans every column, and `pinnedItem` also stays composed off screen, for content costly to start anew. The home view is a `LazyStaggeredGridView`, its items a unit apart and a unit from its edges in `Grid` mode, so the rounded entries stand clear, and a line apart otherwise. The map and the feed heading stay where they are in either mode.
@@ -146,7 +152,7 @@ The app bundles the site's icons and drawings. The build syncs `www/icon` and `w
 
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
-A lazy layout disposes an item that scrolls away, which would close the map's native renderer and start it anew each time it returned, so a map is a `pinnedItem`.
+The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapSlot` where the map goes, its center and the radius of its corners; the slot holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's slot, fading out, moving and looking over the slot's center, then fading in, in step with the page. A slot leaves the host as soon as its page starts to leave, so the map fades out with it. A page never composes a map of its own, and a slot needs no pinning, since its leaving the composition costs nothing.
 
 ## Feed
 

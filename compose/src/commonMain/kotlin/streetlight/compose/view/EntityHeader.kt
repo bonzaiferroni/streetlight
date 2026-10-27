@@ -26,6 +26,7 @@ import streetlight.compose.modifier.zenBg
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityDetail
 import streetlight.model.data.toEntityType
+import streetlight.compose.model.toRoute
 
 /**
  * The header of [entity] on its page, in the entity's scheme color: its image beside its title, [descriptor] and
@@ -35,10 +36,11 @@ import streetlight.model.data.toEntityType
 @Composable
 fun EntityHeader(entity: Entity, descriptor: String, details: List<EntityDetail>, modifier: Modifier = Modifier) {
     val theme = currentTheme
+    val route = entity.toRoute()
     CompositionLocalProvider(LocalSchemeColor provides entity.toEntityType()) {
-        Column(modifier.fillMaxWidth().borderRadius(2, moonShadow = true, outline = Outline.Mid).zenBg()) {
+        Column(modifier.sharedPart(route, SharedPart.Frame).fillMaxWidth().borderRadius(2, moonShadow = true, outline = Outline.Mid).zenBg()) {
             BoxWithConstraints {
-                val image = @Composable { imageModifier: Modifier -> ContainImage(entity.image, imageModifier) }
+                val image = @Composable { imageModifier: Modifier -> ContainImage(entity.image, imageModifier.sharedPart(route, SharedPart.Image)) }
                 val title = @Composable { titleModifier: Modifier -> HeaderTitle(entity, descriptor, titleModifier) }
                 if (maxWidth >= SideBySideWidth) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -68,6 +70,7 @@ private fun HeaderTitle(entity: Entity, descriptor: String, modifier: Modifier) 
     Column(modifier.padding(2), horizontalAlignment = Alignment.CenterHorizontally) {
         BasicText(
             entity.label,
+            Modifier.sharedPart(entity.toRoute(), SharedPart.Title),
             style = theme.text.heading2.copy(lineHeight = 1.em, textAlign = TextAlign.Center),
             color = { theme.colors.ink },
         )

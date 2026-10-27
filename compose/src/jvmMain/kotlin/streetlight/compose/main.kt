@@ -16,7 +16,7 @@ fun main() {
         Window(onCloseRequest = ::exitApplication, state = state, title = "Streetlight") {
             // MapLibre presents its native map through the window
             ProvideMapPresentationHost(rememberAwtComposeMapPresentationHost(window)) {
-                App()
+                App(overlay = { BackButton() })
             }
         }
     }

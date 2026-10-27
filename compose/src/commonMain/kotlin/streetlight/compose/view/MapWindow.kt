@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.koin.compose.koinInject
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.map.MaplibreMap
+import org.maplibre.compose.map.MapState
 import org.maplibre.compose.map.rememberMapState
 import org.maplibre.compose.overlay.DisappearingCompassButton
 import org.maplibre.compose.overlay.DisappearingScaleBar
@@ -25,23 +26,29 @@ import streetlight.compose.model.AppConfig
 import kotlin.math.hypot
 import kampfire.model.GeoPoint
 
+/** The state of the app's one map, in the site's fjord style read from the server as the web reads it. */
+@Composable
+fun rememberAppMapState(): MapState {
+    val config = koinInject<AppConfig>()
+    return rememberMapState(
+        baseStyle = BaseStyle.Uri(config.apiUrl + FjordStylePath),
+        initialCameraPosition = cameraPositionOf(null),
+    )
+}
+
+/** The camera looking over [center], or over Denver without one, at the web's pitch. */
+fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
+    center = center?.let { Position(longitude = it.lng, latitude = it.lat) } ?: Denver,
+    zoom = if (center != null) PointZoom else 11.0,
+    pitch = 45.0,
+)
+
 /**
- * The map in the site's fjord style, read from the server as the web reads it, looking over [center], or Denver without
- * one, at the web's pitch. The cousin of the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar,
+ * The map of [state]. The cousin of the web's `geoMapMount`, darkened toward its edges, with MapLibre's scale bar,
  * compass and attribution and without its logo.
  */
 @Composable
-fun MapWindow(modifier: Modifier = Modifier, center: GeoPoint? = null) {
-    val config = koinInject<AppConfig>()
-    val state = rememberMapState(
-        baseStyle = BaseStyle.Uri(config.apiUrl + FjordStylePath),
-        initialCameraPosition = CameraPosition(
-            center = center?.let { Position(longitude = it.lng, latitude = it.lat) } ?: Denver,
-            zoom = if (center != null) PointZoom else 11.0,
-            pitch = 45.0,
-        ),
-    )
-
+fun MapWindow(state: MapState, modifier: Modifier = Modifier) {
     // MapLibre Compose's default controls without its logo; the attribution of the map data stays
     MaplibreMap(
         modifier = modifier,

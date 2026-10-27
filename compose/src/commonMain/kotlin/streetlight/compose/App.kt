@@ -1,5 +1,6 @@
 package streetlight.compose
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import coil3.compose.setSingletonImageLoaderFactory
@@ -13,18 +14,24 @@ import streetlight.compose.model.LocalPortal
 import streetlight.compose.model.appModule
 import streetlight.compose.model.rememberPortal
 import streetlight.compose.view.AppPortal
+import streetlight.compose.view.MapHost
 import streetlight.compose.view.AppTheme
 
-/** The root of the app. */
+/** The root of the app, with a platform's [overlay] above its pages, such as the desktop's back button. */
 @Composable
-fun App() {
+fun App(overlay: @Composable () -> Unit = {}) {
     KoinApplication(configuration = koinConfiguration { modules(appModule) }) {
         val config = koinInject<AppConfig>()
         setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
 
         AppTheme {
             CompositionLocalProvider(LocalPortal provides rememberPortal(HomeRoute)) {
-                AppPortal()
+                MapHost {
+                    Box {
+                        AppPortal()
+                        overlay()
+                    }
+                }
             }
         }
     }
