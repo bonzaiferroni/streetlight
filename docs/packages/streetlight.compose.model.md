@@ -37,7 +37,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
 | `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
-| `MapMarker`, `ThumbMarker`, `IconMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
+| `MapMarker`, `ThumbMarker`, `IconMarker`, `EventMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
 
 ## Submodels
 

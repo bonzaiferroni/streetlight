@@ -38,6 +38,19 @@ data class ThumbMarker(
     val sublabel: String? = null,
 ) : MapMarker
 
+/** A [MapMarker] of an event, drawn as the thumbnail at [thumb], its [sublabel] after its type, and its [locationName]. */
+data class EventMarker(
+    override val markerId: MarkerId,
+    override val geoPoint: GeoPoint,
+    override val label: String,
+    override val typeLabel: String,
+    val thumb: Url?,
+    val sublabel: String?,
+    val locationName: String?,
+) : MapMarker {
+    override val type get() = EntityType.Event
+}
+
 /** A [MapMarker] drawn as its [svg]. */
 data class IconMarker(
     override val markerId: MarkerId,
@@ -52,9 +65,9 @@ data class IconMarker(
 fun Entity.toMarker(): MapMarker? {
     val markerId = markerId ?: return null
     return when (this) {
-        is EventLocation -> ThumbMarker(
-            markerId, geoPoint, label, tag?.label ?: "Event", EntityType.Event,
-            image.let { it.thumb ?: it.url }, startsAt?.toFutureFormat(),
+        is EventLocation -> EventMarker(
+            markerId, geoPoint, label, tag?.label ?: "Event",
+            image.let { it.thumb ?: it.url }, startsAt?.toFutureFormat(), locationName,
         )
         is EventPost -> event.toMarker()
         is Location -> IconMarker(markerId, geoPoint, label, mapType ?: "Location", EntityType.Location, SvgFile.MapPin.small)
@@ -67,9 +80,9 @@ fun Entity.toMarker(): MapMarker? {
         is Galaxy -> ThumbMarker(markerId, geoPoint, name, "Galaxy", EntityType.Galaxy, image?.let { it.thumb ?: it.url })
         is EventGroup -> when (startsAt) {
             null -> IconMarker(markerId, geoPoint, label, tag?.label ?: "Event", EntityType.Location, SvgFile.MapPin.small)
-            else -> ThumbMarker(
-                markerId, geoPoint, label, tag?.label ?: "Event", EntityType.Event,
-                image?.let { it.thumb ?: it.url }, startsAt?.toFutureFormat(),
+            else -> EventMarker(
+                markerId, geoPoint, label, tag?.label ?: "Event",
+                image?.let { it.thumb ?: it.url }, startsAt?.toFutureFormat(), locationName,
             )
         }
         else -> null
