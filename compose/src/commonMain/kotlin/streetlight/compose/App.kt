@@ -1,6 +1,5 @@
 package streetlight.compose
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import coil3.compose.setSingletonImageLoaderFactory
@@ -11,27 +10,26 @@ import streetlight.compose.io.buildImageLoader
 import streetlight.compose.model.AppConfig
 import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.LocalPortal
+import streetlight.compose.model.Portal
 import streetlight.compose.model.appModule
 import streetlight.compose.model.rememberPortal
 import streetlight.compose.view.AppPortal
 import streetlight.compose.view.MapHost
 import streetlight.compose.view.AppTheme
 
-/** The root of the app, with a platform's [overlay] above its pages, such as the desktop's back button. */
+/**
+ * The root of the app, moving through [portal], below a platform's [bar], such as the desktop window's title bar. A
+ * platform that answers back on its own, as the desktop window does on its keys, makes the portal and passes it in.
+ */
 @Composable
-fun App(overlay: @Composable () -> Unit = {}) {
+fun App(portal: Portal = rememberPortal(HomeRoute), bar: @Composable () -> Unit = {}) {
     KoinApplication(configuration = koinConfiguration { modules(appModule) }) {
         val config = koinInject<AppConfig>()
         setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
 
-        AppTheme {
-            CompositionLocalProvider(LocalPortal provides rememberPortal(HomeRoute)) {
-                MapHost {
-                    Box {
-                        AppPortal()
-                        overlay()
-                    }
-                }
+        CompositionLocalProvider(LocalPortal provides portal) {
+            AppTheme(bar = bar) {
+                MapHost { AppPortal() }
             }
         }
     }

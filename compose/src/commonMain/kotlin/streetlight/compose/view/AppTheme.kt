@@ -39,13 +39,16 @@ import streetlight.model.data.PageBackgroundMode
 import streetlight.model.data.PageTheme
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 
 /**
  * Shows [content] over the background lights of the current [PageTheme], and provides the [KoalaAppTheme] read as
- * [currentTheme], sized from a rem chosen by the window's width.
+ * [currentTheme], sized from a rem chosen by the window's width, below a platform's [bar], such as the desktop window's
+ * title bar.
  */
 @Composable
-fun AppTheme(content: @Composable () -> Unit) {
+fun AppTheme(bar: @Composable () -> Unit = {}, content: @Composable () -> Unit) {
     val pageTheme by koinInject<ThemeHost>().themeState.collectAsState()
 
     val accentState = animateColorAsState(pageTheme.accent.toColor(), themeTransition())
@@ -76,13 +79,16 @@ fun AppTheme(content: @Composable () -> Unit) {
         CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme, LocalPageHaze provides pageHaze) {
             // the page, paper and lights and all, is what a floating card blurs behind itself; the paper keeps the capture
             // opaque, so the blur covers what lies behind the card
-            Box(Modifier.fillMaxSize().hazeSource(pageHaze).background(paper)) {
-                Spacer(
-                    Modifier.fillMaxSize()
-                        .graphicsLayer()
-                        .drawBehind { drawLights(lights) }
-                )
-                content()
+            Column(Modifier.fillMaxSize()) {
+                bar()
+                Box(Modifier.fillMaxWidth().weight(1f).hazeSource(pageHaze).background(paper)) {
+                    Spacer(
+                        Modifier.fillMaxSize()
+                            .graphicsLayer()
+                            .drawBehind { drawLights(lights) }
+                    )
+                    content()
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
@@ -58,6 +59,8 @@ fun MapHost(content: @Composable () -> Unit) {
     val state = rememberAppMapState()
     val active = host.active
     var shown by remember { mutableStateOf<MapSlotState?>(null) }
+    // the slots report their bounds in the root, and the map is placed in the host, which may sit below a bar
+    var origin by remember { mutableStateOf(Offset.Zero) }
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(active) {
@@ -68,7 +71,7 @@ fun MapHost(content: @Composable () -> Unit) {
     }
 
     CompositionLocalProvider(LocalMapHost provides host) {
-        Box {
+        Box(Modifier.onGloballyPositioned { origin = it.positionInRoot() }) {
             content()
             val slot = shown
             MapWindow(
@@ -81,7 +84,7 @@ fun MapHost(content: @Composable () -> Unit) {
                         val height = bounds.height.toInt().coerceAtLeast(1)
                         val placeable = measurable.measure(Constraints.fixed(width, height))
                         layout(constraints.maxWidth, constraints.maxHeight) {
-                            placeable.place(bounds.left.toInt(), bounds.top.toInt())
+                            placeable.place((bounds.left - origin.x).toInt(), (bounds.top - origin.y).toInt())
                         }
                     }
                     .graphicsLayer { this.alpha = alpha.value }
