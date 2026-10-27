@@ -59,7 +59,7 @@ context(feed: FeedContext?)
 fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
     val route = entity.toRoute()
     val portal = currentPortal
-    CompositionLocalProvider(LocalSchemeColor provides entity.toEntityType()) {
+    CompositionLocalProvider(LocalSchemeColor provides currentTheme.colors.colorOf(entity.toEntityType())) {
         Box(if (route != null) Modifier.pointerClick { portal.open(route) } else Modifier) {
             when (mode) {
                 FeedMode.Minimal -> MinimalFeedRow(entity)
@@ -247,7 +247,7 @@ private fun EntityDetails(details: List<EntityDetail>, isColored: Boolean, modif
     val text = buildAnnotatedString {
         details.forEachIndexed { index, detail ->
             if (index > 0) withStyle(SpanStyle(color = theme.colors.muted)) { append(" · ") }
-            val color = if (isColored) theme.colors.colorOf(detail.type ?: scheme) else theme.colors.ink
+            val color = if (isColored) detail.type?.let { theme.colors.colorOf(it) } ?: scheme else theme.colors.ink
             withStyle(SpanStyle(color = color)) {
                 detail.label?.let { append("$it ") }
                 append(detail.text)

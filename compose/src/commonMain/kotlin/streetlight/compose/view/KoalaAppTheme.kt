@@ -7,8 +7,8 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import streetlight.model.data.EntityType
 import dev.chrisbanes.haze.HazeState
+import androidx.compose.ui.graphics.Color
 
 /**
  * The app's theme: the spacing [unit], the [text] styles, the [colors], the [opacity] levels, the page's [lights], its [magic], and the [line]:
@@ -29,8 +29,11 @@ class KoalaAppTheme(
 
 val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No KoalaAppTheme provided") }
 
-/** The entity type whose color is the scheme color of the content within, as the web's `--color-scheme`, or `null`. */
-val LocalSchemeColor = staticCompositionLocalOf<EntityType?> { null }
+/**
+ * The scheme color of the content within, as the web's `--color-scheme`: the ink of a neutral view, as [AppTheme]
+ * provides it, and an entity's color within a layout that shows the entity, such as a feed row or a page header.
+ */
+val LocalSchemeColor = staticCompositionLocalOf<Color> { error("No scheme color provided") }
 
 /** The page whose drawing a floating card blurs behind itself, captured where [AppTheme] draws the page. */
 val LocalPageHaze = staticCompositionLocalOf<HazeState> { error("No page HazeState provided") }

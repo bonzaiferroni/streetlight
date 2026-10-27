@@ -66,7 +66,7 @@ fun CellGrid(details: List<EntityDetail>, modifier: Modifier = Modifier) {
 @Composable
 private fun Cell(detail: EntityDetail) {
     val theme = currentTheme
-    val color = detail.type ?: LocalSchemeColor.current
+    val color = detail.type?.let { theme.colors.colorOf(it) } ?: LocalSchemeColor.current
     val uriHandler = LocalUriHandler.current
     val url = detail.url?.value?.takeIf { it.startsWith("http") }
     Row(
@@ -80,11 +80,11 @@ private fun Cell(detail: EntityDetail) {
         val svg = detail.svg
         val label = detail.label
         when {
-            svg != null -> Icon(svg = svg, color = { theme.colors.colorOf(color) })
+            svg != null -> Icon(svg = svg, color = { color })
             label != null -> BasicText(
                 text = label,
                 style = theme.text.small,
-                color = { theme.colors.colorOf(color) },
+                color = { color },
                 maxLines = 1,
             )
         }

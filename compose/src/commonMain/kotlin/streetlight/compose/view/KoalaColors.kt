@@ -36,6 +36,7 @@ class KoalaColors(
     val red = Koala.red.toColor()
     val dangerBg = red.mixSrgb(paper, 0.75f)
     val inkDisabled = ink.mixSrgb(paper, 0.5f)
+    val voidBg = paper.mixSrgb(ink, 0.89f)
     val muted = ink.copy(alpha = opacity.high)
     val outlineLow = ink.copy(alpha = 0.1f)
     val outlineMid = ink.copy(alpha = 0.2f)

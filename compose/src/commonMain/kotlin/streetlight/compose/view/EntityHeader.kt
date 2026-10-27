@@ -37,7 +37,7 @@ import streetlight.compose.model.toRoute
 fun EntityHeader(entity: Entity, descriptor: String, details: List<EntityDetail>, modifier: Modifier = Modifier) {
     val theme = currentTheme
     val route = entity.toRoute()
-    CompositionLocalProvider(LocalSchemeColor provides entity.toEntityType()) {
+    CompositionLocalProvider(LocalSchemeColor provides theme.colors.colorOf(entity.toEntityType())) {
         Column(modifier.sharedPart(route, SharedPart.Frame).fillMaxWidth().borderRadius(2, moonShadow = true, outline = Outline.Mid).zenBg()) {
             BoxWithConstraints {
                 val image = @Composable { imageModifier: Modifier -> ContainImage(entity.image, imageModifier.sharedPart(route, SharedPart.Image)) }

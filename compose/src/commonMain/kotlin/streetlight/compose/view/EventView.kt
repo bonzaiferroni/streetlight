@@ -43,12 +43,17 @@ fun EventView(event: EventLocation) {
     Column(2, Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 1)) {
         AppHeader()
         EntityHeader(event, "at", event.headerDetails)
-        Tabs(
-            listOf(
-                "Location" to { EventLocationTab(event) },
-                "Comments" to { BasicText("coming soon", Modifier.fillMaxWidth(), style = theme.text.regular.copy(textAlign = TextAlign.Center), color = { theme.colors.ink }) },
-            )
-        )
+        Tabs {
+            tab("Location") { EventLocationTab(event) }
+            tab("Comments") {
+                BasicText(
+                    "coming soon",
+                    Modifier.fillMaxWidth(),
+                    style = theme.text.regular.copy(textAlign = TextAlign.Center),
+                    color = { theme.colors.ink },
+                )
+            }
+        }
         AppFooter(EventViewSource, Modifier.padding(top = 8))
     }
 }

@@ -32,7 +32,7 @@ fun SmallGalaxyCard(galaxy: Galaxy, modifier: Modifier = Modifier) {
     val theme = currentTheme
     val description = galaxy.description?.value
     val route = GalaxyRoute(galaxy.slug)
-    CompositionLocalProvider(LocalSchemeColor provides EntityType.Galaxy) {
+    CompositionLocalProvider(LocalSchemeColor provides theme.colors.colorOf(EntityType.Galaxy)) {
         Row(
             modifier.sharedPart(route, SharedPart.Frame)
                 .fillMaxWidth()

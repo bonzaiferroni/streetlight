@@ -76,7 +76,11 @@ fun AppTheme(bar: @Composable () -> Unit = {}, content: @Composable () -> Unit) 
         }
 
         val pageHaze = rememberHazeState()
-        CompositionLocalProvider(LocalKoalaAppTheme provides koalaAppTheme, LocalPageHaze provides pageHaze) {
+        CompositionLocalProvider(
+            LocalKoalaAppTheme provides koalaAppTheme,
+            LocalPageHaze provides pageHaze,
+            LocalSchemeColor provides koalaAppTheme.colors.ink,
+        ) {
             // the page, paper and lights and all, is what a floating card blurs behind itself; the paper keeps the capture
             // opaque, so the blur covers what lies behind the card
             Column(Modifier.fillMaxSize()) {

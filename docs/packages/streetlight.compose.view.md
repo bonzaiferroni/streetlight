@@ -52,7 +52,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `ConnectPicker` | `connectPicker` (`streetlight.web.component`) |
 | `AppFooter` | `appFooter` (`streetlight.web.page`), without its lottie |
 | `EntityHeader` | `entityHeader` and its `pageHeader` card (`streetlight.web.layout`) |
-| `Tabs` | `tabs` (`koala.layout`) |
+| `Tabs`, `TabScope`, `tab` | `tabs`, its `TabScope` and `tab` (`koala.layout`) |
 | `GalaxyView`, its `layoutBlock` | `galaxyShell` and `renderLayout` (`streetlight.web.layout`) |
 | `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
@@ -89,6 +89,10 @@ A view declares its view model as the context parameter `model`, following `docs
 
 The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that opens a page reads `currentPortal` and calls it from `pointerClick`, as a feed row opens its entity's `toRoute()` and the logo of `AppHeader` returns `home()`. An entity the app has no page for opens nothing.
 
+## Tabs
+
+`Tabs` is a layout, not a view: it takes no model, and its lambda builds the tabs on a `TabScope` with `tab(label, icon) { content }`, as the web's does. The buttons share the container's width, wrapping below the web's 100px each, and the chosen tab's content slides in a short way from the side its button lies on as the other slides out the other way, never sweeping across the page. A tab remembers which is chosen across recomposition and a return to its page.
+
 ## Motion
 
 A change of page fades the old page out over one `magic` interval, then the new one in over the next, as the web's portal does, and a return does the same. The new page's content is read from the start of the fade-out, so it is often ready as the page fades in; content that arrives later fades in within the page, and a loading message is held back for a moment so a quick read shows none.
@@ -122,7 +126,7 @@ BasicText(text, color = { theme.colors.accent })
 
 A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. An `EntityType` is given its color by `KoalaColors.colorOf`, as the web gives it a custom property, and no type the primary color. `muted` is the ink at the web's `--opacity-high`.
 
-The scheme color of a part of the page is a context, as the web's `--color-scheme`: `LocalSchemeColor` holds the entity type that gives it, none unless provided, and a view whose content belongs to an entity provides the entity's, as `FeedRow` does. A modifier that paints in it, such as `schemeBg()`, reads it while drawing.
+The scheme color of a part of the page is a context, as the web's `--color-scheme`: `LocalSchemeColor` holds the resolved color. A view is neutral, so `AppTheme` provides the ink, and a layout that shows an entity provides the entity's color, `colorOf(entity.toEntityType())`, as `FeedRow`, `EntityHeader` and `SmallGalaxyCard` do, a typeless entity taking the primary color. A part that paints in it, such as `schemeBg()` or a tab's button, reads it as given.
 
 ### Typography
 

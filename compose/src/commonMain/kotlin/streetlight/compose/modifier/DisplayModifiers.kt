@@ -188,7 +188,7 @@ private data object SchemeBgElement : ModifierNodeElement<SchemeBgNode>() {
 private class SchemeBgNode : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     override fun ContentDrawScope.draw() {
         val colors = theme.colors
-        val scheme = colors.colorOf(currentValueOf(LocalSchemeColor))
+        val scheme = currentValueOf(LocalSchemeColor)
         val inner = scheme.mixSrgb(colors.paper, SchemeCenterMix)
         val outer = scheme.mixSrgb(colors.paper, SchemeEdgeMix)
         // the web's color hint, its curve traced in stops
