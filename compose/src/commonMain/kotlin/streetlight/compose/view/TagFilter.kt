@@ -34,10 +34,10 @@ import streetlight.model.data.EventTag
 /**
  * The tag that filters a feed, bound to [state]: a quiet button reading the tag with its flair, or "filter" with the
  * label flair without one, opening the [EventTagMenu] in a [Popover], then a control that clears the tag while one is
- * set. The cousin of the web's `tagFilterMenu`.
+ * set. The button draws [backdrop] within its shape, beneath its background. The cousin of the web's `tagFilterMenu`.
  */
 @Composable
-fun TagFilter(state: MutableTap<EventTag?>, modifier: Modifier = Modifier) {
+fun TagFilter(state: MutableTap<EventTag?>, modifier: Modifier = Modifier, backdrop: Modifier = Modifier) {
     val theme = currentTheme
     val tag by state.collectAsState()
     var isOpen by remember { mutableStateOf(false) }
@@ -45,7 +45,13 @@ fun TagFilter(state: MutableTap<EventTag?>, modifier: Modifier = Modifier) {
 
     Row(1, modifier, verticalAlignment = Alignment.CenterVertically) {
         Box {
-            Button(tag?.label ?: "filter", onClick = { isOpen = true }, style = ButtonStyle.Zen, flair = tag?.svg ?: SvgFile.Label)
+            Button(
+                tag?.label ?: "filter",
+                onClick = { isOpen = true },
+                style = ButtonStyle.Zen,
+                flair = tag?.svg ?: SvgFile.Label,
+                backdrop = backdrop,
+            )
             Popover(isOpen, onDismiss = { isOpen = false }) {
                 EventTagMenu(tag, category, onCategory = { category = it }) { chosen ->
                     state.set(chosen)

@@ -34,8 +34,9 @@ import androidx.compose.ui.graphics.shadow.Shadow as DropShadow
 
 /**
  * A button reading [text], with its [flair] before it when given, in [style], that calls [onClick] unless it is not
- * [isEnabled]. The cousin of the web's `btn` and `button`, which compose needs as one: a button that navigates and one
- * that acts are both a click.
+ * [isEnabled]. A [backdrop] is drawn within its shape beneath its background, such as a blur of what lies behind it.
+ * The cousin of the web's `btn` and `button`, which compose needs as one: a button that navigates and one that acts are
+ * both a click.
  */
 @Composable
 fun Button(
@@ -45,6 +46,7 @@ fun Button(
     style: ButtonStyle = ButtonStyle.Primary,
     flair: SvgPack? = null,
     isEnabled: Boolean = true,
+    backdrop: Modifier = Modifier,
 ) {
     val theme = currentTheme
     val colors = theme.colors
@@ -95,6 +97,7 @@ fun Button(
                     .dropShadow(shape, DropShadow(radius = 1.dp, color = Color.Black.copy(alpha = 0.2f), offset = DpOffset(1.dp, 1.dp)))
             )
             .clip(shape)
+            .then(backdrop)
             .background(background)
             .then(if (isQuiet) Modifier.border(theme.line, colors.outlineMid, shape) else Modifier)
             .clickable(enabled = isEnabled, role = Role.Button, interactionSource = null, indication = null, onClick = onClick)

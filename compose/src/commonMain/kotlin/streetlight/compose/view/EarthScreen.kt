@@ -79,8 +79,8 @@ private fun EarthOverlay() {
 }
 
 /**
- * The entities of the marker in focus, each a [FeedRow] in the `Row` mode, in a column that scrolls over the blurred
- * map, fading in and out with the focus. The cousin of the web's `earthFocus`.
+ * The entities of the marker in focus, the first featured and the rest each a [FeedRow] in the `Row` mode, in a column
+ * that scrolls over the blurred map, fading in and out with the focus. The cousin of the web's `earthFocus`.
  */
 @Composable
 context(model: EarthModel)
@@ -95,20 +95,21 @@ fun EarthFocus(modifier: Modifier = Modifier) {
     AnimatedVisibility(entities != null, modifier, enter = fadeIn(magic.eased()), exit = fadeOut(magic.eased())) {
         Column(
             Modifier.borderRadius(0, moonShadow = true, outline = Outline.Mid)
-                .hazeBlur(HazeInput.Sources(LocalMapHaze.current), FocusBlur)
+                .hazeBlur(HazeInput.Sources(LocalMapHaze.current), MapBlur)
                 .zenBg()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(theme.line),
         ) {
-            shown.forEach { entity ->
-                context(null as FeedContext?) { FeedRow(entity, FeedMode.Row) }
+            shown.forEachIndexed { index, entity ->
+                context(null as FeedContext?) { FeedRow(entity, FeedMode.Row, isFeatured = index == 0) }
             }
         }
     }
 }
 
 /**
- * The map's title in a filigree on a band of paper, over the tag filter and the search, dimmed while the map moves.
+ * The map's title in a filigree on a band of paper, over the tag filter and the search, each over the blurred map,
+ * dimmed while the map moves.
  * The cousin of the web's `earthHeader` and `earthControls`.
  */
 @Composable
@@ -139,9 +140,10 @@ fun EarthHeader() {
             )
         }
         Row(Modifier.fillMaxWidth().padding(1), verticalAlignment = Alignment.CenterVertically) {
-            TagFilter(model.tagState)
+            val blur = Modifier.hazeBlur(HazeInput.Sources(LocalMapHaze.current), MapBlur)
+            TagFilter(model.tagState, backdrop = blur)
             Spacer(Modifier.weight(1f))
-            SearchField(model.searchState)
+            SearchField(model.searchState, backdrop = blur)
         }
     }
 }
@@ -155,8 +157,11 @@ private val FocusWidth = 600.dp
 /** The share of the space below the header the focus may take on a narrow map, the web's `minmax(0, 5fr)` by `1fr`. */
 private const val NarrowFocusShare = 5f / 6
 
-/** The blur of the map behind the focus, twice the web's `--strong-blur` of 10px. */
-private val FocusBlur = HazeBlurStyle { blurRadius(20.dp) }
+/**
+ * The blur of the map behind the focus and the controls, the web's `--strong-blur` of 10px: CSS blurs to a deviation of
+ * its value, and Haze to about 0.58 of its radius.
+ */
+private val MapBlur = HazeBlurStyle { blurRadius(20.dp) }
 
 /** The height of the title's band in units, the web's `Height(8)`. */
 private const val TitleHeightUnits = 8

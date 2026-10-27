@@ -37,10 +37,16 @@ import streetlight.compose.utility.collectAsState
  * A pill five units tall holding the search icon before a field bound to [state], showing [placeholder] while empty and
  * unfocused, fading it out when focused, and a clear button while it holds text. It keeps the width of its placeholder
  * and the clear button until its text outgrows them. The field takes focus only when tapped, so the keyboard stays down
- * until wanted. The cousin of the web's `searchField`.
+ * until wanted. A [backdrop] is drawn within the pill beneath its background, such as a blur of what lies behind it.
+ * The cousin of the web's `searchField`.
  */
 @Composable
-fun SearchField(state: MutableTap<String>, modifier: Modifier = Modifier, placeholder: String = "search") {
+fun SearchField(
+    state: MutableTap<String>,
+    modifier: Modifier = Modifier,
+    placeholder: String = "search",
+    backdrop: Modifier = Modifier,
+) {
     val theme = currentTheme
     val text by state.collectAsState()
     val interactionSource = remember { MutableInteractionSource() }
@@ -64,6 +70,7 @@ fun SearchField(state: MutableTap<String>, modifier: Modifier = Modifier, placeh
     Row(
         1,
         modifier.clip(shape)
+            .then(backdrop)
             .background(theme.colors.zenBg)
             .border(theme.line, if (isFocused) theme.colors.primary else theme.colors.outlineMid, shape)
             .height(theme.unit * HeightUnits)

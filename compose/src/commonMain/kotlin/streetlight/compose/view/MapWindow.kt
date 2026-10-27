@@ -23,7 +23,6 @@ import org.maplibre.compose.interaction.ClickResult
 import org.maplibre.compose.interaction.MapInteractions
 import org.maplibre.compose.map.MapState
 import org.maplibre.compose.map.rememberMapState
-import org.maplibre.compose.overlay.DisappearingCompassButton
 import org.maplibre.compose.overlay.DisappearingScaleBar
 import org.maplibre.compose.overlay.ExpandingAttributionButton
 import org.maplibre.compose.overlay.MapOverlay
@@ -54,7 +53,7 @@ fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
 /**
  * The map of [state] with the markers of [markerMap], if any, and the page's [overlay] above all else. The cousin of
  * the web's `geoMapMount`, darkened toward its edges, its focus cleared by a click on the map itself, with MapLibre's
- * scale bar, compass and attribution and without its logo. The map and its markers are the [LocalMapHaze] source, so
+ * scale bar and attribution and without its logo or compass. The map and its markers are the [LocalMapHaze] source, so
  * the overlay, drawn beside the map rather than within it, may blur what lies beneath.
  */
 @Composable
@@ -68,10 +67,10 @@ fun MapWindow(state: MapState, markerMap: MarkerMap?, overlay: (@Composable () -
     }
 }
 
-/** The map of [state] with the markers of [markerMap] and MapLibre's controls. */
+/** The map of [state] with the markers of [markerMap] and MapLibre's scale bar and attribution. */
 @Composable
 private fun MapContent(state: MapState, markerMap: MarkerMap?, modifier: Modifier) {
-    // MapLibre Compose's default controls without its logo; the attribution of the map data stays
+    // MapLibre Compose's default controls without its logo or compass; the attribution of the map data stays
     MaplibreMap(
         modifier = modifier,
         state = state,
@@ -95,7 +94,6 @@ private fun MapContent(state: MapState, markerMap: MarkerMap?, modifier: Modifie
                     zoom = { state.cameraPosition.zoom },
                     modifier = Modifier.align(Alignment.TopStart),
                 )
-                DisappearingCompassButton(Modifier.align(Alignment.TopEnd))
                 ExpandingAttributionButton(Modifier.align(Alignment.BottomEnd))
             }
         },

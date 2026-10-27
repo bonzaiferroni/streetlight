@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.Layout
@@ -46,25 +45,31 @@ import streetlight.model.data.FeedContext
 import streetlight.compose.model.currentPortal
 import streetlight.compose.model.toRoute
 import streetlight.compose.modifier.pointerClick
+import kotlin.math.roundToInt
+import androidx.compose.ui.layout.layout
 
 /** The layouts of a feed row, the cousin of the web's `FeedMode`. */
 enum class FeedMode { Minimal, Row, Grid }
 
 /**
  * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in,
- * opening the entity's page when the app has one. The cousin of the web's `feedRow`.
+ * opening the entity's page when the app has one. A row [isFeatured] takes the `Grid` layout in any mode, square, its
+ * text clipped at 24 units. The cousin of the web's `feedRow` and its `FeedRowStyle.Featured`.
  */
 @Composable
 context(feed: FeedContext?)
-fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal) {
+fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal, isFeatured: Boolean = false) {
     val route = entity.toRoute()
     val portal = currentPortal
     CompositionLocalProvider(LocalSchemeColor provides currentTheme.colors.colorOf(entity.toEntityType())) {
         Box(if (route != null) Modifier.pointerClick { portal.open(route) } else Modifier) {
-            when (mode) {
-                FeedMode.Minimal -> MinimalFeedRow(entity)
-                FeedMode.Row -> RowFeedRow(entity)
-                FeedMode.Grid -> GridFeedRow(entity)
+            when {
+                isFeatured -> GridFeedRow(entity, FeedRowMod.FeaturedBase, FeaturedTextUnits)
+                else -> when (mode) {
+                    FeedMode.Minimal -> MinimalFeedRow(entity)
+                    FeedMode.Row -> RowFeedRow(entity)
+                    FeedMode.Grid -> GridFeedRow(entity, FeedRowMod.GridBase, RowHeightUnits)
+                }
             }
         }
     }
@@ -159,20 +164,26 @@ private fun RowFeedRow(entity: Entity) {
 }
 
 /**
- * An entry of a grid: the image across the top in its own shape, held between 1:2 and 4:1, whole over its backdrop; the
- * title over the description, clipped and fading as in the row, beside the flair badge; then the cells. The parts below the image are inset a unit at the
- * sides and stand a unit apart, and the entry's corners are rounded three units. The cousin of the web's `Grid` mode.
+ * An entry of a grid on [base]: the image across the top in its own shape, held between 3:4 and 4:1 and no taller
+ * than 48 units, whole over its backdrop; the title over the description, clipped at [textUnits] and fading, beside
+ * the flair badge; then the cells. The parts below the image are inset a unit at the sides and stand a unit apart. The cousin of the web's `Grid` mode.
  */
 @Composable
 context(feed: FeedContext?)
-private fun GridFeedRow(entity: Entity) {
+private fun GridFeedRow(entity: Entity, base: Modifier, textUnits: Int) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
-    Column(1, FeedRowMod.GridBase.padding(bottom = 1)) {
-        ContainImage(entity.image, Modifier.fillMaxWidth().aspectRatio(entity.imageRatio).sharedPart(entity.toRoute(), SharedPart.Image).background(entity.tint))
+    Column(1, base.padding(bottom = 1)) {
+        ContainImage(
+            entity.image,
+            Modifier.fillMaxWidth()
+                .aspectHeight(entity.imageRatio, theme.unit * MaxImageHeightUnits)
+                .sharedPart(entity.toRoute(), SharedPart.Image)
+                .background(entity.tint),
+        )
         Row(1, Modifier.padding(horizontal = 1)) {
-            EntityText(entity, Modifier.weight(1f).fadeClip(RowHeightUnits))
+            EntityText(entity, Modifier.weight(1f).fadeClip(textUnits))
             FlairBadge(entity, rowHeight)
         }
         CellGrid(entity.toDetails(feed), FeedRowMod.Cells)
@@ -260,6 +271,9 @@ private fun EntityDetails(details: List<EntityDetail>, isColored: Boolean, modif
 /** The height of a row in units, the web's `--row-height`, which the thumbnail fills and the text is clipped at. */
 private const val RowHeightUnits = 10
 
+/** The height a featured row's text is clipped at in units, the web's `--clip` of `FeedRowStyle.Featured`. */
+private const val FeaturedTextUnits = 24
+
 /** The height of a minimal row in units, the web's `--row-height` in `Minimal`. */
 private const val MinimalRowHeightUnits = 8
 
@@ -272,13 +286,25 @@ private val WideRowWidth = 960.dp
 /** The shape of a grid entry's image when it has none of its own: the web's `aspect-ratio: 3 / 2`. */
 private const val GridImageRatio = 3f / 2f
 
+/** The tallest a grid entry's image may be in units, whatever its width. */
+private const val MaxImageHeightUnits = 48
+
+/** The full width given, and the height [ratio] gives it, width over height, but no more than [maxHeight]. */
+private fun Modifier.aspectHeight(ratio: Float, maxHeight: Dp) = layout { measurable, constraints ->
+    val width = constraints.maxWidth
+    val height = (width / ratio).roundToInt().coerceAtMost(maxHeight.roundToPx())
+    val placeable = measurable.measure(Constraints.fixed(width, height))
+    layout(width, height) { placeable.place(0, 0) }
+}
+
 /** The tallest and the widest a grid entry's image may be, as width over height. */
-private const val MinImageRatio = 1f / 2f
+private const val MinImageRatio = 3f / 4f
 private const val MaxImageRatio = 4f
 
 /** The modifiers the feed rows share. */
 private object FeedRowMod {
     val Base = Modifier.fillMaxWidth().zenBg()
     val GridBase = Modifier.fillMaxWidth().borderRadius(3, moonShadow = true, outline = Outline.Low).heavyCardBg()
+    val FeaturedBase = Modifier.fillMaxWidth().borderRadius(0, moonShadow = true, outline = Outline.Low).heavyCardBg()
     val Cells = Modifier.padding(horizontal = 1).borderRadius(2.5, moonShadow = true, outline = Outline.Mid).schemeBg()
 }

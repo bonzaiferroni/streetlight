@@ -11,19 +11,22 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import androidx.compose.foundation.Image
+import coil3.compose.rememberAsyncImagePainter
 import koala.Image
 
 /**
- * Shows [image] whole, its `medium` variant contained over a blurred, scaled and dimmed backdrop of its `thumb`, which
- * fills the space the image leaves. The cousin of koala's `containImage`.
+ * Shows [image] whole, its `medium` variant contained over a blurred, scaled and dimmed backdrop of itself, which fills
+ * the space the image leaves. The variant is read once and drawn twice, so the image costs one request. The cousin of
+ * koala's `containImage`.
  */
 @Composable
 fun ContainImage(image: Image?, modifier: Modifier = Modifier) {
     Box(modifier.clipToBounds()) {
         if (image == null) return@Box
-        AsyncImage(
-            model = image.thumb ?: image.url,
+        val painter = rememberAsyncImagePainter(image.medium ?: image.url)
+        Image(
+            painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             colorFilter = BackdropDim,
@@ -34,8 +37,8 @@ fun ContainImage(image: Image?, modifier: Modifier = Modifier) {
                 }
                 .blur(BackdropBlur),
         )
-        AsyncImage(
-            model = image.medium ?: image.url,
+        Image(
+            painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxSize(),
