@@ -18,6 +18,8 @@ class Inflator(private val api: ApiClient) {
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
         is EventRoute -> api.event.readEventSlug(route.slug)
         is LocationRoute -> api.location.readLocationContent(route.slug)
+        // the earth reads its content as the camera moves, so its screen inflates nothing
+        EarthRoute -> Ok(Unit)
     }
 }
 

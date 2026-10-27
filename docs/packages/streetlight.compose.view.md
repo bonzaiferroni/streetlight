@@ -60,6 +60,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `GalaxyView`, its `layoutBlock` | `galaxyShell` and `renderLayout` (`streetlight.web.layout`) |
 | `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
 | `LocationView` | `locationShell` (`streetlight.web.shell`) |
+| `EarthView` | `viewEarth` (`streetlight.web.view`) |
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |

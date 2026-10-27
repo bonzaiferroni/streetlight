@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import streetlight.compose.model.EarthRoute
 import streetlight.compose.model.EventRoute
 import streetlight.compose.model.GalaxyRoute
 import streetlight.compose.model.HomeRoute
@@ -48,6 +49,7 @@ fun AppPortal() {
                     entry<GalaxyRoute> { GalaxyScreen(it) }
                     entry<EventRoute> { EventScreen(it) }
                     entry<LocationRoute> { LocationScreen(it) }
+                    entry<EarthRoute> { EarthScreen() }
                 },
             )
         }

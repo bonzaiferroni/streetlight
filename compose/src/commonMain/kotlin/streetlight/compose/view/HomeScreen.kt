@@ -27,6 +27,7 @@ import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 import streetlight.compose.model.currentPortal
 import streetlight.compose.model.GalaxyRoute
+import streetlight.compose.model.EarthRoute
 import streetlight.compose.modifier.pointerClick
 import streetlight.compose.model.HomeRoute
 import streetlight.model.data.HomeContent
@@ -77,13 +78,18 @@ fun HomeView() {
 }
 
 /**
- * The galaxy menu at the start, and the buttons to create a galaxy and a post at the end, which do nothing until the
- * app has their menus and routes. The cousin of the web's `galaxyMenu`, its Create Galaxy button and `createPostMenu`.
+ * The galaxy menu and a button to the earth at the start, and the buttons to create a galaxy and a post at the end, which
+ * do nothing until the app has their menus and routes. The cousin of the web's `galaxyMenu`, its Create Galaxy button and `createPostMenu`.
  */
 @Composable
 private fun HomeMenus(modifier: Modifier) {
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
+        val portal = currentPortal
+        Row(1) {
+            Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
+            // a passage to the earth until the app has its route dock
+            Button("earth", onClick = { portal.open(EarthRoute) }, style = ButtonStyle.Zen)
+        }
         Row(1) {
             Button("Create Galaxy", onClick = {}, style = ButtonStyle.Zen)
             Button("Create Post", onClick = {}, style = ButtonStyle.Zen)

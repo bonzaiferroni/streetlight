@@ -24,6 +24,9 @@ data class EventRoute(val slug: Slug) : AppRoute
 @Serializable
 data class LocationRoute(val slug: Slug) : AppRoute
 
+@Serializable
+data object EarthRoute : AppRoute
+
 /** The app's route to the page of this web route, `null` for a page the app does not have. */
 fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyRoute -> GalaxyRoute(slug)
