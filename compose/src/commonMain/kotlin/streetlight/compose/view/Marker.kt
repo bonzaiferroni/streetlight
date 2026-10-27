@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -165,7 +166,8 @@ private fun GeoPoint.toWorldPoint(): Offset {
 }
 
 /**
- * The [marker] at its point: its body centered there, its label beside it, grown by half while it [isFocused]. The
+ * The [marker] at its point: its body centered there, its label beside it, grown by half while it [isFocused]. It
+ * fades in as it comes into view, as the web's marker body does on its `@starting-style`. The
  * cousin of the web's `configureThumbMarker` and `configureIconMarker`.
  */
 @Composable
@@ -175,6 +177,8 @@ fun MapOverlayScope.Marker(marker: MapMarker, isFocused: Boolean, onClick: () ->
     val bodySize = marker.bodySize
     val half = with(LocalDensity.current) { (bodySize / 2).roundToPx() }
     val scale by animateFloatAsState(if (isFocused) FocusScale else 1f, theme.magic.bounced())
+    val appear = remember { Animatable(0f) }
+    LaunchedEffect(Unit) { appear.animateTo(1f, theme.magic.eased()) }
     val labelStyle = theme.text.regular.copy(
         fontWeight = FontWeight.Bold,
         shadow = Shadow(theme.colors.paper, blurRadius = LabelShadowBlur),
@@ -186,6 +190,7 @@ fun MapOverlayScope.Marker(marker: MapMarker, isFocused: Boolean, onClick: () ->
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale
+                alpha = appear.value
                 transformOrigin = TransformOrigin(half.toFloat() / size.width, 0.5f)
             }
             .pointerClick(onClick),

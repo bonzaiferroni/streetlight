@@ -29,6 +29,11 @@ import streetlight.compose.modifier.borderRadius
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.compose.runtime.snapshotFlow
 import kampfire.model.GeoRect
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.geometry.lerp
+import androidx.compose.ui.util.lerp
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.koinInject
 import org.maplibre.compose.camera.CameraUpdate
@@ -60,9 +65,11 @@ val LocalMapHost = staticCompositionLocalOf<MapHostState> { error("No MapHost pr
 
 /**
  * Holds the app's one map above [content] for as long as the app runs, so a page that shows the map never starts its
- * renderer. The map shows in the mount of the latest page that holds one, in its rounded frame and outline: it fades
- * out, moves to the mount, shows the mount's markers through [GeoMap] and looks over its center, then fades in, as a page
- * does. Without a mount it stays, unseen. It applies the camera's pans and reports where it looks, the cousin of the
+ * renderer. The map shows in the mount of the latest page that holds one, in its rounded frame and outline. When the
+ * mount it shows in and the new one are both in the window, its frame grows or shrinks from one to the other as the
+ * pages fade beneath it, gliding to the new mount's center, with the new mount's markers from the start. Otherwise
+ * it fades out, moves to the mount, shows the mount's markers through [GeoMap] and looks over its center, then fades in,
+ * as a page does. Without a mount it stays, unseen. It applies the camera's pans and reports where it looks, the cousin of the
  * web's `wireGeoMap`.
  */
 @Composable
@@ -75,10 +82,29 @@ fun MapHost(content: @Composable () -> Unit) {
     val active = host.active
     var shown by remember { mutableStateOf<MapMountState?>(null) }
     // the mounts report their bounds in the root, and the map is placed in the host, which may sit below a bar
-    var origin by remember { mutableStateOf(Offset.Zero) }
+    var window by remember { mutableStateOf(Rect.Zero) }
     val alpha = remember { Animatable(0f) }
+    var morph by remember { mutableStateOf<MapMorph?>(null) }
+    val progress = remember { Animatable(0f) }
 
     LaunchedEffect(active) {
+        // a morph cut short by a newer mount ends where it stands
+        morph = null
+        val from = shown
+        if (active != null && from != null && alpha.value == 1f && from.bounds.isWithin(window)) {
+            // a new mount reports its bounds once its page is laid out
+            val to = snapshotFlow { active.bounds }.first { it != Rect.Zero }
+            if (to.isWithin(window)) {
+                morph = MapMorph(from.bounds, from.radius, active)
+                shown = active
+                geoMap.show(active.markerMap)
+                progress.snapTo(0f)
+                launch { state.animateCamera(cameraUpdateOf(active.center)) }
+                progress.animateTo(1f, tween(magic.interval * 2, easing = magic.easing))
+                morph = null
+                return@LaunchedEffect
+            }
+        }
         alpha.animateTo(0f, magic.eased())
         shown = active
         geoMap.show(active?.markerMap)
@@ -109,25 +135,26 @@ fun MapHost(content: @Composable () -> Unit) {
     }
 
     CompositionLocalProvider(LocalMapHost provides host) {
-        Box(Modifier.onGloballyPositioned { origin = it.positionInRoot() }) {
+        Box(Modifier.onGloballyPositioned { window = Rect(it.positionInRoot(), it.size.toSize()) }) {
             content()
             val mount = shown
+            val radius = morph?.let { lerp(it.fromRadius, it.to.radius, progress.value) } ?: mount?.radius ?: 0f
             MapWindow(
                 state,
                 markerMap,
                 Modifier
                     .layout { measurable, constraints ->
                         // the map takes its mount's size and place, or a sliver while it has none
-                        val bounds = mount?.bounds ?: Rect(0f, 0f, 1f, 1f)
+                        val bounds = morph?.let { lerp(it.from, it.to.bounds, progress.value) } ?: mount?.bounds ?: Rect(0f, 0f, 1f, 1f)
                         val width = bounds.width.toInt().coerceAtLeast(1)
                         val height = bounds.height.toInt().coerceAtLeast(1)
                         val placeable = measurable.measure(Constraints.fixed(width, height))
                         layout(constraints.maxWidth, constraints.maxHeight) {
-                            placeable.place((bounds.left - origin.x).toInt(), (bounds.top - origin.y).toInt())
+                            placeable.place((bounds.left - window.left).toInt(), (bounds.top - window.top).toInt())
                         }
                     }
                     .graphicsLayer { this.alpha = alpha.value }
-                    .borderRadius(mount?.radius ?: 0f, outline = Outline.Mid),
+                    .borderRadius(radius, outline = Outline.Mid),
             )
         }
     }
@@ -152,6 +179,15 @@ fun MapMount(modifier: Modifier = Modifier, center: GeoPoint? = null, radius: Nu
     }
     Spacer(modifier.onGloballyPositioned { mount.bounds = Rect(it.positionInRoot(), it.size.toSize()) })
 }
+
+/** A change of the map's frame from the bounds [from] and corners [fromRadius] of the mount it left to the mount [to]. */
+private class MapMorph(val from: Rect, val fromRadius: Float, val to: MapMountState)
+
+/** Whether these bounds have area and lie within [window], as a mount the eye can follow does. */
+private fun Rect.isWithin(window: Rect) = width > 0f && height > 0f && window.contains(topLeft) && window.contains(bottomRight - Offset(1f, 1f))
+
+/** The camera update that looks over [center], as [cameraPositionOf] does. */
+private fun cameraUpdateOf(center: GeoPoint?) = cameraPositionOf(center).let { CameraUpdate(center = it.center, zoom = it.zoom) }
 
 /** The point of this position. */
 private fun Position.toGeoPoint() = GeoPoint(lng = longitude, lat = latitude)
