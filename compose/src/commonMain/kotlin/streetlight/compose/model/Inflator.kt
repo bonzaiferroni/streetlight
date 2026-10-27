@@ -17,6 +17,7 @@ class Inflator(private val api: ApiClient) {
         HomeRoute -> api.content.readHomeContent(null)
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
         is EventRoute -> api.event.readEventSlug(route.slug)
+        is LocationRoute -> api.location.readLocationContent(route.slug)
     }
 }
 

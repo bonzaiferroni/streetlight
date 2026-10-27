@@ -8,6 +8,7 @@ import androidx.navigation3.ui.NavDisplay
 import streetlight.compose.model.EventRoute
 import streetlight.compose.model.GalaxyRoute
 import streetlight.compose.model.HomeRoute
+import streetlight.compose.model.LocationRoute
 import streetlight.compose.model.currentPortal
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
@@ -46,6 +47,7 @@ fun AppPortal() {
                     entry<HomeRoute> { HomeScreen() }
                     entry<GalaxyRoute> { GalaxyScreen(it) }
                     entry<EventRoute> { EventScreen(it) }
+                    entry<LocationRoute> { LocationScreen(it) }
                 },
             )
         }

@@ -14,10 +14,7 @@ object DefaultLayout {
     val location = PageLayout(
         blocks = listOf(
             HeaderBlock(),
-            TabsBlock(listOf(
-                TabContent("events", listOf(EventsBlock)),
-                TabContent("directions", listOf(MapBlock))
-            )),
+            EventsBlock,
         ),
     )
     val media = PageLayout(

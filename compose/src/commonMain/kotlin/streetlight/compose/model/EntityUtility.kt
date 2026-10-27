@@ -37,5 +37,6 @@ fun Entity.toRoute(): AppRoute? = when (this) {
     is EventPost -> event.toRoute()
     is Event -> EventRoute(slug)
     is Galaxy -> GalaxyRoute(slug)
+    is Location -> LocationRoute(slug)
     else -> null
 }

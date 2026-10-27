@@ -16,3 +16,6 @@ data class GalaxyRoute(val slug: Slug) : AppRoute
 
 @Serializable
 data class EventRoute(val slug: Slug) : AppRoute
+
+@Serializable
+data class LocationRoute(val slug: Slug) : AppRoute

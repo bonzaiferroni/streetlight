@@ -176,15 +176,15 @@ Your content integrates seamlessly with Streetlight, and visitors to your subdom
 private val selfPathInfo by lazyMarkdown("""
 | Add your business to Streetlight. |
 |:---|
-| We've created a guided tour that will get you started. | 
 | **Free now, free later.** We are committed to an open and free platform. |
+| Follow a guided tour that will get you started. | 
 """)
 
 private val supportPathInfo by lazyMarkdown("""
 | We can build it for you. | 
 |:---|
-| We'll connect you to a web developer from your area. |
 | **Scaled to meet your needs.** We'll work with you to find a solution that fits your business. |
+| We'll connect you to a web developer from your area. |
 """)
 
 private val noAds = """
