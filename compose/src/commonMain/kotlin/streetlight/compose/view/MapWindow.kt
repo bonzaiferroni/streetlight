@@ -47,8 +47,11 @@ fun rememberAppMapState(): MapState {
 fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
     center = center?.toPosition() ?: Denver,
     zoom = if (center != null) PointZoom else 11.0,
-    pitch = 45.0,
+    pitch = MapPitch,
 )
+
+/** The pitch the map looks at, as the web's. */
+const val MapPitch = 45.0
 
 /**
  * The map of [state] with the markers of [markerMap], if any, and the page's [overlay] above all else. The cousin of

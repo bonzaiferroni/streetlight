@@ -19,7 +19,7 @@ fun GalaxyMapScreen(route: GalaxyMapRoute) = Inflated<GalaxyContent>(route) { co
 }
 
 /**
- * The view of [GalaxyMapRoute]: the map across the whole page, looking over the galaxy, with the markers of its feed,
+ * The view of [GalaxyMapRoute]: the map across the whole page, framing the markers of the galaxy's feed,
  * under its [MapTitle], and the [MapFocus] below it, in the galaxy's own theme.
  */
 @Composable
@@ -29,7 +29,8 @@ fun GalaxyMapView() {
     PageThemeEffect(galaxy.design?.theme)
     MapMount(
         Modifier.fillMaxSize(),
-        center = galaxy.geoPoint,
+        center = model.center,
+        area = model.area,
         radius = 0,
         markerMap = model.markerMap,
         overlay = { GalaxyMapOverlay() },

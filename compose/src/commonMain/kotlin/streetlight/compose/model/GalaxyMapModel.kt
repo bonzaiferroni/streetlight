@@ -13,4 +13,10 @@ class GalaxyMapModel(val content: GalaxyContent, geoMap: GeoMap) : ViewModel() {
     init {
         markerMap.setPoints(content.feed.entities)
     }
+
+    /** The area the map frames on arrival, `null` to look over [center]. */
+    val area = markerMap.area
+
+    /** The point the map looks over without an [area]: the only marker's, or the galaxy's. */
+    val center = markerMap.markersState.now.singleOrNull()?.geoPoint ?: content.galaxy.geoPoint
 }

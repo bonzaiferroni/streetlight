@@ -16,6 +16,7 @@ import streetlight.compose.view.AppPortal
 import streetlight.compose.view.MapHost
 import streetlight.compose.view.AppTheme
 import streetlight.compose.view.RouteDock
+import streetlight.compose.view.HelmBar
 import streetlight.compose.modifier.padding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,11 @@ fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
         setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
 
         CompositionLocalProvider(LocalPortal provides portal) {
-            AppTheme(bar = bar, overlay = { RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2)) }) {
+            AppTheme(bar = bar, overlay = {
+                RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2))
+                // the bar's menus open over the dock
+                HelmBar()
+            }) {
                 MapHost { AppPortal() }
             }
         }

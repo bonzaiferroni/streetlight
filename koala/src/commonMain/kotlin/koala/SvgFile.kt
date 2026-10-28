@@ -609,6 +609,7 @@ object SvgFile {
     val Food = svgOf("food")
     val Guitar = svgOf("guitar")
     val Helm = svgOf("helm")
+    val HelmAnimated = svgOf("helm-animated")
     val LogoFlame = svgOf("logo-flame")
     val LogoText = svgOf("logo-text")
     val LogoTextLight = svgOf("logo-text-light")

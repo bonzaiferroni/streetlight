@@ -37,6 +37,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.koinInject
 import org.maplibre.compose.camera.CameraUpdate
+import org.maplibre.compose.camera.CameraFit
+import org.maplibre.spatialk.geojson.BoundingBox
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.DpSize
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.math.abs
+import kotlin.time.Duration.Companion.seconds
 import org.maplibre.spatialk.geojson.Position
 import streetlight.compose.model.GeoCameraState
 import streetlight.compose.model.GeoMap
@@ -44,12 +52,20 @@ import streetlight.compose.model.MarkerMap
 import streetlight.compose.utility.collectAsState
 
 /**
- * A place on a page where the app's one map shows: its [bounds] in the root, the [center] the map looks over there, the
- * [radius] of its corners in units, the page's [markerMap], if any, and the [overlay] the page draws over the map.
+ * A place on a page where the app's one map shows: its [bounds] in the root, the [center] the map looks over there, or
+ * the [area] it frames, the [radius] of its corners in units, the page's [markerMap], if any, and the [overlay] the
+ * page draws over the map.
  */
-class MapMountState(center: GeoPoint?, radius: Float, markerMap: MarkerMap?, overlay: (@Composable () -> Unit)?) {
+class MapMountState(
+    center: GeoPoint?,
+    area: GeoRect?,
+    radius: Float,
+    markerMap: MarkerMap?,
+    overlay: (@Composable () -> Unit)?,
+) {
     var bounds by mutableStateOf(Rect.Zero)
     var center by mutableStateOf(center)
+    var area by mutableStateOf(area)
     var radius by mutableStateOf(radius)
     var markerMap by mutableStateOf(markerMap)
     var overlay by mutableStateOf(overlay)
@@ -80,6 +96,7 @@ fun MapHost(content: @Composable () -> Unit) {
     val state = rememberAppMapState()
     val geoMap = koinInject<GeoMap>()
     val markerMap by geoMap.markerMapState.collectAsState()
+    val density = LocalDensity.current
     val active = host.active
     var shown by remember { mutableStateOf<MapMountState?>(null) }
     // the mounts report their bounds in the root, and the map is placed in the host, which may sit below a bar
@@ -100,16 +117,30 @@ fun MapHost(content: @Composable () -> Unit) {
                 shown = active
                 geoMap.show(active.markerMap)
                 progress.snapTo(0f)
-                launch { state.animateCamera(cameraUpdateOf(active.center)) }
+                val area = active.area
+                if (area == null) launch { state.animateCamera(cameraUpdateOf(active.center)) }
                 progress.animateTo(1f, tween(magic.interval * 2, easing = magic.easing))
                 morph = null
+                // an area is fit to the frame the morph ends at
+                area?.let { state.animateCameraToBounds(it.toBoundingBox(), AreaFit) }
                 return@LaunchedEffect
             }
         }
         alpha.animateTo(0f, magic.eased())
         shown = active
         geoMap.show(active?.markerMap)
-        active?.let { state.setCameraPosition(cameraPositionOf(it.center)) }
+        active?.let { mount ->
+            when (val area = mount.area) {
+                null -> state.setCameraPosition(cameraPositionOf(mount.center))
+                else -> {
+                    // an area is fit once the map has taken the mount's size
+                    withTimeoutOrNull(ViewportWait) {
+                        snapshotFlow { state.viewport?.size }.first { size -> size != null && size.fits(mount.bounds, density) }
+                    }
+                    state.fitCameraToBounds(area.toBoundingBox(), AreaFit)
+                }
+            }
+        }
         if (active != null) alpha.animateTo(1f, magic.eased())
     }
 
@@ -117,6 +148,10 @@ fun MapHost(content: @Composable () -> Unit) {
         geoMap.camera.panFlow.collectLatest { pan ->
             state.animateCamera(CameraUpdate(center = pan.point.toPosition(), zoom = pan.zoom))
         }
+    }
+
+    LaunchedEffect(state) {
+        geoMap.camera.areaPanFlow.collectLatest { area -> state.animateCameraToBounds(area.toBoundingBox(), AreaFit) }
     }
 
     LaunchedEffect(state) {
@@ -163,7 +198,8 @@ fun MapHost(content: @Composable () -> Unit) {
 }
 
 /**
- * A mount where the app's one map shows on this page, looking over [center], or Denver without one, with corners of
+ * A mount where the app's one map shows on this page, framing [area], or else looking over [center], or Denver without
+ * one, with corners of
  * [radius] units, showing the markers of [markerMap] and the page's [overlay] above them, such as its controls. The
  * mount holds the map's place in the page's layout; the [MapHost] draws the map into it, and the overlay with it, since
  * the map is drawn above the page. It leaves the host as its page starts to leave, so the map fades out with the page.
@@ -172,13 +208,15 @@ fun MapHost(content: @Composable () -> Unit) {
 fun MapMount(
     modifier: Modifier = Modifier,
     center: GeoPoint? = null,
+    area: GeoRect? = null,
     radius: Number = 2,
     markerMap: MarkerMap? = null,
     overlay: (@Composable () -> Unit)? = null,
 ) {
     val host = LocalMapHost.current
-    val mount = remember { MapMountState(center, radius.toFloat(), markerMap, overlay) }
+    val mount = remember { MapMountState(center, area, radius.toFloat(), markerMap, overlay) }
     mount.center = center
+    mount.area = area
     mount.radius = radius.toFloat()
     mount.markerMap = markerMap
     mount.overlay = overlay
@@ -201,3 +239,17 @@ private fun cameraUpdateOf(center: GeoPoint?) = cameraPositionOf(center).let { C
 
 /** The point of this position. */
 private fun Position.toGeoPoint() = GeoPoint(lng = longitude, lat = latitude)
+
+/** The bounding box of this rectangle. */
+private fun GeoRect.toBoundingBox() = BoundingBox(sw.toPosition(), ne.toPosition())
+
+/** Whether this size matches [bounds] to within a pixel at [density]. */
+private fun DpSize.fits(bounds: Rect, density: Density) = with(density) {
+    abs(width.toPx() - bounds.width) <= 1f && abs(height.toPx() - bounds.height) <= 1f
+}
+
+/** The fit of an area, at the map's pitch, as [cameraPositionOf] looks. */
+private val AreaFit = CameraFit(pitch = MapPitch)
+
+/** The longest the host waits for the map to take a mount's size before fitting its area. */
+private val ViewportWait = 1.seconds

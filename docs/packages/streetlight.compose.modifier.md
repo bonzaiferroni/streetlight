@@ -16,6 +16,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 | Compose | Web |
 |---|---|
 | `borderRadius(n)` | `BorderRadius(n)`; its `moonShadow` flag gives `MoonShadow`, and its `outline` level gives `OutlineLow` or `Outline`, `--outline-low` or `--outline-mid` |
+| `borderRadius(topStart, topEnd, bottomEnd, bottomStart)` | `border-radius` with four values, in units |
 | `zenBg()`, `inkBg()`, `cardBg()`, `heavyCardBg()` | `ZenBg`, `InkBg`, `CardBg`, `HeavyCardBg` |
 | `shineBg()` | `ShineBg` |
 | `schemeBg()` | `SchemeBg` |

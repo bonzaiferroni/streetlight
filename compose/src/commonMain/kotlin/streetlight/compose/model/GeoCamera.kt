@@ -11,15 +11,24 @@ import kotlinx.coroutines.flow.SharedFlow
 class GeoCamera {
     private val store = storeOf(GeoCameraState())
     private val pans = MutableSharedFlow<PanPoint>(extraBufferCapacity = 1)
+    private val areaPans = MutableSharedFlow<GeoRect>(extraBufferCapacity = 1)
 
     val cameraState: Tap<GeoCameraState> = store
 
     /** The requests to pan, applied by the map as they come. */
     val panFlow: SharedFlow<PanPoint> = pans
 
+    /** The requests to frame an area, applied by the map as they come. */
+    val areaPanFlow: SharedFlow<GeoRect> = areaPans
+
     /** Pans the map to [point], at [zoom] when given. */
     fun pan(point: GeoPoint, zoom: Double? = null) {
         pans.tryEmit(PanPoint(point, zoom))
+    }
+
+    /** Pans the map to frame [area]. */
+    fun pan(area: GeoRect) {
+        areaPans.tryEmit(area)
     }
 
     /** Sets where the camera looks, as the map reports it. */

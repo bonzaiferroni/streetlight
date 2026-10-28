@@ -71,6 +71,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `RouteDock` | `viewRouteDock`, its main routes |
+| `HelmBar` | `helmBar` (`streetlight.web.page`) |
+| `HelmMenu` | `siteHelmPopover` and `siteMenuItems` (`streetlight.web.page`) |
+| `StarMenu` | `starHelmPopover` and the signed-out panel of `wireStarHelm` |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
 | `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
 | `Popover` | `popoverMenu` (`streetlight.web.dom.component`) and its card |
@@ -106,7 +109,7 @@ The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that o
 
 ## Route Dock
 
-`RouteDock` floats over the bottom of the window, over the page and the map, and stays across pages; a page makes no room for it. It is `AppTheme`'s `overlay`, the page's sibling, since a Haze blur cannot draw a source it lies within.
+`HelmBar` and `RouteDock` are `AppTheme`'s `overlay`. The helm bar's menus open within the overlay, not in a `Popup`, so a button's icon is one shared element with its menu's. `RouteDock` floats over the bottom of the window, over the page and the map, and stays across pages; a page makes no room for it. It is `AppTheme`'s `overlay`, the page's sibling, since a Haze blur cannot draw a source it lies within.
 
 A tray of the dock holds icons for utilities, never routes.
 
@@ -185,7 +188,7 @@ The app bundles the site's icons and drawings. The build syncs `www/icon` and `w
 
 The desktop window provides the map's presentation host in `main()`, through `ProvideMapPresentationHost`.
 
-The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapMount` where the map goes, its center and the radius of its corners; the mount holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's mount. When the mount it leaves and the new one both lie within the window, its frame grows or shrinks from one to the other over the pages' two fades, its corners following and its camera gliding to the new center, and the new mount's markers take the old ones' place as it starts. Otherwise it fades out, moves and looks over the mount's center, then fades in, in step with the page. A mount leaves the host as soon as its page starts to leave, so the map fades out with it. A page never composes a map of its own, and a mount needs no pinning, since its leaving the composition costs nothing.
+The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapMount` where the map goes, its center or an area to frame, and the radius of its corners; the mount holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's mount. When the mount it leaves and the new one both lie within the window, its frame grows or shrinks from one to the other over the pages' two fades, its corners following and its camera gliding to the new center, and the new mount's markers take the old ones' place as it starts. Otherwise it fades out, moves and looks over the mount's center, then fades in, in step with the page. A mount leaves the host as soon as its page starts to leave, so the map fades out with it. An area is fit once the map has the mount's frame, so a page frames its arrival through its mount, not a camera pan, which the mount's arrival would overwrite. A page never composes a map of its own, and a mount needs no pinning, since its leaving the composition costs nothing.
 
 The map is drawn above the page, so whatever a page shows over its map, such as the earth's controls, is the mount's `overlay`, which the host draws in the map's frame above the markers; it fades and changes frame with the map. The overlay is drawn beside the map, not within MapLibre's own overlay, so the map and its markers can be the `LocalMapHaze` source a part of the overlay blurs, as `MapFocus` does. A page never lays out its own parts over a mount.
 

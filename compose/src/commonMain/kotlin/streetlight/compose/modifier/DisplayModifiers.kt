@@ -8,6 +8,9 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
@@ -45,7 +48,25 @@ import kotlin.math.pow
  * inside the edge, both following the corners.
  */
 fun Modifier.borderRadius(units: Number, moonShadow: Boolean = false, outline: Outline? = null) =
-    this then BorderRadiusElement(units.toFloat(), moonShadow, outline)
+    borderRadius(units, units, units, units, moonShadow, outline)
+
+/**
+ * Rounds each corner to its own units of the theme's unit, [topStart], [topEnd], [bottomEnd] and [bottomStart], and
+ * clips the content to them, as the web's `border-radius` with four values. [moonShadow] and [outline] follow the
+ * corners, as in the uniform [borderRadius].
+ */
+fun Modifier.borderRadius(
+    topStart: Number,
+    topEnd: Number,
+    bottomEnd: Number,
+    bottomStart: Number,
+    moonShadow: Boolean = false,
+    outline: Outline? = null,
+) = this then BorderRadiusElement(
+    CornerUnits(topStart.toFloat(), topEnd.toFloat(), bottomEnd.toFloat(), bottomStart.toFloat()),
+    moonShadow,
+    outline,
+)
 
 /** The level of an outline a [borderRadius] draws. */
 enum class Outline {
@@ -94,7 +115,7 @@ fun Modifier.opacityHigh() = this then OpacityElement(Opacity.High)
 private enum class Opacity { Low, High }
 
 private data class BorderRadiusElement(
-    val units: Float,
+    val units: CornerUnits,
     val moonShadow: Boolean,
     val outline: Outline?,
 ) : ModifierNodeElement<BorderRadiusNode>() {
@@ -109,17 +130,17 @@ private data class BorderRadiusElement(
     }
 }
 
-private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var outline: Outline?) :
+private class BorderRadiusNode(var units: CornerUnits, var moonShadow: Boolean, var outline: Outline?) :
     Modifier.Node(), LayoutModifierNode, DrawModifierNode, CompositionLocalConsumerModifierNode {
     var painters: List<DropShadowPainter>? = null
     private var paintedUnit: Dp? = null
 
     override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
         val placeable = measurable.measure(constraints)
-        val corner = theme.unit * units
+        val shape = units.toShape(theme.unit)
         return layout(placeable.width, placeable.height) {
             placeable.placeWithLayer(0, 0) {
-                shape = RoundedCornerShape(corner)
+                this.shape = shape
                 clip = true
             }
         }
@@ -130,7 +151,7 @@ private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var ou
         val unit = theme.unit
         if (moonShadow) {
             val shadows = painters?.takeIf { paintedUnit == unit } ?: moonShadows.map { shadow ->
-                requireGraphicsContext().shadowContext.createDropShadowPainter(RoundedCornerShape(unit * units), shadow)
+                requireGraphicsContext().shadowContext.createDropShadowPainter(units.toShape(unit), shadow)
             }.also {
                 painters = it
                 paintedUnit = unit
@@ -140,16 +161,26 @@ private class BorderRadiusNode(var units: Float, var moonShadow: Boolean, var ou
         drawContent()
         outline?.let { level ->
             val width = theme.line.toPx()
-            val corner = (unit * units).toPx()
+            val inset = width / 2
+            fun radiusOf(cornerUnits: Float) = CornerRadius(((unit * cornerUnits).toPx() - inset).coerceAtLeast(0f))
+            val isLtr = layoutDirection == LayoutDirection.Ltr
             // the stroke runs inside the edge, its corners following the edge's, as a CSS border does
-            drawRoundRect(
+            val edge = RoundRect(
+                left = inset,
+                top = inset,
+                right = size.width - inset,
+                bottom = size.height - inset,
+                topLeftCornerRadius = radiusOf(if (isLtr) units.topStart else units.topEnd),
+                topRightCornerRadius = radiusOf(if (isLtr) units.topEnd else units.topStart),
+                bottomRightCornerRadius = radiusOf(if (isLtr) units.bottomEnd else units.bottomStart),
+                bottomLeftCornerRadius = radiusOf(if (isLtr) units.bottomStart else units.bottomEnd),
+            )
+            drawPath(
+                Path().apply { addRoundRect(edge) },
                 color = when (level) {
                     Outline.Low -> theme.colors.outlineLow
                     Outline.Mid -> theme.colors.outlineMid
                 },
-                topLeft = Offset(width / 2, width / 2),
-                size = Size(size.width - width, size.height - width),
-                cornerRadius = CornerRadius((corner - width / 2).coerceAtLeast(0f)),
                 style = Stroke(width),
             )
         }
@@ -281,3 +312,8 @@ private val moonShadows = listOf(
     Shadow(radius = 4.dp, color = Color.Black.copy(alpha = 0.05f), spread = 4.dp),
     Shadow(radius = 12.dp, color = Color.Black.copy(alpha = 0.05f), spread = 12.dp),
 )
+
+/** The units of each corner of a [borderRadius]. */
+private data class CornerUnits(val topStart: Float, val topEnd: Float, val bottomEnd: Float, val bottomStart: Float) {
+    fun toShape(unit: Dp) = RoundedCornerShape(unit * topStart, unit * topEnd, unit * bottomEnd, unit * bottomStart)
+}
