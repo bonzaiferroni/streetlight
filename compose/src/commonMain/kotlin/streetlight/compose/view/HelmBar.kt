@@ -17,6 +17,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
+import org.koin.compose.koinInject
+import streetlight.compose.model.StarSession
+import streetlight.compose.utility.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,7 +79,7 @@ fun HelmBar(modifier: Modifier = Modifier) {
                 HelmMenu(onClose = close) { HelmIcon(HelmBarMenu.Helm, isOpen = true, Modifier.pointerClick(close)) }
             }
             CornerMenu(openMenu == HelmBarMenu.Star, isEnd = true, Modifier.align(Alignment.TopEnd)) {
-                StarMenu { HelmIcon(HelmBarMenu.Star, isOpen = true, Modifier.pointerClick(close)) }
+                StarMenu(onClose = close) { HelmIcon(HelmBarMenu.Star, isOpen = true, Modifier.pointerClick(close)) }
             }
         }
     }
@@ -97,7 +105,8 @@ private fun HelmButton(menu: HelmBarMenu, isOpen: Boolean, onClick: () -> Unit) 
 /**
  * The icon of [menu], the one element shared by its button and its open menu: on the button in a color of the logo,
  * the helm in the accent and the star in the primary, and on the menu the menu's own icon in its own color, its tint
- * turning between them as it passes from one to the other.
+ * turning between them as it passes from one to the other. The star's is the signed-in star's thumbnail, when they
+ * have one.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -114,10 +123,18 @@ private fun HelmIcon(menu: HelmBarMenu, isOpen: Boolean, modifier: Modifier = Mo
         modifier.sharedElement(rememberSharedContentState(menu), visibility)
     }
     val size = theme.unit * HelmIconUnits
+    val star by koinInject<StarSession>().starState.collectAsState()
+    val thumb = star?.image?.thumb?.takeIf { menu == HelmBarMenu.Star }
 
-    when (isOpen) {
-        true -> AnimatedIcon(menu.openSvg, color = { tint.value }, modifier = iconMod, size = size)
-        false -> Icon(menu.closedSvg, color = { tint.value }, modifier = iconMod, size = size)
+    when {
+        thumb != null -> AsyncImage(
+            model = thumb,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = iconMod.size(size).clip(CircleShape),
+        )
+        isOpen -> AnimatedIcon(menu.openSvg, color = { tint.value }, modifier = iconMod, size = size)
+        else -> Icon(menu.closedSvg, color = { tint.value }, modifier = iconMod, size = size)
     }
 }
 
@@ -182,8 +199,8 @@ private fun DrawScope.drawInnerOutline(isFarRight: Boolean, width: Float, radius
     drawPath(Path().apply { addRoundRect(edge) }, color, style = Stroke(width))
 }
 
-/** The radius of the far corner of a menu's card in units, the web's `var(--unit-2)`. */
-private const val MenuRadiusUnits = 2
+/** The radius of the far corner of a menu's card in units. */
+private const val MenuRadiusUnits = 2.5f
 
 /** The size of a helm icon in units, the web's `HelmBar.IconMod`. */
 const val HelmIconUnits = 6

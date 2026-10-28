@@ -12,7 +12,8 @@ import streetlight.compose.modifier.pointerClick
 import streetlight.compose.model.currentPortal
 
 /**
- * The header of a view: the [TextLogo] between the accent and primary rays, returning home when clicked. The cousin of the web's `appHeader`.
+ * The header of a view: the [TextLogo] between the accent and primary rays, returning home when clicked. The rays line
+ * up with the centers of the [HelmBar]'s icons and stop a unit short of them. The cousin of the web's `appHeader`.
  */
 @Composable
 fun AppHeader(modifier: Modifier = Modifier) {
@@ -21,12 +22,15 @@ fun AppHeader(modifier: Modifier = Modifier) {
     TextLogo(
         modifier.fillMaxWidth()
             .height(theme.unit * HeaderUnits)
-            .padding(1)
+            .padding(horizontal = RayInsetUnits, vertical = 1)
             .filigree(FiligreeStyle.Ray)
             .pointerClick { portal.home() }
             .fillMaxHeight()
     )
 }
 
-/** The height of the header in units, the web's `Height(10)` on the home page. */
-private const val HeaderUnits = 10
+/** The height of the header in units, its center on the centers of the helm bar's icons, a unit plus half an icon down. */
+private const val HeaderUnits = 2 + HelmIconUnits
+
+/** The inset of the rays from the sides in units: past the helm bar's padding and icon, and a unit clear of the icon. */
+private const val RayInsetUnits = 1 + HelmIconUnits + 1

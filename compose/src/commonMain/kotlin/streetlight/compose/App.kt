@@ -1,6 +1,8 @@
 package streetlight.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import streetlight.compose.model.StarSession
 import androidx.compose.runtime.CompositionLocalProvider
 import coil3.compose.setSingletonImageLoaderFactory
 import org.koin.compose.KoinApplication
@@ -30,6 +32,8 @@ fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
     KoinApplication(configuration = koinConfiguration { modules(appModule) }) {
         val config = koinInject<AppConfig>()
         setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
+        val session = koinInject<StarSession>()
+        LaunchedEffect(session) { session.restore() }
 
         CompositionLocalProvider(LocalPortal provides portal) {
             AppTheme(bar = bar, overlay = {

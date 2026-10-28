@@ -1,7 +1,6 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -28,6 +27,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.rememberTextMeasurer
+import streetlight.compose.utility.mixSrgb
 import kampfire.model.MutableTap
 import koala.SvgFile
 import streetlight.compose.modifier.padding
@@ -62,6 +62,8 @@ fun SearchField(
         val textWidth = textMeasurer.measure(text, textStyle).size.width
         maxOf(placeholderWidth, textWidth).toDp() + theme.line
     }
+    // the focus outline fades in and out, read while drawing
+    val focus = animateFloatAsState(if (isFocused) 1f else 0f, theme.magic.eased())
     val placeholderAlpha by animateFloatAsState(
         targetValue = if (text.isEmpty() && !isFocused) theme.opacity.high else 0f,
         animationSpec = theme.magic.eased(),
@@ -72,9 +74,10 @@ fun SearchField(
         modifier.clip(shape)
             .then(backdrop)
             .background(theme.colors.zenBg)
-            .border(theme.line, if (isFocused) theme.colors.primary else theme.colors.outlineMid, shape)
+            .pillOutline(theme.line) { theme.colors.outlineMid.mixSrgb(theme.colors.primary, 1f - focus.value) }
             .height(theme.unit * HeightUnits)
-            .padding(horizontal = 2),
+            // the icon sits a unit from the start, as a text field's does
+            .padding(start = 1, end = 2),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(SvgFile.Search.small, color = { theme.colors.ink })

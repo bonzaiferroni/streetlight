@@ -19,6 +19,7 @@ val appModule = module {
     single { Inflator(get()) }
     single { GeoCamera() }
     single { GeoMap(get()) }
+    single { StarSession(get()) }
     viewModel { (route: AppRoute) -> InflationModel(route, get()) }
     viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }

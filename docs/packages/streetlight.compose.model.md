@@ -38,6 +38,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
 | `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
+| `StarSession` | `SessionClient` (`streetlight.web.model`) |
 | `EarthModel`, `EarthCache` | `Earth`, `EarthCache` (`streetlight.web.model`) |
 | `MapMarker`, `ThumbMarker`, `IconMarker`, `EventMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
 
@@ -73,6 +74,11 @@ A route with a focus gives its `FocusDock` with `toFocusDock()`, built from the 
 | `Inflator` | The read of each route's content |
 | `GeoMap` | The app's one map: its `GeoCamera` and the `MarkerMap` it shows |
 | `GeoCamera` | The requests to pan the map, and where it looks as the map reports it |
+| `StarSession` | The star signed in on this device |
+
+## Sign In
+
+The app signs in as a browser does: the server's session cookie is kept in the app's cookie file, created readable by the user alone, and goes with every request. A session always stays signed in, as the device is taken to be one person's, and lasts until the star signs out. One star is signed in at a time. `StarSession` reads the star of the saved session at launch.
 
 ## View Models
 

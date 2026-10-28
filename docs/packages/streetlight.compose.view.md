@@ -73,12 +73,13 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `RouteDock` | `viewRouteDock`, its main routes |
 | `HelmBar` | `helmBar` (`streetlight.web.page`) |
 | `HelmMenu` | `siteHelmPopover` and `siteMenuItems` (`streetlight.web.page`) |
-| `StarMenu` | `starHelmPopover` and the signed-out panel of `wireStarHelm` |
+| `StarMenu` | `starHelmPopover` and `wireStarHelm`, with the sign-in form of `signInForm` |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
 | `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
 | `Popover` | `popoverMenu` (`streetlight.web.dom.component`) and its card |
 | `TagFilter`, `EventTagMenu` | `tagFilterMenu` (`streetlight.web.component`) and `eventTagMenu` |
 | `SearchField` | `searchField` (`koala.component`) |
+| `TextField` | `textField` (`koala.component`) |
 
 A button is a `Button` whatever its click does. The web's `btn` exists to dress a link as a button; compose has no such split, so a button that navigates and one that acts are one composable, built on foundation's `clickable` with no Material indication.
 

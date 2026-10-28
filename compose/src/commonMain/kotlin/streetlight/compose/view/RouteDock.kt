@@ -111,13 +111,12 @@ private fun DockRoutes(dock: List<DockRoute>) {
                         isStable -> dockRoute.route == portal.dockRoute
                         else -> dockRoute.route == portal.backStack.last()
                     }
-                    val routeMod = when {
-                        isShown -> Modifier.border(theme.line, colors.primary, PillShape)
-                        else -> Modifier
-                    }
+                    // the outline of the route shown fades in and out, read while drawing
+                    val outline = animateFloatAsState(if (isShown) 1f else 0f, magic.eased())
                     BasicText(
                         dockRoute.label.uppercase(),
-                        routeMod.clip(PillShape)
+                        Modifier.pillOutline(theme.line) { colors.primary.copy(alpha = colors.primary.alpha * outline.value) }
+                            .clip(PillShape)
                             .pointerClick {
                                 when {
                                     isStable -> portal.dock(dockRoute.route)
