@@ -39,6 +39,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
 | `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
 | `StarSession` | `SessionClient` (`streetlight.web.model`) |
+| `AccountEditor` | `AccountEditor` (`streetlight.web.model`), with the web's `EmailEditor` and `PasswordEditor` folded in |
 | `UserCreator` | `UserCreator` (`streetlight.web.model`), with the web's `EmailEditor` and `PasswordEditor` folded in |
 | `EarthModel`, `EarthCache` | `Earth`, `EarthCache` (`streetlight.web.model`) |
 | `MapMarker`, `ThumbMarker`, `IconMarker`, `EventMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
@@ -57,7 +58,7 @@ A marker is a `MapMarker`, a plain description of what to draw, built from an en
 
 ## Inflation
 
-`Inflator` reads the content of each route, one branch of a `when` over the sealed `AppRoute`, so a new route cannot be added without saying how its content arrives. `InflationModel` holds a route's `Inflation` while the route is on the back stack, so a return shows its content without reading it again. A route whose content arrives another way, as the earth's does with the camera, gives `Ok(Unit)` there, and its screen shows its view without inflating. Only a screen touches either; a view model is built with its content, as `GalaxyModel(content, …)`.
+`Inflator` reads the content of each route, one branch of a `when` over the sealed `AppRoute`, so a new route cannot be added without saying how its content arrives. `InflationModel` holds a route's `Inflation` while the route is on the back stack, so a return shows its content without reading it again. A route whose content arrives another way, as the earth's does with the camera, gives `Ok(Unit)` there, and its screen shows its view without inflating. Only a screen touches either; a view model is built with its content, as `GalaxyModel(content, …)`. Content that differs by who reads it, such as the star's own account, is read and modeled under a key of the reader, so a star who signs in after another reads their own.
 
 ## Navigation
 

@@ -13,6 +13,7 @@ import streetlight.compose.model.GalaxyMapRoute
 import streetlight.compose.model.GalaxyRoute
 import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.LocationRoute
+import streetlight.compose.model.StarConfigRoute
 import streetlight.compose.model.currentPortal
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
@@ -41,6 +42,7 @@ fun AppPortal() {
         entry<LocationRoute> { LocationScreen(it) }
         entry<EarthRoute> { EarthScreen() }
         entry<GalaxyMapRoute> { GalaxyMapScreen(it) }
+        entry<StarConfigRoute> { StarConfigScreen() }
     }
     // each stack decorates its own entries, so a hidden stack's pages keep their state and view models
     val stackEntries = portal.stacks.mapValues { (_, stack) ->

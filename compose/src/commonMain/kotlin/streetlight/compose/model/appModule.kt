@@ -4,6 +4,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import streetlight.compose.io.AppTransport
 import streetlight.model.io.ApiClient
+import streetlight.model.data.Account
 import streetlight.model.data.GalaxyContent
 import streetlight.model.data.HomeContent
 import streetlight.model.data.LocationContent
@@ -26,6 +27,7 @@ val appModule = module {
     viewModel { (content: LocationContent) -> LocationModel(content, get(), get()) }
     viewModel { EarthModel(get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
+    viewModel { (account: Account) -> AccountEditor(account, get(), get()) }
 }
 
 /** The API of the server on this machine, where the app points while in development. */

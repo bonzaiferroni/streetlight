@@ -1,25 +1,17 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.LaunchedEffect
-import streetlight.compose.model.UserCreator
-import streetlight.model.io.ApiClient
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import kampfire.model.Ok
-import kampfire.model.MutableTap
-import kampfire.model.storeOf
 import koala.SvgPack
 import koala.SvgFile
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import streetlight.compose.model.StarConfigRoute
 import streetlight.compose.model.StarSession
 import streetlight.compose.model.currentPortal
 import streetlight.compose.modifier.padding
@@ -27,8 +19,8 @@ import streetlight.compose.modifier.pointerClick
 import streetlight.compose.utility.collectAsState
 
 /**
- * The star's menu: their name beside their [badge], then the form to sign in while no star is signed in, or the
- * star's places and the way to sign out, which closes the menu with [onClose] and returns home. The cousin of the web's
+ * The star's menu: their name beside their [badge], then the [SignInForm] while no star is signed in, or the star's
+ * places and the way to sign out, which closes the menu with [onClose]. The cousin of the web's
  * star helm.
  */
 @Composable
@@ -43,85 +35,30 @@ fun StarMenu(onClose: () -> Unit, badge: @Composable () -> Unit) {
             badge()
         }
         when (star) {
-            null -> SignInForm(session)
+            null -> SignInForm()
             else -> StarPlaces(session, onClose)
         }
     }
 }
 
 /**
- * The fields of a username or email and a password, a problem from the last try, and the buttons to create an account,
- * which opens its dialog, and to sign in through [session].
+ * The signed-in star's places, each closing the menu as it opens, those the app has no route for yet opening nothing,
+ * and the way to sign out of [session].
  */
-@Composable
-private fun SignInForm(session: StarSession) {
-    val theme = currentTheme
-    val scope = rememberCoroutineScope()
-    val identity = remember { storeOf("") }
-    val password = remember { storeOf("") }
-    var problem by remember { mutableStateOf<String?>(null) }
-    var isSigningIn by remember { mutableStateOf(false) }
-    val isCreating = remember { storeOf(false) }
-
-    val signIn = signIn@{
-        if (isSigningIn || identity.now.isBlank() || password.now.isBlank()) return@signIn
-        isSigningIn = true
-        scope.launch {
-            when (val outcome = session.signIn(identity.now.trim(), password.now)) {
-                is Ok -> password.set("")
-                else -> problem = outcome.message
-            }
-            isSigningIn = false
-        }
-        Unit
-    }
-
-    TextField(identity, "username or email", icon = SvgFile.User)
-    TextField(password, "password", icon = SvgFile.Key, isPassword = true, onSubmit = signIn)
-    problem?.let { BasicText(it, style = theme.text.small, color = { theme.colors.red }) }
-    Row(1) {
-        Button("create account", onClick = { isCreating.set(true) }, style = ButtonStyle.Zen)
-        Button("sign in", onClick = signIn, isEnabled = !isSigningIn)
-    }
-    CreateAccountDialog(isCreating, session)
-}
-
-/**
- * The dialog to create an account while [state] is `true`: a tab for each kind of account, a guest's or a registered
- * star's, each form on its card, sharing one [UserCreator]. It closes once the new star is signed in. The cousin of the
- * web's sign-in dialog, whose third tab, signing in, is the star menu's.
- */
-@Composable
-private fun CreateAccountDialog(state: MutableTap<Boolean>, session: StarSession) {
-    RawDialogMount(state, "Create Account") {
-        val api = koinInject<ApiClient>()
-        val scope = rememberCoroutineScope()
-        val creator = remember { UserCreator(scope, api, session) }
-        val star by session.starState.collectAsState()
-        LaunchedEffect(star) { if (star != null) state.set(false) }
-
-        context(creator) {
-            Tabs {
-                tab("Guest", SvgFile.Ghost) { DialogCard { GuestRegistrationForm() } }
-                tab("Register", SvgFile.UserPlus) { DialogCard { FullRegistrationForm() } }
-            }
-        }
-    }
-}
-
-/** The signed-in star's places, which open nothing until the app has them, and the way to sign out of [session]. */
 @Composable
 private fun StarPlaces(session: StarSession, onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
     val portal = currentPortal
 
     StarItem("Dashboard", SvgFile.Dashboard)
-    StarItem("Account", SvgFile.User)
+    StarItem("Account", SvgFile.User) {
+        portal.open(StarConfigRoute)
+        onClose()
+    }
     StarItem("Inbox", SvgFile.Mail)
     StarItem("Sign out", SvgFile.SignOut) {
         scope.launch {
             session.signOut()
-            portal.home()
             onClose()
         }
     }

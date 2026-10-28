@@ -30,6 +30,10 @@ data object EarthRoute : AppRoute
 @Serializable
 data class GalaxyMapRoute(val slug: Slug) : AppRoute
 
+/** The signed-in star's account settings. */
+@Serializable
+data object StarConfigRoute : AppRoute
+
 /** The app's route to the page of this web route, `null` for a page the app does not have. */
 fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyRoute -> GalaxyRoute(slug)

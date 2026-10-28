@@ -27,11 +27,12 @@ import streetlight.compose.utility.collectAsState
 /**
  * Shows [content] with the content of [route] once it is inflated, fading it in when it arrives after the page does; a
  * message while it loads, held back for a moment so a quick read shows none, or when a problem keeps it. A screen calls
- * it with the content type its route reads.
+ * it with the content type its route reads. Content that differs by who reads it, such as a star's own, gives a [key]
+ * of the reader, so another reader's content is read anew.
  */
 @Composable
-inline fun <reified C : Any> Inflated(route: AppRoute, crossinline content: @Composable (C) -> Unit) {
-    val model = koinViewModel<InflationModel> { parametersOf(route) }
+inline fun <reified C : Any> Inflated(route: AppRoute, key: Any? = null, crossinline content: @Composable (C) -> Unit) {
+    val model = koinViewModel<InflationModel>(key = key?.let { "$route:$it" }) { parametersOf(route) }
     val inflation by model.inflationState.collectAsState()
     val magic = currentTheme.magic
     AnimatedContent(

@@ -21,6 +21,7 @@ class Inflator(private val api: ApiClient) {
         is LocationRoute -> api.location.readLocationContent(route.slug)
         // the earth reads its content as the camera moves, so its screen inflates nothing
         EarthRoute -> Ok(Unit)
+        StarConfigRoute -> api.star.readAccount()
     }
 }
 

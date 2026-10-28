@@ -79,6 +79,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `TagFilter`, `EventTagMenu` | `tagFilterMenu` (`streetlight.web.component`) and `eventTagMenu` |
 | `SearchField` | `searchField` (`koala.component`) |
 | `TextField` | `textField` (`koala.component`) |
+| `StarGate`, `SignInToContinue` | `starGate`, `signInToContinue` (`streetlight.web.view`) |
+| `SignInForm` | `signInForm` (`streetlight.web.view`) |
+| `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
 | `CheckBox` | `checkBox` (`koala.dom.component`) |
 | `FormRow`, `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formRow`, `formSection`, `formHeading`, `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
 | `GuestRegistrationForm`, `FullRegistrationForm` | `guestRegistrationForm`, `fullRegistrationForm` (`streetlight.web.view`) |
@@ -122,6 +125,10 @@ A tray of the dock holds icons for utilities, never routes.
 ## Top Bar
 
 A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. The helm and star stay reachable above the bar, whatever its fade.
+
+## Star Gate
+
+A screen of the star's own puts a `StarGate` ahead of `Inflated`, so its content is read only while a star is signed in, and the star is in context for what it shows. Signed out, it shows its fallback, by default the `SignInForm` on a card. Signing out leaves the star where they are; each gate turns to its fallback, so nothing of the star's stays on screen. What a gated screen shows may depend on the star's account type, as the star configuration shows a guest the form to register and a registered star their email and password; it changes with the star, so an upgrade shows the registered form at once.
 
 ## Dialogs
 
