@@ -20,15 +20,18 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.vector.PathParser
 
 /**
- * Draws [document] as it is at [time] seconds, its view box filling this scope.
+ * Draws [document] as it is at [time] seconds, its view box fit within this scope at its own aspect and centered, as
+ * an svg's default `preserveAspectRatio` places it.
  *
  * Every shape is drawn in [color], at its own opacity, as the web's icon mask uses an icon's alpha alone. A `mask`
  * is not applied.
  */
 internal fun DrawScope.drawSvg(document: SvgDocument, time: Float, color: Color) {
     val box = document.viewBox
+    val scale = minOf(size.width / box.width, size.height / box.height)
     withTransform({
-        scale(size.width / box.width, size.height / box.height, pivot = Offset.Zero)
+        translate((size.width - box.width * scale) / 2, (size.height - box.height * scale) / 2)
+        scale(scale, scale, pivot = Offset.Zero)
         translate(-box.left, -box.top)
     }) {
         drawNode(document.root, document, time, color, SvgStyle())

@@ -9,6 +9,7 @@ import androidx.navigation3.ui.NavDisplay
 import streetlight.compose.model.AppRoute
 import streetlight.compose.model.EarthRoute
 import streetlight.compose.model.EventRoute
+import streetlight.compose.model.GalaxyMapRoute
 import streetlight.compose.model.GalaxyRoute
 import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.LocationRoute
@@ -39,6 +40,7 @@ fun AppPortal() {
         entry<EventRoute> { EventScreen(it) }
         entry<LocationRoute> { LocationScreen(it) }
         entry<EarthRoute> { EarthScreen() }
+        entry<GalaxyMapRoute> { EarthScreen() }
     }
     // each stack decorates its own entries, so a hidden stack's pages keep their state and view models
     val stackEntries = portal.stacks.mapValues { (_, stack) ->

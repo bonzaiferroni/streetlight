@@ -12,9 +12,11 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -28,7 +30,8 @@ import streetlight.compose.svg.drawSvg
 import streetlight.compose.svg.readSvg
 
 /**
- * Draws [svg] in [color], filling its shape as the web's mask does. The cousin of koala's `icon`.
+ * Draws [svg] in [color], filling its shape as the web's mask does, held to its own aspect and centered in the square
+ * as an svg's `viewBox` is. The cousin of koala's `icon`.
  *
  * [color] is read while drawing, so an animating color redraws the icon without recomposing it.
  */
@@ -40,9 +43,16 @@ fun Icon(
     size: Dp = currentTheme.unit * 3,
 ) {
     val painter = rememberSvgPainter(svg)
+    // the painter stretches to the size it is given, so the icon is fit by its view box
+    val viewBox by produceState<Rect?>(null, svg) { value = readIconDocument(svg).viewBox }
     Spacer(
         modifier.size(size).drawBehind {
-            with(painter) { draw(this@drawBehind.size, colorFilter = ColorFilter.tint(color())) }
+            val box = viewBox ?: return@drawBehind
+            val scale = minOf(this.size.width / box.width, this.size.height / box.height)
+            val drawn = Size(box.width * scale, box.height * scale)
+            translate((this.size.width - drawn.width) / 2, (this.size.height - drawn.height) / 2) {
+                with(painter) { draw(drawn, colorFilter = ColorFilter.tint(color())) }
+            }
         }
     )
 }

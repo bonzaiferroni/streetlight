@@ -27,6 +27,10 @@ data class LocationRoute(val slug: Slug) : AppRoute
 @Serializable
 data object EarthRoute : AppRoute
 
+/** The map of a galaxy, shown for now by the earth's view. */
+@Serializable
+data class GalaxyMapRoute(val slug: Slug) : AppRoute
+
 /** The app's route to the page of this web route, `null` for a page the app does not have. */
 fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyRoute -> GalaxyRoute(slug)

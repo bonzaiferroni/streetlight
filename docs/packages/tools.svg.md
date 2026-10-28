@@ -38,6 +38,8 @@ The workshop for the site's icons. Python batch scripts write the variant files 
 
 A pack built with `round2.build` gets all four from one function that returns its static and animated elements.
 
+Every file's root `<svg>` carries a `width` and `height` equal to the size of its `viewBox`, as the tabler packs' `24` do.
+
 ## Animation
 
 - SMIL only: `<animate>`, `<animateTransform>` and `<animateMotion>`. No CSS and no script in the file.

@@ -38,6 +38,11 @@ class Portal(val start: AppRoute, val stacks: Map<AppRoute, NavBackStack<AppRout
         stack.add(route)
     }
 
+    /** Shows [route] in place of the current one. */
+    fun swap(route: AppRoute) {
+        stack[stack.lastIndex] = route
+    }
+
     /** Shows the stack of the dock route [route], or returns to its first route when it is already shown. */
     fun dock(route: AppRoute) {
         when (route) {

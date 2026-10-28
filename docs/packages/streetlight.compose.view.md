@@ -103,7 +103,9 @@ The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that o
 
 ## Route Dock
 
-`RouteDock` floats at the bottom center of the window, over the page and the map, and stays across pages; a page makes no room for it. It is `AppTheme`'s `overlay`, the page's sibling rather than within it, since a Haze blur cannot draw a source it lies within, so it blurs `LocalPageHaze`, map and all. Each label calls `Portal.dock`, and the dock route whose stack is shown is outlined in the primary color.
+`RouteDock` floats at the bottom center of the window, over the page and the map, and stays across pages; a page makes no room for it. It is `AppTheme`'s `overlay`, the page's sibling rather than within it, since a Haze blur cannot draw a source it lies within, so it blurs `LocalPageHaze`, map and all. It is a row whose two sides share the width left over, so the pill of routes stays centered and a tray, a smaller pill of icons, holds to it from either side, centered vertically.
+
+The pill shows `StableDock`, or the focus dock of the route on top, on the primary background. While the route has a focus, a tray on the left switches between the two, the routes fading from one to the other; each new focus shows its own dock first. The tray matches the dock shown: the `FocusDock`'s icon on the primary background while the focus dock shows, and the flame on neutral glass while the stable dock shows. A stable route calls `Portal.dock` and a focus route `Portal.swap`, and the route shown is outlined in the primary color.
 
 `AppPortal` decorates the entries of each stack on their own and shows the shown stacks' entries together, so a hidden stack's pages keep their saved state and view models.
 
@@ -172,7 +174,7 @@ The unit builds the hierarchy of grouping. The elements of an item are one unit 
 
 The app bundles the site's icons and drawings. The build syncs `www/icon` and `www/svg`, the files the web serves, into the app's resources as `files/icon` and `files/svg`, so an `Svg` from the shared code, such as a variant of an `SvgFile` pack or the logo, names its bundled file: `/www/icon/foo.svg` is `files/icon/foo.svg`, and `/www/svg/foo.svg` is `files/svg/foo.svg`.
 
-`Icon` draws an `Svg` tinted with a color read while drawing, filling the icon's shape as the web's mask does. `rememberSvgPainter` reads an icon's file once, keeps its bytes, and is empty while it loads. `AnimatedIcon` plays an icon's `animated` variant through `streetlight.compose.svg`, at a clock read while drawing.
+`Icon` draws an `Svg` tinted with a color read while drawing, filling the icon's shape as the web's mask does. It draws in a square, the icon held to the aspect of its `viewBox` and centered, as the web's svg is within its mask, and so does `AnimatedIcon`. `rememberSvgPainter` reads an icon's file once, keeps its bytes, and is empty while it loads. `AnimatedIcon` plays an icon's `animated` variant through `streetlight.compose.svg`, at a clock read while drawing.
 
 ## Map
 
