@@ -85,6 +85,8 @@ The third is the one most often missed. A convention described is a convention d
 
 An explanation often covers several packages at once. Each package named gets its own amendment, in its own document.
 
+Specification the code states plainly needs no amendment; `docs/package-documentation.md` states what a document records.
+
 Accuracy outranks completeness. A document describes the code as it stands, and an inaccurate one is worse than a missing one, because it will be believed.
 
 These are live documents. Drift noticed is drift to correct, in the turn it is noticed, whether or not the current task put it there. Reporting that a document has fallen behind and leaving it that way is not a finding, it is a second reader misled. Correct the drift and say what changed.

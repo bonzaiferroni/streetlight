@@ -8,6 +8,8 @@ Each package should have a document that describes the specifications and concep
 
 A package document provides an outline for working with code in a particular package. The code is the primary documentation, and a document carries only specification the code does not make plain.
 
+Specification the code states plainly, such as which icon a part shows or the color of its background, is left to the code. A document records only the specification the code leaves unsaid: a rule other code must follow, a constraint behind a shape, or an intent a later change could lose.
+
 Include:
 
 - Naming patterns for files and types
