@@ -76,8 +76,9 @@ fun HomeView(gridState: LazyStaggeredGridState) {
 }
 
 /**
- * The galaxy menu and a button to the earth at the start, and the buttons to create a galaxy and a post at the end, which
- * do nothing until the app has their menus and routes. The cousin of the web's `galaxyMenu`, its Create Galaxy button and `createPostMenu`.
+ * The galaxy menu and a button to the earth at the start, and the button to create a galaxy and the menu to create a
+ * post at the end; the galaxy's two do nothing until the app has their menu and route. The cousin of the web's
+ * `galaxyMenu`, its Create Galaxy button and `createPostMenu`.
  */
 @Composable
 private fun HomeMenus(modifier: Modifier) {
@@ -90,7 +91,7 @@ private fun HomeMenus(modifier: Modifier) {
         }
         Row(1) {
             Button("Create Galaxy", onClick = {}, style = ButtonStyle.Zen)
-            Button("Create Post", onClick = {}, style = ButtonStyle.Zen)
+            CreatePostMenu(null)
         }
     }
 }

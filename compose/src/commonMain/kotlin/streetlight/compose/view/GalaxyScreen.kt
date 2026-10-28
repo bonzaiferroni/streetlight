@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import kampfire.api.Slug
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.getValue
@@ -86,7 +87,7 @@ private fun LazyStaggeredGridScope.layoutBlock(
         is HeaderBlock -> fullItem {
             Column(1, Modifier.padding(horizontal = side, vertical = 1)) {
                 EntityHeader(content.galaxy, "a galaxy", if (block.showCells) content.galaxy.toDetails() else emptyList())
-                GalaxyButtons()
+                GalaxyButtons(content.galaxy.slug)
             }
         }
         PostsBlock, EventsBlock -> feedSection(page, mode)
@@ -108,12 +109,15 @@ private fun LazyStaggeredGridScope.layoutBlock(
     }
 }
 
-/** The galaxy menu at the start and the button to create a post at the end, which do nothing until the app has them. */
+/**
+ * The galaxy menu at the start, which does nothing until the app has it, and the menu to create a post to the galaxy of
+ * [slug] at the end.
+ */
 @Composable
-private fun GalaxyButtons() {
+private fun GalaxyButtons(slug: Slug) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
-        Button("Create Post", onClick = {}, style = ButtonStyle.Zen)
+        CreatePostMenu(slug)
     }
 }
 

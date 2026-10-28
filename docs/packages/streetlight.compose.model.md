@@ -58,7 +58,7 @@ A marker is a `MapMarker`, a plain description of what to draw, built from an en
 
 ## Inflation
 
-`Inflator` reads the content of each route, one branch of a `when` over the sealed `AppRoute`, so a new route cannot be added without saying how its content arrives. `InflationModel` holds a route's `Inflation` while the route is on the back stack, so a return shows its content without reading it again. A route whose content arrives another way, as the earth's does with the camera, gives `Ok(Unit)` there, and its screen shows its view without inflating. Only a screen touches either; a view model is built with its content, as `GalaxyModel(content, …)`. Content that differs by who reads it, such as the star's own account, is read and modeled under a key of the reader, so a star who signs in after another reads their own.
+`Inflator` reads the content of each route, one branch of a `when` over the sealed `AppRoute`, so a new route cannot be added without saying how its content arrives. `InflationModel` holds a route's `Inflation` while the route is on the back stack, so a return shows its content without reading it again. A route whose content arrives another way, as the earth's does with the camera, gives `Ok(Unit)` there, and its screen shows its view without inflating. Only a screen touches either; a view model is built with its content, as `GalaxyModel(content, …)`. A screen that creates a post reads the galaxy its route names, if any, as a `PostGalaxy`, so a route with a galaxy's slug posts to that galaxy and one without posts to none. Content that differs by who reads it, such as the star's own account, is read and modeled under a key of the reader, so a star who signs in after another reads their own.
 
 ## Navigation
 

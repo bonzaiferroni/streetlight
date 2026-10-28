@@ -31,6 +31,18 @@ data object EarthRoute : AppRoute
 @Serializable
 data class GalaxyMapRoute(val slug: Slug) : AppRoute
 
+/** The scouting of a new event, to be posted to the galaxy of [slug], when given. */
+@Serializable
+data class EventScoutRoute(val slug: Slug?) : AppRoute
+
+/** The scouting of a new location, to be posted to the galaxy of [slug], when given. */
+@Serializable
+data class LocationScoutRoute(val slug: Slug?) : AppRoute
+
+/** The forging of a new media post, to be posted to the galaxy of [slug], when given. */
+@Serializable
+data class MediaForgeRoute(val slug: Slug?) : AppRoute
+
 /** The signed-in star's dashboard, showing its [tab], or the first. */
 @Serializable
 data class StarDashRoute(val tab: StarDashTab? = null) : AppRoute

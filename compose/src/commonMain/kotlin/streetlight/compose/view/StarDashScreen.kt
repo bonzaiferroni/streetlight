@@ -8,16 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import streetlight.compose.model.StarDashRoute
 import streetlight.compose.model.StarSession
 import streetlight.compose.model.currentPortal
-import streetlight.compose.modifier.Outline
-import streetlight.compose.modifier.borderRadius
-import streetlight.compose.modifier.cardBg
-import streetlight.compose.modifier.padding
 import streetlight.model.data.Star
 import streetlight.model.ui.StarDashTab
 
@@ -79,16 +74,4 @@ private fun SandboxTab() {
             Button("sign out", onClick = { scope.launch { session.signOut() } }, style = ButtonStyle.Zen)
         }
     }
-}
-
-/** A tab's [subject], which waits for its own work, on a card. */
-@Composable
-private fun Placeholder(subject: String) {
-    val theme = currentTheme
-    BasicText(
-        "$subject, coming soon",
-        Modifier.fillMaxWidth().borderRadius(2, outline = Outline.Mid).cardBg().padding(2),
-        style = theme.text.regular.copy(textAlign = TextAlign.Center),
-        color = { theme.colors.ink },
-    )
 }

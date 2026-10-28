@@ -2,12 +2,15 @@ package streetlight.compose.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kampfire.api.Slug
 import kampfire.model.Ok
+import kampfire.model.toDataOr
 import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import kotlinx.coroutines.launch
+import streetlight.model.data.Galaxy
 import streetlight.model.io.ApiClient
 
 /** Reads the content each route shows, one branch per route. The cousin of the web's `AppContentFetcher`. */
@@ -22,8 +25,20 @@ class Inflator(private val api: ApiClient) {
         // the earth reads its content as the camera moves, and the dashboard each tab its own, so neither inflates
         EarthRoute, is StarDashRoute -> Ok(Unit)
         StarConfigRoute -> api.star.readAccount()
+        is EventScoutRoute -> readPostGalaxy(route.slug)
+        is LocationScoutRoute -> readPostGalaxy(route.slug)
+        is MediaForgeRoute -> readPostGalaxy(route.slug)
+    }
+
+    /** The galaxy of [slug] a new post goes to, or none without one. */
+    private suspend fun readPostGalaxy(slug: Slug?): Outcome<PostGalaxy> = when (slug) {
+        null -> Ok(PostGalaxy(null))
+        else -> api.galaxy.readGalaxy(slug).toDataOr { return it }.let { Ok(PostGalaxy(it)) }
     }
 }
+
+/** The content of a screen that creates a post: the [galaxy] the post goes to, or `null` for none. */
+data class PostGalaxy(val galaxy: Galaxy?)
 
 /** The content of a route as it arrives: on its way, ready, or kept by a problem. */
 sealed interface Inflation {
