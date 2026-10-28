@@ -10,6 +10,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.em
+import streetlight.compose.modifier.filigree
+import streetlight.compose.modifier.padding
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -31,6 +40,9 @@ import dev.chrisbanes.haze.blur.hazeBlur
 sealed interface TopBar {
     /** The [AppHeader]: the logo between its rays. */
     data object Logo : TopBar
+
+    /** The view's [text] in a filigree, as a map's title. */
+    data class Title(val text: String) : TopBar
 }
 
 /** A view's [bar] and the pixels its content has [scrolled] under it, read while drawing. */
@@ -50,7 +62,8 @@ val LocalTopBarHost = staticCompositionLocalOf<TopBarHostState> { error("No TopB
 
 /**
  * Shows [bar] as this view's top bar, fading as the view's content scrolls [scrolled] pixels under it. The view keeps
- * [TopBarUnits] of room above its content for the bar. The mount leaves as its page starts to leave, so the bar fades
+ * [TopBarUnits] of room above its content for the bar. A bar known from the route is mounted by its screen, before the
+ * content is read, so a change of page between two views with the same bar leaves it in place. The mount leaves as its page starts to leave, so the bar fades
  * out with the page.
  */
 @Composable
@@ -75,30 +88,56 @@ fun TopBarMount(bar: TopBar, scrolled: () -> Float) {
 fun TopBarHost(modifier: Modifier = Modifier) {
     val theme = currentTheme
     val host = LocalTopBarHost.current
-    val active = host.active
     val height = theme.unit * TopBarUnits
     val heightPx = with(LocalDensity.current) { height.toPx() }
-    val fade = { active?.let { 1f - (it.scrolled() / heightPx).coerceIn(0f, 1f) } ?: 0f }
-    val isGone by remember(active, heightPx) { derivedStateOf { fade() == 0f } }
 
+    // a mount with the same bar as the last takes its place unchanged; each bar fades by its own mount's scroll, so one
+    // that leaves fades out where it stood
     AnimatedContent(
-        active?.bar,
-        modifier.fillMaxWidth().height(height).graphicsLayer { alpha = fade() },
+        host.active,
+        modifier.fillMaxWidth().height(height),
         transitionSpec = { fadeIn(theme.magic.eased()) togetherWith fadeOut(theme.magic.eased()) },
-    ) { bar ->
-        if (bar == null || isGone) return@AnimatedContent
+        contentKey = { it?.bar },
+    ) { mount ->
+        mount ?: return@AnimatedContent
+        val fade = { 1f - (mount.scrolled() / heightPx).coerceIn(0f, 1f) }
+        val isGone by remember(mount, heightPx) { derivedStateOf { fade() == 0f } }
+        if (isGone) return@AnimatedContent
+        val bar = mount.bar
         Box(
             Modifier.fillMaxWidth()
                 .height(height)
+                .graphicsLayer { alpha = fade() }
                 .hazeBlur(HazeInput.Sources(LocalPageHaze.current), TopBarBlur)
                 .background(theme.colors.paper.copy(alpha = GlassAlpha))
         ) {
             when (bar) {
                 TopBar.Logo -> AppHeader()
+                is TopBar.Title -> TopBarTitle(bar.text)
             }
         }
     }
 }
+
+/** The [text] of a view in a filigree, its rays stopping a unit short of the helm bar's icons, as the [AppHeader]'s. */
+@Composable
+private fun TopBarTitle(text: String) {
+    val theme = currentTheme
+    BasicText(
+        text,
+        Modifier.fillMaxSize().padding(horizontal = RayInsetUnits).filigree().wrapContentHeight(),
+        style = theme.text.heading3.copy(lineHeight = 1.em, textAlign = TextAlign.Center),
+        color = { theme.colors.ink },
+    )
+}
+
+/** The pixels this grid has scrolled under a top bar, all of them once its first item has left. */
+fun LazyStaggeredGridState.scrolledUnder(): () -> Float = {
+    if (firstVisibleItemIndex > 0) Float.MAX_VALUE else firstVisibleItemScrollOffset.toFloat()
+}
+
+/** The pixels this scroll has moved its content under a top bar. */
+fun ScrollState.scrolledUnder(): () -> Float = { value.toFloat() }
 
 /** The height of a top bar in units: the helm bar's icon and a unit above and below it. */
 const val TopBarUnits = 2 + HelmIconUnits

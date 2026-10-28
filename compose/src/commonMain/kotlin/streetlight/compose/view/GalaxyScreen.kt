@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.runtime.remember
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -37,19 +40,24 @@ import streetlight.compose.model.GalaxyRoute
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-/** The screen of [route]: its galaxy once inflated, shown in the [GalaxyView]. */
+/** The screen of [route]: the logo as its top bar, and its galaxy once inflated, shown in the [GalaxyView]. */
 @Composable
-fun GalaxyScreen(route: GalaxyRoute) = Inflated<GalaxyContent>(route) { content ->
-    context(koinViewModel<GalaxyModel> { parametersOf(content) }) { GalaxyView() }
+fun GalaxyScreen(route: GalaxyRoute) {
+    val gridState = rememberLazyStaggeredGridState()
+    TopBarMount(TopBar.Logo, remember(gridState) { gridState.scrolledUnder() })
+    Inflated<GalaxyContent>(route) { content ->
+        context(koinViewModel<GalaxyModel> { parametersOf(content) }) { GalaxyView(gridState) }
+    }
 }
 
 /**
- * The view of [GalaxyRoute]: the header, then the galaxy's page layout block by block, as the
- * web's `renderLayout` lays it out, in the galaxy's own theme, and the footer. The cousin of the web's `galaxyShell`.
+ * The view of [GalaxyRoute], in a grid scrolled by [gridState] under the top bar: the galaxy's page layout block by
+ * block, as the web's `renderLayout` lays it out, in the galaxy's own theme, and the footer. The cousin of the
+ * web's `galaxyShell`.
  */
 @Composable
 context(model: GalaxyModel)
-fun GalaxyView() {
+fun GalaxyView(gridState: LazyStaggeredGridState) {
     val loaded = model.content
     val page by model.feed.feedState.collectAsState()
     val mode by model.feed.modeState.collectAsState()
@@ -61,11 +69,13 @@ fun GalaxyView() {
     val side = if (isGrid) 0 else 1
     val layout = loaded.galaxy.design?.layout ?: PageLayout.defaultOf(loaded)
 
+    val edge = if (isGrid) theme.unit else 0.dp
+
     LazyStaggeredGridView(
+        state = gridState,
         spacing = if (isGrid) theme.unit else theme.line,
-        contentPadding = PaddingValues(if (isGrid) theme.unit else 0.dp),
+        contentPadding = PaddingValues(start = edge, top = theme.unit * TopBarUnits + edge, end = edge, bottom = edge),
     ) {
-        fullItem { AppHeader() }
         context(model.feed) {
             layout.blocks.forEach { block -> layoutBlock(block, loaded, page, mode, side) }
         }

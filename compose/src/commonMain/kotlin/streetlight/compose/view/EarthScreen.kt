@@ -24,30 +24,31 @@ import streetlight.compose.utility.collectAsState
 fun EarthScreen() = context(koinViewModel<EarthModel>()) { EarthView() }
 
 /**
- * The view of [EarthRoute]: the map across the whole page, with the events of each view it settles on, under the
- * [EarthHeader], and the [MapFocus] below it. The cousin of the web's `viewEarth`.
+ * The view of [EarthRoute]: the map across the whole page, with the events of each view it settles on, under its top
+ * bar of the title and the [EarthHeader], and the [MapFocus] below it. The cousin of the web's `viewEarth`.
  */
 @Composable
 context(model: EarthModel)
 fun EarthView() {
     PageThemeEffect(null)
+    TopBarMount(TopBar.Title("Events")) { 0f }
     MapMount(Modifier.fillMaxSize(), radius = 0, markerMap = model.markerMap, overlay = { EarthOverlay() })
 }
 
-/** The header across the top of the map, then the focus in the space below it. */
+/** The header below the top bar, then the focus in the space below it. */
 @Composable
 context(model: EarthModel)
 private fun EarthOverlay() {
     val entities by model.focusEntitiesState.collectAsState()
-    Column(0, Modifier.fillMaxSize()) {
+    Column(0, Modifier.fillMaxSize().padding(top = TopBarUnits)) {
         EarthHeader()
         MapFocus(entities, Modifier.fillMaxWidth().weight(1f))
     }
 }
 
 /**
- * The map's title over the tag filter and the search, each over the blurred map, dimmed while the map moves.
- * The cousin of the web's `earthHeader` and `earthControls`.
+ * The tag filter and the search, each over the blurred map, dimmed while the map moves. The cousin of the web's
+ * `earthHeader` and `earthControls`.
  */
 @Composable
 context(model: EarthModel)
@@ -56,14 +57,14 @@ fun EarthHeader() {
     val isMoving by model.isMovingState.collectAsState()
     val alpha by animateFloatAsState(if (isMoving) MovingAlpha else 1f, theme.magic.eased())
 
-    Column(0, Modifier.fillMaxWidth().graphicsLayer { this.alpha = alpha }) {
-        MapTitle("Events")
-        Row(Modifier.fillMaxWidth().padding(1), verticalAlignment = Alignment.CenterVertically) {
-            val blur = Modifier.hazeBlur(HazeInput.Sources(LocalMapHaze.current), MapBlur)
-            TagFilter(model.tagState, backdrop = blur)
-            Spacer(Modifier.weight(1f))
-            SearchField(model.searchState, backdrop = blur)
-        }
+    Row(
+        Modifier.fillMaxWidth().graphicsLayer { this.alpha = alpha }.padding(1),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val blur = Modifier.hazeBlur(HazeInput.Sources(LocalMapHaze.current), MapBlur)
+        TagFilter(model.tagState, backdrop = blur)
+        Spacer(Modifier.weight(1f))
+        SearchField(model.searchState, backdrop = blur)
     }
 }
 

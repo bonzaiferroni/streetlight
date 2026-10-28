@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,21 +28,25 @@ import streetlight.model.data.EntityDetail
 import streetlight.model.data.EventLocation
 import streetlight.model.data.costDetailOf
 
-/** The screen of [route]: its event once inflated, shown in the [EventView]. */
+/** The screen of [route]: the logo as its top bar, and its event once inflated, shown in the [EventView]. */
 @Composable
-fun EventScreen(route: EventRoute) = Inflated<EventLocation>(route) { EventView(it) }
+fun EventScreen(route: EventRoute) {
+    val scrollState = rememberScrollState()
+    TopBarMount(TopBar.Logo, remember(scrollState) { scrollState.scrolledUnder() })
+    Inflated<EventLocation>(route) { EventView(it, scrollState) }
+}
 
 /**
- * The view of [EventRoute], showing [event]: the header with its time, cost and host, then its location and comments
- * in tabs, and the footer. The cousin of the web's `eventShell`.
+ * The view of [EventRoute], showing [event] in a column scrolled by [scrollState] under the top bar: the header with
+ * its time, cost and host, then its location and comments in tabs, and the footer. The cousin of the web's `eventShell`.
  */
 @Composable
-fun EventView(event: EventLocation) {
+fun EventView(event: EventLocation, scrollState: ScrollState) {
     val theme = currentTheme
     PageThemeEffect(null)
 
-    Column(2, Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 1)) {
-        AppHeader()
+    // the column is padded a unit all around below the top bar's room, as an item is
+    Column(2, Modifier.fillMaxSize().verticalScroll(scrollState).padding(top = TopBarUnits).padding(1)) {
         EntityHeader(event, "at", event.headerDetails)
         Tabs {
             tab("Location") { EventLocationTab(event) }

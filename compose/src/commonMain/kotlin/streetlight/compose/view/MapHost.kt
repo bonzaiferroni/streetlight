@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.graphicsLayer
@@ -171,7 +172,8 @@ fun MapHost(content: @Composable () -> Unit) {
     }
 
     CompositionLocalProvider(LocalMapHost provides host) {
-        Box(Modifier.onGloballyPositioned { window = Rect(it.positionInRoot(), it.size.toSize()) }) {
+        // the map follows a mount that scrolls past the host's edges, so the host clips it to the page
+        Box(Modifier.clipToBounds().onGloballyPositioned { window = Rect(it.positionInRoot(), it.size.toSize()) }) {
             content()
             val mount = shown
             val radius = morph?.let { lerp(it.fromRadius, it.to.radius, progress.value) } ?: mount?.radius ?: 0f

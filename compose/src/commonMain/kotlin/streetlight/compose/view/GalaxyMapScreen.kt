@@ -3,6 +3,7 @@ package streetlight.compose.view
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import streetlight.compose.modifier.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
@@ -20,13 +21,14 @@ fun GalaxyMapScreen(route: GalaxyMapRoute) = Inflated<GalaxyContent>(route) { co
 
 /**
  * The view of [GalaxyMapRoute]: the map across the whole page, framing the markers of the galaxy's feed,
- * under its [MapTitle], and the [MapFocus] below it, in the galaxy's own theme.
+ * under its top bar of the galaxy's name, and the [MapFocus] below it, in the galaxy's own theme.
  */
 @Composable
 context(model: GalaxyMapModel)
 fun GalaxyMapView() {
     val galaxy = model.content.galaxy
     PageThemeEffect(galaxy.design?.theme)
+    TopBarMount(TopBar.Title(galaxy.name)) { 0f }
     MapMount(
         Modifier.fillMaxSize(),
         center = model.center,
@@ -37,13 +39,12 @@ fun GalaxyMapView() {
     )
 }
 
-/** The galaxy's name across the top of the map, then the focus in the space below it. */
+/** The focus in the space below the top bar. */
 @Composable
 context(model: GalaxyMapModel)
 private fun GalaxyMapOverlay() {
     val entities by model.focusEntitiesState.collectAsState()
-    Column(0, Modifier.fillMaxSize()) {
-        MapTitle(model.content.galaxy.name)
+    Column(0, Modifier.fillMaxSize().padding(top = TopBarUnits)) {
         MapFocus(entities, Modifier.fillMaxWidth().weight(1f))
     }
 }

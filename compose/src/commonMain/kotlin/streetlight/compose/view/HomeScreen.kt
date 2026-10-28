@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.runtime.remember
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,19 +37,23 @@ import streetlight.model.data.HomeContent
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-/** The screen of [HomeRoute]: its content once inflated, shown in the [HomeView]. */
+/** The screen of [HomeRoute]: the logo as its top bar, and its content once inflated, shown in the [HomeView]. */
 @Composable
-fun HomeScreen() = Inflated<HomeContent>(HomeRoute) { content ->
-    context(koinViewModel<HomeModel> { parametersOf(content) }) { HomeView() }
+fun HomeScreen() {
+    val gridState = rememberLazyStaggeredGridState()
+    TopBarMount(TopBar.Logo, remember(gridState) { gridState.scrolledUnder() })
+    Inflated<HomeContent>(HomeRoute) { content ->
+        context(koinViewModel<HomeModel> { parametersOf(content) }) { HomeView(gridState) }
+    }
 }
 
 /**
- * The view of [HomeRoute], under its top bar of the logo, which fades as the view scrolls: the map, the menus, the galaxies beside the connect picker, the home feed's
- * [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
+ * The view of [HomeRoute], in a grid scrolled by [gridState] under the top bar: the map, the menus, the galaxies beside
+ * the connect picker, the home feed's [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
  */
 @Composable
 context(model: HomeModel)
-fun HomeView() {
+fun HomeView(gridState: LazyStaggeredGridState) {
     val page by model.feed.feedState.collectAsState()
     val theme = currentTheme
     PageThemeEffect(null)
@@ -57,11 +63,6 @@ fun HomeView() {
     // in grid mode the grid holds its items a unit from the edges, in place of the map's own padding
     val isGrid = mode == FeedMode.Grid
     val edge = if (isGrid) theme.unit else 0.dp
-
-    val gridState = rememberLazyStaggeredGridState()
-    TopBarMount(TopBar.Logo) {
-        if (gridState.firstVisibleItemIndex > 0) Float.MAX_VALUE else gridState.firstVisibleItemScrollOffset.toFloat()
-    }
 
     LazyStaggeredGridView(
         state = gridState,

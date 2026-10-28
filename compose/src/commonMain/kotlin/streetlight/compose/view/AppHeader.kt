@@ -33,4 +33,4 @@ fun AppHeader(modifier: Modifier = Modifier) {
 private const val HeaderUnits = 2 + HelmIconUnits
 
 /** The inset of the rays from the sides in units: past the helm bar's padding and icon, and a unit clear of the icon. */
-private const val RayInsetUnits = 1 + HelmIconUnits + 1
+const val RayInsetUnits = 1 + HelmIconUnits + 1

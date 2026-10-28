@@ -64,10 +64,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
 | `LocationView` | `locationShell` (`streetlight.web.shell`) |
 | `EarthView` | `viewEarth` (`streetlight.web.view`) |
-| `EarthHeader` | `earthHeader` and `earthControls` (`streetlight.web.view`) |
+| `EarthHeader` | `earthControls` (`streetlight.web.view`); the title of `earthHeader` is the earth's `TopBar.Title` |
 | `GalaxyMapView` | `viewEarth` (`streetlight.web.view`) on a galaxy's map |
 | `MapFocus` | `earthFocus` (`streetlight.web.view`) |
-| `MapTitle` | The map title of `earthHeader` |
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `RouteDock` | `viewRouteDock`, its main routes |
@@ -118,7 +117,7 @@ A tray of the dock holds icons for utilities, never routes.
 
 ## Top Bar
 
-A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. The helm and star stay reachable above the bar, whatever its fade.
+A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. The helm and star stay reachable above the bar, whatever its fade.
 
 ## Page Layouts
 
