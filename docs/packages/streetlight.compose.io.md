@@ -18,6 +18,7 @@ The app's transport to the Streetlight server, its cookies and files, and the lo
 |---|---|
 | `AppTransport` | `WebTransport` (`streetlight.web.io`) |
 | `AppCookieStorage` | The browser's cookies |
+| `OsmClient` | `OSMClient` (`streetlight.web.io`), naming the app to OpenStreetMap as its policy asks |
 
 ## Transport
 

@@ -14,7 +14,7 @@ import streetlight.model.data.Galaxy
 @Composable
 fun EventScoutScreen(route: EventScoutRoute) {
     val scrollState = rememberScrollState()
-    TopBarMount(TopBar.TwoTone("Event ", "Scout"), scrollState)
+    TopBarMount(TopBar.TwoTone("Event", "Scout"), scrollState)
     StarGate {
         Inflated<PostGalaxy>(route) { target -> EventScoutView(target.galaxy, scrollState) }
     }

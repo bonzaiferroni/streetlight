@@ -62,7 +62,7 @@ fun StarConfigView(scrollState: ScrollState) {
     ConfigBody(null, scrollState) {
         when (star.accountType) {
             AccountType.Guest -> RegisterAccountForm()
-            AccountType.Registered -> FormRow {
+            AccountType.Registered -> ColumnRow {
                 EmailSection()
                 PasswordSection()
             }
@@ -81,7 +81,7 @@ private fun RegisterAccountForm() {
     val message by model.registerMessageState.collectAsState()
 
     Column(2) {
-        FormRow {
+        ColumnRow {
             FormSection(null) {
                 BasicText(
                     "Register Account",

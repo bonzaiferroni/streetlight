@@ -14,7 +14,7 @@ import streetlight.model.data.Galaxy
 @Composable
 fun MediaForgeScreen(route: MediaForgeRoute) {
     val scrollState = rememberScrollState()
-    TopBarMount(TopBar.TwoTone("Media ", "Forge"), scrollState)
+    TopBarMount(TopBar.TwoTone("Media", "Forge"), scrollState)
     StarGate {
         Inflated<PostGalaxy>(route) { target -> MediaForgeView(target.galaxy, scrollState) }
     }

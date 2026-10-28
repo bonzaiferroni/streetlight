@@ -14,6 +14,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | `koin` | Services and view models, through `koin-compose` |
 | `io.ktor.client` | `AppTransport`, over the CIO engine |
 | `org.maplibre.compose` | The map, through MapLibre Native |
+| `io.github.vinceglb.filekit` | The system's pickers: a file dialog on a desktop, the photo picker on a phone |
 | `model` | Entities, DTOs, `Api`, and `ApiClient` from `streetlight.model.io` |
 | `kampfire.model` | `Store` and `Tap` |
 | `koala` | The theme's defaults and types, the icon packs, and the markdown parser, through `model` |

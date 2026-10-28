@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -41,8 +42,10 @@ import streetlight.compose.utility.collectAsState
 /**
  * A pill five units tall holding the small [icon], when given, before a field bound to [state], across the width it is
  * given, showing [placeholder] while empty and fading it out when focused. The icon names what the field holds, as the
- * web's `blockLabel` does in words. A field that [isPassword] hides what it holds. [onSubmit] is called by the
- * keyboard's done action. The cousin of koala's `textField`, styled as the [SearchField].
+ * web's `blockLabel` does in words, at half opacity so it stays behind what is typed. A field that [isPassword] hides
+ * what it holds. [keyboardType] and [capitalization] shape the keyboard a touch screen offers, such as one for a url, or
+ * capitals at the start of each word of a name. [onSubmit] is called by the keyboard's done action. The cousin of koala's `textField`, styled as the
+ * [SearchField].
  */
 @Composable
 fun TextField(
@@ -51,6 +54,8 @@ fun TextField(
     modifier: Modifier = Modifier,
     icon: SvgPack? = null,
     isPassword: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    capitalization: KeyboardCapitalization = KeyboardCapitalization.None,
     onSubmit: (() -> Unit)? = null,
 ) {
     val theme = currentTheme
@@ -76,7 +81,8 @@ fun TextField(
         interactionSource = interactionSource,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text,
+            capitalization = capitalization,
+            keyboardType = if (isPassword) KeyboardType.Password else keyboardType,
             imeAction = if (onSubmit != null) ImeAction.Done else ImeAction.Next,
         ),
         keyboardActions = KeyboardActions(onDone = { onSubmit?.invoke() }),
@@ -91,7 +97,7 @@ fun TextField(
                     .padding(start = if (icon != null) 1 else 2, end = 2),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                icon?.let { Icon(it.small, color = { theme.colors.ink }) }
+                icon?.let { Icon(it.small, color = { theme.colors.ink.copy(alpha = theme.opacity.half) }) }
                 Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     BasicText(
                         placeholder,

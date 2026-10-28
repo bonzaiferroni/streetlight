@@ -36,7 +36,7 @@ fun GuestRegistrationForm() {
     val message by model.messageState.collectAsState()
 
     Column(2) {
-        FormRow {
+        ColumnRow {
             FormSection(null) {
                 BasicText(
                     "Guest accounts",
@@ -80,7 +80,7 @@ fun FullRegistrationForm() {
     val message by model.messageState.collectAsState()
 
     Column(2) {
-        FormRow {
+        ColumnRow {
             UsernameSection()
             FormSection("Email") {
                 TextField(model.emailField, "email", icon = SvgFile.Mail)

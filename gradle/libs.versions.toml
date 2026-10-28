@@ -10,6 +10,7 @@ androidx-test-junit = "1.3.0"
 coilCompose = "3.6.3"
 haze = "2.0.1"
 compose-multiplatform = "1.12.2"
+filekit = "0.17.0"
 compose-navigation = "2.9.0"
 navigation3 = "1.2.0"
 maplibreCompose = "0.20.0"
@@ -55,6 +56,7 @@ timeshape = "2026b.29"
 kotlin-logging = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlinLogging" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
+filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-blur = { module = "dev.chrisbanes.haze:haze-blur", version.ref = "haze" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }

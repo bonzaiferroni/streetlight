@@ -1,16 +1,12 @@
 package streetlight.compose.view
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -22,37 +18,51 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import kampfire.model.MutableTap
 import koala.SvgFile
+import streetlight.compose.modifier.Outline
+import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.filigree
+import streetlight.compose.modifier.padding
+import streetlight.compose.modifier.zenBg
 import streetlight.compose.modifier.opacityHigh
 import streetlight.compose.modifier.pointerClick
 import streetlight.compose.utility.collectAsState
 
 /**
- * The sections of a form side by side, each at least [FormSectionMinUnits] wide and sharing the width, wrapping onto
- * more rows where they do not fit. The cousin of the web's `formRow`.
+ * A section of a form under the heading [name], when given, a column of a [ColumnRow]. The cousin of the web's
+ * `formSection`.
  */
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun FormRow(modifier: Modifier = Modifier, content: @Composable FlowRowScope.() -> Unit) {
-    val theme = currentTheme
-    FlowRow(
-        modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(theme.unit * 2),
-        verticalArrangement = Arrangement.spacedBy(theme.unit * 2),
-        content = content,
-    )
-}
-
-/** A section of a form under the heading [name], when given, filling its share of a [FormRow]. */
 @Composable
 fun FlowRowScope.FormSection(name: String?, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Column(1, modifier.widthIn(min = currentTheme.unit * FormSectionMinUnits).weight(1f)) {
+    Column(1, modifier.rowColumn()) {
         name?.let { FormHeading(it) }
         content()
     }
 }
 
-/** The heading of a form's section, [text] in capitals in a filigree. The cousin of the web's `formHeading`. */
+/**
+ * A card of a form's sections under the heading [name], when given, in a filigree, on the zen background, outlined, its
+ * sections two units apart. The cousin of the web's `formCard`.
+ */
+@Composable
+fun FormCard(name: String?, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    val theme = currentTheme
+    Column(1, modifier.fillMaxWidth()) {
+        name?.let {
+            BasicText(
+                it,
+                Modifier.fillMaxWidth().filigree(),
+                style = theme.text.heading3.copy(textAlign = TextAlign.Center),
+                color = { theme.colors.ink },
+            )
+        }
+        Column(2, Modifier.fillMaxWidth().borderRadius(2, outline = Outline.Mid).zenBg().padding(2), content = content)
+    }
+}
+
+/**
+ * The heading of a form's section, [text] in capitals in the system's foreground, in a filigree. The cousin of the web's
+ * `formHeading`.
+ */
 @Composable
 fun FormHeading(text: String) {
     val theme = currentTheme
@@ -60,7 +70,7 @@ fun FormHeading(text: String) {
         text.uppercase(),
         Modifier.fillMaxWidth().filigree(),
         style = theme.text.heading4.copy(textAlign = TextAlign.Center),
-        color = { theme.colors.ink },
+        color = { theme.colors.systemFg },
     )
 }
 
@@ -113,6 +123,3 @@ fun CheckBox(state: MutableTap<Boolean>, label: String, modifier: Modifier = Mod
         BasicText(label, style = theme.text.regular, color = { theme.colors.ink })
     }
 }
-
-/** The narrowest a form's section runs in units, before the sections of a row wrap. */
-const val FormSectionMinUnits = 32

@@ -36,6 +36,7 @@ class KoalaColors(
     val primaryButton get() = primary.scaleOklch(0.93f, 0.8f)
     val accentButton get() = accent.scaleOklch(0.93f, 0.8f)
     val grayBg = Koala.gray.toColor().mixSrgb(paper, 0.5f)
+    val systemFg = Koala.purple.toColor().mixSrgb(ink, 0.5f)
     val red = Koala.red.toColor()
     val dangerBg = red.mixSrgb(paper, 0.75f)
     val inkDisabled = ink.mixSrgb(paper, 0.5f)

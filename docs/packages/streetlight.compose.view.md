@@ -85,9 +85,16 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `StarDashView` | `viewStarDash` (`streetlight.web.view`) |
 | `EventScoutView`, `LocationScoutView`, `MediaForgeView` | `viewEventScout`, `viewLocationScout`, `viewMediaForge` (`streetlight.web.view`) |
 | `CreatePostMenu` | `createPostMenu` (`streetlight.web.component`) and `wireCreatePost` |
+| `SelectorContainer` | `selectorContainer` (`koala.dom.layout`) |
+| `StageHeader` | `onboardStage` (`streetlight.web.view`), without its strikethrough |
+| `LocationScoutView` | `viewLocationScout` and `locationFinder` (`streetlight.web.view`) |
 | `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
+| `ColumnRow` | `BodyStyle.ColumnRow` (`streetlight.web.layout`) |
+| `FormCard` | `formCard` (`streetlight.web.dom.layout`) |
+| `ImageField` | `imageFormSection` and `imageDrop` (`streetlight.web.view`), with FileKit's picker |
+| `LocationEditForm` | `locationEditFormBody` (`streetlight.web.view`) |
 | `CheckBox` | `checkBox` (`koala.dom.component`) |
-| `FormRow`, `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formRow`, `formSection`, `formHeading`, `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
+| `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formSection`, `formHeading`, `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
 | `GuestRegistrationForm`, `FullRegistrationForm` | `guestRegistrationForm`, `fullRegistrationForm` (`streetlight.web.view`) |
 | `RawDialogMount`, `DialogMount`, `DialogCard` | `dialog` with `rawDialogContent` or `dialogContent`, and `dialogCard` (`koala.dom.component`) |
 
@@ -133,6 +140,10 @@ A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value,
 ## Star Gate
 
 A screen of the star's own puts a `StarGate` ahead of `Inflated`, so its content is read only while a star is signed in, and the star is in context for what it shows. Signed out, it shows its fallback, by default the `SignInForm` on a card. Signing out leaves the star where they are; each gate turns to its fallback, so nothing of the star's stays on screen. What a gated screen shows may depend on the star's account type, as the star configuration shows a guest the form to register and a registered star their email and password; it changes with the star, so an upgrade shows the registered form at once.
+
+## Forms
+
+A form is laid out in `ColumnRow`s: columns side by side while each keeps 400dp, wrapping below that, none wider than 540dp, as the web's `ColumnRow`. A `FormSection` is such a column, and a `FormCard` holds a form's rows. A field asks for the keyboard a touch screen should offer, such as `KeyboardType.Uri` for a link or word capitals for a name, as a phone's own forms do.
 
 ## Dialogs
 

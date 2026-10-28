@@ -4,6 +4,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import streetlight.compose.io.AppTransport
 import streetlight.model.io.ApiClient
+import streetlight.compose.io.OsmClient
 import streetlight.model.data.Account
 import streetlight.model.data.GalaxyContent
 import streetlight.model.data.HomeContent
@@ -21,6 +22,7 @@ val appModule = module {
     single { GeoCamera() }
     single { GeoMap(get()) }
     single { StarSession(get()) }
+    single { OsmClient() }
     viewModel { (route: AppRoute) -> InflationModel(route, get()) }
     viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
@@ -28,6 +30,7 @@ val appModule = module {
     viewModel { EarthModel(get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
     viewModel { (account: Account) -> AccountEditor(account, get(), get()) }
+    viewModel { (target: PostGalaxy) -> LocationScout(target.galaxy, get(), get(), get()) }
 }
 
 /** The API of the server on this machine, where the app points while in development. */

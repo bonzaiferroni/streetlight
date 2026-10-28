@@ -80,7 +80,7 @@ fun SearchField(
             .padding(start = 1, end = 2),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(SvgFile.Search.small, color = { theme.colors.ink })
+        Icon(SvgFile.Search.small, color = { theme.colors.ink.copy(alpha = theme.opacity.half) })
         BasicTextField(
             value = text,
             onValueChange = { state.set(it) },

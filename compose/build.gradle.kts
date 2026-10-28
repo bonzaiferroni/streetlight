@@ -32,6 +32,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.cbor)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
+            implementation(libs.filekit.dialogs.compose)
             implementation(libs.maplibre.compose)
         }
         jvmMain.dependencies {
