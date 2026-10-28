@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +42,7 @@ fun HomeScreen() = Inflated<HomeContent>(HomeRoute) { content ->
 }
 
 /**
- * The view of [HomeRoute]: the header, the map, the menus, the galaxies beside the connect picker, the home feed's
+ * The view of [HomeRoute], under its top bar of the logo, which fades as the view scrolls: the map, the menus, the galaxies beside the connect picker, the home feed's
  * [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
  */
 @Composable
@@ -55,12 +56,18 @@ fun HomeView() {
 
     // in grid mode the grid holds its items a unit from the edges, in place of the map's own padding
     val isGrid = mode == FeedMode.Grid
+    val edge = if (isGrid) theme.unit else 0.dp
+
+    val gridState = rememberLazyStaggeredGridState()
+    TopBarMount(TopBar.Logo) {
+        if (gridState.firstVisibleItemIndex > 0) Float.MAX_VALUE else gridState.firstVisibleItemScrollOffset.toFloat()
+    }
 
     LazyStaggeredGridView(
+        state = gridState,
         spacing = if (isGrid) theme.unit else theme.line,
-        contentPadding = PaddingValues(if (isGrid) theme.unit else 0.dp),
+        contentPadding = PaddingValues(start = edge, top = theme.unit * TopBarUnits + edge, end = edge, bottom = edge),
     ) {
-        fullItem { AppHeader() }
         fullItem {
             MapMount(
                 Modifier.fillMaxWidth()

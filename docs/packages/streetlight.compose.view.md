@@ -116,6 +116,10 @@ A tray of the dock holds icons for utilities, never routes.
 
 `AppPortal` decorates the entries of each stack on their own, so a hidden stack's pages keep their saved state and view models.
 
+## Top Bar
+
+A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. The helm and star stay reachable above the bar, whatever its fade.
+
 ## Page Layouts
 
 A page with a design, such as a galaxy's or a location's, lays out its `PageLayout` with `renderLayout`, which adds each block to the view's lazy grid with `renderBlock`. The family keeps the web's names: the functions on the lazy scope are lower case, and the composable of each block is `RenderFoo`, after the web's `renderFoo`. A feed block is a `feedSection` of the grid; every other block is a full item showing `RenderBlock`.

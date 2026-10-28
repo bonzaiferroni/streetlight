@@ -1,6 +1,10 @@
 package streetlight.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import streetlight.compose.view.LocalTopBarHost
+import streetlight.compose.view.TopBarHost
+import streetlight.compose.view.TopBarHostState
 import androidx.compose.runtime.LaunchedEffect
 import streetlight.compose.model.StarSession
 import androidx.compose.runtime.CompositionLocalProvider
@@ -35,8 +39,10 @@ fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
         val session = koinInject<StarSession>()
         LaunchedEffect(session) { session.restore() }
 
-        CompositionLocalProvider(LocalPortal provides portal) {
+        val topBarHost = remember { TopBarHostState() }
+        CompositionLocalProvider(LocalPortal provides portal, LocalTopBarHost provides topBarHost) {
             AppTheme(bar = bar, overlay = {
+                TopBarHost(Modifier.align(Alignment.TopCenter))
                 RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2))
                 // the bar's menus open over the dock
                 HelmBar()
