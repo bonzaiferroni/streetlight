@@ -173,7 +173,9 @@ body {
     --primary-button: oklch(from rgb(var(--primary)) calc(l * 0.93) calc(c * 0.8) h);
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));
     --primary-light-fg: color-mix(in srgb, rgb(var(--primary)) 25%, rgb(var(--ink)));
-    --primary-bg: color-mix(in srgb, var(--primary-button) 30%, rgb(var(--paper)));
+    --primary-bg: radial-gradient(circle farthest-side,
+        color-mix(in srgb, var(--primary-fg) 25%, var(--paper-bg)), 70%,
+        color-mix(in srgb, var(--primary-fg) 15%, var(--paper-bg)));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
     

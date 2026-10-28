@@ -200,7 +200,7 @@ private fun DrawScope.drawInnerOutline(isFarRight: Boolean, width: Float, radius
 }
 
 /** The radius of the far corner of a menu's card in units. */
-private const val MenuRadiusUnits = 2.5f
+private const val MenuRadiusUnits = 3
 
 /** The size of a helm icon in units, the web's `HelmBar.IconMod`. */
 const val HelmIconUnits = 6

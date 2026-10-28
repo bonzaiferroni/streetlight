@@ -26,6 +26,7 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import kampfire.model.MutableTap
 import koala.SvgFile
 import streetlight.compose.modifier.cardBg
+import streetlight.compose.modifier.primaryBg
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 import streetlight.model.data.EventCategory
@@ -93,7 +94,7 @@ fun EventTagMenu(
                 BasicText(
                     text = option.label.uppercase(),
                     modifier = Modifier.fillMaxWidth()
-                        .then(if (option == category) Modifier.background(theme.colors.primaryBg) else Modifier.cardBg())
+                        .then(if (option == category) Modifier.primaryBg() else Modifier.cardBg())
                         .clickable { onCategory(option) }
                         .pointerHoverIcon(PointerIcon.Hand)
                         .padding(horizontal = 2, vertical = 1),

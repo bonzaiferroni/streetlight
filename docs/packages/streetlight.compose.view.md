@@ -79,6 +79,10 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `TagFilter`, `EventTagMenu` | `tagFilterMenu` (`streetlight.web.component`) and `eventTagMenu` |
 | `SearchField` | `searchField` (`koala.component`) |
 | `TextField` | `textField` (`koala.component`) |
+| `CheckBox` | `checkBox` (`koala.dom.component`) |
+| `FormRow`, `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formRow`, `formSection`, `formHeading`, `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
+| `GuestRegistrationForm`, `FullRegistrationForm` | `guestRegistrationForm`, `fullRegistrationForm` (`streetlight.web.view`) |
+| `RawDialogMount`, `DialogMount`, `DialogCard` | `dialog` with `rawDialogContent` or `dialogContent`, and `dialogCard` (`koala.dom.component`) |
 
 A button is a `Button` whatever its click does. The web's `btn` exists to dress a link as a button; compose has no such split, so a button that navigates and one that acts are one composable, built on foundation's `clickable` with no Material indication.
 
@@ -119,6 +123,10 @@ A tray of the dock holds icons for utilities, never routes.
 
 A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. The helm and star stay reachable above the bar, whatever its fade.
 
+## Dialogs
+
+A dialog is declared with a `RawDialogMount`, its content from scratch, or a `DialogMount`, its content on a `DialogCard`, composed beside what opens it and open while its state is `true`. Unlike a top bar, it hands the `DialogHost` a composable, since a dialog's content is its own. The host, last in the overlay, shows one dialog at a time over the blurred app; opening another closes the first, and a click on the veil, Escape, or a change of route closes it.
+
 ## Page Layouts
 
 A page with a design, such as a galaxy's or a location's, lays out its `PageLayout` with `renderLayout`, which adds each block to the view's lazy grid with `renderBlock`. The family keeps the web's names: the functions on the lazy scope are lower case, and the composable of each block is `RenderFoo`, after the web's `renderFoo`. A feed block is a `feedSection` of the grid; every other block is a full item showing `RenderBlock`.
@@ -137,7 +145,7 @@ A part that a page shares with the page it opens moves between them, the contain
 
 ## Composables
 
-A view that scrolls is a `LazyGridView`, one lazy grid for the whole view, filled with sections built on `LazyGridScope`. `LazyStaggeredGridView` is its masonry cousin, each column stacking items of their own heights, filled with sections built on `LazyStaggeredGridScope`; a section is written for each scope it serves. On either, `fullItem` spans every column, and `pinnedItem` also stays composed off screen, for content costly to start anew. The home view is a `LazyStaggeredGridView`, its items a unit apart and a unit from its edges in `Grid` mode, so the rounded entries stand clear, and a line apart otherwise. The map and the feed heading stay where they are in either mode.
+A view that scrolls is a `LazyGridView`, one lazy grid for the whole view, filled with sections built on `LazyGridScope`. `LazyStaggeredGridView` is its masonry cousin, each column stacking items of their own heights, filled with sections built on `LazyStaggeredGridScope`; a section is written for each scope it serves. On either, `fullItem` spans every column, and `pinnedItem` also stays composed off screen, for content costly to start anew. A `LazyStaggeredGridView` takes the feed's mode and spaces itself by it: its items a unit apart and a unit from its edges in `Grid` mode, so the rounded entries stand clear, and a line apart otherwise, each full item padded by the mode's `sideUnits`. It keeps the top bar's room at its top. The map and the feed heading stay where they are in either mode.
 
 A composable draws its content and leaves its framing to the caller. It takes a `modifier` and applies it to its root, and the call site gives the corners, shadow, outline and surface, as `CellGrid(details, FeedRowMod.Cells)`. The composable keeps a styling of its own only where its content depends on it, as the cells of `CellGrid` need a background behind them for their gaps to draw its lines. A composable that clips to a shape of its own, such as `Button` or `SearchField`, takes a `backdrop` modifier, drawn within its shape beneath its background, so a caller can blur what lies behind it, as the earth's controls blur the map.
 
@@ -160,7 +168,7 @@ BasicText(text, color = { theme.colors.accent })
 
 ### Colors
 
-A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. An `EntityType` is given its color by `KoalaColors.colorOf`, as the web gives it a custom property, and no type the primary color. `muted` is the ink at the web's `--opacity-high`.
+A color derived from the theme, such as `accentFg`, is a getter on `KoalaColors` mixing its sources the way `ThemeCss` does. An `EntityType` is given its color by `KoalaColors.colorOf`, as the web gives it a custom property, and no type the primary color. `muted` is the ink at the web's `--opacity-high`. A background that is a gradient, as `--primary-bg` and `--accent-bg` are, is a function of the surface's size on `KoalaColors`, such as `primaryBg(size)`, drawn by its modifier.
 
 The scheme color of a part of the page is a context, as the web's `--color-scheme`: `LocalSchemeColor` holds the resolved color. A view is neutral, so `AppTheme` provides the ink, and a layout that shows an entity provides the entity's color, `colorOf(entity.toEntityType())`, as `FeedRow`, `EntityHeader` and `SmallGalaxyCard` do, a typeless entity taking the primary color. A part that paints in it, such as `schemeBg()` or a tab's button, reads it as given.
 

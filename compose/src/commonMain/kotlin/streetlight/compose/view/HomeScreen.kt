@@ -10,14 +10,12 @@ import androidx.compose.ui.unit.em
 import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.opacityHigh
 import streetlight.model.data.Galaxy
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.runtime.remember
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,7 +39,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun HomeScreen() {
     val gridState = rememberLazyStaggeredGridState()
-    TopBarMount(TopBar.Logo, remember(gridState) { gridState.scrolledUnder() })
+    TopBarMount(TopBar.Logo, gridState)
     Inflated<HomeContent>(HomeRoute) { content ->
         context(koinViewModel<HomeModel> { parametersOf(content) }) { HomeView(gridState) }
     }
@@ -60,26 +58,18 @@ fun HomeView(gridState: LazyStaggeredGridState) {
 
     val mode by model.feed.modeState.collectAsState()
 
-    // in grid mode the grid holds its items a unit from the edges, in place of the map's own padding
-    val isGrid = mode == FeedMode.Grid
-    val edge = if (isGrid) theme.unit else 0.dp
-
-    LazyStaggeredGridView(
-        state = gridState,
-        spacing = if (isGrid) theme.unit else theme.line,
-        contentPadding = PaddingValues(start = edge, top = theme.unit * TopBarUnits + edge, end = edge, bottom = edge),
-    ) {
+    LazyStaggeredGridView(gridState, mode) {
         fullItem {
             MapMount(
                 Modifier.fillMaxWidth()
-                    .padding(if (isGrid) 0 else 1)
+                    .padding(mode.sideUnits)
                     .height(theme.unit * MapHeightUnits)
                     .borderRadius(2, moonShadow = true),
                 markerMap = model.markerMap,
             )
         }
-        fullItem { HomeMenus(Modifier.padding(horizontal = if (isGrid) 0 else 1)) }
-        fullItem { LeadingSection(Modifier.padding(horizontal = if (isGrid) 0 else 1, vertical = 4)) }
+        fullItem { HomeMenus(Modifier.padding(horizontal = mode.sideUnits)) }
+        fullItem { LeadingSection(Modifier.padding(horizontal = mode.sideUnits, vertical = 4)) }
         context(model.feed) { feedSection(page, mode) }
         fullItem { AppFooter(HomeViewSource, Modifier.padding(top = 8)) }
     }

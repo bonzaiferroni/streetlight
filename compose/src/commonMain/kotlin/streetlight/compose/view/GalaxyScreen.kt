@@ -1,7 +1,6 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -9,12 +8,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.runtime.remember
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import koala.markdown.HeadingLevel
 import streetlight.compose.model.FeedModel
@@ -44,7 +41,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun GalaxyScreen(route: GalaxyRoute) {
     val gridState = rememberLazyStaggeredGridState()
-    TopBarMount(TopBar.Logo, remember(gridState) { gridState.scrolledUnder() })
+    TopBarMount(TopBar.Logo, gridState)
     Inflated<GalaxyContent>(route) { content ->
         context(koinViewModel<GalaxyModel> { parametersOf(content) }) { GalaxyView(gridState) }
     }
@@ -61,23 +58,13 @@ fun GalaxyView(gridState: LazyStaggeredGridState) {
     val loaded = model.content
     val page by model.feed.feedState.collectAsState()
     val mode by model.feed.modeState.collectAsState()
-    val theme = currentTheme
     PageThemeEffect(loaded.galaxy.design?.theme)
 
-    // in grid mode the grid holds its items a unit from the edges, in place of their own padding
-    val isGrid = mode == FeedMode.Grid
-    val side = if (isGrid) 0 else 1
     val layout = loaded.galaxy.design?.layout ?: PageLayout.defaultOf(loaded)
 
-    val edge = if (isGrid) theme.unit else 0.dp
-
-    LazyStaggeredGridView(
-        state = gridState,
-        spacing = if (isGrid) theme.unit else theme.line,
-        contentPadding = PaddingValues(start = edge, top = theme.unit * TopBarUnits + edge, end = edge, bottom = edge),
-    ) {
+    LazyStaggeredGridView(gridState, mode) {
         context(model.feed) {
-            layout.blocks.forEach { block -> layoutBlock(block, loaded, page, mode, side) }
+            layout.blocks.forEach { block -> layoutBlock(block, loaded, page, mode, mode.sideUnits) }
         }
         fullItem { AppFooter(GalaxyViewSource, Modifier.padding(top = 8)) }
     }

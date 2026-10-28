@@ -206,7 +206,7 @@ $OverscrollBehaviorContain { overscroll-behavior: contain; }
 $ScrollbarWidthNone        { scrollbar-width:     none; }
 
 /* Background */
-$PrimaryBg     { background-color: var(--primary-bg); }
+$PrimaryBg     { background:       var(--primary-bg); }
 $PrimaryCardBg { background-color: var(--primary-card-bg); }
 $SystemBg      { background-color: var(--system-bg); }
 $InkBg         { background-color: var(--ink-bg); }

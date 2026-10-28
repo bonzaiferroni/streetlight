@@ -63,8 +63,8 @@ val LocalTopBarHost = staticCompositionLocalOf<TopBarHostState> { error("No TopB
 /**
  * Shows [bar] as this view's top bar, fading as the view's content scrolls [scrolled] pixels under it. The view keeps
  * [TopBarUnits] of room above its content for the bar. A bar known from the route is mounted by its screen, before the
- * content is read, so a change of page between two views with the same bar leaves it in place. The mount leaves as its page starts to leave, so the bar fades
- * out with the page.
+ * content is read, so a change of page between two views with the same bar leaves it in place. The mount leaves as its
+ * page starts to leave, so the bar fades out with the page.
  */
 @Composable
 fun TopBarMount(bar: TopBar, scrolled: () -> Float) {
@@ -131,13 +131,30 @@ private fun TopBarTitle(text: String) {
     )
 }
 
+/** Shows [bar] as the top bar of a view whose grid scrolls by [gridState], fading as its content scrolls under it. */
+@Composable
+fun TopBarMount(bar: TopBar, gridState: LazyStaggeredGridState) =
+    TopBarMount(bar, remember(gridState) { gridState.scrolledUnder() })
+
+/** Shows [bar] as the top bar of a view whose column scrolls by [scrollState], fading as its content scrolls under it. */
+@Composable
+fun TopBarMount(bar: TopBar, scrollState: ScrollState) =
+    TopBarMount(bar, remember(scrollState) { scrollState.scrolledUnder() })
+
+/** Shows [bar] as the top bar of a view that does not scroll, so the bar stays whole. */
+@Composable
+fun TopBarMount(bar: TopBar) = TopBarMount(bar, Unscrolled)
+
 /** The pixels this grid has scrolled under a top bar, all of them once its first item has left. */
-fun LazyStaggeredGridState.scrolledUnder(): () -> Float = {
+private fun LazyStaggeredGridState.scrolledUnder(): () -> Float = {
     if (firstVisibleItemIndex > 0) Float.MAX_VALUE else firstVisibleItemScrollOffset.toFloat()
 }
 
 /** The pixels this scroll has moved its content under a top bar. */
-fun ScrollState.scrolledUnder(): () -> Float = { value.toFloat() }
+private fun ScrollState.scrolledUnder(): () -> Float = { value.toFloat() }
+
+/** The scroll of a view that does not scroll. */
+private val Unscrolled = { 0f }
 
 /** The height of a top bar in units: the helm bar's icon and a unit above and below it. */
 const val TopBarUnits = 2 + HelmIconUnits

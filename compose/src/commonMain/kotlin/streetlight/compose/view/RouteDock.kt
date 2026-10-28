@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeInput
@@ -81,7 +81,7 @@ private fun FocusTray(focusDock: FocusDock?, isFocusShown: Boolean, onToggle: ()
     val primary = animateFloatAsState(if (isFocusShown) 1f else 0f, magic.eased())
 
     AnimatedVisibility(focusDock != null, enter = fadeIn(magic.eased()), exit = fadeOut(magic.eased())) {
-        DockGlass(Modifier.pointerClick(onToggle), glass = { glassOf(colors, primary.value) }) {
+        DockGlass(Modifier.pointerClick(onToggle), glass = { drawGlass(colors, primary.value) }) {
             val icon = shownDock?.icon?.takeIf { isFocusShown } ?: SvgFile.Flame
             AnimatedContent(icon, transitionSpec = { fadeIn(magic.eased()) togetherWith fadeOut(magic.eased()) }) {
                 Icon(it.small, color = { colors.ink.copy(alpha = InkAlpha) })
@@ -102,7 +102,7 @@ private fun DockRoutes(dock: List<DockRoute>) {
     val portal = currentPortal
     val focus = animateFloatAsState(if (dock == StableDock) 0f else 1f, magic.eased())
 
-    DockGlass(glass = { glassOf(colors, focus.value) }) {
+    DockGlass(glass = { drawGlass(colors, focus.value) }) {
         AnimatedContent(dock, transitionSpec = { fadeIn(magic.eased()) togetherWith fadeOut(magic.eased()) }) { routes ->
             val isStable = routes == StableDock
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -133,14 +133,14 @@ private fun DockRoutes(dock: List<DockRoute>) {
     }
 }
 
-/** A pill of [content] on [glass], read while drawing, that blurs the page beneath it. */
+/** A pill of [content] on the [glass] it draws, which blurs the page beneath it. */
 @Composable
-private fun DockGlass(modifier: Modifier = Modifier, glass: () -> Color, content: @Composable () -> Unit) {
+private fun DockGlass(modifier: Modifier = Modifier, glass: DrawScope.() -> Unit, content: @Composable () -> Unit) {
     val theme = currentTheme
     Box(
         Modifier.clip(PillShape)
             .hazeBlur(HazeInput.Sources(LocalPageHaze.current), DockBlur)
-            .drawBehind { drawRect(glass()) }
+            .drawBehind(glass)
             .border(theme.line, theme.colors.outlineMid, PillShape)
             .then(modifier)
             .padding(1),
@@ -149,9 +149,11 @@ private fun DockGlass(modifier: Modifier = Modifier, glass: () -> Color, content
     }
 }
 
-/** The glass of the dock, turned [primary] of the way from paper to the primary background. */
-private fun glassOf(colors: KoalaColors, primary: Float) =
-    colors.paper.copy(alpha = GlassAlpha).mixSrgb(colors.primaryBg.copy(alpha = GlassAlpha), 1f - primary)
+/** Draws the glass of the dock, turned [primary] of the way from paper to the primary background. */
+private fun DrawScope.drawGlass(colors: KoalaColors, primary: Float) {
+    drawRect(colors.paper, alpha = GlassAlpha * (1f - primary))
+    drawRect(colors.primaryBg(size), alpha = GlassAlpha * primary)
+}
 
 private val PillShape = RoundedCornerShape(50)
 

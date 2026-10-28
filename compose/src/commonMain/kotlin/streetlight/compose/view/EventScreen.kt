@@ -32,7 +32,7 @@ import streetlight.model.data.costDetailOf
 @Composable
 fun EventScreen(route: EventRoute) {
     val scrollState = rememberScrollState()
-    TopBarMount(TopBar.Logo, remember(scrollState) { scrollState.scrolledUnder() })
+    TopBarMount(TopBar.Logo, scrollState)
     Inflated<EventLocation>(route) { EventView(it, scrollState) }
 }
 

@@ -1,6 +1,9 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.LaunchedEffect
+import streetlight.compose.model.UserCreator
+import streetlight.model.io.ApiClient
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kampfire.model.Ok
+import kampfire.model.MutableTap
 import kampfire.model.storeOf
 import koala.SvgPack
 import koala.SvgFile
@@ -47,7 +51,7 @@ fun StarMenu(onClose: () -> Unit, badge: @Composable () -> Unit) {
 
 /**
  * The fields of a username or email and a password, a problem from the last try, and the buttons to create an account,
- * which does nothing until the app has the dialog, and to sign in through [session].
+ * which opens its dialog, and to sign in through [session].
  */
 @Composable
 private fun SignInForm(session: StarSession) {
@@ -57,6 +61,7 @@ private fun SignInForm(session: StarSession) {
     val password = remember { storeOf("") }
     var problem by remember { mutableStateOf<String?>(null) }
     var isSigningIn by remember { mutableStateOf(false) }
+    val isCreating = remember { storeOf(false) }
 
     val signIn = signIn@{
         if (isSigningIn || identity.now.isBlank() || password.now.isBlank()) return@signIn
@@ -75,8 +80,32 @@ private fun SignInForm(session: StarSession) {
     TextField(password, "password", icon = SvgFile.Key, isPassword = true, onSubmit = signIn)
     problem?.let { BasicText(it, style = theme.text.small, color = { theme.colors.red }) }
     Row(1) {
-        Button("create account", onClick = {}, style = ButtonStyle.Zen)
+        Button("create account", onClick = { isCreating.set(true) }, style = ButtonStyle.Zen)
         Button("sign in", onClick = signIn, isEnabled = !isSigningIn)
+    }
+    CreateAccountDialog(isCreating, session)
+}
+
+/**
+ * The dialog to create an account while [state] is `true`: a tab for each kind of account, a guest's or a registered
+ * star's, each form on its card, sharing one [UserCreator]. It closes once the new star is signed in. The cousin of the
+ * web's sign-in dialog, whose third tab, signing in, is the star menu's.
+ */
+@Composable
+private fun CreateAccountDialog(state: MutableTap<Boolean>, session: StarSession) {
+    RawDialogMount(state, "Create Account") {
+        val api = koinInject<ApiClient>()
+        val scope = rememberCoroutineScope()
+        val creator = remember { UserCreator(scope, api, session) }
+        val star by session.starState.collectAsState()
+        LaunchedEffect(star) { if (star != null) state.set(false) }
+
+        context(creator) {
+            Tabs {
+                tab("Guest", SvgFile.Ghost) { DialogCard { GuestRegistrationForm() } }
+                tab("Register", SvgFile.UserPlus) { DialogCard { FullRegistrationForm() } }
+            }
+        }
     }
 }
 

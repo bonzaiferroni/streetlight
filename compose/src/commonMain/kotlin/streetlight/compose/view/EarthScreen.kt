@@ -31,7 +31,7 @@ fun EarthScreen() = context(koinViewModel<EarthModel>()) { EarthView() }
 context(model: EarthModel)
 fun EarthView() {
     PageThemeEffect(null)
-    TopBarMount(TopBar.Title("Events")) { 0f }
+    TopBarMount(TopBar.Title("Events"))
     MapMount(Modifier.fillMaxSize(), radius = 0, markerMap = model.markerMap, overlay = { EarthOverlay() })
 }
 

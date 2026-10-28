@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import streetlight.compose.view.LocalTopBarHost
 import streetlight.compose.view.TopBarHost
+import streetlight.compose.view.DialogHost
+import streetlight.compose.view.DialogHostState
+import streetlight.compose.view.LocalDialogHost
 import streetlight.compose.view.TopBarHostState
 import androidx.compose.runtime.LaunchedEffect
 import streetlight.compose.model.StarSession
@@ -40,12 +43,18 @@ fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
         LaunchedEffect(session) { session.restore() }
 
         val topBarHost = remember { TopBarHostState() }
-        CompositionLocalProvider(LocalPortal provides portal, LocalTopBarHost provides topBarHost) {
+        val dialogHost = remember { DialogHostState() }
+        CompositionLocalProvider(
+            LocalPortal provides portal,
+            LocalTopBarHost provides topBarHost,
+            LocalDialogHost provides dialogHost,
+        ) {
             AppTheme(bar = bar, overlay = {
                 TopBarHost(Modifier.align(Alignment.TopCenter))
                 RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2))
-                // the bar's menus open over the dock
+                // the bar's menus open over the dock, and a dialog over everything
                 HelmBar()
+                DialogHost()
             }) {
                 MapHost { AppPortal() }
             }

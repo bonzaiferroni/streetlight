@@ -28,7 +28,7 @@ context(model: GalaxyMapModel)
 fun GalaxyMapView() {
     val galaxy = model.content.galaxy
     PageThemeEffect(galaxy.design?.theme)
-    TopBarMount(TopBar.Title(galaxy.name)) { 0f }
+    TopBarMount(TopBar.Title(galaxy.name))
     MapMount(
         Modifier.fillMaxSize(),
         center = model.center,

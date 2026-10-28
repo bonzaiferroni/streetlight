@@ -93,7 +93,13 @@ fun Modifier.heavyCardBg() = this then BackgroundElement(Background.HeavyCard)
  * Paints the context's [LocalSchemeColor] over paper behind the content, brighter in a circle at the center that
  * fades out toward the farther sides. The web's `SchemeBg`.
  */
-fun Modifier.schemeBg() = this then SchemeBgElement
+fun Modifier.schemeBg() = this then RadialBgElement(RadialBg.Scheme)
+
+/** Paints the theme's primary background behind the content, brighter at its center. The web's `PrimaryBg`. */
+fun Modifier.primaryBg() = this then RadialBgElement(RadialBg.Primary)
+
+/** Paints the theme's accent background behind the content, brighter at its center. The web's `AccentBg`. */
+fun Modifier.accentBg() = this then RadialBgElement(RadialBg.Accent)
 
 /**
  * Clips the content at [height] units and fades it over the two units that end [inset] units above the clip, as the
@@ -211,24 +217,26 @@ private class BackgroundNode(var background: Background) : Modifier.Node(), Draw
     }
 }
 
-private data object SchemeBgElement : ModifierNodeElement<SchemeBgNode>() {
-    override fun create() = SchemeBgNode()
-    override fun update(node: SchemeBgNode) = Unit
+/** The color a radial background is painted in. */
+private enum class RadialBg { Scheme, Primary, Accent }
+
+private data class RadialBgElement(val background: RadialBg) : ModifierNodeElement<RadialBgNode>() {
+    override fun create() = RadialBgNode(background)
+    override fun update(node: RadialBgNode) {
+        node.background = background
+        node.invalidateDraw()
+    }
 }
 
-private class SchemeBgNode : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
+private class RadialBgNode(var background: RadialBg) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     override fun ContentDrawScope.draw() {
         val colors = theme.colors
-        val scheme = currentValueOf(LocalSchemeColor)
-        val inner = scheme.mixSrgb(colors.paper, SchemeCenterMix)
-        val outer = scheme.mixSrgb(colors.paper, SchemeEdgeMix)
-        // the web's color hint, its curve traced in stops
-        val stops = Array(SchemeHintStops + 1) { index ->
-            val position = index.toFloat() / SchemeHintStops
-            position to inner.mixSrgb(outer, 1 - position.pow(SchemeHintExponent))
+        val brush = when (background) {
+            RadialBg.Scheme -> colors.radialBgOf(currentValueOf(LocalSchemeColor), size)
+            RadialBg.Primary -> colors.primaryBg(size)
+            RadialBg.Accent -> colors.accentBg(size)
         }
-        // the web's circle farthest-side, holding the edge's color past it
-        drawRect(Brush.radialGradient(*stops, center = center, radius = maxOf(size.width, size.height) / 2))
+        drawRect(brush)
         drawContent()
     }
 }
@@ -292,20 +300,6 @@ private class OpacityNode(var level: Opacity) : Modifier.Node(), LayoutModifierN
 
 /** The length of the fade at a clip, in units: the web's `1rem`. */
 private const val FadeUnits = 2
-
-/** The scheme color's share of a [schemeBg] at its center and at its edge, over paper. */
-private const val SchemeCenterMix = 0.25f
-private const val SchemeEdgeMix = 0.15f
-
-/**
- * The point where a [schemeBg] is halfway from its center to its edge, the web's color hint, and the stops that trace
- * it.
- */
-private const val SchemeHint = 0.7f
-private const val SchemeHintStops = 8
-
-/** The curve of the web's color hint: a position raised to it gives the progress toward the edge's color. */
-private val SchemeHintExponent = ln(0.5f) / ln(SchemeHint)
 
 /** The web's `--moon-shadow`: two soft rings of black at 5%. */
 private val moonShadows = listOf(

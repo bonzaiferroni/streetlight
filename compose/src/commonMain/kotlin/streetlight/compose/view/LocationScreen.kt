@@ -1,13 +1,10 @@
 package streetlight.compose.view
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import streetlight.compose.model.LocationModel
@@ -20,7 +17,7 @@ import streetlight.model.data.LocationContent
 @Composable
 fun LocationScreen(route: LocationRoute) {
     val gridState = rememberLazyStaggeredGridState()
-    TopBarMount(TopBar.Logo, remember(gridState) { gridState.scrolledUnder() })
+    TopBarMount(TopBar.Logo, gridState)
     Inflated<LocationContent>(route) { content ->
         context(koinViewModel<LocationModel> { parametersOf(content) }) { LocationView(gridState) }
     }
@@ -35,18 +32,10 @@ context(model: LocationModel)
 fun LocationView(gridState: LazyStaggeredGridState) {
     val page by model.feed.feedState.collectAsState()
     val mode by model.feed.modeState.collectAsState()
-    val theme = currentTheme
     PageThemeEffect(model.content.design?.theme)
 
-    // in grid mode the grid holds its items a unit from the edges, in place of their own padding
-    val isGrid = mode == FeedMode.Grid
-    val edge = if (isGrid) theme.unit else 0.dp
-    LazyStaggeredGridView(
-        state = gridState,
-        spacing = if (isGrid) theme.unit else theme.line,
-        contentPadding = PaddingValues(start = edge, top = theme.unit * TopBarUnits + edge, end = edge, bottom = edge),
-    ) {
-        context(model.feed) { renderLayout(model.content, page, mode, side = if (isGrid) 0 else 1) }
+    LazyStaggeredGridView(gridState, mode) {
+        context(model.feed) { renderLayout(model.content, page, mode, side = mode.sideUnits) }
         fullItem { AppFooter(LocationViewSource, Modifier.padding(top = 8)) }
     }
 }

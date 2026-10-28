@@ -39,6 +39,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
 | `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
 | `StarSession` | `SessionClient` (`streetlight.web.model`) |
+| `UserCreator` | `UserCreator` (`streetlight.web.model`), with the web's `EmailEditor` and `PasswordEditor` folded in |
 | `EarthModel`, `EarthCache` | `Earth`, `EarthCache` (`streetlight.web.model`) |
 | `MapMarker`, `ThumbMarker`, `IconMarker`, `EventMarker`, `toMarker` | The markers of `StreetMarker.kt` and `createMarker` (`streetlight.web.model`) |
 
@@ -49,6 +50,8 @@ State and logic that several view models share is a submodel: a plain class, not
 `MarkerMap` is another: the markers a view shows on the map and the one in focus, built with `GeoMap`. A view model sets its markers, as from its feed's entities, and never clears them; the map shows them only while the view's map is in sight. Focus belongs to the `MarkerMap`. Culling to the camera is the renderer's, not the view model's. `GeoCamera` reports whichever map is shown, so a submodel that reads the camera, such as `EarthCache`, acts only while `GeoMap` shows its own `MarkerMap`.
 
 The web's earth routes change the address bar; the app has none, so a route is a place the viewer goes, and a refinement of what it shows, such as a tag or a search, is state on its model. Each earth route is its own entry with its own model.
+
+A model of a part that belongs to no route, such as a dialog's form, is a plain class built where the part is shown, with that composition's scope, as the create-account dialog builds `UserCreator`.
 
 A marker is a `MapMarker`, a plain description of what to draw, built from an entity by `toMarker()`, and carrying that entity, so a focus can show it or, for an `EventGroup`, read the location's events.
 

@@ -51,6 +51,9 @@ import androidx.compose.ui.layout.layout
 /** The layouts of a feed row, the cousin of the web's `FeedMode`. */
 enum class FeedMode { Minimal, Row, Grid }
 
+/** The side padding in units of a full item of a grid in this mode: none in `Grid`, whose grid holds it from its edges. */
+val FeedMode.sideUnits get() = if (this == FeedMode.Grid) 0 else 1
+
 /**
  * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in,
  * opening the entity's page when the app has one. A row [isFeatured] takes the `Grid` layout in any mode, square, its
