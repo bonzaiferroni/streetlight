@@ -10,14 +10,12 @@ import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.RoundRect
@@ -50,8 +47,8 @@ import streetlight.compose.modifier.padding
 import streetlight.compose.modifier.pointerClick
 
 /**
- * The helm button at the top start of the page and the star button at its end, floating over the page on glass that
- * blurs it, each opening its menu from its corner. The button's icon is the same element as the menu's, so it stays in
+ * The helm button at the top start of the page and the star button at its end, floating over the page in the logo's
+ * colors, each opening its menu from its corner. The button's icon is the same element as the menu's, so it stays in
  * place as the menu grows around it. A click outside an open menu closes it. The cousin of the web's `helmBar`.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -86,27 +83,21 @@ private enum class HelmBarMenu(val closedSvg: Svg, val openSvg: Svg) {
     Star(SvgFile.Someone, SvgFile.Someone),
 }
 
-/** The round button of [menu] on dark glass that blurs the page, shown while its menu is not [isOpen], calling [onClick]. */
+/** The button of [menu], its icon alone, shown while its menu is not [isOpen], calling [onClick]. */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 context(stage: SharedTransitionScope)
 private fun HelmButton(menu: HelmBarMenu, isOpen: Boolean, onClick: () -> Unit) {
     val magic = currentTheme.magic
     AnimatedVisibility(!isOpen, enter = fadeIn(magic.eased()), exit = fadeOut(magic.eased())) {
-        Box(
-            Modifier.clip(CircleShape)
-                .hazeBlur(HazeInput.Sources(LocalPageHaze.current), HelmBlur)
-                .background(Color.Black.copy(alpha = GlassAlpha))
-                .pointerClick(onClick)
-        ) {
-            HelmIcon(menu, isOpen = false)
-        }
+        HelmIcon(menu, isOpen = false, Modifier.pointerClick(onClick))
     }
 }
 
 /**
- * The icon of [menu], the one element shared by its button and its open menu: white on the button, and on the menu
- * the menu's own icon in the primary color, its tint turning between them as it passes from one to the other.
+ * The icon of [menu], the one element shared by its button and its open menu: on the button in a color of the logo,
+ * the helm in the accent and the star in the primary, and on the menu the menu's own icon in its own color, its tint
+ * turning between them as it passes from one to the other.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -115,8 +106,9 @@ private fun HelmIcon(menu: HelmBarMenu, isOpen: Boolean, modifier: Modifier = Mo
     val theme = currentTheme
     val colors = theme.colors
     val openTint = if (menu == HelmBarMenu.Helm) colors.primaryFg else colors.ink.copy(alpha = theme.opacity.high)
-    val ownTint = if (isOpen) openTint else Color.White
-    val otherTint = if (isOpen) Color.White else openTint
+    val closedTint = if (menu == HelmBarMenu.Helm) colors.accentFg else colors.primaryFg
+    val ownTint = if (isOpen) openTint else closedTint
+    val otherTint = if (isOpen) closedTint else openTint
     val tint = visibility.transition.animateColor { if (it == EnterExitState.Visible) ownTint else otherTint }
     val iconMod = with(stage) {
         modifier.sharedElement(rememberSharedContentState(menu), visibility)
@@ -196,11 +188,5 @@ private const val MenuRadiusUnits = 2
 /** The size of a helm icon in units, the web's `HelmBar.IconMod`. */
 const val HelmIconUnits = 6
 
-/** The blur of the page beneath a helm button, the web's `--strong-blur` of 10px. */
-private val HelmBlur = HazeBlurStyle { blurRadius(10.dp) }
-
 /** The blur of the page behind an open menu, the web's `--stronger-blur` of 18px. */
 private val MenuBlur = HazeBlurStyle { blurRadius(18.dp) }
-
-/** The dark glass of a helm button, the web's `CardStaticBg`. */
-private const val GlassAlpha = 0.4f
