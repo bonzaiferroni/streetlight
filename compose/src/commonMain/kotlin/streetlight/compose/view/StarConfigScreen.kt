@@ -2,11 +2,9 @@ package streetlight.compose.view
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.FlowRowScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,8 +33,8 @@ import streetlight.model.data.Star
 import streetlight.model.data.viableEmail
 
 /**
- * The screen of [StarConfigRoute]: the logo as its top bar, and, while a star is signed in, their account once read,
- * shown in the [StarConfigView].
+ * The screen of [StarConfigRoute]: the logo as its top bar, and, while a star is signed in, the star's account as its
+ * top bar, and their account once read, shown in the [StarConfigView].
  */
 @Composable
 fun StarConfigScreen() {
@@ -45,6 +43,7 @@ fun StarConfigScreen() {
     StarGate {
         // the account is the signed-in star's, so another star's sign-in reads and edits their own
         val starKey = contextOf<Star>().username.value
+        TopBarMount(TopBar.TwoTone("$starKey's ", "Account"), scrollState)
         Inflated<Account>(StarConfigRoute, key = starKey) { account ->
             val editor = koinViewModel<AccountEditor>(key = starKey) { parametersOf(account) }
             context(editor) { StarConfigView(scrollState) }
@@ -53,23 +52,14 @@ fun StarConfigScreen() {
 }
 
 /**
- * The view of [StarConfigRoute], in a column scrolled by [scrollState] under the top bar: the star's name, then the
- * form to register a guest's account, or the email and password of a registered one. The cousin of the web's
+ * The view of [StarConfigRoute], in a column scrolled by [scrollState] under the top bar that names it: the form to
+ * register a guest's account, or the email and password of a registered one. The cousin of the web's
  * `viewStarConfig`.
  */
 @Composable
 context(model: AccountEditor, star: Star)
 fun StarConfigView(scrollState: ScrollState) {
-    val theme = currentTheme
-    PageThemeEffect(null)
-
-    Column(2, Modifier.fillMaxSize().verticalScroll(scrollState).padding(top = TopBarUnits).padding(1)) {
-        BasicText(
-            star.username.value,
-            Modifier.fillMaxWidth().filigree(),
-            style = theme.text.heading2.copy(textAlign = TextAlign.Center),
-            color = { theme.colors.ink },
-        )
+    ConfigBody(null, scrollState) {
         when (star.accountType) {
             AccountType.Guest -> RegisterAccountForm()
             AccountType.Registered -> FormRow {

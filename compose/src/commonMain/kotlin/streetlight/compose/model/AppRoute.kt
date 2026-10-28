@@ -4,6 +4,7 @@ import androidx.navigation3.runtime.NavKey
 import kampfire.api.Slug
 import koala.model.WebRoute
 import kotlinx.serialization.Serializable
+import streetlight.model.ui.StarDashTab
 import streetlight.model.ui.EventRoute as WebEventRoute
 import streetlight.model.ui.GalaxyRoute as WebGalaxyRoute
 import streetlight.model.ui.LocationRoute as WebLocationRoute
@@ -29,6 +30,10 @@ data object EarthRoute : AppRoute
 
 @Serializable
 data class GalaxyMapRoute(val slug: Slug) : AppRoute
+
+/** The signed-in star's dashboard, showing its [tab], or the first. */
+@Serializable
+data class StarDashRoute(val tab: StarDashTab? = null) : AppRoute
 
 /** The signed-in star's account settings. */
 @Serializable

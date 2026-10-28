@@ -104,7 +104,7 @@ private fun HelmButton(menu: HelmBarMenu, isOpen: Boolean, onClick: () -> Unit) 
 
 /**
  * The icon of [menu], the one element shared by its button and its open menu: on the button in a color of the logo,
- * the helm in the accent and the star in the primary, and on the menu the menu's own icon in its own color, its tint
+ * the helm in the primary and the star in the accent, and on the menu the menu's own icon in its own color, its tint
  * turning between them as it passes from one to the other. The star's is the signed-in star's thumbnail, when they
  * have one.
  */
@@ -115,7 +115,7 @@ private fun HelmIcon(menu: HelmBarMenu, isOpen: Boolean, modifier: Modifier = Mo
     val theme = currentTheme
     val colors = theme.colors
     val openTint = if (menu == HelmBarMenu.Helm) colors.primaryFg else colors.ink.copy(alpha = theme.opacity.high)
-    val closedTint = if (menu == HelmBarMenu.Helm) colors.accentFg else colors.primaryFg
+    val closedTint = if (menu == HelmBarMenu.Helm) colors.primaryFg else colors.accentFg
     val ownTint = if (isOpen) openTint else closedTint
     val otherTint = if (isOpen) closedTint else openTint
     val tint = visibility.transition.animateColor { if (it == EnterExitState.Visible) ownTint else otherTint }

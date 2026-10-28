@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
+import streetlight.compose.modifier.FiligreeStyle
 import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.padding
 import androidx.compose.runtime.DisposableEffect
@@ -43,6 +46,9 @@ sealed interface TopBar {
 
     /** The view's [text] in a filigree, as a map's title. */
     data class Title(val text: String) : TopBar
+
+    /** A title in the logo's two colors, [accent] then [primary], in a filigree, as the web's `configBody` heading. */
+    data class TwoTone(val accent: String, val primary: String) : TopBar
 }
 
 /** A view's [bar] and the pixels its content has [scrolled] under it, read while drawing. */
@@ -114,6 +120,7 @@ fun TopBarHost(modifier: Modifier = Modifier) {
             when (bar) {
                 TopBar.Logo -> AppHeader()
                 is TopBar.Title -> TopBarTitle(bar.text)
+                is TopBar.TwoTone -> TopBarTwoTone(bar.accent, bar.primary)
             }
         }
     }
@@ -155,6 +162,22 @@ private fun ScrollState.scrolledUnder(): () -> Float = { value.toFloat() }
 
 /** The scroll of a view that does not scroll. */
 private val Unscrolled = { 0f }
+
+/**
+ * The title of [accent] in the accent's foreground followed by [primary] in the primary's, between the accent and
+ * primary rays, as the logo is.
+ */
+@Composable
+private fun TopBarTwoTone(accent: String, primary: String) {
+    val theme = currentTheme
+    val style = theme.text.heading3.copy(lineHeight = 1.em)
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = RayInsetUnits).filigree(FiligreeStyle.Ray)) {
+            BasicText(accent, style = style, color = { theme.colors.accentFg })
+            BasicText(primary, style = style, color = { theme.colors.primaryFg })
+        }
+    }
+}
 
 /** The height of a top bar in units: the helm bar's icon and a unit above and below it. */
 const val TopBarUnits = 2 + HelmIconUnits

@@ -12,6 +12,7 @@ import koala.SvgFile
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import streetlight.compose.model.StarConfigRoute
+import streetlight.compose.model.StarDashRoute
 import streetlight.compose.model.StarSession
 import streetlight.compose.model.currentPortal
 import streetlight.compose.modifier.padding
@@ -50,7 +51,10 @@ private fun StarPlaces(session: StarSession, onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
     val portal = currentPortal
 
-    StarItem("Dashboard", SvgFile.Dashboard)
+    StarItem("Dashboard", SvgFile.Dashboard) {
+        portal.open(StarDashRoute())
+        onClose()
+    }
     StarItem("Account", SvgFile.User) {
         portal.open(StarConfigRoute)
         onClose()

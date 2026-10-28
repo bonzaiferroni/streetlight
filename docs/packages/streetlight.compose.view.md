@@ -81,6 +81,8 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `TextField` | `textField` (`koala.component`) |
 | `StarGate`, `SignInToContinue` | `starGate`, `signInToContinue` (`streetlight.web.view`) |
 | `SignInForm` | `signInForm` (`streetlight.web.view`) |
+| `ConfigBody` | `configBody` (`streetlight.web.view`) |
+| `StarDashView` | `viewStarDash` (`streetlight.web.view`) |
 | `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
 | `CheckBox` | `checkBox` (`koala.dom.component`) |
 | `FormRow`, `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formRow`, `formSection`, `formHeading`, `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
@@ -124,7 +126,7 @@ A tray of the dock holds icons for utilities, never routes.
 
 ## Top Bar
 
-A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. The helm and star stay reachable above the bar, whatever its fade.
+A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. A part that knows more, such as a `StarGate`'s content knowing the star, may mount a bar of its own within the screen's; the latest mount is shown, so the screen's returns when the part leaves, as the dash's `TopBar.TwoTone` gives way to the logo on sign-out. The helm and star stay reachable above the bar, whatever its fade.
 
 ## Star Gate
 
@@ -142,7 +144,7 @@ A feed is available only at the top level of a layout. Within a tab, whose block
 
 ## Tabs
 
-`Tabs` is a layout, not a view: it takes no model, and its lambda builds the tabs on a `TabScope` with `tab(label, icon) { content }`, as the web's does. The buttons share the container's width, wrapping below the web's 100px each, and the chosen tab's content slides in a short way from the side its button lies on as the other slides out the other way, never sweeping across the page. A tab remembers which is chosen across recomposition and a return to its page.
+`Tabs` is a layout, not a view: it takes no model, and its lambda builds the tabs on a `TabScope` with `tab(label, icon) { content }`, as the web's does. The buttons share the container's width, wrapping below the web's 100px each, and the chosen tab's content slides in a short way from the side its button lies on as the other slides out the other way, never sweeping across the page. A tab remembers which is chosen across recomposition and a return to its page. A route that names a tab, as `StarDashRoute(tab)` does with its `StarDashTab`, opens its view on that tab through `initialTab`, so a place in the app can lead straight to it.
 
 ## Motion
 
