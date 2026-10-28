@@ -11,6 +11,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,10 +46,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 /**
  * Shows [content] over the background lights of the current [PageTheme], and provides the [KoalaAppTheme] read as
  * [currentTheme], sized from a rem chosen by the window's width, below a platform's [bar], such as the desktop window's
- * title bar.
+ * title bar. The [overlay] floats over the page, and may blur it, map and all, through [LocalPageHaze].
  */
 @Composable
-fun AppTheme(bar: @Composable () -> Unit = {}, content: @Composable () -> Unit) {
+fun AppTheme(
+    bar: @Composable () -> Unit = {},
+    overlay: @Composable BoxScope.() -> Unit = {},
+    content: @Composable () -> Unit,
+) {
     val pageTheme by koinInject<ThemeHost>().themeState.collectAsState()
 
     val accentState = animateColorAsState(pageTheme.accent.toColor(), themeTransition())
@@ -85,13 +90,17 @@ fun AppTheme(bar: @Composable () -> Unit = {}, content: @Composable () -> Unit) 
             // opaque, so the blur covers what lies behind the card
             Column(Modifier.fillMaxSize()) {
                 bar()
-                Box(Modifier.fillMaxWidth().weight(1f).hazeSource(pageHaze).background(paper)) {
-                    Spacer(
-                        Modifier.fillMaxSize()
-                            .graphicsLayer()
-                            .drawBehind { drawLights(lights) }
-                    )
-                    content()
+                // the overlay is the page's sibling, since a blur cannot draw a source it lies within
+                Box(Modifier.fillMaxWidth().weight(1f)) {
+                    Box(Modifier.fillMaxSize().hazeSource(pageHaze).background(paper)) {
+                        Spacer(
+                            Modifier.fillMaxSize()
+                                .graphicsLayer()
+                                .drawBehind { drawLights(lights) }
+                        )
+                        content()
+                    }
+                    overlay()
                 }
             }
         }

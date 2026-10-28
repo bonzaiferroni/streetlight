@@ -29,6 +29,7 @@ The app's routes and back stack, its services and view models, and the propertie
 |---|---|
 | `AppRoute` | `WebRoute` (`koala.model`) |
 | `Portal` | `Portal` (`koala.model`) |
+| `DockRoute`, `StableDock` | `RouteDock` and `RouteDockState` (`streetlight.web.model`), the main routes |
 | `appModule` | `webModule` |
 | `AppSettings` | The root switches, such as `FeedRowStyle.Mode` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
@@ -56,7 +57,9 @@ A marker is a `MapMarker`, a plain description of what to draw, built from an en
 
 ## Navigation
 
-`Portal` owns the back stack, which holds `AppRoute`s and is saved with `AppRoute.serializer()`. A view navigates through `Portal`, never by touching the back stack: `open` a route, go `back`, or return `home` to the first. It is ambient, provided as `LocalPortal` and read as `currentPortal`. An entity's page is its `toRoute()`, `null` for a type the app has no page for. A web route from the shared model, such as a detail's `route`, becomes the app's with `toAppRoute()`, `null` for a page the app does not have. It is built by `rememberPortal`, not by Koin, since the back stack is Compose saved state.
+`Portal` owns a back stack for each route of the dock, each starting at its route, as a tab bar keeps a stack per tab. It shows the stack of its `dockRoute` above the stack of its `start`, the first dock route, so back from the first route of another stack returns to the start's. The stacks hold `AppRoute`s and are saved with `AppRoute.serializer()`. A view navigates through `Portal`, never by touching a stack: `open` a route on the shown stack, go `back`, `dock` a dock route to show its stack, or to return to its first route when it is shown, or return `home` to the start. It is ambient, provided as `LocalPortal` and read as `currentPortal`. An entity's page is its `toRoute()`, `null` for a type the app has no page for. A web route from the shared model, such as a detail's `route`, becomes the app's with `toAppRoute()`, `null` for a page the app does not have. It is built by `rememberPortal` from the routes of a dock, `StableDock` by default, not by Koin, since the stacks are Compose saved state.
+
+A `DockRoute` is a dock route and its label. `StableDock` is the dock shown on every page.
 
 ## Services
 

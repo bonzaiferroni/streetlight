@@ -8,7 +8,6 @@ import org.koin.compose.koinInject
 import org.koin.dsl.koinConfiguration
 import streetlight.compose.io.buildImageLoader
 import streetlight.compose.model.AppConfig
-import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.LocalPortal
 import streetlight.compose.model.Portal
 import streetlight.compose.model.appModule
@@ -16,19 +15,23 @@ import streetlight.compose.model.rememberPortal
 import streetlight.compose.view.AppPortal
 import streetlight.compose.view.MapHost
 import streetlight.compose.view.AppTheme
+import streetlight.compose.view.RouteDock
+import streetlight.compose.modifier.padding
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 
 /**
  * The root of the app, moving through [portal], below a platform's [bar], such as the desktop window's title bar. A
  * platform that answers back on its own, as the desktop window does on its keys, makes the portal and passes it in.
  */
 @Composable
-fun App(portal: Portal = rememberPortal(HomeRoute), bar: @Composable () -> Unit = {}) {
+fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
     KoinApplication(configuration = koinConfiguration { modules(appModule) }) {
         val config = koinInject<AppConfig>()
         setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
 
         CompositionLocalProvider(LocalPortal provides portal) {
-            AppTheme(bar = bar) {
+            AppTheme(bar = bar, overlay = { RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2)) }) {
                 MapHost { AppPortal() }
             }
         }

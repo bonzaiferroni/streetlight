@@ -64,4 +64,4 @@ The desktop window reopens at the frame it last settled on, kept in the app file
 | Run on desktop | `./gradlew :compose:run` |
 | Run with hot reload | `./gradlew :compose:hotRunJvm` |
 
-To add a route: declare `FooRoute` in `AppRoute.kt`, write `FooView`, and add its `entry` to `AppPortal`. A route with a view model registers it in `appModule`.
+To add a route: declare `FooRoute` in `AppRoute.kt`, write `FooView`, and add its `entry` to `AppPortal`. A route with a view model registers it in `appModule`. A route the dock opens is a `DockRoute` of `StableDock`.

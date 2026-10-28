@@ -67,6 +67,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `EarthHeader` | `earthHeader` and `earthControls` (`streetlight.web.view`) |
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
+| `RouteDock` | `viewRouteDock`, its main routes |
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
 | `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
 | `Popover` | `popoverMenu` (`streetlight.web.dom.component`) and its card |
@@ -99,6 +100,12 @@ fun GalaxyScreen(route: GalaxyRoute) = Inflated<GalaxyContent>(route) { content 
 A view declares its view model as the context parameter `model`, following `docs/kotlin-style.md`, and reads a lens with `collectAsState()` from `TapUtility.kt`. A view with no state of its own takes its content as an argument, as `EventView(event)`.
 
 The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that opens a page reads `currentPortal` and calls it from `pointerClick`, as a feed row opens its entity's `toRoute()` and the logo of `AppHeader` returns `home()`. An entity the app has no page for opens nothing.
+
+## Route Dock
+
+`RouteDock` floats at the bottom center of the window, over the page and the map, and stays across pages; a page makes no room for it. It is `AppTheme`'s `overlay`, the page's sibling rather than within it, since a Haze blur cannot draw a source it lies within, so it blurs `LocalPageHaze`, map and all. Each label calls `Portal.dock`, and the dock route whose stack is shown is outlined in the primary color.
+
+`AppPortal` decorates the entries of each stack on their own and shows the shown stacks' entries together, so a hidden stack's pages keep their saved state and view models.
 
 ## Page Layouts
 

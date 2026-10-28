@@ -8,7 +8,6 @@ import org.jetbrains.compose.resources.painterResource
 import streetlight.compose.resources.Res
 import streetlight.compose.resources.foxicon
 import java.awt.Dimension
-import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.rememberPortal
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -23,7 +22,7 @@ fun main() {
         val state = rememberWindowState(frame)
         LaunchedEffect(state) { state.saveFrames(frame) }
         // the window answers the desktop's back key and mouse button, so it holds the app's portal
-        val portal = rememberPortal(HomeRoute)
+        val portal = rememberPortal()
         Window(
             onCloseRequest = ::exitApplication,
             state = state,
