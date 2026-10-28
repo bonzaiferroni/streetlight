@@ -24,6 +24,7 @@ val appModule = module {
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
     viewModel { (content: LocationContent) -> LocationModel(content, get(), get()) }
     viewModel { EarthModel(get(), get()) }
+    viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
 }
 
 /** The API of the server on this machine, where the app points while in development. */

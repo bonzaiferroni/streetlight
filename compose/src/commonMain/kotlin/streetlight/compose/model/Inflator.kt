@@ -16,10 +16,11 @@ class Inflator(private val api: ApiClient) {
     suspend fun inflate(route: AppRoute): Outcome<Any> = when (route) {
         HomeRoute -> api.content.readHomeContent(null)
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
+        is GalaxyMapRoute -> api.galaxy.readGalaxyContent(route.slug)
         is EventRoute -> api.event.readEventSlug(route.slug)
         is LocationRoute -> api.location.readLocationContent(route.slug)
         // the earth reads its content as the camera moves, so its screen inflates nothing
-        EarthRoute, is GalaxyMapRoute -> Ok(Unit)
+        EarthRoute -> Ok(Unit)
     }
 }
 

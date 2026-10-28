@@ -40,7 +40,7 @@ fun AppPortal() {
         entry<EventRoute> { EventScreen(it) }
         entry<LocationRoute> { LocationScreen(it) }
         entry<EarthRoute> { EarthScreen() }
-        entry<GalaxyMapRoute> { EarthScreen() }
+        entry<GalaxyMapRoute> { GalaxyMapScreen(it) }
     }
     // each stack decorates its own entries, so a hidden stack's pages keep their state and view models
     val stackEntries = portal.stacks.mapValues { (_, stack) ->

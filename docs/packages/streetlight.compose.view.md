@@ -65,6 +65,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `LocationView` | `locationShell` (`streetlight.web.shell`) |
 | `EarthView` | `viewEarth` (`streetlight.web.view`) |
 | `EarthHeader` | `earthHeader` and `earthControls` (`streetlight.web.view`) |
+| `GalaxyMapView` | `viewEarth` (`streetlight.web.view`) on a galaxy's map |
+| `MapFocus` | `earthFocus` (`streetlight.web.view`) |
+| `MapTitle` | The map title of `earthHeader` |
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
 | `RouteDock` | `viewRouteDock`, its main routes |
@@ -184,7 +187,7 @@ The desktop window provides the map's presentation host in `main()`, through `Pr
 
 The app has one map. Starting MapLibre's renderer stalls the UI thread for most of a second, so `MapHost`, around the app in `App()`, composes the map once at launch and keeps it for the life of the app. A page shows it with a `MapMount` where the map goes, its center and the radius of its corners; the mount holds the place in the page's layout and reports its bounds as the page lays out and scrolls, and the host draws the map there, above the page, in its own frame and outline. The map shows in the newest page's mount. When the mount it leaves and the new one both lie within the window, its frame grows or shrinks from one to the other over the pages' two fades, its corners following and its camera gliding to the new center, and the new mount's markers take the old ones' place as it starts. Otherwise it fades out, moves and looks over the mount's center, then fades in, in step with the page. A mount leaves the host as soon as its page starts to leave, so the map fades out with it. A page never composes a map of its own, and a mount needs no pinning, since its leaving the composition costs nothing.
 
-The map is drawn above the page, so whatever a page shows over its map, such as the earth's controls, is the mount's `overlay`, which the host draws in the map's frame above the markers; it fades and changes frame with the map. The overlay is drawn beside the map, not within MapLibre's own overlay, so the map and its markers can be the `LocalMapHaze` source a part of the overlay blurs, as the earth's focus does. A page never lays out its own parts over a mount.
+The map is drawn above the page, so whatever a page shows over its map, such as the earth's controls, is the mount's `overlay`, which the host draws in the map's frame above the markers; it fades and changes frame with the map. The overlay is drawn beside the map, not within MapLibre's own overlay, so the map and its markers can be the `LocalMapHaze` source a part of the overlay blurs, as `MapFocus` does. A page never lays out its own parts over a mount.
 
 `MapHost` is the link between the map and `GeoMap`. As a mount becomes the one shown, the host hands its `MarkerMap`, or `null`, to `GeoMap`, so a page's markers show only while its map is in sight. The host applies `GeoCamera`'s pans to the map and reports the camera back into it.
 
@@ -212,7 +215,7 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 | `Row` | Padded a unit all around, where the web pads a line at the sides. The main part: the thumbnail, outlined; the title in `heading5` semi-bold on one line over the entity's `body` as markdown in `small` at `opacityHigh()`, both clipped at the row's 10 units with half a unit of inset and fading where they reach the clip; then the flair badge. The `CellGrid` sits below it, or beside it as the row's right half, less half a unit, from 960dp |
 | `Grid` | No padding but a unit below. A `ContainImage` across the top in the image's own `aspect`, held between 3:4 and 4:1 and no taller than 48 units, contained within that height, or 3:2 when it has none; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart. The entry's corners are rounded three units |
 
-A featured row, `isFeatured`, takes the `Grid` layout in any mode, with square corners and its text clipped at 24 units, as the web's `FeedRowStyle.Featured`. The earth's focus features its first entity.
+A featured row, `isFeatured`, takes the `Grid` layout in any mode, with square corners and its text clipped at 24 units, as the web's `FeedRowStyle.Featured`. A map's focus features its first entity.
 
 ### Cell Grid
 
