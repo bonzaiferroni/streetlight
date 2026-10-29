@@ -8,6 +8,8 @@ data class ValidityCheck(
     val message get() = invalidParts.takeIf{ it.isNotEmpty() }?.let { "missing: ${it.joinToString(", ")}" }
 
     val isValid get() = invalidParts.isEmpty()
+
+    fun isValid(key: String) = key !in invalidParts
 }
 
 /** A [ValidityCheck] of these missing parts. */

@@ -154,7 +154,9 @@ Documentation is maintained as the work goes, following the rest of this documen
 
 ### Bounty Documents
 
-A bounty document lives at `logs/bounty/<bounty-name>.md`. Once its bounty is complete, it moves to `logs/bounty/complete/`.
+A bounty document is written only for a bounty that will be taken up later, not in the current session: a bounty followed in the session is charted by the session itself. It lives at `logs/bounty/<bounty-name>.md`. Once its bounty is complete, it moves to `logs/bounty/complete/`.
+
+A ledger the navigator keeps for future work, such as `web-gremlins.md` or `web-parity.md`, is a bounty document of this kind, added to as items turn up.
 
 ### Workflow
 
@@ -174,20 +176,22 @@ The navigator may open a *fast bounty*: a bounty given the green light to comple
 
 ### Long Bounty
 
-The navigator may open a *long bounty*: a body of work mapped in a document at `logs/bounty/<bounty-name>.md`, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
+The navigator may open a *long bounty*: a body of work charted in the session, followed by the agent as far as its path is clear, without a list staged or a summary given between items. It differs from a bounty in these ways:
 
 | Part | Long bounty                                                                                                                                                                                             |
 |---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Map | The document holds the shape, the steps, the decisions and the open questions. The agent records each step's progress and each decision in it as the work goes                                          |
+| Map | The session holds the shape, the steps, the decisions and the open questions. A document is written only when the navigator asks for one, or when work is saved for a later session |
 | Pace | The agent carries on through the steps until it reaches a crossroads: a choice that is the navigator's, or a path that is not clear. It then stops and raises the question                              |
 | Questions | Ask questions when the path is unclear, each with a recommendation, so the work then runs on a full plan; a crossroads found later is raised when it comes |
 | Notice | The agent sends a voice message (see Voice) when it reaches a crossroads or finishes, since the navigator may be away from the terminal                                                                 |
 | Compile | Allowed and expected, since the navigator is not compiling along the way. The agent compiles at milestones. It does not run tests unless the navigator asks, and does not check work more than the work needs |
 | Report | At a crossroads or the end: what was done, what was decided along the way, and the questions                                                                                                            |
 
-## Scratch Points
+## Scratch and Utility Points
 
 A scratch point is a moment when a shape already in the code would not be the one written from scratch, now that the code has seen some action. A first shape often serves best by showing what shape the work really wants. When the agent recognizes one, it raises it as a question, naming the shape it would write and what it replaces, rather than growing the old shape in ways it was not meant for. `WebRoute.screenKey`, which replaced `retainWithinScreen` once routes gained parameters that change content within a view, is an example.
+
+A utility point is a moment when the same piece of work turns up in more than one place, or when a part would read more tidily as a call, and a utility would give it one shape. When the agent recognizes one, it raises it as a question in the same way, naming the utility and the places it would serve. `CenteredText`, which replaced four private copies of a centered note in the compose forms, is an example.
 
 ## Scope
 

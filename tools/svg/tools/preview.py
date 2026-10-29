@@ -29,7 +29,7 @@ def masked(name, label):
     return f'<figure><div class="flair" style="--mask: url({uri})"></div><figcaption>{name}</figcaption></figure>'
 reviewed = ''.join(masked(*r) for r in review)
 # edited this round: static large and animated at 10rem
-edited = [(l, l) for l in ('songwriting',)]
+edited = [(l, l) for l in ('point',)]
 latest = ''.join(f'<figure><img src="../../www/icon/{l}-large.svg"><img src="../../www/icon/{l}-animated.svg"><figcaption>{l}</figcaption></figure>' for n, l in edited)
 nav = '<a href="#Edited">Edited</a> · <a href="#Review">Review</a> · <a href="#New">New</a> · ' + ' · '.join(f'<a href="#{n.split()[0]}">{n.split()[0]}</a>' for n, _ in sections)
 body = ''.join(f'<h2 id="{n.split()[0]}">{n} <small>{len(items)}</small></h2><main>{"".join(cell(*i) for i in items)}</main>' for n, items in sections)

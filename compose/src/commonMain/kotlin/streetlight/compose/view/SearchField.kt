@@ -30,7 +30,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import streetlight.compose.utility.mixSrgb
 import kampfire.model.MutableTap
 import koala.SvgFile
-import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 
 /**
@@ -77,7 +76,7 @@ fun SearchField(
             .pillOutline(theme.line) { theme.colors.outlineMid.mixSrgb(theme.colors.primary, 1f - focus.value) }
             .height(theme.unit * HeightUnits)
             // the icon sits a unit from the start, as a text field's does
-            .padding(start = 1, end = 2),
+            .pillPadding(hasIcon = true),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(SvgFile.Search.small, color = { theme.colors.ink.copy(alpha = theme.opacity.half) })

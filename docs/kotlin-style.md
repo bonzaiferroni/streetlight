@@ -22,6 +22,8 @@ A name never drops the type for a word that names only where the value came from
 
 A `Modifier` is named in the singular, as `noteMod`, however many modifiers it combines, since a combination of modifiers is itself a modifier.
 
+A constructor value that only seeds a class's state, not kept as a property, takes the `initial` prefix, as `initialEdit` seeds an editor's store. Within a property initializer the constructor value shadows a member of the same name, so an `edit` passed in would hide the state's `edit` in a lens's write.
+
 ## Functions
 
 A function's name follows a verbNoun shape and names the noun it acts on.

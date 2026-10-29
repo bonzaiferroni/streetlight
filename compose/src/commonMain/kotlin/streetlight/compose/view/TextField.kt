@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -43,9 +44,10 @@ import streetlight.compose.utility.collectAsState
  * A pill five units tall holding the small [icon], when given, before a field bound to [state], across the width it is
  * given, showing [placeholder] while empty and fading it out when focused. The icon names what the field holds, as the
  * web's `blockLabel` does in words, at half opacity so it stays behind what is typed. A field that [isPassword] hides
- * what it holds. [keyboardType] and [capitalization] shape the keyboard a touch screen offers, such as one for a url, or
- * capitals at the start of each word of a name. [onSubmit] is called by the keyboard's done action. The cousin of koala's `textField`, styled as the
- * [SearchField].
+ * what it holds. [keyboardType] and [capitalization] shape the keyboard a touch screen offers, such as one for a url,
+ * or capitals at the start of each word of a name. [onSubmit] is called by the keyboard's done action. A field with a
+ * check tints its icon and outline by [isValid]: the required color while `false`, the valid color while `true`, as
+ * the web's `flowValid`. The cousin of koala's `textField`, styled as the [SearchField].
  */
 @Composable
 fun TextField(
@@ -57,6 +59,7 @@ fun TextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.None,
     onSubmit: (() -> Unit)? = null,
+    isValid: Boolean? = null,
 ) {
     val theme = currentTheme
     val text by state.collectAsState()
@@ -66,6 +69,15 @@ fun TextField(
     val textStyle = theme.text.regular.copy(color = theme.colors.ink)
     // the focus outline fades in and out, read while drawing
     val focus = animateFloatAsState(if (isFocused) 1f else 0f, theme.magic.eased())
+    val validity = animateColorAsState(
+        when (isValid) {
+            null -> theme.colors.outlineMid
+            false -> theme.colors.requiredFg
+            true -> theme.colors.validFg
+        },
+        theme.magic.eased(),
+    )
+    val iconColor = { if (isValid == null) theme.colors.ink.copy(alpha = theme.opacity.half) else validity.value }
     val placeholderAlpha by animateFloatAsState(
         targetValue = if (text.isEmpty() && !isFocused) theme.opacity.high else 0f,
         animationSpec = theme.magic.eased(),
@@ -91,13 +103,12 @@ fun TextField(
                 1,
                 Modifier.clip(shape)
                     .background(theme.colors.zenBg)
-                    .pillOutline(theme.line) { theme.colors.outlineMid.mixSrgb(theme.colors.primary, 1f - focus.value) }
+                    .pillOutline(theme.line) { validity.value.mixSrgb(theme.colors.primary, 1f - focus.value) }
                     .height(theme.unit * HeightUnits)
-                    // an icon sits a unit from the start, closer than text, which keeps its two
-                    .padding(start = if (icon != null) 1 else 2, end = 2),
+                    .pillPadding(hasIcon = icon != null),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                icon?.let { Icon(it.small, color = { theme.colors.ink.copy(alpha = theme.opacity.half) }) }
+                icon?.let { Icon(it.small, color = iconColor) }
                 Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     BasicText(
                         placeholder,
@@ -112,6 +123,9 @@ fun TextField(
         },
     )
 }
+
+/** Pads a pill's content: an icon sits a unit from the start, closer than text, which keeps two, as at the end. */
+fun Modifier.pillPadding(hasIcon: Boolean) = padding(start = if (hasIcon) 1 else 2, end = 2)
 
 /** Draws an outline of [width] in [color], read while drawing, inside the edge of a pill over its content. */
 fun Modifier.pillOutline(width: Dp, color: () -> Color) = drawWithContent {

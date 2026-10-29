@@ -34,6 +34,7 @@ val appModule = module {
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
     viewModel { (account: Account) -> AccountEditor(account, get(), get()) }
     viewModel { (target: PostGalaxy) -> LocationScout(target.galaxy, get(), get(), get(), get(), get()) }
+    viewModel { (target: PostGalaxy) -> EventScout(target.galaxy, get(), get(), get(), get(), get()) }
 }
 
 /** The API of the server on this machine, where the app points while in development. */

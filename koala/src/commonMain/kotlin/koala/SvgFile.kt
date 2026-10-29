@@ -449,6 +449,7 @@ object SvgFile {
     val Playground = svgPackOf("playground")
     val Plus = svgPackOf("plus")
     val PlusAbove = svgPackOf("plus-above")
+    val Point = svgPackOf("point")
     val Pool = svgPackOf("pool")
     val PottedPlant = svgPackOf("potted-plant")
     val Pray = svgPackOf("pray")

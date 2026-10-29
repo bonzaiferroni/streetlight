@@ -122,3 +122,6 @@ Composition, SkillTag (tools/batches/compositions.py):
   y 11) with Tabler's -edit pencil in the corner. Reworked so the pencil is the subject: a forged pencil at -45°
   (body, point, lead, ferrule, rounded eraser) on the axis x + y = 23, with an eighth note in the corner. The pencil
   scribbles, then the note hops twice.
+
+Point (tools/batches/point.py):
+- point (new, SvgFile.Point): Tabler's point, a field's icon when no other fits, as an event's title. The animation is the fallback: a slow grow and shrink, 12% over 4s.

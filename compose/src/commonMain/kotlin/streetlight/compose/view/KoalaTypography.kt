@@ -40,6 +40,7 @@ class KoalaTypography(private val family: FontFamily, rem: TextUnit) {
     val paragraph = styleOf(rem * 1.1f)
     val regular = styleOf(rem)
     val small = styleOf(rem * 0.9f)
+    val label = styleOf(rem * 0.65f).copy(lineHeight = 1.em)
     val large = styleOf(rem * 1.4f)
 
     /** A style of [size] and [weight] at the web body's line height, its leading split above and below as CSS does. */

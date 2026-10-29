@@ -97,7 +97,7 @@ fun FormBullets(vararg bullets: String) {
 @Composable
 fun FormSubmit(label: String, onClick: () -> Unit, messages: Tap<UIMessage?>, isEnabled: Boolean = true) {
     Row(1, Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.weight(1f)) { MessageBox(messages) }
+        Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) { MessageBox(messages) }
         Button(label, onClick = onClick, isEnabled = isEnabled)
     }
 }
@@ -123,4 +123,15 @@ fun CheckBox(state: MutableTap<Boolean>, label: String, modifier: Modifier = Mod
         }
         BasicText(label, style = theme.text.regular, color = { theme.colors.ink })
     }
+}
+
+@Composable
+fun CenteredText(text: String) {
+    val theme = currentTheme
+    BasicText(
+        text,
+        Modifier.fillMaxWidth(),
+        style = theme.text.regular.copy(textAlign = TextAlign.Center),
+        color = { theme.colors.ink },
+    )
 }

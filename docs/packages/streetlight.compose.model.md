@@ -42,6 +42,9 @@ The app's routes and back stack, its services and view models, and the propertie
 | `ImageEditor` | `ImageEditor` (`streetlight.web.model`), holding the picked bytes where the web holds a blob |
 | `LocationEditor` | `LocationEditor` (`streetlight.web.model`), as a submodel |
 | `LocationScout` | `LocationScout` (`streetlight.web.model`) |
+| `LocationFinder` | The search of the web's `LocationScout`, as a submodel |
+| `EventScout` | `EventScout` (`streetlight.web.model`) |
+| `EventEditor` | `EventEditor` (`streetlight.web.model`), as a submodel |
 | `AccountEditor` | `AccountEditor` (`streetlight.web.model`), with the web's `EmailEditor` and `PasswordEditor` folded in |
 | `UserCreator` | `UserCreator` (`streetlight.web.model`), with the web's `EmailEditor` and `PasswordEditor` folded in |
 | `EarthModel`, `EarthCache` | `Earth`, `EarthCache` (`streetlight.web.model`) |
@@ -51,13 +54,15 @@ The app's routes and back stack, its services and view models, and the propertie
 
 State and logic that several view models share is a submodel: a plain class, not a `ViewModel`, that a view model builds with its `viewModelScope` and the collaborators it needs, and holds as a property. `FeedModel` is one: a feed shown in a view, starting from the page its view's content holds, its type, the mode it is laid out in, and the tag and search that filter it, read again in the scope it was given. A view model holds one per feed, as `HomeModel.feed`, and a view passes it to the parts that show it as a context parameter.
 
-`LocationEditor` is another: a location's edit, its fields and its saving, with an `ImageEditor` that holds a picked image until the save uploads it, held by any view model that edits a location, as `LocationScout` holds one for a new location.
+`LocationEditor` is another: a location's edit, its fields and its saving, with an `ImageEditor` that holds a picked image until the save uploads it, held by any view model that edits a location, as `LocationScout` holds one for a new location. `EventEditor` is its cousin for an event.
+
+`LocationFinder` is another: the search for a location, in Streetlight, in OpenStreetMap or on the map, with its own `MarkerMap`. It does not hold what is chosen; it hands what the star picks or starts to the `onFind` its owner gives it, and the owner moves its own focus, as `LocationScout` and `EventScout` do.
 
 `MarkerMap` is another: the markers a view shows on the map and the one in focus, built with `GeoMap`. A view model sets its markers, as from its feed's entities, and never clears them; the map shows them only while the view's map is in sight. Focus belongs to the `MarkerMap`. Culling to the camera is the renderer's, not the view model's. `GeoCamera` reports whichever map is shown, so a submodel that reads the camera, such as `EarthCache`, acts only while `GeoMap` shows its own `MarkerMap`.
 
 The web's earth routes change the address bar; the app has none, so a route is a place the viewer goes, and a refinement of what it shows, such as a tag or a search, is state on its model. Each earth route is its own entry with its own model.
 
-A staged form's model holds the focus of the star's work, such as `LocationScoutFocus`, and its stage follows from the focus, an enum whose order is the stages' order. A stage is left by changing the focus, so going back to an earlier stage is a move like any other. Once its post is done, a form that goes on to another route swaps itself for it, so its model, whose state says it posted, is not shown again.
+A staged form's model holds the focus of the star's work, such as `LocationScoutFocus`, and its stage follows from the focus, an enum whose order is the stages' order. A stage may cover more than one focus, as `EventScout`'s location stage covers both the search and the edit of a new location. A stage is left by changing the focus, so going back to an earlier stage is a move like any other. Once its post is done, a form that goes on to another route swaps itself for it, so its model, whose state says it posted, is not shown again.
 
 A model reports to the user as the web's do: a `MessageStore` for each place in the view where a message shows, delivered through `toDataOr(messenger)`, and the injected `Toaster` where there is no such place, as for a post whose view is gone.
 

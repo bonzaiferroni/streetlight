@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import koala.SvgPack
-import streetlight.compose.modifier.padding
 import androidx.compose.ui.graphics.shadow.Shadow as DropShadow
 
 /**
@@ -102,7 +101,7 @@ fun Button(
             .then(if (isQuiet) Modifier.border(theme.line, colors.outlineMid, shape) else Modifier)
             .clickable(enabled = isEnabled, role = Role.Button, interactionSource = null, indication = null, onClick = onClick)
             .then(if (isEnabled) Modifier.pointerHoverIcon(PointerIcon.Hand) else Modifier)
-            .padding(horizontal = PaddingXUnits),
+            .pillPadding(hasIcon = flair != null),
         horizontalArrangement = Arrangement.spacedBy(theme.unit),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -147,9 +146,6 @@ private const val GlowUnits = 1.6f
 
 /** The height of a button in units, as every button and field is: the web's padding around its 1rem line. */
 private const val HeightUnits = 5
-
-/** The padding at a button's sides in units, the web's `1rem`. */
-private const val PaddingXUnits = 2
 
 /** The height of a flair in units, the web's `SmallIconHeight`. */
 private const val FlairUnits = 3

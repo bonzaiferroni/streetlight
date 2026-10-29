@@ -2,6 +2,7 @@ package streetlight.compose.model
 
 import kampfire.model.Ok
 import kampfire.model.Outcome
+import kampfire.model.Url
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
@@ -20,12 +21,15 @@ class ImageEditor(private val target: ImageTarget, private val api: ApiClient) {
 
     val imageState = store.tapOf { it.image }
     val pickedState = store.tapOf { it.picked }
+    val previewImageState = store.tapOf { state ->
+        state.picked?.let { Image(url = it.url, name = it.name) } ?: state.image
+    }
 
     /** Starts from the stored [image], if any, with nothing picked. */
     fun setImage(image: Image?) = store.set { ImageEditorState(image) }
 
-    /** Holds the image of [bytes], picked from the file [name], in place of the stored one. */
-    fun pick(name: String, bytes: ByteArray) = store.set { copy(picked = PickedImage(name, bytes)) }
+    /** Holds the image of [bytes], picked from the file [name] at the local [url], in place of the stored one. */
+    fun pick(name: String, bytes: ByteArray, url: Url) = store.set { copy(picked = PickedImage(name, bytes, url)) }
 
     /** Leaves the edit with no image. */
     fun clear() = store.set { ImageEditorState() }
@@ -46,5 +50,8 @@ data class ImageEditorState(
     val picked: PickedImage? = null,
 )
 
-/** An image picked from the device, its file's [name] and [bytes], not yet uploaded. */
-class PickedImage(val name: String, val bytes: ByteArray)
+/**
+ * An image picked from the device, its file's [name] and [bytes], not yet uploaded, and its local [url], a path on a
+ * desktop or a content uri on a phone, which an image loader draws as the web draws a `blob:` url.
+ */
+class PickedImage(val name: String, val bytes: ByteArray, val url: Url)

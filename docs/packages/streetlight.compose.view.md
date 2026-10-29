@@ -80,6 +80,10 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `MessageBox`, `MessageCard` | `messageBox` (`koala.dom.layout`) |
 | `ToasterHost` | `wireToaster` (`streetlight.web.interop`) |
 | `DropMenu` | `dropMenu` (`koala.dom.component`) |
+| `ActionSection`, `ActionSectionCard`, `ActionRow`, `ActionButton` | `actionSection`, `actionSectionCard`, `actionRow`, `menuActionButton` (`streetlight.web.dom.layout`) |
+| `LinksSection` | `linksFormSection` (`streetlight.web.view`) |
+| `DateField`, `TimeField`, `DayStepper`, `TimeStepper` | `dateInput`, `timeInput`, `dayIndicator`, `timeIndicator` |
+| `EventEditorForm` | `eventEditFormBody` (`streetlight.web.view`) |
 | `PostRow` | `postRow` (`streetlight.web.layout`) |
 | `TagFilter`, `EventTagMenu` | `tagFilterMenu` (`streetlight.web.component`) and `eventTagMenu` |
 | `SearchField` | `searchField` (`koala.component`) |
@@ -92,7 +96,8 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `CreatePostMenu` | `createPostMenu` (`streetlight.web.component`) and `wireCreatePost` |
 | `SelectorContainer` | `selectorContainer` (`koala.dom.layout`) |
 | `StageHeader` | `onboardStage` (`streetlight.web.view`), without its strikethrough |
-| `LocationScoutView` | `viewLocationScout` and `locationFinder` (`streetlight.web.view`) |
+| `LocationScoutView` | `viewLocationScout` (`streetlight.web.view`) |
+| `LocationFinderForm` | `locationFinder` (`streetlight.web.view`) |
 | `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
 | `ColumnRow` | `BodyStyle.ColumnRow` (`streetlight.web.layout`) |
 | `FormCard` | `formCard` (`streetlight.web.dom.layout`) |
@@ -154,6 +159,10 @@ A message is a `UIMessage`, from a `MessageStore` for each place in a view where
 ## Forms
 
 A form is laid out in `ColumnRow`s: columns side by side while each keeps 400dp, wrapping below that, none wider than 540dp, as the web's `ColumnRow`. A `FormSection` is such a column, and a `FormCard` holds a form's rows. A field asks for the keyboard a touch screen should offer, such as `KeyboardType.Uri` for a link or word capitals for a name, as a phone's own forms do.
+
+An action section heads a list the star adds to and edits: its heading on the left and its actions on the right, over a rule. Its actions are a composable slot, so an action that opens a `Popover` holds its own. In a form it is an `ActionSectionCard`, on an outlined card, its heading styled as a `FormSection`'s. A row of such a list is an `ActionRow`, its content taking the room beside its actions.
+
+A control the platform has its own of, such as a date or time picker, is an `expect` composable, so each platform shows the one its people know. A platform without one, such as the desktop, uses the common control built from the app's parts, such as `PopoverDateField`, opening a month in a `Popover`.
 
 ## Markdown Editor
 

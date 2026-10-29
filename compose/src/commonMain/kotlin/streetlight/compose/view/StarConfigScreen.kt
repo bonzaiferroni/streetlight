@@ -277,18 +277,6 @@ private fun NewEmailField() {
     )
 }
 
-/** [text] centered across its column. */
-@Composable
-private fun CenteredText(text: String) {
-    val theme = currentTheme
-    BasicText(
-        text,
-        Modifier.fillMaxWidth(),
-        style = theme.text.regular.copy(textAlign = TextAlign.Center),
-        color = { theme.colors.ink },
-    )
-}
-
 /** The message of [messages], if any, centered. */
 @Composable
 private fun FormMessage(messages: Tap<UIMessage?>) {

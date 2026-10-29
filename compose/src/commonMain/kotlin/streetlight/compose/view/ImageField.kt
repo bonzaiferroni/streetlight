@@ -13,7 +13,9 @@ import coil3.compose.AsyncImage
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
+import kampfire.model.Url
 import koala.SvgFile
 import kotlinx.coroutines.launch
 import streetlight.compose.model.ImageEditor
@@ -35,7 +37,7 @@ fun ImageField() {
     val picked by editor.pickedState.collectAsState()
     val launcher = rememberFilePickerLauncher(type = FileKitType.Image) { file ->
         file ?: return@rememberFilePickerLauncher
-        scope.launch { editor.pick(file.name, file.readBytes()) }
+        scope.launch { editor.pick(file.name, file.readBytes(), Url(file.path)) }
     }
     val preview: Any? = picked?.bytes ?: image?.url
 

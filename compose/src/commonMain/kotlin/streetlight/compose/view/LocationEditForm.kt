@@ -67,23 +67,11 @@ private fun LocationLinksCard() = FormCard("Links") {
     ColumnRow {
         FormSection("Website") {
             TextField(editor.websiteState, "website", icon = SvgFile.World, keyboardType = KeyboardType.Uri)
-            FieldNote("This location's home on the web.")
+            CenteredText("This location's home on the web.")
         }
         FormSection("Calendar") {
             TextField(editor.eventsUrlState, "calendar", icon = SvgFile.Calendar, keyboardType = KeyboardType.Uri)
-            FieldNote("Does the location have an events page or calendar?")
+            CenteredText("Does the location have an events page or calendar?")
         }
     }
-}
-
-/** A note on a field, [text] centered beneath it. */
-@Composable
-private fun FieldNote(text: String) {
-    val theme = currentTheme
-    BasicText(
-        text,
-        Modifier.fillMaxWidth(),
-        style = theme.text.regular.copy(textAlign = TextAlign.Center),
-        color = { theme.colors.ink },
-    )
 }

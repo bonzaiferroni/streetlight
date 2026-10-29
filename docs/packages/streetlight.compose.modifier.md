@@ -24,6 +24,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 | `padding(n)` | `padding: var(--unit)`, `PaddingX1`, `PaddingY1` |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
+| `blockLabel(label, isValid)` | `blockLabel` and `flowValid` (`koala.dom`), and `BlockLabelCss` |
 | `filigree()`, `filigree(FiligreeStyle.Ray)` | `filigree` (`koala.component`) and its `ParticleRay`; the rays of `rayHeader` (`streetlight.web.page`) |
 
 ## Modifiers
@@ -33,6 +34,10 @@ A styling the web gives with a `koala.modifier` class is an extension here, name
 Each is a `Modifier.Node` that reads the theme with `currentValueOf(LocalKoalaAppTheme)`, so a call site needs no theme in hand and chains like any modifier. The theme holds the values, such as `KoalaOpacity`, and the node holds only how they are applied. A node that reshapes or fades its content places it with a layer; one that draws around it is a `DrawModifierNode`. A styling that follows the corners, such as a shadow or an outline, is a parameter of `borderRadius()` rather than a modifier of its own, so the corners are given once.
 
 A modifier lives in the file that corresponds to its web cousin's stylesheet: `DisplayModifiers.kt` for `DisplayCss`, as borders, backgrounds, shadows, opacity and clips, `LayoutModifiers.kt` for `LayoutCss`, as padding, `MagicModifiers.kt` for `MagicCss`, as `filigree()` and its rays, and `TextModifiers.kt` for `TextCss` when one is needed. A modifier whose drawing outgrows its stylesheet's file takes a file of its own, as `ShineBg.kt`. `ModifierUtility.kt` holds what the nodes share, such as their read of the theme.
+
+## Block Label
+
+`blockLabel` draws its label over the top edge of its content, at the end, as the web's `::after` does, taking no room: the layout around a labeled part leaves the label room above it. The label's background tells a part's validity, as the web's `Required` and `Valid` do: plain for a part with no check, the required color while it is missing, the valid color once given. A form reads a part's validity from its edit's `ValidityCheck` with `isValid(key)`. A `TextField` shows the same check without a label, tinting its icon and outline by its `isValid`, so a form that needs no labels, such as signing in, keeps a light touch.
 
 ## Padding
 

@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.cbor)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
             implementation(libs.filekit.dialogs.compose)
