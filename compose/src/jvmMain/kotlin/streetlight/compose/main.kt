@@ -3,6 +3,7 @@ package streetlight.compose
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import streetlight.compose.resources.Res
@@ -16,13 +17,17 @@ import org.maplibre.compose.desktop.ProvideMapPresentationHost
 import org.maplibre.compose.desktop.rememberAwtComposeMapPresentationHost
 
 fun main() {
-    // read before the window opens, so it opens at its saved frame
+    // read before the window opens, so it opens at its saved frame and on its last route
     val frame = runBlocking { readWindowFrame() }
+    val lastRoute = runBlocking { readLastRoute() }
     application {
         val state = rememberWindowState(frame)
         LaunchedEffect(state) { state.saveFrames(frame) }
         // the window answers the desktop's back key and mouse button, so it holds the app's portal
         val portal = rememberPortal()
+        // restored before the window composes, so it opens on the route rather than fading to it
+        remember(portal) { lastRoute?.let(portal::restore) }
+        LaunchedEffect(portal) { portal.saveLastRoute() }
         Window(
             onCloseRequest = ::exitApplication,
             state = state,

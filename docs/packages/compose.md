@@ -46,7 +46,7 @@ Compose's `Modifier` is the only one in this module: `koala.modifier.Modifier` i
 
 ## Window
 
-The desktop window reopens at the frame it last settled on, kept in the app files as `window.json` and read before the window opens.
+The desktop window reopens at the frame it last settled on, kept in the app files as `window.json` and read before the window opens. It reopens on the route last on top, kept as `route.json`: a dock route on its own stack, any other above home, with nothing restored beneath it. A phone keeps its portal through the platform's saved state instead, so it returns where it was when the system ends it in the background, and starts at home on a cold launch.
 
 ## Build
 
