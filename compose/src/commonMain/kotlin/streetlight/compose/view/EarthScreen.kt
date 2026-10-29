@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.animation.core.animateFloatAsState
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.blur.hazeBlur
@@ -40,7 +41,7 @@ fun EarthView() {
 context(model: EarthModel)
 private fun EarthOverlay() {
     val entities by model.focusEntitiesState.collectAsState()
-    Column(0, Modifier.fillMaxSize().padding(top = TopBarUnits)) {
+    Column(0, Modifier.fillMaxSize().padding(top = currentPageInsets.calculateTopPadding())) {
         EarthHeader()
         MapFocus(entities, Modifier.fillMaxWidth().weight(1f))
     }

@@ -24,6 +24,7 @@ import streetlight.compose.model.rememberPortal
 import streetlight.compose.view.AppPortal
 import streetlight.compose.view.MapHost
 import streetlight.compose.view.AppTheme
+import streetlight.compose.view.AppScaffold
 import streetlight.compose.view.RouteDock
 import streetlight.compose.view.HelmBar
 import streetlight.compose.modifier.padding
@@ -49,14 +50,16 @@ fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
             LocalTopBarHost provides topBarHost,
             LocalDialogHost provides dialogHost,
         ) {
-            AppTheme(bar = bar, overlay = {
-                TopBarHost(Modifier.align(Alignment.TopCenter))
-                RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2))
-                // the bar's menus open over the dock, and a dialog over everything
-                HelmBar()
-                DialogHost()
-            }) {
-                MapHost { AppPortal() }
+            AppTheme {
+                AppScaffold(bar = bar, overlay = {
+                    TopBarHost(Modifier.align(Alignment.TopCenter))
+                    RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2))
+                    // the bar's menus open over the dock, and a dialog over everything
+                    HelmBar()
+                    DialogHost()
+                }) {
+                    MapHost { AppPortal() }
+                }
             }
         }
     }

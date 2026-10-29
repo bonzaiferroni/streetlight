@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,7 @@ fun ConfigBody(title: String?, scrollState: ScrollState, content: @Composable Co
     val theme = currentTheme
     PageThemeEffect(null)
 
-    Column(2, Modifier.fillMaxSize().verticalScroll(scrollState).padding(top = TopBarUnits).padding(1)) {
+    Column(2, Modifier.fillMaxSize().verticalScroll(scrollState).padding(currentPageInsets).padding(1)) {
         title?.let {
             BasicText(
                 it,

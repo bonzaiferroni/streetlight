@@ -33,7 +33,8 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `AppPortal` | `viewPortal` |
 | `FooScreen` | `viewFooRoute` and its `RouteBlock` |
 | `FooView` | `viewFoo`, and the shell it renders |
-| `AppTheme` | `applyTheme`, and the background of `ThemeCss` |
+| `AppTheme` | `applyTheme` |
+| `AppScaffold` | The background of `ThemeCss` |
 | `KoalaAppTheme` | `KoalaTheme`, and the stylesheets built from it |
 | `KoalaColors` | The color custom properties of `ThemeCss` |
 | `KoalaOpacity` | `--opacity-low`, `--opacity-half`, `--opacity-high` |
@@ -103,7 +104,7 @@ A button is a `Button` whatever its click does. The web's `btn` exists to dress 
 
 A menu opened by a click is a `Popover`, composed inside what opens it while it is open. It places itself below its opener when it fits, above when only that fits, and otherwise on the side with more room, kept inside the window, and it closes on a click outside. It grows from the web's initial scale with the magic bounce out of the corner nearest its opener, fading in, and shrinks back into it as it closes; the `Popup` stays composed until its exit ends.
 
-A floating card blurs the page behind it, as the web's `BlurBackdrop` does, with Haze. `AppTheme` captures the page, lights and all, as the `hazeSource` of `LocalPageHaze`, and the card reads it with `hazeBlur(HazeInput.Sources(…))`, which reaches across the composition root of a `Popup`. The card's tint goes over the blur.
+A floating card blurs the page behind it, as the web's `BlurBackdrop` does, with Haze. `AppScaffold` captures the page, lights and all, as the `hazeSource` of `LocalPageHaze`, and the card reads it with `hazeBlur(HazeInput.Sources(…))`, which reaches across the composition root of a `Popup`. The card's tint goes over the blur.
 
 A filter is state on the view model, bound to its control as a `MutableTap`; the model reads the feed again when the state changes. A feed section shows the filters of a type that `isSearched`.
 
@@ -128,7 +129,7 @@ The `Portal` is ambient: `App()` provides it as `LocalPortal`, and a part that o
 
 ## Route Dock
 
-`HelmBar` and `RouteDock` are `AppTheme`'s `overlay`. The helm bar's menus open within the overlay, not in a `Popup`, so a button's icon is one shared element with its menu's. `RouteDock` floats over the bottom of the window, over the page and the map, and stays across pages; a page makes no room for it. It is `AppTheme`'s `overlay`, the page's sibling, since a Haze blur cannot draw a source it lies within.
+`HelmBar` and `RouteDock` are `AppScaffold`'s `overlay`. The helm bar's menus open within the overlay, not in a `Popup`, so a button's icon is one shared element with its menu's. `RouteDock` floats over the bottom of the window, over the page and the map, and stays across pages. It is `AppScaffold`'s `overlay`, the page's sibling, since a Haze blur cannot draw a source it lies within.
 
 A tray of the dock holds icons for utilities, never routes.
 
@@ -136,7 +137,7 @@ A tray of the dock holds icons for utilities, never routes.
 
 ## Top Bar
 
-A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view with a bar keeps `TopBarUnits` of room above its content. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. A part that knows more, such as a `StarGate`'s content knowing the star, may mount a bar of its own within the screen's; the latest mount is shown, so the screen's returns when the part leaves, as the dash's `TopBar.TwoTone` gives way to the logo on sign-out. The helm and star stay reachable above the bar, whatever its fade.
+A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value, not a composable, and how far its content has scrolled under the bar. `TopBarHost`, in the overlay, draws the latest mount's bar in one look for every view, so the bar can blur the page, and so two views with the same bar share it unchanged. A view keeps `currentPageInsets` of room at its edges, provided by `AppScaffold`: `TopBarUnits` above for the bar and `DockUnits` below for the dock, applied within its scroll, as a lazy view's `contentPadding` or padding inside `verticalScroll`, so the content scrolls under both. A map's overlay keeps only the top. A bar known from the route is mounted by the screen, outside `Inflated`, so it stays while the content is read. A part that knows more, such as a `StarGate`'s content knowing the star, may mount a bar of its own within the screen's; the latest mount is shown, so the screen's returns when the part leaves, as the dash's `TopBar.TwoTone` gives way to the logo on sign-out. The helm and star stay reachable above the bar, whatever its fade.
 
 ## Star Gate
 
@@ -182,7 +183,7 @@ A modifier whose arguments do not change in composition is declared once, as a `
 
 The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
 
-`AppTheme` wraps the app below Koin. It shows the `PageTheme` held by `ThemeHost`, draws its three glows behind the content, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. Each view shows its page's theme with `PageThemeEffect`, its content's theme or `null` for the default, so returning to a view restores its own.
+`AppTheme` wraps the app below Koin, and `AppScaffold` within it lays out the platform's bar, the page on paper over the theme's three glows, and the overlay above the page. It animates the `PageTheme` held by `ThemeHost` and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. Each view shows its page's theme with `PageThemeEffect`, its content's theme or `null` for the default, so returning to a view restores its own.
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. `KoalaLights` holds the glows and the flux hue as states, `drawLights` draws them as the page background, its size the frame of their positions and radii; `KoalaLights.pageSize`, set as the root is laid out, gives a light's radius on the page to a surface drawn elsewhere, and `shineBg()` casts them on a surface. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 

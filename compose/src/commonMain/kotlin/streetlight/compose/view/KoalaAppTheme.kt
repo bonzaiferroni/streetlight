@@ -35,7 +35,7 @@ val LocalKoalaAppTheme = staticCompositionLocalOf<KoalaAppTheme> { error("No Koa
  */
 val LocalSchemeColor = staticCompositionLocalOf<Color> { error("No scheme color provided") }
 
-/** The page whose drawing a floating card blurs behind itself, captured where [AppTheme] draws the page. */
+/** The page whose drawing a floating card blurs behind itself, captured where [AppScaffold] draws the page. */
 val LocalPageHaze = staticCompositionLocalOf<HazeState> { error("No page HazeState provided") }
 
 /** The theme [AppTheme] provides. */

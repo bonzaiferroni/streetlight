@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -44,7 +45,7 @@ fun GalaxyMapView() {
 context(model: GalaxyMapModel)
 private fun GalaxyMapOverlay() {
     val entities by model.focusEntitiesState.collectAsState()
-    Column(0, Modifier.fillMaxSize().padding(top = TopBarUnits)) {
+    Column(0, Modifier.fillMaxSize().padding(top = currentPageInsets.calculateTopPadding())) {
         MapFocus(entities, Modifier.fillMaxWidth().weight(1f))
     }
 }

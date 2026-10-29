@@ -163,3 +163,6 @@ private val DockBlur = HazeBlurStyle { blurRadius(10.dp) }
 /** The glass of the dock and its ink, the web's paper at `.6` and ink at `.8`. */
 private const val GlassAlpha = 0.6f
 private const val InkAlpha = 0.8f
+
+/** The height of the dock in units, with the two below it. */
+const val DockUnits = 9

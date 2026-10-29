@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +47,7 @@ fun EventView(event: EventLocation, scrollState: ScrollState) {
     PageThemeEffect(null)
 
     // the column is padded a unit all around below the top bar's room, as an item is
-    Column(2, Modifier.fillMaxSize().verticalScroll(scrollState).padding(top = TopBarUnits).padding(1)) {
+    Column(2, Modifier.fillMaxSize().verticalScroll(scrollState).padding(currentPageInsets).padding(1)) {
         EntityHeader(event, "at", event.headerDetails)
         Tabs {
             tab("Location") { EventLocationTab(event) }

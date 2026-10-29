@@ -9,11 +9,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -23,12 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
-import androidx.compose.ui.draw.drawBehind
 import koala.modifier.Glow
 import koala.modifier.Koala
 import koala.modifier.KoalaTheme
@@ -38,22 +32,13 @@ import streetlight.compose.utility.collectAsState
 import streetlight.compose.utility.toColor
 import streetlight.model.data.PageBackgroundMode
 import streetlight.model.data.PageTheme
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.rememberHazeState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 
 /**
- * Shows [content] over the background lights of the current [PageTheme], and provides the [KoalaAppTheme] read as
- * [currentTheme], sized from a rem chosen by the window's width, below a platform's [bar], such as the desktop window's
- * title bar. The [overlay] floats over the page, and may blur it, map and all, through [LocalPageHaze].
+ * Provides [content] the [KoalaAppTheme] read as [currentTheme], with the colors and lights of the current [PageTheme],
+ * sized from a rem chosen by the window's width.
  */
 @Composable
-fun AppTheme(
-    bar: @Composable () -> Unit = {},
-    overlay: @Composable BoxScope.() -> Unit = {},
-    content: @Composable () -> Unit,
-) {
+fun AppTheme(content: @Composable () -> Unit) {
     val pageTheme by koinInject<ThemeHost>().themeState.collectAsState()
 
     val accentState = animateColorAsState(pageTheme.accent.toColor(), themeTransition())
@@ -80,30 +65,11 @@ fun AppTheme(
             KoalaAppTheme(unitOf(rem), text, colors, Opacity, lights, Magic)
         }
 
-        val pageHaze = rememberHazeState()
         CompositionLocalProvider(
             LocalKoalaAppTheme provides koalaAppTheme,
-            LocalPageHaze provides pageHaze,
             LocalSchemeColor provides koalaAppTheme.colors.ink,
-        ) {
-            // the page, paper and lights and all, is what a floating card blurs behind itself; the paper keeps the capture
-            // opaque, so the blur covers what lies behind the card
-            Column(Modifier.fillMaxSize()) {
-                bar()
-                // the overlay is the page's sibling, since a blur cannot draw a source it lies within
-                Box(Modifier.fillMaxWidth().weight(1f)) {
-                    Box(Modifier.fillMaxSize().hazeSource(pageHaze).background(paper)) {
-                        Spacer(
-                            Modifier.fillMaxSize()
-                                .graphicsLayer()
-                                .drawBehind { drawLights(lights) }
-                        )
-                        content()
-                    }
-                    overlay()
-                }
-            }
-        }
+            content = content,
+        )
     }
 }
 

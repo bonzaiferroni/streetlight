@@ -71,8 +71,8 @@ fun LazyGridScope.pinnedItem(
  * A view that scrolls by [state] as one lazy staggered grid of [columns], each column stacking its items whatever their
  * heights, filled by [content] with sections such as [feedSection]. In the `Grid` [mode] its items stand a unit apart
  * and a unit from its edges, so the rounded entries stand clear; otherwise a line apart, each full item padded by the
- * mode's [sideUnits]. It keeps room at its top for the top bar while [isUnderTopBar]. The masonry cousin of
- * [LazyGridView].
+ * mode's [sideUnits]. It keeps room at its bottom for the dock, and at its top for the top bar while [isUnderTopBar].
+ * The masonry cousin of [LazyGridView].
  */
 @Composable
 fun LazyStaggeredGridView(
@@ -87,8 +87,10 @@ fun LazyStaggeredGridView(
     val isGrid = mode == FeedMode.Grid
     val spacing = if (isGrid) theme.unit else theme.line
     val edge = if (isGrid) theme.unit else 0.dp
-    val top = if (isUnderTopBar) theme.unit * TopBarUnits else 0.dp
-    val contentPadding = PaddingValues(start = edge, top = top + edge, end = edge, bottom = edge)
+    val insets = currentPageInsets
+    val top = if (isUnderTopBar) insets.calculateTopPadding() else 0.dp
+    val bottom = insets.calculateBottomPadding()
+    val contentPadding = PaddingValues(start = edge, top = top + edge, end = edge, bottom = bottom + edge)
     LazyVerticalStaggeredGrid(
         columns = columns,
         modifier = modifier.fillMaxSize(),

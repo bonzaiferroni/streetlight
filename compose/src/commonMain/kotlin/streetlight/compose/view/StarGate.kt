@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,7 +41,7 @@ fun StarGate(fallback: @Composable () -> Unit = { SignInToContinue() }, content:
 @Composable
 fun SignInToContinue() {
     val theme = currentTheme
-    Box(Modifier.fillMaxSize().padding(top = TopBarUnits).padding(2), contentAlignment = Alignment.TopCenter) {
+    Box(Modifier.fillMaxSize().padding(currentPageInsets).padding(2), contentAlignment = Alignment.TopCenter) {
         Column(
             1,
             // as wide as its widest row, so the buttons keep their labels, and no narrower than the star menu
