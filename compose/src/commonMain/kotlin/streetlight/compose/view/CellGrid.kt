@@ -74,7 +74,7 @@ private fun Cell(detail: EntityDetail) {
     val route = detail.route?.toAppRoute()
     val url = detail.url?.value?.takeIf { it.startsWith("http") }
     val onClick = when {
-        route != null -> { -> portal.open(route) }
+        route != null -> { -> portal.go(route) }
         url != null -> { -> uriHandler.openUri(url) }
         else -> null
     }

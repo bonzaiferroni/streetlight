@@ -15,6 +15,7 @@ import kampfire.model.Ok
 import kampfire.model.storeOf
 import koala.SvgFile
 import kotlinx.coroutines.launch
+import koala.model.Toaster
 import org.koin.compose.koinInject
 import streetlight.compose.model.StarSession
 import streetlight.compose.model.UserCreator
@@ -70,8 +71,9 @@ fun SignInForm(modifier: Modifier = Modifier) {
 private fun CreateAccountDialog(state: MutableTap<Boolean>, session: StarSession) {
     RawDialogMount(state, "Create Account") {
         val api = koinInject<ApiClient>()
+        val toaster = koinInject<Toaster>()
         val scope = rememberCoroutineScope()
-        val creator = remember { UserCreator(scope, api, session) }
+        val creator = remember { UserCreator(scope, api, session, toaster) }
         val star by session.starState.collectAsState()
         LaunchedEffect(star) { if (star != null) state.set(false) }
 

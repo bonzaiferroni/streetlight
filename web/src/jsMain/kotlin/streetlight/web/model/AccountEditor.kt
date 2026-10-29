@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.api.EmailAddress
 import kampfire.api.Password
 import kampfire.api.obfuscatePassword

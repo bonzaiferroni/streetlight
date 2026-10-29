@@ -57,7 +57,9 @@ State and logic that several view models share is a submodel: a plain class, not
 
 The web's earth routes change the address bar; the app has none, so a route is a place the viewer goes, and a refinement of what it shows, such as a tag or a search, is state on its model. Each earth route is its own entry with its own model.
 
-A staged form's model holds the focus of the star's work, such as `LocationScoutFocus`, and its stage follows from the focus, an enum whose order is the stages' order. A stage is left by changing the focus, so going back to an earlier stage is a move like any other.
+A staged form's model holds the focus of the star's work, such as `LocationScoutFocus`, and its stage follows from the focus, an enum whose order is the stages' order. A stage is left by changing the focus, so going back to an earlier stage is a move like any other. Once its post is done, a form that goes on to another route swaps itself for it, so its model, whose state says it posted, is not shown again.
+
+A model reports to the user as the web's do: a `MessageStore` for each place in the view where a message shows, delivered through `toDataOr(messenger)`, and the injected `Toaster` where there is no such place, as for a post whose view is gone.
 
 A model of a part that belongs to no route, such as a dialog's form, is a plain class built where the part is shown, with that composition's scope, as the create-account dialog builds `UserCreator`.
 

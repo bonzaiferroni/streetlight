@@ -77,6 +77,10 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `TextLogo` | `textLogo` (`streetlight.web.component`) |
 | `Button`, `ButtonStyle` | `btn` and `button` (`koala.component`), and the button classes of `ButtonCss`, such as `Zen` |
 | `Popover` | `popoverMenu` (`streetlight.web.dom.component`) and its card |
+| `MessageBox`, `MessageCard` | `messageBox` (`koala.dom.layout`) |
+| `ToasterHost` | `wireToaster` (`streetlight.web.interop`) |
+| `DropMenu` | `dropMenu` (`koala.dom.component`) |
+| `PostRow` | `postRow` (`streetlight.web.layout`) |
 | `TagFilter`, `EventTagMenu` | `tagFilterMenu` (`streetlight.web.component`) and `eventTagMenu` |
 | `SearchField` | `searchField` (`koala.component`) |
 | `TextField` | `textField` (`koala.component`) |
@@ -142,6 +146,10 @@ A view declares its top bar with a `TopBarMount`, handing over a `TopBar` value,
 ## Star Gate
 
 A screen of the star's own puts a `StarGate` ahead of `Inflated`, so its content is read only while a star is signed in, and the star is in context for what it shows. Signed out, it shows its fallback, by default the `SignInForm` on a card. Signing out leaves the star where they are; each gate turns to its fallback, so nothing of the star's stays on screen. What a gated screen shows may depend on the star's account type, as the star configuration shows a guest the form to register and a registered star their email and password; it changes with the star, so an upgrade shows the registered form at once.
+
+## Messages
+
+A message is a `UIMessage`, from a `MessageStore` for each place in a view where one shows, or from the app's `Toaster`, the same models the web uses. `MessageBox` shows a store's message in its place; `ToasterHost`, in `AppScaffold`'s overlay, shows the toasts bottom left above the dock, the newest at the bottom pushing the others up. Either shows it as a `MessageCard`: the icon of its type beside its text on the background of its type, `Working` with an animated loader. A message's corners are rounded `MessageRadiusUnits`, less than a button's.
 
 ## Forms
 
@@ -259,6 +267,8 @@ A layout that changes with its width, such as `CellGrid` or the `Row` feed row, 
 | `Grid` | No padding but a unit below. A `ContainImage` across the top in the image's own `aspect`, held between 3:4 and 4:1 and no taller than 48 units, contained within that height, or 3:2 when it has none; the title and description as in `Row`, clipped at 10 units with no inset, beside the flair badge; then the `CellGrid`. The parts below the image are inset a unit at the sides and stand a unit apart. The entry's corners are rounded three units |
 
 A featured row, `isFeatured`, takes the `Grid` layout in any mode, with square corners and its text clipped at 24 units, as the web's `FeedRowStyle.Featured`. A map's focus features its first entity.
+
+A row's details are read from the entity for its feed unless given. A preview of what an edit will post as, `PostRow`, shows a `CustomEntity` with the details the posted entity will have, as the web's `postRow` does.
 
 ### Cell Grid
 

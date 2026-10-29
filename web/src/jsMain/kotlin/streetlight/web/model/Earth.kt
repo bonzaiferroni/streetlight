@@ -2,6 +2,7 @@
 
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.model.reactIn
 import kampfire.model.UIMessageType
 import kampfire.model.toDataOr

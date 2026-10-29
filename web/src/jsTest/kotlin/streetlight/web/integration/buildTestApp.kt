@@ -8,7 +8,7 @@ import org.koin.dsl.module
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
 import streetlight.model.io.ApiClient
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 
 fun buildTestApp(
     scope: CoroutineScope,

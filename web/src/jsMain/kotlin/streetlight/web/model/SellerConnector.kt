@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.model.Messenger
 import kampfire.model.Url
 import kampfire.model.storeOf

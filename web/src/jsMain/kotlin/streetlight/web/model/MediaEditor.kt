@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import streetlight.model.data.ImageTarget
 import kampfire.api.Slug
 import kampfire.api.Markdown

@@ -16,7 +16,7 @@ import streetlight.web.model.LocationEditor
 import streetlight.web.model.LocationScout
 import streetlight.web.model.MarkerMap
 import streetlight.web.model.SiteConfig
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

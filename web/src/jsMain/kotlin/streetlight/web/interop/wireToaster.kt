@@ -3,7 +3,7 @@ package streetlight.web.interop
 import koala.modifier.*
 import koala.dom.*
 import koala.layout.MessageBox
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 import streetlight.web.page.AppBody
 import koala.dom.component.*
 import koala.dom.layout.*
@@ -14,7 +14,8 @@ fun ViewScope.wireToaster() {
 
     mountChildView(AppBody.ToasterId) {
         column(Padding(2)) {
-            itemsBlock(model.messagesState, modify(Magic, SlideLeft)) { message ->
+            itemsBlock(model.toastsState, modify(Magic, SlideLeft)) { toast ->
+                val message = toast.message
                 val typeMod = message.messageType.toModifier()
                 row {
                     card(modify(MessageBox.Mod, BlurBackdrop, typeMod)) {

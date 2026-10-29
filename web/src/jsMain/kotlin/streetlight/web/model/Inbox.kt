@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.api.Markdown
 import kampfire.model.CursorStatus
 import kampfire.model.LiveList

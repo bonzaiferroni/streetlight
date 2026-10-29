@@ -26,6 +26,7 @@ import streetlight.compose.view.MapHost
 import streetlight.compose.view.AppTheme
 import streetlight.compose.view.AppScaffold
 import streetlight.compose.view.RouteDock
+import streetlight.compose.view.ToasterHost
 import streetlight.compose.view.HelmBar
 import streetlight.compose.modifier.padding
 import androidx.compose.ui.Alignment
@@ -54,6 +55,7 @@ fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
                 AppScaffold(bar = bar, overlay = {
                     TopBarHost(Modifier.align(Alignment.TopCenter))
                     RouteDock(Modifier.align(Alignment.BottomCenter).padding(bottom = 2))
+                    ToasterHost(Modifier.align(Alignment.BottomStart))
                     // the bar's menus open over the dock, and a dialog over everything
                     HelmBar()
                     DialogHost()

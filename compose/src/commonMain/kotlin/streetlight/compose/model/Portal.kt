@@ -34,7 +34,7 @@ class Portal(val start: AppRoute, val stacks: Map<AppRoute, NavBackStack<AppRout
     private val stack get() = stacks.getValue(dockRoute)
 
     /** Opens [route] above the current one. */
-    fun open(route: AppRoute) {
+    fun go(route: AppRoute) {
         stack.add(route)
     }
 

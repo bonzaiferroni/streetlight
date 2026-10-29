@@ -7,6 +7,8 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
+import koala.model.MessageStore
+import koala.model.Toaster
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -18,6 +20,8 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationEntity
+import streetlight.model.data.PostEdit
+import streetlight.model.data.PostType
 import streetlight.model.data.toEditOrNull
 import streetlight.model.io.ApiClient
 
@@ -31,6 +35,8 @@ class LocationScout(
     private val api: ApiClient,
     private val osm: OsmClient,
     private val geoMap: GeoMap,
+    settings: AppSettings,
+    private val toaster: Toaster,
 ) : ViewModel() {
     private val store = storeOf(LocationScoutState())
     private var osmJob: Job? = null
@@ -42,18 +48,22 @@ class LocationScout(
     val locationsState = store.tapOf { it.locations }
     val focusState = store.tapOf { it.focus }
     val stageState = store.tapOf { it.focus.toStage() }
-    val queryMessageState = store.tapOf { it.queryMessage }
-    val mapMessageState = store.tapOf { it.mapMessage }
+    val queryMessage = MessageStore()
+    val mapMessage = MessageStore()
+    val postMessage = MessageStore()
+    val isPostedState = store.tapOf { it.isPosted }
+    val postModeState = settings.locationPostModeState
+    val feedModeState = settings.feedModeState
 
     init {
         viewModelScope.launch {
             store.flow.map { it.query to it.city }.distinctUntilChanged().collectLatest { (query, city) ->
                 osmJob?.cancel()
-                store.set { copy(queryMessage = null) }
+                queryMessage.clear()
                 val locations = when {
                     query.isBlank() -> emptyList()
                     else -> api.location.searchLocations(query, city.takeIf { it.isNotBlank() })
-                        .toDataOr { return@collectLatest }
+                        .toDataOr(toaster) { return@collectLatest }
                 }
                 setLocations(locations)
             }
@@ -63,15 +73,14 @@ class LocationScout(
     /** Searches OpenStreetMap for the query, within the city or near the galaxy. */
     fun queryOsm() {
         val state = store.now
-        if (state.query.isBlank()) return store.set { copy(queryMessage = "First you have to type something.") }
-        store.set { copy(queryMessage = "Searching OSM...") }
+        if (state.query.isBlank()) return queryMessage.deliver("First you have to type something.")
+        queryMessage.deliverSending("Searching OSM...")
         osmJob?.cancel()
         osmJob = viewModelScope.launch {
             val city = state.city.takeIf { it.isNotBlank() }
             val bounds = galaxy?.geoRect.takeIf { city == null }?.scaleBy(OsmBoundsScale)
-            val found = osm.readLocations(state.query, city, bounds)
-                .toDataOr { return@launch store.set { copy(queryMessage = it.message) } }
-            store.set { copy(queryMessage = "found: ${found.size}") }
+            val found = osm.readLocations(state.query, city, bounds).toDataOr(queryMessage) { return@launch }
+            queryMessage.deliverSuccess("found: ${found.size}")
             setLocations(found.mapNotNull { it.toEditOrNull() })
         }
     }
@@ -80,9 +89,9 @@ class LocationScout(
     fun whatIsHere() {
         val center = geoMap.camera.cameraState.now.center ?: return
         viewModelScope.launch {
-            val found = osm.readLocationAt(center).toDataOr { return@launch store.set { copy(mapMessage = it.message) } }
+            val found = osm.readLocationAt(center).toDataOr(mapMessage) { return@launch }
             val location = found.toEditOrNull() ?: return@launch
-            store.set { copy(mapMessage = location.name ?: location.address) }
+            mapMessage.deliver(location.label)
             setLocations(listOf(location))
         }
     }
@@ -114,20 +123,59 @@ class LocationScout(
     /** Returns to the search, keeping what was found. */
     fun search() = store.set { copy(focus = null) }
 
+    /** Saves the location when it is new, posts it to the galaxy when there is one, and goes on by the post mode. */
+    fun post() {
+        val focus = store.now.focus as? LocationScoutFocus.Review ?: return
+        postMessage.clear()
+        viewModelScope.launch {
+            val location = when (val location = focus.location) {
+                is Location -> location
+                is LocationEdit -> editor.saveLocation()?.also {
+                    store.set { copy(focus = LocationScoutFocus.Review(it)) }
+                }
+            } ?: return@launch
+            galaxy?.let { galaxy ->
+                val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
+                api.post.createPost(edit).toDataOr(postMessage) { return@launch }
+            }
+            when (postModeState.now) {
+                LocationPostMode.ResetLocation -> {
+                    toaster.deliverSuccess("Posted! Ready for the next one.")
+                    reset()
+                }
+                LocationPostMode.Return -> {
+                    val posted = galaxy?.let { "Posted to ${it.name}." } ?: "Posted ${location.name ?: "Location"}."
+                    toaster.deliverSuccess(posted)
+                    store.set { copy(isPosted = true) }
+                }
+            }
+        }
+    }
+
+    /** Returns to the search with nothing chosen or found, cancelling an OpenStreetMap search. */
+    fun reset() {
+        osmJob?.cancel()
+        store.set { LocationScoutState() }
+        editor.setEdit(LocationEdit())
+        markerMap.setPoints(emptyList())
+        queryMessage.clear()
+        mapMessage.clear()
+        postMessage.clear()
+    }
+
     private fun setLocations(locations: List<LocationEntity>) {
         store.set { copy(locations = locations) }
         markerMap.setPoints(locations.filterIsInstance<Entity>())
     }
 }
 
-/** The search of a [LocationScout], what it found, the [focus] of the star's work, and the last message of each part. */
+/** The search of a [LocationScout], what it found, the [focus] of the star's work, and whether it [isPosted]. */
 data class LocationScoutState(
     val query: String = "",
     val city: String = "",
     val locations: List<LocationEntity> = emptyList(),
     val focus: LocationScoutFocus? = null,
-    val queryMessage: String? = null,
-    val mapMessage: String? = null,
+    val isPosted: Boolean = false,
 )
 
 /** The location a [LocationScout] works on, past the search. */

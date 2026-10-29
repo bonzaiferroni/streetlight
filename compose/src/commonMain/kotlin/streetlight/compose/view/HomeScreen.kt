@@ -9,7 +9,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
 import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.opacityHigh
-import streetlight.model.data.Galaxy
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import streetlight.compose.model.HomeModel
-import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
@@ -87,7 +85,7 @@ private fun HomeMenus(modifier: Modifier) {
         Row(1) {
             Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
             // a passage to the earth until the app has its route dock
-            Button("earth", onClick = { portal.open(EarthRoute) }, style = ButtonStyle.Zen)
+            Button("earth", onClick = { portal.go(EarthRoute) }, style = ButtonStyle.Zen)
         }
         Row(1) {
             Button("Create Galaxy", onClick = {}, style = ButtonStyle.Zen)
@@ -111,7 +109,7 @@ private fun LeadingSection(modifier: Modifier) {
             Column(1, columnModifier) {
                 NotedHeading("Galaxies", "Communities with a particular focus.")
                 galaxies.forEach { galaxy ->
-                    SmallGalaxyCard(galaxy, Modifier.pointerClick { portal.open(GalaxyRoute(galaxy.slug)) })
+                    SmallGalaxyCard(galaxy, Modifier.pointerClick { portal.go(GalaxyRoute(galaxy.slug)) })
                 }
             }
         }

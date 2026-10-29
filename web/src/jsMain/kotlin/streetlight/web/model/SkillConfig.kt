@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr

@@ -3,7 +3,6 @@ package streetlight.compose.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.remember
@@ -55,23 +54,28 @@ enum class FeedMode { Minimal, Row, Grid }
 val FeedMode.sideUnits get() = if (this == FeedMode.Grid) 0 else 1
 
 /**
- * An entity in a feed, laid out by [mode], within the entity's scheme color, its details read for the [feed] it is in,
- * opening the entity's page when the app has one. A row [isFeatured] takes the `Grid` layout in any mode, square, its
+ * An entity in a feed, laid out by [mode], within the entity's scheme color, showing its [details], read for the
+ * [feed] it is in unless given, and opening the entity's page when the app has one. A row [isFeatured] takes the `Grid` layout in any mode, square, its
  * text clipped at 24 units. The cousin of the web's `feedRow` and its `FeedRowStyle.Featured`.
  */
 @Composable
 context(feed: FeedContext?)
-fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal, isFeatured: Boolean = false) {
+fun FeedRow(
+    entity: Entity,
+    mode: FeedMode = FeedMode.Minimal,
+    isFeatured: Boolean = false,
+    details: List<EntityDetail> = entity.toDetails(feed),
+) {
     val route = entity.toRoute()
     val portal = currentPortal
     CompositionLocalProvider(LocalSchemeColor provides currentTheme.colors.colorOf(entity.toEntityType())) {
-        Box(if (route != null) Modifier.pointerClick { portal.open(route) } else Modifier) {
+        Box(if (route != null) Modifier.pointerClick { portal.go(route) } else Modifier) {
             when {
-                isFeatured -> GridFeedRow(entity, FeedRowMod.FeaturedBase, FeaturedTextUnits)
+                isFeatured -> GridFeedRow(entity, details, FeedRowMod.FeaturedBase, FeaturedTextUnits)
                 else -> when (mode) {
-                    FeedMode.Minimal -> MinimalFeedRow(entity)
-                    FeedMode.Row -> RowFeedRow(entity)
-                    FeedMode.Grid -> GridFeedRow(entity, FeedRowMod.GridBase, RowHeightUnits)
+                    FeedMode.Minimal -> MinimalFeedRow(entity, details)
+                    FeedMode.Row -> RowFeedRow(entity, details)
+                    FeedMode.Grid -> GridFeedRow(entity, details, FeedRowMod.GridBase, RowHeightUnits)
                 }
             }
         }
@@ -86,11 +90,10 @@ fun FeedRow(entity: Entity, mode: FeedMode = FeedMode.Minimal, isFeatured: Boole
  * The row has a unit of padding and its parts are a unit apart.
  */
 @Composable
-context(feed: FeedContext?)
-private fun MinimalFeedRow(entity: Entity) {
+private fun MinimalFeedRow(entity: Entity, details: List<EntityDetail>) {
     val theme = currentTheme
     val rowHeight = theme.unit * MinimalRowHeightUnits
-    val (priority, rest) = entity.toDetails(feed).partition { it.isPriority }
+    val (priority, rest) = details.partition { it.isPriority }
 
     Row(1, FeedRowMod.Base.padding(1)) {
         Thumbnail(entity, Modifier.size(rowHeight).sharedPart(entity.toRoute(), SharedPart.Image).borderRadius(1))
@@ -116,8 +119,7 @@ private fun MinimalFeedRow(entity: Entity) {
  * row's right half from [WideRowWidth], below it otherwise. The cousin of the web's `Row` mode.
  */
 @Composable
-context(feed: FeedContext?)
-private fun RowFeedRow(entity: Entity) {
+private fun RowFeedRow(entity: Entity, details: List<EntityDetail>) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
@@ -133,7 +135,7 @@ private fun RowFeedRow(entity: Entity) {
                 )
                 FlairBadge(entity, rowHeight)
             }
-            CellGrid(entity.toDetails(feed), FeedRowMod.Cells)
+            CellGrid(details, FeedRowMod.Cells)
         },
         modifier = FeedRowMod.Base.padding(1),
     ) { measurables, constraints ->
@@ -172,8 +174,7 @@ private fun RowFeedRow(entity: Entity) {
  * the flair badge; then the cells. The parts below the image are inset a unit at the sides and stand a unit apart. The cousin of the web's `Grid` mode.
  */
 @Composable
-context(feed: FeedContext?)
-private fun GridFeedRow(entity: Entity, base: Modifier, textUnits: Int) {
+private fun GridFeedRow(entity: Entity, details: List<EntityDetail>, base: Modifier, textUnits: Int) {
     val theme = currentTheme
     val rowHeight = theme.unit * RowHeightUnits
 
@@ -189,7 +190,7 @@ private fun GridFeedRow(entity: Entity, base: Modifier, textUnits: Int) {
             EntityText(entity, Modifier.weight(1f).fadeClip(textUnits))
             FlairBadge(entity, rowHeight)
         }
-        CellGrid(entity.toDetails(feed), FeedRowMod.Cells)
+        CellGrid(details, FeedRowMod.Cells)
     }
 }
 

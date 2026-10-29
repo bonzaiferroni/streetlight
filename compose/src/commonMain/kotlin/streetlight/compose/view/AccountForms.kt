@@ -33,7 +33,6 @@ context(model: UserCreator)
 fun GuestRegistrationForm() {
     val theme = currentTheme
     val isValid by model.isValidState.collectAsState()
-    val message by model.messageState.collectAsState()
 
     Column(2) {
         ColumnRow {
@@ -65,7 +64,7 @@ fun GuestRegistrationForm() {
             UsernameSection()
             RequirementsSection()
         }
-        FormSubmit("Register as Guest", { model.createAccount(AccountType.Guest) }, message, isValid)
+        FormSubmit("Register as Guest", { model.createAccount(AccountType.Guest) }, model.messages, isValid)
     }
 }
 
@@ -77,7 +76,6 @@ fun GuestRegistrationForm() {
 context(model: UserCreator)
 fun FullRegistrationForm() {
     val isValid by model.isValidState.collectAsState()
-    val message by model.messageState.collectAsState()
 
     Column(2) {
         ColumnRow {
@@ -100,7 +98,7 @@ fun FullRegistrationForm() {
             }
             RequirementsSection()
         }
-        FormSubmit("Sign up", { model.createAccount(AccountType.Registered) }, message, isValid)
+        FormSubmit("Sign up", { model.createAccount(AccountType.Registered) }, model.messages, isValid)
     }
 }
 

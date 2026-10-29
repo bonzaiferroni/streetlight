@@ -6,7 +6,7 @@ import koala.model.Portal
 import streetlight.model.io.ApiClient
 import streetlight.web.model.MarkerMap
 import streetlight.web.model.RouteDock
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 import streetlight.web.model.SessionClient
 
 val AppFacade.api get() = app.get<ApiClient>()

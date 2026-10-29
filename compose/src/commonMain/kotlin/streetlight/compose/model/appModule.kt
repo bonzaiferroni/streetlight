@@ -1,5 +1,7 @@
 package streetlight.compose.model
 
+import koala.model.Toaster
+import kotlinx.coroutines.MainScope
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import streetlight.compose.io.AppTransport
@@ -23,6 +25,7 @@ val appModule = module {
     single { GeoMap(get()) }
     single { StarSession(get()) }
     single { OsmClient() }
+    single { Toaster(MainScope()) }
     viewModel { (route: AppRoute) -> InflationModel(route, get()) }
     viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
@@ -30,7 +33,7 @@ val appModule = module {
     viewModel { EarthModel(get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
     viewModel { (account: Account) -> AccountEditor(account, get(), get()) }
-    viewModel { (target: PostGalaxy) -> LocationScout(target.galaxy, get(), get(), get()) }
+    viewModel { (target: PostGalaxy) -> LocationScout(target.galaxy, get(), get(), get(), get(), get()) }
 }
 
 /** The API of the server on this machine, where the app points while in development. */

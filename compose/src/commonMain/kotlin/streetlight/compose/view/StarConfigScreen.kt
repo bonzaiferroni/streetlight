@@ -2,12 +2,15 @@ package streetlight.compose.view
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.FlowRowScope
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import kampfire.model.Tap
+import kampfire.model.UIMessage
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -78,7 +81,6 @@ fun StarConfigView(scrollState: ScrollState) {
 context(model: AccountEditor)
 private fun RegisterAccountForm() {
     val theme = currentTheme
-    val message by model.registerMessageState.collectAsState()
 
     Column(2) {
         ColumnRow {
@@ -110,7 +112,7 @@ private fun RegisterAccountForm() {
             FormSection("Password") { NewPasswordFields() }
             FormSection("Email") { NewEmailField() }
         }
-        FormSubmit("Register Account", model::completeRegistration, message)
+        FormSubmit("Register Account", model::completeRegistration, model.registerMessage)
     }
 }
 
@@ -141,7 +143,6 @@ context(model: AccountEditor)
 private fun EmailProvided(email: EmailAddress, status: EmailStatus?) {
     val theme = currentTheme
     val isSent by model.isVerifySentState.collectAsState()
-    val message by model.emailMessageState.collectAsState()
     val isVerified = status == EmailStatus.Verified
 
     Column(1, Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -163,7 +164,7 @@ private fun EmailProvided(email: EmailAddress, status: EmailStatus?) {
                 }
             }
         }
-        FormMessage(message)
+        FormMessage(model.emailMessage)
     }
 }
 
@@ -173,12 +174,11 @@ context(model: AccountEditor)
 private fun AddEmailForm() {
     val isChanging by model.isChangingEmailState.collectAsState()
     val hasVerifiedEmail by model.hasVerifiedEmailState.collectAsState()
-    val message by model.emailMessageState.collectAsState()
 
     Column(1) {
         if (isChanging && hasVerifiedEmail) VerifyPasswordField("Please provide a password to authorize change.")
         NewEmailField()
-        FormSubmit(if (isChanging) "change email" else "add email", model::addEmail, message)
+        FormSubmit(if (isChanging) "change email" else "add email", model::addEmail, model.emailMessage)
     }
 }
 
@@ -187,14 +187,13 @@ private fun AddEmailForm() {
 context(model: AccountEditor)
 private fun RemoveEmailForm() {
     val hasVerifiedEmail by model.hasVerifiedEmailState.collectAsState()
-    val message by model.emailMessageState.collectAsState()
 
     Column(1) {
         when (hasVerifiedEmail) {
             true -> VerifyPasswordField("Please provide a password to authorize removal.")
             false -> CenteredText("Please confirm that you want to remove the email address from this account.")
         }
-        FormSubmit("Remove email", model::removeEmail, message)
+        FormSubmit("Remove email", model::removeEmail, model.emailMessage)
         Button("back", onClick = { model.isRemovingEmailField.set(false) }, style = ButtonStyle.Zen)
     }
 }
@@ -204,7 +203,6 @@ private fun RemoveEmailForm() {
 context(model: AccountEditor)
 private fun UndeliveredEmailForm(email: EmailAddress?) {
     val theme = currentTheme
-    val message by model.emailMessageState.collectAsState()
 
     Column(1) {
         BasicText(
@@ -214,7 +212,7 @@ private fun UndeliveredEmailForm(email: EmailAddress?) {
         )
         email?.let { CenteredText("Provided address: ${it.obfuscate()}") }
         NewEmailField()
-        FormSubmit("add email", model::addEmail, message)
+        FormSubmit("add email", model::addEmail, model.emailMessage)
     }
 }
 
@@ -227,13 +225,12 @@ private fun UndeliveredEmailForm(email: EmailAddress?) {
 context(model: AccountEditor)
 private fun FlowRowScope.PasswordSection() = FormSection("Password") {
     val isEditing by model.isEditingPasswordField.collectAsState()
-    val message by model.passwordMessageState.collectAsState()
     val account by model.accountState.collectAsState()
 
     when (isEditing) {
         false -> Column(1, Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button("change password", onClick = { model.isEditingPasswordField.set(true) })
-            FormMessage(message)
+            FormMessage(model.passwordMessage)
         }
         true -> Column(1) {
             val viableEmail = account.viableEmail
@@ -242,7 +239,7 @@ private fun FlowRowScope.PasswordSection() = FormSection("Password") {
             if (viableEmail != null) {
                 Button("I forgot my current password", onClick = model::resetPassword, style = ButtonStyle.Zen)
             }
-            FormSubmit("change", model::changePassword, message)
+            FormSubmit("change", model::changePassword, model.passwordMessage)
             Button("back", onClick = { model.isEditingPasswordField.set(false) }, style = ButtonStyle.Zen)
         }
     }
@@ -292,10 +289,10 @@ private fun CenteredText(text: String) {
     )
 }
 
-/** A form's [message], if any, centered. */
+/** The message of [messages], if any, centered. */
 @Composable
-private fun FormMessage(message: String?) {
-    message?.let { CenteredText(it) }
+private fun FormMessage(messages: Tap<UIMessage?>) {
+    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { MessageBox(messages) }
 }
 
 private const val RegisterIntro =

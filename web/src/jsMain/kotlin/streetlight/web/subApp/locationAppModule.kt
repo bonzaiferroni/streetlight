@@ -16,7 +16,7 @@ import streetlight.model.ui.LocationAppRoute
 import streetlight.model.ui.LocationAppScreen
 import streetlight.model.io.ApiClient
 import streetlight.web.io.WebTransport
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 
 /** The services of a LocationApp, one of each, created on first use. */
 val locationAppModule = module {

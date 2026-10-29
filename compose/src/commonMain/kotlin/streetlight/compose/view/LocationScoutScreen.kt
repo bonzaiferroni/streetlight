@@ -1,6 +1,7 @@
 package streetlight.compose.view
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -8,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,19 +19,25 @@ import androidx.compose.ui.text.style.TextOverflow
 import koala.SvgFile
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import streetlight.compose.model.HomeRoute
 import streetlight.compose.model.LocationScout
 import streetlight.compose.model.LocationScoutFocus
 import streetlight.compose.model.LocationScoutRoute
 import streetlight.compose.model.LocationScoutStage
 import streetlight.compose.model.PostGalaxy
+import streetlight.compose.model.currentPortal
+import streetlight.compose.model.toRoute
 import streetlight.compose.model.toStage
 import streetlight.compose.modifier.opacityHigh
 import streetlight.compose.modifier.padding
 import streetlight.compose.modifier.pointerClick
 import streetlight.compose.utility.collectAsState
 import streetlight.model.data.EntityType
+import streetlight.model.data.FeedContext
+import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationEntity
+import streetlight.model.data.Star
 
 /**
  * The screen of [route]: its name as its top bar, and, while a star is signed in, the galaxy the location goes to once
@@ -52,16 +60,22 @@ fun LocationScoutScreen(route: LocationScoutRoute) {
  * of the web's `viewLocationScout`.
  */
 @Composable
-context(model: LocationScout)
+context(model: LocationScout, star: Star)
 fun LocationScoutView(scrollState: ScrollState) {
     val stage by model.stageState.collectAsState()
+    val isPosted by model.isPostedState.collectAsState()
+    val portal = currentPortal
+    // the scout gives its place to where it was headed, as the web's goes on to it
+    LaunchedEffect(isPosted) {
+        if (isPosted) portal.swap(model.galaxy?.toRoute() ?: HomeRoute)
+    }
 
     ConfigBody(model.galaxy?.name, scrollState) {
         StageHeader(LocationScoutStage.entries.map { it.label }, stage.ordinal)
         when (stage) {
             LocationScoutStage.Search -> LocationFinder()
             LocationScoutStage.Edit -> LocationEditStage()
-            LocationScoutStage.Review -> ReviewPlaceholder()
+            LocationScoutStage.Review -> LocationReviewStage()
         }
     }
 }
@@ -91,7 +105,6 @@ private fun LocationSearch() {
     val theme = currentTheme
     val query by model.queryState.collectAsState()
     val locations by model.locationsState.collectAsState()
-    val message by model.queryMessageState.collectAsState()
 
     Row(1, Modifier.fillMaxWidth()) {
         TextField(model.queryState, "search", Modifier.weight(1f), icon = SvgFile.Search)
@@ -107,7 +120,7 @@ private fun LocationSearch() {
                 CenteredNote("Don't see the location in the list? Try a power search with OpenStreetMap.")
                 Column(1, Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Button("Search OSM", onClick = model::queryOsm)
-                    message?.let { CenteredNote(it) }
+                    MessageBox(model.queryMessage)
                 }
             }
         }
@@ -164,7 +177,6 @@ private fun SearchItem(location: LocationEntity, modifier: Modifier = Modifier) 
 context(model: LocationScout)
 private fun LocationMap() {
     val theme = currentTheme
-    val message by model.mapMessageState.collectAsState()
 
     MapMount(
         Modifier.fillMaxWidth().height(theme.unit * MapHeightUnits),
@@ -173,7 +185,7 @@ private fun LocationMap() {
     )
     Row(1, Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Button("What is Here?", onClick = model::whatIsHere)
-        message?.let { BasicText(it, Modifier.weight(1f), style = theme.text.regular, color = { theme.colors.ink }) }
+        MessageBox(model.mapMessage, Modifier.weight(1f, fill = false))
     }
     Row(1, Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         TextField(model.queryState, "name", Modifier.weight(1f), icon = SvgFile.MapPin)
@@ -188,30 +200,46 @@ private fun LocationMap() {
 @Composable
 context(model: LocationScout)
 private fun LocationEditStage() {
-    val theme = currentTheme
-    val message by model.editor.messageState.collectAsState()
-
     Column(2) {
         context(model.editor) { LocationEditForm() }
         Row(1, Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Button("Back", onClick = model::search, style = ButtonStyle.Zen)
-            BasicText(message.orEmpty(), Modifier.weight(1f), style = theme.text.regular, color = { theme.colors.ink })
+            Box(Modifier.weight(1f)) { MessageBox(model.editor.messages) }
             Button("Next", onClick = model::review)
         }
     }
 }
 
-/** The place of the review, which waits for its own work, and the way back to the edit or the search. */
+/**
+ * The location as it will be posted, then the post mode, the way back to the edit or the search, the last message, and
+ * the way to post. The cousin of the web's review stage.
+ */
 @Composable
-context(model: LocationScout)
-private fun ReviewPlaceholder() {
+context(model: LocationScout, star: Star)
+private fun LocationReviewStage() {
     val focus by model.focusState.collectAsState()
-    val isNew = (focus as? LocationScoutFocus.Review)?.location is LocationEdit
-    Column(1, horizontalAlignment = Alignment.CenterHorizontally) {
-        Placeholder("The location's post")
-        when (isNew) {
-            true -> Button("Edit", onClick = model::edit, style = ButtonStyle.Zen)
-            false -> Button("Back to search", onClick = model::search, style = ButtonStyle.Zen)
+    val mode by model.feedModeState.collectAsState()
+    val isSaving by model.editor.isSavingState.collectAsState()
+    val location = (focus as? LocationScoutFocus.Review)?.location ?: return
+
+    Column(2) {
+        when (location) {
+            is Location -> context(null as FeedContext?) { FeedRow(location, mode) }
+            is LocationEdit -> PostRow(location, star.username, mode)
+        }
+        Column(1, Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+            DropMenu(model.postModeState)
+            Row(1, Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                when (location) {
+                    is LocationEdit -> Button("Edit", onClick = model::edit, style = ButtonStyle.Zen)
+                    is Location -> Button("Back to search", onClick = model::search, style = ButtonStyle.Zen)
+                }
+                Column(1, Modifier.weight(1f)) {
+                    MessageBox(model.editor.messages)
+                    MessageBox(model.postMessage)
+                }
+                Button("Post", onClick = model::post, isEnabled = !isSaving)
+            }
         }
     }
 }

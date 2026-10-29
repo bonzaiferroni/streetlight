@@ -13,7 +13,7 @@ import kampfire.api.TestTransport
 import streetlight.model.data.FeedbackEdit
 import streetlight.model.testing.TestApiClient
 import streetlight.model.testing.answerFeedback
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 import streetlight.web.view.viewFeedbackHub
 import kotlin.test.Test
 import kotlin.test.assertEquals

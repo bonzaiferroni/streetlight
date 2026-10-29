@@ -46,6 +46,7 @@ Only `Portal` writes the browser's history. Code that sets a query parameter of 
 | [`MenuOption`](../../koala/src/commonMain/kotlin/koala/model/MenuAction.kt) | An entry in a menu: a label, a route, an action or a value |
 | [`IconButton`](../../koala/src/commonMain/kotlin/koala/model/IconButton.kt) | An icon that navigates or acts |
 | [`MessageStore`](../../koala/src/commonMain/kotlin/koala/model/MessageStore.kt) | A `Messenger` holding one message for a `messageBox` |
+| [`Toaster`, `Toast`](../../koala/src/commonMain/kotlin/koala/model/Toaster.kt) | A `Messenger` showing each message as a toast that fades, held and dismissed by the view |
 
 ### Data
 

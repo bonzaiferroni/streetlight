@@ -17,6 +17,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import kampfire.model.MutableTap
+import kampfire.model.Tap
+import kampfire.model.UIMessage
 import koala.SvgFile
 import streetlight.compose.modifier.Outline
 import streetlight.compose.modifier.borderRadius
@@ -89,14 +91,13 @@ fun FormBullets(vararg bullets: String) {
 }
 
 /**
- * The end of a form: the [message] to the star, if any, beside the button reading [label] that calls [onClick] while
+ * The end of a form: the message of [messages], if any, beside the button reading [label] that calls [onClick] while
  * [isEnabled]. The cousin of the web's `formSubmit`.
  */
 @Composable
-fun FormSubmit(label: String, onClick: () -> Unit, message: String?, isEnabled: Boolean = true) {
-    val theme = currentTheme
+fun FormSubmit(label: String, onClick: () -> Unit, messages: Tap<UIMessage?>, isEnabled: Boolean = true) {
     Row(1, Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        BasicText(message.orEmpty(), Modifier.weight(1f), style = theme.text.regular, color = { theme.colors.ink })
+        Box(Modifier.weight(1f)) { MessageBox(messages) }
         Button(label, onClick = onClick, isEnabled = isEnabled)
     }
 }

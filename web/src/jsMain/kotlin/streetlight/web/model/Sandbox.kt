@@ -8,7 +8,7 @@ import koala.utility.dedup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import streetlight.model.io.ApiClient
-import streetlight.web.model.Toaster
+import koala.model.Toaster
 import koala.utility.launch
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds

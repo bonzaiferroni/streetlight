@@ -7,6 +7,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
 import kampfire.model.toUrl
+import koala.model.MessageStore
 import streetlight.model.data.ImageTarget
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -29,7 +30,7 @@ class LocationEditor(private val api: ApiClient, edit: LocationEdit = LocationEd
     val websiteState = editStateOf({ it.website?.value.orEmpty() }) { copy(website = it.toUrlOrNull()) }
     val eventsUrlState = editStateOf({ it.eventsUrl?.value.orEmpty() }) { copy(eventsUrl = it.toUrlOrNull()) }
     val isHostState = editStateOf({ it.isHost == true }) { copy(isHost = it) }
-    val messageState = store.tapOf { it.message }
+    val messages = MessageStore()
     val imageEditor = ImageEditor(ImageTarget.Location, api).apply { setImage(edit.image) }
     val isSavingState = store.tapOf { it.isSaving }
 
@@ -38,13 +39,14 @@ class LocationEditor(private val api: ApiClient, edit: LocationEdit = LocationEd
     /** Starts editing [edit], clearing the last message. */
     fun setEdit(edit: LocationEdit) {
         store.set { LocationEditorState(edit) }
+        messages.clear()
         imageEditor.setImage(edit.image)
     }
 
     /** Whether the edit is valid, showing the reason when it is not. */
     fun isEditValid(): Boolean {
         val message = editNow.validity.message
-        store.set { copy(message = message) }
+        messages.set(message)
         return message == null
     }
 
@@ -54,22 +56,24 @@ class LocationEditor(private val api: ApiClient, edit: LocationEdit = LocationEd
      */
     suspend fun saveLocation(): Location? {
         if (!isEditValid()) return null
-        store.set { copy(message = "Uploading image...", isSaving = true) }
-        val image = imageEditor.finalizeImage().toDataOr {
-            store.set { copy(message = it.message, isSaving = false) }
+        store.set { copy(isSaving = true) }
+        messages.deliverSending("Uploading image...")
+        val image = imageEditor.finalizeImage().toDataOr(messages) {
+            store.set { copy(isSaving = false) }
             return null
         }
         val edit = editNow.copy(image = image)
-        store.set { copy(message = "Saving...") }
+        messages.deliverSending("Saving...")
         val outcome = when (edit.locationId) {
             null -> api.location.createLocation(edit)
             else -> api.location.updateLocation(edit)
         }
-        val location = outcome.toDataOr {
-            store.set { copy(message = it.message, isSaving = false) }
+        val location = outcome.toDataOr(messages) {
+            store.set { copy(isSaving = false) }
             return null
         }
-        store.set { copy(edit = edit.copy(locationId = location.locationId), message = null, isSaving = false) }
+        store.set { copy(edit = edit.copy(locationId = location.locationId), isSaving = false) }
+        messages.clear()
         return location
     }
 
@@ -77,10 +81,9 @@ class LocationEditor(private val api: ApiClient, edit: LocationEdit = LocationEd
         store.mutableTapOf({ read(it.edit) }) { copy(edit = edit.write(it)) }
 }
 
-/** The [edit] of a [LocationEditor], its last [message], and whether it [isSaving]. */
+/** The [edit] of a [LocationEditor], and whether it [isSaving]. */
 data class LocationEditorState(
     val edit: LocationEdit,
-    val message: String? = null,
     val isSaving: Boolean = false,
 )
 

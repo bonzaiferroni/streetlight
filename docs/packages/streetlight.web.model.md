@@ -125,7 +125,6 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`AppFacade.api, AppFacade.portal…`](../../web/src/jsMain/kotlin/streetlight/web/model/StreetlightFacade.kt) | Services reached from any `AppFacade` |
 | [`SessionClient`](../../web/src/jsMain/kotlin/streetlight/web/model/SessionClient.kt) | The signed-in star, and sign-in and sign-out |
 | [`AppContentFetcher`](../../web/src/jsMain/kotlin/streetlight/web/model/AppContentFetcher.kt) | The content of each route |
-| [`Toaster`](../../web/src/jsMain/kotlin/streetlight/web/model/Toaster.kt) | Messages shown as toasts |
 | [`RouteDock`](../../web/src/jsMain/kotlin/streetlight/web/model/RouteDock.kt) | The state of the route dock |
 | [`SiteConfig`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteConfig.kt) | The viewer's site settings |
 | [`DataCache`](../../web/src/jsMain/kotlin/streetlight/web/model/DataCache.kt) | Data loaded once per session |

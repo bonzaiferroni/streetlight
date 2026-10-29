@@ -25,7 +25,7 @@ fun CreatePostMenu(slug: Slug?, modifier: Modifier = Modifier) {
     var isOpen by remember { mutableStateOf(false) }
     val openRoute = { route: AppRoute ->
         isOpen = false
-        portal.open(route)
+        portal.go(route)
     }
 
     Box(modifier) {

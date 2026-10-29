@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import koala.model.GeoCamera
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope

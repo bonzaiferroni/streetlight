@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import koala.model.ChartData

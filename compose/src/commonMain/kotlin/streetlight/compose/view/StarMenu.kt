@@ -52,11 +52,11 @@ private fun StarPlaces(session: StarSession, onClose: () -> Unit) {
     val portal = currentPortal
 
     StarItem("Dashboard", SvgFile.Dashboard) {
-        portal.open(StarDashRoute())
+        portal.go(StarDashRoute())
         onClose()
     }
     StarItem("Account", SvgFile.User) {
-        portal.open(StarConfigRoute)
+        portal.go(StarConfigRoute)
         onClose()
     }
     StarItem("Inbox", SvgFile.Mail)

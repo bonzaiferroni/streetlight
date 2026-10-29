@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import koala.model.Toaster
 import kampfire.model.MutableTap
 import kampfire.model.Outcome
 import kampfire.model.combine

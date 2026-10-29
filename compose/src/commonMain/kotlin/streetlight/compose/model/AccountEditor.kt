@@ -18,6 +18,7 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
+import koala.model.MessageStore
 import kotlinx.coroutines.launch
 import streetlight.model.data.Account
 import streetlight.model.data.EmailStatus
@@ -42,21 +43,17 @@ class AccountEditor(account: Account, private val api: ApiClient, private val se
     val isChangingEmailState = store.tapOf { it.isChangingEmail }
     val isVerifySentState = store.tapOf { it.isVerificationSent }
     val hasVerifiedEmailState = store.tapOf { it.hasVerifiedEmail }
-    val emailMessageState = store.tapOf { it.emailMessage }
-    val passwordMessageState = store.tapOf { it.passwordMessage }
-    val registerMessageState = store.tapOf { it.registerMessage }
+    val emailMessage = MessageStore()
+    val passwordMessage = MessageStore()
+    val registerMessage = MessageStore()
 
     init {
         val isUnverified = account.email != null && account.emailStatus.let { it == null || it == EmailStatus.Unverified }
         if (isUnverified) {
             viewModelScope.launch {
                 val isSent = (api.accountAction.readEmailVerificationIsSent() as? Ok)?.data ?: return@launch
-                store.set {
-                    copy(
-                        isVerificationSent = isSent,
-                        emailMessage = if (isSent) "Check your inbox to verify your email." else emailMessage,
-                    )
-                }
+                store.set { copy(isVerificationSent = isSent) }
+                if (isSent) emailMessage.deliver(VerifyInboxMessage)
             }
         }
     }
@@ -64,13 +61,13 @@ class AccountEditor(account: Account, private val api: ApiClient, private val se
     /** Upgrades a guest's account with the password and optional email in the form, then reads the star again. */
     fun completeRegistration() {
         val state = store.now
-        val email = emailOf(state.email).toDataOr { return setRegisterMessage(it.message) }
-        val password = passwordOf(state).toDataOr { return setRegisterMessage(it.message) }
+        val email = emailOf(state.email).toDataOr(registerMessage) { return }
+        val password = passwordOf(state).toDataOr(registerMessage) { return }
         val request = AccountUpgradeRequest(password.obfuscatePassword(), email)
 
-        setRegisterMessage("Registering...")
+        registerMessage.deliverSending("Registering...")
         viewModelScope.launch {
-            val isUpgraded = api.user.upgradeAccount(request).toDataOr { return@launch setRegisterMessage(it.message) }
+            val isUpgraded = api.user.upgradeAccount(request).toDataOr(registerMessage) { return@launch }
             if (!isUpgraded) return@launch
             store.set {
                 copy(
@@ -78,32 +75,35 @@ class AccountEditor(account: Account, private val api: ApiClient, private val se
                     password = "",
                     confirmation = "",
                     isVerificationSent = email != null,
-                    registerMessage = null,
-                    emailMessage = email?.let { "Check your inbox to verify your email." },
                 )
             }
+            registerMessage.clear()
+            emailMessage.set(email?.let { VerifyInboxMessage })
             session.restore()
         }
     }
 
     /** Asks the server to send the verification email for the account's address again. */
     fun verifyExistingEmail() {
-        setEmailMessage("Sending...")
+        emailMessage.deliverSending()
         viewModelScope.launch {
-            api.accountAction.verifyExistingEmail().toDataOr { return@launch setEmailMessage(it.message) }
-            store.set { copy(isVerificationSent = true, emailMessage = "Request sent, check your email.") }
+            api.accountAction.verifyExistingEmail().toDataOr(emailMessage) { return@launch }
+            store.set { copy(isVerificationSent = true) }
+            emailMessage.deliverSuccess("Request sent, check your email.")
         }
     }
 
     /** Clears the email so a new one can be entered; nothing is sent until [addEmail]. */
-    fun changeEmail() = store.set {
-        copy(
-            account = account.copy(email = null, emailStatus = null),
-            isVerificationSent = false,
-            isChangingEmail = true,
-            verifyPassword = "",
-            emailMessage = null,
-        )
+    fun changeEmail() {
+        store.set {
+            copy(
+                account = account.copy(email = null, emailStatus = null),
+                isVerificationSent = false,
+                isChangingEmail = true,
+                verifyPassword = "",
+            )
+        }
+        emailMessage.clear()
     }
 
     /** Removes the account's email, confirmed by the current password when the email is verified. */
@@ -113,10 +113,9 @@ class AccountEditor(account: Account, private val api: ApiClient, private val se
             true -> state.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it).obfuscatePassword() } ?: return
             false -> ""
         }
-        setEmailMessage("Sending...")
+        emailMessage.deliverSending()
         viewModelScope.launch {
-            api.accountAction.removeEmail(PasswordVerification(password))
-                .toDataOr { return@launch setEmailMessage(it.message) }
+            api.accountAction.removeEmail(PasswordVerification(password)).toDataOr(emailMessage) { return@launch }
             store.set {
                 copy(
                     account = account.copy(email = null, emailStatus = null),
@@ -124,24 +123,24 @@ class AccountEditor(account: Account, private val api: ApiClient, private val se
                     isRemovingEmail = false,
                     hasVerifiedEmail = false,
                     verifyPassword = "",
-                    emailMessage = "Your email address has been removed from our database.",
                 )
             }
+            emailMessage.deliverSuccess("Your email address has been removed from our database.")
         }
     }
 
     /** Sets the typed email as the account's, unverified, and sends its verification. */
     fun addEmail() {
         val state = store.now
-        val email = emailOf(state.email).toDataOr { return setEmailMessage(it.message) } ?: return
+        val email = emailOf(state.email).toDataOr(emailMessage) { return } ?: return
         val passwordNow = when (state.account.viableEmail) {
             null -> null
             else -> state.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
         }
-        setEmailMessage("Sending...")
+        emailMessage.deliverSending()
         viewModelScope.launch {
             api.accountAction.addEmail(EmailChange(passwordNow?.obfuscatePassword(), email))
-                .toDataOr { return@launch setEmailMessage(it.message) }
+                .toDataOr(emailMessage) { return@launch }
             store.set {
                 copy(
                     account = account.copy(email = email, emailStatus = EmailStatus.Unverified),
@@ -150,49 +149,45 @@ class AccountEditor(account: Account, private val api: ApiClient, private val se
                     isChangingEmail = false,
                     hasVerifiedEmail = false,
                     verifyPassword = "",
-                    emailMessage = "Check your inbox to verify your email.",
                 )
             }
+            emailMessage.deliver(VerifyInboxMessage)
         }
     }
 
     /** Changes the password to the typed one, confirmed by the current password when the email is viable. */
     fun changePassword() {
         val state = store.now
-        val password = passwordOf(state).toDataOr { return setPasswordMessage(it.message) }
+        val password = passwordOf(state).toDataOr(passwordMessage) { return }
         val passwordNow = when (state.account.viableEmail) {
             null -> null
             else -> state.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
         }
-        setPasswordMessage("Sending...")
+        passwordMessage.deliverSending()
         viewModelScope.launch {
             val change = PasswordChange(passwordNow?.obfuscatePassword(), password.obfuscatePassword())
-            api.accountAction.changePassword(change).toDataOr { return@launch setPasswordMessage(it.message) }
+            api.accountAction.changePassword(change).toDataOr(passwordMessage) { return@launch }
             store.set {
                 copy(
                     password = "",
                     confirmation = "",
                     verifyPassword = "",
                     isEditingPassword = false,
-                    passwordMessage = "Password successfully changed.",
                 )
             }
+            passwordMessage.deliverSuccess("Password successfully changed.")
         }
     }
 
     /** Sends a link to reset the password to the account's viable email. */
     fun resetPassword() {
         val email = store.now.account.viableEmail ?: return
-        setPasswordMessage("Sending...")
+        passwordMessage.deliverSending()
         viewModelScope.launch {
-            api.accountAction.resetPassword(email).toDataOr { return@launch setPasswordMessage(it.message) }
-            setPasswordMessage("Check your email inbox for a link to reset your password.")
+            api.accountAction.resetPassword(email).toDataOr(passwordMessage) { return@launch }
+            passwordMessage.deliverSuccess("Check your email inbox for a link to reset your password.")
         }
     }
-
-    private fun setEmailMessage(message: String?) = store.set { copy(emailMessage = message) }
-    private fun setPasswordMessage(message: String?) = store.set { copy(passwordMessage = message) }
-    private fun setRegisterMessage(message: String?) = store.set { copy(registerMessage = message) }
 }
 
 /** The typed email, validated, or `null` when blank, as it is optional. */
@@ -207,7 +202,7 @@ private fun passwordOf(state: AccountEditorState): Outcome<Password> = when {
     else -> Password(state.password).toValidOutcome()
 }
 
-/** The [account] as edited, the fields of its forms, and the last message of each form. */
+/** The [account] as edited, and the fields of its forms. */
 data class AccountEditorState(
     val account: Account,
     val email: String = "",
@@ -219,7 +214,6 @@ data class AccountEditorState(
     val isChangingEmail: Boolean = false,
     val isRemovingEmail: Boolean = false,
     val hasVerifiedEmail: Boolean = account.email != null && account.emailStatus == EmailStatus.Verified,
-    val emailMessage: String? = null,
-    val passwordMessage: String? = null,
-    val registerMessage: String? = null,
 )
+
+private const val VerifyInboxMessage = "Check your inbox to verify your email."
