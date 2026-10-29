@@ -1,5 +1,6 @@
 package streetlight.compose.model
 
+import kampfire.api.toMarkdown
 import kampfire.model.Url
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
@@ -22,6 +23,9 @@ class LocationEditor(private val api: ApiClient, edit: LocationEdit = LocationEd
     val nameState = editStateOf({ it.name.orEmpty() }) { copy(name = it.takeIf(String::isNotBlank)) }
     val addressState = editStateOf({ it.address.orEmpty() }) { copy(address = it.takeIf(String::isNotBlank)) }
     val cityState = editStateOf({ it.city.orEmpty() }) { copy(city = it.takeIf(String::isNotBlank)) }
+    val descriptionState = editStateOf({ it.description ?: "".toMarkdown() }) {
+        copy(description = it.takeIf { markdown -> markdown.value.isNotBlank() })
+    }
     val websiteState = editStateOf({ it.website?.value.orEmpty() }) { copy(website = it.toUrlOrNull()) }
     val eventsUrlState = editStateOf({ it.eventsUrl?.value.orEmpty() }) { copy(eventsUrl = it.toUrlOrNull()) }
     val isHostState = editStateOf({ it.isHost == true }) { copy(isHost = it) }

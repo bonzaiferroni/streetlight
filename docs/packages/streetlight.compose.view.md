@@ -91,6 +91,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
 | `ColumnRow` | `BodyStyle.ColumnRow` (`streetlight.web.layout`) |
 | `FormCard` | `formCard` (`streetlight.web.dom.layout`) |
+| `MarkdownEditor` | `markdownEditor` (`koala.dom.markdown`) |
 | `ImageField` | `imageFormSection` and `imageDrop` (`streetlight.web.view`), with FileKit's picker |
 | `LocationEditForm` | `locationEditFormBody` (`streetlight.web.view`) |
 | `CheckBox` | `checkBox` (`koala.dom.component`) |
@@ -144,6 +145,10 @@ A screen of the star's own puts a `StarGate` ahead of `Inflated`, so its content
 ## Forms
 
 A form is laid out in `ColumnRow`s: columns side by side while each keeps 400dp, wrapping below that, none wider than 540dp, as the web's `ColumnRow`. A `FormSection` is such a column, and a `FormCard` holds a form's rows. A field asks for the keyboard a touch screen should offer, such as `KeyboardType.Uri` for a link or word capitals for a name, as a phone's own forms do.
+
+## Markdown Editor
+
+`MarkdownEditor` is a text field over the markdown as written, styled by a `VisualTransformation` that maps every offset to itself, so the caret, selection, undo and keyboard stay the platform's. Its styles come from `MarkdownStyler`. Every style is a span style: a paragraph style, such as a centered heading, lays its range out as a paragraph of its own, and the newline after it then adds a line that the text does not have, so headings stay at the start of their line until the editor maps offsets. Each line takes its own height. A style that would hide or move text, such as hiding the syntax, needs an offset mapping of its own.
 
 ## Dialogs
 

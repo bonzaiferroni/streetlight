@@ -41,7 +41,7 @@ private fun LocationDetailsCard() = FormCard("Location Details") {
         }
     }
     ColumnRow {
-        FormSection("Description") { Placeholder("The description's editor") }
+        FormSection("Description") { MarkdownEditor(editor.descriptionState, "description") }
     }
 }
 
