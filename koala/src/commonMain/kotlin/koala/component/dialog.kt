@@ -72,7 +72,7 @@ $Class[open]$Reveal::backdrop {
 }
 
 $Card {
-    border-radius: var(--unit-2);
+    border-radius: calc(var(--curve-unit) * 2);
     background-color: var(--dialog-bg);
     padding: var(--unit-2);
     overflow-y: auto;

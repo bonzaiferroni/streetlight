@@ -161,6 +161,7 @@ val ThemeCss get() = with(Koala) { """
 @property --rho-shine-y { syntax: '<percentage>'; inherits: true; initial-value: ${rho.position.shineAnchor().second}%; }
 @property --beta-shine-y { syntax: '<percentage>'; inherits: true; initial-value: ${beta.position.shineAnchor().second}%; }
 @property --gamma-shine-y { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.position.shineAnchor().second}%; }
+@property --curve { syntax: '<number>'; inherits: true; initial-value: 1; }
 
 :root {
     scrollbar-color: var(--ink-fg) var(--void-bg);
@@ -169,6 +170,10 @@ val ThemeCss get() = with(Koala) { """
 
 body {
     background-color: var(--body-bg);
+
+    /* declared on body, where --curve is set, so it reads the page's curve */
+    --curve-unit: calc(var(--unit) * var(--curve));
+    transition: --curve ${KoalaTheme.ThemeTransitionSeconds}s var(--magic-cubic-bounce);
 
     --primary-button: oklch(from rgb(var(--primary)) calc(l * 0.93) calc(c * 0.8) h);
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));

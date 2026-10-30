@@ -139,8 +139,8 @@ $CircleShape {
 /* Border Radius */
 $BorderDashed2Px     { border:        2px dashed var(--outline-mid-fg); }
 $BorderSolid2Px      { border:        var(--outline-mid); }
-$BorderRadiusTop1    { border-radius: var(--unit) var(--unit) 0 0; }
-$BorderRadiusBottom1 { border-radius: 0 0 var(--unit) var(--unit); }
+$BorderRadiusTop1    { border-radius: var(--curve-unit) var(--curve-unit) 0 0; }
+$BorderRadiusBottom1 { border-radius: 0 0 var(--curve-unit) var(--curve-unit); }
 $Outline             { outline:       var(--outline-mid); outline-offset: -2px; }
 $OutlineLow          { outline:       var(--outline-low); outline-offset: -2px; }
 $OutlineEditorFg     { outline:       2px solid var(--system-fg); outline-offset: -2px; }

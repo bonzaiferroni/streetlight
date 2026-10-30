@@ -13,7 +13,7 @@ ${MarkdownStyle.Container} table {
     border-collapse: separate;
     border-spacing: 0;
     border: 2px solid var(--outline-mid-fg);
-    border-radius: var(--unit);
+    border-radius: var(--curve-unit);
     background: var(--zen-bg);
     background-clip: padding-box;
     box-shadow: var(--moon-shadow);

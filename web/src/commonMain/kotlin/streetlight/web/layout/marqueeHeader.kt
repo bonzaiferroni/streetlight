@@ -119,7 +119,7 @@ $Frame {
     grid-template-rows: minmax(0, 1fr);
     aspect-ratio: 4 / 3;
     max-height: 50dvh;
-    border-radius: calc(var(--unit) * 2);
+    border-radius: calc(var(--curve-unit) * 2);
     overflow: clip;
     background: var(--paper-bg);
     box-shadow: 0 0 48px -16px var(--rho-color);

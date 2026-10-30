@@ -46,7 +46,7 @@ $Container {
     white-space: pre-wrap;
 
     border: 2px solid var(--void-border);
-    border-radius: var(--unit);
+    border-radius: var(--curve-unit);
     box-shadow: var(--input-shadow);
     
     > * {
@@ -111,7 +111,7 @@ $Container {
     ${BlockType.selector(ContentBlock.Code)} {
         font-family: var(--mono-family);
         background: var(--zen-bg);
-        border-radius: 2px;
+        border-radius: calc(2px * var(--curve));
     }
     
     ${BlockType.selector(ContentBlock.Image)},
@@ -121,7 +121,7 @@ $Container {
                 content: "";
                 background-image: var(--inline-image);
                 background-size: cover;
-                border-radius: var(--unit-1);
+                border-radius: var(--curve-unit);
                 float: right;
                 clear: right;
                 width: 20%;
@@ -149,7 +149,7 @@ $Container {
     $InlineCode {
         font-family: var(--mono-family);
         color: var(--green-fg);
-        border-radius: 2px;
+        border-radius: calc(2px * var(--curve));
     }
     
     $Strikethrough {

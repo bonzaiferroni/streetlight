@@ -16,6 +16,7 @@ class ThemeEditor(initialTheme: PageTheme?) {
     val betaState = state.mutableTapOf({ it.beta }) { copy(beta = it) }
     val gammaState = state.mutableTapOf({ it.gamma }) { copy(gamma = it) }
     val backgroundModeState = state.mutableTapOf({ it.backgroundMode }) { copy(backgroundMode = it) }
+    val curveState = state.mutableTapOf({ it.curve }) { copy(curve = it) }
 
     /** The edited theme, or `null` when it is the default. */
     fun buildTheme(): PageTheme? {

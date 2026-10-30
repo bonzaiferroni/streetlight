@@ -21,6 +21,7 @@ import streetlight.web.dom.layout.formCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.component.slider
+import kotlin.math.roundToInt
 
 context(model: ThemeEditor)
 fun ViewScope.themeForm() {
@@ -38,6 +39,11 @@ fun ViewScope.themeForm() {
                 }
                 switchMenu(model.backgroundModeState)
                 centeredText("Flux makes the background colors slowly drift.", TextSmall)
+            }
+            formSection("Curve") {
+                val curveState = model.curveState.mutableTapOf({ (it * 100).roundToInt() }) { it / 100f }
+                slider(SvgFile.WaveSine.small, curveState, (0..100))
+                centeredText("Set how round the corners of your page are.", TextSmall)
             }
             formSection("How it works") {
                 card(modify(ShineBg, Padding(2), Outline, MoonShadow)) {

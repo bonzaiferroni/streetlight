@@ -42,7 +42,7 @@ ${CommentClass.HasNestedContent} > div > ${CommentClass.NestedContent} {
 }
 
 ${CommentClass.HasNestedContent} > $Card {
-    border-radius: var(--unit-2) var(--unit-2) var(--unit-2) 0;
+    border-radius: calc(var(--curve-unit) * 2) calc(var(--curve-unit) * 2) calc(var(--curve-unit) * 2) 0;
 }
 
 ${CommentClass.Content},

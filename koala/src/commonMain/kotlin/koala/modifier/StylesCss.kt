@@ -56,7 +56,7 @@ textarea {
     line-height: var(--paragraph-line-height);
 
     border: 1px solid var(--void-border);
-    border-radius: var(--unit);
+    border-radius: var(--curve-unit);
     box-shadow: var(--input-shadow);
 }
 
@@ -71,7 +71,7 @@ input[type="checkbox"] {
     place-items: center;
 
     border: 1px solid var(--void-border);
-    border-radius: 0.25rem;
+    border-radius: calc(0.25rem * var(--curve));
     box-shadow: var(--input-shadow);
 }
 
@@ -98,7 +98,7 @@ select {
     color: rgb(var(--ink));
 
     outline: 1px solid var(--void-border);
-    border-radius: var(--unit);
+    border-radius: var(--curve-unit);
     box-shadow: var(--btn-text-shadow);
 }
 

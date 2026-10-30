@@ -167,7 +167,7 @@ $Image {
     width: var(--row-height);
     aspect-ratio: 1;
     border: var(--outline-mid);
-    border-radius: var(--unit);
+    border-radius: var(--curve-unit);
 }
 
 $Text {
@@ -216,7 +216,7 @@ $Cells { grid-area: cells; margin-inline: var(--unit); }
 /* the feed is one card, its rows a line apart */
 $Feed {
     gap: 2px;
-    border-radius: var(--unit);
+    border-radius: var(--curve-unit);
     overflow: clip;
     box-shadow: var(--moon-shadow);
 }
@@ -233,7 +233,7 @@ ${Mode.selector(FeedMode.Grid)} $Feed {
 
     > $Base {
         border: var(--outline-low);
-        border-radius: calc(var(--unit) * 3);
+        border-radius: calc(var(--curve-unit) * 3);
         overflow: clip;
         box-shadow: var(--moon-shadow);
     }

@@ -10,7 +10,7 @@ body {
     --btn-font-size: .9rem;
     --btn-font-weight: 500;
     --btn-padding: .72rem 1rem .78rem;
-    --btn-border-radius: 1.25rem;
+    --btn-border-radius: calc(var(--curve-unit) * 2.5);
 
     --zen-button-day: rgba(var(--paper), .5);
 
@@ -174,6 +174,6 @@ $HoverBg:hover {
 $Selected {
     outline: 2px solid rgb(var(--primary));
     outline-offset: -2px;
-    border-radius: var(--unit-1);
+    border-radius: var(--curve-unit);
 }
 """}

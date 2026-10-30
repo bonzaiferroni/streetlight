@@ -79,7 +79,7 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
             icon(SvgFile.ChevronUp.small, Height(3)) {
                 configMarkIndicator(upMark)
             }
-            button(modify(Height(3), MinWidth(6), FlexColumn, JustifyContentCenter, VoidBg, BorderRadiusPill, PointerEventsAuto, Outline)) {
+            button(modify(Height(3), MinWidth(6), FlexColumn, JustifyContentCenter, VoidBg, Css.BorderRadius.curve(1.5), PointerEventsAuto, Outline)) {
                 setPopoverTarget(PopoverId.Curator)
                 textBlock(mod = modify(TextAlignCenter, TextSmall)) {
                     configurePostLeanText(curator)

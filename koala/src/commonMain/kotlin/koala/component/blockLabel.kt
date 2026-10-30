@@ -33,7 +33,7 @@ ${Attribute.BlockLabel}::after {
     text-overflow: ellipsis;
     text-transform: uppercase;
 
-    border-radius: 0.4rem;
+    border-radius: calc(0.4rem * var(--curve));
     box-shadow: var(--input-shadow);
 }
 

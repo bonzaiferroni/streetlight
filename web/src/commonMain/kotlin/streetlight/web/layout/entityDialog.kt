@@ -63,7 +63,7 @@ $Base {
     max-height: 80vh;
     overflow-y: auto;
     border: var(--outline-mid);
-    border-radius: var(--unit-2);
+    border-radius: calc(var(--curve-unit) * 2);
     /* its own blur, stacked on the dialog backdrop's, so the page behind the content stays out of the text */
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);

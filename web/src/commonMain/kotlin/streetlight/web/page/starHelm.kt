@@ -38,7 +38,7 @@ object StarHelm {
 // language="CSS"
 val StarHelmCss get() = """
 ${StarHelm.PopoverCardClass} {
-    border-radius: 0 0 0 var(--unit-2);
+    border-radius: 0 0 0 calc(var(--curve-unit) * 2);
 }
 
 ${StarHelm.PopoverClass} {

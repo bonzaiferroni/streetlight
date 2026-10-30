@@ -29,7 +29,7 @@ fun ViewScope.colorPicker(
         buttonElement.setStyle(Css.BackgroundColor.of(hex))
     }
 
-    box(modify(mod, BorderRadiusPill, MoonShadow)) {
+    box(modify(mod, BorderRadius25, MoonShadow)) {
         inputElement = input {
             addModifiers(Opacity0)
 

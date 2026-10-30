@@ -28,7 +28,7 @@ $Container {
         padding: 0.1em 0.3em 0.05em;
         background-color: var(--void-bg);
         border: 1px solid var(--outline-mid-fg);
-        border-radius: 4px;
+        border-radius: calc(4px * var(--curve));
         color: var(--sea-green-fg);
     }
 }

@@ -137,7 +137,7 @@ $Header {
     display: flex;
     flex-wrap: wrap;
     gap: var(--unit);
-    border-radius: 24px 24px 12px 12px;
+    border-radius: calc(24px * var(--curve)) calc(24px * var(--curve)) calc(12px * var(--curve)) calc(12px * var(--curve));
     width: 100%;
     text-transform: uppercase;
     font-size: var(--text-small);
@@ -150,7 +150,7 @@ $Button {
     min-width: 0;
     white-space: nowrap;
     padding: 0.5rem 1rem;
-    border-radius: 24px 24px 12px 12px;
+    border-radius: calc(24px * var(--curve)) calc(24px * var(--curve)) calc(12px * var(--curve)) calc(12px * var(--curve));
     cursor: pointer;
     transition: var(--transition-background-color);
     text-align: center;

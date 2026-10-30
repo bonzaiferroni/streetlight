@@ -42,6 +42,7 @@ fun PageTheme.toStyleSet() = styleOf(
     KoalaStyle.RhoShineY.of(rho.position.shineAnchor().second.pct),
     KoalaStyle.BetaShineY.of(beta.position.shineAnchor().second.pct),
     KoalaStyle.GammaShineY.of(gamma.position.shineAnchor().second.pct),
+    KoalaStyle.Curve.of(curve),
     if (backgroundMode != PageBackgroundMode.Flux) KoalaStyle.ColorFlux.of("none") else null
 )
 

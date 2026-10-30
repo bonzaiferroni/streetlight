@@ -17,7 +17,7 @@ $Class {
     align-self: start;
     min-width: 0;
 
-    border-radius: 2rem;
+    border-radius: calc(var(--curve-unit) * 2.5);
 
     background: color-mix(in srgb, var(--primary-button) 25%, transparent);
     /*box-shadow: 0 0 .8rem color-mix(in srgb, var(--primary-button) 35%, transparent);*/
@@ -36,7 +36,7 @@ $Pill {
 
     padding: var(--btn-padding);
     border: none;
-    border-radius: 2rem;
+    border-radius: calc(var(--curve-unit) * 2.5);
     background: var(--gray-bg);
     color: white;
     font-size: var(--btn-font-size);

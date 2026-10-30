@@ -36,7 +36,7 @@ $Class {
     display: grid;
     width: 100%;
     max-height: 24rem;
-    border-radius: 1rem;
+    border-radius: calc(var(--curve-unit) * 2);
     overflow: hidden;
 }
 

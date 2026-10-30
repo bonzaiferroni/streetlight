@@ -88,6 +88,7 @@ object KoalaStyle {
     val RhoShineY = Property<LinearDimension>("rho-shine-y", true)
     val BetaShineY = Property<LinearDimension>("beta-shine-y", true)
     val GammaShineY = Property<LinearDimension>("gamma-shine-y", true)
+    val Curve = Property<kotlin.Float>("curve", true)
 
     val all = listOf(
         Accent, Primary, ColorFlux,
@@ -98,6 +99,7 @@ object KoalaStyle {
         RhoFocus, BetaFocus, GammaFocus,
         RhoShineX, BetaShineX, GammaShineX,
         RhoShineY, BetaShineY, GammaShineY,
+        Curve,
     )
 }
 

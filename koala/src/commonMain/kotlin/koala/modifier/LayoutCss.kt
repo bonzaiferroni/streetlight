@@ -57,7 +57,7 @@ $Card {
     flex-direction: column;
 
     gap: var(--unit);
-    border-radius: var(--unit-2);
+    border-radius: calc(var(--curve-unit) * 2);
     background-color: var(--card-bg);
     padding: var(--unit);
 }

@@ -37,6 +37,7 @@ fun applyTheme(theme: PageTheme?) {
     body.setStyle(KoalaStyle.RhoShineY, theme?.rho?.position?.shineAnchor()?.second?.pct)
     body.setStyle(KoalaStyle.BetaShineY, theme?.beta?.position?.shineAnchor()?.second?.pct)
     body.setStyle(KoalaStyle.GammaShineY, theme?.gamma?.position?.shineAnchor()?.second?.pct)
+    body.setStyle(KoalaStyle.Curve, theme?.curve)
 
     when (theme?.backgroundMode) {
         null, PageBackgroundMode.Flux -> body.removeStyle(KoalaStyle.ColorFlux)
