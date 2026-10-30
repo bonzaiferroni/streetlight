@@ -2,6 +2,7 @@ package streetlight.compose.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,7 @@ fun ColorPicker(label: String, state: MutableTap<Rgb>, modifier: Modifier = Modi
 
     Box(modifier) {
         Box(
-            Modifier.height(theme.unit * PillUnits)
+            Modifier.fillMaxWidth().height(theme.unit * PillUnits)
                 .borderRadius(PillUnits / 2f, moonShadow = true)
                 .background(color.toColor())
                 .pointerClick { isOpen = true }

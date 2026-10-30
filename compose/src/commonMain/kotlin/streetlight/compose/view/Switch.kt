@@ -50,8 +50,7 @@ fun Switch(state: MutableTap<Boolean>, label: String, modifier: Modifier = Modif
     // the hidden label sets the track's width, the pill's travel beyond it
     Box(
         modifier.height(theme.unit * PillUnits)
-            .clip(shape)
-            .background(colors.primaryButton.copy(alpha = TrackAlpha))
+            .background(colors.primaryButton.copy(alpha = TrackAlpha), shape)
             .pointerClick { state.set(!isOn) },
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -90,7 +89,7 @@ fun <T> SwitchMenu(
     val selected by state.collectAsState()
     val shape = RoundedCornerShape(theme.unit * RadiusUnits)
 
-    Row(0, modifier.width(IntrinsicSize.Max).clip(shape).background(colors.grayBg)) {
+    Row(0, modifier.width(IntrinsicSize.Max).background(colors.grayBg, shape)) {
         options.forEach { option ->
             val isSelected = option == selected
             val light by animateFloatAsState(if (isSelected) 1f else 0f, theme.magic.eased())
@@ -105,10 +104,9 @@ fun <T> SwitchMenu(
                 Box(
                     Modifier.matchParentSize()
                         .scale(scale)
-                        .alpha(light)
-                        .dropShadow(shape, DropShadow(radius = theme.unit * GlowUnits, color = colors.primaryButton))
+                        .dropShadow(shape, DropShadow(theme.unit * GlowUnits, colors.primaryButton.copy(alpha = light)))
                         .clip(shape)
-                        .background(colors.primaryButton)
+                        .background(colors.primaryButton.copy(alpha = light))
                 )
                 BasicText(
                     label(option).uppercase(),
