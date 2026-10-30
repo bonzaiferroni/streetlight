@@ -15,9 +15,11 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.ui.EarthRoute
 import streetlight.model.ui.EventsMapRoute
 import streetlight.model.ui.FeedRoute
+import streetlight.model.ui.GalaxyFeedRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.StarFeedRoute
 
 /**
  * The navigation dock, read from the route: the [StableDock], or the [FocusDock] of the current route while it is
@@ -68,6 +70,8 @@ data class RouteDockState(
 val StableDock = listOf(
     HomeRoute().withLabel("Home"),
     EventsMapRoute().withLabel("Earth"),
+    GalaxyFeedRoute().withLabel("Galaxies"),
+    StarFeedRoute().withLabel("Stars"),
 )
 
 /** The dock of the content a route focuses on: its [routes], and the [icon] that calls it up. */
@@ -93,6 +97,8 @@ private fun WebRoute.toStableRoute(): WebRoute? = when {
     this is HomeRoute -> StableDock[0].route
     this is GalaxyMapRoute && slug != null -> null
     this is EarthRoute -> StableDock[1].route
+    this is GalaxyFeedRoute -> StableDock[2].route
+    this is StarFeedRoute -> StableDock[3].route
     else -> null
 }
 

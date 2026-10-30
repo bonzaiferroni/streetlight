@@ -31,6 +31,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object GalaxyFeed: GetEndpoint<GalaxyFeedContent>(this) {
             val feed = enumParamOf<FeedType>("feed")
         }
+        object StarFeed: GetEndpoint<StarFeedContent>(this)
     }
 
     object Events: GetEndpoint<List<Event>>(this) {

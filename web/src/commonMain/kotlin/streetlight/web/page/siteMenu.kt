@@ -16,6 +16,7 @@ import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
 import streetlight.model.ui.SiteConfigRoute
 import streetlight.model.ui.SiteMonitorRoute
+import streetlight.model.ui.StarFeedRoute
 import streetlight.web.model.SiteDoc
 import streetlight.web.model.route
 import koala.component.*
@@ -61,6 +62,7 @@ fun FlowContent.siteMenuItems() {
     item("Earth", GalaxyMapRoute(null), SvgFile.Earth.large)
     item("Galaxies", GalaxyFeedRoute(), SvgFile.Satellite.large)
     item("Cities", CityFeedRoute(), SvgFile.City.large)
+    item("Stars", StarFeedRoute(), SvgFile.Star.large)
     // radio
     label("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.Question.large)
@@ -131,7 +133,7 @@ ${generateScreenSelectors(highlightedScreens)} {
 """ }
 
 val highlightedScreens = listOf(
-    Screen.Home, Screen.Earth, Screen.GalaxyFeed, Screen.CityFeed,
+    Screen.Home, Screen.Earth, Screen.GalaxyFeed, Screen.CityFeed, Screen.StarFeed,
     Screen.Feedback, Screen.SiteMonitor, Screen.Contribute, Screen.Docs,
     Screen.SiteConfig,
 )

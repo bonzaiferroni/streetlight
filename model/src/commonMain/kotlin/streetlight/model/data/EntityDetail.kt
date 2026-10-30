@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kabinet.utils.format
+import kabinet.utils.toAgoFormat
 import kabinet.utils.toFutureFormat
 import kabinet.utils.toMetricString
 import kabinet.utils.toTimeFormat
@@ -9,6 +10,7 @@ import koala.Svg
 import koala.SvgFile
 import koala.model.WebRoute
 import streetlight.model.ui.LocationRoute
+import streetlight.model.ui.StarRoute
 import kotlin.time.Instant
 
 /**
@@ -57,7 +59,10 @@ fun Entity.toDetails(context: FeedContext? = null): List<EntityDetail> = when (t
     )
     is Star -> listOfNotNull(
         tagline?.let { EntityDetail(it, SvgFile.Star.small, isPriority = true) },
-        EntityDetail(username.value, SvgFile.User.small),
+        EntityDetail(createdAt.toAgoFormat(), SvgFile.UserPlus.small),
+        skillCount.takeIf { it > 0 }?.let {
+            EntityDetail("${it.toMetricString()} skills", SvgFile.Award.small, route = StarRoute(username))
+        },
     )
     is EventGroup -> listOfNotNull(
         startsAt?.let { EntityDetail(it.toFutureFormat(), SvgFile.Calendar.small, isPriority = true) },

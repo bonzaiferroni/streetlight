@@ -29,6 +29,7 @@ class ContentClient(private val transport: ApiTransport) {
         feed?.let { writeParam(endpoint.feed, it) }
     }
     suspend fun readCityFeedContent(): Outcome<CityFeedContent> = transport.getApi(Api.Content.CityFeed)
+    suspend fun readStarFeedContent(): Outcome<StarFeedContent> = transport.getApi(Api.Content.StarFeed)
     suspend fun readGalaxyFeedContent(feed: FeedType?): Outcome<GalaxyFeedContent> = transport.getApi(Api.Content.GalaxyFeed) { endpoint ->
         feed?.let { writeParam(endpoint.feed, it) }
     }

@@ -9,6 +9,7 @@ import kampfire.model.Labeled
 import koala.SvgFile
 import koala.SvgPack
 import koala.model.buildRelativePath
+import streetlight.model.data.FeedType
 import streetlight.model.data.OfferingId
 import kotlin.uuid.Uuid
 
@@ -16,6 +17,13 @@ data class StarRoute(val username: Username): StreetlightRoute, SlugRoute {
     override val screen get() = Screen.Star
     override val title get() = "Profile"
     override val slug get() = username
+}
+
+data class StarFeedRoute(override val feed: FeedType? = null): FeedRoute {
+    override val screen get() = Screen.StarFeed
+    override val title get() = "Stars"
+    override val defaultFeedRoute get() = copy(feed = null)
+    override fun toRelativePath() = basePath.withFeedParam(feed)
 }
 
 data class StarDashRoute(val tab: StarDashTab? = null): StreetlightRoute {

@@ -90,7 +90,12 @@ sealed interface FeedContext {
     data object Cities: FeedContext {
         override val types get() = listOf(FeedType.Cities)
     }
+
+    @Serializable
+    data object Stars: FeedContext {
+        override val types get() = listOf(FeedType.Stars)
+    }
 }
 
 @Serializable
-enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media, StarGalaxies, TopGalaxies, NewGalaxies, Cities }
+enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media, StarGalaxies, TopGalaxies, NewGalaxies, Cities, Stars }

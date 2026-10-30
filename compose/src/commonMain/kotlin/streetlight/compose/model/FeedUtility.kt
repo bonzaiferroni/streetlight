@@ -14,6 +14,7 @@ val FeedType.heading get() = when (this) {
     FeedType.TopGalaxies -> "Top Galaxies"
     FeedType.NewGalaxies -> "New Galaxies"
     FeedType.Cities -> "Cities"
+    FeedType.Stars -> "Stars"
 }
 
 fun FeedType.toSvg() = when (this) {
@@ -26,6 +27,7 @@ fun FeedType.toSvg() = when (this) {
     FeedType.TopGalaxies -> SvgFile.Trophy.small
     FeedType.NewGalaxies -> SvgFile.Seedling.small
     FeedType.Cities -> SvgFile.City.small
+    FeedType.Stars -> SvgFile.Star.small
 }
 
 fun FeedMode.toSvg() = when (this) {
@@ -36,6 +38,6 @@ fun FeedMode.toSvg() = when (this) {
 
 /** Whether a feed of this type has a search field, as the web's. */
 val FeedType.isSearched get() = when (this) {
-    FeedType.Events, FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies, FeedType.Cities -> true
+    FeedType.Events, FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies, FeedType.Cities, FeedType.Stars -> true
     FeedType.Locations, FeedType.GalaxyPosts, FeedType.Posts, FeedType.Media -> false
 }

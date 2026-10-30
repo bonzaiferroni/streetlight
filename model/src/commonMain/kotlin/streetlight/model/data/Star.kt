@@ -27,6 +27,7 @@ data class Star(
     val design: PageDesign?,
     val accountType: AccountType,
     override val createdAt: Instant,
+    val skillCount: Int = 0,
 ): Entity {
     val isAdmin get() = roles.contains(UserRole.Admin)
 

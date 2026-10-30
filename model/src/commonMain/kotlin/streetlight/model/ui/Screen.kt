@@ -54,6 +54,7 @@ enum class Screen(
     SkillProfile(UuidParse { SkillRoute(SkillId(it)) }),
     Star(UsernameParse { StarRoute(it) }, "s", true),
     StarDash(StaticParse { StarDashRoute.of(this) }),
+    StarFeed(StaticParse { StarFeedRoute(readFeedType()) }, "stars", true),
     ProfileConfig(StaticParse { ProfileConfigRoute }),
     StarConfig(StaticParse { StarConfigRoute.of(this) }),
     Inbox(StaticParse { InboxRoute }),

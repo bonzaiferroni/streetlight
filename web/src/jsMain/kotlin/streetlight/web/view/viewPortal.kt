@@ -58,6 +58,7 @@ private fun RouteScope.viewCorePortal() {
 
         // star
         Screen.Star -> viewStarRoute()
+        Screen.StarFeed -> viewStarFeedRoute()
 
         // location
         Screen.Location -> viewLocation()

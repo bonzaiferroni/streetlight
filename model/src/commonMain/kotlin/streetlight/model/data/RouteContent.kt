@@ -80,6 +80,12 @@ data class CityFeedContent(
     val feed: EntityFeed,
 ): RouteContent
 
+/** The content of the star feed: its first page. */
+@Serializable
+data class StarFeedContent(
+    val feed: EntityFeed,
+): RouteContent
+
 /** The content of the galaxy feed: its first page. */
 @Serializable
 data class GalaxyFeedContent(

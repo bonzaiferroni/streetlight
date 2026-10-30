@@ -28,6 +28,7 @@ fun Screen.toAppSection() = when (this) {
     Screen.Earth,
     Screen.City,
     Screen.CityFeed,
+    Screen.StarFeed,
     Screen.Media,
     Screen.Offering,
     Screen.Error -> AppSection.Core

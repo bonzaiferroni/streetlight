@@ -28,12 +28,13 @@ import streetlight.web.layout.BodyStyle
 import streetlight.web.layout.pageBody
 import streetlight.web.layout.sourcePathShell
 import streetlight.web.page.AppAttribute
-import streetlight.web.page.appHeader
+import streetlight.model.ui.TopBar
+import streetlight.web.page.topBar
 import streetlight.web.view.ConnectStyle
 
 /** Renders the connect page, showing the panel of [initialType]. */
 fun FlowContent.connectShell(initialType: OnboardType) {
-    pageBody(sourcePathShell("connectShell.kt"), null, { appHeader(Height(10)) }) {
+    pageBody(sourcePathShell("connectShell.kt"), null, { topBar(TopBar.Logo) }) {
         setId(ConnectShell.RootId)
         setAttribute(AppAttribute.OnboardType, initialType)
 
