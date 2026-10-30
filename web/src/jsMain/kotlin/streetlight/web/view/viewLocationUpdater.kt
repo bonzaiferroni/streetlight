@@ -62,9 +62,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent) {
 }
 
 fun RouteScope.viewLocationUpdaterRoute() {
-    routeBlock<LocationUpdateRoute, LocationUpdaterContent> { content ->
-        starGate {
-            viewLocationUpdater(content)
-        }
+    starRouteBlock<LocationUpdateRoute, LocationUpdaterContent> { content ->
+        viewLocationUpdater(content)
     }
 }

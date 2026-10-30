@@ -37,10 +37,8 @@ fun ViewScope.viewStarDash() {
 }
 
 fun RouteScope.viewStarDashRoute() {
-    routeBlock<StarDashRoute, NullContent>() {
-        starGate {
-            viewStarDash()
-        }
+    starRouteBlock<StarDashRoute, NullContent> {
+        viewStarDash()
     }
 }
 

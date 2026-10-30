@@ -35,9 +35,7 @@ fun ViewScope.viewCityConfig(city: City) {
 }
 
 fun RouteScope.viewCityConfigRoute() {
-    routeBlock<CityConfigRoute, City> { city ->
-        starGate {
-            viewCityConfig(city)
-        }
+    starRouteBlock<CityConfigRoute, City> { city ->
+        viewCityConfig(city)
     }
 }

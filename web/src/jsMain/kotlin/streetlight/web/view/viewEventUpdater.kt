@@ -61,9 +61,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent) {
 }
 
 fun RouteScope.viewEventUpdaterRoute() {
-    routeBlock<EventUpdateRoute, EventUpdaterContent> { content ->
-        starGate {
-            viewEventUpdater(content)
-        }
+    starRouteBlock<EventUpdateRoute, EventUpdaterContent> { content ->
+        viewEventUpdater(content)
     }
 }
