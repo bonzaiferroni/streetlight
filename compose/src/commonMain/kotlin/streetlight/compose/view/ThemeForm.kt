@@ -86,7 +86,7 @@ fun ThemeForm() {
             }
             FormSection("Curve") {
                 Slider(curveState, 0..100, icon = SvgFile.WaveSine.small)
-                CenteredText("Set how round the corners of your page are.", small)
+                CenteredText("Set the curve of your corners.", small)
             }
         }
     }

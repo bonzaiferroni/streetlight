@@ -66,7 +66,7 @@ fun ViewScope.themeForm() {
             formSection("Curve") {
                 val curveState = model.curveState.mutableTapOf({ (it * 100).roundToInt() }) { it / 100f }
                 slider(SvgFile.WaveSine.small, curveState, (0..100))
-                centeredText("Set how round the corners of your page are.", TextSmall)
+                centeredText("Set the curve of your corners.", TextSmall)
             }
         }
     }
