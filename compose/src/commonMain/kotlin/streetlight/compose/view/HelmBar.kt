@@ -174,7 +174,7 @@ private fun CornerMenu(
                 .cardBg()
                 .drawWithContent {
                     drawContent()
-                    drawInnerOutline(isFarRight = isEnd != isLtr, theme.line.toPx(), (theme.unit * MenuRadiusUnits).toPx(), theme.colors.outlineMid)
+                    drawInnerOutline(isFarRight = isEnd != isLtr, theme.line.toPx(), theme.radius(MenuRadiusUnits).toPx(), theme.colors.outlineMid)
                 }
                 // the card takes its own clicks, so only a click outside it closes the menu
                 .pointerInput(Unit) { detectTapGestures { } }

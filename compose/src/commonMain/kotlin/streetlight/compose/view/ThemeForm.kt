@@ -24,9 +24,10 @@ import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.padding
 import streetlight.compose.modifier.shineBg
 import streetlight.compose.utility.collectAsState
+import kotlin.math.roundToInt
 
 /**
- * The form of a page's theme: its colors and background mode, how it works, the field that places its lights, and each
+ * The form of a page's theme: its colors and background mode, its curve, how it works, the field that places its lights, and each
  * light's color, energy, size and focus. The page shows the theme as it is edited. The cousin of the web's `themeForm`.
  */
 @Composable
@@ -35,6 +36,7 @@ fun ThemeForm() {
     val theme = currentTheme
     val small = theme.text.small
     val edited by editor.themeState.collectAsState()
+    val curveState = remember { editor.curveState.mutableTapOf({ (it * 100).roundToInt() }) { it / 100f } }
     PageThemeEffect(edited)
 
     FormCard(null) {
@@ -81,6 +83,10 @@ fun ThemeForm() {
                     "You may change the color, size, brightness, and focus of the background lights.",
                     small,
                 )
+            }
+            FormSection("Curve") {
+                Slider(curveState, 0..100, icon = SvgFile.WaveSine.small)
+                CenteredText("Set how round the corners of your page are.", small)
             }
         }
     }

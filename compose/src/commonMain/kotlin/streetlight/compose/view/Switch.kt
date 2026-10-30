@@ -45,7 +45,7 @@ fun Switch(state: MutableTap<Boolean>, label: String, modifier: Modifier = Modif
     val travel by animateDpAsState(if (isOn) theme.unit * TravelUnits else theme.unit * 0, theme.magic.eased())
     val pill by animateColorAsState(if (isOn) colors.primaryButton else colors.grayBg, theme.magic.eased())
     val glow by animateFloatAsState(if (isOn) 1f else 0f, theme.magic.eased())
-    val shape = RoundedCornerShape(50)
+    val shape = theme.pillShape
 
     // the hidden label sets the track's width, the pill's travel beyond it
     Box(
@@ -87,7 +87,7 @@ fun <T> SwitchMenu(
     val theme = currentTheme
     val colors = theme.colors
     val selected by state.collectAsState()
-    val shape = RoundedCornerShape(theme.unit * RadiusUnits)
+    val shape = RoundedCornerShape(theme.radius(RadiusUnits))
 
     Row(0, modifier.width(IntrinsicSize.Max).background(colors.grayBg, shape)) {
         options.forEach { option ->

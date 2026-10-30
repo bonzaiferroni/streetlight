@@ -143,7 +143,7 @@ private class BorderRadiusNode(var units: CornerUnits, var moonShadow: Boolean, 
 
     override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
         val placeable = measurable.measure(constraints)
-        val shape = units.toShape(theme.unit)
+        val shape = units.toShape(theme.radius(1))
         return layout(placeable.width, placeable.height) {
             placeable.placeWithLayer(0, 0) {
                 this.shape = shape
@@ -154,7 +154,7 @@ private class BorderRadiusNode(var units: CornerUnits, var moonShadow: Boolean, 
 
     // the shadow falls outside the clipped layer and the outline is drawn over it
     override fun ContentDrawScope.draw() {
-        val unit = theme.unit
+        val unit = theme.radius(1)
         if (moonShadow) {
             val shadows = painters?.takeIf { paintedUnit == unit } ?: moonShadows.map { shadow ->
                 requireGraphicsContext().shadowContext.createDropShadowPainter(units.toShape(unit), shadow)

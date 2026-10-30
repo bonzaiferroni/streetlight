@@ -1,7 +1,6 @@
 package streetlight.compose.modifier
 
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.shadow.DropShadowPainter
@@ -46,6 +45,7 @@ private class BlockLabelNode(var label: String, var isValid: Boolean?) :
     Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
     private var measurer: TextMeasurer? = null
     private var shadows: List<DropShadowPainter>? = null
+    private var shadowCurve: Float? = null
 
     override fun ContentDrawScope.draw() {
         drawContent()
@@ -57,9 +57,13 @@ private class BlockLabelNode(var label: String, var isValid: Boolean?) :
             currentValueOf(LocalDensity),
             currentValueOf(LocalLayoutDirection),
         ).also { measurer = it }
-        val shadows = shadows ?: LabelShadows.map {
-            requireGraphicsContext().shadowContext.createDropShadowPainter(PillShape, it)
-        }.also { shadows = it }
+        val curve = theme.curve
+        val shadows = shadows?.takeIf { shadowCurve == curve } ?: LabelShadows.map {
+            requireGraphicsContext().shadowContext.createDropShadowPainter(theme.pillShape, it)
+        }.also {
+            shadows = it
+            shadowCurve = curve
+        }
 
         // the web's padding of .12rem .5rem .1rem, no wider than 75% of the content
         val padX = unit * PadXUnits
@@ -81,13 +85,11 @@ private class BlockLabelNode(var label: String, var isValid: Boolean?) :
         }
         translate(topLeft.x, topLeft.y) {
             shadows.forEach { with(it) { draw(labelSize) } }
-            drawRoundRect(background, size = labelSize, cornerRadius = CornerRadius(labelSize.height / 2))
+            drawRoundRect(background, size = labelSize, cornerRadius = CornerRadius(labelSize.height / 2 * curve))
             drawText(text, topLeft = Offset(padX, unit * PadTopUnits))
         }
     }
 }
-
-private val PillShape = RoundedCornerShape(50)
 
 /** The web's `--input-shadow`. */
 private val LabelShadows = listOf(

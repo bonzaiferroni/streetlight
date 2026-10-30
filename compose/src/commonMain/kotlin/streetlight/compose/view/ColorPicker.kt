@@ -70,7 +70,7 @@ fun ColorPicker(label: String, state: MutableTap<Rgb>, modifier: Modifier = Modi
             Column(1, Modifier.width(theme.unit * PopoverUnits).padding(2)) {
                 Box(
                     Modifier.width(theme.unit * PopoverUnits).height(theme.unit * SwatchUnits)
-                        .clip(RoundedCornerShape(theme.unit))
+                        .clip(RoundedCornerShape(theme.radius(1)))
                         .background(color.toColor())
                 )
                 Slider(hueState, 0..359, icon = SvgFile.Palette.small)

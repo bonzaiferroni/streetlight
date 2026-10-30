@@ -13,7 +13,7 @@ data class PageDesign(
     val theme: PageTheme?,
 )
 
-/** The colors and background glows of a page. */
+/** The colors, background glows and corner curve of a page, its curve from square at 0 to full at 1. */
 @Serializable
 data class PageTheme(
     val accent: Rgb = Koala.accent,
@@ -22,6 +22,7 @@ data class PageTheme(
     val beta: Glow = Koala.beta,
     val gamma: Glow = Koala.gamma,
     val backgroundMode: PageBackgroundMode = PageBackgroundMode.Flux,
+    val curve: Float = 1f,
 )
 
 enum class PageBackgroundMode: Labeled {

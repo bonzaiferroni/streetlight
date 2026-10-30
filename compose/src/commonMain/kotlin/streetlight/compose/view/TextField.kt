@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -65,7 +64,7 @@ fun TextField(
     val text by state.collectAsState()
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val shape = RoundedCornerShape(percent = 50)
+    val shape = theme.pillShape
     val textStyle = theme.text.regular.copy(color = theme.colors.ink)
     // the focus outline fades in and out, read while drawing
     val focus = animateFloatAsState(if (isFocused) 1f else 0f, theme.magic.eased())
@@ -103,7 +102,7 @@ fun TextField(
                 1,
                 Modifier.clip(shape)
                     .background(theme.colors.zenBg)
-                    .pillOutline(theme.line) { validity.value.mixSrgb(theme.colors.primary, 1f - focus.value) }
+                    .pillOutline(theme.line, theme.curve) { validity.value.mixSrgb(theme.colors.primary, 1f - focus.value) }
                     .height(theme.unit * HeightUnits)
                     .pillPadding(hasIcon = icon != null),
                 verticalAlignment = Alignment.CenterVertically,
@@ -127,15 +126,17 @@ fun TextField(
 /** Pads a pill's content: an icon sits a unit from the start, closer than text, which keeps two, as at the end. */
 fun Modifier.pillPadding(hasIcon: Boolean) = padding(start = if (hasIcon) 1 else 2, end = 2)
 
-/** Draws an outline of [width] in [color], read while drawing, inside the edge of a pill over its content. */
-fun Modifier.pillOutline(width: Dp, color: () -> Color) = drawWithContent {
+/**
+ * Draws an outline of [width] in [color], read while drawing, inside the edge of a pill of [curve] over its content.
+ */
+fun Modifier.pillOutline(width: Dp, curve: Float, color: () -> Color) = drawWithContent {
     drawContent()
     val stroke = width.toPx()
     drawRoundRect(
         color = color(),
         topLeft = Offset(stroke / 2, stroke / 2),
         size = Size(size.width - stroke, size.height - stroke),
-        cornerRadius = CornerRadius((size.height - stroke) / 2),
+        cornerRadius = CornerRadius((size.height - stroke) / 2 * curve),
         style = Stroke(stroke),
     )
 }

@@ -111,7 +111,7 @@ fun FormSubmit(label: String, onClick: () -> Unit, messages: Tap<UIMessage?>, is
 fun CheckBox(state: MutableTap<Boolean>, label: String, modifier: Modifier = Modifier) {
     val theme = currentTheme
     val isChecked by state.collectAsState()
-    val shape = RoundedCornerShape(theme.unit / 2)
+    val shape = RoundedCornerShape(theme.radius(0.5))
     Row(1, modifier.pointerClick { state.set(!isChecked) }, verticalAlignment = Alignment.CenterVertically) {
         Box(
             Modifier.size(theme.unit * 3)

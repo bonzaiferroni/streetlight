@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -50,7 +49,7 @@ fun SearchField(
     val text by state.collectAsState()
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val shape = RoundedCornerShape(percent = 50)
+    val shape = theme.pillShape
     val textStyle = theme.text.regular.copy(color = theme.colors.ink)
     val placeholderStyle = textStyle.copy(fontStyle = FontStyle.Italic)
     // the field is as wide as its placeholder or its text, whichever is wider, and the cursor after it
@@ -73,7 +72,7 @@ fun SearchField(
         modifier.clip(shape)
             .then(backdrop)
             .background(theme.colors.zenBg)
-            .pillOutline(theme.line) { theme.colors.outlineMid.mixSrgb(theme.colors.primary, 1f - focus.value) }
+            .pillOutline(theme.line, theme.curve) { theme.colors.outlineMid.mixSrgb(theme.colors.primary, 1f - focus.value) }
             .height(theme.unit * HeightUnits)
             // the icon sits a unit from the start, as a text field's does
             .pillPadding(hasIcon = true),

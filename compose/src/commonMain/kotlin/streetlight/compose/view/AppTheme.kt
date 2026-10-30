@@ -49,6 +49,7 @@ fun AppTheme(content: @Composable () -> Unit) {
 
     val accentState = animateColorAsState(pageTheme.accent.toColor(), themeTransition())
     val primaryState = animateColorAsState(pageTheme.primary.toColor(), themeTransition())
+    val curveState = animateFloatAsState(pageTheme.curve, themeTransition())
     val paper = Koala.paper.toColor()
     val family = firaSans()
 
@@ -66,9 +67,9 @@ fun AppTheme(content: @Composable () -> Unit) {
     BoxWithConstraints(Modifier.fillMaxSize().onSizeChanged { pageSize.value = it.toSize() }) {
         val rem = if (maxWidth < NarrowMaxWidth) NarrowRem else WideRem
         val text = remember(family, rem) { KoalaTypography(family, rem) }
-        val koalaAppTheme = remember(accentState, primaryState, text, lights) {
+        val koalaAppTheme = remember(accentState, primaryState, curveState, text, lights) {
             val colors = KoalaColors(paper, Koala.ink.toColor(), Opacity, accentState, primaryState)
-            KoalaAppTheme(unitOf(rem), text, colors, Opacity, lights, Magic)
+            KoalaAppTheme(unitOf(rem), text, colors, Opacity, lights, Magic, curveState)
         }
 
         CompositionLocalProvider(

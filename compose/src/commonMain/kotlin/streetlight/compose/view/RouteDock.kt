@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -115,8 +114,8 @@ private fun DockRoutes(dock: List<DockRoute>) {
                     val outline = animateFloatAsState(if (isShown) 1f else 0f, magic.eased())
                     BasicText(
                         dockRoute.label.uppercase(),
-                        Modifier.pillOutline(theme.line) { colors.primary.copy(alpha = colors.primary.alpha * outline.value) }
-                            .clip(PillShape)
+                        Modifier.pillOutline(theme.line, theme.curve) { colors.primary.copy(alpha = colors.primary.alpha * outline.value) }
+                            .clip(theme.pillShape)
                             .pointerClick {
                                 when {
                                     isStable -> portal.dock(dockRoute.route)
@@ -138,10 +137,10 @@ private fun DockRoutes(dock: List<DockRoute>) {
 private fun DockGlass(modifier: Modifier = Modifier, glass: DrawScope.() -> Unit, content: @Composable () -> Unit) {
     val theme = currentTheme
     Box(
-        Modifier.clip(PillShape)
+        Modifier.clip(theme.pillShape)
             .hazeBlur(HazeInput.Sources(LocalPageHaze.current), DockBlur)
             .drawBehind(glass)
-            .border(theme.line, theme.colors.outlineMid, PillShape)
+            .border(theme.line, theme.colors.outlineMid, theme.pillShape)
             .then(modifier)
             .padding(1),
     ) {
@@ -154,8 +153,6 @@ private fun DrawScope.drawGlass(colors: KoalaColors, primary: Float) {
     drawRect(colors.paper, alpha = GlassAlpha * (1f - primary))
     drawRect(colors.primaryBg(size), alpha = GlassAlpha * primary)
 }
-
-private val PillShape = RoundedCornerShape(50)
 
 /** The blur of the page beneath the dock, the web's `--strong-blur` of 10px. */
 private val DockBlur = HazeBlurStyle { blurRadius(10.dp) }

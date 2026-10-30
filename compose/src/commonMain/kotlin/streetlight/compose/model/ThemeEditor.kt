@@ -5,7 +5,7 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import streetlight.model.data.PageTheme
 
-/** The edit of a page's theme: its colors, its three glows, and its background mode. The web's `ThemeEditor`. */
+/** The edit of a page's theme: its colors, its three glows, its background mode, and its curve. The web's `ThemeEditor`. */
 class ThemeEditor(initialTheme: PageTheme) {
     private val store = storeOf(initialTheme)
 
@@ -16,4 +16,5 @@ class ThemeEditor(initialTheme: PageTheme) {
     val betaState = store.mutableTapOf({ it.beta }) { copy(beta = it) }
     val gammaState = store.mutableTapOf({ it.gamma }) { copy(gamma = it) }
     val backgroundModeState = store.mutableTapOf({ it.backgroundMode }) { copy(backgroundMode = it) }
+    val curveState = store.mutableTapOf({ it.curve }) { copy(curve = it) }
 }

@@ -67,9 +67,9 @@ fun Tabs(modifier: Modifier = Modifier, initialTab: Int = 0, content: TabScope.(
     Column(1, modifier.fillMaxWidth()) {
         FlowRow(
             Modifier.fillMaxWidth()
-                .clip(TabShape)
+                .clip(tabShape(theme.curve))
                 .background(theme.colors.voidBg)
-                .border(theme.line, theme.colors.outlineMid, TabShape),
+                .border(theme.line, theme.colors.outlineMid, tabShape(theme.curve)),
             horizontalArrangement = Arrangement.spacedBy(theme.unit),
         ) {
             tabs.forEachIndexed { index, tab ->
@@ -104,7 +104,7 @@ private fun TabButton(tab: Tab, isChosen: Boolean, modifier: Modifier, onChoose:
         else -> theme.colors.primary.copy(alpha = 0f)
     }
     Row(
-        modifier.clip(TabShape)
+        modifier.clip(tabShape(theme.curve))
             .background(background)
             .hoverable(interactionSource)
             .then(if (isChosen) Modifier else Modifier.pointerClick(onChoose))
@@ -123,8 +123,9 @@ private fun TabButton(tab: Tab, isChosen: Boolean, modifier: Modifier, onChoose:
     }
 }
 
-/** The shape of the header and its buttons, the web's `24px 24px 12px 12px`. */
-private val TabShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomEnd = 12.dp, bottomStart = 12.dp)
+/** The shape of the header and its buttons at [curve], the web's `24px 24px 12px 12px` at full curve. */
+private fun tabShape(curve: Float) =
+    RoundedCornerShape(topStart = 24.dp * curve, topEnd = 24.dp * curve, bottomEnd = 12.dp * curve, bottomStart = 12.dp * curve)
 
 /** The narrowest a tab's button is before the header wraps, the web's `100px`. */
 private val MinButtonWidth = 100.dp

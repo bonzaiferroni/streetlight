@@ -49,7 +49,7 @@ fun Button(
 ) {
     val theme = currentTheme
     val colors = theme.colors
-    val shape = RoundedCornerShape(theme.unit * RadiusUnits)
+    val shape = RoundedCornerShape(theme.radius(RadiusUnits))
     val background = when {
         !isEnabled -> colors.grayBg
         else -> when (style) {

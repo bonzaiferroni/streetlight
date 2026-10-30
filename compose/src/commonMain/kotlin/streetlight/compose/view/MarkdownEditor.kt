@@ -109,7 +109,7 @@ fun MarkdownEditor(
                             color = theme.colors.outlineMid.mixSrgb(theme.colors.primary, 1f - focus.value),
                             topLeft = Offset(stroke / 2, stroke / 2),
                             size = Size(size.width - stroke, size.height - stroke),
-                            cornerRadius = CornerRadius(theme.unit.toPx() - stroke / 2),
+                            cornerRadius = CornerRadius((theme.radius(1).toPx() - stroke / 2).coerceAtLeast(0f)),
                             style = Stroke(stroke),
                         )
                     }
