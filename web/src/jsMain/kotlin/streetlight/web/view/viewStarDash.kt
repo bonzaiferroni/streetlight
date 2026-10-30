@@ -1,8 +1,5 @@
 package streetlight.web.view
 
-import koala.model.LabeledRoute
-import streetlight.model.ui.StarRoute
-import streetlight.web.model.RouteDockState
 import koala.modifier.*
 import koala.dom.*
 import koala.component.btn
@@ -18,8 +15,6 @@ import streetlight.web.model.SessionClient
 import koala.dom.component.*
 import koala.dom.layout.*
 import streetlight.web.dom.layout.configBody
-import streetlight.web.model.dock
-import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.portal
 
 context(star: Star, route: StarDashRoute)
@@ -39,7 +34,6 @@ fun ViewScope.viewStarDash() {
         }
     }
 
-    dock.mergeState(route, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewStarDashRoute() {

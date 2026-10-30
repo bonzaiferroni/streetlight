@@ -5,12 +5,10 @@ import koala.dom.*
 import streetlight.model.data.GalaxyContent
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.toConfigRoute
-import streetlight.web.model.RouteDockState
 import streetlight.web.shell.GalaxyShell
 import streetlight.web.shell.galaxyShell
 import koala.dom.page.*
 import streetlight.web.dom.page.applyTheme
-import streetlight.web.model.dock
 import streetlight.web.interop.wireGalaxyMenu
 
 fun ViewScope.viewGalaxy(content: GalaxyContent) {
@@ -19,8 +17,6 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
         applyTheme(content.design?.theme)
     }
 
-    val rightRoutes = content.galaxy.takeIf { it.isHost }?.toConfigRoute()?.let { listOf(it) }
-    dock.mergeState(content.galaxy.toRoute(), RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
 
     // wireGalaxyMenu(root, content.galaxy)
 }

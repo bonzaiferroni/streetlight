@@ -281,39 +281,15 @@ A view model receives the store as a `Messenger` parameter rather than holding o
 
 ## Route Dock
 
-The route dock holds the routes directly relevant to the route now. It is rendered once by `viewRouteDock` into `AppOverlay.RouteDockId`, wired from `viewApp`, and persists between routes.
+The route dock is read from the route alone. It is rendered once by `viewRouteDock` into `AppOverlay.RouteDockId`, wired from `viewApp`, and persists between routes.
 
-| Part | Holds |
-|---|---|
-| Title | A label naming what the routes belong to |
-| Main routes | Route labels as text |
-| Left and right routes | Icons, chosen by `iconOf` |
-
-A side route is for a route that not every view wants, such as a config route. A side route with no entry in `iconOf` fails.
+It shows the `StableDock`, or the `FocusDock` of a route that has one, such as a galaxy's feed and map, on the primary glass. While a route has a focus, a tray at the left switches between the two; a new focus shows its own dock first. The stable route marked is the last one visited, as a tab bar marks its tab, and a focus route is marked while it is the route now.
 
 The dock holds routes only. An action belongs in the view it acts on.
-
-A dock route equal to the route now carries `RouteDockStyle.RouteNow`, applied with `flowModifier` over `Portal.routeState`. The match is by route, not screen, because routes of one dock can share a screen. It updates in place, so a dock that persists across routes is not rebuilt to move the indicator.
-
-### State
-
-`RouteDock` in `streetlight.web.model` holds the dock's state, reached through `AppFacade.dock`. On every route it sets its state from `stateOf(route)`, which states everything the route alone determines. A route with no branch clears the dock.
-
-A view adds what only its content knows with `dock.mergeState`, naming its own route. A merge replaces each field it sets and leaves the rest.
-
-```kotlin
-dock.mergeState(content.galaxy.toRoute(), RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
-```
-
-A merge is applied when the state on hand was built from the same route, and held as pending otherwise, to be applied when that route arrives. The test is the route the state was built from, not the current route in `Portal`, which already reads as the new one while the dock's own reaction is still pending. A pending merge is dropped when a different route arrives.
-
-The route passed is the view's own, never `Portal.stateNow.route`, which would name the route that replaced it.
 
 ### Visibility
 
 A view hides the dock with `dock.setVisible(false)`, for content it would otherwise sit over. Every route that lands makes it visible again, so a view states only when to hide it and never when to restore it. The reaction that drives it belongs to the view's `contentScope`, so it ends with the view.
-
-Visibility is not part of `RouteDockState`. That state is the dock's content, handed over once per route, while visibility toggles as often as the view's own content does.
 
 The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`.
 

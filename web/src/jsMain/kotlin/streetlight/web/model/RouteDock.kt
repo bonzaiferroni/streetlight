@@ -1,156 +1,100 @@
 package streetlight.web.model
 
+import kampfire.api.Slug
 import kampfire.model.reactIn
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import kampfire.model.tapOf
+import koala.SvgFile
+import koala.SvgPack
 import koala.model.WebRoute
 import koala.model.LabeledRoute
 import koala.model.withLabel
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.ui.CityFeedRoute
-import streetlight.model.ui.CityMapRoute
-import streetlight.model.ui.CityRoute
-import streetlight.model.ui.GalaxyFeedRoute
+import streetlight.model.ui.EarthRoute
+import streetlight.model.ui.EventsMapRoute
+import streetlight.model.ui.FeedRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
-import streetlight.model.ui.FeedRoute
 import streetlight.model.ui.HomeRoute
-import streetlight.model.ui.LocationRoute
-import streetlight.model.ui.EventsMapRoute
-import streetlight.model.ui.ProfileConfigRoute
-import streetlight.model.ui.StarConfigRoute
-import streetlight.model.ui.StarDashRoute
-import streetlight.model.ui.StarRoute
 
 /**
- * The navigation dock of the current route: a title and main, left, and right route links.
- *
- * A page can add to the dock with [mergeState]; a merge for a route not yet current waits for that route. A merge
- * holds across a change to a route with the same [WebRoute.screenKey], since the page that made it stays.
+ * The navigation dock, read from the route: the [StableDock], or the [FocusDock] of the current route while it is
+ * shown. A new focus shows its own dock first. The stable route marked is the last of the stable dock's routes
+ * visited, as a tab bar marks its tab.
  */
 class RouteDock(scope: CoroutineScope, val portal: Portal) {
-    private val state = storeOf<RouteDockState?>(null)
-    private var stateRoute: WebRoute? = null
-    private var routeDockMerge: RouteDockMerge? = null
+    private val state = storeOf(RouteDockState())
     private val visible = storeOf(true)
 
-    val titleState = state.tapOf { it?.title }
-    val mainRoutes = state.tapOf { it?.mainRoutes }
-    val leftRoutes = state.tapOf { it?.leftRoutes }
-    val rightRoutes = state.tapOf { it?.rightRoutes }
+    val focusDockState = state.tapOf { it.focusDock }
+    val isFocusShownState = state.tapOf { it.isFocusShown }
+    val shownDockState = state.tapOf { it.focusDock?.routes?.takeIf { _ -> it.isFocusShown } ?: StableDock }
+    val stableRouteState = state.tapOf { it.stableRoute }
     val isVisibleState: Tap<Boolean> = visible
 
     init {
         portal.routeState.reactIn(scope) { portalRoute ->
             val route = portalRoute.dockRoute
-            val keptMerge = routeDockMerge?.takeIf { it.route.screenKey == route.screenKey }
-            state.set { stateOf(route) }
-            stateRoute = route
-            routeDockMerge = null
-            keptMerge?.let { applyMerge(it.state) }
+            val focusDock = route.toFocusDock()
+            state.set {
+                copy(
+                    focusDock = focusDock,
+                    isFocusShown = isFocusShown || focusDock != this.focusDock,
+                    stableRoute = route.toStableRoute() ?: stableRoute,
+                )
+            }
             visible.set(true)
         }
     }
 
-    /** Sets the non-null parts of [merge] on the dock of [route]. */
-    fun mergeState(route: WebRoute, merge: RouteDockState) {
-        when (route.dockRoute) {
-            stateRoute -> applyMerge(merge)
-            else -> routeDockMerge = RouteDockMerge(route.dockRoute, merge)
-        }
-    }
+    /** Switches between the focus dock and the [StableDock]. */
+    fun toggleFocus() = state.set { copy(isFocusShown = !isFocusShown) }
 
     fun setVisible(isVisible: Boolean) {
         visible.set(isVisible)
     }
-
-    private fun applyMerge(merge: RouteDockState) {
-        val route = stateRoute ?: return
-        val gathered = routeDockMerge?.takeIf { it.route == route }?.state?.mergedWith(merge) ?: merge
-        routeDockMerge = RouteDockMerge(route, gathered)
-        state.set { (this ?: RouteDockState()).mergedWith(merge) }
-    }
 }
 
+/** The focus dock of a [RouteDock], whether it is shown, and the stable route last visited. */
 data class RouteDockState(
-    val mainRoutes: List<LabeledRoute>? = null,
-    val title: String? = null,
-    val leftRoutes: List<WebRoute>? = null,
-    val rightRoutes: List<WebRoute>? = null,
+    val focusDock: FocusDock? = null,
+    val isFocusShown: Boolean = true,
+    val stableRoute: WebRoute = StableDock.first().route,
 )
 
-/** This state with the non-null parts of [merge] set over it. */
-private fun RouteDockState.mergedWith(merge: RouteDockState) = copy(
-    mainRoutes = merge.mainRoutes ?: mainRoutes,
-    title = merge.title ?: title,
-    leftRoutes = merge.leftRoutes ?: leftRoutes,
-    rightRoutes = merge.rightRoutes ?: rightRoutes,
+/** The routes of the dock shown on every page. */
+val StableDock = listOf(
+    HomeRoute().withLabel("Home"),
+    EventsMapRoute().withLabel("Earth"),
 )
 
-private data class RouteDockMerge(
-    val route: WebRoute,
-    val state: RouteDockState,
-)
+/** The dock of the content a route focuses on: its [routes], and the [icon] that calls it up. */
+data class FocusDock(val routes: List<LabeledRoute>, val icon: SvgPack)
 
-private fun stateOf(route: WebRoute): RouteDockState? {
-    return when (route) {
-        // universe
-        is HomeRoute -> universeStateOf(EventsMapRoute())
-        is GalaxyFeedRoute -> universeStateOf(GalaxyMapRoute(null))
-        is CityFeedRoute -> universeStateOf(CityMapRoute)
-
-        // galaxy
-        is GalaxyRoute -> RouteDockState(
-            mainRoutes = listOf(route.withLabel("Feed"), GalaxyMapRoute(route.slug).withLabel()),
-            leftRoutes = listOf(HomeRoute()),
-        )
-
-        // city
-        is CityRoute -> RouteDockState(listOf(route.withLabel("Feed"), EventsMapRoute().withLabel("Map")))
-
-        // star
-        is StarRoute -> RouteDockState(listOf(route.withLabel()), title = route.username.value)
-        is StarDashRoute, is ProfileConfigRoute, is StarConfigRoute -> RouteDockState(
-            rightRoutes = listOf(ProfileConfigRoute),
-        )
-
-        // location
-        is LocationRoute -> RouteDockState(listOf(route.withLabel()))
-
-        // earth
-        is EventsMapRoute -> RouteDockState(
-            mainRoutes = listOf(route.withLabel(), GalaxyMapRoute(null).withLabel(), CityMapRoute.withLabel()),
-            title = route.title,
-            leftRoutes = listOf(HomeRoute()),
-        )
-        is GalaxyMapRoute -> when (val slug = route.slug) {
-            null -> RouteDockState(
-                mainRoutes = listOf(EventsMapRoute().withLabel(), route.withLabel(), CityMapRoute.withLabel()),
-                title = "Streetlight",
-                leftRoutes = listOf(HomeRoute()),
-            )
-            else -> RouteDockState(
-                mainRoutes = listOf(GalaxyRoute(slug).withLabel("Feed"), route.withLabel()),
-                leftRoutes = listOf(GalaxyMapRoute(null)),
-            )
-        }
-        is CityMapRoute -> RouteDockState(
-            mainRoutes = listOf(EventsMapRoute().withLabel(), GalaxyMapRoute(null).withLabel(), route.withLabel()),
-            title = "Streetlight",
-            leftRoutes = listOf(HomeRoute()),
-        )
-
-        else -> null
-    }
+/** The dock of the content this route focuses on, `null` for a route with no focus. */
+private fun WebRoute.toFocusDock(): FocusDock? = when (this) {
+    is GalaxyRoute -> galaxyDockOf(slug)
+    is GalaxyMapRoute -> slug?.let { galaxyDockOf(it) }
+    else -> null
 }
 
-private fun universeStateOf(mapRoute: WebRoute) = RouteDockState(
-    mainRoutes = listOf(HomeRoute().withLabel(), GalaxyFeedRoute().withLabel(), CityFeedRoute().withLabel()),
-    title = "Streetlight",
-    rightRoutes = listOf(mapRoute),
+private fun galaxyDockOf(slug: Slug) = FocusDock(
+    routes = listOf(
+        GalaxyRoute(slug).withLabel("Feed"),
+        GalaxyMapRoute(slug).withLabel("Map"),
+    ),
+    icon = SvgFile.Planet,
 )
+
+/** The route of the [StableDock] this route lies under, `null` for one under none. */
+private fun WebRoute.toStableRoute(): WebRoute? = when {
+    this is HomeRoute -> StableDock[0].route
+    this is GalaxyMapRoute && slug != null -> null
+    this is EarthRoute -> StableDock[1].route
+    else -> null
+}
 
 /** This route as the dock knows it: a feed route showing its default feed, so it is one route whichever feed it shows. */
 internal val WebRoute.dockRoute get() = (this as? FeedRoute)?.defaultFeedRoute ?: this

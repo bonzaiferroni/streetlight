@@ -1,8 +1,6 @@
 package streetlight.web.view
 
-import koala.model.LabeledRoute
 import streetlight.model.ui.StarRoute
-import streetlight.web.model.RouteDockState
 import kampfire.model.AccountType
 import koala.modifier.*
 import koala.model.MessageStore
@@ -21,8 +19,6 @@ import streetlight.model.data.Star
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.AccountEditor
 import streetlight.web.dom.layout.configBody
-import streetlight.web.dom.component.configHeading
-import streetlight.web.model.dock
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSubmit
@@ -40,7 +36,6 @@ fun ViewScope.viewStarConfig() {
         }
     }
 
-    dock.mergeState(route, RouteDockState(listOf(LabeledRoute(StarRoute(star.username))), title = star.username.value))
 }
 
 fun RouteScope.viewStarConfigRoute() {
