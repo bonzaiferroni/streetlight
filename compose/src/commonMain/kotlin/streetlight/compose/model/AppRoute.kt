@@ -6,6 +6,7 @@ import kampfire.api.Username
 import koala.model.WebRoute
 import kotlinx.serialization.Serializable
 import streetlight.model.data.OnboardType
+import streetlight.model.ui.CityFeedRoute as WebCityFeedRoute
 import streetlight.model.ui.ConnectRoute as WebConnectRoute
 import streetlight.model.ui.StarDashTab
 import streetlight.model.ui.EventRoute as WebEventRoute
@@ -40,6 +41,10 @@ data object EarthRoute : AppRoute
 /** The feed of every galaxy. */
 @Serializable
 data object GalaxyFeedRoute : AppRoute
+
+/** The feed of every city. */
+@Serializable
+data object CityFeedRoute : AppRoute
 
 /** The feed of every star. */
 @Serializable
@@ -81,6 +86,7 @@ fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebEventRoute -> EventRoute(slug)
     is WebLocationRoute -> LocationRoute(slug)
     is WebGalaxyFeedRoute -> GalaxyFeedRoute
+    is WebCityFeedRoute -> CityFeedRoute
     is WebStarFeedRoute -> StarFeedRoute
     is WebStarRoute -> StarRoute(username)
     is WebConnectRoute -> ConnectRoute(type)

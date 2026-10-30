@@ -19,6 +19,7 @@ class Inflator(private val api: ApiClient) {
     suspend fun inflate(route: AppRoute): Outcome<Any> = when (route) {
         HomeRoute -> api.content.readHomeContent(null)
         GalaxyFeedRoute -> api.content.readGalaxyFeedContent(null)
+        CityFeedRoute -> api.content.readCityFeedContent()
         StarFeedRoute -> api.content.readStarFeedContent()
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
         is GalaxyMapRoute -> api.galaxy.readGalaxyContent(route.slug)

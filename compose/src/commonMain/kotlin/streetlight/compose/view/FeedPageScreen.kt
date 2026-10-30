@@ -9,11 +9,13 @@ import koala.Image
 import koala.SiteImage
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import streetlight.compose.model.CityFeedRoute
 import streetlight.compose.model.FeedPageModel
 import streetlight.compose.model.GalaxyFeedRoute
 import streetlight.compose.model.StarFeedRoute
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
+import streetlight.model.data.CityFeedContent
 import streetlight.model.data.GalaxyFeedContent
 import streetlight.model.data.StarFeedContent
 import streetlight.model.ui.TopBar
@@ -26,6 +28,18 @@ fun GalaxyFeedScreen() {
     Inflated<GalaxyFeedContent>(GalaxyFeedRoute) { content ->
         context(koinViewModel<FeedPageModel> { parametersOf(content.feed) }) {
             FeedPageView(gridState, "Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
+        }
+    }
+}
+
+/** The screen of [CityFeedRoute]: the logo as its top bar, and the feed of cities once inflated. */
+@Composable
+fun CityFeedScreen() {
+    val gridState = rememberLazyStaggeredGridState()
+    TopBarMount(TopBar.Logo, gridState)
+    Inflated<CityFeedContent>(CityFeedRoute) { content ->
+        context(koinViewModel<FeedPageModel> { parametersOf(content.feed) }) {
+            FeedPageView(gridState, "Cities", "Streetlight Cities", SiteImage.PearlStreet)
         }
     }
 }
@@ -44,8 +58,8 @@ fun StarFeedScreen() {
 
 /**
  * The view of a page of one feed, in a grid scrolled by [gridState] under the top bar: a [PageHeader] of [title],
- * [descriptor] and [image], the feed's [feedSection], and the footer. The cousin of the web's `galaxyFeedShell` and
- * `starFeedShell`.
+ * [descriptor] and [image], the feed's [feedSection], and the footer. The cousin of the web's `galaxyFeedShell`,
+ * `cityFeedShell` and `starFeedShell`.
  */
 @Composable
 context(model: FeedPageModel)

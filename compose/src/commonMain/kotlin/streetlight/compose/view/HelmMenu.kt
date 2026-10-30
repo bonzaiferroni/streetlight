@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import koala.SvgPack
 import koala.SvgFile
 import streetlight.compose.model.AppConfigRoute
+import streetlight.compose.model.CityFeedRoute
 import streetlight.compose.model.EarthRoute
 import streetlight.compose.model.currentPortal
 import streetlight.compose.modifier.filigree
@@ -43,7 +44,10 @@ fun HelmMenu(onClose: () -> Unit, helm: @Composable () -> Unit) {
             onClose()
         }
         HelmItem("Galaxies", SvgFile.Satellite)
-        HelmItem("Cities", SvgFile.City)
+        HelmItem("Cities", SvgFile.City, isCurrent = portal.backStack.last() == CityFeedRoute) {
+            portal.go(CityFeedRoute)
+            onClose()
+        }
         HelmLabel("meta")
         HelmItem("Help & Feedback", SvgFile.Question)
         HelmItem("Contribute", SvgFile.HeartHandshake)
