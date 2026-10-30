@@ -14,7 +14,6 @@ import streetlight.web.model.EventScout
 import streetlight.web.model.EventScoutStage
 import streetlight.web.model.LocationEditor
 import streetlight.web.model.LocationScout
-import streetlight.web.model.MarkerMap
 import streetlight.web.model.SiteConfig
 import koala.model.Toaster
 import kotlin.test.Test
@@ -37,7 +36,7 @@ class EventScoutTest: ViewTest() {
             editor = LocationEditor(LocationEdit(), scope, api),
             scope = scope,
             osm = OSMClient(),
-            map = MarkerMap(scope, GeoMap(scope, GeoCamera(scope))),
+            geoMap = GeoMap(GeoCamera(scope)),
             toaster = toaster,
             api = api,
             siteConfig = siteConfig,

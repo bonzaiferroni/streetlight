@@ -29,5 +29,5 @@ val locationAppModule = module {
     single<ContentFetcher> { LocationAppFetcher(get()) }
     single { RouteInflator(get(), get(), get(), get()) }
     single { GeoCamera(get()) }
-    single { GeoMap(get(), get()) }
+    single { GeoMap(get()) }
 }

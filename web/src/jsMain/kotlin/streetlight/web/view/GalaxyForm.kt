@@ -21,6 +21,8 @@ import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formTextField
 import streetlight.web.model.geoCamera
+import streetlight.web.model.geoMap
+import koala.model.MarkerMap
 
 context(model: GalaxyEditor)
 fun ViewScope.galaxyNameFormRow() = formRow {
@@ -105,7 +107,7 @@ context(model: GalaxyEditor)
 fun ViewScope.galaxyMapFormRow() = formRow {
     formSection("Map Location") {
         formField {
-            geoMapMount(mod = FormMod.GeoMap)
+            geoMapMount(MarkerMap(geoMap), mod = FormMod.GeoMap)
             centeredText("Choose the point on the map and zoom level.")
 
             flowBlock(geoCamera.pointAndZoom) { (point, zoom) ->

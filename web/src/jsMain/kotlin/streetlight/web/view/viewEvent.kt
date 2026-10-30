@@ -2,6 +2,9 @@ package streetlight.web.view
 
 import koala.dom.*
 import koala.model.GeoCamera
+import koala.model.MarkerMap
+import streetlight.web.model.geoMap
+import streetlight.web.model.setPoints
 import streetlight.model.data.EventLocation
 import streetlight.model.ui.EventRoute
 import streetlight.web.shell.EventShell
@@ -12,7 +15,8 @@ fun ViewScope.viewEvent(event: EventLocation) {
     val camera = app.get<GeoCamera>()
     // val cache = app.get<DataCache>()
 
-    shellBoxWithMap {
+    val markerMap = MarkerMap(geoMap).apply { setPoints(listOf(event)) }
+    shellBoxWithMap(markerMap) {
         eventShell(event)
     }
 

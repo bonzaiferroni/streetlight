@@ -7,6 +7,8 @@ import koala.dom.component.textBlock
 import koala.dom.layout.flowBlock
 import koala.dom.page.shellBox
 import koala.dom.page.shellBoxWithMap
+import koala.model.MarkerMap
+import streetlight.web.model.setPoints
 import koala.model.GeoCamera
 import streetlight.model.data.EventLocation
 import streetlight.model.ui.EventRoute
@@ -55,7 +57,8 @@ private fun RouteScope.viewLocationAppEvent() {
     val camera = app.get<GeoCamera>()
 
     routeBlock<EventRoute, EventLocation>(LocationAppEventShell.IslandId) { event ->
-        shellBoxWithMap {
+        val markerMap = MarkerMap(app.get()).apply { setPoints(listOf(event)) }
+        shellBoxWithMap(markerMap) {
             locationAppEventShell(event)
         }
 

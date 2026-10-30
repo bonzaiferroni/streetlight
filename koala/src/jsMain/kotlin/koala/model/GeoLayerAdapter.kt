@@ -15,7 +15,8 @@ internal class GeoLayerAdapter(
     val widget: maplibregl.Map,
     val lightLayer: LightLayer,
     val scope: CoroutineScope,
-    val onFocus: (PointMarker?) -> Unit
+    val markerMap: MarkerMap,
+    val onPointsSet: () -> Unit,
 ) {
     var pointElements: Map<MarkerId, PointMarkerElement> = emptyMap()
         private set
@@ -51,7 +52,7 @@ internal class GeoLayerAdapter(
                     // update element
                     element.update(marker, planarPoint)
                 } ?: marker.toPointElement(planarPoint, lightLayer) {
-                    onFocus(marker)
+                    markerMap.setFocus(marker)
                 }
                 pointBuffer[marker.markerId] = element
             }
@@ -59,7 +60,7 @@ internal class GeoLayerAdapter(
             // remove cached points not in list
             pointElements.forEach { (key, element) ->
                 if (markers.any { it.markerId == key }) return@forEach
-                if (element.isFocused) onFocus(null)
+                if (element.isFocused) markerMap.setFocus(null)
                 element.dispose()
             }
 
@@ -69,6 +70,7 @@ internal class GeoLayerAdapter(
             applyZoom()
             pointElements.values.forEach { cullOutsideBounds(it) }
         }
+        onPointsSet()
     }
 
     /**

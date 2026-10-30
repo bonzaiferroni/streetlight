@@ -1,5 +1,7 @@
 package streetlight.web.model
 
+import koala.model.GeoMap
+import koala.model.MarkerMap
 import koala.model.Toaster
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
@@ -36,7 +38,7 @@ class LocationScout(
     val editor: LocationEditor,
     private val scope: CoroutineScope,
     private val osm: OSMClient,
-    private val map: MarkerMap,
+    geoMap: GeoMap,
     private val toaster: Toaster,
     private val api: ApiClient,
     siteConfig: SiteConfig,
@@ -48,6 +50,7 @@ class LocationScout(
     val mapMessage = MessageStore()
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
+    val map = MarkerMap(geoMap)
     val leadEditor = LeadEditor(LeadType.Location, galaxy, scope, api)
     private var osmJob: Job? = null
     val postModeState = siteConfig.locationPostModeState

@@ -19,7 +19,7 @@ import streetlight.web.dom.component.workSignal
 context(model: Earth)
 fun ViewScope.viewEarth() {
     box(EarthStyle.Container, modify(Size100P, PositionRelative)) {
-        geoMapMount(mod = EarthStyle.Map)
+        geoMapMount(model.markerMap, mod = EarthStyle.Map)
         column(modify(Gap0, PointerEventsNone)) {
             div(modify(EarthStyle.Grid, Flex1, MinHeight(0))) {
                 earthHeader()

@@ -62,16 +62,20 @@ Only `Portal` writes the browser's history. Code that sets a query parameter of 
 
 ### Map
 
+A `MarkerMap` is a submodel: a model holds one for the map its view shows, and the view passes it to its map mount, which has `GeoMap` show it while the mount is in sight. `GeoRender` clears the map when another `MarkerMap` is shown and draws that one's layers. Focus belongs to the `MarkerMap`, and a click on a marker sets it there without moving the camera.
+
 | Model | Role |
 |---|---|
-| [`GeoMap`](../../koala/src/commonMain/kotlin/koala/model/GeoMap.kt) | The map's layers and focused marker, shared by every view that shows the map |
+| [`GeoMap`](../../koala/src/commonMain/kotlin/koala/model/GeoMap.kt) | The app's one map and the `MarkerMap` it shows |
+| [`MarkerMap`](../../koala/src/commonMain/kotlin/koala/model/MarkerMap.kt) | The layers of markers a view shows and the one in focus |
+| [`MarkerLayerConfig`](../../koala/src/commonMain/kotlin/koala/model/MarkerLayerConfig.kt) | The map layers the site draws on |
 | [`GeoCamera`](../../koala/src/commonMain/kotlin/koala/model/GeoCamera.kt) | The camera over the map |
 | [`GeoFocus`](../../koala/src/commonMain/kotlin/koala/model/GeoFocus.kt) | The focus of the map: a marker or a cluster |
 | [`GeoLayer`](../../koala/src/commonMain/kotlin/koala/model/GeoLayer.kt) | A layer of markers |
 | [`GeoMarker`](../../koala/src/commonMain/kotlin/koala/model/GeoMarker.kt) | Something drawn on the map |
 | [`MarkerStyle`](../../koala/src/commonMain/kotlin/koala/model/MarkerStyle.kt) | The stylesheet of markers |
 | [`configureThumbMarker`…](../../koala/src/commonMain/kotlin/koala/model/configureMarker.kt) | The markup of each kind of marker |
-| [`GeoRender`](../../koala/src/jsMain/kotlin/koala/model/GeoRender.kt) | Draws the map's layers and marks the focused marker |
+| [`GeoRender`](../../koala/src/jsMain/kotlin/koala/model/GeoRender.kt) | Draws the layers of the shown `MarkerMap` and marks its focused marker |
 | [`GeoCameraController`](../../koala/src/jsMain/kotlin/koala/model/GeoCameraController.kt) | Connects the MapLibre map to its camera |
 | [`GeoLayerAdapter`](../../koala/src/jsMain/kotlin/koala/model/GeoLayerAdapter.kt) | Gives each point the zoom where it is revealed |
 | [`LightLayer`](../../koala/src/jsMain/kotlin/koala/model/LightLayer.kt) | Draws each marker's light beneath the markers |

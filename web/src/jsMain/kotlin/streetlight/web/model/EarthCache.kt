@@ -2,6 +2,7 @@
 
 package streetlight.web.model
 
+import koala.model.MarkerMap
 import koala.model.Toaster
 import kampfire.model.GeoRect
 import kampfire.model.storeOf

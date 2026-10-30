@@ -1,7 +1,4 @@
-package streetlight.web.model
-
-import koala.model.GeoLayerConfig
-import koala.model.GeoLayerId
+package koala.model
 
 /** The map layers the site draws on. */
 object MarkerLayerConfig {

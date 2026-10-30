@@ -11,7 +11,6 @@ import streetlight.web.shell.galaxyShell
 import koala.dom.page.*
 import streetlight.web.dom.page.applyTheme
 import streetlight.web.model.dock
-import streetlight.web.model.markerMap
 import streetlight.web.interop.wireGalaxyMenu
 
 fun ViewScope.viewGalaxy(content: GalaxyContent) {
@@ -24,8 +23,6 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
     dock.mergeState(content.galaxy.toRoute(), RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
 
     // wireGalaxyMenu(root, content.galaxy)
-
-    markerMap.setPoints(content.feed.entities)
 }
 
 fun RouteScope.viewGalaxyRoute() {

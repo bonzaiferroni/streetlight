@@ -183,8 +183,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 |---|---|
 | [`Earth`](../../web/src/jsMain/kotlin/streetlight/web/model/Earth.kt) | The model of the map screens |
 | [`EarthCache`](../../web/src/jsMain/kotlin/streetlight/web/model/EarthCache.kt) | The events of each settled map view |
-| [`MarkerMap`](../../web/src/jsMain/kotlin/streetlight/web/model/MarkerMap.kt) | The entity markers on the map and its focus |
-| [`MarkerLayerConfig`](../../web/src/jsMain/kotlin/streetlight/web/model/MarkerLayerConfig.kt) | The map layers the site draws on |
+| [`setPoints`, `showStarLocation`…](../../web/src/jsMain/kotlin/streetlight/web/model/markerMapPoints.kt) | Sets a `MarkerMap`'s markers from entities and shows the viewer's location on it |
 | [`StreetMarker`](../../web/src/jsMain/kotlin/streetlight/web/model/StreetMarker.kt) | The markers of entities |
 | [`InflateMarker`](../../web/src/jsMain/kotlin/streetlight/web/model/InflateMarker.kt) | The markers of event groups |
 | [`StarMarker`](../../web/src/jsMain/kotlin/streetlight/web/model/StarMarker.kt) | The viewer's own location marker |

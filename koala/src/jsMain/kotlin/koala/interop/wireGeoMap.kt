@@ -9,6 +9,7 @@ import koala.external.maplibregl.Point
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.GeoRender
+import koala.model.MarkerMap
 import koala.model.LightLayer
 import koala.modifier.isModified
 import kotlinx.coroutines.CoroutineScope
@@ -25,17 +26,19 @@ import koala.dom.getElementOrNullById
 import koala.external.onView
 
 /**
- * Attaches the app's shared map to the mount in [ancestor] once it comes into view, returning its camera
- * controller.
+ * Attaches the app's shared map to the mount in [ancestor] once it comes into view, showing the layers of
+ * [markerMap], and returns its camera controller.
  */
 fun ViewScope.wireGeoMap(
     ancestor: HTMLElement,
+    markerMap: MarkerMap,
 ): GeoCameraController {
     val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) }
         ?: ancestor.queryFirstOrNull(GeoMapKey.MapMount) ?: error("mount not found")
     val context = wireMapContext(mount)
 
     mount.onView { isVisible ->
+        if (isVisible) markerMap.geoMap.show(markerMap)
         if (isVisible && mount.children.length == 0) {
             console.log("grabbing geomap window")
             mount.appendChild(context.windowElement)

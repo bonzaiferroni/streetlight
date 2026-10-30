@@ -17,7 +17,6 @@ interface Streetlight {
     val gate: SessionClient
     // val gateAgent: GateAgent
     val geoMap: GeoCamera
-    val markerMap: MarkerMap
     val chatRoom: ChatRoom
     val config: SiteConfig
     val omni: OmniClient

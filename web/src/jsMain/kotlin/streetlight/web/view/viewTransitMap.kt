@@ -11,7 +11,6 @@ import streetlight.web.model.Streetlight
 import kotlin.js.json
 import streetlight.web.utility.element
 import streetlight.web.dom.layout.getValue
-import streetlight.web.model.markerMap
 
 /** The zoom at which transit stops show. */
 const val STOP_ZOOM = 14
@@ -20,7 +19,6 @@ fun ViewScope.viewTransitMap(
     app: Streetlight,
     maplibre: maplibregl.Map
 ) {
-    val streetMap = app.markerMap
     // val transitMap = app.streetMap.transit
     var stopMarkers: List<MarkerStyle> = emptyList()
 //    var areaTransit = transitMap.stateNow.areaTransit

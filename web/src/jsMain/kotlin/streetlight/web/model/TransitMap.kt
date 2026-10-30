@@ -9,6 +9,8 @@ import koala.model.LineMarker
 import koala.model.MarkerId
 import koala.external.VehiclePosition
 import koala.model.GeoMap
+import koala.model.MarkerLayerConfig
+import koala.model.MarkerMap
 import koala.model.TravelMarker
 import koala.utility.dedup
 import kampfire.model.storeOf
@@ -37,7 +39,8 @@ class TransitMap(
     val stateNow get() = state.now
     val stateFlow = state.flow
     val isActiveFlow = stateFlow.dedup { it.isActive }
-    private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Transit)
+    val markerMap = MarkerMap(geoMap)
+    private val markerLayer = markerMap.getOrCreateLayer(MarkerLayerConfig.Transit)
 
     private var currentEntities: List<VehicleMarker> = emptyList()
     private var trackingJob: Job? = null

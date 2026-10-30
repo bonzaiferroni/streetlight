@@ -45,7 +45,7 @@ fun ViewScope.locationFinder() = formCard("Location Finder") {
     }
 
     formSection("or just put it on the map") {
-        geoMapMount(mod = FormMod.GeoMap)
+        geoMapMount(model.map, mod = FormMod.GeoMap)
         row(AlignItemsStart) {
             button("What is Here?", model::whatIsHere)
             spacer(Flex1)

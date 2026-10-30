@@ -11,6 +11,7 @@ import koala.dom.clear
 import koala.dom.getElementOrNullById
 import koala.external.onView
 import koala.interop.wireGeoMap
+import koala.model.MarkerMap
 import koala.dom.component.box
 
 /**
@@ -38,13 +39,14 @@ fun ViewScope.shellBox(
     }
 }
 
-/** A [shellBox] whose map is wired once it comes into view. */
+/** A [shellBox] whose map is wired once it comes into view, showing the layers of [markerMap]. */
 fun ViewScope.shellBoxWithMap(
+    markerMap: MarkerMap,
     block: DIV.() -> Unit
 ): HTMLElement {
     val element = shellBox(block)
     element.onView {
-        wireGeoMap(element)
+        wireGeoMap(element, markerMap)
     }
     return element
 }

@@ -2,6 +2,8 @@
 
 package streetlight.web.model
 
+import koala.model.GeoMap
+import koala.model.MarkerMap
 import koala.model.Toaster
 import kampfire.model.reactIn
 import kampfire.model.UIMessageType
@@ -49,9 +51,10 @@ class Earth(
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
-    private val markerMap: MarkerMap,
+    geoMap: GeoMap,
     private val starLocator: StarLocator,
 ) {
+    val markerMap = MarkerMap(geoMap)
     private val state = storeOf(EarthMapState(initialMap))
     val stateFlow = state.flow
     val stateNow get() = state.now
@@ -82,6 +85,8 @@ class Earth(
             }
         }
 
+        markerMap.showStarLocation(starLocator, scope)
+
         markerMap.focusState.reactIn(scope) { focus ->
             reactToFocus(focus)
         }
@@ -101,7 +106,11 @@ class Earth(
         }
     }
 
-    fun setFocus(marker: StaticMarker) = markerMap.setFocus(marker)
+    /** Focuses [marker] and pans to it. */
+    fun setFocus(marker: StaticMarker) {
+        markerMap.setFocus(marker)
+        markerMap.geoMap.camera.panMap(marker.geoPoint)
+    }
 
     /** Frames every marker. */
     fun showAll() = markerMap.showAll()
@@ -195,7 +204,7 @@ class Earth(
 
     /** Frames every marker when there are markers and none of them is in view. */
     private fun showAllWhenNoneInView() {
-        val markers = markerMap.stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
+        val markers = markerMap.stateNow.markers.takeIf { it.isNotEmpty() } ?: return
         val view = markerMap.geoMap.camera.stateNow.view
         if (markers.none { view.contains(it.geoPoint) }) showAll()
     }
@@ -209,7 +218,7 @@ class Earth(
 
         when (marker) {
             is CityMarker -> {
-                markerMap.geoMap.setFocus(null)
+                markerMap.setFocus(null)
                 portal.go(CityRoute(marker.city.slug))
             }
             is InflateMarker -> {

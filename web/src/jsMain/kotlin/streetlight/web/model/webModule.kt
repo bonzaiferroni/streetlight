@@ -54,10 +54,9 @@ val webModule = module {
     single { SessionClient(get(), get(), get(), get(), get()) }
     // single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
-    single { GeoMap(get(), get()) }
+    single { GeoMap(get()) }
     single { TransitMap(get(), get(), get(), get()) }
-    single { MarkerMap(get(), get()) }
-    single(createdAtStart = true) { StarLocator(get(), get())}
+    single(createdAtStart = true) { StarLocator(get()) }
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
 }

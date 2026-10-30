@@ -5,21 +5,22 @@ import koala.dom.*
 import koala.dom.routeBlock
 import streetlight.model.data.HomeContent
 import streetlight.model.ui.HomeRoute
-import streetlight.web.model.MarkerMap
+import koala.model.MarkerMap
 import streetlight.web.shell.HomeShell
 import streetlight.web.shell.homeShell
 import web.dom.document
 import koala.dom.page.*
 import streetlight.web.model.api
 import streetlight.web.dom.page.applyTheme
-import streetlight.web.model.markerMap
+import streetlight.web.model.geoMap
+import streetlight.web.model.setPoints
 import streetlight.web.utility.setTitle
 import streetlight.web.model.toaster
 
 fun ViewScope.viewHome(content: HomeContent) {
-    val markerMap = app.get<MarkerMap>()
+    val markerMap = MarkerMap(geoMap)
 
-    shellBoxWithMap {
+    shellBoxWithMap(markerMap) {
         homeShell(content)
     }
 

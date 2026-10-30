@@ -37,7 +37,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
 | `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
-| `MarkerMap` | `MarkerMap` (`streetlight.web.model`) |
+| `MarkerMap` | `MarkerMap` (`koala.model`) |
 | `StarSession` | `SessionClient` (`streetlight.web.model`) |
 | `ImageEditor` | `ImageEditor` (`streetlight.web.model`), holding the picked bytes where the web holds a blob |
 | `LocationEditor` | `LocationEditor` (`streetlight.web.model`), as a submodel |
