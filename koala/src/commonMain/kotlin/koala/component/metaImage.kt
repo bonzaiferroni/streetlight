@@ -11,7 +11,7 @@ fun FlowContent.metaImage(
     mod: Modifier? = null,
     config: DIV.() -> Unit = { }
 ) {
-    box(mod) {
+    box(modify(mod, image?.aspect?.let { Css.AspectRatio.of(it) })) {
         config()
         image(image, mod = modify(ObjectFitCover, PlaceSelfStretch), alt = image?.description)
         image?.attribution?.let {

@@ -8,13 +8,14 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 import streetlight.web.page.appFooter
-import streetlight.web.page.appHeader
+import streetlight.model.ui.TopBar
+import streetlight.web.page.topBar
 
-/** The page of a shell: the [appHeader], then [content] in a body section closed by the footer. */
+/** The page of a shell: the logo's [topBar], then [content] in a body section closed by the footer. */
 fun FlowContent.mainBody(
     sourceFile: String,
     mod: Modifier? = null,
-    header: (DIV.() -> Unit)? = { appHeader() },
+    header: (DIV.() -> Unit)? = { topBar(TopBar.Logo) },
     content: SECTION.() -> Unit
 ) = pageBody(sourcePathShell(sourceFile), mod, header, content)
 
