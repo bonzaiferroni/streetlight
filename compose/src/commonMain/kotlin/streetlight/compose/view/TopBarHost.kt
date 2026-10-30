@@ -38,18 +38,7 @@ import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import dev.chrisbanes.haze.HazeInput
 import dev.chrisbanes.haze.blur.HazeBlurStyle
 import dev.chrisbanes.haze.blur.hazeBlur
-
-/** The content of a view's top bar, which the [TopBarHost] draws in a look shared by every view. */
-sealed interface TopBar {
-    /** The [AppHeader]: the logo between its rays. */
-    data object Logo : TopBar
-
-    /** The view's [text] in a filigree, as a map's title. */
-    data class Title(val text: String) : TopBar
-
-    /** A title in the logo's two colors, [accent] then [primary], in a filigree, as the web's `configBody` heading. */
-    data class TwoTone(val accent: String, val primary: String) : TopBar
-}
+import streetlight.model.ui.TopBar
 
 /** A view's [bar] and the pixels its content has [scrolled] under it, read while drawing. */
 class TopBarMountState(bar: TopBar, scrolled: () -> Float) {

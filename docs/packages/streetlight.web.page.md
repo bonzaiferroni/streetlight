@@ -27,6 +27,8 @@ A head support, such as maps or protobuf, is a `HEAD` extension in `supports.kt`
 
 A page header is built on `rayHeader`, which places its content between a ray in `AccentFg` on the left and one in `PrimaryFg` on the right. Content in the header follows the same colors from left to right.
 
+A shell's top bar is `topBar`, given a `TopBar` from `streetlight.model.ui`, the value the app's top bar takes. It is the first child of the shell's single root, since a shell built on the client sits in a `box`, which stacks its children over one another. Its background reaches to the viewport's edges. In `TopBarMode.Ghost`, the default, it scrolls away with the page; in `Sticky` it stays at the top of the viewport over the content.
+
 ## Head Script
 
 The site's root settings are declared in the `HeadScriptConfig` in `ServerResource.kt`. A new root setting is added there.
@@ -61,7 +63,8 @@ A theme is a set of custom properties from `PageTheme.toStyleSet()`. The viewer'
 | Part | Role |
 |---|---|
 | [`appBody`](../../web/src/commonMain/kotlin/streetlight/web/page/appBody.kt) | The body of an app page around the portal mount |
-| [`appHeader`, `configHeader`, `rayHeader`](../../web/src/commonMain/kotlin/streetlight/web/page/appHeader.kt) | The headers of a page |
+| [`appHeader`, `rayHeader`](../../web/src/commonMain/kotlin/streetlight/web/page/appHeader.kt) | The headers of a page |
+| [`topBar`](../../web/src/commonMain/kotlin/streetlight/web/page/topBar.kt) | The top bar of a page |
 | [`appFooter`](../../web/src/commonMain/kotlin/streetlight/web/page/appFooter.kt) | The footer of a page |
 | [`appOverlay`](../../web/src/commonMain/kotlin/streetlight/web/page/appOverlay.kt) | The fixed layer over the page |
 | [`helmBar`](../../web/src/commonMain/kotlin/streetlight/web/page/helmBar.kt) | The bar of helm buttons |

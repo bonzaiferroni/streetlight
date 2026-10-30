@@ -64,6 +64,7 @@ private val KtStyles = listOf(
     ContainImageCss,
     GridColumnsCss,
     RouteDockCss,
+    TopBarCss,
     TagFilterMenuCss,
     BodyCss,
     HrCss,

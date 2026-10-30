@@ -40,11 +40,6 @@ fun ViewScope.themeForm() {
                 switchMenu(model.backgroundModeState)
                 centeredText("Flux makes the background colors slowly drift.", TextSmall)
             }
-            formSection("Curve") {
-                val curveState = model.curveState.mutableTapOf({ (it * 100).roundToInt() }) { it / 100f }
-                slider(SvgFile.WaveSine.small, curveState, (0..100))
-                centeredText("Set how round the corners of your page are.", TextSmall)
-            }
             formSection("How it works") {
                 card(modify(ShineBg, Padding(2), Outline, MoonShadow)) {
                     markdown(tipsInfo)
@@ -67,6 +62,11 @@ fun ViewScope.themeForm() {
                     glowConfig("gamma", model.gammaState)
                 }
                 centeredText("You may change the color, size, brightness, and focus of the background lights.", TextSmall)
+            }
+            formSection("Curve") {
+                val curveState = model.curveState.mutableTapOf({ (it * 100).roundToInt() }) { it / 100f }
+                slider(SvgFile.WaveSine.small, curveState, (0..100))
+                centeredText("Set how round the corners of your page are.", TextSmall)
             }
         }
     }

@@ -19,7 +19,7 @@ fun FlowContent.helmBar() {
     row(HelmBar.StickyBarId, Padding(1)) {
         div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
-            button(SvgFile.Helm, modify(HelmBar.IconMod)) {
+            button(SvgFile.Helm, modify(HelmBar.IconMod, PrimaryFg)) {
                 setPopoverTarget(SiteHelm.popoverId)
             }
         }

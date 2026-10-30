@@ -10,7 +10,8 @@ import streetlight.model.ui.HomeRoute
 import streetlight.web.layout.feedSection
 import streetlight.web.layout.smallGalaxyCard
 import streetlight.web.page.appFooter
-import streetlight.web.page.appHeader
+import streetlight.web.page.topBar
+import streetlight.model.ui.TopBar
 import koala.component.*
 import koala.modifier.Width
 import koala.page.*
@@ -22,25 +23,26 @@ import streetlight.web.component.createPostMenu
 import streetlight.web.component.galaxyMenu
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(MarginTop(1)) {
-        appHeader(Height(10))
-
-        geoMapMount(null, modify(BorderRadius2, Height(48), MoonShadow, BorderSolid2Px))
-        box {
-            column(Gap(8)) {
-                row(JustifyContentSpaceBetween) {
-                    galaxyMenu()
-                    row {
-                        btn("Create Galaxy", GalaxyFoundryRoute, Zen)
-                        createPostMenu(null)
+    column {
+        topBar(TopBar.Logo)
+        column {
+            geoMapMount(null, modify(BorderRadius2, Height(48), MoonShadow, BorderSolid2Px))
+            box {
+                column(Gap(8)) {
+                    row(JustifyContentSpaceBetween) {
+                        galaxyMenu()
+                        row {
+                            btn("Create Galaxy", GalaxyFoundryRoute, Zen)
+                            createPostMenu(null)
+                        }
                     }
+
+                    leadingSection(content.galaxies)
+
+                    feedSection(content.feed) { HomeRoute(it) }
+
+                    appFooter(HomeShell.SOURCE)
                 }
-
-                leadingSection(content.galaxies)
-
-                feedSection(content.feed) { HomeRoute(it) }
-
-                appFooter(HomeShell.SOURCE)
             }
         }
     }

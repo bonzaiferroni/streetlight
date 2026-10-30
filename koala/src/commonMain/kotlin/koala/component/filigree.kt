@@ -7,7 +7,7 @@ import kotlinx.html.FlowContent
 /** Frames what [block] builds, usually a heading, between two decorative rules. */
 fun FlowContent.filigree(
     mod: Modifier? = null,
-    ruleMod: Modifier = MaxWidth(16),
+    ruleMod: Modifier? = MaxWidth(16),
     block: DIV.() -> Unit
 ) {
     row(modify(mod, JustifyContentCenter, AlignItemsCenter)) {
@@ -17,7 +17,7 @@ fun FlowContent.filigree(
 
 /** Adds the rules of a [filigree] around what [block] builds. */
 fun DIV.configureFiligree(
-    ruleMaxWidth: Modifier = MaxWidth(16),
+    ruleMaxWidth: Modifier? = MaxWidth(16),
     block: DIV.() -> Unit
 ) {
     val hrMods = modify(Flex1, MoonDropShadow, Height2Px, OpacityHalf, ParticleRay, AspectAuto, ruleMaxWidth)

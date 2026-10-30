@@ -223,7 +223,7 @@ fun ViewScope.viewFoo() {
 }
 ```
 
-A view that configures or creates a record, named `viewFooConfig` or `viewFooScout`, builds its page with `configBody` instead. Its `configHeader` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
+A view that configures or creates a record, named `viewFooConfig` or `viewFooScout`, builds its page with `configBody` instead. Its two-tone `topBar` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
 
 ```kotlin
 configBody("Foo", "Config", "viewFooConfig.kt") {

@@ -9,7 +9,8 @@ import kotlinx.html.DIV
 import kotlinx.html.SECTION
 import streetlight.model.ui.HomeRoute
 import streetlight.web.page.appHeader
-import streetlight.web.page.configHeader
+import streetlight.web.page.topBar
+import streetlight.model.ui.TopBar
 import streetlight.web.layout.BodyStyle
 import streetlight.web.dom.page.appFooter
 import streetlight.web.layout.mainBody
@@ -24,7 +25,7 @@ fun AppendScope.mainBody(
 ) = pageBody(sourcePathView(sourceFile), mod, { appHeader() }, content)
 
 /**
- * The page of a config view: a [configHeader] of [titleFirst] and [titleSecond] in place of the app header, then
+ * The page of a config view: a two-tone top bar of [titleFirst] and [titleSecond] in place of the app header, then
  * [content] in a body section closed by the footer.
  */
 fun AppendScope.configBody(
@@ -34,7 +35,7 @@ fun AppendScope.configBody(
     route: WebRoute = HomeRoute(),
     mod: Modifier? = null,
     content: SECTION.() -> Unit
-) = pageBody(sourcePathView(sourceFile), mod, { configHeader(titleFirst, titleSecond, route) }, content)
+) = pageBody(sourcePathView(sourceFile), mod, { topBar(TopBar.TwoTone(titleFirst, titleSecond), route = route) }, content)
 
 /**
  * The shape every body shares: what [header] builds, then [content] in a body section closed by a footer linking
