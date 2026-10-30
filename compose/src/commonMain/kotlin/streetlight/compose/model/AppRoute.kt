@@ -6,7 +6,9 @@ import koala.model.WebRoute
 import kotlinx.serialization.Serializable
 import streetlight.model.ui.StarDashTab
 import streetlight.model.ui.EventRoute as WebEventRoute
+import streetlight.model.ui.GalaxyFeedRoute as WebGalaxyFeedRoute
 import streetlight.model.ui.GalaxyRoute as WebGalaxyRoute
+import streetlight.model.ui.StarFeedRoute as WebStarFeedRoute
 import streetlight.model.ui.LocationRoute as WebLocationRoute
 
 /** A place in the app, held on the back stack of [Portal]. */
@@ -27,6 +29,14 @@ data class LocationRoute(val slug: Slug) : AppRoute
 
 @Serializable
 data object EarthRoute : AppRoute
+
+/** The feed of every galaxy. */
+@Serializable
+data object GalaxyFeedRoute : AppRoute
+
+/** The feed of every star. */
+@Serializable
+data object StarFeedRoute : AppRoute
 
 @Serializable
 data class GalaxyMapRoute(val slug: Slug) : AppRoute
@@ -59,5 +69,7 @@ fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyRoute -> GalaxyRoute(slug)
     is WebEventRoute -> EventRoute(slug)
     is WebLocationRoute -> LocationRoute(slug)
+    is WebGalaxyFeedRoute -> GalaxyFeedRoute
+    is WebStarFeedRoute -> StarFeedRoute
     else -> null
 }

@@ -35,7 +35,9 @@ import streetlight.model.data.PageLayout
 import streetlight.model.data.PostsBlock
 import streetlight.model.data.TextBlock
 import streetlight.model.data.toDetails
+import streetlight.compose.model.GalaxyFeedRoute
 import streetlight.compose.model.GalaxyRoute
+import streetlight.compose.model.currentPortal
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -110,14 +112,12 @@ private fun LazyStaggeredGridScope.layoutBlock(
     }
 }
 
-/**
- * The galaxy menu at the start, which does nothing until the app has it, and the menu to create a post to the galaxy of
- * [slug] at the end.
- */
+/** A button to the galaxies at the start, and the menu to create a post to the galaxy of [slug] at the end. */
 @Composable
 private fun GalaxyButtons(slug: Slug) {
+    val portal = currentPortal
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
+        Button("galaxies", onClick = { portal.dock(GalaxyFeedRoute) }, style = ButtonStyle.Zen)
         CreatePostMenu(slug)
     }
 }

@@ -18,6 +18,8 @@ class Inflator(private val api: ApiClient) {
     /** The content of [route], read from the server. */
     suspend fun inflate(route: AppRoute): Outcome<Any> = when (route) {
         HomeRoute -> api.content.readHomeContent(null)
+        GalaxyFeedRoute -> api.content.readGalaxyFeedContent(null)
+        StarFeedRoute -> api.content.readStarFeedContent()
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
         is GalaxyMapRoute -> api.galaxy.readGalaxyContent(route.slug)
         is EventRoute -> api.event.readEventSlug(route.slug)

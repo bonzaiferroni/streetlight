@@ -8,6 +8,7 @@ import streetlight.compose.io.AppTransport
 import streetlight.model.io.ApiClient
 import streetlight.compose.io.OsmClient
 import streetlight.model.data.Account
+import streetlight.model.data.EntityFeed
 import streetlight.model.data.GalaxyContent
 import streetlight.model.data.HomeContent
 import streetlight.model.data.LocationContent
@@ -29,6 +30,7 @@ val appModule = module {
     viewModel { (route: AppRoute) -> InflationModel(route, get()) }
     viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
+    viewModel { (page: EntityFeed) -> FeedPageModel(page, get(), get()) }
     viewModel { (content: LocationContent) -> LocationModel(content, get(), get()) }
     viewModel { EarthModel(get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }

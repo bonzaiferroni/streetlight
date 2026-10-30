@@ -22,8 +22,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * A feed shown in a view, starting from [page], with its type, the [modeState] it is laid out in, and the tag and search
- * that filter it. The feed is read again in [scope] when the tag or the search changes, the search once it rests. A view
- * model holds one per feed it shows.
+ * that filter it. The feed is read again in [scope] when the type, the tag or the search changes, the search once it
+ * rests. A view model holds one per feed it shows.
  */
 class FeedModel(
     private val scope: CoroutineScope,
@@ -39,6 +39,7 @@ class FeedModel(
     val searchState = store.mutableTapOf({ it.search }) { copy(search = it) }
 
     init {
+        scope.launch { typeState.flow.drop(1).collectLatest { read() } }
         scope.launch { tagState.flow.drop(1).collectLatest { read() } }
         scope.launch {
             searchState.flow.drop(1).collectLatest {
@@ -48,14 +49,17 @@ class FeedModel(
         }
     }
 
-    /** Reads the first page of the feed again, filtered by the tag and search; a newer read cancels one in flight. */
+    /**
+     * Reads the first page of the feed of the type chosen, filtered by the tag and search; a newer read cancels one in
+     * flight.
+     */
     private fun read() {
         readJob?.cancel()
         readJob = scope.launch {
             val state = store.now
-            val source = state.feed.source ?: return@launch
+            val source = state.feed.source?.copy(type = state.type) ?: return@launch
             val search = state.search.trim().takeIf { it.isNotEmpty() }
-            val cursor = EntityCursor.Upcoming.copy(tag = state.tag?.ordinal, search = search)
+            val cursor = state.type.firstCursor.copy(tag = state.tag?.ordinal, search = search)
             // a failed read keeps the feed shown, as the view has no toaster yet
             val outcome = api.feed.readFeed(FeedRequest(source, cursor))
             if (outcome is Ok) store.set { copy(feed = outcome.data) }
@@ -72,6 +76,9 @@ data class FeedState(
     val tag: EventTag? = null,
     val search: String = "",
 )
+
+/** The cursor of the first page of a feed of this type: upcoming for events, newest first otherwise. */
+private val FeedType.firstCursor get() = if (this == FeedType.Events) EntityCursor.Upcoming else EntityCursor.Default
 
 /** The rest the search takes before the feed is read again, the web's debounce. */
 private val SearchRest = 500.milliseconds

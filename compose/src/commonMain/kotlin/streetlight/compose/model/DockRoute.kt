@@ -11,6 +11,8 @@ data class DockRoute(val label: String, val route: AppRoute)
 val StableDock = listOf(
     DockRoute("Home", HomeRoute),
     DockRoute("Earth", EarthRoute),
+    DockRoute("Galaxies", GalaxyFeedRoute),
+    DockRoute("Stars", StarFeedRoute),
 )
 
 /** The dock of the content a route focuses on: its [routes], and the [icon] that calls it up. */

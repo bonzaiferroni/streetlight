@@ -23,6 +23,7 @@ import streetlight.compose.modifier.opacityHigh
 import streetlight.compose.modifier.padding
 import streetlight.compose.modifier.schemeBg
 import streetlight.compose.modifier.zenBg
+import koala.Image
 import streetlight.model.data.Entity
 import streetlight.model.data.EntityDetail
 import streetlight.model.data.toEntityType
@@ -82,6 +83,45 @@ private fun HeaderTitle(entity: Entity, descriptor: String, modifier: Modifier) 
         )
         entity.sublabel?.let {
             BasicText(it, Modifier.opacityHigh(), style = theme.text.regular.copy(textAlign = TextAlign.Center), color = { theme.colors.ink })
+        }
+    }
+}
+
+/**
+ * The header of a page that shows no one entity: [image], when given, at its own shape, beside [title] over
+ * [descriptor] from the [SideBySideWidth], and above it below that. The cousin of the web's `pageHeader`.
+ */
+@Composable
+fun PageHeader(title: String, descriptor: String, image: Image?, modifier: Modifier = Modifier) {
+    val theme = currentTheme
+    BoxWithConstraints(modifier.fillMaxWidth().borderRadius(2, moonShadow = true, outline = Outline.Mid).zenBg()) {
+        val ratio = image?.aspect ?: HeaderImageRatio
+        val pageImage = @Composable { imageModifier: Modifier -> ContainImage(image, imageModifier.aspectRatio(ratio)) }
+        val pageTitle = @Composable { titleModifier: Modifier ->
+            Column(titleModifier.padding(2), horizontalAlignment = Alignment.CenterHorizontally) {
+                BasicText(
+                    title,
+                    style = theme.text.heading2.copy(lineHeight = 1.em, textAlign = TextAlign.Center),
+                    color = { theme.colors.ink },
+                )
+                BasicText(
+                    descriptor,
+                    Modifier.fillMaxWidth().filigree(),
+                    style = theme.text.regular.copy(fontStyle = FontStyle.Italic, textAlign = TextAlign.Center),
+                    color = { theme.colors.ink.copy(alpha = theme.opacity.half) },
+                )
+            }
+        }
+        if (maxWidth >= SideBySideWidth) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                if (image != null) pageImage(Modifier.weight(1f))
+                pageTitle(Modifier.weight(1f))
+            }
+        } else {
+            Column {
+                if (image != null) pageImage(Modifier.fillMaxWidth())
+                pageTitle(Modifier.fillMaxWidth())
+            }
         }
     }
 }
