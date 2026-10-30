@@ -8,6 +8,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import streetlight.compose.model.AppConfigRoute
 import streetlight.compose.model.AppRoute
+import streetlight.compose.model.ConnectRoute
 import streetlight.compose.model.EarthRoute
 import streetlight.compose.model.EventRoute
 import streetlight.compose.model.EventScoutRoute
@@ -55,6 +56,7 @@ fun AppPortal() {
         entry<GalaxyMapRoute> { GalaxyMapScreen(it) }
         entry<StarConfigRoute> { StarConfigScreen() }
         entry<AppConfigRoute> { AppConfigScreen() }
+        entry<ConnectRoute> { ConnectScreen(it) }
         entry<StarDashRoute> { StarDashScreen(it) }
         entry<EventScoutRoute> { EventScoutScreen(it) }
         entry<LocationScoutRoute> { LocationScoutScreen(it) }

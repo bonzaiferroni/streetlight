@@ -6,18 +6,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import koala.SvgFile
 import koala.modifier.Palette
@@ -65,9 +60,7 @@ private fun SkillCard(skill: Skill, color: Color) {
         Modifier.width(theme.unit * CardWidthUnits).height(theme.unit * CardHeightUnits).zenBg().padding(2),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(Modifier.size(theme.unit * BadgeUnits).drawBehind { drawBadge(color) }, contentAlignment = Alignment.Center) {
-            AnimatedIcon(svg.animated, color = { color }, size = theme.unit * IconUnits)
-        }
+        IconBadge(svg, color)
         Box(Modifier.height(theme.unit * NameUnits), contentAlignment = Alignment.Center) {
             BasicText(skill.name, style = theme.text.heading6.copy(textAlign = TextAlign.Center), color = { theme.colors.ink })
         }
@@ -83,22 +76,12 @@ private fun SkillCard(skill: Skill, color: Color) {
     }
 }
 
-/** Draws the badge behind a skill's icon in [color]: a soft glow at its center and a faint ring, the web's `IconBadge`. */
-private fun DrawScope.drawBadge(color: Color) {
-    drawCircle(Brush.radialGradient(listOf(color.copy(alpha = 0.22f), Color.Transparent)))
-    drawCircle(color.copy(alpha = 0.35f), radius = size.minDimension / 2 - 0.5f, style = Stroke(1f))
-}
-
 /** The size of a card in units, the web's `Width(20)` and `Height(40)`. */
 private const val CardWidthUnits = 20
 private const val CardHeightUnits = 40
-
-/** The badge and its icon in units, the web's `Width(16)` and `Width(8)`. */
-private const val BadgeUnits = 16
-private const val IconUnits = 8
 
 /** The height of the name's box in units, the web's `Height(4)`. */
 private const val NameUnits = 4
 
 /** The height left to the description: the card less its padding, badge, name, and the gaps between them. */
-private const val DescriptionUnits = CardHeightUnits - 2 * 2 - BadgeUnits - NameUnits - 2 * 2
+private const val DescriptionUnits = CardHeightUnits - 2 * 2 - IconBadgeUnits - NameUnits - 2 * 2

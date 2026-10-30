@@ -5,6 +5,8 @@ import kampfire.api.Slug
 import kampfire.api.Username
 import koala.model.WebRoute
 import kotlinx.serialization.Serializable
+import streetlight.model.data.OnboardType
+import streetlight.model.ui.ConnectRoute as WebConnectRoute
 import streetlight.model.ui.StarDashTab
 import streetlight.model.ui.EventRoute as WebEventRoute
 import streetlight.model.ui.GalaxyFeedRoute as WebGalaxyFeedRoute
@@ -69,6 +71,10 @@ data object StarConfigRoute : AppRoute
 @Serializable
 data object AppConfigRoute : AppRoute
 
+/** The connect page, opened on the pitch to [onboardType]. */
+@Serializable
+data class ConnectRoute(val onboardType: OnboardType = OnboardType.BusinessOwner) : AppRoute
+
 /** The app's route to the page of this web route, `null` for a page the app does not have. */
 fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyRoute -> GalaxyRoute(slug)
@@ -77,5 +83,6 @@ fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyFeedRoute -> GalaxyFeedRoute
     is WebStarFeedRoute -> StarFeedRoute
     is WebStarRoute -> StarRoute(username)
+    is WebConnectRoute -> ConnectRoute(type)
     else -> null
 }

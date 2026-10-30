@@ -1,5 +1,6 @@
 package streetlight.compose.view
 
+import streetlight.compose.modifier.pointerClick
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,11 +19,11 @@ import streetlight.compose.modifier.shineBg
 import streetlight.model.data.OnboardType
 
 /**
- * The four ways to connect, one quadrant per [OnboardType] in a 4:3 grid, each its animated icon over its label. The
- * cousin of the web's `connectPicker`, its quadrants unlinked until the app has their routes.
+ * The four ways to connect, one quadrant per [OnboardType] in a 4:3 grid, each its animated icon over its label,
+ * calling [onPick] with its type. The cousin of the web's `connectPicker`.
  */
 @Composable
-fun ConnectPicker(modifier: Modifier = Modifier) {
+fun ConnectPicker(modifier: Modifier = Modifier, onPick: (OnboardType) -> Unit) {
     val theme = currentTheme
     Column(
         modifier.aspectRatio(4f / 3f).borderRadius(2, moonShadow = true, outline = Outline.Mid).shineBg(),
@@ -30,7 +31,7 @@ fun ConnectPicker(modifier: Modifier = Modifier) {
     ) {
         OnboardType.entries.chunked(2).forEach { pair ->
             Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(theme.line)) {
-                pair.forEach { type -> ConnectOption(type, Modifier.weight(1f)) }
+                pair.forEach { type -> ConnectOption(type, Modifier.weight(1f).pointerClick { onPick(type) }) }
             }
         }
     }

@@ -27,6 +27,7 @@ import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 import streetlight.compose.model.currentPortal
 import streetlight.compose.model.GalaxyRoute
+import streetlight.compose.model.ConnectRoute
 import streetlight.compose.model.EarthRoute
 import streetlight.compose.model.GalaxyFeedRoute
 import streetlight.compose.modifier.pointerClick
@@ -118,7 +119,7 @@ private fun LeadingSection(modifier: Modifier) {
         val connectColumn = @Composable { columnModifier: Modifier ->
             Column(1, columnModifier, horizontalAlignment = Alignment.CenterHorizontally) {
                 NotedHeading("Get Involved", "Connect to your community through Streetlight.")
-                ConnectPicker(Modifier.widthIn(max = theme.unit * PickerMaxUnits).fillMaxWidth())
+                ConnectPicker(Modifier.widthIn(max = theme.unit * PickerMaxUnits).fillMaxWidth()) { portal.go(ConnectRoute(it)) }
             }
         }
         if (maxWidth >= SideBySideWidth) {

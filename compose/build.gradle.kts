@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.coil.network.ktor3)
             implementation(libs.filekit.dialogs.compose)
             implementation(libs.maplibre.compose)
+            implementation(libs.compose.media.player)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs) {
