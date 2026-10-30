@@ -37,7 +37,7 @@ fun StarFeedScreen() {
     TopBarMount(TopBar.Logo, gridState)
     Inflated<StarFeedContent>(StarFeedRoute) { content ->
         context(koinViewModel<FeedPageModel> { parametersOf(content.feed) }) {
-            FeedPageView(gridState, "Stars", "Streetlight Stars", null)
+            FeedPageView(gridState, "Stars", "Streetlight Stars", SiteImage.HelixNebula)
         }
     }
 }

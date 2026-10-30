@@ -94,8 +94,9 @@ fun RenderBlock(block: LayoutBlock, content: DesignContent, modifier: Modifier =
         is RichTextBlock -> RenderRichText(block, modifier)
         is ImageBlock -> RenderImage(block, modifier)
         is TabsBlock -> RenderTabs(block, content, modifier)
-        // comments, skills, galleries and columns wait for their own bounty
-        CommentsBlock, SkillsBlock, is GalleryBlock, is ColumnsBlock -> RenderPlaceholder(block, modifier)
+        SkillsBlock -> RenderSkills(content, modifier)
+        // comments, galleries and columns wait for their own bounty
+        CommentsBlock, is GalleryBlock, is ColumnsBlock -> RenderPlaceholder(block, modifier)
     }
 }
 
@@ -131,6 +132,13 @@ private fun GalaxyButtons() {
         Button("galaxies", onClick = {}, style = ButtonStyle.Zen)
         Button("Create Post", onClick = {}, style = ButtonStyle.Zen)
     }
+}
+
+/** The skills of [content], a star's, nothing when they have none. The web's `renderSkills`. */
+@Composable
+fun RenderSkills(content: DesignContent, modifier: Modifier = Modifier) {
+    val skills = (content as? StarContent)?.skills?.takeIf { it.isNotEmpty() } ?: return
+    SkillsSection(skills, modifier)
 }
 
 /** The map of [content], looking over its point. The web's `renderMap`. */

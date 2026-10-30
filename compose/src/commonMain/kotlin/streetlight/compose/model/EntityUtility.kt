@@ -9,6 +9,7 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
+import streetlight.model.data.Star
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
@@ -38,5 +39,6 @@ fun Entity.toRoute(): AppRoute? = when (this) {
     is Event -> EventRoute(slug)
     is Galaxy -> GalaxyRoute(slug)
     is Location -> LocationRoute(slug)
+    is Star -> StarRoute(username)
     else -> null
 }

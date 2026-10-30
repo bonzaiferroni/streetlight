@@ -1,5 +1,6 @@
 package streetlight.web.shell
 
+import koala.SiteImage
 import koala.page.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.StarFeedContent
@@ -10,7 +11,7 @@ import streetlight.web.layout.pageHeader
 
 fun FlowContent.starFeedShell(content: StarFeedContent) {
     mainBody("starFeedShell.kt") {
-        pageHeader("Stars", "Streetlight Stars", null)
+        pageHeader("Stars", "Streetlight Stars", SiteImage.HelixNebula)
         feedSection(content.feed) { StarFeedRoute(it) }
     }
 

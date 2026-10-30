@@ -12,6 +12,7 @@ import streetlight.model.data.EntityFeed
 import streetlight.model.data.GalaxyContent
 import streetlight.model.data.HomeContent
 import streetlight.model.data.LocationContent
+import streetlight.model.data.StarContent
 import org.koin.core.module.dsl.viewModel
 
 /** The app's services and view models. */
@@ -32,6 +33,7 @@ val appModule = module {
     viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
     viewModel { (page: EntityFeed) -> FeedPageModel(page, get(), get()) }
     viewModel { (content: LocationContent) -> LocationModel(content, get(), get()) }
+    viewModel { (content: StarContent) -> StarModel(content, get(), get()) }
     viewModel { EarthModel(get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
     viewModel { (account: Account) -> AccountEditor(account, get(), get()) }

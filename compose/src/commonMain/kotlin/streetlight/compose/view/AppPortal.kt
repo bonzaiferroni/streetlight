@@ -21,6 +21,7 @@ import streetlight.compose.model.LocationRoute
 import streetlight.compose.model.StarConfigRoute
 import streetlight.compose.model.StarDashRoute
 import streetlight.compose.model.StarFeedRoute
+import streetlight.compose.model.StarRoute
 import streetlight.compose.model.currentPortal
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
@@ -47,6 +48,7 @@ fun AppPortal() {
         entry<GalaxyRoute> { GalaxyScreen(it) }
         entry<EventRoute> { EventScreen(it) }
         entry<LocationRoute> { LocationScreen(it) }
+        entry<StarRoute> { StarScreen(it) }
         entry<EarthRoute> { EarthScreen() }
         entry<GalaxyFeedRoute> { GalaxyFeedScreen() }
         entry<StarFeedRoute> { StarFeedScreen() }
