@@ -97,8 +97,7 @@ data class UserCreatorState(
 
 enum class SignInPath(val svg: SvgPack, label: String? = null): Labeled {
     Guest(SvgFile.Ghost),
-    Register(SvgFile.UserPlus),
-    LogIn(SvgFile.Login, "Log In");
+    Register(SvgFile.UserPlus);
 
     override val label = label ?: name
 }

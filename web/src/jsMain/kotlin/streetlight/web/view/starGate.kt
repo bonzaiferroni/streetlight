@@ -1,13 +1,13 @@
 package streetlight.web.view
 
 import koala.dom.ViewScope
-import koala.dom.component.button
+import koala.component.filigree
+import koala.component.heading4
+import koala.dom.component.column
 import koala.dom.layout.flowBlock
-import koala.dom.component.textBlock
-import kampfire.model.setTrue
 import koala.modifier.*
 import streetlight.model.data.Star
-import streetlight.web.interop.SignIn
+import streetlight.web.model.getUserCreator
 import streetlight.web.model.session
 
 /** Renders [content] for the signed-in star, or [baseContent] while no star is signed in. */
@@ -24,9 +24,15 @@ fun ViewScope.starGate(
     }
 }
 
-/** A button that opens the sign-in dialog. */
+/** The [signInForm] on a card, asking the star to sign in to see the page. */
 fun ViewScope.signInToContinue() {
-    button(onClick = { SignIn.isOpen.setTrue() }) {
-        textBlock("Sign in to continue.")
+    val creator = app.getUserCreator(contentScope)
+    column(modify(AlignSelfCenter, MinWidth(32), BorderRadius3, MoonShadow, Outline, CardBg, Padding(2))) {
+        filigree {
+            heading4("Sign in to continue")
+        }
+        context(creator) {
+            signInForm()
+        }
     }
 }

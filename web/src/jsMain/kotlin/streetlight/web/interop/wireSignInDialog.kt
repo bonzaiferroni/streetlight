@@ -18,7 +18,6 @@ import streetlight.web.model.SignInPath
 import streetlight.web.model.getUserCreator
 import streetlight.web.view.guestRegistrationForm
 import streetlight.web.model.session
-import streetlight.web.view.signInForm
 
 /** The sign-in dialog, opened by [SignIn.isOpen] and closed once a star signs in. */
 fun ViewScope.wireSignInDialog() {
@@ -30,7 +29,7 @@ fun ViewScope.wireSignInDialog() {
 
     dialog(SignIn.isOpen) {
         val model = app.getUserCreator(contentScope)
-        rawDialogContent("Sign In") {
+        rawDialogContent("Create Account") {
             context(model) {
                 lazyTabs("sign-in-tabs") { // mod = Width64
                     SignInPath.entries.forEach {
@@ -47,7 +46,6 @@ fun ViewScope.wireSignInDialog() {
                                             enabledTap = model.isValidField
                                         )
                                     }
-                                    SignInPath.LogIn -> signInForm()
                                 }
                             }
                         }

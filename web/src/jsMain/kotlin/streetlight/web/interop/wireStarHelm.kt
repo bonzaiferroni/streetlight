@@ -31,6 +31,8 @@ import streetlight.web.page.PopoverId
 import streetlight.web.utility.element
 import streetlight.web.model.session
 import streetlight.web.view.starGate
+import streetlight.web.view.signInForm
+import streetlight.web.model.getUserCreator
 
 /** Fills both star helms: the menu of the signed-in star, or the sign-in panel. */
 fun ViewScope.wireStarHelm() {
@@ -122,7 +124,9 @@ private fun ViewScope.someonePanel() {
             }
         }
 
-        button("sign in", onClick = SignIn.isOpen::setTrue)
+        context(app.getUserCreator(contentScope)) {
+            signInForm()
+        }
 
 //        tabs(Id("someone-tabs")) {
 //            tab("Sign in") {

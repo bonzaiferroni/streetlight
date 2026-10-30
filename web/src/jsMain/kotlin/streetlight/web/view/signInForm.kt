@@ -19,6 +19,8 @@ import koala.dom.component.textBlock
 import koala.dom.component.textField
 import kampfire.model.MutableTap
 import kampfire.model.storeOf
+import kampfire.model.setTrue
+import streetlight.web.interop.SignIn
 import kotlinx.html.InputType
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.SessionClient
@@ -97,7 +99,7 @@ context(cred: CredentialStore, gate: SessionClient)
 fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>) {
     formColumn {
         val messages = MessageStore()
-        formSection("sign in") {
+        formSection {
             column {
                 textField(
                     field = cred.usernameField,
@@ -119,9 +121,12 @@ fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>) {
                 }
             }
         }
-        formSubmit("Sign in", {
-            val request = cred.getLoginRequest() ?: return@formSubmit
-            gate.signIn(request, messages)
-        }, messages)
+        row(modify(JustifyContentEnd, AlignItemsStart)) {
+            button("create account", { SignIn.isOpen.setTrue() }, Zen)
+            formSubmit("Sign in", {
+                val request = cred.getLoginRequest() ?: return@formSubmit
+                gate.signIn(request, messages)
+            }, messages)
+        }
     }
 }
