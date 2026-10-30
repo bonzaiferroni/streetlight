@@ -5,7 +5,9 @@ import androidx.compose.ui.graphics.colorspace.ColorSpaces
 import koala.modifier.Glow
 import koala.modifier.Rgb
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 fun Rgb.toColor() = Color(red, green, blue)
@@ -42,4 +44,30 @@ fun Color.rotateHue(degrees: Float): Color {
         blue = (red * (0.213f - 0.213f * c - 0.787f * s) + green * (0.715f - 0.715f * c + 0.715f * s) + blue * (0.072f + 0.928f * c + 0.072f * s)).coerceIn(0f, 1f),
         alpha = alpha,
     )
+}
+
+/** A color as CSS `hsl()` reads it: its [hue] in degrees, its [saturation] and [lightness] from 0 to 1. */
+data class Hsl(val hue: Float, val saturation: Float, val lightness: Float)
+
+fun Rgb.toHsl(): Hsl {
+    val r = red / 255f
+    val g = green / 255f
+    val b = blue / 255f
+    val max = maxOf(r, g, b)
+    val min = minOf(r, g, b)
+    val lightness = (max + min) / 2
+    val delta = max - min
+    if (delta == 0f) return Hsl(0f, 0f, lightness)
+    val saturation = delta / (1 - abs(2 * lightness - 1))
+    val hue = when (max) {
+        r -> 60 * (((g - b) / delta).mod(6f))
+        g -> 60 * ((b - r) / delta + 2)
+        else -> 60 * ((r - g) / delta + 4)
+    }
+    return Hsl(hue, saturation, lightness)
+}
+
+fun Hsl.toRgb(): Rgb {
+    val color = Color.hsl(hue.mod(360f), saturation.coerceIn(0f, 1f), lightness.coerceIn(0f, 1f))
+    return Rgb((color.red * 255).roundToInt(), (color.green * 255).roundToInt(), (color.blue * 255).roundToInt())
 }

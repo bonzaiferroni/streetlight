@@ -15,11 +15,11 @@ import org.koin.core.module.dsl.viewModel
 
 /** The app's services and view models. */
 val appModule = module {
-    single { AppConfig(apiUrl = DEV_API_URL) }
-    single { AppTransport(get<AppConfig>().apiUrl) }
+    single { AppEnv(apiUrl = DEV_API_URL) }
+    single { AppTransport(get<AppEnv>().apiUrl) }
     single { ApiClient(get<AppTransport>()) }
     singleOf(::ThemeHost)
-    singleOf(::AppSettings)
+    single { AppConfig(MainScope()) }
     single { Inflator(get()) }
     single { GeoCamera() }
     single { GeoMap(get()) }

@@ -16,6 +16,11 @@ actual suspend fun readAppFile(name: String): String? = withContext(Dispatchers.
     if (file.exists()) file.readText() else null
 }
 
+actual fun readAppFileNow(name: String): String? {
+    val file = appDataDir().resolve(name)
+    return if (file.exists()) file.readText() else null
+}
+
 actual suspend fun writeAppFile(name: String, text: String) = withContext(Dispatchers.IO) {
     val dir = appDataDir().createDirectories()
     val file = dir.resolve(name)

@@ -28,7 +28,7 @@ class EventScout(
     private val api: ApiClient,
     osm: OsmClient,
     geoMap: GeoMap,
-    settings: AppSettings,
+    config: AppConfig,
     private val toaster: Toaster,
 ) : ViewModel() {
     private val store = storeOf(EventScoutState())
@@ -41,8 +41,8 @@ class EventScout(
     val eventQueryState = store.mutableTapOf({ it.eventQuery }) { copy(eventQuery = it) }
     val postMessage = MessageStore()
     val isPostedState = store.tapOf { it.isPosted }
-    val postModeState = settings.eventPostModeState
-    val feedModeState = settings.feedModeState
+    val postModeState = config.eventPostModeState
+    val feedModeState = config.feedModeState
 
     /** Works on [location]: finds its event when it is one of Streetlight's, or starts editing it when it is new. */
     fun focus(location: LocationEntity) = when (location) {

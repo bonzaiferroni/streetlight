@@ -51,6 +51,9 @@ data class StarDashRoute(val tab: StarDashTab? = null) : AppRoute
 @Serializable
 data object StarConfigRoute : AppRoute
 
+@Serializable
+data object AppConfigRoute : AppRoute
+
 /** The app's route to the page of this web route, `null` for a page the app does not have. */
 fun WebRoute.toAppRoute(): AppRoute? = when (this) {
     is WebGalaxyRoute -> GalaxyRoute(slug)

@@ -27,7 +27,7 @@ class LocationScout(
     private val api: ApiClient,
     osm: OsmClient,
     geoMap: GeoMap,
-    settings: AppSettings,
+    config: AppConfig,
     private val toaster: Toaster,
 ) : ViewModel() {
     private val store = storeOf(LocationScoutState())
@@ -38,8 +38,8 @@ class LocationScout(
     val stageState = store.tapOf { it.focus.toStage() }
     val postMessage = MessageStore()
     val isPostedState = store.tapOf { it.isPosted }
-    val postModeState = settings.locationPostModeState
-    val feedModeState = settings.feedModeState
+    val postModeState = config.locationPostModeState
+    val feedModeState = config.feedModeState
 
     /** Works on [location]: reviews one of Streetlight's, or starts editing one that is new. */
     fun focus(location: LocationEntity) {

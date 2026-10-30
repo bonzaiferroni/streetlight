@@ -31,7 +31,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `Portal` | `Portal` (`koala.model`) |
 | `DockRoute`, `StableDock` | `RouteDock` and `RouteDockState` (`streetlight.web.model`), the main routes |
 | `appModule` | `webModule` |
-| `AppSettings` | The root switches, such as `FeedRowStyle.Mode` |
+| `AppConfig` | `SiteConfig` (`streetlight.web.model`), and the root switches, such as `FeedRowStyle.Mode` |
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
 | `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
@@ -42,6 +42,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `ImageEditor` | `ImageEditor` (`streetlight.web.model`), holding the picked bytes where the web holds a blob |
 | `LocationEditor` | `LocationEditor` (`streetlight.web.model`), as a submodel |
 | `LocationScout` | `LocationScout` (`streetlight.web.model`) |
+| `ThemeEditor` | `ThemeEditor` (`streetlight.web.model`) |
 | `LocationFinder` | The search of the web's `LocationScout`, as a submodel |
 | `EventScout` | `EventScout` (`streetlight.web.model`) |
 | `EventEditor` | `EventEditor` (`streetlight.web.model`), as a submodel |
@@ -86,8 +87,8 @@ A route with a focus gives its `FocusDock` with `toFocusDock()`, built from the 
 
 | Service | Holds |
 |---|---|
-| `AppConfig` | The settings of this build, such as the server's URL |
-| `AppSettings` | The viewer's settings that hold across the app, each a lens, such as the feed mode |
+| `AppEnv` | The environment of this build, such as the server's URL |
+| `AppConfig` | The viewer's settings that hold across the app, each a lens, such as the feed mode, kept in the app's files |
 | `ThemeHost` | The `PageTheme` the app shows |
 | `Inflator` | The read of each route's content |
 | `GeoMap` | The app's one map: its `GeoCamera` and the `MarkerMap` it shows |

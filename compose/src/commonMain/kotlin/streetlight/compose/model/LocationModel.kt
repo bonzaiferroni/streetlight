@@ -6,6 +6,6 @@ import streetlight.model.data.LocationContent
 import streetlight.model.io.ApiClient
 
 /** A location's [content]: the location, and the [feed] of its events. */
-class LocationModel(val content: LocationContent, api: ApiClient, settings: AppSettings) : ViewModel() {
-    val feed = FeedModel(viewModelScope, api, settings.feedModeState, content.feed)
+class LocationModel(val content: LocationContent, api: ApiClient, config: AppConfig) : ViewModel() {
+    val feed = FeedModel(viewModelScope, api, config.feedModeState, content.feed)
 }

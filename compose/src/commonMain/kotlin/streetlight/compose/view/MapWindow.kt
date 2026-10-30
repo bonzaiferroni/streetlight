@@ -28,7 +28,7 @@ import org.maplibre.compose.overlay.ExpandingAttributionButton
 import org.maplibre.compose.overlay.MapOverlay
 import org.maplibre.compose.style.BaseStyle
 import org.maplibre.spatialk.geojson.Position
-import streetlight.compose.model.AppConfig
+import streetlight.compose.model.AppEnv
 import streetlight.compose.model.MarkerMap
 import kotlin.math.hypot
 import kampfire.model.GeoPoint
@@ -36,9 +36,9 @@ import kampfire.model.GeoPoint
 /** The state of the app's one map, in the site's fjord style read from the server as the web reads it. */
 @Composable
 fun rememberAppMapState(): MapState {
-    val config = koinInject<AppConfig>()
+    val env = koinInject<AppEnv>()
     return rememberMapState(
-        baseStyle = BaseStyle.Uri(config.apiUrl + FjordStylePath),
+        baseStyle = BaseStyle.Uri(env.apiUrl + FjordStylePath),
         initialCameraPosition = cameraPositionOf(null),
     )
 }

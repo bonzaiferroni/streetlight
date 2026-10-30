@@ -6,6 +6,6 @@ import streetlight.model.data.GalaxyContent
 import streetlight.model.io.ApiClient
 
 /** A galaxy's [content]: the galaxy, and its [feed]. */
-class GalaxyModel(val content: GalaxyContent, api: ApiClient, settings: AppSettings) : ViewModel() {
-    val feed = FeedModel(viewModelScope, api, settings.feedModeState, content.feed)
+class GalaxyModel(val content: GalaxyContent, api: ApiClient, config: AppConfig) : ViewModel() {
+    val feed = FeedModel(viewModelScope, api, config.feedModeState, content.feed)
 }

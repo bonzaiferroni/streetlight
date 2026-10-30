@@ -7,8 +7,8 @@ import streetlight.model.data.HomeContent
 import streetlight.model.io.ApiClient
 
 /** The home [content]: its top galaxies, its [feed], and the [markerMap] of the feed's entities. */
-class HomeModel(val content: HomeContent, api: ApiClient, settings: AppSettings, geoMap: GeoMap) : ViewModel() {
-    val feed = FeedModel(viewModelScope, api, settings.feedModeState, content.feed)
+class HomeModel(val content: HomeContent, api: ApiClient, config: AppConfig, geoMap: GeoMap) : ViewModel() {
+    val feed = FeedModel(viewModelScope, api, config.feedModeState, content.feed)
     val markerMap = MarkerMap(geoMap)
 
     init {

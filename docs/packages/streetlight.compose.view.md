@@ -80,6 +80,11 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `MessageBox`, `MessageCard` | `messageBox` (`koala.dom.layout`) |
 | `ToasterHost` | `wireToaster` (`streetlight.web.interop`) |
 | `DropMenu` | `dropMenu` (`koala.dom.component`) |
+| `Switch`, `SwitchMenu` | `switch`, `switchMenu` (`koala.dom.component`) |
+| `Slider` | `slider` (`streetlight.web.dom.component`) |
+| `ColorPicker` | `colorPicker` (`koala.dom.component`) |
+| `GlowField` | `glowField` (`koala.dom.component`), its three fields in one |
+| `ThemeForm` | `themeForm` (`streetlight.web.view`) |
 | `ActionSection`, `ActionSectionCard`, `ActionRow`, `ActionButton` | `actionSection`, `actionSectionCard`, `actionRow`, `menuActionButton` (`streetlight.web.dom.layout`) |
 | `LinksSection` | `linksFormSection` (`streetlight.web.view`) |
 | `DateField`, `TimeField`, `DayStepper`, `TimeStepper` | `dateInput`, `timeInput`, `dayIndicator`, `timeIndicator` |
@@ -98,6 +103,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `StageHeader` | `onboardStage` (`streetlight.web.view`), without its strikethrough |
 | `LocationScoutView` | `viewLocationScout` (`streetlight.web.view`) |
 | `LocationFinderForm` | `locationFinder` (`streetlight.web.view`) |
+| `AppConfigView` | `viewSiteConfig` (`streetlight.web.view`) |
 | `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
 | `ColumnRow` | `BodyStyle.ColumnRow` (`streetlight.web.layout`) |
 | `FormCard` | `formCard` (`streetlight.web.dom.layout`) |
@@ -200,7 +206,7 @@ A modifier whose arguments do not change in composition is declared once, as a `
 
 The theme has two levels: `KoalaAppTheme`, the app's own values, and `PageTheme`, the colors and glows a piece of content brings over them.
 
-`AppTheme` wraps the app below Koin, and `AppScaffold` within it lays out the platform's bar, the page on paper over the theme's three glows, and the overlay above the page. It animates the `PageTheme` held by `ThemeHost` and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. Each view shows its page's theme with `PageThemeEffect`, its content's theme or `null` for the default, so returning to a view restores its own.
+`AppTheme` wraps the app below Koin, and `AppScaffold` within it lays out the platform's bar, the page on paper over the theme's three glows, and the overlay above the page. It animates the `PageTheme` held by `ThemeHost`, or the viewer's default theme from `AppConfig` when the host holds none or the viewer keeps the default over every page's own, and provides the `KoalaAppTheme` as `LocalKoalaAppTheme`. A composable reads it through the top-level property `currentTheme`, after Compose's `current` prefix for ambient reads. The theme groups its values as the web's stylesheets do: `currentTheme.unit`, `currentTheme.text.small`, `currentTheme.colors.primary`, `currentTheme.opacity.low`, `currentTheme.lights`, `currentTheme.magic`. A motion takes its timing and curve from `currentTheme.magic`, as `eased()` or `bounced()`. Each view shows its page's theme with `PageThemeEffect`, its content's theme or `null` for the default, so returning to a view restores its own. A theme form shows the theme it edits the same way, so the page previews it.
 
 A change of theme animates over `KoalaTheme.ThemeTransitionSeconds` with the web's bounce easing. `KoalaLights` holds the glows and the flux hue as states, `drawLights` draws them as the page background, its size the frame of their positions and radii; `KoalaLights.pageSize`, set as the root is laid out, gives a light's radius on the page to a surface drawn elsewhere, and `shineBg()` casts them on a surface. In `Flux` mode the glow colors turn around the hue wheel every 30 seconds, as the web's `hueSpin` does.
 
@@ -259,7 +265,7 @@ Every marker has a light, revealed or not, so a hidden marker shows as its light
 
 ## Feed
 
-A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. It reads its controls' state from the `FeedModel` it takes as a context parameter. A lazy layout's builder cannot read state, so the view reads the page and the mode and passes them as values, and a change of either lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the model's type, and the `FeedMode` switch, bound to the mode the model takes from `AppSettings`.
+A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. It reads its controls' state from the `FeedModel` it takes as a context parameter. A lazy layout's builder cannot read state, so the view reads the page and the mode and passes them as values, and a change of either lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the model's type, and the `FeedMode` switch, bound to the mode the model takes from `AppConfig`.
 
 An entry carries `zenBg()`, and the feed stands its entries `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 

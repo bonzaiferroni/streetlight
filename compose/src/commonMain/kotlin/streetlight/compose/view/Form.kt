@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import kampfire.model.MutableTap
 import kampfire.model.Tap
@@ -126,12 +127,12 @@ fun CheckBox(state: MutableTap<Boolean>, label: String, modifier: Modifier = Mod
 }
 
 @Composable
-fun CenteredText(text: String) {
+fun CenteredText(text: String, style: TextStyle = currentTheme.text.regular) {
     val theme = currentTheme
     BasicText(
         text,
         Modifier.fillMaxWidth(),
-        style = theme.text.regular.copy(textAlign = TextAlign.Center),
+        style = style.copy(textAlign = TextAlign.Center),
         color = { theme.colors.ink },
     )
 }

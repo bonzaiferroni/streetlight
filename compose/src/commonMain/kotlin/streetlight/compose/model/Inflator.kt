@@ -22,8 +22,9 @@ class Inflator(private val api: ApiClient) {
         is GalaxyMapRoute -> api.galaxy.readGalaxyContent(route.slug)
         is EventRoute -> api.event.readEventSlug(route.slug)
         is LocationRoute -> api.location.readLocationContent(route.slug)
-        // the earth reads its content as the camera moves, and the dashboard each tab its own, so neither inflates
-        EarthRoute, is StarDashRoute -> Ok(Unit)
+        // the earth reads its content as the camera moves, the dashboard each tab its own, and the config is local, so
+        // none inflates
+        EarthRoute, is StarDashRoute, AppConfigRoute -> Ok(Unit)
         StarConfigRoute -> api.star.readAccount()
         is EventScoutRoute -> readPostGalaxy(route.slug)
         is LocationScoutRoute -> readPostGalaxy(route.slug)

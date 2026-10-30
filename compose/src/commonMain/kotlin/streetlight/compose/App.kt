@@ -16,7 +16,7 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.dsl.koinConfiguration
 import streetlight.compose.io.buildImageLoader
-import streetlight.compose.model.AppConfig
+import streetlight.compose.model.AppEnv
 import streetlight.compose.model.LocalPortal
 import streetlight.compose.model.Portal
 import streetlight.compose.model.appModule
@@ -39,8 +39,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun App(portal: Portal = rememberPortal(), bar: @Composable () -> Unit = {}) {
     KoinApplication(configuration = koinConfiguration { modules(appModule) }) {
-        val config = koinInject<AppConfig>()
-        setSingletonImageLoaderFactory { context -> buildImageLoader(context, config) }
+        val env = koinInject<AppEnv>()
+        setSingletonImageLoaderFactory { context -> buildImageLoader(context, env) }
         val session = koinInject<StarSession>()
         LaunchedEffect(session) { session.restore() }
 

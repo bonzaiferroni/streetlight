@@ -27,6 +27,7 @@ import koala.modifier.Glow
 import koala.modifier.Koala
 import koala.modifier.KoalaTheme
 import org.koin.compose.koinInject
+import streetlight.compose.model.AppConfig
 import streetlight.compose.model.ThemeHost
 import streetlight.compose.utility.collectAsState
 import streetlight.compose.utility.toColor
@@ -39,7 +40,12 @@ import streetlight.model.data.PageTheme
  */
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
-    val pageTheme by koinInject<ThemeHost>().themeState.collectAsState()
+    val config = koinInject<AppConfig>()
+    val hostTheme by koinInject<ThemeHost>().themeState.collectAsState()
+    val defaultTheme by config.defaultThemeState.collectAsState()
+    val isDefaultThemeOnly by config.isDefaultThemeOnlyState.collectAsState()
+    // the viewer may keep their default theme over every page's own
+    val pageTheme = hostTheme?.takeUnless { isDefaultThemeOnly } ?: defaultTheme
 
     val accentState = animateColorAsState(pageTheme.accent.toColor(), themeTransition())
     val primaryState = animateColorAsState(pageTheme.primary.toColor(), themeTransition())

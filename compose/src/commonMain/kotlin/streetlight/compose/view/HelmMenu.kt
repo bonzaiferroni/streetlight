@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import koala.SvgPack
 import koala.SvgFile
+import streetlight.compose.model.AppConfigRoute
 import streetlight.compose.model.EarthRoute
 import streetlight.compose.model.currentPortal
 import streetlight.compose.modifier.filigree
@@ -49,7 +50,10 @@ fun HelmMenu(onClose: () -> Unit, helm: @Composable () -> Unit) {
         HelmItem("Status", SvgFile.Chart)
         HelmItem("Privacy", SvgFile.EyeClosed)
         HelmLabel("config")
-        HelmItem("Settings", SvgFile.Gear)
+        HelmItem("Settings", SvgFile.Gear, isCurrent = portal.backStack.last() == AppConfigRoute) {
+            portal.go(AppConfigRoute)
+            onClose()
+        }
         HelmItem("Theme", SvgFile.Sun)
     }
 }
