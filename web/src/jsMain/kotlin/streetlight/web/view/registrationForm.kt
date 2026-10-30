@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import kampfire.api.Username
 import kampfire.model.AccountType
 import koala.modifier.*
@@ -96,7 +97,8 @@ private fun ViewScope.usernameSection() = formSection("Username") {
             mod = Flex1,
             field = model.usernameField,
             maxLength = Username.MAX_LENGTH,
-            placeholder = "Username"
+            placeholder = "Username",
+            icon = SvgFile.User,
         )
         button("Choose for me", model::generateUsername, Secondary)
     }

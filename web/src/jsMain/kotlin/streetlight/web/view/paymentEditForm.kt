@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import koala.dom.ViewScope
 import koala.dom.component.row
 import koala.dom.component.textBlock
@@ -30,7 +31,7 @@ fun ViewScope.paymentEditForm() = formColumn {
         }
         formSection("Invoice") {
             row(AlignItemsCenter) {
-                textField(model.priceState, "price", Flex1, prefix = "$")
+                textField(model.priceState, "price", Flex1, icon = SvgFile.Coin)
                     .flowValid(PaymentProperty.Price, model.validityField, contentScope)
                 textField(model.platformCutField, "Streetlight cut", Flex1, suffix = "%")
                     .flowValid(PaymentProperty.PlatformCut, model.validityField, contentScope)

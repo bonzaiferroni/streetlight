@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import streetlight.web.model.EventScout
@@ -17,7 +18,7 @@ fun ViewScope.eventSearchForm() = formSectionLegacy("Add an event") {
             bullets = listOf("The event may already be on Streetlight.")
         ) {
             row {
-                textField(model.query, "name", Flex1)
+                textField(model.query, "name", Flex1, icon = SvgFile.Point)
                 button("create", model::create)
             }
 

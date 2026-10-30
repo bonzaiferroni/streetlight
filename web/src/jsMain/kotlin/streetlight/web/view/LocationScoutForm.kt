@@ -24,8 +24,8 @@ fun ViewScope.locationFinder() = formCard("Location Finder") {
     formRow {
         formSection("search") {
             row {
-                textField(model.queryState, "search", Flex1)
-                textField(model.cityState, "city", Width(24))
+                textField(model.queryState, "search", Flex1, icon = SvgFile.Search)
+                textField(model.cityState, "city", Width(24), icon = SvgFile.City)
             }
             selectorContainer {
                 selectorBlock(items = model.locationsState, selection = model.selectionState) { location ->
@@ -50,7 +50,7 @@ fun ViewScope.locationFinder() = formCard("Location Finder") {
             button("What is Here?", model::whatIsHere)
             spacer(Flex1)
             messageBox(model.mapMessage)
-            textField(model.queryState)
+            textField(model.queryState, icon = SvgFile.MapPin)
             button("Create", onClick = model::createLocation, Accent)
         }
     }

@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import koala.dom.ViewScope
 import koala.dom.component.textField
 import streetlight.web.model.EmailEditor
@@ -13,7 +14,7 @@ fun ViewScope.emailFormSection() = formSection("Email") {
 
 context(model: EmailEditor)
 fun ViewScope.emailFormInput() {
-    textField(model.emailStringField, "optional", placeholder = "email")
+    textField(model.emailStringField, "optional", placeholder = "email", icon = SvgFile.Mail)
     formBullets(
         null,
         "Providing an email address is optional",

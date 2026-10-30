@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import kampfire.api.EmailAddress
 import kampfire.api.obfuscate
 import koala.modifier.*
@@ -73,7 +74,7 @@ private fun ViewScope.emailNullForm() {
     column {
         if (model.stateNow.isChangingEmail && model.stateNow.hasVerifiedEmail) {
             centeredText("Please provide a password to authorize change.")
-            textField(model.verifyPasswordField, "current password") {
+            textField(model.verifyPasswordField, "current password", icon = SvgFile.Key) {
                 type = InputType.password
             }
             centeredText("What is your new email?", MarginTop(1))
@@ -107,7 +108,7 @@ private fun ViewScope.removingEmailForm() {
     column {
         if (model.stateNow.hasVerifiedEmail) {
             centeredText("Please provide a password to authorize removal.")
-            textField(model.verifyPasswordField, "current password") {
+            textField(model.verifyPasswordField, "current password", icon = SvgFile.Key) {
                 type = InputType.password
             }
         } else {

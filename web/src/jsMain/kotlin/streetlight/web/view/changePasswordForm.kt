@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import kotlinx.html.InputType
@@ -22,7 +23,7 @@ fun ViewScope.changePasswordForm() = formSection("Password") {
             column {
                 if (email != null) {
                     centeredText("Please provide your current password to authorize change.")
-                    textField(model.verifyPasswordField, "current password") {
+                    textField(model.verifyPasswordField, "current password", icon = SvgFile.Key) {
                         type = InputType.password
                     }
                     centeredText("New password:", MarginTop(1))

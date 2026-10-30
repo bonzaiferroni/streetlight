@@ -46,7 +46,7 @@ fun ViewScope.eventWebsiteForm() = formCard("Parse Event") {
     formRow {
         formSection("Website") {
             centeredText("Does this event have a web page? We can read it to find certain details.")
-            textField(model.urlState, "website")
+            textField(model.urlState, "website", icon = SvgFile.World)
             formSubmit("🤖 read page", model::parseFromUrl, model.parseMessage)
         }
         formFiller(LottieFile.Ghost)

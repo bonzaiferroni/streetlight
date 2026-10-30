@@ -90,8 +90,8 @@ private fun ViewScope.linkPopover(id: Id, link: ExtraLink, onSave: (ExtraLink) -
             popover.close()
         }
         row(modify(AlignItemsCenter, Padding(2))) {
-            textField(labelState, "label", Flex1, onEnterSubmit = save)
-            textField(urlState, "url", Flex3, onEnterSubmit = save)
+            textField(labelState, "label", Flex1, onEnterSubmit = save, icon = SvgFile.Label)
+            textField(urlState, "url", Flex3, onEnterSubmit = save, icon = SvgFile.Link)
             button(SvgFile.Check.small, save, Height(5))
         }
     }

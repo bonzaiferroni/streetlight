@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.LocationProperty
@@ -25,13 +26,13 @@ context(model: LocationEditor)
 fun ViewScope.locationDetailsForm() = formCard("Location Details") {
     formRow {
         formSection("Name") {
-            formTextField(model.nameField, "title", maxLength = 50)
+            formTextField(model.nameField, "title", maxLength = 50, icon = SvgFile.MapPin)
                 .flowValid(LocationProperty.Name, model.validityField, contentScope)
         }
         formSection("Address / City") {
             row {
-                textField(model.addressField, "address", Flex1)
-                textField(model.cityField, "city", Flex1)
+                textField(model.addressField, "address", Flex1, icon = SvgFile.Road)
+                textField(model.cityField, "city", Flex1, icon = SvgFile.City)
             }
         }
     }
@@ -54,11 +55,11 @@ context(model: LocationEditor)
 fun ViewScope.locationLinksForm() = formCard("Links") {
     formRow {
         formSection("Website") {
-            textField(model.websiteField, "website")
+            textField(model.websiteField, "website", icon = SvgFile.World)
             centeredText("This location's home on the web.")
         }
         formSection("Calendar") {
-            textField(model.eventsUrlField, "calendar")
+            textField(model.eventsUrlField, "calendar", icon = SvgFile.Calendar)
             centeredText("Does the location have an events page or calendar?")
         }
     }

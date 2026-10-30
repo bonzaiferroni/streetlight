@@ -6,6 +6,7 @@ import kampfire.api.toValidOutcome
 import kampfire.model.LoginRequest
 import kampfire.model.toDataOr
 import koala.LottieFile
+import koala.SvgFile
 import koala.modifier.*
 import koala.dom.ViewScope
 import koala.model.MessageStore
@@ -105,11 +106,13 @@ fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>) {
                     field = cred.usernameField,
                     label = "username/email",
                     placeholder = "username/email",
+                    icon = SvgFile.User,
                 )
                 textField(
                     label = "password",
                     placeholder = "password",
-                    field = cred.passwordField
+                    field = cred.passwordField,
+                    icon = SvgFile.Key,
                 ) {
                     type = InputType.password
                 }

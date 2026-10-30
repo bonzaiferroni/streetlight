@@ -1,5 +1,6 @@
 package streetlight.web.dom.layout
 
+import koala.SvgPack
 import koala.Lottie
 import koala.modifier.*
 import koala.dom.*
@@ -125,9 +126,10 @@ fun ViewScope.formTextField(
     mod: Modifier? = null,
     footnote: String? = null,
     placeholder: String? = label,
-    maxLength: Int? = null
+    maxLength: Int? = null,
+    icon: SvgPack? = null,
 ) = column(mod) {
-    textField(field, label, placeholder = placeholder, maxLength = maxLength)
+    textField(field, label, placeholder = placeholder, maxLength = maxLength, icon = icon)
     footnote?.let {
         textBlock(footnote, modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall))
     }

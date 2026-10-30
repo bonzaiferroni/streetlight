@@ -1,5 +1,7 @@
 package koala.dom.component
 
+import koala.SvgPack
+import koala.component.IconStyle
 import koala.modifier.*
 import koala.page.Id
 import kotlinx.css.LinearDimension
@@ -22,8 +24,8 @@ import koala.component.configureTextFieldInput
 /**
  * A text input bound to [field], labeled [label] over its corner.
  *
- * With [maxLength], a count of characters used is shown. With [onEnterSubmit], Enter submits. [prefix] and [suffix]
- * are shown at the start and end of the input, outside its value.
+ * With [maxLength], a count of characters used is shown. With [onEnterSubmit], Enter submits. [icon] is shown a unit
+ * in from the start, naming what the field holds, and [suffix] at the end, outside the input's value.
  */
 fun ViewScope.textField(
     field: MutableTap<String>,
@@ -35,9 +37,9 @@ fun ViewScope.textField(
     name: String? = null,
     size: Int = 25,
     maxLength: Int? = null,
-    prefix: String? = null,
     suffix: String? = null,
     onEnterSubmit: (() -> Unit)? = null,
+    icon: SvgPack? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLElement {
     var currentValue = field.now
@@ -57,7 +59,7 @@ fun ViewScope.textField(
 
         element = input {
             val affixMod = modify(
-                prefix?.let { Css.PaddingLeft.of(it.toAffixInset()) },
+                icon?.let { Css.PaddingLeft(IconInsetUnits) },
                 suffix?.let { Css.PaddingRight.of(it.toAffixInset()) },
             )
             configureTextFieldInput(id, modify(affixMod, textMod), placeholder, size, maxLength, name, currentValue)
@@ -72,7 +74,9 @@ fun ViewScope.textField(
             block?.invoke(this)
         }.asWeb()
 
-        prefix?.let { textBlock(it, modify(TextFieldAffixMod, JustifySelfStart)) }
+        icon?.let {
+            this@textField.icon(it.small, modify(IconStyle.DefaultMod, JustifySelfStart, AlignSelfCenter, MarginLeft(1), OpacityHalf, PointerEventsNone))
+        }
         suffix?.let { textBlock(it, modify(TextFieldAffixMod, JustifySelfEnd)) }
 
         maxLengthText = maxLength?.let {
@@ -98,6 +102,9 @@ fun ViewScope.textField(
 }
 
 private val TextFieldAffixMod = modify(AlignSelfCenter, PaddingX1, OpacityHalf, PointerEventsNone)
+
+/** The input's start padding beside an icon in units: a unit before the icon, its three, and a unit after it. */
+private const val IconInsetUnits = 5
 
 /** The padding that clears an affix of this text beside the input's own padding. */
 private fun String.toAffixInset() = LinearDimension("calc(var(--unit) * 2 + ${length}ch)")

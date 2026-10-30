@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import koala.SvgFile
 import kampfire.api.Password
 import koala.dom.ViewScope
 import koala.dom.component.textField
@@ -15,10 +16,10 @@ fun ViewScope.passwordFormSection() = formSection("Password") {
 
 context(model: PasswordEditor)
 fun ViewScope.passwordFormInput() {
-    textField(model.passwordField, "password") {
+    textField(model.passwordField, "password", icon = SvgFile.Key) {
         type = InputType.password
     }
-    textField(model.confirmationField, "confirm password") {
+    textField(model.confirmationField, "confirm password", icon = SvgFile.Key) {
         type = InputType.password
     }
     formBullets(
