@@ -21,7 +21,7 @@ The theme's styling as extensions on Compose's `Modifier`, the cousins of `koala
 | `shineBg()` | `ShineBg` |
 | `schemeBg()` | `SchemeBg` |
 | `primaryBg()`, `accentBg()` | `PrimaryBg`, `AccentBg` |
-| `padding(n)` | `padding: var(--unit)`, `PaddingX1`, `PaddingY1` |
+| `padding(n)` | `padding: var(--unit)`, `PaddingX(1)`, `PaddingY(1)` |
 | `opacityLow()`, `opacityHigh()` | `OpacityLow`, `OpacityHigh` |
 | `fadeClip()` | The feed row's text clip and its mask |
 | `blockLabel(label, isValid)` | `blockLabel` and `flowValid` (`koala.dom`), and `BlockLabelCss` |

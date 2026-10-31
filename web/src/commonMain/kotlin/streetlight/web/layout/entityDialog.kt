@@ -25,7 +25,7 @@ fun FlowContent.entityDialog(entity: Entity) {
     div(modify(EntityDialogStyle.Base, VoidBg)) {
         setStyle(Css.ColorScheme.of(entity.toEntityType().cssValue))
         containImage(entity.image, modify(EntityDialogStyle.Image, CardBg), isNative = true)
-        div(modify(CardBg, TextAlignCenter, PaddingX2, PaddingY2)) {
+        div(modify(CardBg, TextAlignCenter, PaddingX(2), PaddingY(2))) {
             navigationIfNotNull(entity.url?.value ?: entity.toRoute()?.toRelativePath()) {
                 heading2(entity.label, modify(LineHeight115, Bold))
             }

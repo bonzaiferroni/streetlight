@@ -47,6 +47,8 @@ object Css {
     val PaddingRight = Property<LinearDimension>("padding-right")
     val PaddingBottom = Property<LinearDimension>("padding-bottom")
     val PaddingLeft = Property<LinearDimension>("padding-left")
+    val PaddingInline = Property<LinearDimension>("padding-inline")
+    val PaddingBlock = Property<LinearDimension>("padding-block")
     val Margin = Property<LinearDimension>("margin")
     val MarginRight = Property<LinearDimension>("margin-right")
     val MarginBottom = Property<LinearDimension>("margin-bottom")

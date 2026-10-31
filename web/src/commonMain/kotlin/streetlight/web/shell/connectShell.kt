@@ -68,7 +68,7 @@ fun FlowContent.connectBusiness() {
             filigree {
                 heading2("Put your events on the map")
             }
-            markdown(businessIntro, modify(MaxWidth(80.pct), AlignSelfCenter, PaddingX2, Prose, TextAlignCenter))
+            markdown(businessIntro, modify(MaxWidth(80.pct), AlignSelfCenter, PaddingX(2), Prose, TextAlignCenter))
         }
 
         column(modify(ContainerMdRow, FlexItems1, Gap2Px, BorderRadius2, OverflowClip, Outline)) {

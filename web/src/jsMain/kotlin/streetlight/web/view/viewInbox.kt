@@ -163,7 +163,7 @@ private fun ViewScope.messageList() {
                 }
             }
 
-            card(modify(ZenBg, BorderRadius1, PaddingX2, FadeIn)) {
+            card(modify(ZenBg, BorderRadius1, PaddingX(2), FadeIn)) {
                 markdown(message.content)
             }
         }

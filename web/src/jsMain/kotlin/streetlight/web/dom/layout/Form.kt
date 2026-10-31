@@ -9,7 +9,6 @@ import koala.component.bulletsOf
 import koala.component.column
 import koala.component.filigree
 import koala.component.heading3
-import koala.component.heading4
 import koala.model.MenuAction
 import kampfire.model.Tap
 import kampfire.model.MutableTap
@@ -19,6 +18,7 @@ import koala.dom.layout.*
 import koala.dom.component.*
 import koala.model.*
 import streetlight.web.layout.BodyStyle
+import streetlight.web.component.systemHeading
 
 /** The column of a form's cards. */
 fun ViewScope.formColumn(
@@ -48,7 +48,7 @@ fun ViewScope.formSection(
     content: SECTION.() -> Unit
 ) = section(mod) {
     name?.let {
-        formHeading(name)
+        systemHeading(name)
     }
     content()
 }
@@ -57,12 +57,6 @@ fun ViewScope.formRow(
     mod: Modifier? = null,
     content: DIV.() -> Unit
 ) = row(modify(BodyStyle.ColumnRow, mod), content = content)
-
-fun ViewScope.formHeading(
-    text: String
-) = filigree(ruleMod = MaxWidth(32)) {
-    heading4(text, modify(SystemFg, TextUppercase, MoonShadowText))
-}
 
 fun ViewScope.formBullets(
     heading: String?,
@@ -131,7 +125,7 @@ fun ViewScope.formTextField(
 ) = column(mod) {
     textField(field, label, placeholder = placeholder, maxLength = maxLength, icon = icon)
     footnote?.let {
-        textBlock(footnote, modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall))
+        textBlock(footnote, modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX(1), TextSmall))
     }
 }
 

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.offset
 /** Pads every side by [all] units of the theme's unit. The web's `padding: var(--unit)`. */
 fun Modifier.padding(all: Number) = padding(all, all, all, all)
 
-/** Pads the sides by [horizontal] units and the top and bottom by [vertical] units. The web's `PaddingX1`, `PaddingY1`. */
+/** Pads the sides by [horizontal] units and the top and bottom by [vertical] units. The web's `PaddingX(1)`, `PaddingY(1)`. */
 fun Modifier.padding(horizontal: Number = 0, vertical: Number = 0) = padding(horizontal, vertical, horizontal, vertical)
 
 /** Pads each side by its own count of units, [start] and [end] following the layout direction. */

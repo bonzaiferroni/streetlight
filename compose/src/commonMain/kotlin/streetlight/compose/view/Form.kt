@@ -64,7 +64,7 @@ fun FormCard(name: String?, modifier: Modifier = Modifier, content: @Composable 
 
 /**
  * The heading of a form's section, [text] in capitals in the system's foreground, in a filigree. The cousin of the web's
- * `formHeading`.
+ * `systemHeading`.
  */
 @Composable
 fun FormHeading(text: String) {

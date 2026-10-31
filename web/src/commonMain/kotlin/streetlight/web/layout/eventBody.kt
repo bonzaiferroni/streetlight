@@ -30,7 +30,7 @@ fun FlowContent.eventBody(event: EventLocation) {
                             event.locationImage?.small?.let {
                                 image(it, modify(Flex1, BorderRadius2, MaxHeight(16)))
                             }
-                            column(modify(PaddingX1, PaddingY2, Gap0)) {
+                            column(modify(PaddingX(1), PaddingY(2), Gap0)) {
                                 heading2(event.locationName, modify(TextAlignCenter, MinWidth(0)))
                                 event.addressLine?.let {
                                     filigree {

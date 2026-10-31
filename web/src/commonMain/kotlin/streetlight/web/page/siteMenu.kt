@@ -64,12 +64,12 @@ fun FlowContent.siteMenuItems() {
     item("Cities", CityFeedRoute(), SvgFile.City.large)
     item("Stars", StarFeedRoute(), SvgFile.Star.large)
     // radio
-    label("meta")
+    menuSectionLabel("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.Question.large)
     item("Contribute", ContributeRoute, SvgFile.HeartHandshake.large)
     item("Status", SiteMonitorRoute, SvgFile.Chart.large) // td
     item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed.large)
-    label("config")
+    menuSectionLabel("config")
     item("Settings", SiteConfigRoute, SvgFile.Gear.large)
     row(modify(SiteHelm.rowMod, ThemeToggle)) {
         onClick = KoalaFun.toggleRootModifier.invokeJs(DayTheme)
@@ -78,8 +78,9 @@ fun FlowContent.siteMenuItems() {
     }
 }
 
-private fun FlowContent.label(label: String) {
-    filigree {
+/** A small, uppercase heading of [label] in a filigree, which takes [mod]. */
+fun FlowContent.menuSectionLabel(label: String, mod: Modifier? = null) {
+    filigree(mod) {
         textBlock(label, modify(TextSmall, TextUppercase, OpacityHalf))
     }
 }

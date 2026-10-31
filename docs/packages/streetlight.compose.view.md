@@ -111,7 +111,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `ImageField` | `imageFormSection` and `imageDrop` (`streetlight.web.view`), with FileKit's picker |
 | `LocationEditForm` | `locationEditFormBody` (`streetlight.web.view`) |
 | `CheckBox` | `checkBox` (`koala.dom.component`) |
-| `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formSection`, `formHeading`, `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
+| `FormSection`, `FormHeading`, `FormBullets`, `FormSubmit` | `formSection`, `systemHeading` (`streetlight.web.component`), `formBullets`, `formSubmit` (`streetlight.web.dom.layout`) |
 | `GuestRegistrationForm`, `FullRegistrationForm` | `guestRegistrationForm`, `fullRegistrationForm` (`streetlight.web.view`) |
 | `RawDialogMount`, `DialogMount`, `DialogCard` | `dialog` with `rawDialogContent` or `dialogContent`, and `dialogCard` (`koala.dom.component`) |
 

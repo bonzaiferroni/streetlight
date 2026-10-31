@@ -22,7 +22,7 @@ fun FlowContent.topBar(bar: TopBar, isSticky: Boolean = false, route: WebRoute =
         val reachMod = modify(Height100Pct, TopBarStyle.Reach)
         when (bar) {
             TopBar.Logo -> appHeader(reachMod, rayMaxWidth = null, route = route)
-            is TopBar.Title -> filigree(modify(reachMod, PaddingX2), ruleMod = null) {
+            is TopBar.Title -> filigree(modify(reachMod, PaddingX(2)), ruleMod = null) {
                 navigation(route) {
                     heading2(bar.text, modify(LineHeight1, MoonShadowText, FocusTarget))
                 }

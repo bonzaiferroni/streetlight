@@ -82,6 +82,6 @@ fun AppendScope.menuActionsRow(actions: List<MenuAction>?) {
 fun AppendScope.menuActionButton(action: MenuAction) {
     button(action.onClick) {
         action.config(this)
-        textBlock(action.label, modify(TextUppercase, TextSmall, OpacityHigh, Bold, PaddingX1))
+        textBlock(action.label, modify(TextUppercase, TextSmall, OpacityHigh, Bold, PaddingX(1)))
     }
 }

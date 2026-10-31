@@ -51,7 +51,7 @@ fun FlowContent.heroHeader(
         }
 
         val fgMod = if (image != null) modify(WhiteFg, TextShadow) else null
-        column(modify(HeroHeader.Title, PaddingX2, Gap(1), AlignSelfStart, AlignItemsCenter, fgMod)) {
+        column(modify(HeroHeader.Title, PaddingX(2), Gap(1), AlignSelfStart, AlignItemsCenter, fgMod)) {
             heading1(title, FocusTarget)
             filigree(AlignSelfStretch) {
                 textBlock(descriptor, modify(Italic, OpacityHalf))

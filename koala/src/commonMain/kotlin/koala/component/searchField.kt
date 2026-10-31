@@ -27,7 +27,7 @@ fun FlowContent.searchField(
 
 /** Configures this element as the pill of a [searchField], holding its icon. The input is added after. */
 fun DIV.configureSearchFieldContainer(mod: Modifier?) {
-    addModifiers(SearchField.Container, DisplayFlex, AlignItemsCenter, Gap(1), BorderRadiusPill, PaddingX2, PaddingY1, mod)
+    addModifiers(SearchField.Container, DisplayFlex, AlignItemsCenter, Gap(1), BorderRadiusPill, PaddingX(2), PaddingY(1), mod)
     icon(SvgFile.Search.small)
 }
 

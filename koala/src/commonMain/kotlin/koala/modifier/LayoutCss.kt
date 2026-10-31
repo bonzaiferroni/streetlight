@@ -7,10 +7,6 @@ val FlexColumn = Class("column")
 val FlexReverse = Class("flex-reverse")
 val Size100P = Class("size-100")
 val FlexItems1 = Class("flex-items-1")
-val PaddingX1 = Class("padding-x-1")
-val PaddingX2 = Class("padding-x-2")
-val PaddingY1 = Class("padding-y-1")
-val PaddingY2 = Class("padding-y-2")
 val Shrinkable = Class("shrinkable")
 val MediaMdRow = Class("media-md-row")
 val ContainerMdRow = Class("container-md-row")
@@ -74,10 +70,6 @@ $Size100P { width: 100%; height: 100%; }
 
 $FlexItems1 > * { flex: 1; }
 
-$PaddingX1 { padding-left: var(--unit);   padding-right:  var(--unit); }
-$PaddingX2 { padding-left: var(--unit-2); padding-right:  var(--unit-2); }
-$PaddingY1 { padding-top:  var(--unit);   padding-bottom: var(--unit); }
-$PaddingY2 { padding-top:  var(--unit-2); padding-bottom: var(--unit-2); }
 
 @media (min-width: 600px) {
     $MediaMdRow { flex-direction: row; }

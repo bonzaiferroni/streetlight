@@ -47,7 +47,7 @@ fun ViewScope.viewRouteDock() {
                         isStable -> model.stableRouteState.tapOf { it == route }
                         else -> portal.routeState.tapOf { it.dockRoute == route }
                     }
-                    this@flowBlock.navigation(route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +labeledRoute.label }
+                    this@flowBlock.navigation(route, modify(BorderRadiusPill, PaddingY(1), PaddingX(2))) { +labeledRoute.label }
                         .asWeb().flowModifier(isRouteNow, RouteDockStyle.RouteNow, contentScope)
                 }
             }

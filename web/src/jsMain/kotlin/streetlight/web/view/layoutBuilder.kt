@@ -87,7 +87,7 @@ fun ViewScope.editorRow(
                     }
 
                     val headingMod = modify(
-                        PaddingX2, PaddingY1, BorderRadiusPill, OutlineEditorFg,
+                        PaddingX(2), PaddingY(1), BorderRadiusPill, OutlineEditorFg,
                         MinWidth(16), TextAlignCenter
                     )
                     when (popoverId) {

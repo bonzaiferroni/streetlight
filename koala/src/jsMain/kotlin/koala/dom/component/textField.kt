@@ -101,7 +101,7 @@ fun ViewScope.textField(
     return parent
 }
 
-private val TextFieldAffixMod = modify(AlignSelfCenter, PaddingX1, OpacityHalf, PointerEventsNone)
+private val TextFieldAffixMod = modify(AlignSelfCenter, PaddingX(1), OpacityHalf, PointerEventsNone)
 
 /** The input's start padding beside an icon in units: a unit before the icon, its three, and a unit after it. */
 private const val IconInsetUnits = 5
