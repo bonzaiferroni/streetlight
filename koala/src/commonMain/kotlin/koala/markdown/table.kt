@@ -20,6 +20,11 @@ ${MarkdownStyle.Container} table {
     overflow: clip;
 }
 
+/* a unit beyond the block spacing, on what follows so a table that ends the markdown adds nothing */
+${MarkdownStyle.Block} > table + * {
+    margin-top: var(--unit-2);
+}
+
 ${MarkdownStyle.Container} th + th,
 ${MarkdownStyle.Container} td + td {
     border-left: 2px solid var(--outline-mid-fg);

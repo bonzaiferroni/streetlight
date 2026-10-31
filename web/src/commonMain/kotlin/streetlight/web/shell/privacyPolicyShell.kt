@@ -74,7 +74,7 @@ val InformationSharedContent get() = """
 
 This section describes the information that can be shared with Streetlight, how it is stored, and how it is used. We'll follow the basic progression that most users will follow, from using the site without an account, to account creation and beyond. 
 
-### Using Streetlight without an account---
+#### Using Streetlight without an account---
 
 We keep the core functionality of Streetlight available to users without an account. It is possible to browse the majority of the content without ever signing in. 
 
@@ -105,7 +105,7 @@ There are a few important considerations when sharing this information.
 * **Geolocation** is among the most sensitive information that it is possible to share with Streetlight. For this reason, all users are advised not to share a personal residence as a location. Ultimately, this decision is left to the discretion of the user.
 * It is possible to set a **feature image** by providing a web address for the event or location, the image itself does not need to be provided by the user. The server checks the metainformation of the web content for an image specifically intended to be shared on social media. When an image is gathered this way, it is not associated with the user account that submitted the post.  
 
-### Creating a Streetlight account---
+#### Creating a Streetlight account---
 
 Creating an account enables additional site functionality. Users with an account can create their own galaxies and can submit posts directly. Their information is also synchronized across devices.
 

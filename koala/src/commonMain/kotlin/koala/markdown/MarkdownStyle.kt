@@ -49,11 +49,10 @@ $Block > * + * {
 
 /* after the block spacing, so a heading's wider margin wins */
 $Heading {
-    margin-top: var(--unit-2);
+    margin-top: var(--unit-3);
     text-align: center;
+    opacity: var(--opacity-high);
 }
-
-$Heading :is(h1, h2, h3, h4, h5, h6) { opacity: var(--opacity-high); }
 
 $OrderedList {
     padding-inline-start: var(--unit-3);
