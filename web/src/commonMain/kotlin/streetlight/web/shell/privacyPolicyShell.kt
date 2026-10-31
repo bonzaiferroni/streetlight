@@ -53,14 +53,15 @@ object PrivacyPolicyKey {
 val PrivacyIntro get() = """
 
 Streetlight was designed to provide a high level of transparency and control over the information you share.
-This page describes in detail what you can expect when using the site.
+
+This page describes in detail what you can expect when using the site. 
 
 ### In a nutshell---
-* We !["I need my privacy"](/www/lottie/astronaut-reading.json) gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account.
+* We gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account. !["I need my privacy"](/www/lottie/astronaut-reading.json) 
 * We do not sell or give information to third parties beyond the functionality of site features and a lawful subpoena by a recognized authority. 
 * We do not show ads or provide information to advertisers.
 * We provide tools that let you keep track of what information you share and easily remove it.
-* Streetlight's source code is open and can be inspected to verify an effective implementation of these policies.
+* Streetlight's source code is open and can be inspected to verify an effective implementation of these policies. 
 
 #### Important limitations 
 Sharing information on the internet can carry risk that is difficult to completely safeguard against. For example, it is possible for third parties to access websites and gather public information on individuals and the community. It is important for each user to be mindful of what they share and how it may be used outside of Streetlight's control. 

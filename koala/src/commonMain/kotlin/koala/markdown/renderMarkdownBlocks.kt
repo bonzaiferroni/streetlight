@@ -148,6 +148,7 @@ fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
         block.items.forEach { item ->
             listItem {
                 span {
+                    renderFirstInlineImage(item.spans)
                     renderMarkdownSpans(item.spans)
                 }
                 item.sublist?.let {
@@ -177,6 +178,7 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
         block.items.forEach { item ->
             listItem {
                 span {
+                    renderFirstInlineImage(item.spans)
                     renderMarkdownSpans(item.spans)
                 }
                 item.sublist?.let {

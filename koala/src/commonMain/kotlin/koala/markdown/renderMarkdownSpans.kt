@@ -74,7 +74,7 @@ fun FlowOrPhrasingContent.renderFirstInlineImage(spans: List<MarkdownSpan>) {
 fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     span {
         addModifiers(MarkdownStyle.InlineImage, FloatRight, MarginLeft(2), MarginBottom(2))
-        span.width?.let { addModifiers(MaxWidth(it)) }
+        span.width?.let { addModifiers(if (span.type == ImageType.Lottie) Width(it) else MaxWidth(it)) }
         when (span.type) {
             ImageType.Lottie -> renderLottieImage(span)
             ImageType.Image -> renderBasicImage(span)
@@ -97,10 +97,11 @@ fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
 }
 
 /** Renders [span] as a Lottie animation, only when it names one of the site's own. */
-fun FlowContent.renderLottieImage(span: MarkdownImage) {
+fun FlowOrPhrasingContent.renderLottieImage(span: MarkdownImage) {
     if (!isSiteLottiePath(span.url.value)) return
-    div {
-        addModifiers(LottieClass.Core)
+    // a span, since a paragraph may hold it and a div would close the paragraph
+    span {
+        addModifiers(LottieClass.Core, DisplayBlock)
         attributes["data-lottie"] = span.url.value
     }
 }

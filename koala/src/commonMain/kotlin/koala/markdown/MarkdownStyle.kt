@@ -1,6 +1,7 @@
 package koala.markdown
 
 import koala.modifier.Class
+import koala.component.LottieClass
 
 /** The classes of rendered markdown. */
 object MarkdownStyle {
@@ -67,6 +68,9 @@ $InlineImage {
     height: auto;
     display: inline-block;
 }
+
+/* a lottie has no width of its own for the float to shrink to */
+$InlineImage:has(> ${LottieClass.Core}) { width: 33%; }
 
 $Paragraph {
     white-space: pre-line;
