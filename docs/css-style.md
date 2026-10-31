@@ -39,6 +39,8 @@ A rule of one or two declarations that fits on one line is written on one line. 
 
 A stylesheet holds the presentation unique to a component, usually layout that must come as a package. A property that a modifier can set on the element is set with the modifier, unless it changes with presentation declared in a stylesheet, such as a mode or a container query.
 
+Brevity also decides. A single rule in the component's stylesheet takes the place of the same modifier repeated across several elements, such as one rule that selects each level of a heading in place of a modifier on each.
+
 ## Sizing Children
 
 A container sizes its direct children through a child rule in its stylesheet, as `CellGrid.Base` does with `> * { flex: 1; min-width: var(--unit-16); }`. An element is not wrapped only to size it.

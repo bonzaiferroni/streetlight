@@ -53,6 +53,8 @@ $Heading {
     text-align: center;
 }
 
+$Heading :is(h1, h2, h3, h4, h5, h6) { opacity: var(--opacity-high); }
+
 $OrderedList {
     padding-inline-start: var(--unit-3);
 }
