@@ -1,11 +1,8 @@
 package streetlight.web.view
 
 import koala.dom.*
-import koala.model.DocNode
-import koala.model.DocTable
 import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
-import streetlight.web.shell.SiteDocKey
 import streetlight.web.shell.siteDocShell
 import koala.dom.page.*
 

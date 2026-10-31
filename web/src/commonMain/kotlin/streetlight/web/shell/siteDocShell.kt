@@ -22,8 +22,8 @@ fun FlowContent.siteDocShell(content: DocContent) {
         column {
             pageHeader(doc.title, "a Streetlight doc", doc.image)
 
-            row(AlignItemsStart) {
-                column(modify(Width(32), Css.Top(8), PositionSticky)) {
+            row(modify(SiteDocStyle.Container, AlignItemsStart)) {
+                column(modify(SiteDocStyle.Menu, Width(32), Css.Top(8), PositionSticky)) {
                     docTableMenu(table)
                     docSectionsMenu(node)
                 }
@@ -36,7 +36,7 @@ fun FlowContent.siteDocShell(content: DocContent) {
 /** The links of [table], nested by level. */
 fun FlowContent.docTableMenu(table: DocTable) {
     card(modify(ZenBg, Gap0)) {
-        setId(SiteDocKey.TableId)
+        setId(SiteDocStyle.TableId)
         docTableMenuItems(table)
     }
 }
@@ -74,7 +74,7 @@ fun FlowContent.docSectionsMenu(node: DocNode) {
 /** The sections of a doc, with jump links when more than one has an id. */
 fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
-    column(SiteDocKey.ContentId, Flex1) {
+    column(SiteDocStyle.ContentId, Flex1) {
         column(Gap(8)) {
             doc.sections.forEach { section ->
 
@@ -117,7 +117,17 @@ fun FlowContent.siteDocContent(node: DocNode) {
     }
 }
 
-object SiteDocKey {
+object SiteDocStyle {
     val ContentId = Id("site-doc-content")
     val TableId = Id("site-doc-table")
+    val Container = Class("site-doc")
+    val Menu = Container.withBemElement("menu")
+    const val MenuMinWidth = 850
 }
+
+// language="CSS"
+val SiteDocCss get() = with(SiteDocStyle) { """
+@media (max-width: ${MenuMinWidth - 1}px) {
+    $Menu { display: none; }
+}
+""" }

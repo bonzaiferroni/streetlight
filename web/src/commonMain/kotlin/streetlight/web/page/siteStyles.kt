@@ -27,6 +27,7 @@ import streetlight.web.view.LayoutBuilderCss
 import streetlight.web.layout.LayoutStyleCss
 import streetlight.web.view.TalkLogCss
 import streetlight.web.layout.TextDeltaCss
+import streetlight.web.shell.SiteDocCss
 import koala.component.*
 import koala.interop.*
 import koala.layout.*
@@ -97,6 +98,7 @@ private val KtStyles = listOf(
     CuratorMenuStyle,
     ConnectPickerCss,
     ConnectCss,
+    SiteDocCss,
 )
 
 /** The site-wide stylesheet: the base sheets of koala, then the stylesheet of each component and layout. */
