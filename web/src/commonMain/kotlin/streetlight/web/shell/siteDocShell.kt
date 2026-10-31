@@ -19,27 +19,53 @@ fun FlowContent.siteDocShell(content: DocContent) {
     val table = content.table
     val node = content.node
     mainBody("siteDocShell.kt") {
-        pageHeader(doc.title, "a Streetlight doc", doc.image)
+        column {
+            pageHeader(doc.title, "a Streetlight doc", doc.image)
 
-        row(AlignItemsStart) {
-            card(modify(Width(32), ZenBg, Gap0, PositionSticky, Css.Top(8))) {
-                setId(SiteDocKey.TableId)
-                siteDocTable(table)
+            row(AlignItemsStart) {
+                column(modify(Width(32), Css.Top(8), PositionSticky)) {
+                    docTableMenu(table)
+                    docSectionsMenu(node)
+                }
+                siteDocContent(node)
             }
-            siteDocContent(node)
         }
     }
 }
 
 /** The links of [table], nested by level. */
-fun FlowContent.siteDocTable(table: DocTable) {
+fun FlowContent.docTableMenu(table: DocTable) {
+    card(modify(ZenBg, Gap0)) {
+        setId(SiteDocKey.TableId)
+        docTableMenuItems(table)
+    }
+}
+
+fun FlowContent.docTableMenuItems(table: DocTable) {
     table.forEach { item ->
         navigation(SiteDocRoute(item.docId)) {
             textBlock(item.label, Padding(1))
         }
         item.children?.let {
             column(modify(PaddingLeft(3), Gap0)) {
-                siteDocTable(it)
+                docTableMenuItems(it)
+            }
+        }
+    }
+}
+
+fun FlowContent.docSectionsMenu(node: DocNode) {
+    val doc = node.doc
+    card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding(0))) {
+        val idSections = doc.sections.filter { it.id != null && it.title != null }
+        if (idSections.size > 1) {
+            row(modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, PaddingX1)) {
+                textBlock("Jump to:", OpacityHigh)
+                idSections.forEach {
+                    navigation(it.id!!) {
+                        textBlock(it.title!!, Padding(1))
+                    }
+                }
             }
         }
     }
@@ -49,25 +75,6 @@ fun FlowContent.siteDocTable(table: DocTable) {
 fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, Flex1) {
-        card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding(0))) {
-            // box(modify(AlignItemsEnd, Aspect2By1)) {
-            //     image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
-            //     spacer(modify(GradientDarkBottom, AlignSelfStretch, VignetteOver))
-            //     heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText, NightInk))
-            // }
-            val idSections = doc.sections.filter { it.id != null && it.title != null }
-            if (idSections.size > 1) {
-                row(modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, PaddingX1)) {
-                    textBlock("Jump to:", OpacityHigh)
-                    idSections.forEach {
-                        navigation(it.id!!) {
-                            textBlock(it.title!!, Padding(1))
-                        }
-                    }
-                }
-            }
-        }
-
         column(Gap(8)) {
             doc.sections.forEach { section ->
 

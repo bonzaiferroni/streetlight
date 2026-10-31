@@ -5,8 +5,6 @@ import kampfire.model.ImageVariant
 
 /** The site's own images, including the placeholders shown when an image is missing. */
 object SiteImage : FileSet<Image>() {
-    val crossing = siteImageOf("crossing.jpg")
-
     val placeholderLg = siteImageUrlOf("placeholder-lg.jpg")
     val placeholderMd = siteImageUrlOf("placeholder-md.jpg")
     val placeholderSm = siteImageUrlOf("placeholder-sm.jpg")
@@ -42,4 +40,5 @@ object SiteImage : FileSet<Image>() {
         "pearl.jpg", 1000 / 638f, "Tall pines and a banjo player on Pearl Street, Boulder",
         "Luke Bollwerk"
     )
+    val crossing = siteImageOf("crossing.jpg", 1024 / 681f)
 }
