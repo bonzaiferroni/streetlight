@@ -44,10 +44,10 @@ class UserClient(private val transport: ApiTransport) {
             TextPart("target", target.name),
             FilePart("file", bytes, "upload"),
         ))
-    /** Uploads [bytes], an audio file named [name], to be encoded and stored, returning the stored audio. */
-    suspend fun uploadAudio(name: String, bytes: ByteArray): Outcome<Audio> =
-        transport.postForm(Api.Users.UploadAudio, listOf(
-            TextPart("name", name),
+    /** Uploads [bytes], an audio file named [name] when given, to be encoded and stored, returning the stored audio. */
+    suspend fun uploadAudio(name: String?, bytes: ByteArray): Outcome<Audio> =
+        transport.postForm(Api.Users.UploadAudio, listOfNotNull(
+            name?.let { TextPart("name", it) },
             FilePart("file", bytes, "upload"),
         ))
     suspend fun readSkills(): Outcome<List<Skill>> = transport.getApi(Api.Users.Skills)

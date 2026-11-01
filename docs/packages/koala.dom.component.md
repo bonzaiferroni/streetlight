@@ -67,9 +67,10 @@ The `ViewScope` variant of an interactive component builds its element through t
 | [`datetimeInput`, `dateInput`, `timeInput`](../../koala/src/jsMain/kotlin/koala/dom/component/datetimeInput.kt) | Date and time inputs bound to a field |
 | [`colorPicker`](../../koala/src/jsMain/kotlin/koala/dom/component/colorPicker.kt) | A button showing a color that opens the browser's color picker |
 | [`glowField`](../../koala/src/jsMain/kotlin/koala/dom/component/glowField.kt) | A field where a handle is dragged to place a background glow |
-| [`filePicker`](../../koala/src/jsMain/kotlin/koala/dom/component/filePicker.kt) | An area that picks a file by click or drop, and previews it |
+| [`filePicker`](../../koala/src/jsMain/kotlin/koala/dom/component/filePicker.kt) | An area that picks a file by click or drop, and previews an image |
 | [`fileDrop`](../../koala/src/jsMain/kotlin/koala/dom/component/fileDrop.kt) | A file picker bound to the picked file's URL |
 | [`imageDrop`](../../koala/src/jsMain/kotlin/koala/dom/component/imageDrop.kt) | An image picker bound to a field |
+| [`audioDrop`](../../koala/src/jsMain/kotlin/koala/dom/component/audioDrop.kt) | An audio picker bound to a url field, with a player once set |
 
 ### Text
 

@@ -153,6 +153,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MediaEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MediaEditor.kt) | Creates or updates media |
 | [`GalaxyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/GalaxyEditor.kt) | Creates or updates a galaxy |
 | [`ImageEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ImageEditor.kt) | Uploads a picked image |
+| [`AudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/AudioEditor.kt) | Uploads the picked audio of an audio post |
 | [`DesignEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DesignEditor.kt) | Edits the layout and theme of a page |
 | [`LayoutEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LayoutEditor.kt) | Edits a page layout as a tree of blocks and containers |
 | [`ContainerEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ContainerEditor.kt) | One container of a layout |

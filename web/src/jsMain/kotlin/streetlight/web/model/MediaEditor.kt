@@ -36,6 +36,9 @@ class MediaEditor(
 
     val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
+    val mediaTypeField = editField.mutableTapOf({ it.mediaType }) {
+        if (it == mediaType) this else copy(mediaType = it, url = null, meta = null)
+    }
     val titleField = editField.mutableTapOf({ it.title ?: "" }) { copy(title = it) }
     val subtitleField = editField.mutableTapOf({ it.subtitle ?: "" }) { copy(subtitle = it) }
     val textField = editField.mutableTapOf({ it.text ?: "".toMarkdown() }) { copy(text = it.takeIf(Markdown::isNotBlank)) }
@@ -50,6 +53,7 @@ class MediaEditor(
 
     val message = MessageStore()
     val imageEditor = ImageEditor(imageField, ImageTarget.Media, api)
+    val audioEditor = AudioEditor(editField, api)
 
     init {
         scope.launch {
@@ -63,11 +67,12 @@ class MediaEditor(
     // fun setSubtitle(subtitle: String) = setContent { it.copy(subtitle = subtitle) }
     // fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
-    /** Saves the media with its image and design, and posts it to [galaxy] when given. */
+    /** Saves the media with its image, audio and design, and posts it to [galaxy] when given. */
     fun submitPost(galaxy: Galaxy? = null) {
         if (!editField.now.isValid) return
         scope.launch {
             if (!imageEditor.finalizeImage(message)) return@launch
+            if (!audioEditor.finalizeAudio(message)) return@launch
             val design = designer.build(message)
 
             val edit = editField.now.copy(design = design)

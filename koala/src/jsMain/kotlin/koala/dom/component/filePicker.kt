@@ -67,13 +67,13 @@ fun AppendScope.filePicker(
         val file = file ?: return
         if (!file.type.startsWith(mimeType.label)) {
             console.log("nay: $mimeType")
-            onMessage?.invoke(UIMessage("Chosen file needs to be an image", messageType = UIMessageType.Error))
+            onMessage?.invoke(UIMessage("Chosen file needs to be of type ${mimeType.label}", messageType = UIMessageType.Error))
             return
         }
 
         val url = URL.createObjectURL(file)
         dropZone.style.display = "none"
-        preview.src = url
+        if (mimeType == MimeType.Image) preview.src = url
         onPickFile(url.toUrl())
     }
 
@@ -104,7 +104,8 @@ fun AppendScope.filePicker(
 /** The kinds of file a [filePicker] accepts. */
 enum class MimeType(val label: String) {
     All("*"),
-    Image("image");
+    Image("image"),
+    Audio("audio");
 
     val expression get() = "$label/*"
 }
