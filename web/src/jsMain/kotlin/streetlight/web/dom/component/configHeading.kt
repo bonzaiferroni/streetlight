@@ -6,9 +6,9 @@ import koala.model.WebRoute
 import koala.component.heading1
 import koala.modifier.*
 import kotlinx.html.A
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 
-/** The heading of a [configBody]: [title], linking to [route], the page of what the view configures. */
+/** The heading of a [mainBody]: [title], linking to [route], the page of what the view configures. */
 fun AppendScope.configHeading(
     title: String,
     route: WebRoute,

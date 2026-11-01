@@ -1,5 +1,8 @@
 package koala.dom.component
 
+import koala.Svg
+import koala.SvgPack
+import koala.component.IconStyle
 import koala.modifier.*
 import koala.model.LabeledRoute
 import koala.page.Id
@@ -75,13 +78,16 @@ fun AppendScope.popoverLabel(label: String) = textBlock(
 )
 
 /** An entry of a popover that runs [onClick]. */
-fun AppendScope.popoverOption(label: String, mod: Modifier? = null, onClick: () -> Unit) =
+fun AppendScope.popoverOption(label: String, svg: Svg? = null, mod: Modifier? = null, onClick: () -> Unit) =
     button(onClick, mod = modify(mod, Padding(1), MinWidth(16))) {
-        textBlock(label, modify(TextAlignCenter, Width(100.pct)))
+        svg?.let {
+            icon(it, modify(IconStyle.DefaultMod, OpacityHigh))
+        }
+        textBlock(label, modify(TextAlignCenter, Width(100.pct), PaddingX(1)))
     }
 
 /** An entry of a popover for [option]. */
-fun AppendScope.popoverOption(option: MenuAction) = popoverOption(option.label, option.mod, option.onClick)
+fun AppendScope.popoverOption(option: MenuAction) = popoverOption(option.label, option.svg, option.mod, option.onClick)
 
 /** An entry of a popover that navigates to the route of [labeledRoute]. */
 fun AppendScope.popoverOption(labeledRoute: LabeledRoute, mod: Modifier? = null) =

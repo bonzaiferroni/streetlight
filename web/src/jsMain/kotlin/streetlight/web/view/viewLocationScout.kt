@@ -17,8 +17,7 @@ import streetlight.web.model.route
 import streetlight.web.model.LocationScoutStage
 import koala.dom.component.*
 import koala.dom.layout.*
-import koala.model.*
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.feedRow
 import streetlight.web.dom.layout.formSubmit
@@ -34,7 +33,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy?) {
     val routeFlow = model.stateFlow.dedupNotNull { state -> doneRoute.takeIf { state.isPosted } }
     goOnRoute(routeFlow)
 
-    configBody("Location", "Scout", "viewLocationScout.kt") {
+    mainBody("Location", "Scout", "viewLocationScout.kt") {
         configHeading(galaxy?.name ?: "Location", doneRoute)
 
         stageBlock(model.stageState) { stage ->

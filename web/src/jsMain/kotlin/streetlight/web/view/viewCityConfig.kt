@@ -9,7 +9,7 @@ import streetlight.model.ui.CityRoute
 import streetlight.web.model.CityEditor
 import koala.model.*
 import streetlight.web.model.api
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.portal
@@ -18,7 +18,7 @@ fun ViewScope.viewCityConfig(city: City) {
     val model = CityEditor(city.toEdit(), contentScope, api, portal)
     val messenger = MessageStore()
 
-    configBody("City", "Config", "viewCityConfig.kt") {
+    mainBody("City", "Config", "viewCityConfig.kt") {
         configHeading(city.name, CityRoute(city.slug))
 
         context(model) {

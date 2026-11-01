@@ -1,7 +1,6 @@
 package streetlight.web.view
 
 import koala.modifier.Accent
-import koala.LottieFile
 import koala.dom.*
 import koala.utility.dedupNotNull
 import streetlight.model.data.EventEdit
@@ -20,7 +19,7 @@ import streetlight.web.model.EventScoutStage
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.utility.*
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.feedRow
 import streetlight.web.dom.layout.formBodyProto
@@ -45,7 +44,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy?) {
         else -> false
     }
 
-    configBody("Event", "Scout", "viewEventScout.kt") {
+    mainBody("Event", "Scout", "viewEventScout.kt") {
         configHeading(galaxy?.name ?: "Event", doneRoute)
 
         stageBlock(model.stage, isHeadingStage = ::isHeadingStage) { stage ->

@@ -9,7 +9,7 @@ import koala.model.MenuAction
 import koala.model.NullContent
 import streetlight.model.data.OnboardType
 import streetlight.model.ui.OnboardRoute
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.getUserCreator
@@ -17,7 +17,7 @@ import streetlight.web.model.session
 
 /** The onboarding of a star as the audience the [route] names. */
 context(route: OnboardRoute)
-fun ViewScope.viewOnboard() = configBody("hello: ", route.onboardType.label, "viewOnboard.kt") {
+fun ViewScope.viewOnboard() = mainBody("hello: ", route.onboardType.label, "viewOnboard.kt") {
     // app.getUserCreator(contentScope)
     // val model = Onboarder(contentScope)
     flowBlock(session.starState) { star ->

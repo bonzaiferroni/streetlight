@@ -11,8 +11,7 @@ import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
 import koala.dom.component.*
 import koala.dom.layout.*
-import koala.model.*
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.deltaRow
 import streetlight.web.dom.layout.formSubmit
@@ -24,7 +23,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent) {
     val edit = content.location.toEdit()
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
-    configBody("Location", "Config", "viewLocationUpdater.kt") {
+    mainBody("Location", "Config", "viewLocationUpdater.kt") {
         configHeading(content.location.name ?: "Location", LocationRoute(content.location.slug))
 
         lazyTabs {

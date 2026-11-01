@@ -95,7 +95,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `TextField` | `textField` (`koala.component`) |
 | `StarGate`, `SignInToContinue` | `starGate`, `signInToContinue` (`streetlight.web.view`) |
 | `SignInForm` | `signInForm` (`streetlight.web.view`) |
-| `ConfigBody` | `configBody` (`streetlight.web.view`) |
+| `ConfigBody` | `mainBody` (`streetlight.web.view`) |
 | `StarDashView` | `viewStarDash` (`streetlight.web.view`) |
 | `EventScoutView`, `LocationScoutView`, `MediaForgeView` | `viewEventScout`, `viewLocationScout`, `viewMediaForge` (`streetlight.web.view`) |
 | `CreatePostMenu` | `createPostMenu` (`streetlight.web.component`) and `wireCreatePost` |

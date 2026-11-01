@@ -6,14 +6,13 @@ import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.component.column
 import koala.dom.layout.lazyTabs
-import koala.dom.routeBlock
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.EventUpdateRoute
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.deltaRow
 import streetlight.web.dom.layout.formSubmit
@@ -25,7 +24,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent) {
     val edit = content.event.toEdit()
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
-    configBody("Event", "Config", "viewEventUpdater.kt") {
+    mainBody("Event", "Config", "viewEventUpdater.kt") {
         configHeading(content.event.title, EventRoute(content.event.slug))
 
         lazyTabs {

@@ -13,6 +13,7 @@ import kotlin.uuid.Uuid
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
+import streetlight.web.dom.layout.actionMenu
 
 /**
  * A button that opens the menu of blocks to add, by category, calling [onSelection] with the chosen block.
@@ -29,26 +30,23 @@ fun ViewScope.blockMenu(
     popover(popoverId, SystemBg) {
         val categoryField = storeOf<BlockCategory?>(null)
         flowBlock(categoryField, modify(Magic, Scale)) { category ->
-            val options = when (category) {
+            val actions = when (category) {
                 null -> {
                     val categories = getCategories(depth)
                     categories.map {
-                        MenuAction(it.name, modify(TextSmall, TextUppercase)) { categoryField.set(it) }
+                        // td: add icons
+                        MenuAction(it.name, null, modify(TextSmall, TextUppercase)) { categoryField.set(it) }
                     }
                 }
 
                 else -> {
                     val options = getOptions(category, depth)
                     listOf(
-                        MenuAction("← $category", modify(Bold, ZenBg, TextSmall, TextUppercase)) { categoryField.set(null) }
+                        MenuAction("← $category", null, modify(Bold, ZenBg, TextSmall, TextUppercase)) { categoryField.set(null) }
                     ) + options.map { MenuAction(it.label) { onSelection(it.value) } }
                 }
             }
-            column(Gap0) {
-                options.forEach { option ->
-                    popoverOption(option)
-                }
-            }
+            actionMenu(actions)
         }
     }
     row(modify(AlignItemsCenter, LargeIconHeight)) {

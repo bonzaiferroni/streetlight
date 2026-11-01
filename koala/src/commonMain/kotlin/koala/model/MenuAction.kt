@@ -1,11 +1,15 @@
 package koala.model
 
 import kampfire.model.Labeled
+import koala.Svg
+import koala.SvgPack
 import koala.modifier.*
 import kotlinx.html.BUTTON
 
 /** An entry in a menu. */
-sealed interface MenuOption: Labeled
+sealed interface MenuOption: Labeled {
+    val svg: Svg? get() = null
+}
 
 /** A menu entry that only labels the entries after it. */
 data class MenuLabel(override val label: String): MenuOption
@@ -21,6 +25,7 @@ data class MenuRoute(
 /** A menu entry that runs [onClick]. */
 data class MenuAction(
     override val label: String,
+    override val svg: Svg? = null,
     val mod: Modifier? = null,
     val config: BUTTON.() -> Unit = { },
     val onClick: () -> Unit,

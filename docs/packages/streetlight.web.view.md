@@ -223,7 +223,7 @@ fun ViewScope.viewFoo() {
 }
 ```
 
-A view that configures or creates a record, named `viewFooConfig` or `viewFooScout`, builds its page with `configBody` instead. Its two-tone `topBar` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
+A view that configures or creates a record, named `viewFooConfig` or `viewFooScout`, builds its page with `mainBody` instead. Its two-tone `topBar` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
 
 ```kotlin
 configBody("Foo", "Config", "viewFooConfig.kt") {
@@ -236,7 +236,7 @@ The body opens with `configHeading`, naming the record the view configures and l
 
 The two title parts render as one word, `titleFirst` in `AccentFg` and `titleSecond` in `PrimaryFg`.
 
-`mainBody` and `configBody` differ only in their header. Both are built on `pageBody`, which holds the shape they share. A new kind of body is built on `pageBody` too.
+`mainBody` and `mainBody` differ only in their header. Both are built on `pageBody`, which holds the shape they share. A new kind of body is built on `pageBody` too.
 
 Screens outside the base layout, such as the sandbox, inbox and earth, use neither.
 

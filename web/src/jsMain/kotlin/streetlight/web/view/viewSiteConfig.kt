@@ -8,7 +8,7 @@ import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
 import streetlight.web.dom.layout.centeredText
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.formSubmit
@@ -16,7 +16,7 @@ import streetlight.web.dom.layout.formSubmit
 fun ViewScope.viewSiteConfig() {
     val model = app.get<SiteConfig>()
 
-    configBody("Site", "Config", "viewSiteConfig.kt") {
+    mainBody("Site", "Config", "viewSiteConfig.kt") {
         lazyTabs("site-config-tabs") {
 //            tab("general") {
 //                column(AlignItemsStart) {

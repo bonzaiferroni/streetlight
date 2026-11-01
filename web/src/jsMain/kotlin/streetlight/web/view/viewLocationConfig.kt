@@ -1,7 +1,6 @@
 package streetlight.web.view
 
 import kampfire.model.toDataOrNull
-import koala.modifier.*
 import koala.dom.*
 import kampfire.model.storeOf
 import streetlight.model.data.DefaultLayout
@@ -16,8 +15,7 @@ import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.*
 import streetlight.web.model.api
-import streetlight.web.dom.layout.cardOf
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.dataBlock
 import streetlight.web.dom.layout.formSubmit
@@ -41,7 +39,7 @@ fun ViewScope.viewLocationConfig(
         }
     }
 
-    configBody("Location", "Config", "viewLocationConfig.kt") {
+    mainBody("Location", "Config", "viewLocationConfig.kt") {
         flowBlock(locationState) { location ->
             configHeading(location.name ?: "Location", location.route)
         }

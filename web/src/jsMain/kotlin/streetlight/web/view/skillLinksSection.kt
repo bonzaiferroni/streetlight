@@ -7,6 +7,7 @@ import koala.dom.layout.flowBlock
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
+import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSectionCard
 import streetlight.web.model.SkillLinkEditor
@@ -17,20 +18,19 @@ import kotlin.uuid.Uuid
 context(model: SkillLinkEditor)
 fun ViewScope.skillLinksSection() {
     val id = Id(Uuid.random().toString())
+
     popover(id) { popover ->
         flowBlock(model.unlinkedSkillsState) { skills ->
             if (skills == null) return@flowBlock
-            column(Gap(1)) {
-                skills.forEach { skill ->
-                    button(skill.name, {
-                        model.toggleSkill(skill.skillId)
-                        popover.close()
-                    }, Zen, flair = skill.toFlair())
-                }
-                if (skills.isEmpty()) {
-                    textBlock("Every skill is linked. Add skills in your dashboard.", modify(TextSmall, OpacityHigh))
-                }
+            if (skills.isEmpty()) {
+                textBlock("Add skills in your dashboard.", modify(TextSmall, OpacityHigh))
+                return@flowBlock
             }
+            val actions = skills.map { MenuAction(it.name, it.tags?.firstOrNull()?.svg?.small) {
+                model.toggleSkill(it.skillId)
+                popover.close()
+            } }
+            actionMenu(actions)
         }
     }
     actionSectionCard(
@@ -45,7 +45,7 @@ fun ViewScope.skillLinksSection() {
                 actionRow(skill, actions = listOf(MenuAction("Remove") { model.toggleSkill(skill.skillId) }))
             }
             if (skills.isEmpty()) {
-                textBlock("Link this to the skills it shows.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
+                textBlock("Link this to your skills.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
             }
         }
     }

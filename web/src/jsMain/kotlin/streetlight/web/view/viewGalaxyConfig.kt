@@ -10,7 +10,7 @@ import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.web.model.route
 import koala.dom.component.*
 import koala.dom.layout.*
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.component.configHeading
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.model.getGalaxyEditor
@@ -20,7 +20,7 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
     val model = app.getGalaxyEditor(config.galaxy.toEdit(config.marks), contentScope)
     val initialGalaxy = config.galaxy
 
-    configBody("Galaxy", "Config", "viewGalaxyConfig.kt") {
+    mainBody("Galaxy", "Config", "viewGalaxyConfig.kt") {
         configHeading(initialGalaxy.name, initialGalaxy.route)
 
         context(model) {

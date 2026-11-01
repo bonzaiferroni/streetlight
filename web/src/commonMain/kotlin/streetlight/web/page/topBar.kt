@@ -17,7 +17,7 @@ import streetlight.model.ui.TopBar
  * from the helm bar's icons, linking to [route]. It scrolls away with the page, or stays at the top of the viewport
  * over the content while [isSticky].
  */
-fun FlowContent.topBar(bar: TopBar, isSticky: Boolean = false, route: WebRoute = HomeRoute()) {
+fun FlowContent.topBar(bar: TopBar = TopBar.Logo, isSticky: Boolean = false, route: WebRoute = HomeRoute()) {
     box(modify(TopBarStyle.Container, TopBarStyle.Sticky.takeIf { isSticky })) {
         val reachMod = modify(Height100Pct, TopBarStyle.Reach)
         when (bar) {

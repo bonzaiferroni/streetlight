@@ -18,7 +18,7 @@ import streetlight.model.data.Account
 import streetlight.model.data.Star
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.AccountEditor
-import streetlight.web.dom.layout.configBody
+import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
 import streetlight.web.dom.layout.formSubmit
@@ -26,7 +26,7 @@ import streetlight.web.model.getAccountEditor
 
 context(model: AccountEditor, star: Star, route: StarConfigRoute)
 fun ViewScope.viewStarConfig() {
-    configBody("Config:", star.username.value, "viewStarConfig.kt", StarRoute(star.username)) {
+    mainBody("Config:", star.username.value, "viewStarConfig.kt", StarRoute(star.username)) {
         // configHeading(star.username.value, StarRoute(star.username))
 
         if (star.accountType == AccountType.Guest) {

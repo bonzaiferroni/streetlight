@@ -45,7 +45,7 @@ The function that does a submit's work calls `deliverSending()` on its messenger
 
 | Layout | Role |
 |---|---|
-| [`mainBody`, `configBody`, `pageBody`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/body.kt) | The page of a view: its header, its body section and the footer |
+| [`mainBody`, `mainBody`, `pageBody`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/body.kt) | The page of a view: its header, its body section and the footer |
 | [`formCard`, `formRow`, `formSection`, `formSubmit`…](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/Form.kt) | The parts forms are built from |
 | [`formSectionLegacy`, `formBodyProto`…](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/FormElement.kt) | Form parts of the earlier approach, still used by the event scout |
 | [`cardOf`](../../web/src/jsMain/kotlin/streetlight/web/dom/layout/cardOf.kt) | The card of a location, linking to it or calling a function |

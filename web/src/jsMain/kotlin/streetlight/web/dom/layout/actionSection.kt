@@ -5,7 +5,6 @@ import koala.component.buttonPopover
 import koala.component.heading3
 import koala.component.heading5
 import koala.component.navigationIfNotNull
-import koala.component.spacer
 import koala.component.textBlock
 import koala.dom.AppendScope
 import koala.dom.component.*
@@ -16,7 +15,6 @@ import kampfire.model.Url
 import koala.model.WebRoute
 import kotlinx.html.DIV
 import streetlight.model.data.Entity
-import streetlight.model.ui.HomeRoute
 import streetlight.web.model.toRoute
 
 fun AppendScope.actionSection(
@@ -83,5 +81,13 @@ fun AppendScope.menuActionButton(action: MenuAction) {
     button(action.onClick) {
         action.config(this)
         textBlock(action.label, modify(TextUppercase, TextSmall, OpacityHigh, Bold, PaddingX(1)))
+    }
+}
+
+fun AppendScope.actionMenu(actions: List<MenuAction>) {
+    column(Gap0) {
+        actions.forEach { option ->
+            popoverOption(option)
+        }
     }
 }

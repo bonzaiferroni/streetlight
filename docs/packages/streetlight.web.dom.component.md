@@ -18,7 +18,7 @@ The app's components built in the browser on `AppendScope` or `ViewScope`.
 |---|---|
 | [`slider`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/slider.kt) | A range input bound to a field, with an optional icon |
 | [`popoverMenu`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/PopoverMenu.kt) | A popover shared by every button that targets its id |
-| [`configHeading`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/configHeading.kt) | The heading of a `configBody`, linking to what the view configures |
+| [`configHeading`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/configHeading.kt) | The heading of a `mainBody`, linking to what the view configures |
 | [`workSignal`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/workSignal.kt) | A spinning icon shown while work is in progress |
 | [`comingSoon`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/comingSoon.kt) | An animation for a feature not yet built |
 | [`configureEntityMarker`](../../web/src/jsMain/kotlin/streetlight/web/dom/component/configureEntityMarker.kt) | The body of an entity's map marker |

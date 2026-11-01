@@ -31,7 +31,7 @@ fun ViewScope.starGate(
 fun RouteScope.starGate(mod: Modifier? = null, content: context(Star) ViewScope.() -> Unit) =
     starGate(mod, {
         column {
-            topBar(TopBar.Logo)
+            topBar()
             signInToContinue()
         }
     }, content)
