@@ -33,64 +33,72 @@ fun FlowContent.feedSection(
     section {
         setAttribute(AppAttribute.FeedSource.to(source))
 
-        row(AlignItemsCenter) {
-            row(modify(FeedSection.TypeMenu, Flex1)) {
+        row(modify(AlignItemsCenter, BorderBottom2Px)) {
+            div(modify(FeedSection.TypeMenu, Flex1)) {
                 types.forEach { type ->
-                    navigationIfNotNull(typeRoute?.invoke(type), FeedSection.TypeOption) {
-                        if (type == source.type) attributes["aria-current"] = "page"
-                        +type.label
-                    }
+                    val current = Attribute.AriaCurrent.to("page").takeIf { type == source.type }
+                    navigationIfNotNull(typeRoute?.invoke(type), modify(FeedSection.TypeOption, current)) { +type.label }
                 }
             }
             rootSwitch(FeedRowStyle.Mode, OpacityHigh) { icon(it.toSvg()) }
         }
 
-        // td: filter and search posts
-        if (source.type.isSearched) {
-            row(modify(AlignItemsCenter, JustifyContentSpaceBetween)) {
-                row(AlignItemsCenter) {
-                    if (source.type == FeedType.Events) tagFilterMenu()
-                }
-                searchField(textMod = FeedSection.Search) {
-                    onInput = FeedSection.SearchFeed.invokeJs(ThisElement)
+        feedSectionBody(feed)
+    }
+}
+
+/**
+ * The parts of a [feedSection] below its type menu, which change with the type: the filters and search, and the feed
+ * with a button for more.
+ */
+fun FlowContent.feedSectionBody(feed: EntityFeed) {
+    val source = feed.source ?: error("a feed section shows a feed with a source")
+
+    // td: filter and search posts
+    if (source.type.isSearched) {
+        row(modify(AlignItemsCenter, JustifyContentSpaceBetween)) {
+            row(AlignItemsCenter) {
+                if (source.type == FeedType.Events) tagFilterMenu()
+            }
+            searchField(textMod = FeedSection.Search) {
+                onInput = FeedSection.SearchFeed.invokeJs(ThisElement)
+            }
+        }
+    }
+
+    feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
+        row(JustifyContentCenter) {
+            feedMarks.forEach { mark ->
+                textBlock(mark.name) {
+                    setAttribute(AppAttribute.MarkId.to(mark.markId))
+                    onClick = FeedSection.SortByMark.invokeJs(ThisElement)
                 }
             }
         }
+    }
 
-        feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
-            row(JustifyContentCenter) {
-                feedMarks.forEach { mark ->
-                    textBlock(mark.name) {
-                        setAttribute(AppAttribute.MarkId.to(mark.markId))
-                        onClick = FeedSection.SortByMark.invokeJs(ThisElement)
-                    }
-                }
-            }
+    layoutFeed {
+        if (feed.entities.isEmpty()) emptyFeed()
+        feed.entities.forEach { entity ->
+            feedRow(entity, feed.curatorOf(entity), entity.toDetails(source.context))
         }
 
-        layoutFeed {
-            if (feed.entities.isEmpty()) emptyFeed()
-            feed.entities.forEach { entity ->
-                feedRow(entity, feed.curatorOf(entity), entity.toDetails(source.context))
-            }
-
-            feed.nextCursor?.let {
-                button("more", modify(Zen)) {
-                    setAttribute(FeedSection.NextCursor.to(it))
-                    onClick = FeedSection.MorePosts.invokeJs(ThisElement)
-                }
+        feed.nextCursor?.let {
+            button("more", modify(Zen)) {
+                setAttribute(FeedSection.NextCursor.to(it))
+                onClick = FeedSection.MorePosts.invokeJs(ThisElement)
             }
         }
     }
 }
 
-/** The message in place of an empty feed: an animated icon over a line of text, centered in its height. */
-fun FlowContent.emptyFeed() = column(FeedSection.EmptyMod) { emptyFeedContent() }
+/** The message in place of a feed: an animated icon over the line [text], centered in its height. */
+fun FlowContent.emptyFeed(text: String = FeedSection.EmptyText) = column(FeedSection.EmptyMod) { emptyFeedContent(text) }
 
-/** The icon and text of [emptyFeed], shared with the feed's client-side append. */
-fun DIV.emptyFeedContent() {
+/** The icon and [text] of [emptyFeed], shared with the feed's client-side append. */
+fun DIV.emptyFeedContent(text: String = FeedSection.EmptyText) {
     icon(SvgFile.Binoculars.animated, Height(10))
-    textBlock("Nothing to show!", OpacityHigh)
+    textBlock(text, OpacityHigh)
 }
 
 /** The column that feed rows mount in, and that more rows append to. */
@@ -104,6 +112,8 @@ fun FlowContent.layoutFeed(
 
 object FeedSection {
     val EmptyMod = modify(AlignItemsCenter, JustifyContentCenter, Height(24))
+    const val EmptyText = "Nothing to show!"
+    const val FailedText = "We couldn't load this feed."
     val MountId = Id("feed-layout")
     val Search = Class("feed-search")
     val TypeMenu = Class("feed-type-menu")
@@ -134,17 +144,24 @@ fun FeedMode.toSvg() = when (this) {
 val FeedSectionCss get() = with(FeedSection) { """
 ${rootSwitchCss(FeedRowStyle.Mode, FeedMode.entries)}
 
-$TypeMenu { align-items: baseline; }
+/* the strut of a selected option sets the line box, so the baseline holds while the options change size */
+$TypeMenu {
+    font-size: var(--heading-2-size);
+    line-height: 1;
+}
 
 $TypeOption {
-    font-size: var(--btn-font-size);
+    display: inline-block;
+    font-size: var(--paragraph-size);
     font-weight: var(--btn-font-weight);
     opacity: var(--opacity-high);
     transition: font-size var(--magic-interval) var(--magic-easing), var(--transition-opacity);
 
     &[aria-current="page"] {
-        font-size: var(--heading-3-size);
+        font-size: var(--heading-2-size);
         opacity: 1;
     }
+
+    & + & { margin-inline-start: var(--unit); }
 }
 """ }

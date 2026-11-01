@@ -21,7 +21,7 @@ fun ViewScope.viewGalaxyFeed(content: GalaxyFeedContent) {
     document.setTitle(GalaxyFeedRoute())
     applyTheme(null)
 
-    followFeedRoute<GalaxyFeedRoute>({ GalaxyFeedRoute(it) }) { route ->
+    followFeedRoute<GalaxyFeedRoute> { route ->
         api.content.readGalaxyFeedContent(route.feed).toDataOrNull(toaster) { it.feed }
     }
 }

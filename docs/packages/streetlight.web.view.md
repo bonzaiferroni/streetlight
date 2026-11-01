@@ -126,7 +126,7 @@ A state parameter is a `Tap` for a read and a `MutableTap` for a read and write.
 
 A route is an object while it has no parameters, and a data class once it has any. A route whose page holds a feed with more than one type is a `FeedRoute`: its `feed` names the type chosen, written to its path as the `feed` query parameter and left out for the default, so choosing a type navigates and the backstack holds each choice. Its content endpoint takes the type, and the server's render reads it from the query. The route dock treats a feed route as its `defaultFeedRoute`, so the dock's route stays marked whichever feed it shows.
 
-Portal keeps a screen's view across a change to a route with the same `screenKey`, which is the route itself by default, and rebuilds it on any other change or a refresh. Going to the route already shown counts as a refresh. A feed route's key is its `defaultFeedRoute`, so its view stays, and the view follows the new feed with `followFeedRoute`, which reads the route's content again and swaps the feed section in place. Every Earth route shares `Screen.Earth` as its key, since the Earth view handles each of its routes itself.
+Portal keeps a screen's view across a change to a route with the same `screenKey`, which is the route itself by default, and rebuilds it on any other change or a refresh. Going to the route already shown counts as a refresh. A feed route's key is its `defaultFeedRoute`, so its view stays, and the view follows the new feed with `followFeedRoute`, which marks the new type in the section's type menu, reads the route's content again and rebuilds the section below the menu with `feedSectionBody`, or with the `emptyFeed` message of a failure when the read fails. Every Earth route shares `Screen.Earth` as its key, since the Earth view handles each of its routes itself.
 
 A screen whose tabs are addressable declares a `FooTab` enum in `streetlight.model.ui`, each entry `Labeled` and holding its `svg`. The route carries `tab: FooTab?`, written as the `tab` query parameter with `ordinalParamOf` and left out for the default, and fixes its `screenKey` so a change of tab keeps the view. The view's tabs take `paramKey = FooRoute.tabParam.key` and build one tab per entry with a `when` over it. `StarConfigRoute` and `StarDashRoute` are the examples.
 
@@ -396,7 +396,7 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`blockBuilder`](../../web/src/jsMain/kotlin/streetlight/web/view/blockBuilder.kt) | The editor of a layout block |
 | [`blockMenu`](../../web/src/jsMain/kotlin/streetlight/web/view/blockMenu.kt) | The menu of blocks to add |
 | [`CommentView`](../../web/src/jsMain/kotlin/streetlight/web/view/CommentView.kt) | A comment with its replies and forms |
-| [`followFeedRoute`](../../web/src/jsMain/kotlin/streetlight/web/view/followFeedRoute.kt) | Swaps the feed section when the route changes its feed |
+| [`followFeedRoute`](../../web/src/jsMain/kotlin/streetlight/web/view/followFeedRoute.kt) | Rebuilds the feed section below its type menu when the route changes its feed |
 | [`earthControls`](../../web/src/jsMain/kotlin/streetlight/web/view/earthControls.kt) | The controls of the map |
 | [`earthFocus`](../../web/src/jsMain/kotlin/streetlight/web/view/earthFocus.kt) | The panel of the focused marker |
 | [`earthMenu`](../../web/src/jsMain/kotlin/streetlight/web/view/earthMenu.kt) | The menu of the map |

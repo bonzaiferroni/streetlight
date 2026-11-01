@@ -52,6 +52,7 @@ data class Attribute<T>(
         val SrcSet = stringAttributeOf("srcset")
         val Sizes = stringAttributeOf("sizes")
         val AriaLabel = stringAttributeOf("aria-label")
+        val AriaCurrent = stringAttributeOf("aria-current")
         val AriaMultiline = booleanAttributeOf("aria-multiline")
         val ContentEditable = stringAttributeOf("contenteditable")
         val Role = stringAttributeOf("role")

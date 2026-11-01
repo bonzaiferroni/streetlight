@@ -23,7 +23,7 @@ fun ViewScope.viewCity(content: CityContent) {
 
     applyTheme(null)
 
-    followFeedRoute<CityRoute>({ CityRoute(content.city.slug, it) }) { route ->
+    followFeedRoute<CityRoute> { route ->
         api.city.readCityContent(route.slug, route.feed).toDataOrNull(toaster) { it.feed }
     }
 }

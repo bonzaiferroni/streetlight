@@ -28,7 +28,7 @@ fun ViewScope.viewHome(content: HomeContent) {
     document.setTitle(HomeRoute())
     applyTheme(null)
 
-    followFeedRoute<HomeRoute>({ HomeRoute(it) }, { markerMap.setPoints(it.entities) }) { route ->
+    followFeedRoute<HomeRoute>({ markerMap.setPoints(it.entities) }) { route ->
         api.content.readHomeContent(route.feed).toDataOrNull(toaster) { it.feed }
     }
 }
