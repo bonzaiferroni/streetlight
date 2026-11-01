@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.HomeContent
+import koala.model.Toaster
 import streetlight.model.io.ApiClient
 
 /** The home [content]: its top galaxies, its [feed], and the [markerMap] of the feed's entities. */
-class HomeModel(val content: HomeContent, api: ApiClient, config: AppConfig, geoMap: GeoMap) : ViewModel() {
-    val feed = FeedModel(viewModelScope, api, config.feedModeState, content.feed)
+class HomeModel(val content: HomeContent, api: ApiClient, toaster: Toaster, config: AppConfig, geoMap: GeoMap) : ViewModel() {
+    val feed = FeedModel(viewModelScope, api, toaster, config.feedModeState, content.feed)
     val markerMap = MarkerMap(geoMap)
 
     init {

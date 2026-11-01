@@ -35,7 +35,7 @@ The app's routes and back stack, its services and view models, and the propertie
 | `FooModel`, `FooState` | The models of `streetlight.web.model` |
 | `EntityUtility.kt` | `EntityUtility.kt` (`streetlight.web.model`) |
 | `FlairIcon`, `toFlair` | `FlairIcon`, `toFlair` (`streetlight.web.model`) |
-| `FeedUtility.kt` | `heading` and `toSvg` beside `feedSection` (`streetlight.web.layout`) |
+| `FeedUtility.kt` | `isSearched` and `FeedMode.toSvg` beside `feedSection` (`streetlight.web.layout`) |
 | `GeoMap`, `GeoCamera` | `GeoMap`, `GeoCamera` (`koala.model`) |
 | `MarkerMap` | `MarkerMap` (`koala.model`) |
 | `StarSession` | `SessionClient` (`streetlight.web.model`) |

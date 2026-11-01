@@ -265,7 +265,7 @@ Every marker has a light, revealed or not, so a hidden marker shows as its light
 
 ## Feed
 
-A feed is shown with `feedSection`, which adds its heading and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The heading spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. It reads its controls' state from the `FeedModel` it takes as a context parameter. A lazy layout's builder cannot read state, so the view reads the page and the mode and passes them as values, and a change of either lays the feed out again. The heading sits in a `filigree()` between the type menu, bound to the model's type, and the `FeedMode` switch, bound to the mode the model takes from `AppConfig`.
+A feed is shown with `feedSection`, which adds its type menu and entries to the `LazyGridView` or `LazyStaggeredGridView` it is in. The menu spans the row, and so does each entry but in `Grid` mode, where an entry takes a column. It reads its controls' state from the `FeedModel` it takes as a context parameter. A lazy layout's builder cannot read state, so the view reads the page and the mode and passes them as values, and a change of either lays the feed out again.
 
 An entry carries `zenBg()`, and the feed stands its entries `currentTheme.line` apart, so the background behind shows through as the line between them, as the web's `ZenBg` rows and `Gap2Px` column do.
 

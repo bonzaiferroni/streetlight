@@ -1,7 +1,8 @@
 package streetlight.compose.model
 
 import kampfire.model.MutableTap
-import kampfire.model.Ok
+import kampfire.model.toDataOr
+import koala.model.Toaster
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
@@ -23,11 +24,12 @@ import kotlin.time.Duration.Companion.milliseconds
 /**
  * A feed shown in a view, starting from [page], with its type, the [modeState] it is laid out in, and the tag and search
  * that filter it. The feed is read again in [scope] when the type, the tag or the search changes, the search once it
- * rests. A view model holds one per feed it shows.
+ * rests, and a failed read is delivered to [toaster]. A view model holds one per feed it shows.
  */
 class FeedModel(
     private val scope: CoroutineScope,
     private val api: ApiClient,
+    private val toaster: Toaster,
     val modeState: MutableTap<FeedMode>,
     page: EntityFeed,
 ) {
@@ -60,9 +62,13 @@ class FeedModel(
             val source = state.feed.source?.copy(type = state.type) ?: return@launch
             val search = state.search.trim().takeIf { it.isNotEmpty() }
             val cursor = state.type.firstCursor.copy(tag = state.tag?.ordinal, search = search)
-            // a failed read keeps the feed shown, as the view has no toaster yet
-            val outcome = api.feed.readFeed(FeedRequest(source, cursor))
-            if (outcome is Ok) store.set { copy(feed = outcome.data) }
+            val page = api.feed.readFeed(FeedRequest(source, cursor)).toDataOr(toaster) {
+                // the toaster tells of the failure; the entries are cleared, so they do not pass for the type chosen
+                store.set { copy(feed = feed.copy(entities = emptyList(), nextCursor = null)) }
+                return@launch
+            }
+            // a read carries no types, so the page keeps those its viewer was first offered
+            store.set { copy(feed = page.copy(types = page.types ?: feed.types)) }
         }
     }
 

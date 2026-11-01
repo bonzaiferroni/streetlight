@@ -19,7 +19,7 @@ import streetlight.web.model.portal
 /**
  * Rebuilds the body of the page's feed section in place whenever the route changes its feed, with the feed [readFeed]
  * reads for the new route. The type menu stays, marking the new route's type before the read. [onFeed] receives each
- * feed shown. A read that gives `null`, having delivered its problem, shows a message of the failure below the menu.
+ * feed shown. A read that gives `null`, having delivered its problem, shows the empty message below the menu.
  */
 inline fun <reified Route : FeedRoute> ViewScope.followFeedRoute(
     noinline onFeed: (EntityFeed) -> Unit = {},
@@ -37,7 +37,7 @@ inline fun <reified Route : FeedRoute> ViewScope.followFeedRoute(
             val source = feed?.source
             val section = document.querySelector(AppAttribute.FeedSource.selector) ?: return@collect
             val body = document.createDiv {
-                if (source == null) emptyFeed(FeedSection.FailedText) else feedSectionBody(feed)
+                if (source == null) emptyFeed() else feedSectionBody(feed)
             }
             // the first child is the type menu's row
             while (section.childElementCount > 1) section.lastElementChild?.remove()

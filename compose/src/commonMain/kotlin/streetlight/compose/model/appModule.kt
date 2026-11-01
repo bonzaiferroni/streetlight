@@ -29,11 +29,11 @@ val appModule = module {
     single { OsmClient() }
     single { Toaster(MainScope()) }
     viewModel { (route: AppRoute) -> InflationModel(route, get()) }
-    viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get()) }
-    viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get()) }
-    viewModel { (page: EntityFeed) -> FeedPageModel(page, get(), get()) }
-    viewModel { (content: LocationContent) -> LocationModel(content, get(), get()) }
-    viewModel { (content: StarContent) -> StarModel(content, get(), get()) }
+    viewModel { (content: HomeContent) -> HomeModel(content, get(), get(), get(), get()) }
+    viewModel { (content: GalaxyContent) -> GalaxyModel(content, get(), get(), get()) }
+    viewModel { (page: EntityFeed) -> FeedPageModel(page, get(), get(), get()) }
+    viewModel { (content: LocationContent) -> LocationModel(content, get(), get(), get()) }
+    viewModel { (content: StarContent) -> StarModel(content, get(), get(), get()) }
     viewModel { EarthModel(get(), get()) }
     viewModel { (content: GalaxyContent) -> GalaxyMapModel(content, get()) }
     viewModel { (account: Account) -> AccountEditor(account, get(), get()) }

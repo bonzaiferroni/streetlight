@@ -51,7 +51,7 @@ The feed carries only what a row shows. The dialog reads the whole entity when i
 
 ## Feed Sections
 
-`feedSection` shows a feed under a menu of the types its context offers, each named by its `label`, with the `FeedMode` switch at the right. The menu takes the place of a heading, so it shows even for a single type, telling the viewer what the feed holds; the type shown is marked in the primary color. When the caller passes `typeRoute`, each type links to the route that shows it, and the page is read again for it. Each row's cells are read for the feed's context, so an event in a location's own feed leaves out its location. The types offered come from the feed, which the server limits by viewer, as it keeps the posts of followed galaxies from a visitor, and otherwise from the context.
+`feedSection` shows a feed under a menu of the types its context offers. The menu takes the place of a heading, so it shows even for a single type, telling the viewer what the feed holds. When the caller passes `typeRoute`, each type links to the route that shows it, and the page is read again for it. Each row's cells are read for the feed's context, so an event in a location's own feed leaves out its location. The types offered come from the feed, which the server limits by viewer, as it keeps the posts of followed galaxies from a visitor, and otherwise from the context.
 
 A feed whose type `isSearched` shows a search field under the menu, beside the tag filter of an `Events` feed. A new searchable type adds itself to `isSearched`, and its server read takes the cursor's `search`.
 

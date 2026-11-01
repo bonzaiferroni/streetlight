@@ -92,13 +92,13 @@ fun FlowContent.feedSectionBody(feed: EntityFeed) {
     }
 }
 
-/** The message in place of a feed: an animated icon over the line [text], centered in its height. */
-fun FlowContent.emptyFeed(text: String = FeedSection.EmptyText) = column(FeedSection.EmptyMod) { emptyFeedContent(text) }
+/** The message in place of an empty feed: an animated icon over a line of text, centered in its height. */
+fun FlowContent.emptyFeed() = column(FeedSection.EmptyMod) { emptyFeedContent() }
 
-/** The icon and [text] of [emptyFeed], shared with the feed's client-side append. */
-fun DIV.emptyFeedContent(text: String = FeedSection.EmptyText) {
+/** The icon and text of [emptyFeed], shared with the feed's client-side append. */
+fun DIV.emptyFeedContent() {
     icon(SvgFile.Binoculars.animated, Height(10))
-    textBlock(text, OpacityHigh)
+    textBlock("Nothing to show!", OpacityHigh)
 }
 
 /** The column that feed rows mount in, and that more rows append to. */
@@ -112,8 +112,6 @@ fun FlowContent.layoutFeed(
 
 object FeedSection {
     val EmptyMod = modify(AlignItemsCenter, JustifyContentCenter, Height(24))
-    const val EmptyText = "Nothing to show!"
-    const val FailedText = "We couldn't load this feed."
     val MountId = Id("feed-layout")
     val Search = Class("feed-search")
     val TypeMenu = Class("feed-type-menu")
@@ -152,14 +150,12 @@ $TypeMenu {
 
 $TypeOption {
     display: inline-block;
-    font-size: var(--paragraph-size);
+    font-size: var(--heading-5-size);
     font-weight: var(--btn-font-weight);
-    opacity: var(--opacity-high);
-    transition: font-size var(--magic-interval) var(--magic-easing), var(--transition-opacity);
+    transition: font-size var(--magic-interval) var(--magic-easing);
 
     &[aria-current="page"] {
         font-size: var(--heading-2-size);
-        opacity: 1;
     }
 
     & + & { margin-inline-start: var(--unit); }
