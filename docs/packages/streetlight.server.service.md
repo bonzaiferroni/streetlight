@@ -40,3 +40,9 @@ An image comes in as an upload or as a url the server downloads, and both are bo
 | Time | `HttpImageClient` | Connect, socket and request timeouts |
 | Bytes | `HttpImageClient`, `UploadImage` | `MAX_IMAGE_BYTES`, checked against `Content-Length` and enforced while reading |
 | Pixels | `encodeImage` | The header's dimensions and frame count against `MAX_FRAME_PIXELS` and `MAX_TOTAL_PIXELS`; an unreadable header is refused |
+
+## Audio Intake
+
+An audio file comes in as an upload alone. `encodeAudioAndStore` reads its duration through `client.audio` before encoding, so a file is refused on `MAX_AUDIO_BYTES` or `MAX_AUDIO_DURATION` before the encoder runs. Every file is stored as Opus in an mp4 container, with no variants, and recorded in `AudioTable`.
+
+An audio post names its audio by id in its meta. `checkMediaAudio` replaces the meta and url of the edit with the stored audio, which must be the caller's, and clears the meta of any other post.

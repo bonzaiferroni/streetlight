@@ -128,6 +128,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object EditSkill: PostEndpoint<SkillEdit, Skill>(this)
         object UploadAvatar: PostEndpoint<ByteArray, String>(this)
         object UploadImage: PostEndpoint<ByteArray, Image>(this)
+        object UploadAudio: PostEndpoint<ByteArray, Audio>(this)
     }
 
     object Messages: ApiNode(this) {

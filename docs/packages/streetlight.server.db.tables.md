@@ -109,6 +109,10 @@ A table holding an image implements `ImageColumnTable`, overriding `image` as `i
 
 An interface implemented only by tables takes the `Table` suffix, as `SlugTable` and `ImageColumnTable`.
 
+## Meta Columns
+
+Details particular to one type of a record, such as the audio of an audio post, are held in a `meta` column, `jsonb` on a sealed type `FooMeta` in `streetlight.model.data`, one subtype per record type that needs it.
+
 ## Aggregate Columns
 
 An aggregate that must be current on every read is kept live.

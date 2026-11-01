@@ -13,7 +13,8 @@ data class MediaEdit(
     val title: String? = null,
     val subtitle: String? = null,
     val text: Markdown? = null,
-    val link: Url? = null,
+    val url: Url? = null,
+    val meta: MediaMeta? = null,
     val geoPoint: GeoPoint? = null,
     val image: Image? = null,
     val design: PageDesign? = null,
@@ -26,10 +27,12 @@ data class MediaEdit(
 
 fun Media.toEdit() = MediaEdit(
     mediaId = mediaId,
+    mediaType = mediaType,
     title = title,
     subtitle = subtitle,
     text = text,
-    link = link,
+    url = url,
+    meta = meta,
     geoPoint = geoPoint,
     image = image,
 )

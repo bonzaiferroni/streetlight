@@ -15,7 +15,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
-/** A piece of media a user shares: text, an image, or a link. */
+/** A piece of media a user shares: text, an image, a link, or audio at [url] described by [meta]. */
 @Serializable
 data class Media(
     val mediaId: MediaId,
@@ -25,7 +25,8 @@ data class Media(
     val title: String?,
     val subtitle: String?,
     val text: Markdown?,
-    val link: Url?,
+    override val url: Url?,
+    val meta: MediaMeta?,
     override val geoPoint: GeoPoint?,
     override val image: Image?,
     override val design: PageDesign?,
@@ -36,7 +37,7 @@ data class Media(
     override val sublabel get() = subtitle
     override val description get() = text
     override val body get() = text ?: subtitle?.toMarkdown() ?: addedBodyOf(createdAt)
-    override val links get() = link?.let { listOf(ExtraLink("link", it)) }
+    override val links get() = url?.takeIf { mediaType == MediaType.Link }?.let { listOf(ExtraLink("link", it)) }
     override val markerId get() = mediaId.toString()
 }
 
@@ -54,8 +55,8 @@ value class MediaId(override val value: Uuid): RecordId {
 enum class MediaType(label: String? = null): Labeled {
     Text,
     Image,
-    Link;
-    // Audio,
+    Link,
+    Audio;
     // Gallery
     // News,
 

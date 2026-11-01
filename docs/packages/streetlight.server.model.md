@@ -49,6 +49,7 @@ Anything outside the process sits behind an interface, with the implementation n
 | `BlobClient` | `S3BlobClient` | `TestBlobClient` |
 | `EmailClient` | `PostmarkEmailClient` | `TestEmailClient` |
 | `PaymentClient` | `StripePaymentClient` | `TestPaymentClient` |
+| `AudioClient` | `FfmpegAudioClient` | `TestAudioClient` |
 
 The name is the implementation specifier followed by the interface, and the interfaces live here.
 

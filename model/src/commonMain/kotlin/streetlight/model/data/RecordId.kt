@@ -26,6 +26,7 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     EditLogId::class -> EditLogId(this) as T
     TaskId::class -> TaskId(this) as T
     MediaId::class -> MediaId(this) as T
+    AudioId::class -> AudioId(this) as T
     QuorumId::class -> QuorumId(this) as T
     PolicyId::class -> PolicyId(this) as T
     FlagId::class -> FlagId(this) as T
