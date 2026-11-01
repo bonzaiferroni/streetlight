@@ -3,6 +3,9 @@ package streetlight.model.data
 import kabinet.utils.toAgoFormat
 import kampfire.api.Username
 import kampfire.api.toMarkdown
+import kampfire.model.Labeled
+import koala.SvgFile
+import koala.SvgPack
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
@@ -97,5 +100,19 @@ sealed interface FeedContext {
     }
 }
 
+/** The kind of feed a context offers, named by [label]. */
 @Serializable
-enum class FeedType { Events, Locations, GalaxyPosts, Posts, Media, StarGalaxies, TopGalaxies, NewGalaxies, Cities, Stars }
+enum class FeedType(val svg: SvgPack, label: String? = null): Labeled {
+    Events(SvgFile.Calendar),
+    Locations(SvgFile.MapPin),
+    GalaxyPosts(SvgFile.Planet, "Posts"),
+    Posts(SvgFile.News),
+    Media(SvgFile.Photo),
+    StarGalaxies(SvgFile.Star, "My Galaxies"),
+    TopGalaxies(SvgFile.Trophy, "Top Galaxies"),
+    NewGalaxies(SvgFile.Seedling, "New Galaxies"),
+    Cities(SvgFile.City),
+    Stars(SvgFile.Star);
+
+    override val label = label ?: name
+}

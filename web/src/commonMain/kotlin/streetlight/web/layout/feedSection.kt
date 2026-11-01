@@ -9,7 +9,6 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import kotlinx.html.onInput
 import streetlight.model.data.*
-import streetlight.web.shell.SectionHeadingMod
 import streetlight.web.page.AppAttribute
 import streetlight.web.component.tagFilterMenu
 import koala.component.*
@@ -18,11 +17,11 @@ import koala.page.*
 import streetlight.model.data.toDetails
 
 /**
- * The feed section of a page: a heading with the [FeedMode] switch, a tag filter and search field for an event feed,
+ * The feed section of a page: a type menu with the [FeedMode] switch, a tag filter and search field for an event feed,
  * the mark filters of a galaxy, and the feed with a button for more.
  *
- * The feed's source picks the heading and is where the more button, the filters and the search read from. The
- * type menu left of the heading shows the types the feed's context offers, each a link to [typeRoute] when given.
+ * The type menu names the types the feed's context offers, each a link to [typeRoute] when given. The feed's source
+ * marks the selected type and is where the more button, the filters and the search read from.
  */
 fun FlowContent.feedSection(
     feed: EntityFeed,
@@ -34,21 +33,16 @@ fun FlowContent.feedSection(
     section {
         setAttribute(AppAttribute.FeedSource.to(source))
 
-        // the type menu matches the switch in width, keeping the heading centered
         row(AlignItemsCenter) {
-            row(modify(FeedSection.SwitchWidth, OpacityHigh)) {
+            row(modify(FeedSection.TypeMenu, Flex1)) {
                 types.forEach { type ->
-                    val iconMod = modify(SmallIconHeight, PrimaryFg.takeIf { type == source.type })
-                    when (typeRoute) {
-                        null -> icon(type.toSvg(), iconMod)
-                        else -> navigation(typeRoute(type)) { icon(type.toSvg(), iconMod) }
+                    navigationIfNotNull(typeRoute?.invoke(type), FeedSection.TypeOption) {
+                        if (type == source.type) attributes["aria-current"] = "page"
+                        +type.label
                     }
                 }
             }
-            filigree(Flex1) {
-                heading2(source.type.heading, SectionHeadingMod)
-            }
-            rootSwitch(FeedRowStyle.Mode, modify(FeedSection.SwitchWidth, JustifyContentEnd, OpacityHigh)) { icon(it.toSvg()) }
+            rootSwitch(FeedRowStyle.Mode, OpacityHigh) { icon(it.toSvg()) }
         }
 
         // td: filter and search posts
@@ -112,6 +106,8 @@ object FeedSection {
     val EmptyMod = modify(AlignItemsCenter, JustifyContentCenter, Height(24))
     val MountId = Id("feed-layout")
     val Search = Class("feed-search")
+    val TypeMenu = Class("feed-type-menu")
+    val TypeOption = Class("feed-type-option")
 
     val Attribute = slugAttributeOf("feed-slug")
     val FeedColumnMod = modify(Gap2Px, MoonShadow)
@@ -120,40 +116,12 @@ object FeedSection {
     val SortByMark = JsSignature("sortByMark")
     val MorePosts = JsSignature("morePosts")
     val SearchFeed = JsSignature("searchFeed")
-
-    val SwitchWidth = Width(12)
-}
-
-/** The heading of a feed of this type. */
-val FeedType.heading get() = when (this) {
-    FeedType.Events -> "Events"
-    FeedType.Locations -> "Locations"
-    FeedType.GalaxyPosts, FeedType.Posts -> "Posts"
-    FeedType.Media -> "Media"
-    FeedType.StarGalaxies -> "My Galaxies"
-    FeedType.TopGalaxies -> "Top Galaxies"
-    FeedType.NewGalaxies -> "New Galaxies"
-    FeedType.Cities -> "Cities"
-    FeedType.Stars -> "Stars"
 }
 
 /** Whether a feed of this type has a search field. */
 val FeedType.isSearched get() = when (this) {
     FeedType.Events, FeedType.StarGalaxies, FeedType.TopGalaxies, FeedType.NewGalaxies, FeedType.Cities, FeedType.Stars -> true
     FeedType.Locations, FeedType.GalaxyPosts, FeedType.Posts, FeedType.Media -> false
-}
-
-fun FeedType.toSvg() = when (this) {
-    FeedType.Events -> SvgFile.Calendar.small
-    FeedType.Locations -> SvgFile.MapPin.small
-    FeedType.GalaxyPosts -> SvgFile.Planet.small
-    FeedType.Posts -> SvgFile.News.small
-    FeedType.Media -> SvgFile.Photo.small
-    FeedType.StarGalaxies -> SvgFile.Star.small
-    FeedType.TopGalaxies -> SvgFile.Trophy.small
-    FeedType.NewGalaxies -> SvgFile.Seedling.small
-    FeedType.Cities -> SvgFile.City.small
-    FeedType.Stars -> SvgFile.Star.small
 }
 
 fun FeedMode.toSvg() = when (this) {
@@ -163,6 +131,20 @@ fun FeedMode.toSvg() = when (this) {
 }
 
 // language="CSS"
-val FeedSectionCss get() = """
+val FeedSectionCss get() = with(FeedSection) { """
 ${rootSwitchCss(FeedRowStyle.Mode, FeedMode.entries)}
-"""
+
+$TypeMenu { align-items: baseline; }
+
+$TypeOption {
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight);
+    opacity: var(--opacity-high);
+    transition: font-size var(--magic-interval) var(--magic-easing), var(--transition-opacity);
+
+    &[aria-current="page"] {
+        font-size: var(--heading-3-size);
+        opacity: 1;
+    }
+}
+""" }

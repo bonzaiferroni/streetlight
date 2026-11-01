@@ -23,7 +23,7 @@ import streetlight.web.component.createPostMenu
 import streetlight.web.component.galaxyMenu
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column {
+    column(Gap0) {
         topBar(TopBar.Logo)
         column {
             geoMapMount(null, modify(BorderRadius2, Height(48), MoonShadow, BorderSolid2Px))

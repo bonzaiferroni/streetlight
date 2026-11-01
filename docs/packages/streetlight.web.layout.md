@@ -51,9 +51,9 @@ The feed carries only what a row shows. The dialog reads the whole entity when i
 
 ## Feed Sections
 
-`feedSection` shows a feed under its heading, the name of its type. A menu of the types its context offers sits left of the heading, the `FeedMode` switch right of it, each the same width so the heading stays centered. The menu shows even for a single type, telling the viewer what the feed holds; the type shown is marked in the primary color. When the caller passes `typeRoute`, each type links to the route that shows it, and the page is read again for it. Each row's cells are read for the feed's context, so an event in a location's own feed leaves out its location. The types offered come from the feed, which the server limits by viewer, as it keeps the posts of followed galaxies from a visitor, and otherwise from the context.
+`feedSection` shows a feed under a menu of the types its context offers, each named by its `label`, with the `FeedMode` switch at the right. The menu takes the place of a heading, so it shows even for a single type, telling the viewer what the feed holds; the type shown is marked in the primary color. When the caller passes `typeRoute`, each type links to the route that shows it, and the page is read again for it. Each row's cells are read for the feed's context, so an event in a location's own feed leaves out its location. The types offered come from the feed, which the server limits by viewer, as it keeps the posts of followed galaxies from a visitor, and otherwise from the context.
 
-A feed whose type `isSearched` shows a search field under the heading, beside the tag filter of an `Events` feed. A new searchable type adds itself to `isSearched`, and its server read takes the cursor's `search`.
+A feed whose type `isSearched` shows a search field under the menu, beside the tag filter of an `Events` feed. A new searchable type adds itself to `isSearched`, and its server read takes the cursor's `search`.
 
 ## Feed Rows
 
@@ -130,7 +130,7 @@ A preview of an edit, in `postRow.kt`, is a `feedRow` of a `CustomEntity` carryi
 
 | Layout | Role |
 |---|---|
-| [`feedSection`, `layoutFeed`](../../web/src/commonMain/kotlin/streetlight/web/layout/feedSection.kt) | A feed under its heading, with its mode switch, tag filter and search |
+| [`feedSection`, `layoutFeed`](../../web/src/commonMain/kotlin/streetlight/web/layout/feedSection.kt) | A feed under its type menu, with its mode switch, tag filter and search |
 | [`feedRow`](../../web/src/commonMain/kotlin/streetlight/web/layout/FeedRow.kt) | An entity in a feed, laid out by the `FeedMode` |
 | [`postRow`](../../web/src/commonMain/kotlin/streetlight/web/layout/postRow.kt) | A preview of the feed row an edit will post as |
 | [`layoutPostListing`](../../web/src/commonMain/kotlin/streetlight/web/layout/layoutGalaxyListing.kt) | The posts of a galaxy, as one list or a tab for each type |

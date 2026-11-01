@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.em
 import koala.Svg
 import koala.SvgFile
 import streetlight.compose.model.FeedModel
-import streetlight.compose.model.heading
 import streetlight.compose.model.toSvg
 import streetlight.compose.modifier.filigree
 import streetlight.compose.modifier.opacityHigh
@@ -95,10 +94,10 @@ private fun FeedHeading(type: FeedType, types: List<FeedType>, modifier: Modifie
     // the menu and the switch are the same width, so the heading stays centered
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Row(1, Modifier.width(theme.unit * SwitchUnits).opacityHigh()) {
-            types.forEach { option -> SwitchIcon(option.toSvg(), option == selectedType) { feed.typeState.set(option) } }
+            types.forEach { option -> SwitchIcon(option.svg.small, option == selectedType) { feed.typeState.set(option) } }
         }
         BasicText(
-            text = type.heading,
+            text = type.label,
             modifier = Modifier.weight(1f).filigree(),
             style = theme.text.heading2.copy(
                 lineHeight = 1.em,
