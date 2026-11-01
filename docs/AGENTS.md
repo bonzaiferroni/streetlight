@@ -105,6 +105,7 @@ Each language has its own style document, stating how code in it is written acro
 |---|---|
 | Kotlin | `docs/kotlin-style.md` |
 | CSS, including the stylesheets in `*Css.kt` files | `docs/css-style.md` |
+| English, on the site and in the documentation | `docs/english-style.md` |
 
 ## Testing
 

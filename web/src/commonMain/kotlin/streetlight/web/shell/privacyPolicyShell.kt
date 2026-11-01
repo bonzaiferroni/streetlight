@@ -6,6 +6,7 @@ import kampfire.api.toMarkdown
 import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.web.layout.mainBody
+import streetlight.model.ui.FrontDeskRoute
 import koala.component.*
 import koala.markdown.*
 import koala.page.*
@@ -52,34 +53,30 @@ object PrivacyPolicyKey {
 // language="MD"
 val PrivacyIntro get() = """
 
-Streetlight was designed to provide a high level of transparency and control over the information you share.
-
-This page describes in detail what you can expect when using the site. 
+We built Streetlight to have a high level of transparency and control over the information you share. Here is what we collect, why we collect it, and what you can control.
 
 ### In a nutshell---
-* We gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account. !["I need my privacy"](/www/lottie/astronaut-reading.json) 
+* We aim to collect only the information the site's features need. It is possible to use many features without creating an account. !["I need my privacy"](/www/lottie/astronaut-reading.json) 
 * We do not sell or give information to third parties beyond the functionality of site features and a lawful subpoena by a recognized authority. 
-* We do not show ads or provide information to advertisers.
-* We provide tools that let you keep track of what information you share and easily remove it.
-* Streetlight's source code is open and can be inspected to verify an effective implementation of these policies. 
+* We do not show ads or share information with advertisers.
+* We provide functionality to help you keep track of what information you share and easily remove it.
+* Streetlight is open source and can be inspected to verify an effective implementation of these policies. 
 
 #### Important limitations 
-Sharing information on the internet can carry risk that is difficult to completely safeguard against. For example, it is possible for third parties to access websites and gather public information on individuals and the community. It is important for each user to be mindful of what they share and how it may be used outside of Streetlight's control. 
+Sharing information on the internet carries risk that is difficult to completely safeguard against. For example, it is possible for third parties to access websites and gather public information on individuals and the community.  
 
-Streetlight is at an early stage of development, and certain privacy features are not yet available. For example, we plan to provide a way for you to download all of your data or remove it entirely from the site. In the long term, we believe that Streetlight's open source will be an important reason to trust the integrity of the site. In the short term, it may carry additional risk, since potential attackers can also inspect the code for vulnerabilities.
+Streetlight is at an early stage of development, and you may run into bugs or missing features. We'd appreciate hearing about any problems or suggestions on the [Help & Feedback](${FrontDeskRoute.toRelativePath()}) page.
 
 """.toMarkdown()
 
 // language="MD"
 val InformationSharedContent get() = """
 
-This section describes the information that can be shared with Streetlight, how it is stored, and how it is used. We'll follow the basic progression that most users will follow, from using the site without an account, to account creation and beyond. 
+Streetlight does not require you to create an account to see information shared publicly. To share information or interact, you may create an account as a guest or registered user.
 
 #### Using Streetlight without an account---
 
-We keep the core functionality of Streetlight available to users without an account. It is possible to browse the majority of the content without ever signing in. 
-
-Streetlight lets users mark posts that they are interested in. While you are not signed in, the events that you mark are stored on your device, and no information is sent to the server. You may see the number of lights increase on the post, but this change is not visible to other users.
+We keep the core functionality of Streetlight available to users without an account. It is possible to browse the majority of the content without ever signing in.
 
 We are experimenting with the ability for signed-out users to share posts. These posts are reviewed by a moderator before they become visible to the community at large to ensure the content fits the theme of the galaxy and the site's content policies. A galaxy is a streetlight community with a particular content focus. The moderator is a community member too, the galaxy creator or one of its members. 
 
