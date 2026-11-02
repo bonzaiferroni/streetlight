@@ -18,6 +18,12 @@ import koala.component.IconStyle
 import streetlight.model.ui.StudioRoute
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.AudioSample
+import streetlight.web.model.audioFilters
+import koala.dom.component.switch
+import koala.dom.component.popover
+import koala.page.Id
+import kotlinx.coroutines.flow.combine
+import koala.dom.component.column
 import streetlight.web.model.PcmSample
 import streetlight.web.model.StudioEditor
 import streetlight.web.model.getStudioEditor
@@ -127,21 +133,26 @@ private fun ViewScope.studioTimeline() {
 }
 
 context(model: StudioEditor)
-private fun ViewScope.sampleStage() = flowBlock(model.samplesState, modify(Gap2Px)) { samples ->
-    samples.forEach { sample ->
-        audioSample(sample)
+private fun ViewScope.sampleStage() = flowBlock(model.sampleIdsState, modify(Gap2Px)) { ids ->
+    ids.forEach { id ->
+        model.readSample(id)?.let { audioSample(it) }
     }
 }
 
-/** Renders [sample] beside its name, as its waveform at the timeline's scale, with a line at the cursor. */
+/**
+ * Renders [sample] beside its name and switches, as its waveform at the timeline's scale, with a line at the cursor.
+ */
 context(model: StudioEditor)
 fun ViewScope.audioSample(sample: AudioSample) {
-    val pcm = model.readPcm(sample.id) ?: return
-
+    val filtersId = Id("sample-filters-${sample.id}")
     lateinit var canvasElement: HTMLCanvasElement
     lateinit var lineElement: HTMLElement
     div(modify(StudioStyle.Track, CardBg)) {
-        textBlock(sample.name, Padding(1))
+        column(Padding(1)) {
+            textBlock(sample.name)
+            switch("mute", model.isMutedState(sample.id))
+            button("filters") { setPopoverTarget(filtersId, true) }
+        }
         div(modify(Height(32), StudioStyle.Lane)) {
             canvasElement = this@audioSample.canvas { addModifiers(VoidBg, PrimaryFg, StudioStyle.Waveform) }
                 .unsafeCast<HTMLCanvasElement>()
@@ -152,6 +163,14 @@ fun ViewScope.audioSample(sample: AudioSample) {
     fun sizeWaveform(spanSeconds: Double) =
         canvasElement.setStyle(Css.Width.of((sample.durationSeconds / spanSeconds * 100).pct))
 
+    popover(filtersId) {
+        column {
+            audioFilters.forEach { filter ->
+                switch(filter.label, model.isFilteredState(sample.id, filter))
+            }
+        }
+    }
+
     placeAtCursor(lineElement)
     sizeWaveform(model.spanSecondsState.now)
 
@@ -160,7 +179,9 @@ fun ViewScope.audioSample(sample: AudioSample) {
     }
 
     launchEffect("audioSample") {
-        canvasElement.resizeFlow().collect { canvasElement.drawWaveform(pcm) }
+        combine(canvasElement.resizeFlow(), model.filtersState(sample.id).flow) { _, _ -> }.collect {
+            model.readPcm(sample.id)?.let { canvasElement.drawWaveform(it) }
+        }
     }
 }
 

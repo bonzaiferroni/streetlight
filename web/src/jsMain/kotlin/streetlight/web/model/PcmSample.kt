@@ -23,7 +23,7 @@ class PcmSample(
             val end = max(((column + 1).toLong() * frameCount / columnCount).toInt(), start + 1)
             var low = 0f
             var high = 0f
-            for (samples in channels) {
+            channels.forEach { samples ->
                 for (frame in start until end) {
                     val value = samples[frame]
                     if (value < low) low = value

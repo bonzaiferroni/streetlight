@@ -1,5 +1,8 @@
 package streetlight.web.model
 
+import kampfire.model.MutableTap
+import kampfire.model.Tap
+import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +24,7 @@ class StudioEditor(
     private val audio: StudioAudio,
 ) {
     private val state = storeOf(StudioEditorState())
-    val samplesState = state.tapOf { it.samples }
+    val sampleIdsState = state.tapOf { it.samples.map { sample -> sample.id } }
     val endSecondsState = state.tapOf { it.endSeconds }
     val spanSecondsState = state.tapOf { it.spanSeconds }
     val cursorRatioState = state.tapOf { it.cursorSeconds / it.spanSeconds }
@@ -31,6 +34,7 @@ class StudioEditor(
     val isCalibratingState = state.tapOf { it.isCalibrating }
 
     private val sampleMap = mutableMapOf<Int, PcmSample>()
+    private val filteredMap = mutableMapOf<Int, PcmSample>()
     private var nextSampleId = 0
     private var playJob: Job? = null
     private var calibrateJob: Job? = null
@@ -43,7 +47,33 @@ class StudioEditor(
         }
     }
 
-    fun readPcm(id: Int) = sampleMap[id]
+    fun readSample(id: Int) = state.now.readSample(id)
+
+    /** The filters applied to the sample of [id]. */
+    fun filtersState(id: Int) = state.tapOf { state -> state.readSample(id)?.filters.orEmpty() }
+
+    /** The PCM the sample of [id] plays, with its filters applied. */
+    fun readPcm(id: Int) = filteredMap[id]
+
+    /** Whether the sample of [id] is muted, written by a toggle. */
+    fun isMutedState(id: Int) = state.mutableTapOf({ state -> state.readSample(id)?.isMuted == true }) { isMuted ->
+        copy(samples = samples.map { if (it.id == id) it.copy(isMuted = isMuted) else it })
+    }
+
+    /** Whether [filter] is applied to the sample of [id], written by a toggle. */
+    fun isFilteredState(id: Int, filter: AudioFilter): MutableTap<Boolean> = SettingTap(
+        state.tapOf { state -> state.readSample(id)?.filters?.contains(filter) == true }
+    ) { isFiltered -> setFilter(id, filter, isFiltered) }
+
+    /** Applies [filter] to the sample of [id] when [isFiltered], or removes it, and filters its PCM again. */
+    fun setFilter(id: Int, filter: AudioFilter, isFiltered: Boolean) {
+        val sample = state.now.readSample(id) ?: return
+        val pcm = sampleMap[id] ?: return
+        val filters = if (isFiltered) sample.filters + filter else sample.filters - filter
+
+        filteredMap[id] = pcm.applyFilters(filters)
+        state.update { it.copy(samples = it.samples.map { sample -> if (sample.id == id) sample.copy(filters = filters) else sample }) }
+    }
 
     fun record() = scope.launch {
         recorder.start()
@@ -67,6 +97,7 @@ class StudioEditor(
         val pcm = recorder.stop()?.pcm ?: return@launch
         val id = nextSampleId++
         sampleMap[id] = pcm
+        filteredMap[id] = pcm
         val sample = AudioSample(id, "Sample ${id + 1}", pcm.durationSeconds)
         state.update { it.copy(
             samples = it.samples + sample,
@@ -79,7 +110,7 @@ class StudioEditor(
         playJob?.cancel()
         playJob = scope.launch {
             val endSeconds = state.now.endSeconds ?: return@launch
-            val pcms = state.now.samples.mapNotNull { sampleMap[it.id] }
+            val pcms = state.now.samples.filterNot { it.isMuted }.mapNotNull { filteredMap[it.id] }
             if (state.now.cursorSeconds >= endSeconds) state.update { it.copy(cursorSeconds = 0.0) }
 
             val fromSeconds = state.now.cursorSeconds
@@ -137,6 +168,9 @@ data class StudioEditorState(
     val profile: AcousticProfile? = null,
     val isCalibrating: Boolean = false,
 ) {
+    /** The sample of [id], or `null` when there is none. */
+    fun readSample(id: Int) = samples.firstOrNull { it.id == id }
+
     /** The end of playback, where the longest sample ends, or `null` without samples. */
     val endSeconds get() = samples.maxOfOrNull { it.durationSeconds }
 }
@@ -146,3 +180,16 @@ private const val DEFAULT_SPAN_SECONDS = 10.0
 // a lead-in long enough to measure the noise floor, and a tail long enough for the sweep to arrive and decay
 private const val LEAD_IN_MILLIS = 1000L
 private const val TAIL_MILLIS = 1000L
+
+/** A toggle's state, read from [tap] and written by handing each value to [onSet]. */
+private class SettingTap(
+    private val tap: Tap<Boolean>,
+    private val onSet: (Boolean) -> Unit,
+): MutableTap<Boolean> {
+    override val now get() = tap.now
+    override val flow get() = tap.flow
+
+    override fun update(transform: (Boolean) -> Boolean) = onSet(transform(now))
+    override fun set(value: Boolean) = onSet(value)
+    override fun set(setter: Boolean.() -> Boolean) = onSet(now.setter())
+}

@@ -129,7 +129,7 @@ private class AudioCapture(
         return List(channelCount) { channel ->
             val samples = FloatArray(frameCount)
             var offset = 0
-            for (block in blocks) {
+            blocks.forEach { block ->
                 val part = block[channel]
                 part.copyInto(samples, offset)
                 offset += part.size

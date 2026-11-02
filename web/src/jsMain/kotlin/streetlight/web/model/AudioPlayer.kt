@@ -29,8 +29,8 @@ class AudioPlayer(
         val context = audio.readContext()
         val startClock = context.currentTime
 
-        for (sample in samples) {
-            if (sample.durationSeconds <= fromSeconds) continue
+        samples.forEach { sample ->
+            if (sample.durationSeconds <= fromSeconds) return@forEach
             val source = context.createBufferSource()
             source.buffer = toAudioBuffer(context, sample)
             source.connect(context.destination)
@@ -47,7 +47,7 @@ class AudioPlayer(
     fun stop() {
         val current = sources.toList()
         sources.clear()
-        for (source in current) {
+        current.forEach { source ->
             source.onended = null
             source.stop()
         }

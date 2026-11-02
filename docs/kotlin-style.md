@@ -100,6 +100,19 @@ when (val locationId = lead.locationId) {
 }
 ```
 
+## Loops
+
+A loop over a collection is a `forEach`, with `return@forEach` in place of `continue`. A `for` loop is kept where `forEach` does not fit: an index range in numeric work that runs per sample or per pixel, and a loop that breaks out.
+
+```kotlin
+samples.forEach { sample ->
+    if (sample.durationSeconds <= fromSeconds) return@forEach
+    play(sample)
+}
+
+for (index in start until end) sum += this[index] * this[index]
+```
+
 ## Builders
 
 A map built from values that may be missing is filled through a builder that leaves them out, not a list of pairs filtered after:
