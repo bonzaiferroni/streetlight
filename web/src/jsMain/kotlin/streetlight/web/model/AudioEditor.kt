@@ -7,6 +7,8 @@ import kampfire.model.PrintLnMessenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
+import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import streetlight.model.data.MediaEdit
 import streetlight.model.data.MediaType
@@ -22,6 +24,9 @@ class AudioEditor(
     /** The url of the edit's audio: a local blob once picked, the stored file once uploaded. */
     val urlField = editField.mutableTapOf({ it.url }) { copy(url = it, meta = null) }
 
+    /** Where the audio is taken from. */
+    val sourceField = storeOf(AudioSource.File)
+
     /** Uploads a blob audio file of an audio post and keeps the stored audio. Returns `false` when the upload fails. */
     suspend fun finalizeAudio(messenger: Messenger? = null): Boolean {
         val edit = editField.now
@@ -34,4 +39,10 @@ class AudioEditor(
         editField.set(editField.now.copy(url = audio.url, meta = audio))
         return true
     }
+}
+
+/** The ways an [AudioEditor] takes in audio. */
+enum class AudioSource(override val label: String): Labeled {
+    File("file"),
+    Record("record"),
 }

@@ -3,6 +3,7 @@ package streetlight.web.view
 import koala.modifier.*
 import koala.dom.*
 import streetlight.web.model.MediaEditor
+import streetlight.web.model.AudioSource
 import streetlight.model.data.MediaType
 import koala.dom.layout.flowBlock
 import koala.dom.component.*
@@ -29,7 +30,13 @@ fun ViewScope.mediaForm() = formCard {
 
     flowBlock(model.mediaTypeField) { mediaType ->
         if (mediaType == MediaType.Audio) formSection("audio") {
-            audioDrop(model.audioEditor.urlField)
+            switchMenu(model.audioEditor.sourceField)
+            flowBlock(model.audioEditor.sourceField) { source ->
+                when (source) {
+                    AudioSource.File -> audioDrop(model.audioEditor.urlField)
+                    AudioSource.Record -> recordAudio(model.audioEditor.urlField)
+                }
+            }
         }
     }
 

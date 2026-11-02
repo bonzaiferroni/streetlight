@@ -71,6 +71,7 @@ The `ViewScope` variant of an interactive component builds its element through t
 | [`fileDrop`](../../koala/src/jsMain/kotlin/koala/dom/component/fileDrop.kt) | A file picker bound to the picked file's URL |
 | [`imageDrop`](../../koala/src/jsMain/kotlin/koala/dom/component/imageDrop.kt) | An image picker bound to a field |
 | [`audioDrop`](../../koala/src/jsMain/kotlin/koala/dom/component/audioDrop.kt) | An audio picker bound to a url field, with a player once set |
+| [`recordAudio`](../../koala/src/jsMain/kotlin/koala/dom/component/recordAudio.kt) | A microphone recorder bound to a url field, with a player once set |
 
 ### Text
 
