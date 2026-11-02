@@ -34,6 +34,7 @@ fun Screen.toAppSection() = when (this) {
     Screen.Error -> AppSection.Core
 
     Screen.Onboard,
+    Screen.Studio,
     Screen.Sandbox,
     Screen.SiteMonitor,
     Screen.Chat,

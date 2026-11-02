@@ -48,6 +48,8 @@ The setting is restored on load through the app's `HeadScriptConfig`, described 
 | [`section`](../../koala/src/commonMain/kotlin/koala/component/section.kt) | A `section` laid out as a flex column |
 | [`spacer`, `centeredHeading`](../../koala/src/commonMain/kotlin/koala/component/spacer.kt) | An empty element that takes up space, and a heading centered in a row |
 
+A container is a `div`. `box` is reserved for children stacked over one another.
+
 ### Arrangements
 
 | Component | Role |

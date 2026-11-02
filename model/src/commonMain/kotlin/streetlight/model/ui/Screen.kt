@@ -49,6 +49,7 @@ enum class Screen(
     Contribute(StaticParse { ContributeRoute }),
     Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.BusinessOwner) }, null, true),
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
+    Studio(StaticParse { StudioRoute }),
 
     // star
     SkillProfile(UuidParse { SkillRoute(SkillId(it)) }),
@@ -210,6 +211,11 @@ object SiteMonitorRoute: StreetlightRoute {
 object ContributeRoute: StreetlightRoute {
     override val screen get() = Screen.Contribute
     override val title get() = "Contribute"
+}
+
+object StudioRoute: StreetlightRoute {
+    override val screen get() = Screen.Studio
+    override val title get() = "Studio"
 }
 
 // data class

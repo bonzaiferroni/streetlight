@@ -11,6 +11,7 @@ import streetlight.web.layout.EntityBodyCss
 import streetlight.web.layout.FeedSectionCss
 import streetlight.web.component.LogoCss
 import streetlight.web.view.EarthCss
+import streetlight.web.view.StudioCss
 import streetlight.web.view.RouteDockCss
 import streetlight.web.component.TagFilterMenuCss
 import koala.markdown.MarkdownCss
@@ -95,6 +96,7 @@ private val KtStyles = listOf(
     LayoutBuilderCss,
     LayoutStyleCss,
     InboxCss,
+    StudioCss,
     CuratorMenuStyle,
     ConnectPickerCss,
     ConnectCss,

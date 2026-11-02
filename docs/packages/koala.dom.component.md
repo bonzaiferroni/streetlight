@@ -29,6 +29,8 @@ The `ViewScope` variant of an interactive component builds its element through t
 | [`card`, `cardOf`](../../koala/src/jsMain/kotlin/koala/dom/component/card.kt) | A container with a card's background and corners |
 | [`section`](../../koala/src/jsMain/kotlin/koala/dom/component/section.kt) | A `section` laid out as a flex column |
 
+A container is a `div`. `box` is reserved for children stacked over one another.
+
 ### Arrangements
 
 | Component | Role |

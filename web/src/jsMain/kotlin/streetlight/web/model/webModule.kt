@@ -59,6 +59,9 @@ val webModule = module {
     single(createdAtStart = true) { StarLocator(get()) }
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
+    single { StudioAudio() }
+    single { AudioRecorder(get()) }
+    single { AudioPlayer(get()) }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
@@ -84,6 +87,8 @@ fun AppContainer.getEventScout(galaxy: Galaxy?, editor: EventEditor, location: L
 
 fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())
+
+fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
 
