@@ -26,17 +26,23 @@ class StudioEditor(
     private val state = storeOf(StudioEditorState())
     val sampleIdsState = state.tapOf { it.samples.map { sample -> sample.id } }
     val endSecondsState = state.tapOf { it.endSeconds }
-    val spanSecondsState = state.tapOf { it.spanSeconds }
-    val cursorRatioState = state.tapOf { it.cursorSeconds / it.spanSeconds }
+    val totalSecondsState = state.tapOf { it.totalSeconds }
+    val windowState = state.tapOf { it.window }
     val isRecordingState = recorder.isRecordingState
     val isPlayingState = player.isPlayingState
     val profileState = state.tapOf { it.profile }
     val isCalibratingState = state.tapOf { it.isCalibrating }
 
+    // the cursor moves every frame of playback and recording, so it keeps a store of its own
+    private val cursorStore = storeOf(0.0)
+    val cursorSecondsState: Tap<Double> = cursorStore
+
     private val sampleMap = mutableMapOf<Int, PcmSample>()
     private val filteredMap = mutableMapOf<Int, PcmSample>()
     private var nextSampleId = 0
+    private var captureStartSeconds = 0.0
     private var playJob: Job? = null
+    private var recordJob: Job? = null
     private var calibrateJob: Job? = null
 
     init {
@@ -55,6 +61,24 @@ class StudioEditor(
     /** The PCM the sample of [id] plays, with its filters applied. */
     fun readPcm(id: Int) = filteredMap[id]
 
+    /** The peaks of the capture in progress, or `null` when none is recording. */
+    fun readLivePeaks() = recorder.livePeaks
+
+    /** Where the capture in progress began on the timeline. */
+    fun readLiveStartSeconds() = captureStartSeconds
+
+    /** Where the sample of [id] begins on the timeline. */
+    fun startSecondsState(id: Int) = state.tapOf { state -> state.readSample(id)?.startSeconds ?: 0.0 }
+
+    /** Moves the sample of [id] to begin at [startSeconds], no earlier than the start of the timeline. */
+    fun moveSample(id: Int, startSeconds: Double) {
+        state.update { state ->
+            state.copy(samples = state.samples.map {
+                if (it.id == id) it.copy(startSeconds = max(startSeconds, 0.0)) else it
+            })
+        }
+    }
+
     /** Whether the sample of [id] is muted, written by a toggle. */
     fun isMutedState(id: Int) = state.mutableTapOf({ state -> state.readSample(id)?.isMuted == true }) { isMuted ->
         copy(samples = samples.map { if (it.id == id) it.copy(isMuted = isMuted) else it })
@@ -72,11 +96,28 @@ class StudioEditor(
         val filters = if (isFiltered) sample.filters + filter else sample.filters - filter
 
         filteredMap[id] = pcm.applyFilters(filters)
-        state.update { it.copy(samples = it.samples.map { sample -> if (sample.id == id) sample.copy(filters = filters) else sample }) }
+        state.update { state ->
+            state.copy(samples = state.samples.map { if (it.id == id) it.copy(filters = filters) else it })
+        }
     }
 
-    fun record() = scope.launch {
-        recorder.start()
+    /** Starts a capture at the cursor, with the cursor following it. */
+    fun record() {
+        if (recorder.isRecordingState.now || calibrateJob?.isActive == true) return
+        playJob?.cancel()
+        player.stop()
+
+        recordJob = scope.launch {
+            captureStartSeconds = cursorStore.now
+            recorder.start()
+            if (!recorder.isRecordingState.now) return@launch
+
+            while (true) {
+                awaitAnimationFrame()
+                val peaks = recorder.livePeaks ?: break
+                moveCursorTo(captureStartSeconds + peaks.durationSeconds)
+            }
+        }
     }
 
     /**
@@ -90,37 +131,38 @@ class StudioEditor(
         }
 
         if (!recorder.isRecordingState.now) {
+            playJob?.cancel()
             player.stop()
             return@launch
         }
 
+        recordJob?.cancel()
         val pcm = recorder.stop()?.pcm ?: return@launch
         val id = nextSampleId++
         sampleMap[id] = pcm
         filteredMap[id] = pcm
-        val sample = AudioSample(id, "Sample ${id + 1}", pcm.durationSeconds)
-        state.update { it.copy(
-            samples = it.samples + sample,
-            spanSeconds = max(it.spanSeconds, sample.durationSeconds),
-        ) }
+        val sample = AudioSample(id, "Sample ${id + 1}", pcm.durationSeconds, captureStartSeconds)
+        state.update { it.copy(samples = it.samples + sample) }
     }
 
     /** Plays every sample together from the cursor, which follows playback; from the start once past the end. */
     fun play() {
+        if (recorder.isRecordingState.now) return
         playJob?.cancel()
         playJob = scope.launch {
             val endSeconds = state.now.endSeconds ?: return@launch
-            val pcms = state.now.samples.filterNot { it.isMuted }.mapNotNull { filteredMap[it.id] }
-            if (state.now.cursorSeconds >= endSeconds) state.update { it.copy(cursorSeconds = 0.0) }
+            val placements = state.now.samples
+                .filterNot { it.isMuted }
+                .mapNotNull { sample -> filteredMap[sample.id]?.let { PlacedPcm(it, sample.startSeconds) } }
+            if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
 
-            val fromSeconds = state.now.cursorSeconds
-            val startClock = player.play(pcms, fromSeconds)
+            val fromSeconds = cursorStore.now
+            val startClock = player.play(placements, fromSeconds)
 
             while (true) {
                 awaitAnimationFrame()
                 if (!player.isPlayingState.now) break
-                val seconds = min(fromSeconds + audio.clockSeconds - startClock, endSeconds)
-                state.update { it.copy(cursorSeconds = seconds) }
+                moveCursorTo(min(fromSeconds + audio.clockSeconds - startClock, endSeconds))
             }
         }
     }
@@ -140,7 +182,7 @@ class StudioEditor(
                 recorder.start()
                 delay(LEAD_IN_MILLIS)
                 val sweep = sineSweepOf(audio.sampleRate)
-                val sweepClock = player.play(listOf(sweep), 0.0)
+                val sweepClock = player.play(listOf(PlacedPcm(sweep, 0.0)), 0.0)
                 delay((sweep.durationSeconds * 1000).toLong() + TAIL_MILLIS)
                 val response = recorder.stop() ?: return@launch
                 val profile = measureAcousticProfile(sweep, sweepClock, response)
@@ -153,29 +195,48 @@ class StudioEditor(
         }
     }
 
-    /** Moves the cursor to [ratio] of the timeline's span, stopping playback. */
-    fun moveCursor(ratio: Double) {
+    /** Moves the cursor to [seconds] on the timeline, stopping playback. */
+    fun moveCursor(seconds: Double) {
+        if (recorder.isRecordingState.now) return
         playJob?.cancel()
         player.stop()
-        state.update { it.copy(cursorSeconds = ratio.coerceIn(0.0, 1.0) * it.spanSeconds) }
+        moveCursorTo(seconds.coerceIn(0.0, state.now.totalSeconds))
+    }
+
+    /** Moves the window to start at [seconds], keeping it within the samples. */
+    fun moveWindow(seconds: Double) {
+        state.update { state ->
+            val window = state.window
+            val lastStart = max((state.endSeconds ?: 0.0) - window.spanSeconds, 0.0)
+            state.copy(window = window.copy(startSeconds = seconds.coerceIn(0.0, lastStart)))
+        }
+    }
+
+    // move the cursor, and the window with it when the cursor leaves it
+    private fun moveCursorTo(seconds: Double) {
+        cursorStore.set(seconds)
+        val window = state.now.window.follow(seconds)
+        if (window != state.now.window) state.update { it.copy(window = window) }
     }
 }
 
 data class StudioEditorState(
     val samples: List<AudioSample> = emptyList(),
-    val cursorSeconds: Double = 0.0,
-    val spanSeconds: Double = DEFAULT_SPAN_SECONDS,
+    val window: TimeWindow = TimeWindow(0.0, DEFAULT_WINDOW_SECONDS),
     val profile: AcousticProfile? = null,
     val isCalibrating: Boolean = false,
 ) {
     /** The sample of [id], or `null` when there is none. */
     fun readSample(id: Int) = samples.firstOrNull { it.id == id }
 
-    /** The end of playback, where the longest sample ends, or `null` without samples. */
-    val endSeconds get() = samples.maxOfOrNull { it.durationSeconds }
+    /** The end of playback, where the last sample ends, or `null` without samples. */
+    val endSeconds get() = samples.maxOfOrNull { it.endSeconds }
+
+    /** The length of the whole timeline, through the samples and the window. */
+    val totalSeconds get() = max(window.endSeconds, endSeconds ?: 0.0)
 }
 
-private const val DEFAULT_SPAN_SECONDS = 10.0
+private const val DEFAULT_WINDOW_SECONDS = 10.0
 
 // a lead-in long enough to measure the noise floor, and a tail long enough for the sweep to arrive and decay
 private const val LEAD_IN_MILLIS = 1000L

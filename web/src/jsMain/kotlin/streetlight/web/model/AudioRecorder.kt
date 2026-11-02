@@ -33,6 +33,9 @@ class AudioRecorder(
     private val recordingStore = storeOf(false)
     val isRecordingState: Tap<Boolean> = recordingStore
 
+    /** The peaks of the capture in progress, or `null` when none is recording. */
+    val livePeaks get() = capture?.peaks
+
     /** Starts a capture from the microphone, unless one is already recording. */
     suspend fun start() {
         if (capture != null || isStarting) return
@@ -90,6 +93,7 @@ private class AudioCapture(
     private val node: AudioWorkletNode,
 ) {
     private val blocks = mutableListOf<Array<FloatArray>>()
+    val peaks = BlockPeaks(sampleRate)
     private val ended = CompletableDeferred<Unit>()
     private var startClock = 0.0
 
@@ -99,7 +103,11 @@ private class AudioCapture(
             when {
                 data == END_MESSAGE -> ended.complete(Unit)
                 jsTypeOf(data) == "number" -> startClock = data.unsafeCast<Double>()
-                else -> blocks.add(data.unsafeCast<Array<FloatArray>>())
+                else -> {
+                    val block = data.unsafeCast<Array<FloatArray>>()
+                    blocks.add(block)
+                    peaks.add(block)
+                }
             }
         }
     }

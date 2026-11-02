@@ -21,21 +21,23 @@ class AudioPlayer(
     val isPlayingState: Tap<Boolean> = playingStore
 
     /**
-     * Plays [samples] together, each from [fromSeconds] into it, and returns the [StudioAudio.clockSeconds]
-     * playback began at. Any playback already running is stopped first.
+     * Plays [placements] together from [fromSeconds] on the timeline, and returns the [StudioAudio.clockSeconds]
+     * playback began at. A placement that begins later waits for its start. Any playback already running is stopped
+     * first.
      */
-    fun play(samples: List<PcmSample>, fromSeconds: Double): Double {
+    fun play(placements: List<PlacedPcm>, fromSeconds: Double): Double {
         stop()
         val context = audio.readContext()
         val startClock = context.currentTime
 
-        samples.forEach { sample ->
-            if (sample.durationSeconds <= fromSeconds) return@forEach
+        placements.forEach { placement ->
+            val offset = fromSeconds - placement.startSeconds
+            if (offset >= placement.pcm.durationSeconds) return@forEach
             val source = context.createBufferSource()
-            source.buffer = toAudioBuffer(context, sample)
+            source.buffer = toAudioBuffer(context, placement.pcm)
             source.connect(context.destination)
             source.onended = EventHandler { endSource(source) }
-            source.start(startClock, fromSeconds)
+            if (offset >= 0) source.start(startClock, offset) else source.start(startClock - offset, 0.0)
             sources.add(source)
         }
 
@@ -67,3 +69,9 @@ class AudioPlayer(
         return buffer
     }
 }
+
+/** PCM placed on the timeline at [startSeconds]. */
+class PlacedPcm(
+    val pcm: PcmSample,
+    val startSeconds: Double,
+)

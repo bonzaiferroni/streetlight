@@ -5,18 +5,36 @@ import koala.modifier.*
 object StudioStyle {
     val Track = Class("studio-track")
     val Timeline = Class("studio-timeline")
+    val WindowRegion = Timeline.withBemElement("window-region")
     val CursorHandle = Timeline.withBemElement("cursor-handle")
     val Lane = Class("studio-lane")
+    val Extent = Lane.withBemElement("extent")
     val Waveform = Lane.withBemElement("waveform")
-    val CursorLine = Lane.withBemElement("cursor-line")
+    val Stage = Class("studio-stage")
+    val CursorOverlay = Stage.withBemElement("cursor-overlay")
+    val CursorLine = Stage.withBemElement("cursor-line")
 }
 
 //language="CSS"
 val StudioCss get() = with(StudioStyle) { """
     
 $Timeline { position: relative; touch-action: none; }
-$Lane     { position: relative; }
-$Waveform { display: block; height: 100%; }
+$Lane     { position: relative; touch-action: pan-y; }
+$Extent   { position: absolute; inset-block: 0; }
+
+$Waveform {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+$WindowRegion {
+    position: absolute;
+    inset-block: 0;
+    background: color-mix(in srgb, var(--accent-fg) 25%, transparent);
+    cursor: grab;
+}
 
 $Track {
     display: grid;
@@ -33,6 +51,17 @@ $CursorHandle {
     border-radius: 50%;
     background: var(--accent-fg);
     cursor: grab;
+}
+
+$Stage { position: relative; }
+
+/* over the lane column of every track, past its panel and gap */
+$CursorOverlay {
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--unit-16) + var(--unit-1)) 0;
+    overflow: clip;
+    pointer-events: none;
 }
 
 $CursorLine {

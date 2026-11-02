@@ -38,8 +38,21 @@ import web.html.HTMLCanvasElement
 import web.html.HTMLElement
 import web.pointer.POINTER_DOWN
 import web.pointer.POINTER_MOVE
+import web.pointer.POINTER_UP
+import web.pointer.POINTER_CANCEL
 import web.pointer.PointerEvent
+import kotlin.math.abs
+import kotlinx.css.Visibility
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.Flow
+import koala.dom.launchEffect
+import streetlight.web.model.BLOCK_FRAMES
+import streetlight.web.model.TimeWindow
+import web.animations.awaitAnimationFrame
 
 /** Renders the studio, where samples are recorded and played together from a cursor on a timeline. */
 fun ViewScope.viewStudio() {
@@ -50,7 +63,11 @@ fun ViewScope.viewStudio() {
                 studioControls()
                 column(modify(Gap2Px, Zen, BorderRadius1, OverflowClip)) {
                     studioTimeline()
-                    sampleStage()
+                    div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
+                        sampleStage()
+                        liveStage()
+                        cursorOverlay()
+                    }
                 }
                 calibrationSection()
             }
@@ -78,7 +95,7 @@ context(model: StudioEditor)
 private fun ViewScope.calibrationSection() = column {
     flowBlock(model.isCalibratingState) { isCalibrating ->
         if (isCalibrating) textBlock("Calibrating…")
-        else button("Calibrate", { model.calibrate() })
+        else button("Calibrate", { model.calibrate() }, Zen)
     }
     flowBlock(model.profileState) { profile ->
         if (profile == null) return@flowBlock
@@ -100,68 +117,129 @@ private fun ViewScope.calibrationSection() = column {
     }
 }
 
-/** Renders the timeline, with a handle at the cursor that moves it by dragging or by pressing the timeline. */
+/**
+ * Renders the timeline, which pulls double duty: the region places the window the lanes show within the whole
+ * composition, while the handle places the cursor within the window, in line with the lanes. Dragging the region
+ * moves the window, and pressing or dragging anywhere else moves the cursor.
+ */
 context(model: StudioEditor)
 private fun ViewScope.studioTimeline() {
     lateinit var timelineElement: HTMLElement
+    lateinit var regionElement: HTMLElement
     lateinit var handleElement: HTMLElement
     div(modify(StudioStyle.Track, CardBg)) {
         flowBlock(model.endSecondsState, Padding(1)) { endSeconds ->
             textBlock(endSeconds?.toDurationText() ?: "0:00")
         }
         timelineElement = div(modify(StudioStyle.Timeline, VoidBg)) {
+            regionElement = div(StudioStyle.WindowRegion)
             handleElement = div(StudioStyle.CursorHandle)
         }
     }
 
-    fun moveCursor(event: PointerEvent) {
+    fun readRatio(event: PointerEvent): Double? {
         val rect = timelineElement.getBoundingClientRect()
-        if (rect.width == 0.0) return
-        model.moveCursor((event.clientX - rect.left) / rect.width)
+        if (rect.width == 0.0) return null
+        return (event.clientX - rect.left) / rect.width
     }
 
-    timelineElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
-        timelineElement.setPointerCapture(event.pointerId)
-        moveCursor(event)
+    // the cursor reads a press within the window, the region within the whole composition
+    fun moveCursor(event: PointerEvent) =
+        readRatio(event)?.let { model.moveCursor(model.windowState.now.toSeconds(it)) }
+    fun readTotalSeconds(event: PointerEvent) = readRatio(event)?.let { it * model.totalSecondsState.now }
+
+    // press or drag the timeline and the handle to move the cursor
+    listOf(timelineElement, handleElement).forEach { element ->
+        element.addEventListener(PointerEvent.POINTER_DOWN, { event ->
+            event.stopPropagation()
+            element.setPointerCapture(event.pointerId)
+            moveCursor(event)
+        })
+        element.addEventListener(PointerEvent.POINTER_MOVE, { event ->
+            if (element.hasPointerCapture(event.pointerId)) moveCursor(event)
+        })
+    }
+
+    // drag the region to move the window, keeping the point it was grabbed by under the pointer, or press it to
+    // move the cursor
+    var grabX = 0
+    var grabOffset = 0.0
+    var isDragging = false
+    regionElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
+        event.stopPropagation()
+        regionElement.setPointerCapture(event.pointerId)
+        grabX = event.clientX
+        grabOffset = (readTotalSeconds(event) ?: 0.0) - model.windowState.now.startSeconds
+        isDragging = false
+    })
+    regionElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
+        if (!regionElement.hasPointerCapture(event.pointerId)) return@addEventListener
+        if (abs(event.clientX - grabX) > DRAG_THRESHOLD_PX) isDragging = true
+        if (isDragging) readTotalSeconds(event)?.let { model.moveWindow(it - grabOffset) }
+    })
+    regionElement.addEventListener(PointerEvent.POINTER_UP, { event ->
+        if (!isDragging) moveCursor(event)
     })
 
-    timelineElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
-        if (timelineElement.hasPointerCapture(event.pointerId)) moveCursor(event)
-    })
+    launchEffect("studioTimeline") {
+        combine(model.windowState.flow, model.totalSecondsState.flow) { window, total -> window to total }
+            .collect { (window, total) ->
+                regionElement.setStyle(Css.Left.of((window.startSeconds / total * 100).pct))
+                regionElement.setStyle(Css.Width.of((window.spanSeconds / total * 100).pct))
+            }
+    }
 
-    placeAtCursor(handleElement)
+    // place the handle in line with the lanes, hidden while the cursor is outside the window
+    launchEffect("studioTimeline") {
+        readCursorRatioFlow().collect { ratio ->
+            handleElement.setStyle(Css.Left.of((ratio * 100).pct))
+            handleElement.setStyle(Css.Visibility.of(if (ratio in 0.0..1.0) Visibility.visible else Visibility.hidden))
+        }
+    }
 }
 
 context(model: StudioEditor)
-private fun ViewScope.sampleStage() = flowBlock(model.sampleIdsState, modify(Gap2Px)) { ids ->
+private fun ViewScope.sampleStage() = flowBlock(model.sampleIdsState, modify(FlexColumn, Gap2Px)) { ids ->
     ids.forEach { id ->
         model.readSample(id)?.let { audioSample(it) }
     }
 }
 
-/**
- * Renders [sample] beside its name and switches, as its waveform at the timeline's scale, with a line at the cursor.
- */
+/** Renders the cursor as one line across every lane, in line with the cursor's place in the window. */
+context(model: StudioEditor)
+private fun ViewScope.cursorOverlay() {
+    lateinit var lineElement: HTMLElement
+    div(StudioStyle.CursorOverlay) {
+        lineElement = div(StudioStyle.CursorLine)
+    }
+    placeAt(lineElement, readCursorRatioFlow())
+}
+
+/** Renders the lane of the capture in progress while one records, apart from a calibration's. */
+context(model: StudioEditor)
+private fun ViewScope.liveStage() = flowBlock(model.isRecordingState) { isRecording ->
+    if (isRecording && !model.isCalibratingState.now) liveLane()
+}
+
+/** Renders [sample] beside its name and switches, as its waveform within the window. */
 context(model: StudioEditor)
 fun ViewScope.audioSample(sample: AudioSample) {
     val filtersId = Id("sample-filters-${sample.id}")
+    lateinit var laneElement: HTMLElement
+    lateinit var extentElement: HTMLElement
     lateinit var canvasElement: HTMLCanvasElement
-    lateinit var lineElement: HTMLElement
     div(modify(StudioStyle.Track, CardBg)) {
         column(Padding(1)) {
             textBlock(sample.name)
             switch("mute", model.isMutedState(sample.id))
-            button("filters") { setPopoverTarget(filtersId, true) }
+            button("filters", mod = Zen) { setPopoverTarget(filtersId, true) }
         }
-        div(modify(Height(32), StudioStyle.Lane)) {
-            canvasElement = this@audioSample.canvas { addModifiers(VoidBg, PrimaryFg, StudioStyle.Waveform) }
+        laneElement = div(modify(Height(32), StudioStyle.Lane)) {
+            extentElement = div(modify(VoidBg, StudioStyle.Extent))
+            canvasElement = this@audioSample.canvas { addModifiers(PrimaryFg, StudioStyle.Waveform) }
                 .unsafeCast<HTMLCanvasElement>()
-            lineElement = div(StudioStyle.CursorLine)
         }
     }
-
-    fun sizeWaveform(spanSeconds: Double) =
-        canvasElement.setStyle(Css.Width.of((sample.durationSeconds / spanSeconds * 100).pct))
 
     popover(filtersId) {
         column {
@@ -171,49 +249,178 @@ fun ViewScope.audioSample(sample: AudioSample) {
         }
     }
 
-    placeAtCursor(lineElement)
-    sizeWaveform(model.spanSecondsState.now)
+    wireSampleDrag(laneElement, sample.id)
 
     launchEffect("audioSample") {
-        model.spanSecondsState.flow.collect { sizeWaveform(it) }
-    }
-
-    launchEffect("audioSample") {
-        combine(canvasElement.resizeFlow(), model.filtersState(sample.id).flow) { _, _ -> }.collect {
-            model.readPcm(sample.id)?.let { canvasElement.drawWaveform(it) }
+        combine(
+            canvasElement.resizeFlow(),
+            model.windowState.flow,
+            model.filtersState(sample.id).flow,
+            model.startSecondsState(sample.id).flow,
+        ) { _, window, _, startSeconds -> window to startSeconds }.collect { (window, startSeconds) ->
+            extentElement.placeExtent(window, startSeconds, sample.durationSeconds)
+            model.readPcm(sample.id)?.let { canvasElement.drawWaveform(it, startSeconds, window) }
         }
     }
 }
 
-/** Keeps [element] at the cursor's position along its container. */
+/**
+ * Moves the sample of [id] along the timeline as [laneElement] is dragged sideways. A drag begins only once the
+ * pointer travels clearly sideways, so a vertical swipe still scrolls the page.
+ */
 context(model: StudioEditor)
-private fun ViewScope.placeAtCursor(element: HTMLElement) {
-    fun place(ratio: Double) = element.setStyle(Css.Left.of((ratio * 100).pct))
+private fun wireSampleDrag(laneElement: HTMLElement, id: Int) {
+    var pointerId: Int? = null
+    var grabX = 0
+    var grabY = 0
+    var grabStartSeconds = 0.0
+    var isDragging = false
 
-    place(model.cursorRatioState.now)
+    laneElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
+        pointerId = event.pointerId
+        grabX = event.clientX
+        grabY = event.clientY
+        grabStartSeconds = model.readSample(id)?.startSeconds ?: return@addEventListener
+        isDragging = false
+    })
 
-    launchEffect("placeAtCursor") {
-        model.cursorRatioState.flow.collect { place(it) }
+    laneElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
+        if (event.pointerId != pointerId) return@addEventListener
+        val dx = event.clientX - grabX
+        val dy = event.clientY - grabY
+
+        // begin on a clear sideways move, or let the gesture go when it turns out vertical
+        if (!isDragging) {
+            if (abs(dy) > SAMPLE_DRAG_THRESHOLD_PX && abs(dy) >= abs(dx)) pointerId = null
+            if (abs(dx) <= SAMPLE_DRAG_THRESHOLD_PX || abs(dx) < abs(dy) * 2) return@addEventListener
+            isDragging = true
+            laneElement.setPointerCapture(event.pointerId)
+        }
+
+        val width = laneElement.getBoundingClientRect().width
+        if (width == 0.0) return@addEventListener
+        model.moveSample(id, grabStartSeconds + dx / width * model.windowState.now.spanSeconds)
+    })
+
+    listOf(PointerEvent.POINTER_UP, PointerEvent.POINTER_CANCEL).forEach { type ->
+        laneElement.addEventListener(type, { event ->
+            if (event.pointerId == pointerId) pointerId = null
+        })
     }
 }
 
-/** Draws [sample] across this canvas in its text color. */
-private fun HTMLCanvasElement.drawWaveform(sample: PcmSample) {
-    // size the drawing surface to the device's pixels
+/** Renders the capture in progress, drawing each frame only the columns its newest blocks reach. */
+context(model: StudioEditor)
+private fun ViewScope.liveLane() {
+    lateinit var extentElement: HTMLElement
+    lateinit var canvasElement: HTMLCanvasElement
+    div(modify(StudioStyle.Track, CardBg)) {
+        textBlock("Recording", Padding(1))
+        div(modify(Height(32), StudioStyle.Lane)) {
+            extentElement = div(modify(VoidBg, StudioStyle.Extent))
+            canvasElement = this@liveLane.canvas { addModifiers(PrimaryFg, StudioStyle.Waveform) }
+                .unsafeCast<HTMLCanvasElement>()
+        }
+    }
+
+    launchEffect("liveLane") {
+        var drawnWindow: TimeWindow? = null
+        var nextColumn = 0
+        while (true) {
+            awaitAnimationFrame()
+            val peaks = model.readLivePeaks() ?: break
+            val startSeconds = model.readLiveStartSeconds()
+            val window = model.windowState.now
+            val context = canvasElement.getContext(CanvasRenderingContext2D.ID) ?: break
+
+            // start over when the window moves or the canvas resizes
+            val pixelWidth = (canvasElement.clientWidth * devicePixelRatio).roundToInt()
+            if (window != drawnWindow || pixelWidth != canvasElement.width) {
+                canvasElement.sizeToPixels()
+                context.fillStyle = canvasElement.readColor()
+                drawnWindow = window
+                nextColumn = max(ceil(window.toRatio(startSeconds) * pixelWidth).toInt(), 0)
+            }
+
+            // draw the columns the new blocks reach
+            extentElement.placeExtent(window, startSeconds, peaks.durationSeconds)
+            val endSeconds = startSeconds + peaks.durationSeconds
+            val endColumn = min(floor(window.toRatio(endSeconds) * pixelWidth).toInt(), pixelWidth)
+            val blocksPerColumn = window.spanSeconds / pixelWidth * peaks.sampleRate / BLOCK_FRAMES
+            val firstBlock = (window.startSeconds - startSeconds) * peaks.sampleRate / BLOCK_FRAMES
+            val middle = canvasElement.height / 2.0
+            for (column in nextColumn until endColumn) {
+                val startBlock = (firstBlock + column * blocksPerColumn).toInt()
+                val endBlock = (firstBlock + (column + 1) * blocksPerColumn).toInt()
+                var low = 0f
+                var high = 0f
+                for (block in startBlock until min(max(endBlock, startBlock + 1), peaks.blockCount)) {
+                    low = min(low, peaks.readLow(block))
+                    high = max(high, peaks.readHigh(block))
+                }
+                context.drawPeak(column, low, high, middle)
+            }
+            nextColumn = max(nextColumn, endColumn)
+        }
+    }
+}
+
+/** Keeps [element] at each ratio of [ratioFlow] along its container. */
+private fun ViewScope.placeAt(element: HTMLElement, ratioFlow: Flow<Double>) {
+    launchEffect("placeAt") {
+        ratioFlow.collect { element.setStyle(Css.Left.of((it * 100).pct)) }
+    }
+}
+
+/** The cursor's position across the window, as it moves. */
+context(model: StudioEditor)
+private fun readCursorRatioFlow() =
+    combine(model.cursorSecondsState.flow, model.windowState.flow) { cursor, window -> window.toRatio(cursor) }
+
+/** Places this element over the part of [window] that a sample [durationSeconds] long from [startSeconds] covers. */
+private fun HTMLElement.placeExtent(window: TimeWindow, startSeconds: Double, durationSeconds: Double) {
+    val start = window.toRatio(startSeconds).coerceIn(0.0, 1.0)
+    val end = window.toRatio(startSeconds + durationSeconds).coerceIn(0.0, 1.0)
+    setStyle(Css.Left.of((start * 100).pct))
+    setStyle(Css.Width.of((max(end - start, 0.0) * 100).pct))
+}
+
+/** Draws the part of [sample], beginning at [startSeconds], within [window] across this canvas in its text color. */
+private fun HTMLCanvasElement.drawWaveform(sample: PcmSample, startSeconds: Double, window: TimeWindow) {
+    sizeToPixels()
+    val context = getContext(CanvasRenderingContext2D.ID) ?: return
+
+    // find the columns the sample covers, and the frames beneath them
+    val firstColumn = max(ceil(window.toRatio(startSeconds) * width).toInt(), 0)
+    val lastColumn = min(floor(window.toRatio(startSeconds + sample.durationSeconds) * width).toInt(), width)
+    if (lastColumn <= firstColumn) return
+    val secondsPerColumn = window.spanSeconds / width
+    val offsetSeconds = window.startSeconds - startSeconds
+    val startFrame = ((offsetSeconds + firstColumn * secondsPerColumn) * sample.sampleRate).toInt()
+    val endFrame = ((offsetSeconds + lastColumn * secondsPerColumn) * sample.sampleRate).toInt()
+
+    val peaks = sample.readPeaks(startFrame, min(endFrame, sample.frameCount), lastColumn - firstColumn)
+    val middle = height / 2.0
+    context.fillStyle = readColor()
+    for (column in 0 until lastColumn - firstColumn) {
+        context.drawPeak(firstColumn + column, peaks[column * 2], peaks[column * 2 + 1], middle)
+    }
+}
+
+// size the drawing surface to the device's pixels, which also clears it
+private fun HTMLCanvasElement.sizeToPixels() {
     val rect = getBoundingClientRect()
     width = (rect.width * devicePixelRatio).roundToInt()
     height = (rect.height * devicePixelRatio).roundToInt()
-    val context = getContext(CanvasRenderingContext2D.ID) ?: return
+}
 
-    // draw a bar from the low to the high peak of each column
-    val peaks = sample.readPeaks(width)
-    val middle = height / 2.0
-    context.fillStyle = getComputedStyle(this).getPropertyValue("color").toJsString()
-    for (column in 0 until width) {
-        val top = middle - peaks[column * 2 + 1] * middle
-        val bottom = middle - peaks[column * 2] * middle
-        context.fillRect(column.toDouble(), top, 1.0, maxOf(bottom - top, 1.0))
-    }
+private fun HTMLCanvasElement.readColor() = getComputedStyle(this).getPropertyValue("color").toJsString()
+
+// a bar from the low to the high peak of one column
+private fun CanvasRenderingContext2D.drawPeak(column: Int, low: Float, high: Float, middle: Double) {
+    val top = middle - high * middle
+    val bottom = middle - low * middle
+    fillRect(column.toDouble(), top, 1.0, max(bottom - top, 1.0))
 }
 
 /** These seconds as minutes, seconds and tenths, as `1:04.2`. */
@@ -225,3 +432,9 @@ private fun Double.toDurationText(): String {
 
 /** This value rounded to tenths, as `-62.3`. */
 private fun Double.toTenthsText() = ((this * 10).roundToInt() / 10.0).toString()
+
+// the distance a press on the window region travels before it becomes a drag
+private const val DRAG_THRESHOLD_PX = 3
+
+// the distance a press on a lane travels, clearly sideways, before it moves the sample
+private const val SAMPLE_DRAG_THRESHOLD_PX = 8
