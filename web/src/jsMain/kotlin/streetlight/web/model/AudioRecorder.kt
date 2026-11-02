@@ -20,20 +20,20 @@ import web.navigator.navigator
 import web.url.URL
 import web.worklets.addModule
 
-/** Records PCM from the microphone, one take at a time. */
+/** Records PCM from the microphone, one capture at a time. */
 class AudioRecorder(
     private val audio: StudioAudio,
 ) {
-    private var take: AudioTake? = null
+    private var capture: AudioCapture? = null
     private var isStarting = false
     private var isModuleLoaded = false
 
     private val recordingStore = storeOf(false)
     val isRecordingState: Tap<Boolean> = recordingStore
 
-    /** Starts a take from the microphone, unless one is already recording. */
+    /** Starts a capture from the microphone, unless one is already recording. */
     suspend fun start() {
-        if (take != null || isStarting) return
+        if (capture != null || isStarting) return
         isStarting = true
         try {
             val context = audio.readContext()
@@ -46,25 +46,25 @@ class AudioRecorder(
             val source = context.createMediaStreamSource(stream)
             val node = AudioWorkletNode(context, AudioWorkletProcessorName(TAP_PROCESSOR), AudioWorkletNodeOptions(numberOfOutputs = 0))
             source.connect(node)
-            take = AudioTake(context.sampleRate.toInt(), stream, node)
+            capture = AudioCapture(context.sampleRate.toInt(), stream, node)
             recordingStore.set(true)
         } finally {
             isStarting = false
         }
     }
 
-    /** Stops the take, and returns what it recorded, or `null` when none is recording. */
-    suspend fun stop(): PcmSample? {
-        val current = take ?: return null
-        take = null
+    /** Stops the capture, and returns what it recorded, or `null` when none is recording. */
+    suspend fun stop(): CapturedPcm? {
+        val current = capture ?: return null
+        capture = null
         recordingStore.set(false)
         return current.stop()
     }
 
-    /** Stops the take and discards what it recorded. */
+    /** Stops the capture and discards what it recorded. */
     fun cancel() {
-        val current = take ?: return
-        take = null
+        val current = capture ?: return
+        capture = null
         recordingStore.set(false)
         current.release()
     }
@@ -81,35 +81,39 @@ class AudioRecorder(
     }
 }
 
-/** A recording in progress, which becomes a [PcmSample] once stopped. */
-private class AudioTake(
+/** A recording in progress, which becomes a [CapturedPcm] once stopped. */
+private class AudioCapture(
     private val sampleRate: Int,
     private val stream: MediaStream,
     private val node: AudioWorkletNode,
 ) {
     private val blocks = mutableListOf<Array<FloatArray>>()
     private val ended = CompletableDeferred<Unit>()
+    private var startClock = 0.0
 
     init {
         node.port.onmessage = EventHandler { event ->
             val data = event.data
-            if (data == END_MESSAGE) ended.complete(Unit)
-            else blocks.add(data.unsafeCast<Array<FloatArray>>())
+            when {
+                data == END_MESSAGE -> ended.complete(Unit)
+                jsTypeOf(data) == "number" -> startClock = data.unsafeCast<Double>()
+                else -> blocks.add(data.unsafeCast<Array<FloatArray>>())
+            }
         }
     }
 
-    /** Stops recording, and returns every sample captured since the take began. */
-    suspend fun stop(): PcmSample {
+    /** Stops recording, and returns every sample captured since the capture began. */
+    suspend fun stop(): CapturedPcm {
         node.port.postMessage(STOP_MESSAGE)
         try {
             ended.await()
         } finally {
             release()
         }
-        return PcmSample(sampleRate, joinBlocks())
+        return CapturedPcm(PcmSample(sampleRate, joinBlocks()), startClock)
     }
 
-    /** Ends the take without waiting for its last blocks, releasing the microphone. */
+    /** Ends the capture without waiting for its last blocks, releasing the microphone. */
     fun release() {
         node.disconnect()
         node.port.close()
@@ -132,16 +136,24 @@ private class AudioTake(
     }
 }
 
+/** What a capture recorded, beginning at [startClock] on the [StudioAudio] clock. */
+class CapturedPcm(
+    val pcm: PcmSample,
+    val startClock: Double,
+)
+
 private const val TAP_PROCESSOR = "pcm-tap"
 private const val STOP_MESSAGE = "stop"
 private const val END_MESSAGE = "end"
 
-// posts a copy of each block of input to the main thread; "end" follows the last block once "stop" arrives
+// posts the clock time of the first block of input, then a copy of each block; "end" follows the last block once
+// "stop" arrives
 private const val TAP_PROCESSOR_SOURCE = """
 class PcmTapProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
         this.stopped = false;
+        this.started = false;
         this.port.onmessage = (event) => {
             if (event.data === "$STOP_MESSAGE") {
                 this.stopped = true;
@@ -153,7 +165,12 @@ class PcmTapProcessor extends AudioWorkletProcessor {
     process(inputs) {
         if (this.stopped) return false;
         const input = inputs[0];
-        if (input.length > 0) this.port.postMessage(input.map((channel) => channel.slice()));
+        if (input.length === 0) return true;
+        if (!this.started) {
+            this.started = true;
+            this.port.postMessage(currentTime);
+        }
+        this.port.postMessage(input.map((channel) => channel.slice()));
         return true;
     }
 }

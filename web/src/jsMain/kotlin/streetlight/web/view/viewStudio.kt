@@ -46,6 +46,7 @@ fun ViewScope.viewStudio() {
                     studioTimeline()
                     sampleStage()
                 }
+                calibrationSection()
             }
         }
     }
@@ -64,6 +65,26 @@ private fun ViewScope.studioControls() = row(AlignSelfCenter) {
     button(SvgFile.PlayerPlay.filled, { model.play() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
     button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     button(SvgFile.PlayerRecord.filled, { model.record() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Record")))
+}
+
+/** Renders the calibration's button, and the acoustic profile it measured once there is one. */
+context(model: StudioEditor)
+private fun ViewScope.calibrationSection() = column {
+    flowBlock(model.isCalibratingState) { isCalibrating ->
+        if (isCalibrating) textBlock("Calibrating…")
+        else button("Calibrate", { model.calibrate() })
+    }
+    flowBlock(model.profileState) { profile ->
+        if (profile == null) return@flowBlock
+        column {
+            textBlock("Latency: ${(profile.latencySeconds * 1000).roundToInt()} ms")
+            textBlock("Noise floor: ${profile.noiseFloorDb.toTenthsText()} dB")
+            textBlock("Response: ${profile.responseDb.toTenthsText()} dB")
+            textBlock("Signal to noise: ${profile.signalToNoiseDb.toTenthsText()} dB")
+            textBlock("Peak: ${profile.peakDb.toTenthsText()} dB")
+            textBlock("Sample rate: ${profile.sampleRate} Hz")
+        }
+    }
 }
 
 /** Renders the timeline, with a handle at the cursor that moves it by dragging or by pressing the timeline. */
@@ -173,3 +194,6 @@ private fun Double.toDurationText(): String {
     val seconds = tenths / 10 % 60
     return "${tenths / 600}:${seconds.toString().padStart(2, '0')}.${tenths % 10}"
 }
+
+/** This value rounded to tenths, as `-62.3`. */
+private fun Double.toTenthsText() = ((this * 10).roundToInt() / 10.0).toString()

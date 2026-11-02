@@ -9,6 +9,9 @@ class StudioAudio {
     /** The audio clock in seconds, which playback and recording are scheduled against. */
     val clockSeconds get() = context?.currentTime ?: 0.0
 
+    /** The sample rate the shared context runs at. */
+    val sampleRate get() = readContext().sampleRate.toInt()
+
     /** The shared context, created on first use. */
     fun readContext() = context ?: AudioContext().also { context = it }
 }

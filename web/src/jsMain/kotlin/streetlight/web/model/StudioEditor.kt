@@ -4,6 +4,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import web.animations.awaitAnimationFrame
 import kotlin.math.max
@@ -26,13 +27,16 @@ class StudioEditor(
     val cursorRatioState = state.tapOf { it.cursorSeconds / it.spanSeconds }
     val isRecordingState = recorder.isRecordingState
     val isPlayingState = player.isPlayingState
+    val profileState = state.tapOf { it.profile }
+    val isCalibratingState = state.tapOf { it.isCalibrating }
 
     private val sampleMap = mutableMapOf<Int, PcmSample>()
     private var nextSampleId = 0
     private var playJob: Job? = null
+    private var calibrateJob: Job? = null
 
     init {
-        // a take or playback left running when the studio closes would hold the microphone or keep sounding
+        // a capture or playback left running when the studio closes would hold the microphone or keep sounding
         scope.coroutineContext[Job]?.invokeOnCompletion {
             recorder.cancel()
             player.stop()
@@ -45,14 +49,22 @@ class StudioEditor(
         recorder.start()
     }
 
-    /** Stops the take, keeping what it recorded as a sample, or stops playback when none is recording. */
+    /**
+     * Stops the capture, keeping what it recorded as a sample, or stops playback when none is recording. A
+     * calibration is cancelled instead.
+     */
     fun stop() = scope.launch {
+        if (calibrateJob?.isActive == true) {
+            calibrateJob?.cancel()
+            return@launch
+        }
+
         if (!recorder.isRecordingState.now) {
             player.stop()
             return@launch
         }
 
-        val pcm = recorder.stop() ?: return@launch
+        val pcm = recorder.stop()?.pcm ?: return@launch
         val id = nextSampleId++
         sampleMap[id] = pcm
         val sample = AudioSample(id, "Sample ${id + 1}", pcm.durationSeconds)
@@ -82,6 +94,34 @@ class StudioEditor(
         }
     }
 
+    /**
+     * Measures the setup's [AcousticProfile]: captures a lead-in of silence, then a sine sweep played through the
+     * speakers and the tail that follows it.
+     */
+    fun calibrate() {
+        if (recorder.isRecordingState.now || calibrateJob?.isActive == true) return
+        playJob?.cancel()
+        player.stop()
+
+        calibrateJob = scope.launch {
+            state.update { it.copy(isCalibrating = true) }
+            try {
+                recorder.start()
+                delay(LEAD_IN_MILLIS)
+                val sweep = sineSweepOf(audio.sampleRate)
+                val sweepClock = player.play(listOf(sweep), 0.0)
+                delay((sweep.durationSeconds * 1000).toLong() + TAIL_MILLIS)
+                val response = recorder.stop() ?: return@launch
+                val profile = measureAcousticProfile(sweep, sweepClock, response)
+                state.update { it.copy(profile = profile) }
+            } finally {
+                recorder.cancel()
+                player.stop()
+                state.update { it.copy(isCalibrating = false) }
+            }
+        }
+    }
+
     /** Moves the cursor to [ratio] of the timeline's span, stopping playback. */
     fun moveCursor(ratio: Double) {
         playJob?.cancel()
@@ -94,9 +134,15 @@ data class StudioEditorState(
     val samples: List<AudioSample> = emptyList(),
     val cursorSeconds: Double = 0.0,
     val spanSeconds: Double = DEFAULT_SPAN_SECONDS,
+    val profile: AcousticProfile? = null,
+    val isCalibrating: Boolean = false,
 ) {
     /** The end of playback, where the longest sample ends, or `null` without samples. */
     val endSeconds get() = samples.maxOfOrNull { it.durationSeconds }
 }
 
 private const val DEFAULT_SPAN_SECONDS = 10.0
+
+// a lead-in long enough to measure the noise floor, and a tail long enough for the sweep to arrive and decay
+private const val LEAD_IN_MILLIS = 500L
+private const val TAIL_MILLIS = 1000L
