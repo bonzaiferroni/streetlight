@@ -53,26 +53,38 @@ fun transformFourier(real: DoubleArray, imaginary: DoubleArray, inverse: Boolean
     }
 }
 
-/** The cross-correlation of [signal] with [kernel] at each lag from 0 through the end of [signal]. */
-fun crossCorrelationOf(signal: FloatArray, kernel: FloatArray): DoubleArray {
+/**
+ * The impulse response that turned [stimulus] into [response], found by deconvolution, at each lag from 0 through the
+ * end of [response]. Frequencies the stimulus barely holds are left out rather than amplified.
+ */
+fun impulseResponseOf(response: FloatArray, stimulus: FloatArray): DoubleArray {
     var size = 1
-    while (size < signal.size + kernel.size) size = size shl 1
+    while (size < response.size + stimulus.size) size = size shl 1
 
-    val signalReal = DoubleArray(size) { if (it < signal.size) signal[it].toDouble() else 0.0 }
-    val signalImaginary = DoubleArray(size)
-    val kernelReal = DoubleArray(size) { if (it < kernel.size) kernel[it].toDouble() else 0.0 }
-    val kernelImaginary = DoubleArray(size)
-    transformFourier(signalReal, signalImaginary)
-    transformFourier(kernelReal, kernelImaginary)
+    val responseReal = DoubleArray(size) { if (it < response.size) response[it].toDouble() else 0.0 }
+    val responseImaginary = DoubleArray(size)
+    val stimulusReal = DoubleArray(size) { if (it < stimulus.size) stimulus[it].toDouble() else 0.0 }
+    val stimulusImaginary = DoubleArray(size)
+    transformFourier(responseReal, responseImaginary)
+    transformFourier(stimulusReal, stimulusImaginary)
 
-    // multiply the signal's spectrum by the kernel's conjugate
+    // divide the response's spectrum by the stimulus's, regularized below its peak power
+    var peakPower = 0.0
     for (index in 0 until size) {
-        val real = signalReal[index] * kernelReal[index] + signalImaginary[index] * kernelImaginary[index]
-        val imaginary = signalImaginary[index] * kernelReal[index] - signalReal[index] * kernelImaginary[index]
-        signalReal[index] = real
-        signalImaginary[index] = imaginary
+        peakPower = maxOf(peakPower, stimulusReal[index] * stimulusReal[index] + stimulusImaginary[index] * stimulusImaginary[index])
+    }
+    val floorPower = peakPower * REGULARIZATION
+    for (index in 0 until size) {
+        val power = stimulusReal[index] * stimulusReal[index] + stimulusImaginary[index] * stimulusImaginary[index]
+        val real = responseReal[index] * stimulusReal[index] + responseImaginary[index] * stimulusImaginary[index]
+        val imaginary = responseImaginary[index] * stimulusReal[index] - responseReal[index] * stimulusImaginary[index]
+        responseReal[index] = real / (power + floorPower)
+        responseImaginary[index] = imaginary / (power + floorPower)
     }
 
-    transformFourier(signalReal, signalImaginary, inverse = true)
-    return DoubleArray(signal.size) { signalReal[it] / size }
+    transformFourier(responseReal, responseImaginary, inverse = true)
+    return DoubleArray(response.size) { responseReal[it] / size }
 }
+
+// 50 dB below the stimulus's peak power
+private const val REGULARIZATION = 1e-5

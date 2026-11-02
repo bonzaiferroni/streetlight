@@ -14,6 +14,8 @@ import web.blob.BlobPropertyBag
 import web.events.EventHandler
 import web.mediadevices.getUserMedia
 import web.mediastreams.MediaStream
+import web.mediastreams.MediaStreamTrack
+import kampfire.model.Labeled
 import web.mediastreams.MediaStreamConstraints
 import web.mediastreams.MediaTrackConstraints
 import web.navigator.navigator
@@ -110,7 +112,8 @@ private class AudioCapture(
         } finally {
             release()
         }
-        return CapturedPcm(PcmSample(sampleRate, joinBlocks()), startClock)
+        val track = stream.getAudioTracks().first()
+        return CapturedPcm(PcmSample(sampleRate, joinBlocks()), startClock, track.label, readProcessing(track))
     }
 
     /** Ends the capture without waiting for its last blocks, releasing the microphone. */
@@ -136,11 +139,33 @@ private class AudioCapture(
     }
 }
 
-/** What a capture recorded, beginning at [startClock] on the [StudioAudio] clock. */
+/**
+ * What a capture recorded, beginning at [startClock] on the [StudioAudio] clock, from the mic named [micLabel] with
+ * the browser's [processing] applied.
+ */
 class CapturedPcm(
     val pcm: PcmSample,
     val startClock: Double,
+    val micLabel: String,
+    val processing: List<BrowserProcessing>,
 )
+
+/** Processing the browser may apply to the mic, which the studio asks it not to. */
+enum class BrowserProcessing(override val label: String): Labeled {
+    EchoCancellation("echo cancellation"),
+    NoiseSuppression("noise suppression"),
+    AutoGainControl("auto gain"),
+}
+
+/** The processing [track] runs with, despite the studio's constraints. */
+private fun readProcessing(track: MediaStreamTrack): List<BrowserProcessing> {
+    val settings = track.getSettings()
+    return buildList {
+        if (settings.echoCancellation?.toString().let { it != null && it != "false" }) add(BrowserProcessing.EchoCancellation)
+        if (settings.noiseSuppression == true) add(BrowserProcessing.NoiseSuppression)
+        if (settings.autoGainControl == true) add(BrowserProcessing.AutoGainControl)
+    }
+}
 
 private const val TAP_PROCESSOR = "pcm-tap"
 private const val STOP_MESSAGE = "stop"

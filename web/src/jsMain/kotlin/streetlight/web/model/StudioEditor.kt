@@ -144,5 +144,5 @@ data class StudioEditorState(
 private const val DEFAULT_SPAN_SECONDS = 10.0
 
 // a lead-in long enough to measure the noise floor, and a tail long enough for the sweep to arrive and decay
-private const val LEAD_IN_MILLIS = 500L
+private const val LEAD_IN_MILLIS = 1000L
 private const val TAIL_MILLIS = 1000L

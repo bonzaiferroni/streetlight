@@ -77,11 +77,18 @@ private fun ViewScope.calibrationSection() = column {
     flowBlock(model.profileState) { profile ->
         if (profile == null) return@flowBlock
         column {
+            textBlock("Mic: ${profile.micLabel}")
             textBlock("Latency: ${(profile.latencySeconds * 1000).roundToInt()} ms")
             textBlock("Noise floor: ${profile.noiseFloorDb.toTenthsText()} dB")
-            textBlock("Response: ${profile.responseDb.toTenthsText()} dB")
-            textBlock("Signal to noise: ${profile.signalToNoiseDb.toTenthsText()} dB")
+            textBlock("Dynamic range: ${profile.dynamicRangeDb.toTenthsText()} dB")
+            textBlock("Rumble: ${profile.rumbleDb.toTenthsText()} dB")
+            textBlock("Hiss: ${profile.hissDb.toTenthsText()} dB")
+            textBlock("Hum: ${profile.humHz?.let { "$it Hz" } ?: "none"}")
+            textBlock("Reverb (RT60): ${profile.reverbSeconds?.let { "${(it * 1000).roundToInt()} ms" } ?: "unmeasured"}")
+            textBlock("Clarity (C50): ${profile.clarityDb?.let { "${it.toTenthsText()} dB" } ?: "unmeasured"}")
+            textBlock("Sweep level: ${profile.responseDb.toTenthsText()} dB")
             textBlock("Peak: ${profile.peakDb.toTenthsText()} dB")
+            textBlock("Browser processing: ${profile.processing.joinToString { it.label }.ifEmpty { "none" }}")
             textBlock("Sample rate: ${profile.sampleRate} Hz")
         }
     }
