@@ -20,7 +20,8 @@ class StudioEditor(
     private val audio: StudioAudio,
 ) {
     private val state = storeOf(StudioEditorState())
-    val sampleIdsState = state.tapOf { it.sampleIds }
+    val samplesState = state.tapOf { it.samples }
+    val endSecondsState = state.tapOf { it.endSeconds }
     val spanSecondsState = state.tapOf { it.spanSeconds }
     val cursorRatioState = state.tapOf { it.cursorSeconds / it.spanSeconds }
     val isRecordingState = recorder.isRecordingState
@@ -38,7 +39,7 @@ class StudioEditor(
         }
     }
 
-    fun readSample(id: Int) = sampleMap[id]
+    fun readPcm(id: Int) = sampleMap[id]
 
     fun record() = scope.launch {
         recorder.start()
@@ -51,11 +52,12 @@ class StudioEditor(
             return@launch
         }
 
-        val sample = recorder.stop() ?: return@launch
+        val pcm = recorder.stop() ?: return@launch
         val id = nextSampleId++
-        sampleMap[id] = sample
+        sampleMap[id] = pcm
+        val sample = AudioSample(id, "Sample ${id + 1}", pcm.durationSeconds)
         state.update { it.copy(
-            sampleIds = it.sampleIds + id,
+            samples = it.samples + sample,
             spanSeconds = max(it.spanSeconds, sample.durationSeconds),
         ) }
     }
@@ -64,12 +66,12 @@ class StudioEditor(
     fun play() {
         playJob?.cancel()
         playJob = scope.launch {
-            val samples = state.now.sampleIds.mapNotNull { sampleMap[it] }
-            val endSeconds = samples.maxOfOrNull { it.durationSeconds } ?: return@launch
+            val endSeconds = state.now.endSeconds ?: return@launch
+            val pcms = state.now.samples.mapNotNull { sampleMap[it.id] }
             if (state.now.cursorSeconds >= endSeconds) state.update { it.copy(cursorSeconds = 0.0) }
 
             val fromSeconds = state.now.cursorSeconds
-            val startClock = player.play(samples, fromSeconds)
+            val startClock = player.play(pcms, fromSeconds)
 
             while (true) {
                 awaitAnimationFrame()
@@ -89,9 +91,12 @@ class StudioEditor(
 }
 
 data class StudioEditorState(
-    val sampleIds: List<Int> = emptyList(),
+    val samples: List<AudioSample> = emptyList(),
     val cursorSeconds: Double = 0.0,
     val spanSeconds: Double = DEFAULT_SPAN_SECONDS,
-)
+) {
+    /** The end of playback, where the longest sample ends, or `null` without samples. */
+    val endSeconds get() = samples.maxOfOrNull { it.durationSeconds }
+}
 
 private const val DEFAULT_SPAN_SECONDS = 10.0

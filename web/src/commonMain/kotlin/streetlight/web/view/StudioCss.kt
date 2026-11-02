@@ -3,18 +3,26 @@ package streetlight.web.view
 import koala.modifier.*
 
 object StudioStyle {
+    val Track = Class("studio-track")
     val Timeline = Class("studio-timeline")
     val CursorHandle = Timeline.withBemElement("cursor-handle")
-    val Sample = Class("studio-sample")
-    val Waveform = Sample.withBemElement("waveform")
-    val CursorLine = Sample.withBemElement("cursor-line")
+    val Lane = Class("studio-lane")
+    val Waveform = Lane.withBemElement("waveform")
+    val CursorLine = Lane.withBemElement("cursor-line")
 }
 
 //language="CSS"
 val StudioCss get() = with(StudioStyle) { """
+    
 $Timeline { position: relative; touch-action: none; }
-$Sample   { position: relative; }
-$Waveform { display: block; width: 100%; height: 100%; }
+$Lane     { position: relative; }
+$Waveform { display: block; height: 100%; }
+
+$Track {
+    display: grid;
+    grid-template-columns: var(--unit-16) minmax(0, 1fr);
+    column-gap: var(--unit-1);
+}
 
 $CursorHandle {
     position: absolute;
