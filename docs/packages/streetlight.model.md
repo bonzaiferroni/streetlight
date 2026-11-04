@@ -72,6 +72,12 @@ A tag enum is stored by name, as a text array, so entries are ordered freely and
 | 1 | A kind of event | `Concert`, `Party` |
 | 2 | An occasion or format | `OpenMic`, `Halloween` |
 
+## Tracks
+
+A `Track` holds its patterns and the order they play in as `placements`, a list of `PatternId`s. Patterns play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
+
+A chord track is written as text by `writeChordTrack` and read by `readChordTrack` in `ChordNotation.kt`. The text holds no measures of its own; they are cut from the `TimeSignature` when written and read.
+
 ## Opening Hours
 
 `expandAddress` spells out the USPS abbreviations of an address's street line: its suffix (`Ave` to `Avenue`) and its direction (`E` to `East`), before the street name or after it. Every other word is kept as written, so a leading "St." of a name stays, a single-letter street keeps its name ("100 E Street"), and a unit and the part after the first comma are untouched. An expanded address expands to itself. Every stored address is expanded when its location is created or updated, and an address is expanded before it is compared with stored ones.

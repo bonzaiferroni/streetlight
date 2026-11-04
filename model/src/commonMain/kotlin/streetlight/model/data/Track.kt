@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 sealed interface Track {
     val patterns: List<Pattern>
-    val placements: List<Placement>
+    val placements: List<PatternId>
 }
 
 @Serializable
@@ -14,13 +14,6 @@ sealed interface Pattern {
     val patternId: PatternId
     val length: Beats
 }
-
-@Serializable
-data class Placement(
-    val patternId: PatternId,
-    val onset: Beats,
-    val repetitions: Int,
-)
 
 @JvmInline @Serializable
 value class PatternId(val name: String)
@@ -30,20 +23,22 @@ value class PatternId(val name: String)
 @Serializable
 data class ChordTrack(
     override val patterns: List<Progression>,
-    override val placements: List<Placement>,
+    override val placements: List<PatternId>,
 ) : Track
 
 @Serializable
 data class Progression(
     override val patternId: PatternId,
-    override val length: Beats,
-    val changes: List<ChordChange>,
-) : Pattern
+    val notes: List<ChordNote>,
+) : Pattern {
+    override val length get() = Beats(notes.sumOf { it.beats.ticks })
+}
 
+/** A [chord] held for [beats], or a rest when [chord] is `null`. */
 @Serializable
-data class ChordChange(
-    val chord: ChordLegacy,
-    val onset: Beats,
+data class ChordNote(
+    val chord: Chord?,
+    val beats: Beats,
 )
 
 // Lyrics
@@ -51,7 +46,7 @@ data class ChordChange(
 @Serializable
 data class LyricTrack(
     override val patterns: List<Stanza>,
-    override val placements: List<Placement>,
+    override val placements: List<PatternId>,
 ) : Track
 
 @Serializable
@@ -72,7 +67,7 @@ data class LyricPhrase(
 @Serializable
 data class DrumTrack(
     override val patterns: List<Groove>,
-    override val placements: List<Placement>,
+    override val placements: List<PatternId>,
 ) : Track
 
 @Serializable

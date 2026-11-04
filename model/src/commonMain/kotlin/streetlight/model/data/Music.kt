@@ -44,7 +44,10 @@ value class Chroma private constructor(val value: Int) {
 data class TimeSignature(
     val beats: Int,
     val beatUnit: Int,
-)
+) {
+    /** The length of a measure, counting a quarter note as one of [Beats]. */
+    val measure get() = Beats.of(beats * 4, beatUnit)
+}
 
 @JvmInline @Serializable
 value class Beats(val ticks: Int) : Comparable<Beats> {

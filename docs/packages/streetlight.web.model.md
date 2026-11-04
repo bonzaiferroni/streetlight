@@ -174,7 +174,8 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/model/ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
-| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SongEditor.kt) | Edits the music of a song loaded from `SongDb` |
+| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music of a song loaded from `SongDb` |
+| [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |

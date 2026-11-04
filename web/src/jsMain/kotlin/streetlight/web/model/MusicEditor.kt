@@ -28,6 +28,8 @@ class MusicEditor(
     val notationStyleState = state.mutableTapOf({ it?.notationStyle ?: NotationStyle.Letters }) {
         this?.copy(notationStyle = it)
     }
+    val tracksState = state.tapOf { it?.tracks.orEmpty() }
+    val focusTrackState = state.tapOf { it?.focusTrack }
     val songsState = db.songsState
 
     init {
@@ -38,6 +40,35 @@ class MusicEditor(
 
     /** Stores a new song titled [title] and loads it. */
     fun create(title: String) = state.set(newMusicEditorState(title))
+
+    fun readTrack(index: Int) = state.now?.tracks?.getOrNull(index)
+
+    /** The track at [index] of the loaded song. */
+    fun trackState(index: Int) = state.mutableTapOf({ it?.tracks?.getOrNull(index) }) { track ->
+        if (this == null || track == null) this
+        else copy(tracks = tracks.toMutableList().apply { set(index, track) })
+    }
+
+    /** Adds [track] to the loaded song and focuses it. */
+    fun addTrack(track: Track) = state.update { song ->
+        song?.copy(tracks = song.tracks + track, focusTrack = song.tracks.size)
+    }
+
+    fun focusTrack(index: Int?) = state.update { it?.copy(focusTrack = index) }
+
+    /** Removes the track at [index], keeping the focus on the track it was on. */
+    fun removeTrack(index: Int) = state.update { song ->
+        song?.copy(
+            tracks = song.tracks.filterIndexed { i, _ -> i != index },
+            focusTrack = song.focusTrack?.let { focus ->
+                when {
+                    focus == index -> null
+                    focus > index -> focus - 1
+                    else -> focus
+                }
+            },
+        )
+    }
 
     /** Removes the song of [songId], unloading it if loaded. */
     fun remove(songId: SongId) {
@@ -52,6 +83,7 @@ data class MusicEditorState(
     val music: Music,
     val tracks: List<Track> = emptyList(),
     val notationStyle: NotationStyle = NotationStyle.Letters,
+    val focusTrack: Int? = null,
 )
 
 private fun newMusicEditorState(title: String): MusicEditorState {

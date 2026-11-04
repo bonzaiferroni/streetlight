@@ -12,20 +12,27 @@ import koala.model.MenuAction
 import koala.model.NullContent
 import koala.modifier.*
 import koala.page.Id
+import kampfire.model.mutableTapOf
+import streetlight.model.data.ChordTrack
 import streetlight.model.data.Chromatic
+import streetlight.model.data.DrumTrack
+import streetlight.model.data.LyricTrack
+import streetlight.model.data.Track
 import streetlight.model.ui.SongConfigRoute
+import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
+import streetlight.web.model.ChordEditor
 import streetlight.web.model.MusicEditor
-import streetlight.web.model.getSongEditor
+import streetlight.web.model.getMusicEditor
 import streetlight.web.utility.setTitle
 import web.dom.document
 import kotlin.uuid.Uuid
 
 /** Renders the music editor, beside the stored songs it loads. */
 fun ViewScope.viewSongConfig() {
-    val model = app.getSongEditor(contentScope)
+    val model = app.getMusicEditor(contentScope)
     context(model) {
         mainBody("viewSongConfig.kt") {
             column {
@@ -103,6 +110,79 @@ private fun ViewScope.musicEditor() {
                 textBlock("Key: ${Chromatic.ofPitch(music.key.tonic.value).label} ${music.key.mode}")
                 textBlock("Time: ${music.time.beats}/${music.time.beatUnit}")
             }
+            trackList()
+            trackEditor()
         }
     }
+}
+
+context(model: MusicEditor)
+private fun ViewScope.trackList() {
+    val newId = Id(Uuid.random().toString())
+    popover(newId) { popover ->
+        actionMenu(listOf(
+            MenuAction("Chords") {
+                model.addTrack(ChordTrack(emptyList(), emptyList()))
+                popover.close()
+            },
+        ))
+    }
+    actionSection(
+        label = "Tracks",
+        actions = listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { }),
+    ) {
+        flowBlock(model.tracksState) { tracks ->
+            tracks.forEachIndexed { index, track ->
+                actionRow(
+                    label = track.toLabel(),
+                    actions = listOf(
+                        MenuAction("Edit") { model.focusTrack(index) },
+                        MenuAction("Remove") { model.removeTrack(index) },
+                    ),
+                )
+            }
+            if (tracks.isEmpty()) {
+                textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
+            }
+        }
+    }
+}
+
+/** Renders the editor of the focused track, or nothing while no track is focused. */
+context(model: MusicEditor)
+private fun ViewScope.trackEditor() {
+    flowBlock(model.focusTrackState) { index ->
+        val track = index?.let { model.readTrack(it) } ?: return@flowBlock
+        when (track) {
+            is ChordTrack -> {
+                // a removal or unload can reach the lens before this view is rebuilt, so it reads an empty track then
+                val trackState = model.trackState(index).mutableTapOf({ it as? ChordTrack ?: ChordTrack(emptyList(), emptyList()) }) { it }
+                val editor = ChordEditor(contentScope, trackState, model.musicState, model.notationStyleState)
+                context(editor) { chordEditor() }
+            }
+            is LyricTrack, is DrumTrack -> textBlock("Hello ${track.toLabel()}")
+        }
+    }
+}
+
+/** Renders the text of a chord track beside the text its track writes back, so the two can be compared. */
+context(editor: ChordEditor)
+private fun ViewScope.chordEditor() {
+    row(AlignItemsStart) {
+        column(Flex1) {
+            textEditor(editor.textState, "chords", rows = 16, textMod = MonoFont)
+            flowBlock(editor.errorsState) { errors ->
+                errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
+            }
+        }
+        flowBlock(editor.notationState, Flex1) { notation ->
+            textBlock(notation.orEmpty(), modify(MonoFont, WhiteSpacePreLine))
+        }
+    }
+}
+
+private fun Track.toLabel() = when (this) {
+    is ChordTrack -> "Chords"
+    is LyricTrack -> "Lyrics"
+    is DrumTrack -> "Drums"
 }

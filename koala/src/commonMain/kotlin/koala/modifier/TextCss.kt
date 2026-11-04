@@ -6,6 +6,7 @@ val Italic = Class("italic")
 val Strikethrough = Class("strikethrough")
 val TextSmall = Class("text-small")
 val TextLarge = Class("text-large")
+val MonoFont = Class("mono-font")
 
 // Line Height
 val LineHeight1 = Css.LineHeight.of(1)
@@ -37,6 +38,7 @@ $Italic    { font-style:  italic; }
 $Strikethrough { text-decoration-line: line-through; }
 $TextSmall { font-size:   var(--text-small) !important; }
 $TextLarge { font-size:   var(--text-large) !important; }
+$MonoFont  { font-family: var(--mono-family); }
 
 /* Line Height */
 $ParagraphLineHeight { line-height: var(--paragraph-line-height); }
