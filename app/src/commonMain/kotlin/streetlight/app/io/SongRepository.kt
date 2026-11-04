@@ -7,16 +7,16 @@ import streetlight.model.Api
 import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
 import streetlight.model.data.NewSong
-import streetlight.model.data.Song
+import streetlight.model.data.SongLegacy
 import streetlight.model.data.SongId
 import streetlight.model.mockDb
 
 interface SongRepository {
-    suspend fun readSongs(): List<Song>?
-    suspend fun readById(songId: SongId): Song?
+    suspend fun readSongs(): List<SongLegacy>?
+    suspend fun readById(songId: SongId): SongLegacy?
     suspend fun createSong(newSong: NewSong): SongId?
     suspend fun takeNextSong(eventId: EventId, since: Instant): EventSong?
-    suspend fun updateSong(song: Song): Boolean
+    suspend fun updateSong(song: SongLegacy): Boolean
 }
 
 class SongApiClient(
@@ -30,19 +30,19 @@ class SongApiClient(
             write(it.since, since)
         }
 
-    override suspend fun updateSong(song: Song): Boolean = client.request(Api.SongProfile.Update, song) ?: false
+    override suspend fun updateSong(song: SongLegacy): Boolean = client.request(Api.SongProfile.Update, song) ?: false
 }
 
 class SongMockClient : SongRepository {
-    override suspend fun readSongs(): List<Song>? = mockDb.songs
-    override suspend fun readById(songId: SongId): Song? = mockDb.songs.firstOrNull { it.songId == songId }
+    override suspend fun readSongs(): List<SongLegacy>? = mockDb.songs
+    override suspend fun readById(songId: SongId): SongLegacy? = mockDb.songs.firstOrNull { it.songId == songId }
     override suspend fun createSong(newSong: NewSong): SongId? = TODO("Not yet implemented")
     override suspend fun takeNextSong(eventId: EventId, since: Instant): EventSong = EventSong(
         song = mockDb.songs.first(),
         request = null,
     )
 
-    override suspend fun updateSong(song: Song): Boolean {
+    override suspend fun updateSong(song: SongLegacy): Boolean {
         // In mock mode, assume update succeeds.
         return true
     }

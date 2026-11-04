@@ -16,15 +16,15 @@ import pondui.ui.services.rememberMidiPlayer
 import pondui.ui.theme.Pond
 import pondui.utils.mixWith
 import streetlight.model.data.Instrument
-import streetlight.model.data.Song
+import streetlight.model.data.SongLegacy
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 
 @Composable
 fun TabContentScope.EditSongTab(
-    song: Song,
+    song: SongLegacy,
     updateStatus: UpdateStatus,
-    updateSong: (Song) -> Unit,
+    updateSong: (SongLegacy) -> Unit,
     updateNotation: (SongNotation?) -> Unit,
 ) {
     LazyColumnTab("Edit", 2) {

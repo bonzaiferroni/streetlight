@@ -31,7 +31,6 @@ import streetlight.web.io.WebTransport
 import streetlight.web.io.OSMClient
 import streetlight.web.io.OmniClient
 import streetlight.web.io.TransitClient
-import streetlight.web.model.*
 
 /** The web client's services, one of each, created on first use. */
 val webModule = module {
@@ -62,6 +61,7 @@ val webModule = module {
     single { StudioAudio() }
     single { AudioRecorder(get()) }
     single { AudioPlayer(get()) }
+    single { SongDb(get()) }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
@@ -89,6 +89,8 @@ fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get())
+
+fun AppContainer.getSongEditor(scope: CoroutineScope) = MusicEditor(scope, koin.get())
 
 fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
 

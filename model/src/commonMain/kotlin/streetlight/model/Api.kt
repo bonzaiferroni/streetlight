@@ -88,10 +88,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadSubdomainContent: GetByIdEndpoint<Slug, LocationContent>(this)
     }
 
-    object Songs: GetEndpoint<List<Song>>(this) {
-        object ReadId: GetByIdEndpoint<SongId, Song>(this)
+    object Songs: GetEndpoint<List<SongLegacy>>(this) {
+        object ReadId: GetByIdEndpoint<SongId, SongLegacy>(this)
         object Create: PostEndpoint<NewSong, SongId>(this)
-        object Update: PostEndpoint<Song, Boolean>(this)
+        object Update: PostEndpoint<SongLegacy, Boolean>(this)
         object TakeNextSong: GetByIdEndpoint<EventId, EventSong>(this) {
             val since = instantParamOf("since")
         }

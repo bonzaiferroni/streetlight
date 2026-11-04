@@ -6,7 +6,7 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.NewSong
-import streetlight.model.data.Song
+import streetlight.model.data.SongLegacy
 import streetlight.model.io.ApiClient
 
 /** Lists songs and adds new ones. */
@@ -52,5 +52,5 @@ class MusicianHub(
 }
 
 data class MusicHubState(
-    val songs: List<Song> = emptyList(),
+    val songs: List<SongLegacy> = emptyList(),
 )

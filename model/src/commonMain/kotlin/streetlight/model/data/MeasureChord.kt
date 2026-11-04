@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MeasureChord(
     val duration: Int?,
-    val expression: Chord?,
+    val expression: ChordLegacy?,
     val isPhraseEnd: Boolean = false,
 ) {
     /** The chord and its duration written in [style], relative to [rootPitch]. */
@@ -33,7 +33,7 @@ data class MeasureChord(
             isPhraseEnd: Boolean = false,
         ) = MeasureChord(
             duration = duration,
-            expression = degree?.let { Chord.ofDegree(it, quality, extension) },
+            expression = degree?.let { ChordLegacy.ofDegree(it, quality, extension) },
             isPhraseEnd = isPhraseEnd,
         )
     }

@@ -37,6 +37,6 @@ data class NewRequest(
 /** A song and how often it was played. */
 @Serializable
 data class RequestItem(
-    val song: Song,
+    val song: SongLegacy,
     val plays: Int,
 )

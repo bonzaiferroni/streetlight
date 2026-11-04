@@ -7,7 +7,7 @@ import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.NewSong
-import streetlight.model.data.Song
+import streetlight.model.data.SongLegacy
 
 class SongFeedModel(
     private val app: AppProvider = RuntimeProvider
@@ -50,7 +50,7 @@ class SongFeedModel(
 }
 
 data class SongFeedState(
-    val songs: List<Song> = emptyList(),
+    val songs: List<SongLegacy> = emptyList(),
     val newName: String = "",
     val newArtist: String = "",
 )  {

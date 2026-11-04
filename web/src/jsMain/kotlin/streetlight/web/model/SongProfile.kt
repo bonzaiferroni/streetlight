@@ -5,7 +5,7 @@ import koala.utility.dedup
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.Song
+import streetlight.model.data.SongLegacy
 import streetlight.model.data.SongId
 import streetlight.model.io.ApiClient
 
@@ -15,7 +15,7 @@ class SongProfile(
     private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    private val song = storeOf<Song?>(null)
+    private val song = storeOf<SongLegacy?>(null)
 
     val titleFlow = song.flow.dedup { it?.title ?: "" }
     val artistFlow = song.flow.dedup { it?.artist ?: "" }

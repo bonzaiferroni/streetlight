@@ -4,23 +4,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Column
 import pondui.ui.controls.*
-import pondui.ui.modifiers.MagicItem
 import pondui.ui.nav.LocalNav
 import pondui.ui.theme.Pond
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
-import streetlight.app.SongProfileRoute
 import streetlight.app.utils.toRoute
 import streetlight.model.data.*
 import streetlight.model.mockDb
 
 @Composable
 fun LiveSongView(
-    song: Song,
+    song: SongLegacy,
     notes: String?,
     setNotes: (String) -> Unit,
     takeNextSong: () -> Unit,

@@ -174,6 +174,9 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/model/ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
+| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SongEditor.kt) | Edits the music of a song loaded from `SongDb` |
+| [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
+| [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |
 | [`Sandbox`](../../web/src/jsMain/kotlin/streetlight/web/model/Sandbox.kt) | The state of the sandbox |
 | [`LocationOnboarder`](../../web/src/jsMain/kotlin/streetlight/web/model/LocationOnboarder.kt) | Finds a location owner's location in Streetlight or OpenStreetMap |

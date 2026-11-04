@@ -364,6 +364,8 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 | [`viewBugReporter`](../../web/src/jsMain/kotlin/streetlight/web/view/viewBugReporter.kt) | Bug reports |
 | [`viewMusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMusicianHub.kt) | A musician's songs |
 | [`viewSongProfile`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSongProfile.kt) | A song |
+| [`viewSongConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSongConfig.kt) | The music editor and its stored songs |
+| [`viewStudio`](../../web/src/jsMain/kotlin/streetlight/web/view/viewStudio.kt) | The studio |
 | [`viewSiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteMonitor.kt) | The site's status |
 | [`viewSandbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSandbox.kt) | The sandbox |
 

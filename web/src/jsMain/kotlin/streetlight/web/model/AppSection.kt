@@ -35,6 +35,7 @@ fun Screen.toAppSection() = when (this) {
 
     Screen.Onboard,
     Screen.Studio,
+    Screen.SongConfig,
     Screen.Sandbox,
     Screen.SiteMonitor,
     Screen.Chat,

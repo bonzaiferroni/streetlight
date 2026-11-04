@@ -13,9 +13,9 @@ import streetlight.model.mockDb
 
 @Composable
 fun EditSongHeader(
-    song: Song,
+    song: SongLegacy,
     updateStatus: UpdateStatus,
-    updateSong: (Song) -> Unit,
+    updateSong: (SongLegacy) -> Unit,
 ) {
     Column(2) {
         UpdateIndicator(

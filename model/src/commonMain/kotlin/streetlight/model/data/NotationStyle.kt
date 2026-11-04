@@ -1,6 +1,9 @@
 package streetlight.model.data
 
-enum class NotationStyle(val label: String) {
+import kampfire.model.Labeled
+
+/** The style pitches and chords are written in. */
+enum class NotationStyle(override val label: String): Labeled {
     Letters("Letters"),
     Degrees("Degrees"),
 }
@@ -21,7 +24,7 @@ fun notationOf(
 
 /** [chord] written in [style], relative to [rootPitch]. */
 fun notationOf(
-    chord: Chord,
+    chord: ChordLegacy,
     rootPitch: Int = 60,
     style: NotationStyle = NotationStyle.Letters
 ) = when (style) {
@@ -30,7 +33,7 @@ fun notationOf(
 }
 
 /** [chord] written with letters, as "C#m7/E". */
-fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
+fun letterNotationOf(chord: ChordLegacy, rootPitch: Int) = buildString {
     val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
     append(chromatic.label)
     chord.quality?.let { append(it.letterNotation) }
@@ -43,11 +46,11 @@ fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
 }
 
 /** [chord] written with scale degrees. */
-fun degreeNotationOf(chord: Chord, rootPitch: Int) = buildString {
+fun degreeNotationOf(chord: ChordLegacy, rootPitch: Int) = buildString {
     val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
     append(chromatic.diatonic.degree)
     if (chromatic.isSharp) append("#")
-    chord.quality?.let { append(it.degreeNotation) }
+    chord.quality?.let { append(it.symbolNotation) }
     chord.extension?.let { append(it.notation) }
     chord.slash?.let { slash ->
         append('/')

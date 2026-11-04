@@ -8,7 +8,7 @@ import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
-import streetlight.model.data.Song
+import streetlight.model.data.SongLegacy
 import streetlight.model.data.SongId
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -28,7 +28,7 @@ class SongProfileModel(
         }
     }
 
-    fun updateSong(song: Song, delay: Duration = 1.seconds) {
+    fun updateSong(song: SongLegacy, delay: Duration = 1.seconds) {
         val stored = stateNow.storedSong ?: return
         if (song == stored) return
         setState { it.copy(song = song)}
@@ -49,7 +49,7 @@ class SongProfileModel(
 }
 
 data class SongProfileState(
-    val song: Song? = null,
-    val storedSong: Song? = null,
+    val song: SongLegacy? = null,
+    val storedSong: SongLegacy? = null,
     val updateStatus: UpdateStatus = UpdateStatus.None,
 )
