@@ -5,10 +5,9 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.NotationError
@@ -23,17 +22,23 @@ class NotationField(
 
     fun setText(text: String?) = state.update { it.copy(text = text) }
 
-    /**
-     * Reads the text with [read] whenever it changes or [triggers] emits, keeping the problems [read] returns. Nothing
-     * is read while there is no text.
-     */
-    fun launchReads(scope: CoroutineScope, triggers: Flow<Any?> = flowOf(Unit), read: (String) -> List<NotationError>) {
+    /** Reads the text with [read] whenever it changes, keeping the problems [read] returns. */
+    fun launchReads(scope: CoroutineScope, read: (String) -> List<NotationError>) {
         scope.launch {
-            combine(state.flow.map { it.text }.filterNotNull().distinctUntilChanged(), triggers) { text, _ -> text }
-                .collect { text ->
-                    val errors = read(text)
-                    state.update { it.copy(errors = errors) }
-                }
+            state.flow.map { it.text }.filterNotNull().distinctUntilChanged().collect { text ->
+                val errors = read(text)
+                state.update { it.copy(errors = errors) }
+            }
+        }
+    }
+
+    /**
+     * Rewrites the text with [write] whenever [changes] emits after its first value, as when the key the text is
+     * written against changes.
+     */
+    fun launchRewrites(scope: CoroutineScope, changes: Flow<Any?>, write: () -> String?) {
+        scope.launch {
+            changes.drop(1).collect { setText(write()) }
         }
     }
 }

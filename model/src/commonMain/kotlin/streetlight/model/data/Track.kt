@@ -81,16 +81,26 @@ data class Phrase(
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
 
-/** A [pitch] held for [beats], or a rest when [pitch] is `null`. */
+/** A note at [interval] held for [beats], or a rest when [interval] is `null`. */
 @Serializable
 data class MelodyNote(
-    val pitch: Pitch?,
+    val interval: Interval?,
     val beats: Beats,
 )
 
-/** A pitch counted in semitones as MIDI counts them, so middle C is 60. */
+/** A pitch counted in [semitones] from the tonic of the song's key in the octave from middle C. */
 @JvmInline @Serializable
-value class Pitch(val midi: Int)
+value class Interval(val semitones: Int) {
+    /** The MIDI number of this interval in [key], where middle C is 60. */
+    fun toMidi(key: Key) = MIDDLE_C_MIDI + key.tonic.value + semitones
+
+    companion object {
+        /** The interval of the MIDI number [midi] in [key]. */
+        fun ofMidi(midi: Int, key: Key) = Interval(midi - MIDDLE_C_MIDI - key.tonic.value)
+    }
+}
+
+private const val MIDDLE_C_MIDI = 60
 
 // Lyrics
 
@@ -169,7 +179,7 @@ private fun Track.sectionsOf(sectionId: SectionId, visited: Set<SectionId>): Lis
 fun Track.lengthOf(sectionId: SectionId) =
     sectionsOf(sectionId)?.let { sections -> Beats(sections.sumOf { it.length.ticks }) }
 
-/** The length of [sectionId] in a song of these tracks: the longest of the tracks that define it, or `null` for none. */
+/** The length of [sectionId] in a song of these tracks: the longest track that defines it, or `null` for none. */
 fun List<Track>.lengthOf(sectionId: SectionId) = mapNotNull { it.lengthOf(sectionId) }.maxByOrNull { it.ticks }
 
 /**

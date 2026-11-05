@@ -81,14 +81,14 @@ class ChordParser(
                 index = 1
                 val accidental = text.getOrNull(index)?.toAccidental()
                 if (accidental != null) index++
-                Chroma.of(diatonic.pitch + (accidental ?: 0))
+                Chroma.of(diatonic.pitch + (accidental ?: 0) - key.tonic.value)
             }
             NotationStyle.Degrees -> {
                 val accidental = text.getOrNull(0)?.toAccidental()
                 if (accidental != null) index++
                 val degree = text.getOrNull(index)?.digitToIntOrNull()?.takeIf { it in 1..7 } ?: return null
                 index++
-                Chroma.of(degreePitchOf(degree, accidental ?: 0, key))
+                Chroma.of(degreePitchOf(degree, accidental ?: 0, key) - key.tonic.value)
             }
         }
 
@@ -144,8 +144,8 @@ class ChordParser(
     /** Writes the root, quality and seventh of [chord] in [style] against [key]. */
     fun writeChord(chord: Chord) = buildString {
         when (style) {
-            NotationStyle.Letters -> append(Chromatic.ofPitch(chord.root.value).label)
-            NotationStyle.Degrees -> append(writeDegree(chord.root.value - key.majorTonic.value))
+            NotationStyle.Letters -> append(Chromatic.ofPitch(key.tonic.value + chord.root.value).label)
+            NotationStyle.Degrees -> append(writeDegree(key.tonic.value + chord.root.value - key.majorTonic.value))
         }
         when {
             chord.quality == ChordQuality.Major -> Unit

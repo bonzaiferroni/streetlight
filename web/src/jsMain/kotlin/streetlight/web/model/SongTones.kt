@@ -5,6 +5,7 @@ import streetlight.model.data.Chord
 import streetlight.model.data.ChordNote
 import streetlight.model.data.ChordQuality
 import streetlight.model.data.Groove
+import streetlight.model.data.Key
 import streetlight.model.data.MelodyNote
 import streetlight.model.data.Music
 import streetlight.model.data.Phrase
@@ -44,22 +45,22 @@ fun songTonesOf(music: Music, tracks: List<Track>, playing: List<Track>): List<T
         val tones = order.zip(onsets).flatMap { (sectionId, onset) ->
             var tick = onset
             track.sectionsOf(sectionId).orEmpty().flatMap { section ->
-                tonesOf(section, tick, capo).also { tick += section.length.ticks }
+                tonesOf(section, tick, music.key, capo).also { tick += section.length.ticks }
             }
         }
         TrackTones(track, tones)
     }
 }
 
-/** The tones of [section] placed at [onset] and raised [capo] semitones, its pickup sounding before it. */
-private fun tonesOf(section: Section, onset: Int, capo: Int): List<SongTone> = when (section) {
+/** The tones of [section] in [key] placed at [onset] and raised [capo] semitones, its pickup sounding before it. */
+private fun tonesOf(section: Section, onset: Int, key: Key, capo: Int): List<SongTone> = when (section) {
     is Phrase -> {
-        val midiOf = { note: MelodyNote -> note.pitch?.let { listOf(it.midi + capo) } }
+        val midiOf = { note: MelodyNote -> note.interval?.let { listOf(it.toMidi(key) + capo) } }
         section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, { it.beats }, midiOf) +
             section.notes.toTones(onset, { it.beats }, midiOf)
     }
     is Progression -> {
-        val midiOf = { note: ChordNote -> note.chord?.toMidi()?.map { it + capo } }
+        val midiOf = { note: ChordNote -> note.chord?.toMidi(key)?.map { it + capo } }
         section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, { it.beats }, midiOf) +
             section.notes.toTones(onset, { it.beats }, midiOf)
     }
@@ -77,9 +78,9 @@ private fun <N> List<N>.toTones(onset: Int, beatsOf: (N) -> Beats, midiOf: (N) -
     }
 }
 
-/** The MIDI numbers of the root, third, fifth and seventh of the chord, rooted in the octave below middle C. */
-private fun Chord.toMidi(): List<Int> {
-    val root = CHORD_ROOT_MIDI + root.value
+/** The MIDI numbers of the root, third, fifth and seventh of the chord in [key], rooted below middle C. */
+private fun Chord.toMidi(key: Key): List<Int> {
+    val root = CHORD_ROOT_MIDI + (key.tonic.value + root.value).mod(12)
     val third = when (quality) {
         ChordQuality.Minor, ChordQuality.Diminished -> 3
         ChordQuality.Major, ChordQuality.Augmented -> 4

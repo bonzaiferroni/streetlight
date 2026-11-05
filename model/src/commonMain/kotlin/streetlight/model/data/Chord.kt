@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 
+/** A chord, its [root] and [bass] counted in semitones above the tonic of the song's key. */
 @Serializable
 data class Chord(
     val root: Chroma,

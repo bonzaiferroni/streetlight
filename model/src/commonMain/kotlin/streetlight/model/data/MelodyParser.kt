@@ -62,13 +62,13 @@ class MelodyParser(
             when (token) {
                 HOLD -> {
                     val last = notes.lastOrNull()
-                    if (last?.pitch == null) error("A hold with no note before it")
+                    if (last?.interval == null) error("A hold with no note before it")
                     else {
                         notes[notes.lastIndex] = last.copy(beats = last.beats + beat)
                         ticks += beat.ticks
                     }
                 }
-                TIE -> if (notes.lastOrNull()?.pitch == null) error("A tie with no note before it") else isTied = true
+                TIE -> if (notes.lastOrNull()?.interval == null) error("A tie with no note before it") else isTied = true
                 else -> {
                     val note = readNote(token, beat)
                     if (note == null) {
@@ -79,7 +79,7 @@ class MelodyParser(
                     val last = notes.lastOrNull()
                     when {
                         !isTied -> notes.add(note)
-                        last != null && last.pitch == note.pitch ->
+                        last != null && last.interval == note.interval ->
                             notes[notes.lastIndex] = last.copy(beats = last.beats + note.beats)
                         else -> {
                             error("A tie between different pitches")
@@ -106,7 +106,7 @@ class MelodyParser(
         if (degree == 0) return if (accidental.isEmpty() && octaves.isEmpty()) MelodyNote(null, beats) else null
         val octave = octaves.count { it == OCTAVE_UP } - octaves.count { it == OCTAVE_DOWN }
         val semitones = degreePitchOf(degree, accidental.firstOrNull()?.toAccidental() ?: 0, key)
-        return MelodyNote(Pitch(MIDDLE_C + semitones + octave * 12), beats)
+        return MelodyNote(Interval.ofMidi(MIDDLE_C + semitones + octave * 12, key), beats)
     }
 
     /** Writes [track] as the jianpu [read] reads, with measures cut by [time]. */
@@ -115,7 +115,7 @@ class MelodyParser(
             SectionLines(
                 sectionId = phrase.sectionId,
                 pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
-                    pickup.flatMap { writeNote(it.pitch, it.beats.ticks, time.beat.ticks, false) }.joinToString(" ")
+                    pickup.flatMap { writeNote(it.interval, it.beats.ticks, time.beat.ticks, false) }.joinToString(" ")
                 },
                 measures = writeMeasures(phrase.notes, time),
                 measuresPerLine = phrase.measuresPerLine,
@@ -135,7 +135,7 @@ class MelodyParser(
             while (remaining > 0) {
                 if (tick % measureTicks == 0) measures.add(mutableListOf())
                 val piece = minOf(remaining, measureTicks - tick % measureTicks)
-                measures.last().addAll(writeNote(note.pitch, piece, time.beat.ticks, isContinuation))
+                measures.last().addAll(writeNote(note.interval, piece, time.beat.ticks, isContinuation))
                 tick += piece
                 remaining -= piece
                 isContinuation = true
@@ -145,15 +145,15 @@ class MelodyParser(
     }
 
     /**
-     * Writes [ticks] of [pitch] as jianpu tokens: the note, `-` for each further beat, and a tied note for what is left
+     * Writes [ticks] of [interval] as jianpu tokens: the note, `-` for each further beat, and a tied note for what is left
      * of a beat. A [continuation] carries on a note already written, so it opens with a hold or a tie.
      */
-    private fun writeNote(pitch: Pitch?, ticks: Int, beat: Int, continuation: Boolean): List<String> {
-        val degree = pitch?.let { writePitch(it) } ?: REST_DEGREE
+    private fun writeNote(interval: Interval?, ticks: Int, beat: Int, continuation: Boolean): List<String> {
+        val degree = interval?.let { writeInterval(it) } ?: REST_DEGREE
         val wholeBeats = ticks / beat
         val fraction = ticks % beat
         val tokens = mutableListOf<String>()
-        if (pitch == null) {
+        if (interval == null) {
             repeat(wholeBeats) { tokens.add(REST_DEGREE) }
             tokens.addAll(writeFraction(REST_DEGREE, fraction, beat))
             return tokens
@@ -191,9 +191,9 @@ class MelodyParser(
         return tokens
     }
 
-    /** Writes [pitch] as its degree, with an octave mark for each octave from the middle one. */
-    private fun writePitch(pitch: Pitch): String {
-        val semitones = pitch.midi - MIDDLE_C - key.majorTonic.value
+    /** Writes [interval] as its degree, with an octave mark for each octave from the middle one. */
+    private fun writeInterval(interval: Interval): String {
+        val semitones = interval.toMidi(key) - MIDDLE_C - key.majorTonic.value
         val octave = semitones.floorDiv(12)
         val marks = if (octave > 0) OCTAVE_UP.toString().repeat(octave) else OCTAVE_DOWN.toString().repeat(-octave)
         return writeDegree(semitones.mod(12)) + marks
