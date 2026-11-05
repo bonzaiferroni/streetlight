@@ -27,21 +27,24 @@ internal data class SectionText(
     val lines: List<NotationLine>,
 )
 
-/** The sections and arrangements of a track's text, before the sections' measures are read. */
+/** The sections, arrangements and [capo] of a track's text, before the sections' measures are read. */
 internal data class TrackText(
     val sections: List<SectionText>,
     val arrangements: List<Arrangement>,
+    val capo: Int?,
 )
 
 /**
  * Reads the layout every track's text shares, reporting into [errors].
  *
- * A line ending in `:` without a bar line is a heading naming a section. The lines under it are lines of measures,
+ * The text opens with the track's properties, each a labeled line such as `Capo: 2`. After them, a line ending in `:`
+ * without a bar line is a heading naming a section. The lines under it are lines of measures,
  * which hold `|`, or the sections of an arrangement, which list the sections it plays in order. An arrangement that
  * names a missing section or holds itself is reported and left out.
  */
 internal fun readTrackText(text: String, errors: MutableList<NotationError>): TrackText {
     val headings = mutableListOf<HeadingText>()
+    var capo: Int? = null
     text.lines().forEachIndexed { index, rawLine ->
         val line = NotationLine(index + 1, rawLine.trim())
         fun error(message: String) = errors.add(NotationError(line.number, message))
@@ -53,7 +56,15 @@ internal fun readTrackText(text: String, errors: MutableList<NotationError>): Tr
                 if (headings.any { it.sectionId == sectionId }) error("A second section named ${sectionId.name}")
                 else headings.add(HeadingText(sectionId, line.number))
             }
-            heading == null -> error("A line before any heading")
+            heading == null -> {
+                val label = line.text.substringBefore(':', "").trim()
+                val value = line.text.substringAfter(':').trim()
+                when {
+                    label.equals(CAPO, ignoreCase = true) ->
+                        readCapo(value)?.let { capo = it } ?: error("Unknown capo $value")
+                    else -> error("A line before any heading")
+                }
+            }
             '|' in line.text -> heading.measureLines.add(line)
             heading.measureLines.isNotEmpty() -> error("An arrangement line among measures")
             else -> heading.arrangementLines.add(line)
@@ -78,7 +89,7 @@ internal fun readTrackText(text: String, errors: MutableList<NotationError>): Tr
     val arrangedIds = arrangements.map { it.sectionId }.toSet()
     val sections = headings.filter { it.sectionId !in arrangedIds && it.arrangementLines.isEmpty() }
         .map { SectionText(it.sectionId, it.measureLines) }
-    return TrackText(sections, arrangements)
+    return TrackText(sections, arrangements, capo)
 }
 
 /** A heading of a track's text and the lines under it, as they are read. */
@@ -117,9 +128,14 @@ internal fun tokensOf(text: String) = text.split(WHITESPACE).filter { it.isNotEm
 
 /**
  * Writes a track's text: each section under its heading, its [SectionLines.pickup] before the first bar line and its
- * measures [SectionLines.measuresPerLine] to a line, then each of the [arrangements] under its own.
+ * measures [SectionLines.measuresPerLine] to a line, then each of the [arrangements] under its own. A [capo] opens
+ * the text when there is one.
  */
-internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>) = buildString {
+internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>, capo: Int?) = buildString {
+    capo?.let {
+        appendLine("$CAPO: $it")
+        appendLine()
+    }
     for (section in sections) {
         appendLine("${section.sectionId.name}:")
         val lines = section.measures.chunked(section.measuresPerLine.coerceAtLeast(1))
@@ -185,6 +201,12 @@ internal fun measureSlotsOf(onsets: List<Int>, measure: Beats): List<List<Int>> 
         (0 until measureTicks / slot).map { measureStart + it * slot }
     }
 }
+
+/** Reads a capo, a fret from 0 to 12, or returns `null`. */
+internal fun readCapo(text: String) = text.toIntOrNull()?.takeIf { it in 0..MAX_CAPO }
+
+private const val CAPO = "Capo"
+private const val MAX_CAPO = 12
 
 private tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 

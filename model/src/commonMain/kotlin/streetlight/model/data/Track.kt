@@ -3,11 +3,16 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
-/** A part played by a voice or instrument: its [sections], and its [arrangements] of sections into larger ones. */
+/**
+ * A part played by a voice or instrument: its [sections], and its [arrangements] of sections into larger ones.
+ *
+ * The track sounds [capo] semitones higher than written, on top of the [Music.capo] of its song.
+ */
 @Serializable
 sealed interface Track {
     val sections: List<Section>
     val arrangements: List<Arrangement>
+    val capo: Int?
 }
 
 @Serializable
@@ -32,6 +37,7 @@ data class Arrangement(
 data class ChordTrack(
     override val sections: List<Progression>,
     override val arrangements: List<Arrangement>,
+    override val capo: Int? = null,
 ) : Track
 
 /** The [notes] of a chord section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -58,6 +64,7 @@ data class ChordNote(
 data class MelodyTrack(
     override val sections: List<Phrase>,
     override val arrangements: List<Arrangement>,
+    override val capo: Int? = null,
 ) : Track
 
 /** The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -88,6 +95,7 @@ value class Pitch(val midi: Int)
 data class LyricTrack(
     override val sections: List<Stanza>,
     override val arrangements: List<Arrangement>,
+    override val capo: Int? = null,
 ) : Track
 
 /** The [notes] of a lyric section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -114,6 +122,7 @@ data class LyricNote(
 data class DrumTrack(
     override val sections: List<Groove>,
     override val arrangements: List<Arrangement>,
+    override val capo: Int? = null,
 ) : Track
 
 @Serializable

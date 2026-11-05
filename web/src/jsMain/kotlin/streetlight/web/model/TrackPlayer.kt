@@ -4,20 +4,9 @@ package streetlight.web.model
 
 import kampfire.model.Tap
 import kampfire.model.storeOf
-import streetlight.model.data.Beats
-import streetlight.model.data.Chord
-import streetlight.model.data.ChordQuality
-import streetlight.model.data.Groove
+import streetlight.model.data.MelodyTrack
 import streetlight.model.data.Music
-import streetlight.model.data.Phrase
-import streetlight.model.data.Progression
-import streetlight.model.data.Section
-import streetlight.model.data.Seventh
-import streetlight.model.data.Stanza
 import streetlight.model.data.Track
-import streetlight.model.data.lengthOf
-import streetlight.model.data.sectionOrderOf
-import streetlight.model.data.sectionsOf
 import web.audio.AudioContext
 import web.audio.OscillatorNode
 import web.audio.GainNode
@@ -42,45 +31,26 @@ class TrackPlayer(
      */
     fun play(music: Music, tracks: List<Track>, playing: List<Track>) {
         stop()
-        val tones = mutableListOf<Tone>()
-        var onset = 0
-        for (sectionId in tracks.sectionOrderOf(music)) {
-            playing.forEach { track ->
-                var tick = onset
-                track.sectionsOf(sectionId)?.forEach { section ->
-                    tones.addAll(tonesOf(section, tick))
-                    tick += section.length.ticks
-                }
-            }
-            onset += tracks.lengthOf(sectionId)?.ticks ?: 0
-        }
-        if (tones.isEmpty()) return
+        val trackTones = songTonesOf(music, tracks, playing).filter { it.tones.isNotEmpty() }
+        if (trackTones.isEmpty()) return
 
         val context = audio.readContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
         val secondsPerTick = 60.0 / music.bpm / music.time.beat.ticks
         // a pickup sounds before the first downbeat, so the earliest tone sets the start
-        val firstTick = tones.minOf { it.startTick }
+        val firstTick = trackTones.minOf { track -> track.tones.minOf { it.startTick } }
         val startClock = context.currentTime + START_DELAY_SECONDS - firstTick * secondsPerTick
-        tones.forEach { tone ->
-            val start = startClock + tone.startTick * secondsPerTick
-            val duration = tone.ticks * secondsPerTick
-            val voiceLevel = tone.level / sqrt(tone.midi.size.toDouble())
-            tone.midi.forEach { midi -> voice(context, runBus, midi, start, duration, voiceLevel) }
+        trackTones.forEach { (track, tones) ->
+            val level = if (track is MelodyTrack) MELODY_LEVEL else ACCOMPANIMENT_LEVEL
+            tones.forEach { tone ->
+                val start = startClock + tone.startTick * secondsPerTick
+                val duration = tone.ticks * secondsPerTick
+                val voiceLevel = level / sqrt(tone.midi.size.toDouble())
+                tone.midi.forEach { midi -> voice(context, runBus, midi, start, duration, voiceLevel) }
+            }
         }
         playingStore.set(oscillators.isNotEmpty())
-    }
-
-    /** The tones of [section] placed at [onset], its pickup sounding before it. */
-    private fun tonesOf(section: Section, onset: Int): List<Tone> = when (section) {
-        is Phrase -> section.pickup.toTones(onset - section.pickup.lengthOf { it.beats }, MELODY_LEVEL, { it.beats }) {
-            it.pitch?.let { pitch -> listOf(pitch.midi) }
-        } + section.notes.toTones(onset, MELODY_LEVEL, { it.beats }) { it.pitch?.let { pitch -> listOf(pitch.midi) } }
-        is Progression -> section.pickup.toTones(onset - section.pickup.lengthOf { it.beats }, ACCOMPANIMENT_LEVEL, { it.beats }) {
-            it.chord?.toMidi()
-        } + section.notes.toTones(onset, ACCOMPANIMENT_LEVEL, { it.beats }) { it.chord?.toMidi() }
-        is Stanza, is Groove -> emptyList()
     }
 
     /** Stops every tone playing, silencing their release tails at once. */
@@ -130,46 +100,6 @@ class TrackPlayer(
     }
 }
 
-/** The MIDI numbers of [midi] sounding from [startTick] for [ticks], peaking together at [level]. */
-private class Tone(val startTick: Int, val ticks: Int, val level: Double, val midi: List<Int>)
-
-/** The notes laid end to end from [onset], each a tone of the MIDI numbers [midiOf] gives, or a rest for `null`. */
-private fun <N> List<N>.toTones(onset: Int, level: Double, beatsOf: (N) -> Beats, midiOf: (N) -> List<Int>?): List<Tone> {
-    var tick = onset
-    return mapNotNull { note ->
-        val ticks = beatsOf(note).ticks
-        val tone = midiOf(note)?.let { Tone(tick, ticks, level, it) }
-        tick += ticks
-        tone
-    }
-}
-
-private fun <N> List<N>.lengthOf(beatsOf: (N) -> Beats) = sumOf { beatsOf(it).ticks }
-
-/** The MIDI numbers of the root, third, fifth and seventh of the chord, rooted in the octave below middle C. */
-private fun Chord.toMidi(): List<Int> {
-    val root = CHORD_ROOT_MIDI + root.value
-    val third = when (quality) {
-        ChordQuality.Minor, ChordQuality.Diminished -> 3
-        ChordQuality.Major, ChordQuality.Augmented -> 4
-        ChordQuality.Sus2 -> 2
-        ChordQuality.Sus4 -> 5
-    }
-    val fifth = when (quality) {
-        ChordQuality.Diminished -> 6
-        ChordQuality.Augmented -> 8
-        else -> 7
-    }
-    val seventh = when (seventh) {
-        Seventh.Minor -> 10
-        Seventh.Major -> 11
-        Seventh.Diminished -> 9
-        null -> null
-    }
-    return listOfNotNull(0, third, fifth, seventh).map { root + it }
-}
-
-private const val CHORD_ROOT_MIDI = 48
 private const val START_DELAY_SECONDS = 0.1
 private const val MELODY_LEVEL = 0.18
 private const val ACCOMPANIMENT_LEVEL = 0.12

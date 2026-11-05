@@ -141,6 +141,7 @@ private fun ViewScope.trackList() {
         actions = listOf(
             MenuAction("Play") { model.playSong() },
             MenuAction("Stop") { model.stop() },
+            MenuAction("Export") { model.exportMidi() },
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {

@@ -7,6 +7,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import streetlight.web.utility.downloadFile
 import streetlight.model.data.Beats
 import streetlight.model.data.lengthOf
 import kotlinx.serialization.Serializable
@@ -59,6 +60,13 @@ class MusicEditor(
     }
 
     fun stop() = player.stop()
+
+    /** Hands the viewer the song's tracks as a MIDI file, laid along its arrangement. */
+    fun exportMidi() {
+        val song = state.now ?: return
+        val trackTones = songTonesOf(song.music, song.tracks, song.tracks).filter { it.tones.isNotEmpty() }
+        downloadFile(writeMidi(song.music, trackTones), "${song.song.title}.mid", MIDI_TYPE)
+    }
 
     /** The warnings on the track at [index]: each section it defines that runs shorter than in another track. */
     fun sectionWarningsState(index: Int) = state.tapOf { song ->
@@ -148,3 +156,5 @@ private fun newMusicEditorState(title: String): MusicEditorState {
 private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
     if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
 }
+
+private const val MIDI_TYPE = "audio/midi"

@@ -26,7 +26,7 @@ object LyricParser {
             }
             Stanza(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(LyricTrack(stanzas, trackText.arrangements), errors)
+        return NotationRead(LyricTrack(stanzas, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time]. */
@@ -39,7 +39,7 @@ object LyricParser {
                 measuresPerLine = stanza.measuresPerLine,
             )
         }
-        return writeTrackText(sections, track.arrangements)
+        return writeTrackText(sections, track.arrangements, track.capo)
     }
 
     private fun readMeasure(measure: String, length: Beats, notes: MutableList<LyricNote>, error: (String) -> Unit) {

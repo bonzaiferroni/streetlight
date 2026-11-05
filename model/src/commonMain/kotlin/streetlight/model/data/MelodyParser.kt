@@ -42,7 +42,7 @@ class MelodyParser(
             }
             Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(MelodyTrack(phrases, trackText.arrangements), errors)
+        return NotationRead(MelodyTrack(phrases, trackText.arrangements, trackText.capo), errors)
     }
 
     /** The ticks a segment of jianpu filled, and whether it ends on a tie to the next note. */
@@ -121,7 +121,7 @@ class MelodyParser(
                 measuresPerLine = phrase.measuresPerLine,
             )
         }
-        return writeTrackText(sections, track.arrangements)
+        return writeTrackText(sections, track.arrangements, track.capo)
     }
 
     /** Writes [notes] as the jianpu of each measure they fill, holding a note across a bar line where it crosses one. */
