@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import kampfire.model.reactIn
 import kampfire.model.storeOf
@@ -48,6 +49,14 @@ class MusicEditor(
         if (this == null || track == null) this
         else copy(tracks = tracks.toMutableList().apply { set(index, track) })
     }
+
+    /**
+     * The track at [index] of the loaded song as a [T], reading [empty] while there is no such track.
+     *
+     * A removal or unload can reach the lens before the view reading it is rebuilt, which then reads [empty].
+     */
+    inline fun <reified T : Track> trackState(index: Int, empty: T): MutableTap<T> =
+        trackState(index).mutableTapOf({ it as? T ?: empty }) { it }
 
     /** Adds [track] to the loaded song and focuses it. */
     fun addTrack(track: Track) = state.update { song ->

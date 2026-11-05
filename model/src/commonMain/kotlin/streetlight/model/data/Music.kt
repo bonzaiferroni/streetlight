@@ -21,16 +21,20 @@ value class MusicId(override val value: Uuid): RecordId {
 data class Key(
     val tonic: Chroma,
     val mode: Mode,
-)
+) {
+    /** The tonic of the major scale the mode is drawn from, which scale degrees count from. */
+    val majorTonic get() = Chroma.of(tonic.value - mode.semitonesFromMajor)
+}
 
-enum class Mode {
-    Major,
-    Minor,
-    Dorian,
-    Mixolydian,
-    Phrygian,
-    Lydian,
-    Locrian,
+/** A mode, by the [semitonesFromMajor] its tonic sits above the tonic of the major scale it is drawn from. */
+enum class Mode(val semitonesFromMajor: Int) {
+    Major(0),
+    Minor(9),
+    Dorian(2),
+    Mixolydian(7),
+    Phrygian(4),
+    Lydian(5),
+    Locrian(11),
 }
 
 @Serializable @JvmInline
@@ -45,6 +49,9 @@ data class TimeSignature(
     val beats: Int,
     val beatUnit: Int,
 ) {
+    /** The length of one beat of the signature, counting a quarter note as one of [Beats]. */
+    val beat get() = Beats.of(4, beatUnit)
+
     /** The length of a measure, counting a quarter note as one of [Beats]. */
     val measure get() = Beats.of(beats * 4, beatUnit)
 }

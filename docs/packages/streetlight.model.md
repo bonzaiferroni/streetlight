@@ -21,6 +21,7 @@ The domain types and API endpoints shared by the server and the web client. Both
 | `FooId` | A `@JvmInline value class` over `Uuid` implementing `RecordId`, in `Foo.kt` |
 | `FooEdit` | The fields a form sends for `Foo` |
 | `FooContent` | The content of a route, implementing `RouteContent` |
+| `FooParser` | A class that does parsing work |
 | `FooRoute` | A route, in `streetlight.model.ui`, paired with a `Screen` entry, or with an entry of a sub-app's screens |
 | `FooAppScreen` | The screens of a sub-app, an `AppScreen` enum in `streetlight.model.ui`. Its `portalScreens` lists its entries with the `Screen` entries the sub-app also renders |
 
@@ -76,7 +77,17 @@ A tag enum is stored by name, as a text array, so entries are ordered freely and
 
 A `Track` holds its patterns and the order they play in as `placements`, a list of `PatternId`s. Patterns play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
 
-A chord track is written as text by `writeChordTrack` and read by `readChordTrack` in `ChordNotation.kt`. The text holds no measures of its own; they are cut from the `TimeSignature` when written and read.
+A pattern may open with a `pickup`, notes that sound at the end of the measure before it. A pickup is shorter than a measure and does not count toward the pattern's length. A pattern's `measuresPerLine` is the layout of its text, read from the measures on its first line.
+
+Each track type has a text notation, read and written by its `FooParser`, as `ChordParser`. The parsers share the ambient functions of `TrackNotation.kt`, which work on text, beats and ticks and know nothing of notes. The layout every notation shares is a heading line per pattern, its lines of measures, then the placements. The notes before a pattern's first bar line are its pickup. A read reports each problem by line and skips what it cannot read, so a partly written text still gives a track.
+
+| Track | Notation | Lengths |
+|---|---|---|
+| `ChordTrack` | Chord symbols in the `NotationStyle` | A measure's tokens share it evenly; a pickup token is a beat |
+| `LyricTrack` | Syllables and words, a syllable keeping its `-` | As chords |
+| `MelodyTrack` | Jianpu, as jianpu-ly writes it | Each note carries its own; a measure that does not add up is reported |
+
+A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.
 
 ## Opening Hours
 
@@ -107,3 +118,10 @@ The galaxy feed shows the type its route names, and by default shows a caller `S
 A cursor's `search` filters a feed to entities whose searched text holds it: an event's title or location name, a galaxy's name or tagline, a city's name. A feed section refreshes a search with an upcoming cursor whatever its feed, so a feed that pages by another kind reads its first page from its own default cursor and keeps the search. A post feed is not sorted by name, and reads a name cursor as its first page, newest first.
 
 A cursor's `tag`, the ordinal of an `EventTag`, filters its feed to entities carrying that tag, and its `search` to entities whose name or location name holds the text in any case. The next cursor of a feed keeps both. An `Events` feed honors them, and the other types ignore them. The map's endpoint takes them as its `tagParam` and `searchParam`.
+
+## Tests Wanted
+
+- a chord track written to text reads back to the same track
+- a melody track written to jianpu reads back to the same track
+- a jianpu note held across a bar line reads as one note
+- a lyric track written to text reads back to the same track

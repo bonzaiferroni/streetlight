@@ -175,7 +175,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
 | [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music of a song loaded from `SongDb` |
-| [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track |
+| [`NotationEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationEditor.kt) | Edits a track through its text notation, built for each track type by `chordEditorOf`, `melodyEditorOf` and `lyricEditorOf` |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |

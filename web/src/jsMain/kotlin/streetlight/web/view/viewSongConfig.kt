@@ -14,6 +14,7 @@ import koala.modifier.*
 import koala.page.Id
 import kampfire.model.mutableTapOf
 import streetlight.model.data.ChordTrack
+import streetlight.model.data.MelodyTrack
 import streetlight.model.data.Chromatic
 import streetlight.model.data.DrumTrack
 import streetlight.model.data.LyricTrack
@@ -23,7 +24,10 @@ import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
-import streetlight.web.model.ChordEditor
+import streetlight.web.model.NotationEditor
+import streetlight.web.model.chordEditorOf
+import streetlight.web.model.lyricEditorOf
+import streetlight.web.model.melodyEditorOf
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.getMusicEditor
 import streetlight.web.utility.setTitle
@@ -125,6 +129,14 @@ private fun ViewScope.trackList() {
                 model.addTrack(ChordTrack(emptyList(), emptyList()))
                 popover.close()
             },
+            MenuAction("Melody") {
+                model.addTrack(MelodyTrack(emptyList(), emptyList()))
+                popover.close()
+            },
+            MenuAction("Lyrics") {
+                model.addTrack(LyricTrack(emptyList(), emptyList()))
+                popover.close()
+            },
         ))
     }
     actionSection(
@@ -154,23 +166,19 @@ private fun ViewScope.trackEditor() {
     flowBlock(model.focusTrackState) { index ->
         val track = index?.let { model.readTrack(it) } ?: return@flowBlock
         when (track) {
-            is ChordTrack -> {
-                // a removal or unload can reach the lens before this view is rebuilt, so it reads an empty track then
-                val trackState = model.trackState(index).mutableTapOf({ it as? ChordTrack ?: ChordTrack(emptyList(), emptyList()) }) { it }
-                val editor = ChordEditor(contentScope, trackState, model.musicState, model.notationStyleState)
-                context(editor) { chordEditor() }
-            }
-            is LyricTrack, is DrumTrack -> textBlock("Hello ${track.toLabel()}")
+            is ChordTrack -> notationPanes("chords", chordEditorOf(contentScope, model, index))
+            is MelodyTrack -> notationPanes("jianpu", melodyEditorOf(contentScope, model, index))
+            is LyricTrack -> notationPanes("lyrics", lyricEditorOf(contentScope, model, index))
+            is DrumTrack -> textBlock("Hello ${track.toLabel()}")
         }
     }
 }
 
-/** Renders the text of a chord track beside the text its track writes back, so the two can be compared. */
-context(editor: ChordEditor)
-private fun ViewScope.chordEditor() {
+/** Renders the text [editor] reads beside the text its track writes back, so the two can be compared. */
+private fun ViewScope.notationPanes(label: String, editor: NotationEditor<*>) {
     row(AlignItemsStart) {
         column(Flex1) {
-            textEditor(editor.textState, "chords", rows = 16, textMod = MonoFont)
+            textEditor(editor.textState, label, rows = 16, textMod = MonoFont)
             flowBlock(editor.errorsState) { errors ->
                 errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
             }
@@ -183,6 +191,7 @@ private fun ViewScope.chordEditor() {
 
 private fun Track.toLabel() = when (this) {
     is ChordTrack -> "Chords"
+    is MelodyTrack -> "Melody"
     is LyricTrack -> "Lyrics"
     is DrumTrack -> "Drums"
 }
