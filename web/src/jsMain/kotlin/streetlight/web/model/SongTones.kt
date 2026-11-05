@@ -4,6 +4,8 @@ import streetlight.model.data.Beats
 import streetlight.model.data.Chord
 import streetlight.model.data.ChordNote
 import streetlight.model.data.ChordQuality
+import streetlight.model.data.Drum
+import streetlight.model.data.DrumHit
 import streetlight.model.data.Groove
 import streetlight.model.data.Key
 import streetlight.model.data.MelodyNote
@@ -26,11 +28,25 @@ class SongTone(
     val midi: List<Int>,
 )
 
-/** The [tones] of [track] in its song, in the order they start. */
+/** A [hit] of [drum] struck at [startTick]. */
+class DrumTone(
+    val startTick: Int,
+    val drum: Drum,
+    val hit: DrumHit,
+)
+
+/** The pitched [tones] and the [drums] of [track] in its song, each in the order they start. */
 data class TrackTones(
     val track: Track,
     val tones: List<SongTone>,
-)
+    val drums: List<DrumTone>,
+) {
+    /** Whether the track sounds at all. */
+    val isSounding get() = tones.isNotEmpty() || drums.isNotEmpty()
+
+    /** The tick of the first sound, or `null` when there is none. */
+    val firstTick get() = (tones.map { it.startTick } + drums.map { it.startTick }).minOrNull()
+}
 
 /**
  * The tones of [playing], tracks of a song of [tracks], laid along the arrangement of [music] with both capos applied.
@@ -44,15 +60,19 @@ fun songTonesOf(music: Music, tracks: List<Track>, playing: List<Track>): List<T
     val onsets = order.runningFold(0) { onset, sectionId -> onset + (tracks.lengthOf(sectionId)?.ticks ?: 0) }
     return playing.map { track ->
         val capo = (music.capo ?: 0) + (track.capo ?: 0)
-        val tones = order.zip(onsets).flatMap { (sectionId, onset) ->
+        val tones = mutableListOf<SongTone>()
+        val drums = mutableListOf<DrumTone>()
+        order.zip(onsets).forEach { (sectionId, onset) ->
             var tick = onset
             val sections = track.sectionsOf(sectionId).orEmpty()
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
-            List(track.repeatsOf(sectionId, span)) { sections }.flatten().flatMap { section ->
-                tonesOf(section, tick, music.key, capo).also { tick += section.length.ticks }
+            List(track.repeatsOf(sectionId, span)) { sections }.flatten().forEach { section ->
+                tones.addAll(tonesOf(section, tick, music.key, capo))
+                if (section is Groove) drums.addAll(drumTonesOf(section, tick))
+                tick += section.length.ticks
             }
         }
-        TrackTones(track, tones)
+        TrackTones(track, tones, drums.sortedBy { it.startTick })
     }
 }
 
@@ -69,6 +89,16 @@ private fun tonesOf(section: Section, onset: Int, key: Key, capo: Int): List<Son
             section.notes.toTones(onset, { it.beats }, midiOf)
     }
     is Stanza, is Groove -> emptyList()
+}
+
+/** The hits of every lane of [groove] placed at [onset]. */
+private fun drumTonesOf(groove: Groove, onset: Int) = groove.lanes.flatMap { lane ->
+    var tick = onset
+    lane.beats.mapNotNull { beat ->
+        val tone = beat.hit?.let { DrumTone(tick, lane.drum, it) }
+        tick += beat.beats.ticks
+        tone
+    }
 }
 
 /** The notes laid end to end from [onset], each a tone of the MIDI numbers [midiOf] gives, or a rest for `null`. */

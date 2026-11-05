@@ -72,7 +72,7 @@ class MusicEditor(
     /** Hands the viewer the song's tracks as a MIDI file, laid along its arrangement. */
     fun exportMidi() {
         val song = state.now ?: return
-        val trackTones = songTonesOf(song.music, song.tracks, song.tracks).filter { it.tones.isNotEmpty() }
+        val trackTones = songTonesOf(song.music, song.tracks, song.tracks).filter { it.isSounding }
         downloadFile(writeMidi(song.music, trackTones), "${song.song.title}.mid", MIDI_TYPE)
     }
 

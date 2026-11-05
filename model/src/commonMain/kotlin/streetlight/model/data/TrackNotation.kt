@@ -216,8 +216,8 @@ internal fun measureSlotsOf(onsets: List<Int>, measure: Beats): List<List<Int>> 
     }
 }
 
-/** Reads a capo, a fret from 0 to 12, or returns `null`. */
-internal fun readCapo(text: String) = text.toIntOrNull()?.takeIf { it in 0..MAX_CAPO }
+/** Reads a capo, a shift of up to 12 semitones up or down, or returns `null`. */
+internal fun readCapo(text: String) = text.toIntOrNull()?.takeIf { it in -MAX_CAPO..MAX_CAPO }
 
 private const val CAPO = "Capo"
 private const val MAX_CAPO = 12

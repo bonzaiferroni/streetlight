@@ -8,7 +8,7 @@ import streetlight.model.data.MelodyTrack
 import streetlight.model.data.Music
 import streetlight.model.data.Track
 import web.audio.AudioContext
-import web.audio.OscillatorNode
+import web.audio.AudioScheduledSourceNode
 import web.audio.GainNode
 import web.events.EventHandler
 import kotlin.math.pow
@@ -18,7 +18,8 @@ import kotlin.math.sqrt
 class TrackPlayer(
     private val audio: StudioAudio,
 ) {
-    private val oscillators = mutableListOf<OscillatorNode>()
+    private val kit = DrumKit()
+    private val sources = mutableListOf<AudioScheduledSourceNode>()
     private var bus: GainNode? = null
 
     private val playingStore = storeOf(false)
@@ -31,7 +32,7 @@ class TrackPlayer(
      */
     fun play(music: Music, tracks: List<Track>, playing: List<Track>) {
         stop()
-        val trackTones = songTonesOf(music, tracks, playing).filter { it.tones.isNotEmpty() }
+        val trackTones = songTonesOf(music, tracks, playing).filter { it.isSounding }
         if (trackTones.isEmpty()) return
 
         val context = audio.readContext()
@@ -39,9 +40,13 @@ class TrackPlayer(
         bus = runBus
         val secondsPerTick = 60.0 / music.bpm / music.time.beat.ticks
         // a pickup sounds before the first downbeat, so the earliest tone sets the start
-        val firstTick = trackTones.minOf { track -> track.tones.minOf { it.startTick } }
+        val firstTick = trackTones.mapNotNull { it.firstTick }.min()
         val startClock = context.currentTime + START_DELAY_SECONDS - firstTick * secondsPerTick
-        trackTones.forEach { (track, tones) ->
+        trackTones.forEach { (track, tones, drums) ->
+            drums.forEach { drum ->
+                val start = startClock + drum.startTick * secondsPerTick
+                kit.strike(context, runBus, drum.drum, drum.hit, start).forEach { keep(it) }
+            }
             val level = if (track is MelodyTrack) MELODY_LEVEL else ACCOMPANIMENT_LEVEL
             tones.forEach { tone ->
                 val start = startClock + tone.startTick * secondsPerTick
@@ -50,18 +55,18 @@ class TrackPlayer(
                 tone.midi.forEach { midi -> voice(context, runBus, midi, start, duration, voiceLevel) }
             }
         }
-        playingStore.set(oscillators.isNotEmpty())
+        playingStore.set(sources.isNotEmpty())
     }
 
     /** Stops every tone playing, silencing their release tails at once. */
     fun stop() {
         bus?.disconnect()
         bus = null
-        val current = oscillators.toList()
-        oscillators.clear()
-        current.forEach { oscillator ->
-            oscillator.onended = null
-            oscillator.stop()
+        val current = sources.toList()
+        sources.clear()
+        current.forEach { source ->
+            source.onended = null
+            source.stop()
         }
         playingStore.set(false)
     }
@@ -86,17 +91,22 @@ class TrackPlayer(
             gain.gain.value = amplitude.toFloat()
             oscillator.connect(gain)
             gain.connect(envelope)
-            oscillator.onended = EventHandler { endOscillator(oscillator) }
             oscillator.start(start)
             // the release tail outlasts the note, so the oscillators run on until it has faded
             oscillator.stop(start + duration + TAIL_SECONDS)
-            oscillators.add(oscillator)
+            keep(oscillator)
         }
     }
 
-    private fun endOscillator(oscillator: OscillatorNode) {
-        oscillators.remove(oscillator)
-        if (oscillators.isEmpty()) playingStore.set(false)
+    /** Keeps [source] until it ends, so playback is known to run while any source does. */
+    private fun keep(source: AudioScheduledSourceNode) {
+        source.onended = EventHandler { endSource(source) }
+        sources.add(source)
+    }
+
+    private fun endSource(source: AudioScheduledSourceNode) {
+        sources.remove(source)
+        if (sources.isEmpty()) playingStore.set(false)
     }
 }
 

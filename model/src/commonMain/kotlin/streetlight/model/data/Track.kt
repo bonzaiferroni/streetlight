@@ -6,7 +6,8 @@ import kotlin.jvm.JvmInline
 /**
  * A part played by a voice or instrument: its [sections], and its [arrangements] of sections into larger ones.
  *
- * The track sounds [capo] semitones higher than written, on top of the [Music.capo] of its song.
+ * The track sounds [capo] semitones higher than written, or lower for a negative one, on top of the [Music.capo] of
+ * its song.
  */
 @Serializable
 sealed interface Track {
