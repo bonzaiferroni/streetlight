@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
+/** A musical understanding of a song: its key, time and tempo, and the [arrangement] of sections every track follows. */
 @Serializable
 data class Music(
     val musicId: MusicId,
@@ -11,6 +12,7 @@ data class Music(
     val key: Key,
     val time: TimeSignature,
     val bpm: Int = 90,
+    val arrangement: List<SectionId> = emptyList(),
 )
 
 @JvmInline @Serializable

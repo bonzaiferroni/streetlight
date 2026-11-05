@@ -7,12 +7,17 @@ import kampfire.model.storeOf
 import streetlight.model.data.Beats
 import streetlight.model.data.Chord
 import streetlight.model.data.ChordQuality
-import streetlight.model.data.ChordTrack
-import streetlight.model.data.MelodyTrack
+import streetlight.model.data.Groove
 import streetlight.model.data.Music
-import streetlight.model.data.Pattern
+import streetlight.model.data.Phrase
+import streetlight.model.data.Progression
+import streetlight.model.data.Section
 import streetlight.model.data.Seventh
-import streetlight.model.data.PatternId
+import streetlight.model.data.Stanza
+import streetlight.model.data.Track
+import streetlight.model.data.lengthOf
+import streetlight.model.data.sectionOrderOf
+import streetlight.model.data.sectionsOf
 import web.audio.AudioContext
 import web.audio.OscillatorNode
 import web.audio.GainNode
@@ -20,7 +25,7 @@ import web.events.EventHandler
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-/** Plays a track's arrangement through the speakers, each note a few harmonics shaped by an envelope. */
+/** Plays the tracks of a song through the speakers, each note a few harmonics shaped by an envelope. */
 class TrackPlayer(
     private val audio: StudioAudio,
 ) {
@@ -30,47 +35,24 @@ class TrackPlayer(
     private val playingStore = storeOf(false)
     val isPlayingState: Tap<Boolean> = playingStore
 
-    /** Plays the melody of [track] at the tempo of [music]. Any playback already running is stopped first. */
-    fun play(track: MelodyTrack, music: Music) = playPatterns(track.patterns, track.arrangement, music, MELODY_LEVEL) { phrase, onset ->
-        phrase.pickup.toTones(onset - phrase.pickup.lengthOf { it.beats }, { it.beats }) { it.pitch?.let { pitch -> listOf(pitch.midi) } } +
-            phrase.notes.toTones(onset, { it.beats }) { it.pitch?.let { pitch -> listOf(pitch.midi) } }
-    }
-
-    /** Plays the chords of [track] at the tempo of [music], each as a block of its tones. */
-    fun play(track: ChordTrack, music: Music) = playPatterns(track.patterns, track.arrangement, music, ACCOMPANIMENT_LEVEL) { progression, onset ->
-        progression.pickup.toTones(onset - progression.pickup.lengthOf { it.beats }, { it.beats }) { it.chord?.toMidi() } +
-            progression.notes.toTones(onset, { it.beats }) { it.chord?.toMidi() }
-    }
-
-    /** Stops every tone playing, silencing their release tails at once. */
-    fun stop() {
-        bus?.disconnect()
-        bus = null
-        val current = oscillators.toList()
-        oscillators.clear()
-        current.forEach { oscillator ->
-            oscillator.onended = null
-            oscillator.stop()
-        }
-        playingStore.set(false)
-    }
-
     /**
-     * Plays [patterns] in [arrangement], or each once in order when it is empty, with [tonesOf] giving the tones of a
-     * pattern placed at its onset in ticks. A tone peaks at [level], shared among the pitches sounding together.
+     * Plays [playing], tracks of a song of [tracks], through the arrangement of [music]. Each section lasts as long as
+     * the longest track that defines it, and a track rests through a section it lacks or runs short of. Any playback
+     * already running is stopped first.
      */
-    private fun <P : Pattern> playPatterns(
-        patterns: List<P>,
-        arrangement: List<PatternId>,
-        music: Music,
-        level: Double,
-        tonesOf: (P, Int) -> List<Tone>,
-    ) {
+    fun play(music: Music, tracks: List<Track>, playing: List<Track>) {
         stop()
-        val order = arrangement.mapNotNull { id -> patterns.firstOrNull { it.patternId == id } }.ifEmpty { patterns }
+        val tones = mutableListOf<Tone>()
         var onset = 0
-        val tones = order.flatMap { pattern ->
-            tonesOf(pattern, onset).also { onset += pattern.length.ticks }
+        for (sectionId in tracks.sectionOrderOf(music)) {
+            playing.forEach { track ->
+                var tick = onset
+                track.sectionsOf(sectionId)?.forEach { section ->
+                    tones.addAll(tonesOf(section, tick))
+                    tick += section.length.ticks
+                }
+            }
+            onset += tracks.lengthOf(sectionId)?.ticks ?: 0
         }
         if (tones.isEmpty()) return
 
@@ -84,10 +66,34 @@ class TrackPlayer(
         tones.forEach { tone ->
             val start = startClock + tone.startTick * secondsPerTick
             val duration = tone.ticks * secondsPerTick
-            val voiceLevel = level / sqrt(tone.midi.size.toDouble())
+            val voiceLevel = tone.level / sqrt(tone.midi.size.toDouble())
             tone.midi.forEach { midi -> voice(context, runBus, midi, start, duration, voiceLevel) }
         }
         playingStore.set(oscillators.isNotEmpty())
+    }
+
+    /** The tones of [section] placed at [onset], its pickup sounding before it. */
+    private fun tonesOf(section: Section, onset: Int): List<Tone> = when (section) {
+        is Phrase -> section.pickup.toTones(onset - section.pickup.lengthOf { it.beats }, MELODY_LEVEL, { it.beats }) {
+            it.pitch?.let { pitch -> listOf(pitch.midi) }
+        } + section.notes.toTones(onset, MELODY_LEVEL, { it.beats }) { it.pitch?.let { pitch -> listOf(pitch.midi) } }
+        is Progression -> section.pickup.toTones(onset - section.pickup.lengthOf { it.beats }, ACCOMPANIMENT_LEVEL, { it.beats }) {
+            it.chord?.toMidi()
+        } + section.notes.toTones(onset, ACCOMPANIMENT_LEVEL, { it.beats }) { it.chord?.toMidi() }
+        is Stanza, is Groove -> emptyList()
+    }
+
+    /** Stops every tone playing, silencing their release tails at once. */
+    fun stop() {
+        bus?.disconnect()
+        bus = null
+        val current = oscillators.toList()
+        oscillators.clear()
+        current.forEach { oscillator ->
+            oscillator.onended = null
+            oscillator.stop()
+        }
+        playingStore.set(false)
     }
 
     /**
@@ -124,15 +130,15 @@ class TrackPlayer(
     }
 }
 
-/** The MIDI numbers of [midi] sounding from [startTick] for [ticks]. */
-private class Tone(val startTick: Int, val ticks: Int, val midi: List<Int>)
+/** The MIDI numbers of [midi] sounding from [startTick] for [ticks], peaking together at [level]. */
+private class Tone(val startTick: Int, val ticks: Int, val level: Double, val midi: List<Int>)
 
 /** The notes laid end to end from [onset], each a tone of the MIDI numbers [midiOf] gives, or a rest for `null`. */
-private fun <N> List<N>.toTones(onset: Int, beatsOf: (N) -> Beats, midiOf: (N) -> List<Int>?): List<Tone> {
+private fun <N> List<N>.toTones(onset: Int, level: Double, beatsOf: (N) -> Beats, midiOf: (N) -> List<Int>?): List<Tone> {
     var tick = onset
     return mapNotNull { note ->
         val ticks = beatsOf(note).ticks
-        val tone = midiOf(note)?.let { Tone(tick, ticks, it) }
+        val tone = midiOf(note)?.let { Tone(tick, ticks, level, it) }
         tick += ticks
         tone
     }

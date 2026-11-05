@@ -3,7 +3,7 @@ package streetlight.model.data
 /** The heading that opens the arrangement of a track's text. */
 const val ARRANGEMENT_HEADING = "Arrangement:"
 
-/** A problem found on [line] of a track's text, counted from 1. */
+/** A problem found on [line] of a text, counted from 1. */
 data class NotationError(
     val line: Int,
     val message: String,
@@ -21,59 +21,83 @@ internal data class NotationLine(
     val text: String,
 )
 
-/** The heading of a pattern in a track's text and the lines of measures under it. */
-internal data class PatternText(
-    val patternId: PatternId,
+/** The heading of a section in a track's text and the lines of measures under it. */
+internal data class SectionText(
+    val sectionId: SectionId,
     val lines: List<NotationLine>,
 )
 
-/** The patterns and arrangement of a track's text, before their measures are read. */
+/** The sections and arrangements of a track's text, before the sections' measures are read. */
 internal data class TrackText(
-    val patterns: List<PatternText>,
-    val arrangement: List<PatternId>,
+    val sections: List<SectionText>,
+    val arrangements: List<Arrangement>,
 )
 
 /**
  * Reads the layout every track's text shares, reporting into [errors].
  *
- * A line holding `|` is a line of measures, under the heading before it. Any other line is a heading naming a pattern.
- * The line after [ARRANGEMENT_HEADING] lists the patterns in the order they play.
+ * A line ending in `:` without a bar line is a heading naming a section. The lines under it are lines of measures,
+ * which hold `|`, or the sections of an arrangement, which list the sections it plays in order. An arrangement that
+ * names a missing section or holds itself is reported and left out.
  */
 internal fun readTrackText(text: String, errors: MutableList<NotationError>): TrackText {
-    val patterns = mutableListOf<Pair<PatternId, MutableList<NotationLine>>>()
-    val arrangementLines = mutableListOf<NotationLine>()
-    var isArrangement = false
-
+    val headings = mutableListOf<HeadingText>()
     text.lines().forEachIndexed { index, rawLine ->
         val line = NotationLine(index + 1, rawLine.trim())
+        fun error(message: String) = errors.add(NotationError(line.number, message))
+        val heading = headings.lastOrNull()
         when {
             line.text.isEmpty() -> Unit
-            line.text.equals(ARRANGEMENT_HEADING, ignoreCase = true) -> isArrangement = true
-            isArrangement -> arrangementLines.add(line)
-            '|' in line.text -> {
-                val lines = patterns.lastOrNull()?.second
-                if (lines == null) errors.add(NotationError(line.number, "Measures before a heading"))
-                else lines.add(line)
+            '|' !in line.text && line.text.endsWith(':') -> {
+                val sectionId = SectionId(line.text.removeSuffix(":").trim())
+                if (headings.any { it.sectionId == sectionId }) error("A second section named ${sectionId.name}")
+                else headings.add(HeadingText(sectionId, line.number))
             }
-            else -> {
-                val patternId = PatternId(line.text.removeSuffix(":").trim())
-                if (patterns.any { it.first == patternId }) {
-                    errors.add(NotationError(line.number, "A second pattern named ${patternId.name}"))
-                } else {
-                    patterns.add(patternId to mutableListOf())
-                }
-            }
+            heading == null -> error("A line before any heading")
+            '|' in line.text -> heading.measureLines.add(line)
+            heading.measureLines.isNotEmpty() -> error("An arrangement line among measures")
+            else -> heading.arrangementLines.add(line)
         }
     }
 
-    val arrangement = arrangementLines.flatMap { line ->
-        line.text.split(WHITESPACE).mapNotNull { name ->
-            val patternId = PatternId(name)
-            if (patterns.any { it.first == patternId }) patternId
-            else null.also { errors.add(NotationError(line.number, "No pattern named $name")) }
+    val ids = headings.map { it.sectionId }.toSet()
+    val arranged = headings.filter { it.arrangementLines.isNotEmpty() && it.measureLines.isEmpty() }.map { heading ->
+        val sections = heading.arrangementLines.flatMap { line ->
+            tokensOf(line.text).mapNotNull { name ->
+                SectionId(name).takeIf { it in ids }
+                    ?: null.also { errors.add(NotationError(line.number, "No section named $name")) }
+            }
         }
+        heading to Arrangement(heading.sectionId, sections)
     }
-    return TrackText(patterns.map { (patternId, lines) -> PatternText(patternId, lines) }, arrangement)
+    val arrangements = arranged.filter { (heading, arrangement) ->
+        val holdsItself = arrangement.sectionId.isReachedFrom(arrangement.sections, arranged.map { it.second })
+        if (holdsItself) errors.add(NotationError(heading.number, "${arrangement.sectionId.name} holds itself"))
+        !holdsItself
+    }.map { it.second }
+    val arrangedIds = arrangements.map { it.sectionId }.toSet()
+    val sections = headings.filter { it.sectionId !in arrangedIds && it.arrangementLines.isEmpty() }
+        .map { SectionText(it.sectionId, it.measureLines) }
+    return TrackText(sections, arrangements)
+}
+
+/** A heading of a track's text and the lines under it, as they are read. */
+private class HeadingText(val sectionId: SectionId, val number: Int) {
+    val measureLines = mutableListOf<NotationLine>()
+    val arrangementLines = mutableListOf<NotationLine>()
+}
+
+/** Whether this section is reached by following [sectionIds] through [arrangements]. */
+private fun SectionId.isReachedFrom(sectionIds: List<SectionId>, arrangements: List<Arrangement>): Boolean {
+    val visited = mutableSetOf<SectionId>()
+    val pending = ArrayDeque(sectionIds)
+    while (pending.isNotEmpty()) {
+        val next = pending.removeFirst()
+        if (next == this) return true
+        if (!visited.add(next)) continue
+        arrangements.firstOrNull { it.sectionId == next }?.let { pending.addAll(it.sections) }
+    }
+    return false
 }
 
 /** A line of measures cut at its bar lines: the text before the first, if any, and each measure after it. */
@@ -92,27 +116,30 @@ internal fun NotationLine.toBarLine(): BarLine {
 internal fun tokensOf(text: String) = text.split(WHITESPACE).filter { it.isNotEmpty() }
 
 /**
- * Writes a track's text: each pattern under its heading, its [PatternLines.pickup] before the first bar line, its
- * measures [PatternLines.measuresPerLine] to a line, then the [arrangement].
+ * Writes a track's text: each section under its heading, its [SectionLines.pickup] before the first bar line and its
+ * measures [SectionLines.measuresPerLine] to a line, then each of the [arrangements] under its own.
  */
-internal fun writeTrackText(patterns: List<PatternLines>, arrangement: List<PatternId>) = buildString {
-    for (pattern in patterns) {
-        appendLine(pattern.patternId.name)
-        val lines = pattern.measures.chunked(pattern.measuresPerLine.coerceAtLeast(1))
-        if (lines.isEmpty() && pattern.pickup != null) appendLine("${pattern.pickup} |")
+internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>) = buildString {
+    for (section in sections) {
+        appendLine("${section.sectionId.name}:")
+        val lines = section.measures.chunked(section.measuresPerLine.coerceAtLeast(1))
+        if (lines.isEmpty() && section.pickup != null) appendLine("${section.pickup} |")
         lines.forEachIndexed { index, line ->
-            val lead = pattern.pickup?.takeIf { index == 0 }?.let { "$it " }.orEmpty()
+            val lead = section.pickup?.takeIf { index == 0 }?.let { "$it " }.orEmpty()
             appendLine("$lead| ${line.joinToString(" | ")} |")
         }
         appendLine()
     }
-    appendLine(ARRANGEMENT_HEADING)
-    append(arrangement.joinToString(" ") { it.name })
-}
+    for (arrangement in arrangements) {
+        appendLine("${arrangement.sectionId.name}:")
+        appendLine(arrangement.sections.joinToString(" ") { it.name })
+        appendLine()
+    }
+}.trimEnd()
 
-/** A pattern written as the text of its [pickup], or `null` for none, and of each of its [measures]. */
-internal data class PatternLines(
-    val patternId: PatternId,
+/** A section written as the text of its [pickup], or `null` for none, and of each of its [measures]. */
+internal data class SectionLines(
+    val sectionId: SectionId,
     val pickup: String?,
     val measures: List<String>,
     val measuresPerLine: Int,

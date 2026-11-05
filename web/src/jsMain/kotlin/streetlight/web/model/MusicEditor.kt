@@ -7,8 +7,8 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import streetlight.model.data.ChordTrack
-import streetlight.model.data.MelodyTrack
+import streetlight.model.data.Beats
+import streetlight.model.data.lengthOf
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Chroma
 import streetlight.model.data.Key
@@ -45,17 +45,34 @@ class MusicEditor(
         scope.coroutineContext[Job]?.invokeOnCompletion { player.stop() }
     }
 
-    /** Plays the arrangement of the track at [index], if it is one with tones to play. */
+    /** Plays the track at [index] alone through the song's arrangement. */
     fun playTrack(index: Int) {
         val song = state.now ?: return
-        when (val track = song.tracks.getOrNull(index)) {
-            is ChordTrack -> player.play(track, song.music)
-            is MelodyTrack -> player.play(track, song.music)
-            else -> Unit
-        }
+        val track = song.tracks.getOrNull(index) ?: return
+        player.play(song.music, song.tracks, listOf(track))
     }
 
-    fun stopTrack() = player.stop()
+    /** Plays every track of the song together through its arrangement. */
+    fun playSong() {
+        val song = state.now ?: return
+        player.play(song.music, song.tracks, song.tracks)
+    }
+
+    fun stop() = player.stop()
+
+    /** The warnings on the track at [index]: each section it defines that runs shorter than in another track. */
+    fun sectionWarningsState(index: Int) = state.tapOf { song ->
+        val tracks = song?.tracks.orEmpty()
+        val track = tracks.getOrNull(index) ?: return@tapOf emptyList()
+        val ids = track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId }
+        ids.mapNotNull { sectionId ->
+            val length = track.lengthOf(sectionId) ?: return@mapNotNull null
+            val longest = tracks.lengthOf(sectionId) ?: return@mapNotNull null
+            val shortfall = longest.ticks - length.ticks
+            if (shortfall <= 0) null
+            else "${sectionId.name} runs ${shortfall.toBeatsText()} beats shorter than in another track"
+        }
+    }
 
     fun load(songId: SongId) = state.set(db.read(songId))
 
@@ -126,4 +143,8 @@ private fun newMusicEditorState(title: String): MusicEditorState {
             time = TimeSignature(4, 4),
         ),
     )
+}
+
+private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
+    if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
 }

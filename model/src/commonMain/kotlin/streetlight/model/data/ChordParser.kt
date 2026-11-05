@@ -15,10 +15,10 @@ class ChordParser(
     fun read(text: String, time: TimeSignature): NotationRead<ChordTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors)
-        val progressions = trackText.patterns.map { pattern ->
+        val progressions = trackText.sections.map { section ->
             val notes = mutableListOf<ChordNote>()
             val pickup = mutableListOf<ChordNote>()
-            pattern.lines.forEachIndexed { lineIndex, line ->
+            section.lines.forEachIndexed { lineIndex, line ->
                 fun error(message: String) = errors.add(NotationError(line.number, message))
                 val barLine = line.toBarLine()
                 barLine.lead?.let { lead ->
@@ -27,22 +27,22 @@ class ChordParser(
                 }
                 barLine.measures.forEach { readMeasure(it, time.measure, notes, ::error) }
             }
-            Progression(pattern.patternId, notes, pickup, measuresPerLineOf(pattern.lines, MEASURES_PER_LINE))
+            Progression(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(ChordTrack(progressions, trackText.arrangement), errors)
+        return NotationRead(ChordTrack(progressions, trackText.arrangements), errors)
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time]. */
     fun write(track: ChordTrack, time: TimeSignature): String {
-        val patterns = track.patterns.map { progression ->
-            PatternLines(
-                patternId = progression.patternId,
+        val sections = track.sections.map { progression ->
+            SectionLines(
+                sectionId = progression.sectionId,
                 pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.beat) },
                 measures = writeMeasures(progression.notes, time.measure),
                 measuresPerLine = progression.measuresPerLine,
             )
         }
-        return writeTrackText(patterns, track.arrangement)
+        return writeTrackText(sections, track.arrangements)
     }
 
     private fun readMeasure(measure: String, length: Beats, notes: MutableList<ChordNote>, error: (String) -> Unit) {

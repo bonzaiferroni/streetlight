@@ -1,7 +1,8 @@
 package streetlight.model.data
 
 /**
- * The parser of a song's music written as labeled lines, as `Key: C Major`, `Time: 3/4` and `Tempo: 90`.
+ * The parser of a song's music written as labeled lines, as `Key: C Major`, `Time: 3/4`, `Tempo: 90` and
+ * `Arrangement: Intro Verse Chorus`.
  *
  * A label is read in any case. A line left out keeps the value it had, and a line that cannot be read is reported.
  */
@@ -24,6 +25,8 @@ object MusicParser {
                 label.equals(TEMPO, ignoreCase = true) -> value.toIntOrNull()?.takeIf { it > 0 }
                     ?.let { result = result.copy(bpm = it) }
                     ?: error("Unknown tempo $value")
+                label.equals(ARRANGEMENT, ignoreCase = true) ->
+                    result = result.copy(arrangement = tokensOf(value).map { SectionId(it) })
                 else -> error("Unknown line $line")
             }
         }
@@ -34,7 +37,8 @@ object MusicParser {
     fun write(music: Music) = buildString {
         appendLine("$KEY: ${Chromatic.ofPitch(music.key.tonic.value).label} ${music.key.mode.name}")
         appendLine("$TIME: ${music.time.beats}/${music.time.beatUnit}")
-        append("$TEMPO: ${music.bpm}")
+        appendLine("$TEMPO: ${music.bpm}")
+        append("$ARRANGEMENT: ${music.arrangement.joinToString(" ") { it.name }}".trimEnd())
     }
 
     /** Reads a key as its tonic and mode, as `F# Minor`. */
@@ -65,4 +69,5 @@ object MusicParser {
 private const val KEY = "Key"
 private const val TIME = "Time"
 private const val TEMPO = "Tempo"
+private const val ARRANGEMENT = "Arrangement"
 private val WHITESPACE = Regex("\\s+")

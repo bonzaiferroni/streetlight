@@ -130,7 +130,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`DataCache`](../../web/src/jsMain/kotlin/streetlight/web/model/DataCache.kt) | Data loaded once per session |
 | [`StarCache`](../../web/src/jsMain/kotlin/streetlight/web/model/StarCache.kt) | The items a star has lit |
 | [`Fleet`](../../web/src/jsMain/kotlin/streetlight/web/model/Fleet.kt) | A list loaded on first request |
-| [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays a track's arrangement with synthesized tones |
+| [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |
 
 ### Editors

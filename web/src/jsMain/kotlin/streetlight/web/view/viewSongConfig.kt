@@ -138,7 +138,11 @@ private fun ViewScope.trackList() {
     }
     actionSection(
         label = "Tracks",
-        actions = listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { }),
+        actions = listOf(
+            MenuAction("Play") { model.playSong() },
+            MenuAction("Stop") { model.stop() },
+            MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
+        ),
     ) {
         flowBlock(model.tracksState) { tracks ->
             tracks.forEachIndexed { index, track ->
@@ -174,6 +178,9 @@ private fun ViewScope.trackEditor() {
             is LyricTrack -> notationPanes("lyrics", lyricEditorOf(contentScope, model, index))
             is DrumTrack -> textBlock("Hello ${track.toLabel()}")
         }
+        flowBlock(model.sectionWarningsState(index)) { warnings ->
+            warnings.forEach { textBlock("Warning: $it", modify(TextSmall, InkDimFg)) }
+        }
     }
 }
 
@@ -181,7 +188,7 @@ private fun ViewScope.trackEditor() {
 context(model: MusicEditor)
 private fun ViewScope.trackPlayer(index: Int) = flowBlock(model.isPlayingState) { isPlaying ->
     if (isPlaying) {
-        button(SvgFile.PlayerStop.filled, { model.stopTrack() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
+        button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     } else {
         button(SvgFile.PlayerPlay.filled, { model.playTrack(index) }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
     }

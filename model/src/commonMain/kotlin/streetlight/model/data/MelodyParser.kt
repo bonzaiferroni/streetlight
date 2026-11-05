@@ -15,11 +15,11 @@ class MelodyParser(
     fun read(text: String, time: TimeSignature): NotationRead<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors)
-        val phrases = trackText.patterns.map { pattern ->
+        val phrases = trackText.sections.map { section ->
             val notes = mutableListOf<MelodyNote>()
             val pickup = mutableListOf<MelodyNote>()
             var isTied = false
-            val measures = pattern.lines.flatMapIndexed { lineIndex, line ->
+            val measures = section.lines.flatMapIndexed { lineIndex, line ->
                 val barLine = line.toBarLine()
                 barLine.lead?.let { lead ->
                     if (lineIndex == 0) {
@@ -40,9 +40,9 @@ class MelodyParser(
                     error("A measure of ${read.ticks.toBeatsText()} beats")
                 }
             }
-            Phrase(pattern.patternId, notes, pickup, measuresPerLineOf(pattern.lines, MEASURES_PER_LINE))
+            Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(MelodyTrack(phrases, trackText.arrangement), errors)
+        return NotationRead(MelodyTrack(phrases, trackText.arrangements), errors)
     }
 
     /** The ticks a segment of jianpu filled, and whether it ends on a tie to the next note. */
@@ -111,9 +111,9 @@ class MelodyParser(
 
     /** Writes [track] as the jianpu [read] reads, with measures cut by [time]. */
     fun write(track: MelodyTrack, time: TimeSignature): String {
-        val patterns = track.patterns.map { phrase ->
-            PatternLines(
-                patternId = phrase.patternId,
+        val sections = track.sections.map { phrase ->
+            SectionLines(
+                sectionId = phrase.sectionId,
                 pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
                     pickup.flatMap { writeNote(it.pitch, it.beats.ticks, time.beat.ticks, false) }.joinToString(" ")
                 },
@@ -121,7 +121,7 @@ class MelodyParser(
                 measuresPerLine = phrase.measuresPerLine,
             )
         }
-        return writeTrackText(patterns, track.arrangement)
+        return writeTrackText(sections, track.arrangements)
     }
 
     /** Writes [notes] as the jianpu of each measure they fill, holding a note across a bar line where it crosses one. */
