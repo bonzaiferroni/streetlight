@@ -85,7 +85,7 @@ Each track type has a text notation, read and written by its `FooParser`, as `Ch
 |---|---|---|
 | `ChordTrack` | Chord symbols in the `NotationStyle` | A measure's tokens share it evenly; a pickup token is a beat |
 | `LyricTrack` | Syllables and words, a syllable keeping its `-` | As chords |
-| `MelodyTrack` | Jianpu, as jianpu-ly writes it | Each note carries its own; a measure that does not add up is reported |
+| `MelodyTrack` | Jianpu, with `\` after a note for each halving of its length | Each note carries its own; a measure that does not add up is reported |
 
 A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.
 

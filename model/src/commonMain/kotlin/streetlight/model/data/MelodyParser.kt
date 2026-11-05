@@ -3,10 +3,10 @@ package streetlight.model.data
 /**
  * The parser of a melody track's jianpu, with degrees counted from the [Key.majorTonic] of [key].
  *
- * A note is a degree `1`–`7`, or `0` for a rest, a quarter note long. `q` or `s` before it halves or quarters it, `.`
- * after it adds half its length, and an accidental before the degree raises or lowers it, as `q#4`. `'` or `,` after
- * the degree moves it an octave up or down. `-` holds the note before for a beat, and `~` ties the next note to it. The
- * notes before the first bar line of a phrase are its pickup. A token that cannot be read is reported and skipped.
+ * A note is a degree `1`–`7`, or `0` for a rest, a quarter note long. An accidental before the degree raises or lowers
+ * it, and `'` or `,` after it moves it an octave up or down. Then `\` halves it, `\\` quarters it, and `.` adds half its
+ * length, as `#4,\.`. `-` holds the note before for a beat, and `~` ties the next note to it. The notes before the first
+ * bar line of a phrase are its pickup. A token that cannot be read is reported and skipped.
  */
 class MelodyParser(
     private val key: Key,
@@ -95,7 +95,7 @@ class MelodyParser(
 
     private fun readNote(token: String, beat: Beats): MelodyNote? {
         val match = NOTE.matchEntire(token) ?: return null
-        val (length, accidental, degreeText, octaves, dot) = match.destructured
+        val (accidental, degreeText, octaves, length, dot) = match.destructured
         val base = when (length) {
             EIGHTH -> beat.ticks / 2
             SIXTEENTH -> beat.ticks / 4
@@ -181,8 +181,8 @@ class MelodyParser(
     private fun writeFraction(degree: String, ticks: Int, beat: Int): List<String> {
         val tokens = mutableListOf<String>()
         var remaining = ticks
-        for ((length, token) in listOf(beat * 3 / 4 to "$EIGHTH$degree$DOT", beat / 2 to "$EIGHTH$degree",
-            beat * 3 / 8 to "$SIXTEENTH$degree$DOT", beat / 4 to "$SIXTEENTH$degree")) {
+        for ((length, token) in listOf(beat * 3 / 4 to "$degree$EIGHTH$DOT", beat / 2 to "$degree$EIGHTH",
+            beat * 3 / 8 to "$degree$SIXTEENTH$DOT", beat / 4 to "$degree$SIXTEENTH")) {
             while (remaining >= length) {
                 tokens.add(token)
                 remaining -= length
@@ -207,13 +207,13 @@ private fun Int.toBeatsText() = (this.toDouble() / Beats.TICKS_PER_BEAT).let {
     if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
 }
 
-private val NOTE = Regex("""^([qs]?)([#b]?)([0-7])([',]*)(\.?)$""")
+private val NOTE = Regex("""^([#b]?)([0-7])([',]*)(\\{0,2})(\.?)$""")
 private const val MIDDLE_C = 60
 private const val HOLD = "-"
 private const val TIE = "~"
 private const val DOT = "."
-private const val EIGHTH = "q"
-private const val SIXTEENTH = "s"
+private const val EIGHTH = "\\"
+private const val SIXTEENTH = "\\\\"
 private const val REST_DEGREE = "0"
 private const val OCTAVE_UP = '\''
 private const val OCTAVE_DOWN = ','
