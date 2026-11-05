@@ -29,7 +29,7 @@ class ChordParser(
             }
             Progression(pattern.patternId, notes, pickup, measuresPerLineOf(pattern.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(ChordTrack(progressions, trackText.placements), errors)
+        return NotationRead(ChordTrack(progressions, trackText.arrangement), errors)
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time]. */
@@ -42,7 +42,7 @@ class ChordParser(
                 measuresPerLine = progression.measuresPerLine,
             )
         }
-        return writeTrackText(patterns, track.placements)
+        return writeTrackText(patterns, track.arrangement)
     }
 
     private fun readMeasure(measure: String, length: Beats, notes: MutableList<ChordNote>, error: (String) -> Unit) {

@@ -2,6 +2,7 @@ package streetlight.web.view
 
 import kampfire.model.storeOf
 import koala.SvgFile
+import koala.component.IconStyle
 import koala.component.heading3
 import koala.dom.RouteScope
 import koala.dom.ViewScope
@@ -15,7 +16,6 @@ import koala.page.Id
 import kampfire.model.mutableTapOf
 import streetlight.model.data.ChordTrack
 import streetlight.model.data.MelodyTrack
-import streetlight.model.data.Chromatic
 import streetlight.model.data.DrumTrack
 import streetlight.model.data.LyricTrack
 import streetlight.model.data.Track
@@ -28,6 +28,7 @@ import streetlight.web.model.NotationEditor
 import streetlight.web.model.chordEditorOf
 import streetlight.web.model.lyricEditorOf
 import streetlight.web.model.melodyEditorOf
+import streetlight.web.model.musicTextEditorOf
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.getMusicEditor
 import streetlight.web.utility.setTitle
@@ -109,11 +110,7 @@ private fun ViewScope.musicEditor() {
                 heading3(song.title, Flex1)
                 dropMenu(model.notationStyleState)
             }
-            flowBlock(model.musicState) { music ->
-                if (music == null) return@flowBlock
-                textBlock("Key: ${Chromatic.ofPitch(music.key.tonic.value).label} ${music.key.mode}")
-                textBlock("Time: ${music.time.beats}/${music.time.beatUnit}")
-            }
+            notationPanes("music", musicTextEditorOf(contentScope, model), rows = 3)
             trackList()
             trackEditor()
         }
@@ -166,19 +163,35 @@ private fun ViewScope.trackEditor() {
     flowBlock(model.focusTrackState) { index ->
         val track = index?.let { model.readTrack(it) } ?: return@flowBlock
         when (track) {
-            is ChordTrack -> notationPanes("chords", chordEditorOf(contentScope, model, index))
-            is MelodyTrack -> notationPanes("jianpu", melodyEditorOf(contentScope, model, index))
+            is ChordTrack -> {
+                trackPlayer(index)
+                notationPanes("chords", chordEditorOf(contentScope, model, index))
+            }
+            is MelodyTrack -> {
+                trackPlayer(index)
+                notationPanes("jianpu", melodyEditorOf(contentScope, model, index))
+            }
             is LyricTrack -> notationPanes("lyrics", lyricEditorOf(contentScope, model, index))
             is DrumTrack -> textBlock("Hello ${track.toLabel()}")
         }
     }
 }
 
+/** Renders the button that plays the track at [index], or stops it while it plays. */
+context(model: MusicEditor)
+private fun ViewScope.trackPlayer(index: Int) = flowBlock(model.isPlayingState) { isPlaying ->
+    if (isPlaying) {
+        button(SvgFile.PlayerStop.filled, { model.stopTrack() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
+    } else {
+        button(SvgFile.PlayerPlay.filled, { model.playTrack(index) }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
+    }
+}
+
 /** Renders the text [editor] reads beside the text its track writes back, so the two can be compared. */
-private fun ViewScope.notationPanes(label: String, editor: NotationEditor<*>) {
+private fun ViewScope.notationPanes(label: String, editor: NotationEditor<*>, rows: Int = 16) {
     row(AlignItemsStart) {
         column(Flex1) {
-            textEditor(editor.textState, label, rows = 16, textMod = MonoFont)
+            textEditor(editor.textState, label, rows = rows, textMod = MonoFont)
             flowBlock(editor.errorsState) { errors ->
                 errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
             }

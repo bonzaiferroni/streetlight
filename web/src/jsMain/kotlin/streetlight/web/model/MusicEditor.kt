@@ -6,6 +6,9 @@ import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import streetlight.model.data.ChordTrack
+import streetlight.model.data.MelodyTrack
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Chroma
 import streetlight.model.data.Key
@@ -22,10 +25,11 @@ import streetlight.model.data.Track
 class MusicEditor(
     scope: CoroutineScope,
     private val db: SongDb,
+    private val player: TrackPlayer,
 ) {
     private val state = storeOf<MusicEditorState?>(null)
     val songState = state.tapOf { it?.song }
-    val musicState = state.tapOf { it?.music }
+    val musicState = state.mutableTapOf({ it?.music }) { music -> if (this == null || music == null) this else copy(music = music) }
     val notationStyleState = state.mutableTapOf({ it?.notationStyle ?: NotationStyle.Letters }) {
         this?.copy(notationStyle = it)
     }
@@ -33,9 +37,25 @@ class MusicEditor(
     val focusTrackState = state.tapOf { it?.focusTrack }
     val songsState = db.songsState
 
+    val isPlayingState = player.isPlayingState
+
     init {
         state.reactIn(scope) { song -> song?.let { db.save(it) } }
+        // playback left running when the editor closes would keep sounding
+        scope.coroutineContext[Job]?.invokeOnCompletion { player.stop() }
     }
+
+    /** Plays the arrangement of the track at [index], if it is one with tones to play. */
+    fun playTrack(index: Int) {
+        val song = state.now ?: return
+        when (val track = song.tracks.getOrNull(index)) {
+            is ChordTrack -> player.play(track, song.music)
+            is MelodyTrack -> player.play(track, song.music)
+            else -> Unit
+        }
+    }
+
+    fun stopTrack() = player.stop()
 
     fun load(songId: SongId) = state.set(db.read(songId))
 

@@ -130,6 +130,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`DataCache`](../../web/src/jsMain/kotlin/streetlight/web/model/DataCache.kt) | Data loaded once per session |
 | [`StarCache`](../../web/src/jsMain/kotlin/streetlight/web/model/StarCache.kt) | The items a star has lit |
 | [`Fleet`](../../web/src/jsMain/kotlin/streetlight/web/model/Fleet.kt) | A list loaded on first request |
+| [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays a track's arrangement with synthesized tones |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |
 
 ### Editors
@@ -175,7 +176,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
 | [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music of a song loaded from `SongDb` |
-| [`NotationEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationEditor.kt) | Edits a track through its text notation, built for each track type by `chordEditorOf`, `melodyEditorOf` and `lyricEditorOf` |
+| [`NotationEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationEditor.kt) | Edits a value through its text notation, built for each track type by `chordEditorOf`, `melodyEditorOf` and `lyricEditorOf`, and for the song's music by `musicTextEditorOf` |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |

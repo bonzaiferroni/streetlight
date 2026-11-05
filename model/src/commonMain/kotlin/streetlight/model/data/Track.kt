@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 sealed interface Track {
     val patterns: List<Pattern>
-    val placements: List<PatternId>
+    val arrangement: List<PatternId>
 }
 
 @Serializable
@@ -23,7 +23,7 @@ value class PatternId(val name: String)
 @Serializable
 data class ChordTrack(
     override val patterns: List<Progression>,
-    override val placements: List<PatternId>,
+    override val arrangement: List<PatternId>,
 ) : Track
 
 /** The [notes] of a chord pattern, led by a [pickup] that sounds at the end of the measure before it. */
@@ -49,7 +49,7 @@ data class ChordNote(
 @Serializable
 data class MelodyTrack(
     override val patterns: List<Phrase>,
-    override val placements: List<PatternId>,
+    override val arrangement: List<PatternId>,
 ) : Track
 
 /** The [notes] of a melody pattern, led by a [pickup] that sounds at the end of the measure before it. */
@@ -79,7 +79,7 @@ value class Pitch(val midi: Int)
 @Serializable
 data class LyricTrack(
     override val patterns: List<Stanza>,
-    override val placements: List<PatternId>,
+    override val arrangement: List<PatternId>,
 ) : Track
 
 /** The [notes] of a lyric pattern, led by a [pickup] that sounds at the end of the measure before it. */
@@ -105,7 +105,7 @@ data class LyricNote(
 @Serializable
 data class DrumTrack(
     override val patterns: List<Groove>,
-    override val placements: List<PatternId>,
+    override val arrangement: List<PatternId>,
 ) : Track
 
 @Serializable

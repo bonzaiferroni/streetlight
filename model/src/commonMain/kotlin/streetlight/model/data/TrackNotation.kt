@@ -1,7 +1,7 @@
 package streetlight.model.data
 
-/** The heading that opens the placements of a track's text. */
-const val PLACEMENTS_HEADING = "Placements:"
+/** The heading that opens the arrangement of a track's text. */
+const val ARRANGEMENT_HEADING = "Arrangement:"
 
 /** A problem found on [line] of a track's text, counted from 1. */
 data class NotationError(
@@ -9,9 +9,9 @@ data class NotationError(
     val message: String,
 )
 
-/** The track read from a text, with the problems found where the text could not be read. */
-data class NotationRead<T : Track>(
-    val track: T,
+/** The value read from a text, with the problems found where the text could not be read. */
+data class NotationRead<out T>(
+    val value: T,
     val errors: List<NotationError>,
 )
 
@@ -27,29 +27,29 @@ internal data class PatternText(
     val lines: List<NotationLine>,
 )
 
-/** The patterns and placements of a track's text, before their measures are read. */
+/** The patterns and arrangement of a track's text, before their measures are read. */
 internal data class TrackText(
     val patterns: List<PatternText>,
-    val placements: List<PatternId>,
+    val arrangement: List<PatternId>,
 )
 
 /**
  * Reads the layout every track's text shares, reporting into [errors].
  *
  * A line holding `|` is a line of measures, under the heading before it. Any other line is a heading naming a pattern.
- * The line after [PLACEMENTS_HEADING] lists the patterns in the order they play.
+ * The line after [ARRANGEMENT_HEADING] lists the patterns in the order they play.
  */
 internal fun readTrackText(text: String, errors: MutableList<NotationError>): TrackText {
     val patterns = mutableListOf<Pair<PatternId, MutableList<NotationLine>>>()
-    val placementLines = mutableListOf<NotationLine>()
-    var isPlacements = false
+    val arrangementLines = mutableListOf<NotationLine>()
+    var isArrangement = false
 
     text.lines().forEachIndexed { index, rawLine ->
         val line = NotationLine(index + 1, rawLine.trim())
         when {
             line.text.isEmpty() -> Unit
-            line.text.equals(PLACEMENTS_HEADING, ignoreCase = true) -> isPlacements = true
-            isPlacements -> placementLines.add(line)
+            line.text.equals(ARRANGEMENT_HEADING, ignoreCase = true) -> isArrangement = true
+            isArrangement -> arrangementLines.add(line)
             '|' in line.text -> {
                 val lines = patterns.lastOrNull()?.second
                 if (lines == null) errors.add(NotationError(line.number, "Measures before a heading"))
@@ -66,14 +66,14 @@ internal fun readTrackText(text: String, errors: MutableList<NotationError>): Tr
         }
     }
 
-    val placements = placementLines.flatMap { line ->
+    val arrangement = arrangementLines.flatMap { line ->
         line.text.split(WHITESPACE).mapNotNull { name ->
             val patternId = PatternId(name)
             if (patterns.any { it.first == patternId }) patternId
             else null.also { errors.add(NotationError(line.number, "No pattern named $name")) }
         }
     }
-    return TrackText(patterns.map { (patternId, lines) -> PatternText(patternId, lines) }, placements)
+    return TrackText(patterns.map { (patternId, lines) -> PatternText(patternId, lines) }, arrangement)
 }
 
 /** A line of measures cut at its bar lines: the text before the first, if any, and each measure after it. */
@@ -93,9 +93,9 @@ internal fun tokensOf(text: String) = text.split(WHITESPACE).filter { it.isNotEm
 
 /**
  * Writes a track's text: each pattern under its heading, its [PatternLines.pickup] before the first bar line, its
- * measures [PatternLines.measuresPerLine] to a line, then the [placements].
+ * measures [PatternLines.measuresPerLine] to a line, then the [arrangement].
  */
-internal fun writeTrackText(patterns: List<PatternLines>, placements: List<PatternId>) = buildString {
+internal fun writeTrackText(patterns: List<PatternLines>, arrangement: List<PatternId>) = buildString {
     for (pattern in patterns) {
         appendLine(pattern.patternId.name)
         val lines = pattern.measures.chunked(pattern.measuresPerLine.coerceAtLeast(1))
@@ -106,8 +106,8 @@ internal fun writeTrackText(patterns: List<PatternLines>, placements: List<Patte
         }
         appendLine()
     }
-    appendLine(PLACEMENTS_HEADING)
-    append(placements.joinToString(" ") { it.name })
+    appendLine(ARRANGEMENT_HEADING)
+    append(arrangement.joinToString(" ") { it.name })
 }
 
 /** A pattern written as the text of its [pickup], or `null` for none, and of each of its [measures]. */

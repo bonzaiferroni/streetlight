@@ -19,33 +19,36 @@ import streetlight.model.data.LyricTrack
 import streetlight.model.data.MelodyParser
 import streetlight.model.data.MelodyTrack
 import streetlight.model.data.Music
+import streetlight.model.data.MusicParser
 import streetlight.model.data.NotationError
 import streetlight.model.data.NotationRead
 import streetlight.model.data.NotationStyle
-import streetlight.model.data.Track
 
 /**
- * The state behind the editor of the track at [trackState], read from the text the user writes.
+ * The state behind the editor of the value at [valueState], read from the text the user writes.
  *
- * The text is read with [read] against [musicState] in [notationStyleState], and the track it produces replaces the
- * one at [trackState]. The track is left alone until the text is first written. [write] gives the track back as text.
+ * The text is read with [read] against [musicState] in [notationStyleState], and the value it produces replaces the
+ * one at [valueState]. The text starts as [write] gives the value, and [write] gives the value back as text as it
+ * changes.
  */
-class NotationEditor<T : Track>(
+class NotationEditor<T>(
     scope: CoroutineScope,
-    private val trackState: MutableTap<T>,
+    private val valueState: MutableTap<T>,
     private val musicState: Tap<Music?>,
     private val notationStyleState: Tap<NotationStyle>,
     private val read: (String, Music, NotationStyle) -> NotationRead<T>,
     private val write: (T, Music, NotationStyle) -> String,
 ) {
-    private val state = storeOf(NotationEditorState())
+    private val state = storeOf(NotationEditorState(
+        text = musicState.now?.let { write(valueState.now, it, notationStyleState.now) },
+    ))
     val textState = state.mutableTapOf({ it.text.orEmpty() }) { copy(text = it) }
     val errorsState = state.tapOf { it.errors }
 
-    /** The track written as the text it reads from, or `null` while there is no music. */
-    val notationState = trackState
-        .combine(musicState) { track, music -> music?.let { track to it } }
-        .combine(notationStyleState) { pair, style -> pair?.let { (track, music) -> write(track, music, style) } }
+    /** The value written as the text it reads from, or `null` while there is no music. */
+    val notationState = valueState
+        .combine(musicState) { value, music -> music?.let { value to it } }
+        .combine(notationStyleState) { pair, style -> pair?.let { (value, music) -> write(value, music, style) } }
 
     init {
         scope.launch {
@@ -55,7 +58,7 @@ class NotationEditor<T : Track>(
                 notationStyleState.flow,
             ) { text, music, style -> read(text, music, style) }
                 .collect { read ->
-                    trackState.set(read.track)
+                    valueState.set(read.value)
                     state.update { it.copy(errors = read.errors) }
                 }
         }
@@ -70,7 +73,7 @@ data class NotationEditorState(
 /** A [NotationEditor] of the chord track at [index] of [model], written in chord symbols. */
 fun chordEditorOf(scope: CoroutineScope, model: MusicEditor, index: Int) = NotationEditor(
     scope = scope,
-    trackState = model.trackState(index, ChordTrack(emptyList(), emptyList())),
+    valueState = model.trackState(index, ChordTrack(emptyList(), emptyList())),
     musicState = model.musicState,
     notationStyleState = model.notationStyleState,
     read = { text, music, style -> ChordParser(music.key, style).read(text, music.time) },
@@ -80,7 +83,7 @@ fun chordEditorOf(scope: CoroutineScope, model: MusicEditor, index: Int) = Notat
 /** A [NotationEditor] of the melody track at [index] of [model], written in jianpu. */
 fun melodyEditorOf(scope: CoroutineScope, model: MusicEditor, index: Int) = NotationEditor(
     scope = scope,
-    trackState = model.trackState(index, MelodyTrack(emptyList(), emptyList())),
+    valueState = model.trackState(index, MelodyTrack(emptyList(), emptyList())),
     musicState = model.musicState,
     notationStyleState = model.notationStyleState,
     read = { text, music, _ -> MelodyParser(music.key).read(text, music.time) },
@@ -90,9 +93,19 @@ fun melodyEditorOf(scope: CoroutineScope, model: MusicEditor, index: Int) = Nota
 /** A [NotationEditor] of the lyric track at [index] of [model]. */
 fun lyricEditorOf(scope: CoroutineScope, model: MusicEditor, index: Int) = NotationEditor(
     scope = scope,
-    trackState = model.trackState(index, LyricTrack(emptyList(), emptyList())),
+    valueState = model.trackState(index, LyricTrack(emptyList(), emptyList())),
     musicState = model.musicState,
     notationStyleState = model.notationStyleState,
     read = { text, music, _ -> LyricParser.read(text, music.time) },
     write = { track, music, _ -> LyricParser.write(track, music.time) },
+)
+
+/** A [NotationEditor] of the music of [model]'s loaded song. */
+fun musicTextEditorOf(scope: CoroutineScope, model: MusicEditor) = NotationEditor(
+    scope = scope,
+    valueState = model.musicState,
+    musicState = model.musicState,
+    notationStyleState = model.notationStyleState,
+    read = { text, music, _ -> MusicParser.read(text, music) },
+    write = { _, music, _ -> MusicParser.write(music) },
 )

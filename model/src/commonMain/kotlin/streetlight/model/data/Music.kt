@@ -10,6 +10,7 @@ data class Music(
     val songId: SongId,
     val key: Key,
     val time: TimeSignature,
+    val bpm: Int = 90,
 )
 
 @JvmInline @Serializable

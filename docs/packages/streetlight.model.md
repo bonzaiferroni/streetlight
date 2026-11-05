@@ -75,11 +75,11 @@ A tag enum is stored by name, as a text array, so entries are ordered freely and
 
 ## Tracks
 
-A `Track` holds its patterns and the order they play in as `placements`, a list of `PatternId`s. Patterns play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
+A `Track` holds its patterns and the order they play in as its `arrangement`, a list of `PatternId`s. Patterns play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
 
 A pattern may open with a `pickup`, notes that sound at the end of the measure before it. A pickup is shorter than a measure and does not count toward the pattern's length. A pattern's `measuresPerLine` is the layout of its text, read from the measures on its first line.
 
-Each track type has a text notation, read and written by its `FooParser`, as `ChordParser`. The parsers share the ambient functions of `TrackNotation.kt`, which work on text, beats and ticks and know nothing of notes. The layout every notation shares is a heading line per pattern, its lines of measures, then the placements. The notes before a pattern's first bar line are its pickup. A read reports each problem by line and skips what it cannot read, so a partly written text still gives a track.
+Each track type has a text notation, read and written by its `FooParser`, as `ChordParser`. The parsers share the ambient functions of `TrackNotation.kt`, which work on text, beats and ticks and know nothing of notes. The layout every notation shares is a heading line per pattern, its lines of measures, then the arrangement. The notes before a pattern's first bar line are its pickup. A read reports each problem by line and skips what it cannot read, so a partly written text still gives a track.
 
 | Track | Notation | Lengths |
 |---|---|---|
