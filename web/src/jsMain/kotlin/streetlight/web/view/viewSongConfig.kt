@@ -3,7 +3,9 @@ package streetlight.web.view
 import kampfire.model.storeOf
 import koala.SvgFile
 import koala.component.IconStyle
+import koala.SvgPack
 import koala.component.heading3
+import koala.component.heading5
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.component.*
@@ -22,6 +24,7 @@ import streetlight.model.data.Track
 import streetlight.model.ui.SongConfigRoute
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
+import streetlight.web.dom.layout.menuActionsRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.NotationEditor
@@ -30,6 +33,7 @@ import streetlight.web.model.lyricEditorOf
 import streetlight.web.model.melodyEditorOf
 import streetlight.web.model.musicTextEditorOf
 import streetlight.web.model.MusicEditor
+import streetlight.web.model.label
 import streetlight.web.model.getMusicEditor
 import streetlight.web.utility.setTitle
 import web.dom.document
@@ -112,7 +116,6 @@ private fun ViewScope.musicEditor() {
             }
             notationPanes("music", musicTextEditorOf(contentScope, model), rows = 3)
             trackList()
-            trackEditor()
         }
     }
 }
@@ -145,28 +148,61 @@ private fun ViewScope.trackList() {
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
-        flowBlock(model.tracksState) { tracks ->
-            tracks.forEachIndexed { index, track ->
-                actionRow(
-                    label = track.toLabel(),
-                    actions = listOf(
-                        MenuAction("Edit") { model.focusTrack(index) },
-                        MenuAction("Remove") { model.removeTrack(index) },
-                    ),
-                )
+        // the list follows the labels alone, so an edit to a track's content leaves its open editor in place
+        flowBlock(model.trackLabelsState) { labels ->
+            labels.forEachIndexed { index, label ->
+                model.readTrack(index)?.let { trackRow(index, label, it.svg) }
             }
-            if (tracks.isEmpty()) {
+            if (labels.isEmpty()) {
                 textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
             }
         }
     }
 }
 
-/** Renders the editor of the focused track, or nothing while no track is focused. */
+/** Renders the row of the track at [index] shown as [svg] and [label], which opens its editor below it or closes it. */
 context(model: MusicEditor)
-private fun ViewScope.trackEditor() {
-    flowBlock(model.focusTrackState) { index ->
-        val track = index?.let { model.readTrack(it) } ?: return@flowBlock
+private fun ViewScope.trackRow(index: Int, label: String, svg: SvgPack) {
+    val nameId = Id(Uuid.random().toString())
+    trackNamePopover(nameId, index, label)
+    row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
+        button({ model.toggleTrack(index) }, Flex1) {
+            row(AlignItemsCenter) {
+                icon(svg.large, Height(5))
+                heading5(label)
+            }
+        }
+        menuActionsRow(listOf(
+            MenuAction("Edit", config = { setPopoverTarget(nameId, true) }) { },
+            MenuAction("Remove") { model.removeTrack(index) },
+        ))
+    }
+    flowBlock(model.isTrackOpenState(index)) { isOpen ->
+        if (isOpen) trackEditor(index)
+    }
+}
+
+/** A popover with [id] holding a field for the name of the track at [index], starting from [label]. */
+context(model: MusicEditor)
+private fun ViewScope.trackNamePopover(id: Id, index: Int, label: String) {
+    popover(id) { popover ->
+        val nameState = storeOf(model.readTrack(index)?.name ?: label)
+        val save = {
+            model.renameTrack(index, nameState.now)
+            popover.close()
+        }
+        row(modify(AlignItemsCenter, Padding(2))) {
+            textField(nameState, "name", Flex1, onEnterSubmit = save)
+            button(SvgFile.Check.small, save, Height(5))
+        }
+    }
+}
+
+/** Renders the editor of the track at [index]. */
+context(model: MusicEditor)
+private fun ViewScope.trackEditor(index: Int) {
+    val track = model.readTrack(index) ?: return
+    column {
         when (track) {
             is ChordTrack -> {
                 trackPlayer(index)
@@ -177,7 +213,7 @@ private fun ViewScope.trackEditor() {
                 notationPanes("jianpu", melodyEditorOf(contentScope, model, index))
             }
             is LyricTrack -> notationPanes("lyrics", lyricEditorOf(contentScope, model, index))
-            is DrumTrack -> textBlock("Hello ${track.toLabel()}")
+            is DrumTrack -> textBlock("Hello ${track.label}")
         }
         flowBlock(model.sectionWarningsState(index)) { warnings ->
             warnings.forEach { textBlock("Warning: $it", modify(TextSmall, InkDimFg)) }
@@ -210,9 +246,10 @@ private fun ViewScope.notationPanes(label: String, editor: NotationEditor<*>, ro
     }
 }
 
-private fun Track.toLabel() = when (this) {
-    is ChordTrack -> "Chords"
-    is MelodyTrack -> "Melody"
-    is LyricTrack -> "Lyrics"
-    is DrumTrack -> "Drums"
+/** The icon of the track's type. */
+private val Track.svg get() = when (this) {
+    is ChordTrack -> SvgFile.AcousticGuitar
+    is MelodyTrack -> SvgFile.Music
+    is LyricTrack -> SvgFile.Microphone
+    is DrumTrack -> SvgFile.Drum
 }

@@ -1,12 +1,8 @@
 package streetlight.web.model
 
 import streetlight.model.data.Beats
-import streetlight.model.data.ChordTrack
-import streetlight.model.data.DrumTrack
-import streetlight.model.data.LyricTrack
 import streetlight.model.data.MelodyTrack
 import streetlight.model.data.Music
-import streetlight.model.data.Track
 
 /**
  * Writes [trackTones] as a Standard MIDI File of format 1: a conductor track holding the tempo and time signature of
@@ -47,7 +43,7 @@ private fun conductorChunk(music: Music) = buildBytes {
 /** The notes of [tones] on [channel], each event moved [shift] ticks later. */
 private fun noteChunk(tones: TrackTones, channel: Int, shift: Int) = buildBytes {
     chunk("MTrk") {
-        val name = tones.track.toMidiName().encodeToByteArray()
+        val name = tones.track.label.encodeToByteArray()
         event(0, 0xFF, 0x03, name.size)
         addAll(name.toList())
         val velocity = if (tones.track is MelodyTrack) MELODY_VELOCITY else ACCOMPANIMENT_VELOCITY
@@ -74,13 +70,6 @@ private class NoteEvent(val tick: Int, val status: Int, val midi: Int, val veloc
 
 /** The channel of the track at [index], passing over channel 10, which General MIDI keeps for drums. */
 private fun channelOf(index: Int) = (if (index >= DRUM_CHANNEL) index + 1 else index) % 16
-
-private fun Track.toMidiName() = when (this) {
-    is ChordTrack -> "Chords"
-    is MelodyTrack -> "Melody"
-    is LyricTrack -> "Lyrics"
-    is DrumTrack -> "Drums"
-}
 
 private fun log2(value: Int) = 31 - value.countLeadingZeroBits()
 

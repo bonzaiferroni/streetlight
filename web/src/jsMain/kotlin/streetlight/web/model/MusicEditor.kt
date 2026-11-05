@@ -9,6 +9,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import streetlight.web.utility.downloadFile
 import streetlight.model.data.Beats
+import streetlight.model.data.ChordTrack
+import streetlight.model.data.DrumTrack
+import streetlight.model.data.LyricTrack
+import streetlight.model.data.MelodyTrack
 import streetlight.model.data.lengthOf
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Chroma
@@ -35,7 +39,7 @@ class MusicEditor(
         this?.copy(notationStyle = it)
     }
     val tracksState = state.tapOf { it?.tracks.orEmpty() }
-    val focusTrackState = state.tapOf { it?.focusTrack }
+    val trackLabelsState = state.tapOf { song -> song?.tracks.orEmpty().map { it.label } }
     val songsState = db.songsState
 
     val isPlayingState = player.isPlayingState
@@ -103,24 +107,43 @@ class MusicEditor(
     inline fun <reified T : Track> trackState(index: Int, empty: T): MutableTap<T> =
         trackState(index).mutableTapOf({ it as? T ?: empty }) { it }
 
-    /** Adds [track] to the loaded song and focuses it. */
+    /** Whether the editor of the track at [index] is open. */
+    fun isTrackOpenState(index: Int) = state.tapOf { index in it?.openTracks.orEmpty() }
+
+    /** Adds [track] to the loaded song and opens its editor. */
     fun addTrack(track: Track) = state.update { song ->
-        song?.copy(tracks = song.tracks + track, focusTrack = song.tracks.size)
+        song?.copy(tracks = song.tracks + track, openTracks = song.openTracks + song.tracks.size)
     }
 
-    fun focusTrack(index: Int?) = state.update { it?.copy(focusTrack = index) }
+    /** Opens the editor of the track at [index], or closes it when open. */
+    fun toggleTrack(index: Int) = state.update { song ->
+        song?.copy(openTracks = if (index in song.openTracks) song.openTracks - index else song.openTracks + index)
+    }
 
-    /** Removes the track at [index], keeping the focus on the track it was on. */
+    /** Names the track at [index] [name], or clears its name when [name] is blank. */
+    fun renameTrack(index: Int, name: String) = state.update { song ->
+        val track = song?.tracks?.getOrNull(index) ?: return@update song
+        val trackName = name.trim().ifEmpty { null }
+        val renamed = when (track) {
+            is ChordTrack -> track.copy(name = trackName)
+            is MelodyTrack -> track.copy(name = trackName)
+            is LyricTrack -> track.copy(name = trackName)
+            is DrumTrack -> track.copy(name = trackName)
+        }
+        song.copy(tracks = song.tracks.toMutableList().apply { set(index, renamed) })
+    }
+
+    /** Removes the track at [index], keeping open the editors of the tracks after it. */
     fun removeTrack(index: Int) = state.update { song ->
         song?.copy(
             tracks = song.tracks.filterIndexed { i, _ -> i != index },
-            focusTrack = song.focusTrack?.let { focus ->
+            openTracks = song.openTracks.mapNotNull { open ->
                 when {
-                    focus == index -> null
-                    focus > index -> focus - 1
-                    else -> focus
+                    open == index -> null
+                    open > index -> open - 1
+                    else -> open
                 }
-            },
+            }.toSet(),
         )
     }
 
@@ -137,7 +160,7 @@ data class MusicEditorState(
     val music: Music,
     val tracks: List<Track> = emptyList(),
     val notationStyle: NotationStyle = NotationStyle.Letters,
-    val focusTrack: Int? = null,
+    val openTracks: Set<Int> = emptySet(),
 )
 
 private fun newMusicEditorState(title: String): MusicEditorState {
@@ -155,6 +178,14 @@ private fun newMusicEditorState(title: String): MusicEditorState {
 
 private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
     if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
+}
+
+/** The track's name, or the name of its type when it has none. */
+val Track.label get() = name ?: when (this) {
+    is ChordTrack -> "Chords"
+    is MelodyTrack -> "Melody"
+    is LyricTrack -> "Lyrics"
+    is DrumTrack -> "Drums"
 }
 
 private const val MIDI_TYPE = "audio/midi"

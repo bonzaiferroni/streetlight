@@ -13,6 +13,7 @@ sealed interface Track {
     val sections: List<Section>
     val arrangements: List<Arrangement>
     val capo: Int?
+    val name: String?
 }
 
 @Serializable
@@ -38,6 +39,7 @@ data class ChordTrack(
     override val sections: List<Progression>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
+    override val name: String? = null,
 ) : Track
 
 /** The [notes] of a chord section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -65,6 +67,7 @@ data class MelodyTrack(
     override val sections: List<Phrase>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
+    override val name: String? = null,
 ) : Track
 
 /** The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -96,6 +99,7 @@ data class LyricTrack(
     override val sections: List<Stanza>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
+    override val name: String? = null,
 ) : Track
 
 /** The [notes] of a lyric section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -123,6 +127,7 @@ data class DrumTrack(
     override val sections: List<Groove>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
+    override val name: String? = null,
 ) : Track
 
 @Serializable
