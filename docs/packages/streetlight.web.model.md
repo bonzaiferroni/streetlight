@@ -85,7 +85,7 @@ A field the record's DTO does not carry, such as `MediaEdit.skillIds`, is nullab
 
 ## Submodels
 
-Functionality two models share lives in a submodel named with the suffix `Editor`, such as `EmailEditor` and `LeadEditor`. A model holds its submodel as a property, built in its own constructor, and the view reaches it through the model. The submodel holds its own state, publishes it, and makes its own API call, so the base models stay clean and the work is written once. What differs between its users, such as a `LeadEditor`'s `LeadType`, is passed through its constructor.
+A submodel is a model a base model declares as a public property, built in its own constructor, holding its own state. It is named with the suffix `Editor`. It carries functionality two models share, such as `EmailEditor` and `LeadEditor`, or one concern of a large model, such as `MusicPropertyEditor` in `MusicEditor`. The view reaches it through the model. The submodel holds its own state, publishes it, and makes its own API call, so the base models stay clean and the work is written once. What differs between its users, such as a `LeadEditor`'s `LeadType`, is passed through its constructor.
 
 ## Images
 
@@ -178,7 +178,11 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
 | [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music of a song loaded from `SongDb` |
-| [`NotationEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationEditor.kt) | Edits a value through its text notation, built for each track type by `chordEditorOf`, `melodyEditorOf` and `lyricEditorOf`, and for the song's music by `musicTextEditorOf` |
+| [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track through its text |
+| [`MelodyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MelodyEditor.kt) | Edits a melody track through its jianpu |
+| [`LyricEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LyricEditor.kt) | Edits a lyric track through its text |
+| [`MusicPropertyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicPropertyEditor.kt) | Edits a song's music through its text, as a submodel of `MusicEditor` |
+| [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |

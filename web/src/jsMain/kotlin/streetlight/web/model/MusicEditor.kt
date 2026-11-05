@@ -42,6 +42,9 @@ class MusicEditor(
     val trackLabelsState = state.tapOf { song -> song?.tracks.orEmpty().map { it.label } }
     val songsState = db.songsState
 
+    /** The text of the loaded song's music. */
+    val properties = MusicPropertyEditor(scope, musicState, state.tapOf { it?.song?.songId })
+
     val isPlayingState = player.isPlayingState
 
     init {

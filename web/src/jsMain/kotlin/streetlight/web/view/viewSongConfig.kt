@@ -27,11 +27,12 @@ import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.menuActionsRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
-import streetlight.web.model.NotationEditor
-import streetlight.web.model.chordEditorOf
-import streetlight.web.model.lyricEditorOf
-import streetlight.web.model.melodyEditorOf
-import streetlight.web.model.musicTextEditorOf
+import streetlight.web.model.ChordEditor
+import streetlight.web.model.LyricEditor
+import streetlight.web.model.MelodyEditor
+import kampfire.model.MutableTap
+import kampfire.model.Tap
+import streetlight.model.data.NotationError
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.label
 import streetlight.web.model.getMusicEditor
@@ -114,7 +115,7 @@ private fun ViewScope.musicEditor() {
                 heading3(song.title, Flex1)
                 dropMenu(model.notationStyleState)
             }
-            notationPanes("music", musicTextEditorOf(contentScope, model), rows = 3)
+            with(model.properties) { notationPanes("music", textState, errorsState, notationState, rows = 4) }
             trackList()
         }
     }
@@ -206,13 +207,19 @@ private fun ViewScope.trackEditor(index: Int) {
         when (track) {
             is ChordTrack -> {
                 trackPlayer(index)
-                notationPanes("chords", chordEditorOf(contentScope, model, index))
+                with(ChordEditor(contentScope, model, index)) {
+                    notationPanes("chords", textState, errorsState, notationState)
+                }
             }
             is MelodyTrack -> {
                 trackPlayer(index)
-                notationPanes("jianpu", melodyEditorOf(contentScope, model, index))
+                with(MelodyEditor(contentScope, model, index)) {
+                    notationPanes("jianpu", textState, errorsState, notationState)
+                }
             }
-            is LyricTrack -> notationPanes("lyrics", lyricEditorOf(contentScope, model, index))
+            is LyricTrack -> with(LyricEditor(contentScope, model, index)) {
+                notationPanes("lyrics", textState, errorsState, notationState)
+            }
             is DrumTrack -> textBlock("Hello ${track.label}")
         }
         flowBlock(model.sectionWarningsState(index)) { warnings ->
@@ -231,16 +238,25 @@ private fun ViewScope.trackPlayer(index: Int) = flowBlock(model.isPlayingState) 
     }
 }
 
-/** Renders the text [editor] reads beside the text its track writes back, so the two can be compared. */
-private fun ViewScope.notationPanes(label: String, editor: NotationEditor<*>, rows: Int = 16) {
+/**
+ * Renders the text in [textState] and its [errorsState] beside the text written back in [notationState], so the two
+ * can be compared.
+ */
+private fun ViewScope.notationPanes(
+    label: String,
+    textState: MutableTap<String>,
+    errorsState: Tap<List<NotationError>>,
+    notationState: Tap<String?>,
+    rows: Int = 16,
+) {
     row(AlignItemsStart) {
         column(Flex1) {
-            textEditor(editor.textState, label, rows = rows, textMod = MonoFont)
-            flowBlock(editor.errorsState) { errors ->
+            textEditor(textState, label, rows = rows, textMod = MonoFont)
+            flowBlock(errorsState) { errors ->
                 errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
             }
         }
-        flowBlock(editor.notationState, Flex1) { notation ->
+        flowBlock(notationState, Flex1) { notation ->
             textBlock(notation.orEmpty(), modify(MonoFont, WhiteSpacePreLine))
         }
     }
