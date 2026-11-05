@@ -14,6 +14,7 @@ import streetlight.model.data.DrumTrack
 import streetlight.model.data.LyricTrack
 import streetlight.model.data.MelodyTrack
 import streetlight.model.data.lengthOf
+import streetlight.model.data.repeatsOf
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Chroma
 import streetlight.model.data.Key
@@ -75,7 +76,7 @@ class MusicEditor(
         downloadFile(writeMidi(song.music, trackTones), "${song.song.title}.mid", MIDI_TYPE)
     }
 
-    /** The warnings on the track at [index]: each section it defines that runs shorter than in another track. */
+    /** The warnings on the track at [index]: each section it defines whose repeats fall short of another track's. */
     fun sectionWarningsState(index: Int) = state.tapOf { song ->
         val tracks = song?.tracks.orEmpty()
         val track = tracks.getOrNull(index) ?: return@tapOf emptyList()
@@ -83,9 +84,9 @@ class MusicEditor(
         ids.mapNotNull { sectionId ->
             val length = track.lengthOf(sectionId) ?: return@mapNotNull null
             val longest = tracks.lengthOf(sectionId) ?: return@mapNotNull null
-            val shortfall = longest.ticks - length.ticks
+            val shortfall = longest.ticks - length.ticks * track.repeatsOf(sectionId, longest)
             if (shortfall <= 0) null
-            else "${sectionId.name} runs ${shortfall.toBeatsText()} beats shorter than in another track"
+            else "${sectionId.name} falls ${shortfall.toBeatsText()} beats short of another track after its repeats"
         }
     }
 

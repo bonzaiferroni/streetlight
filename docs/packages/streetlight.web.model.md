@@ -180,6 +180,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music of a song loaded from `SongDb` |
 | [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track through its text |
 | [`MelodyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MelodyEditor.kt) | Edits a melody track through its jianpu |
+| [`DrumEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumEditor.kt) | Edits a drum track through its tab |
 | [`LyricEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LyricEditor.kt) | Edits a lyric track through its text |
 | [`MusicPropertyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicPropertyEditor.kt) | Edits a song's music through its text, as a submodel of `MusicEditor` |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |

@@ -9,8 +9,8 @@ import streetlight.model.data.MelodyTrack
 
 /**
  * The state behind the editor of the melody track at [index] of [model], read from jianpu. A read replaces the track's
- * sections, arrangements and capo, and leaves the rest of it alone. A
- * change of key or time rewrites the text from the track.
+ * sections, arrangements and capo, and leaves the rest of it alone. A change of key or time rewrites the text from the
+ * track.
  */
 class MelodyEditor(
     scope: CoroutineScope,

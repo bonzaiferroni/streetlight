@@ -28,6 +28,7 @@ import streetlight.web.dom.layout.menuActionsRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.ChordEditor
+import streetlight.web.model.DrumEditor
 import streetlight.web.model.LyricEditor
 import streetlight.web.model.MelodyEditor
 import kampfire.model.MutableTap
@@ -138,6 +139,10 @@ private fun ViewScope.trackList() {
                 model.addTrack(LyricTrack(emptyList(), emptyList()))
                 popover.close()
             },
+            MenuAction("Drums") {
+                model.addTrack(DrumTrack(emptyList(), emptyList()))
+                popover.close()
+            },
         ))
     }
     actionSection(
@@ -220,7 +225,9 @@ private fun ViewScope.trackEditor(index: Int) {
             is LyricTrack -> with(LyricEditor(contentScope, model, index)) {
                 notationPanes("lyrics", textState, errorsState, notationState)
             }
-            is DrumTrack -> textBlock("Hello ${track.label}")
+            is DrumTrack -> with(DrumEditor(contentScope, model, index)) {
+                notationPanes("drums", textState, errorsState, notationState)
+            }
         }
         flowBlock(model.sectionWarningsState(index)) { warnings ->
             warnings.forEach { textBlock("Warning: $it", modify(TextSmall, InkDimFg)) }

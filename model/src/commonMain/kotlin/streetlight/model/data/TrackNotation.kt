@@ -131,19 +131,18 @@ internal fun tokensOf(text: String) = text.split(WHITESPACE).filter { it.isNotEm
  * measures [SectionLines.measuresPerLine] to a line, then each of the [arrangements] under its own. A [capo] opens
  * the text when there is one.
  */
-internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>, capo: Int?) = buildString {
+internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>, capo: Int?) =
+    writeTrackBodies(sections.map { SectionBody(it.sectionId, it.toLines()) }, arrangements, capo)
+
+/** Writes a track's text from the [bodies] of its sections, each its heading and lines, then its [arrangements]. */
+internal fun writeTrackBodies(bodies: List<SectionBody>, arrangements: List<Arrangement>, capo: Int?) = buildString {
     capo?.let {
         appendLine("$CAPO: $it")
         appendLine()
     }
-    for (section in sections) {
-        appendLine("${section.sectionId.name}:")
-        val lines = section.measures.chunked(section.measuresPerLine.coerceAtLeast(1))
-        if (lines.isEmpty() && section.pickup != null) appendLine("${section.pickup} |")
-        lines.forEachIndexed { index, line ->
-            val lead = section.pickup?.takeIf { index == 0 }?.let { "$it " }.orEmpty()
-            appendLine("$lead| ${line.joinToString(" | ")} |")
-        }
+    for (body in bodies) {
+        appendLine("${body.sectionId.name}:")
+        body.lines.forEach { appendLine(it) }
         appendLine()
     }
     for (arrangement in arrangements) {
@@ -152,6 +151,21 @@ internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arr
         appendLine()
     }
 }.trimEnd()
+
+/** The lines written under the heading of a section. */
+internal data class SectionBody(
+    val sectionId: SectionId,
+    val lines: List<String>,
+)
+
+private fun SectionLines.toLines(): List<String> {
+    val lines = measures.chunked(measuresPerLine.coerceAtLeast(1))
+    if (lines.isEmpty()) return listOfNotNull(pickup?.let { "$it |" })
+    return lines.mapIndexed { index, line ->
+        val lead = pickup?.takeIf { index == 0 }?.let { "$it " }.orEmpty()
+        "$lead| ${line.joinToString(" | ")} |"
+    }
+}
 
 /** A section written as the text of its [pickup], or `null` for none, and of each of its [measures]. */
 internal data class SectionLines(
@@ -208,6 +222,6 @@ internal fun readCapo(text: String) = text.toIntOrNull()?.takeIf { it in 0..MAX_
 private const val CAPO = "Capo"
 private const val MAX_CAPO = 12
 
-private tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+internal tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 
 private val WHITESPACE = Regex("\\s+")

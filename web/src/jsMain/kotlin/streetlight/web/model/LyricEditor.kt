@@ -9,8 +9,7 @@ import streetlight.model.data.LyricTrack
 
 /**
  * The state behind the editor of the lyric track at [index] of [model]. A read replaces the track's sections,
- * arrangements and capo, and leaves the rest of it alone. A
- * change of time rewrites the text from the track.
+ * arrangements and capo, and leaves the rest of it alone. A change of time rewrites the text from the track.
  */
 class LyricEditor(
     scope: CoroutineScope,

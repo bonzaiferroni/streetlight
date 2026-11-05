@@ -77,7 +77,7 @@ A tag enum is stored by name, as a text array, so entries are ordered freely and
 
 `Music.arrangement` lists the sections every track follows, in order. A `Track` holds its `sections` and its `arrangements`, each an `Arrangement` naming a section built of other sections or arrangements, so content repeated within a section is written once. `sectionsOf` resolves an id into the sections it stands for.
 
-A section lasts as long as the longest track that defines it. A track that lacks a section rests through it, and one that runs short of it rests for the rest.
+A section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole times as fit, and rests through a section it lacks or what is left after its repeats.
 
 Sections play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
 
@@ -90,6 +90,7 @@ Each track type has a text notation, read and written by its `FooParser`, as `Ch
 | `ChordTrack` | Chord symbols in the `NotationStyle` | A measure's tokens share it evenly; a pickup token is a beat |
 | `LyricTrack` | Syllables and words, a syllable keeping its `-` | As chords |
 | `MelodyTrack` | Jianpu, with `\` after a note for each halving of its length | Each note carries its own; a measure that does not add up is reported |
+| `DrumTrack` | ASCII drum tab, a row per drum labeled before its first bar line | A measure's characters share it evenly; a hit rings until the next |
 
 A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. A notation that names absolute pitches, such as letter chords, adds the tonic when written and subtracts it when read. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `Capo: 2`, before its first heading.
 

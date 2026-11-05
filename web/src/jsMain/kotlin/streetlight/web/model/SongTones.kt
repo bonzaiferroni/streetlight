@@ -15,6 +15,7 @@ import streetlight.model.data.Seventh
 import streetlight.model.data.Stanza
 import streetlight.model.data.Track
 import streetlight.model.data.lengthOf
+import streetlight.model.data.repeatsOf
 import streetlight.model.data.sectionOrderOf
 import streetlight.model.data.sectionsOf
 
@@ -34,8 +35,9 @@ data class TrackTones(
 /**
  * The tones of [playing], tracks of a song of [tracks], laid along the arrangement of [music] with both capos applied.
  *
- * Each section lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs
- * short of. A pickup starts before its section, so the first tones may start before tick 0.
+ * Each section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole
+ * times as fit, and rests through a section it lacks or what is left after its repeats. A pickup starts before its
+ * section, so the first tones may start before tick 0.
  */
 fun songTonesOf(music: Music, tracks: List<Track>, playing: List<Track>): List<TrackTones> {
     val order = tracks.sectionOrderOf(music)
@@ -44,7 +46,9 @@ fun songTonesOf(music: Music, tracks: List<Track>, playing: List<Track>): List<T
         val capo = (music.capo ?: 0) + (track.capo ?: 0)
         val tones = order.zip(onsets).flatMap { (sectionId, onset) ->
             var tick = onset
-            track.sectionsOf(sectionId).orEmpty().flatMap { section ->
+            val sections = track.sectionsOf(sectionId).orEmpty()
+            val span = tracks.lengthOf(sectionId) ?: Beats(0)
+            List(track.repeatsOf(sectionId, span)) { sections }.flatten().flatMap { section ->
                 tonesOf(section, tick, music.key, capo).also { tick += section.length.ticks }
             }
         }

@@ -140,20 +140,42 @@ data class DrumTrack(
     override val name: String? = null,
 ) : Track
 
+/**
+ * The [lanes] of a drum section, one per drum, sounding together. [slotsPerMeasure] and [measuresPerLine] are the
+ * layout of its tab.
+ */
 @Serializable
 data class Groove(
     override val sectionId: SectionId,
-    override val length: Beats,
-    val hits: List<DrumHit>,
-) : Section
+    val lanes: List<DrumLane>,
+    val slotsPerMeasure: Int = 16,
+    val measuresPerLine: Int = 2,
+) : Section {
+    override val length get() = Beats(lanes.maxOfOrNull { lane -> lane.beats.sumOf { it.beats.ticks } } ?: 0)
+}
 
+/** The [beats] one [drum] plays in a groove. */
 @Serializable
-data class DrumHit(
-    val piece: DrumPiece,
-    val onset: Beats,
+data class DrumLane(
+    val drum: Drum,
+    val beats: List<DrumBeat>,
 )
 
-enum class DrumPiece {
+/** A [hit] that lasts for [beats] until the next, or a rest when [hit] is `null`. */
+@Serializable
+data class DrumBeat(
+    val hit: DrumHit?,
+    val beats: Beats,
+)
+
+/** How a drum is struck. */
+enum class DrumHit {
+    Normal,
+    Accent,
+    Ghost,
+}
+
+enum class Drum {
     Kick,
     Snare,
     HiHat,
@@ -178,6 +200,15 @@ private fun Track.sectionsOf(sectionId: SectionId, visited: Set<SectionId>): Lis
 /** The length of [sectionId] in this track, or `null` when the track does not define it. */
 fun Track.lengthOf(sectionId: SectionId) =
     sectionsOf(sectionId)?.let { sections -> Beats(sections.sumOf { it.length.ticks }) }
+
+/**
+ * The times this track plays [sectionId] to fill [span], the length the section has in the song: as many whole times
+ * as fit, and at least once.
+ */
+fun Track.repeatsOf(sectionId: SectionId, span: Beats): Int {
+    val length = lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return 1
+    return (span.ticks / length).coerceAtLeast(1)
+}
 
 /** The length of [sectionId] in a song of these tracks: the longest track that defines it, or `null` for none. */
 fun List<Track>.lengthOf(sectionId: SectionId) = mapNotNull { it.lengthOf(sectionId) }.maxByOrNull { it.ticks }
