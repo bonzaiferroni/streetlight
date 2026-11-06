@@ -41,12 +41,11 @@ private fun ViewScope.lane(lane: Lane) {
     val slots = mutableListOf<Pair<LaneSlot, HTMLElement>>()
     div(modify(LaneStyle.Row, CardBg)) {
         textBlock(lane.label, Padding(1))
-        div(modify(Height(12), LaneStyle.Content)) {
+        div(modify(Css.Height.of(stepsHeight(lane.steps + LABEL_STEPS)), LaneStyle.Content)) {
             lane.slots.forEach { slot ->
-                val style = if (slot.isRepeat) LaneStyle.RepeatSlot else LaneStyle.InitialSlot
-                slots += slot to div(modify(VoidBg, LaneStyle.Slot, style)) {
-                    sectionMeasures(slot.notation, LaneStyle.SlotMeasures)
-                    textBlock(slot.notation.sectionId.name, modify(Padding(1), TextSmall))
+                slots += slot to div(modify(LaneStyle.Slot, LaneStyle.RepeatSlot.takeIf { slot.isRepeat })) {
+                    textBlock(slot.notation.sectionId.name, modify(LaneStyle.SlotLabel, TextSmall))
+                    sectionMeasures(slot.notation, VoidBg)
                 }
             }
         }
@@ -64,3 +63,6 @@ private fun HTMLElement.placeSlot(slot: LaneSlot, window: TimeWindow) {
     setStyle(Css.Left.of((window.toRatio(slot.startSeconds) * 100).pct))
     setStyle(Css.Width.of((slot.durationSeconds / window.spanSeconds * 100).pct))
 }
+
+/** The staff steps of height a slot keeps above its measures for its label. */
+private const val LABEL_STEPS = 3

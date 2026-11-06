@@ -22,7 +22,7 @@ class DrumEditor(
     val errorsState = field.errorsState
 
     /** The notation of each section of the track. */
-    val sectionsState = trackState.combine(model.musicState) { track, music -> sectionNotationsOf(track, music.time) }
+    val sectionsState = trackState.combine(model.musicState) { track, music -> sectionNotationsOf(track, music) }
 
     init {
         // a change of time changes how the track is written, so the text follows the track

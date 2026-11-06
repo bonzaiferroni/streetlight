@@ -295,6 +295,10 @@ The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`.
 
 Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.
 
+## Theme Colors
+
+Primary marks a selection, such as a timeline's cursor. Accent marks a focus, such as the window a timeline shows.
+
 ## Views
 
 ### App

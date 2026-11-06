@@ -1,27 +1,135 @@
 package streetlight.web.model
 
+import streetlight.model.data.Beats
+import streetlight.model.data.Key
+import streetlight.model.data.MelodyNote
+import streetlight.model.data.Music
+import streetlight.model.data.Phrase
+import streetlight.model.data.Section
 import streetlight.model.data.SectionId
-import streetlight.model.data.TimeSignature
 import streetlight.model.data.Track
 import streetlight.model.data.lengthOf
+import streetlight.model.data.sectionsOf
 
-/** The notation of [sectionId] in a track, [ticks] long, with [measures] the share of it each measure fills. */
+/**
+ * The notation of [sectionId] in a track, [ticks] long and [steps] of the staff tall, with a step the distance from a
+ * line to the space beside it.
+ */
 data class SectionNotation(
     val sectionId: SectionId,
     val ticks: Int,
-    val measures: List<Double>,
+    val steps: Int,
+    val measures: List<MeasureNotation>,
 )
 
-/** The notation of [sectionId] in [track], cut into measures by [time], or `null` when the track gives it no length. */
-fun sectionNotationOf(track: Track, sectionId: SectionId, time: TimeSignature): SectionNotation? {
-    val ticks = track.lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return null
-    val measure = time.measure.ticks
-    val count = (ticks + measure - 1) / measure
-    val measures = List(count) { index -> minOf(measure, ticks - index * measure).toDouble() / ticks }
-    return SectionNotation(sectionId, ticks, measures)
+/** A measure filling [share] of its section, with the [notes] that start in it. */
+data class MeasureNotation(
+    val share: Double,
+    val notes: List<NoteNotation>,
+)
+
+/** A note starting [onset] of the way through its measure, [step] steps above the bottom of its section. */
+data class NoteNotation(
+    val onset: Double,
+    val step: Int,
+    val value: NoteValue,
+    val isDotted: Boolean,
+)
+
+/** The written length of a note. */
+enum class NoteValue(val ticks: Int) {
+    Whole(Beats.TICKS_PER_BEAT * 4),
+    Half(Beats.TICKS_PER_BEAT * 2),
+    Quarter(Beats.TICKS_PER_BEAT),
+    Eighth(Beats.TICKS_PER_BEAT / 2),
+    Sixteenth(Beats.TICKS_PER_BEAT / 4),
 }
 
-/** The notation of each section and arrangement [track] defines, cut into measures by [time]. */
-fun sectionNotationsOf(track: Track, time: TimeSignature) =
-    (track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId })
-        .mapNotNull { sectionNotationOf(track, it, time) }
+/** The staff steps a track's notation shows, from [low] to [high], with each step counted from C of octave 0. */
+data class StaffWindow(
+    val low: Int,
+    val high: Int,
+) {
+    /** The steps of the window, with a step to spare at each end for the heads of its outermost notes. */
+    val steps get() = high - low + 2
+}
+
+/** The window of [track] in [key]: the treble staff, stretched to reach every note of the track. */
+fun staffWindowOf(track: Track, key: Key): StaffWindow {
+    val steps = track.sections.filterIsInstance<Phrase>().flatMap { it.notes }
+        .mapNotNull { note -> note.interval?.let { staffStepOf(it.toMidi(key), key) } }
+    return StaffWindow(minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW), maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH))
+}
+
+/** The notation of [sectionId] in [track] against [music] within [window], or `null` when it has no length there. */
+fun sectionNotationOf(track: Track, sectionId: SectionId, music: Music, window: StaffWindow): SectionNotation? {
+    val ticks = track.lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return null
+    val placed = placedNotesOf(track.sectionsOf(sectionId).orEmpty())
+    val measure = music.time.measure.ticks
+    val count = (ticks + measure - 1) / measure
+    val measures = List(count) { index ->
+        val start = index * measure
+        val length = minOf(measure, ticks - start)
+        val notes = placed.filter { it.tick in start until start + length }.mapNotNull { (tick, note) ->
+            val interval = note.interval ?: return@mapNotNull null
+            val (value, isDotted) = noteValueOf(note.beats.ticks)
+            val step = staffStepOf(interval.toMidi(music.key), music.key) - window.low
+            NoteNotation((tick - start).toDouble() / length, step, value, isDotted)
+        }
+        MeasureNotation(length.toDouble() / ticks, notes)
+    }
+    return SectionNotation(sectionId, ticks, window.steps, measures)
+}
+
+/** The notation of each section and arrangement [track] defines, against [music]. */
+fun sectionNotationsOf(track: Track, music: Music): List<SectionNotation> {
+    val window = staffWindowOf(track, music.key)
+    return (track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId })
+        .mapNotNull { sectionNotationOf(track, it, music, window) }
+}
+
+/** A [note] placed at [tick] of its section. */
+private data class PlacedNote(val tick: Int, val note: MelodyNote)
+
+/** The notes of each phrase of [sections], laid end to end with the sections around them. */
+private fun placedNotesOf(sections: List<Section>): List<PlacedNote> {
+    val placed = mutableListOf<PlacedNote>()
+    var onset = 0
+    for (section in sections) {
+        if (section is Phrase) {
+            var tick = onset
+            section.notes.forEach { note ->
+                placed.add(PlacedNote(tick, note))
+                tick += note.beats.ticks
+            }
+        }
+        onset += section.length.ticks
+    }
+    return placed
+}
+
+/** The value written for [ticks], the longest that fits, and whether it wants a dot for the half more. */
+private fun noteValueOf(ticks: Int): Pair<NoteValue, Boolean> {
+    val value = NoteValue.entries.firstOrNull { it.ticks <= ticks } ?: NoteValue.Sixteenth
+    return value to (ticks * 2 >= value.ticks * 3)
+}
+
+/**
+ * The staff step of [midi] in [key], counted from C of octave 0. A note takes the line or space of its scale degree
+ * from the major tonic, and a note between degrees shares the line of the degree below it.
+ */
+private fun staffStepOf(midi: Int, key: Key): Int {
+    val tonic = key.majorTonic.value
+    val semitones = midi - tonic
+    return semitones.floorDiv(12) * 7 + TONIC_STEPS[tonic] + DEGREE_STEPS[semitones.mod(12)]
+}
+
+/** The letter each major tonic is spelled on, counted from C, as flats name them in all but F#. */
+private val TONIC_STEPS = listOf(0, 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6)
+
+/** The steps above the tonic of each semitone above it, the sharp of a degree sharing its line. */
+private val DEGREE_STEPS = listOf(0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6)
+
+/** The bottom line of the treble staff, E4, and its top line, F5. */
+private const val STAFF_LOW = 37
+private const val STAFF_HIGH = 45

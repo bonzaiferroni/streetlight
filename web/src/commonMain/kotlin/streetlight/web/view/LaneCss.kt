@@ -6,8 +6,7 @@ object LaneStyle {
     val Row = Class("lane-row")
     val Content = Class("lane-content")
     val Slot = Content.withBemElement("slot")
-    val SlotMeasures = Slot.withBemElement("measures")
-    val InitialSlot = Slot.withBemModifier("initial")
+    val SlotLabel = Slot.withBemElement("label")
     val RepeatSlot = Slot.withBemModifier("repeat")
     val CursorOverlay = Class("lane-cursor-overlay")
 }
@@ -26,11 +25,11 @@ $Slot {
     white-space: nowrap;
 }
 
-$SlotMeasures { position: absolute; inset: 0; }
-
-$InitialSlot {
-    outline: 1px solid var(--accent-fg);
-    outline-offset: -1px;
+$SlotLabel {
+    height: var(--unit-3);
+    padding-inline: var(--unit-1);
+    text-transform: uppercase;
+    opacity: 0.5;
 }
 
 $RepeatSlot { opacity: 0.6; }

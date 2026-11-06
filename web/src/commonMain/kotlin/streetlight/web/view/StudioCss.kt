@@ -59,7 +59,7 @@ $CursorHandle {
     aspect-ratio: 1;
     translate: -50% -50%;
     border-radius: 50%;
-    background: var(--accent-fg);
+    background: var(--primary-fg);
     cursor: grab;
 }
 
@@ -78,6 +78,6 @@ $CursorLine {
     position: absolute;
     inset-block: 0;
     width: 1px;
-    background: var(--accent-fg);
+    background: var(--primary-fg);
 }
 """}

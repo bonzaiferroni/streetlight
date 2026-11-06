@@ -199,7 +199,7 @@ private fun ViewScope.notationPanes(
 private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
         textBlock(section.sectionId.name, TextSmall)
-        sectionMeasures(section, Height(8))
+        sectionMeasures(section)
     }
 }
 

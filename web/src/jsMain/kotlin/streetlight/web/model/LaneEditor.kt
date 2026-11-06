@@ -84,9 +84,10 @@ data class LaneEditorState(
     val window: TimeWindow = TimeWindow(0.0, DEFAULT_WINDOW_SECONDS),
 )
 
-/** The lane of a track, shown as [label], holding a slot for each time it plays a section. */
+/** The lane of a track, shown as [label] and [steps] of the staff tall, holding a slot for each time it plays a section. */
 data class Lane(
     val label: String,
+    val steps: Int,
     val slots: List<LaneSlot>,
 )
 
@@ -107,11 +108,12 @@ private fun lanesOf(song: StoredSong): List<Lane> {
     val secondsPerTick = song.music.secondsPerTick
     val order = tracks.sectionOrderOf(song.music)
     return tracks.map { track ->
+        val window = staffWindowOf(track, song.music.key)
         val played = mutableSetOf<SectionId>()
         var onset = 0
         val slots = order.flatMap { sectionId ->
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
-            val notation = sectionNotationOf(track, sectionId, song.music.time)
+            val notation = sectionNotationOf(track, sectionId, song.music, window)
             val sectionSlots = if (notation == null) emptyList() else List(track.repeatsOf(sectionId, span)) { repeat ->
                 LaneSlot(
                     notation = notation,
@@ -123,7 +125,7 @@ private fun lanesOf(song: StoredSong): List<Lane> {
             onset += span.ticks
             sectionSlots
         }
-        Lane(track.label, slots)
+        Lane(track.label, window.steps, slots)
     }
 }
 
