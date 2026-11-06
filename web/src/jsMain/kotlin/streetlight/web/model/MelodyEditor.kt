@@ -18,21 +18,21 @@ class MelodyEditor(
     index: Int,
 ) {
     private val trackState = model.trackState(index, MelodyTrack(emptyList(), emptyList()))
-    private val field = NotationField(model.musicState.now?.let { MelodyParser(it.key).write(trackState.now, it.time) })
+    private val field = NotationField(writeNow())
     val textState = field.textState
     val errorsState = field.errorsState
 
-    /** The track written as the jianpu it reads from, or `null` while there is no music. */
+    /** The track written as the jianpu it reads from. */
     val notationState = trackState.combine(model.musicState) { track, music ->
-        music?.let { MelodyParser(it.key).write(track, it.time) }
+        MelodyParser(music.key).write(track, music.time)
     }
 
     init {
         // a change of key or time changes how the track is written, so the text follows the track
-        val changes = model.musicState.flow.map { music -> music?.key to music?.time }.distinctUntilChanged()
-        field.launchRewrites(scope, changes) { model.musicState.now?.let { MelodyParser(it.key).write(trackState.now, it.time) } }
+        val changes = model.musicState.flow.map { music -> music.key to music.time }.distinctUntilChanged()
+        field.launchRewrites(scope, changes) { writeNow() }
         field.launchReads(scope) { text ->
-            val music = model.musicState.now ?: return@launchReads emptyList()
+            val music = model.musicState.now
             val read = MelodyParser(music.key).read(text, music.time)
             trackState.update { track ->
                 track.copy(
@@ -44,4 +44,6 @@ class MelodyEditor(
             read.errors
         }
     }
+
+    private fun writeNow() = model.musicState.now.let { MelodyParser(it.key).write(trackState.now, it.time) }
 }

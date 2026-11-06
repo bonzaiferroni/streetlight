@@ -1,8 +1,10 @@
 package streetlight.model.data
 
 import kampfire.model.Labeled
+import kotlinx.serialization.Serializable
 
 /** The style pitches and chords are written in. */
+@Serializable
 enum class NotationStyle(override val label: String): Labeled {
     Letters("Letters"),
     Degrees("Degrees"),

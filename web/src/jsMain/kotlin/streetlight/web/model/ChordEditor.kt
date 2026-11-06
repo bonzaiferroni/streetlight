@@ -22,21 +22,21 @@ class ChordEditor(
     val textState = field.textState
     val errorsState = field.errorsState
 
-    /** The track written as the text it reads from, or `null` while there is no music. */
+    /** The track written as the text it reads from. */
     val notationState = trackState
-        .combine(model.musicState) { track, music -> music?.let { track to it } }
-        .combine(model.notationStyleState) { pair, style ->
-            pair?.let { (track, music) -> ChordParser(music.key, style).write(track, music.time) }
+        .combine(model.musicState) { track, music -> track to music }
+        .combine(model.notationStyleState) { (track, music), style ->
+            ChordParser(music.key, style).write(track, music.time)
         }
 
     init {
         // a change of key transposes the track, and a change of time or style respells it, so the text follows it
         val changes = combine(model.musicState.flow, model.notationStyleState.flow) { music, style ->
-            Triple(music?.key, music?.time, style)
+            Triple(music.key, music.time, style)
         }
         field.launchRewrites(scope, changes.distinctUntilChanged()) { writeNow() }
         field.launchReads(scope) { text ->
-            val music = model.musicState.now ?: return@launchReads emptyList()
+            val music = model.musicState.now
             val read = ChordParser(music.key, model.notationStyleState.now).read(text, music.time)
             trackState.update { track ->
                 track.copy(
@@ -49,7 +49,7 @@ class ChordEditor(
         }
     }
 
-    private fun writeNow() = model.musicState.now?.let { music ->
+    private fun writeNow() = model.musicState.now.let { music ->
         ChordParser(music.key, model.notationStyleState.now).write(trackState.now, music.time)
     }
 }

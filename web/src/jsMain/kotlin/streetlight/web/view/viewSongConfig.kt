@@ -35,16 +35,19 @@ import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.model.data.NotationError
 import streetlight.web.model.MusicEditor
+import streetlight.web.model.MusicStudio
+import streetlight.web.model.TrackPlayer
 import streetlight.web.model.label
-import streetlight.web.model.getMusicEditor
+import streetlight.web.model.getMusicStudio
 import streetlight.web.utility.setTitle
 import web.dom.document
 import kotlin.uuid.Uuid
 
-/** Renders the music editor, beside the stored songs it loads. */
+/** Renders the music studio: the stored songs and the editor of the one open. */
 fun ViewScope.viewSongConfig() {
-    val model = app.getMusicEditor(contentScope)
-    context(model) {
+    val model = app.getMusicStudio(contentScope)
+    val player = app.get<TrackPlayer>()
+    context(model, player) {
         mainBody("viewSongConfig.kt") {
             column {
                 songList()
@@ -62,7 +65,7 @@ fun RouteScope.viewSongConfigRoute() {
     }
 }
 
-context(model: MusicEditor)
+context(model: MusicStudio)
 private fun ViewScope.songList() {
     val newId = Id(Uuid.random().toString())
     newSongPopover(newId)
@@ -70,11 +73,11 @@ private fun ViewScope.songList() {
         label = "Songs",
         actions = listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { }),
     ) {
-        flowBlock(model.songsState) { songs ->
-            songs.forEach { entry ->
-                val songId = entry.song.songId
+        flowBlock(model.songList) { songs ->
+            songs.forEach { song ->
+                val songId = song.songId
                 actionRow(
-                    label = entry.song.title,
+                    label = song.title,
                     actions = listOf(
                         MenuAction("Edit") { model.load(songId) },
                         MenuAction("Remove") { model.remove(songId) },
@@ -89,7 +92,7 @@ private fun ViewScope.songList() {
 }
 
 /** A popover with [id] holding a field for a new song's title. */
-context(model: MusicEditor)
+context(model: MusicStudio)
 private fun ViewScope.newSongPopover(id: Id) {
     popover(id) { popover ->
         val titleState = storeOf("")
@@ -106,23 +109,25 @@ private fun ViewScope.newSongPopover(id: Id) {
     }
 }
 
-/** Renders the loaded song's music and the style it is written in, or nothing while no song is loaded. */
-context(model: MusicEditor)
+/** Renders the open song's music and the style it is written in, or nothing while no song is open. */
+context(model: MusicStudio, player: TrackPlayer)
 private fun ViewScope.musicEditor() {
-    flowBlock(model.songState) { song ->
-        if (song == null) return@flowBlock
+    flowBlock(model.editorState) { editor ->
+        if (editor == null) return@flowBlock
+        // playback left running when the song closes would keep sounding
+        onDispose { player.stop() }
         column {
             row(AlignItemsCenter) {
-                heading3(song.title, Flex1)
+                heading3(editor.song.title, Flex1)
                 dropMenu(model.notationStyleState)
             }
-            with(model.properties) { notationPanes("music", textState, errorsState, notationState, rows = 4) }
-            trackList()
+            with(editor.properties) { notationPanes("music", textState, errorsState, notationState, rows = 4) }
+            context(editor) { trackList() }
         }
     }
 }
 
-context(model: MusicEditor)
+context(model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackList() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
@@ -148,8 +153,8 @@ private fun ViewScope.trackList() {
     actionSection(
         label = "Tracks",
         actions = listOf(
-            MenuAction("Play") { model.playSong() },
-            MenuAction("Stop") { model.stop() },
+            MenuAction("Play") { player.play(model.storedState.now) },
+            MenuAction("Stop") { player.stop() },
             MenuAction("Export") { model.exportMidi() },
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
@@ -167,7 +172,7 @@ private fun ViewScope.trackList() {
 }
 
 /** Renders the row of the track at [index] shown as [svg] and [label], which opens its editor below it or closes it. */
-context(model: MusicEditor)
+context(model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackRow(index: Int, label: String, svg: SvgPack) {
     val nameId = Id(Uuid.random().toString())
     trackNamePopover(nameId, index, label)
@@ -205,7 +210,7 @@ private fun ViewScope.trackNamePopover(id: Id, index: Int, label: String) {
 }
 
 /** Renders the editor of the track at [index]. */
-context(model: MusicEditor)
+context(model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackEditor(index: Int) {
     val track = model.readTrack(index) ?: return
     column {
@@ -236,12 +241,16 @@ private fun ViewScope.trackEditor(index: Int) {
 }
 
 /** Renders the button that plays the track at [index], or stops it while it plays. */
-context(model: MusicEditor)
-private fun ViewScope.trackPlayer(index: Int) = flowBlock(model.isPlayingState) { isPlaying ->
+context(model: MusicEditor, player: TrackPlayer)
+private fun ViewScope.trackPlayer(index: Int) = flowBlock(player.isPlayingState) { isPlaying ->
     if (isPlaying) {
-        button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
+        button(SvgFile.PlayerStop.filled, { player.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     } else {
-        button(SvgFile.PlayerPlay.filled, { model.playTrack(index) }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
+        button(
+            SvgFile.PlayerPlay.filled,
+            { model.readTrack(index)?.let { player.play(model.storedState.now, it) } },
+            modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")),
+        )
     }
 }
 
@@ -253,7 +262,7 @@ private fun ViewScope.notationPanes(
     label: String,
     textState: MutableTap<String>,
     errorsState: Tap<List<NotationError>>,
-    notationState: Tap<String?>,
+    notationState: Tap<String>,
     rows: Int = 16,
 ) {
     row(AlignItemsStart) {
@@ -264,7 +273,7 @@ private fun ViewScope.notationPanes(
             }
         }
         flowBlock(notationState, Flex1) { notation ->
-            textBlock(notation.orEmpty(), modify(MonoFont, WhiteSpacePreLine))
+            textBlock(notation, modify(MonoFont, WhiteSpacePreLine))
         }
     }
 }

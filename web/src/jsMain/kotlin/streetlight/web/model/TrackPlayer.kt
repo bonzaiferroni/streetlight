@@ -5,7 +5,6 @@ package streetlight.web.model
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import streetlight.model.data.MelodyTrack
-import streetlight.model.data.Music
 import streetlight.model.data.Track
 import web.audio.AudioContext
 import web.audio.AudioScheduledSourceNode
@@ -26,13 +25,15 @@ class TrackPlayer(
     val isPlayingState: Tap<Boolean> = playingStore
 
     /**
-     * Plays [playing], tracks of a song of [tracks], through the arrangement of [music]. Each section lasts as long as
-     * the longest track that defines it, and a track rests through a section it lacks or runs short of. Any playback
-     * already running is stopped first.
+     * Plays [track] of [song] alone, or every track when it is `null`, through the song's arrangement. Each section
+     * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
+     * of. Any playback already running is stopped first.
      */
-    fun play(music: Music, tracks: List<Track>, playing: List<Track>) {
+    fun play(song: StoredSong, track: Track? = null) {
         stop()
-        val trackTones = songTonesOf(music, tracks, playing).filter { it.isSounding }
+        val music = song.music
+        val playing = track?.let { listOf(it) } ?: song.tracks
+        val trackTones = songTonesOf(music, song.tracks, playing).filter { it.isSounding }
         if (trackTones.isEmpty()) return
 
         val context = audio.readContext()

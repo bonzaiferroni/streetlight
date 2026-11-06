@@ -178,7 +178,8 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/model/ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
-| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music of a song loaded from `SongDb` |
+| [`MusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicStudio.kt) | Lists, creates and removes the songs in `SongDb`, opens one in a `MusicEditor` and saves its changes |
+| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song open in `MusicStudio` |
 | [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track through its text |
 | [`MelodyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MelodyEditor.kt) | Edits a melody track through its jianpu |
 | [`DrumEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumEditor.kt) | Edits a drum track through its tab |
