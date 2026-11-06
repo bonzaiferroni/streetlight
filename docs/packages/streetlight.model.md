@@ -89,7 +89,7 @@ Each track type has a text notation, read and written by its `FooParser`, as `Ch
 |---|---|---|
 | `ChordTrack` | Chord symbols in the `NotationStyle` | A measure's tokens share it evenly; a pickup token is a beat |
 | `LyricTrack` | Syllables and words, a syllable keeping its `-` | As chords |
-| `MelodyTrack` | Jianpu, with `\` after a note for each halving of its length | Each note carries its own; a measure that does not add up is reported |
+| `MelodyTrack` | Jianpu, with `\` after a note for each halving of its length | Each note carries its own, a plain note a quarter in every meter; a measure that does not add up is reported |
 | `DrumTrack` | ASCII drum tab, a row per drum labeled before its first bar line | A measure's characters share it evenly; a hit rings until the next |
 
 A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. A notation that names absolute pitches, such as letter chords, adds the tonic when written and subtracts it when read. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `Capo: 2`, before its first heading.

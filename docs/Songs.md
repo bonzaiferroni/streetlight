@@ -34,23 +34,40 @@ Em G C/G G_2 D/F#_2
 John Newton
 Root 67
 
+Chords
 Verse:
 | G | G7 | C | G |
 | G | Am | D | D |
 | G | G7 | C | G |
 | Em | D | G | G |
 
-Melody:
+Melody
+Verse:
 5, | 1 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 5 - - | - - 3 |
 | 5 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 1 - - | - - - |
 
-Harmony:
+Harmony
+Verse:
 5, | 5, - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 7, - - | - - 1 |
 | 3 - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 3, - - | - - - |
+
+Drums
+VerseA:
+HH|x-x-x-x-x-x-|x-x-x-x-x-x-|
+SD|----o---o---|----o---o---|
+BD|o-----------|o-o---------|
+
+VerseB:
+HH|x-x-x-x-x-x-|x-x-x-x-x-x-|
+SD|----o---o---|----o---o---|
+BD|o-----------|----o-o-o-o-|
+
+Verse:
+VerseA VerseB
 
 Amazing grace how sweet the sound
 that saved a wretch like me
