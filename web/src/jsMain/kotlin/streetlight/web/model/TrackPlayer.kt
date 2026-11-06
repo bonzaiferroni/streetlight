@@ -22,6 +22,7 @@ class TrackPlayer(
     private val sources = mutableListOf<AudioScheduledSourceNode>()
     private var bus: GainNode? = null
     private var startClock = 0.0
+    private var noteBus: GainNode? = null
 
     private val playingStore = storeOf(false)
     val isPlayingState: Tap<Boolean> = playingStore
@@ -63,6 +64,15 @@ class TrackPlayer(
             }
         }
         playingStore.set(sources.isNotEmpty())
+    }
+
+    /** Sounds [midi] briefly over any playback, cutting off the note this last sounded. */
+    fun playNote(midi: Int) {
+        val context = audio.readContext()
+        noteBus?.disconnect()
+        val runBus = context.createGain().also { it.connect(context.destination) }
+        noteBus = runBus
+        voice(context, runBus, midi, context.currentTime, NOTE_SECONDS, MELODY_LEVEL)
     }
 
     /** The seconds from the first downbeat the latest playback has reached, below 0 before it. */
@@ -121,6 +131,7 @@ class TrackPlayer(
 }
 
 private const val START_DELAY_SECONDS = 0.1
+private const val NOTE_SECONDS = 0.35
 private const val MELODY_LEVEL = 0.18
 private const val ACCOMPANIMENT_LEVEL = 0.12
 

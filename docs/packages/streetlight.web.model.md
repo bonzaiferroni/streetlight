@@ -187,6 +187,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicPropertyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicPropertyEditor.kt) | Edits a song's music through its text, as a submodel of `MusicEditor` |
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of section slots on a timeline, and plays them from its cursor |
 | [`SectionNotation`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionNotation.kt) | The notation of a section as the track editors and lanes show it |
+| [`NoteDrag`](../../web/src/jsMain/kotlin/streetlight/web/model/NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`TimelineModel`](../../web/src/jsMain/kotlin/streetlight/web/model/TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditor` share |

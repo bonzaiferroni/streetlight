@@ -3,9 +3,12 @@ package streetlight.web.model
 import kampfire.model.combine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import streetlight.model.data.MelodyParser
 import streetlight.model.data.MelodyTrack
+import streetlight.model.data.Phrase
 
 /**
  * The state behind the editor of the melody track at [index] of [model], read from jianpu. A read replaces the track's
@@ -19,6 +22,7 @@ class MelodyEditor(
 ) {
     private val trackState = model.trackState(index, MelodyTrack(emptyList(), emptyList()))
     private val field = NotationField(writeNow())
+    private var readSections: List<Phrase>? = null
     val textState = field.textState
     val errorsState = field.errorsState
 
@@ -29,9 +33,16 @@ class MelodyEditor(
         // a change of key or time changes how the track is written, so the text follows the track
         val changes = model.musicState.flow.map { music -> music.key to music.time }.distinctUntilChanged()
         field.launchRewrites(scope, changes) { writeNow() }
+        // an edit from elsewhere replaces the track under the text, which a later read would otherwise undo
+        scope.launch {
+            trackState.flow.filter { readSections != null && it.sections != readSections }.collect {
+                field.setText(writeNow())
+            }
+        }
         field.launchReads(scope) { text ->
             val music = model.musicState.now
             val read = MelodyParser(music.key).read(text, music.time)
+            readSections = read.value.sections
             trackState.update { track ->
                 track.copy(
                     sections = read.value.sections,

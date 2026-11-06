@@ -4,12 +4,15 @@ import koala.modifier.*
 
 object LaneStyle {
     val Row = Class("lane-row")
+    val Selected = Row.withBemModifier("selected")
+    val Meta = Row.withBemElement("meta")
     val Content = Class("lane-content")
     val Slot = Content.withBemElement("slot")
     val SlotLabel = Slot.withBemElement("label")
     val LeadIn = Content.withBemElement("lead-in")
     val RepeatSlot = Slot.withBemModifier("repeat")
     val CursorOverlay = Class("lane-cursor-overlay")
+    val NoteCursor = Content.withBemElement("note-cursor")
 }
 
 //language="CSS"
@@ -18,6 +21,20 @@ val LaneCss get() = with(LaneStyle) { """
 $Row { display: grid; grid-template-columns: minmax(0, 1fr); }
 
 $Content { position: relative; overflow: clip; }
+
+/* inside the row's edge, so the stage's clip leaves the stroke whole */
+$Selected {
+    outline: 2px solid var(--primary-fg);
+    outline-offset: -2px;
+}
+
+$Selected $Meta { color: var(--primary-fg); }
+
+/* only a selected lane's notes take the pointer, so a touch anywhere else still scrolls */
+$Selected ${MeasureStyle.Grabbable} {
+    cursor: grab;
+    touch-action: none;
+}
 
 $Slot {
     position: absolute;
@@ -40,6 +57,14 @@ $SlotLabel {
 }
 
 $RepeatSlot { opacity: 0.6; }
+
+/* above the slots, and clear of the pointer so a drag stays on its note */
+$NoteCursor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    --note-ink: var(--primary-fg);
+}
 
 $CursorOverlay {
     position: absolute;

@@ -2,12 +2,14 @@ package streetlight.web.model
 
 import kampfire.model.Tap
 import kampfire.model.combine
+import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import streetlight.model.data.Beats
+import streetlight.model.data.MelodyTrack
 import streetlight.model.data.SectionId
 import streetlight.model.data.lengthOf
 import streetlight.model.data.repeatsOf
@@ -38,6 +40,66 @@ class LaneEditor(
         maxOf(window.endSeconds, endSeconds ?: 0.0, DEFAULT_WINDOW_SECONDS)
     }
     override val cursorSecondsState: Tap<Double> = cursorStore
+
+    /** The grid a dragged note's onset snaps to. */
+    val timeStepState = state.mutableTapOf({ it.timeStep }) { copy(timeStep = it) }
+
+    /** Whether a dragged note's pitch keeps to the scale, moving by semitones otherwise. */
+    val isScaleSnapState = state.mutableTapOf({ it.isScaleSnap }) { copy(isScaleSnap = it) }
+
+    /** Whether the lane at [laneIndex] is selected, which lets its notes be dragged. */
+    fun isLaneSelectedState(laneIndex: Int) = state.tapOf { it.selectedLane == laneIndex }
+
+    fun selectLane(laneIndex: Int) = state.update { it.copy(selectedLane = laneIndex) }
+
+    /** The note cursor of the lane at [laneIndex], or `null` while none of its notes is dragged. */
+    fun noteCursorState(laneIndex: Int) = state.tapOf { editorState ->
+        editorState.drag?.takeIf { it.laneIndex == laneIndex }?.cursor
+    }
+
+    /** Starts a drag of [note] of [slot] in the lane at [laneIndex], returning whether the lane allows one. */
+    fun startNoteDrag(laneIndex: Int, slot: LaneSlot, note: NoteNotation): Boolean {
+        if (state.now.selectedLane != laneIndex) return false
+        val track = readMelodyTrack(laneIndex) ?: return false
+        val cursor = cursorOf(note.source, slot, track)
+        state.update { it.copy(drag = NoteDrag(laneIndex, slot, note.source, note.source, cursor)) }
+        return true
+    }
+
+    /** Moves the note dragged to the nearest place to [tick] of its section, [stepsUp] staff steps from where it began. */
+    fun dragNote(tick: Double, stepsUp: Double) {
+        val drag = state.now.drag ?: return
+        val track = readMelodyTrack(drag.laneIndex) ?: return
+        val phrase = track.sections.firstOrNull { it.sectionId == drag.source.phraseId } ?: return
+        val music = editor.storedState.now.music
+        val window = staffWindowOf(track, music.key)
+        val moved = drag.source
+            .snapTick(tick, phrase, music, state.now.timeStep)
+            .snapMidi(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
+        if (moved == drag.moved) return
+        state.update { it.copy(drag = drag.copy(moved = moved, cursor = cursorOf(moved, drag.slot, track))) }
+        if (moved.midi != drag.moved.midi) player.playNote(moved.midi + (music.capo ?: 0) + (track.capo ?: 0))
+    }
+
+    /** Ends the drag, making its edit when [isCommitted] and the note has moved. */
+    fun endNoteDrag(isCommitted: Boolean) {
+        val drag = state.now.drag ?: return
+        state.update { it.copy(drag = null) }
+        if (!isCommitted || drag.moved == drag.source) return
+        val key = editor.storedState.now.music.key
+        editor.trackState(drag.laneIndex).update { track ->
+            (track as? MelodyTrack)?.withMovedNote(drag.source, drag.moved, key) ?: track
+        }
+    }
+
+    private fun readMelodyTrack(laneIndex: Int) = editor.readTrack(laneIndex) as? MelodyTrack
+
+    // the cursor sits across the window, so its onset is a share of that and not of a measure
+    private fun cursorOf(source: NoteSource, slot: LaneSlot, track: MelodyTrack): NoteNotation {
+        val music = editor.storedState.now.music
+        val seconds = slot.startSeconds + source.tick * music.secondsPerTick
+        return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
+    }
 
     /** Plays every track together from the cursor, which follows playback; from the start once past the end. */
     fun play() {
@@ -87,6 +149,10 @@ class LaneEditor(
 
 data class LaneEditorState(
     val window: TimeWindow = TimeWindow(0.0, DEFAULT_WINDOW_SECONDS),
+    val timeStep: NoteValue = NoteValue.Eighth,
+    val isScaleSnap: Boolean = true,
+    val selectedLane: Int? = null,
+    val drag: NoteDrag? = null,
 )
 
 /**
