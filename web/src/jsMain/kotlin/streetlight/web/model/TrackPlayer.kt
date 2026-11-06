@@ -29,8 +29,8 @@ class TrackPlayer(
     /**
      * Plays [track] of [song] alone, or every track when it is `null`, through the song's arrangement. Each section
      * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
-     * of. Playback begins at [fromSeconds] on the timeline, a pickup sounding before a start at 0, or at the first sound
-     * when it is `null`. Any playback already running is stopped first.
+     * of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
+     * sound when it is `null`. Any playback already running is stopped first.
      */
     fun play(song: StoredSong, track: Track? = null, fromSeconds: Double? = null) {
         stop()
@@ -45,11 +45,7 @@ class TrackPlayer(
         val secondsPerTick = music.secondsPerTick
         // a pickup sounds before the first downbeat, so the earliest tone sets the start
         val firstTick = trackTones.mapNotNull { it.firstTick }.min()
-        val startTick = when {
-            fromSeconds == null -> firstTick
-            fromSeconds <= 0.0 -> minOf(firstTick, 0)
-            else -> (fromSeconds / secondsPerTick).toInt()
-        }
+        val startTick = fromSeconds?.let { (it / secondsPerTick).toInt() } ?: firstTick
         startClock = context.currentTime + START_DELAY_SECONDS - startTick * secondsPerTick
         trackTones.forEach { (track, tones, drums) ->
             drums.filter { it.startTick >= startTick }.forEach { drum ->
@@ -69,7 +65,7 @@ class TrackPlayer(
         playingStore.set(sources.isNotEmpty())
     }
 
-    /** The place on the timeline the latest playback has reached, before 0 while it counts in or sounds a pickup. */
+    /** The seconds from the first downbeat the latest playback has reached, below 0 before it. */
     fun readSeconds() = audio.clockSeconds - startClock
 
     /** Stops every tone playing, silencing their release tails at once. */

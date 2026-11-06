@@ -16,7 +16,10 @@ import web.animations.awaitAnimationFrame
 import kotlin.math.max
 import kotlin.math.min
 
-/** The state behind the lanes of the song in [editor]: a lane for each track on a timeline played from a cursor. */
+/**
+ * The state behind the lanes of the song in [editor]: a lane for each track on a timeline played from a cursor. The
+ * timeline opens with a lead-in before the first downbeat, which holds any pickup and the first note's head.
+ */
 class LaneEditor(
     private val scope: CoroutineScope,
     private val editor: MusicEditor,
@@ -42,12 +45,14 @@ class LaneEditor(
         playJob = scope.launch {
             val endSeconds = endSecondsState.now ?: return@launch
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
-            player.play(editor.storedState.now, fromSeconds = cursorStore.now)
+            val song = editor.storedState.now
+            val leadSeconds = leadSecondsOf(song)
+            player.play(song, fromSeconds = cursorStore.now - leadSeconds)
 
             while (true) {
                 awaitAnimationFrame()
                 if (!player.isPlayingState.now) break
-                moveCursorTo(player.readSeconds().coerceIn(0.0, endSeconds))
+                moveCursorTo((leadSeconds + player.readSeconds()).coerceIn(0.0, endSeconds))
             }
         }
     }
@@ -84,10 +89,14 @@ data class LaneEditorState(
     val window: TimeWindow = TimeWindow(0.0, DEFAULT_WINDOW_SECONDS),
 )
 
-/** The lane of a track, shown as [label] and [steps] of the staff tall, holding a slot for each time it plays a section. */
+/**
+ * The lane of a track, shown as [label] and [steps] of the staff tall, holding a slot for each time it plays a section
+ * after a lead-in [leadSeconds] long.
+ */
 data class Lane(
     val label: String,
     val steps: Int,
+    val leadSeconds: Double,
     val slots: List<LaneSlot>,
 )
 
@@ -107,6 +116,7 @@ private fun lanesOf(song: StoredSong): List<Lane> {
     val tracks = song.tracks
     val secondsPerTick = song.music.secondsPerTick
     val order = tracks.sectionOrderOf(song.music)
+    val leadSeconds = leadSecondsOf(song)
     return tracks.map { track ->
         val window = staffWindowOf(track, song.music.key)
         val played = mutableSetOf<SectionId>()
@@ -117,7 +127,7 @@ private fun lanesOf(song: StoredSong): List<Lane> {
             val sectionSlots = if (notation == null) emptyList() else List(track.repeatsOf(sectionId, span)) { repeat ->
                 LaneSlot(
                     notation = notation,
-                    startSeconds = (onset + repeat * notation.ticks) * secondsPerTick,
+                    startSeconds = leadSeconds + (onset + repeat * notation.ticks) * secondsPerTick,
                     durationSeconds = notation.ticks * secondsPerTick,
                     isRepeat = !played.add(sectionId),
                 )
@@ -125,13 +135,20 @@ private fun lanesOf(song: StoredSong): List<Lane> {
             onset += span.ticks
             sectionSlots
         }
-        Lane(track.label, window.steps, slots)
+        Lane(track.label, window.steps, leadSeconds, slots)
     }
 }
 
 private fun endSecondsOf(song: StoredSong): Double {
     val ticks = song.tracks.sectionOrderOf(song.music).sumOf { song.tracks.lengthOf(it)?.ticks ?: 0 }
-    return ticks * song.music.secondsPerTick
+    return leadSecondsOf(song) + ticks * song.music.secondsPerTick
 }
 
-private const val DEFAULT_WINDOW_SECONDS = 30.0
+/** The length of the lead-in of [song]: its earliest pickup, and room before it for the head of the first note. */
+private fun leadSecondsOf(song: StoredSong): Double {
+    val firstTick = songTonesOf(song.music, song.tracks, song.tracks).mapNotNull { it.firstTick }.minOrNull() ?: 0
+    return -minOf(firstTick, 0) * song.music.secondsPerTick + LEAD_ROOM_SECONDS
+}
+
+private const val DEFAULT_WINDOW_SECONDS = 12.0
+private const val LEAD_ROOM_SECONDS = 0.5

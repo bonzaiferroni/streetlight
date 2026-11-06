@@ -12,32 +12,34 @@ import koala.model.MenuAction
 import koala.model.NullContent
 import koala.modifier.*
 import koala.page.Id
-import streetlight.model.data.SongId
 import streetlight.model.ui.MusicStudioRoute
+import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.LaneEditor
+import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.getMusicStudio
+import streetlight.web.model.portal
 import streetlight.web.utility.setTitle
 import web.dom.document
 import kotlin.uuid.Uuid
 
-/** Renders the music studio: the stored songs, or the editor of the one in focus. */
+/** Renders the music studio: the song the route names, or the stored songs when it names none that is stored. */
+context(route: MusicStudioRoute)
 fun ViewScope.viewMusicStudio() {
     val model = app.getMusicStudio(contentScope)
     val player = app.get<TrackPlayer>()
     context(model, player) {
         mainBody("viewMusicStudio.kt") {
-            flowBlock(model.focusState) { focus ->
-                if (focus == null) songList() else songFocus(focus)
-            }
+            val editor = route.songId?.let { model.editorOf(contentScope, it) }
+            if (editor == null) songList() else songFocus(editor)
         }
     }
 
-    document.setTitle(MusicStudioRoute)
+    document.setTitle(route)
 }
 
 fun RouteScope.viewMusicStudioRoute() {
@@ -46,20 +48,25 @@ fun RouteScope.viewMusicStudioRoute() {
     }
 }
 
-/** Renders the song of [songId] in a section headed by its title, with a way back to the songs, as a tab for each layout. */
+/** Renders the song of [editor] in a section headed by its title, with a way back to the songs, as a tab for each layout. */
 context(model: MusicStudio, player: TrackPlayer)
-private fun ViewScope.songFocus(songId: SongId) {
-    val editor = model.editorOf(contentScope, songId) ?: return
+private fun ViewScope.songFocus(editor: MusicEditor) {
     val lanes = LaneEditor(contentScope, editor, player)
     // playback left running when the song closes would keep sounding
     onDispose { player.stop() }
     actionSection(
         label = editor.song.title,
-        actions = listOf(MenuAction("Back") { model.cancelFocus() }),
+        actions = listOf(MenuAction("Back") { portal.go(MusicStudioRoute()) }),
     ) {
-        lazyTabs {
-            tab("Arrangement") { context(editor) { musicEditor() } }
-            tab("Lanes") { context(lanes) { laneEditor() } }
+        lazyTabs(paramKey = MusicStudioRoute.tabParam.key) {
+            MusicStudioTab.entries.forEach { studioTab ->
+                tab(studioTab.label, studioTab.svg) {
+                    when (studioTab) {
+                        MusicStudioTab.Arrangement -> context(editor) { musicEditor() }
+                        MusicStudioTab.Lanes -> context(lanes) { laneEditor() }
+                    }
+                }
+            }
         }
     }
 }
@@ -78,7 +85,7 @@ private fun ViewScope.songList() {
                 actionRow(
                     label = song.title,
                     actions = listOf(
-                        MenuAction("Edit") { model.load(songId) },
+                        MenuAction("Edit") { portal.go(MusicStudioRoute(songId)) },
                         MenuAction("Remove") { model.remove(songId) },
                     ),
                 )
@@ -97,9 +104,10 @@ private fun ViewScope.newSongPopover(id: Id) {
         val titleState = storeOf("")
         val save = save@{
             val title = titleState.now.takeIf { it.isNotBlank() }?.trim() ?: return@save
-            model.create(title)
+            val songId = model.create(title)
             titleState.set("")
             popover.close()
+            portal.go(MusicStudioRoute(songId))
         }
         row(modify(AlignItemsCenter, Padding(2))) {
             textField(titleState, "title", Flex1, onEnterSubmit = save)

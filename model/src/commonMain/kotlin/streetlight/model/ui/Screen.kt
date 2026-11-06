@@ -1,11 +1,18 @@
 package streetlight.model.ui
 
 import kampfire.api.ActionResult
+import kampfire.api.Slug
 import kampfire.api.SlugValue
 import kampfire.api.TableId
+import kampfire.api.ordinalParamOf
+import kampfire.api.read
+import kampfire.model.Labeled
 import kampfire.model.Token
 import kampfire.utils.pascalToKebabCase
+import koala.SvgFile
+import koala.SvgPack
 import koala.model.WebRoute
+import koala.model.buildRelativePath
 import koala.model.AppScreen
 import koala.model.IdParse
 import koala.model.RouteParse
@@ -50,7 +57,7 @@ enum class Screen(
     Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.BusinessOwner) }, null, true),
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
     Studio(StaticParse { StudioRoute }),
-    MusicStudio(StaticParse { MusicStudioRoute }),
+    MusicStudio(SlugOrNullParse { MusicStudioRoute.of(this, it) }),
 
     // star
     SkillProfile(UuidParse { SkillRoute(SkillId(it)) }),
@@ -219,9 +226,35 @@ object StudioRoute: StreetlightRoute {
     override val title get() = "Studio"
 }
 
-object MusicStudioRoute: StreetlightRoute {
+/** The music studio, showing the song of [songId] in its [tab], or the list of songs when `null`. */
+data class MusicStudioRoute(
+    val songId: SongId? = null,
+    val tab: MusicStudioTab? = null,
+): StreetlightRoute {
+    companion object {
+        val tabParam = ordinalParamOf<MusicStudioTab>("tab")
+
+        fun of(parameters: Parameters, slug: Slug?) = MusicStudioRoute(
+            songId = slug?.let { Uuid.parseOrNull(it.value) }?.let { SongId(it) },
+            tab = parameters.read(tabParam),
+        )
+    }
+
     override val screen get() = Screen.MusicStudio
     override val title get() = "Songs"
+
+    // a change of tab is a change within the view
+    override val screenKey get() = copy(tab = null)
+    override fun toRelativePath() = buildRelativePath(listOfNotNull(songId?.value?.toString())) {
+        writeParam(tabParam, tab)
+    }
+}
+
+enum class MusicStudioTab(val svg: SvgPack): Labeled {
+    Arrangement(SvgFile.Music),
+    Lanes(SvgFile.Columns);
+
+    override val label = name
 }
 
 // data class

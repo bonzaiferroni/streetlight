@@ -12,6 +12,7 @@ import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
 import kampfire.model.mutableTapOf
+import kotlinx.css.pct
 import streetlight.model.data.ChordTrack
 import streetlight.model.data.MelodyTrack
 import streetlight.model.data.DrumTrack
@@ -199,7 +200,9 @@ private fun ViewScope.notationPanes(
 private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
         textBlock(section.sectionId.name, TextSmall)
-        sectionMeasures(section)
+        // the pickup hangs off the left of the strip, so a margin keeps it within the pane
+        val margin = section.pickupShare / (1 + section.pickupShare)
+        sectionMeasures(section, Css.MarginLeft.of((margin * 100).pct))
     }
 }
 

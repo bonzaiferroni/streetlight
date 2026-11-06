@@ -38,10 +38,12 @@ private fun ViewScope.laneControls() = row(AlignSelfCenter) {
 /** Renders [lane] as its meta panel and a slot for each time its track plays a section, placed within the window. */
 context(model: LaneEditor)
 private fun ViewScope.lane(lane: Lane) {
+    lateinit var leadElement: HTMLElement
     val slots = mutableListOf<Pair<LaneSlot, HTMLElement>>()
     div(modify(LaneStyle.Row, CardBg)) {
         textBlock(lane.label, Padding(1))
         div(modify(Css.Height.of(stepsHeight(lane.steps + LABEL_STEPS)), LaneStyle.Content)) {
+            leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
             lane.slots.forEach { slot ->
                 slots += slot to div(modify(LaneStyle.Slot, LaneStyle.RepeatSlot.takeIf { slot.isRepeat })) {
                     textBlock(slot.notation.sectionId.name, modify(LaneStyle.SlotLabel, TextSmall))
@@ -53,15 +55,16 @@ private fun ViewScope.lane(lane: Lane) {
 
     launchEffect("lane") {
         model.windowState.flow.collect { window ->
-            slots.forEach { (slot, element) -> element.placeSlot(slot, window) }
+            leadElement.placeSpan(0.0, lane.leadSeconds, window)
+            slots.forEach { (slot, element) -> element.placeSpan(slot.startSeconds, slot.durationSeconds, window) }
         }
     }
 }
 
-/** Places this element at the true span of [slot] across [window], running past its edges so its measures keep their scale. */
-private fun HTMLElement.placeSlot(slot: LaneSlot, window: TimeWindow) {
-    setStyle(Css.Left.of((window.toRatio(slot.startSeconds) * 100).pct))
-    setStyle(Css.Width.of((slot.durationSeconds / window.spanSeconds * 100).pct))
+/** Places this element across [window], [durationSeconds] from [startSeconds], running past its edges to keep its scale. */
+private fun HTMLElement.placeSpan(startSeconds: Double, durationSeconds: Double, window: TimeWindow) {
+    setStyle(Css.Left.of((window.toRatio(startSeconds) * 100).pct))
+    setStyle(Css.Width.of((durationSeconds / window.spanSeconds * 100).pct))
 }
 
 /** The staff steps of height a slot keeps above its measures for its label. */

@@ -15,7 +15,7 @@ data class TimeWindow(
     /** The seconds at [ratio] across the window, the inverse of [toRatio]. */
     fun toSeconds(ratio: Double) = startSeconds + ratio * spanSeconds
 
-    /** This window [spanSeconds] long from the same start, no shorter than ten seconds and within [totalSeconds]. */
+    /** This window [spanSeconds] long from the same start, no shorter than four seconds and within [totalSeconds]. */
     fun resize(spanSeconds: Double, totalSeconds: Double) =
         copy(spanSeconds = spanSeconds.coerceIn(MIN_SPAN_SECONDS, max(totalSeconds - startSeconds, MIN_SPAN_SECONDS)))
 
@@ -28,4 +28,4 @@ data class TimeWindow(
 }
 
 private const val LEAD_SHARE = 0.2
-private const val MIN_SPAN_SECONDS = 10.0
+private const val MIN_SPAN_SECONDS = 4.0
