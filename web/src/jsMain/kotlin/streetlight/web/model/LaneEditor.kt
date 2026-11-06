@@ -50,7 +50,10 @@ class LaneEditor(
     /** Whether the lane at [laneIndex] is selected, which lets its notes be dragged. */
     fun isLaneSelectedState(laneIndex: Int) = state.tapOf { it.selectedLane == laneIndex }
 
-    fun selectLane(laneIndex: Int) = state.update { it.copy(selectedLane = laneIndex) }
+    /** Selects the lane at [laneIndex], or clears the selection when it is already selected. */
+    fun toggleLane(laneIndex: Int) = state.update {
+        it.copy(selectedLane = laneIndex.takeIf { index -> index != it.selectedLane })
+    }
 
     /** The note cursor of the lane at [laneIndex], or `null` while none of its notes is dragged. */
     fun noteCursorState(laneIndex: Int) = state.tapOf { editorState ->

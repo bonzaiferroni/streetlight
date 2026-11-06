@@ -83,6 +83,7 @@ $StemNote::after, $OneFlagNote::after, $TwoFlagNote::after {
     inset-inline-start: 50%;
     width: 2px;
     translate: -50% 0;
+    border-radius: 1px;
     background: linear-gradient(
         var(--note-ink, rgb(var(--ink))) 4px,
         transparent 4px calc(100% - 4px),
@@ -98,6 +99,7 @@ $OneFlagNote::before, $TwoFlagNote::before {
     inset-inline-start: 50%;
     width: 8px;
     translate: -50% 0;
+    border-radius: 1px;
     border-block: 2px solid var(--note-ink, rgb(var(--ink)));
 }
 

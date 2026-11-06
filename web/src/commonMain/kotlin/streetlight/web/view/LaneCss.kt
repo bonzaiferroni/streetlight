@@ -4,6 +4,7 @@ import koala.modifier.*
 
 object LaneStyle {
     val Row = Class("lane-row")
+    val Lane = Class("lane")
     val Selected = Row.withBemModifier("selected")
     val Meta = Row.withBemElement("meta")
     val Content = Class("lane-content")
@@ -20,13 +21,20 @@ val LaneCss get() = with(LaneStyle) { """
 
 $Row { display: grid; grid-template-columns: minmax(0, 1fr); }
 
+$Meta {
+    padding: var(--unit-1) var(--unit-1) 0;
+    text-align: center;
+}
+
 $Content { position: relative; overflow: clip; }
 
-/* inside the row's edge, so the stage's clip leaves the stroke whole */
-$Selected {
-    outline: 2px solid var(--primary-fg);
-    outline-offset: -2px;
+/* the outline is painted with the background, so the staff draws over it and it takes no room from the timeline's scale */
+$Lane {
+    border-radius: var(--unit-2);
+    box-shadow: inset 0 0 0 1px rgba(var(--ink), var(--opacity-ghost));
 }
+
+$Selected $Lane { background: var(--primary-card-bg); }
 
 $Selected $Meta { color: var(--primary-fg); }
 
@@ -36,9 +44,10 @@ $Selected ${MeasureStyle.Grabbable} {
     touch-action: none;
 }
 
+/* a unit of room above the label, which with the label's height makes the three units a lane keeps above its staff */
 $Slot {
     position: absolute;
-    inset-block: 0;
+    inset-block: var(--unit-1) 0;
 }
 
 /* below the height of the labels, level with the measures of the slots */
@@ -48,7 +57,8 @@ $LeadIn {
 }
 
 $SlotLabel {
-    height: var(--unit-3);
+    height: var(--unit-2);
+    line-height: 1;
     padding-inline: var(--unit-1);
     overflow: clip;
     white-space: nowrap;
@@ -78,6 +88,11 @@ $CursorOverlay {
     $Row {
         grid-template-columns: var(--unit-16) minmax(0, 1fr);
         column-gap: var(--unit-1);
+    }
+
+    $Meta {
+        padding: var(--unit-1);
+        text-align: start;
     }
 
     $CursorOverlay { inset-inline-start: calc(var(--unit-16) + var(--unit-1)); }

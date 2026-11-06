@@ -34,10 +34,10 @@ import kotlin.uuid.Uuid
 context(model: LaneEditor)
 fun ViewScope.laneEditor() = column {
     laneControls()
-    column(modify(Gap2Px, Zen, BorderRadius1, OverflowClip)) {
+    column(modify(Zen, BorderRadius1, OverflowClip)) {
         studioTimeline(LaneStyle.Row)
         div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
-            flowBlock(model.lanesState, modify(FlexColumn, Gap2Px)) { lanes ->
+            flowBlock(model.lanesState, FlexColumn) { lanes ->
                 lanes.forEachIndexed { index, lane -> lane(index, lane) }
             }
             cursorOverlay(LaneStyle.CursorOverlay)
@@ -46,7 +46,7 @@ fun ViewScope.laneEditor() = column {
 }
 
 context(model: LaneEditor)
-private fun ViewScope.laneControls() = row(AlignSelfCenter) {
+private fun ViewScope.laneControls() = row(modify(AlignSelfCenter, AlignItemsCenter)) {
     button(SvgFile.PlayerPlay.filled, { model.play() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
     button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     timeStepControl()
@@ -82,9 +82,9 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
     lateinit var leadElement: HTMLElement
     lateinit var contentElement: HTMLElement
     val slots = mutableListOf<Pair<LaneSlot, HTMLElement>>()
-    val rowElement = div(modify(LaneStyle.Row, CardBg)) {
-        textBlock(lane.label, modify(LaneStyle.Meta, Padding(1)))
-        contentElement = div(modify(Css.Height.of(laneHeight(lane)), LaneStyle.Content)) {
+    val rowElement = div(LaneStyle.Row) {
+        textBlock(lane.label, LaneStyle.Meta)
+        contentElement = div(modify(Css.Height.of(laneHeight(lane)), LaneStyle.Content, LaneStyle.Lane, CardBg)) {
             leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
             lane.slots.forEach { slot ->
                 slots += slot to div(modify(LaneStyle.Slot, LaneStyle.RepeatSlot.takeIf { slot.isRepeat })) {
@@ -100,7 +100,7 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
         }
     }
 
-    contentElement.addEventListener(PointerEvent.CLICK, { model.selectLane(laneIndex) })
+    contentElement.addEventListener(PointerEvent.CLICK, { model.toggleLane(laneIndex) })
 
     launchEffect("lane") {
         model.isLaneSelectedState(laneIndex).flow.collect { isSelected ->
@@ -129,12 +129,14 @@ private fun wireNoteDrag(
     stripElement: HTMLElement,
 ) {
     var grabY = 0
+    var isGrabbed = false
 
     noteElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
         if (!model.startNoteDrag(laneIndex, slot, note)) return@addEventListener
         event.stopPropagation()
         noteElement.setPointerCapture(event.pointerId)
         grabY = event.clientY
+        isGrabbed = true
     })
     noteElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
         if (!noteElement.hasPointerCapture(event.pointerId)) return@addEventListener
@@ -151,6 +153,12 @@ private fun wireNoteDrag(
         model.endNoteDrag(isCommitted = !isOverNote)
     })
     noteElement.addEventListener(PointerEvent.POINTER_CANCEL, { model.endNoteDrag(isCommitted = false) })
+
+    // the click that ends a drag is not a tap on the lane, which would clear its selection
+    noteElement.addEventListener(PointerEvent.CLICK, { event ->
+        if (isGrabbed) event.stopPropagation()
+        isGrabbed = false
+    })
 }
 
 /** The height of [lane]: its label's sublane and the staff steps of its notes. */

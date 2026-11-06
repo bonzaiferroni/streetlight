@@ -201,7 +201,7 @@ private val SCALE_SEMITONES = listOf(0, 2, 4, 5, 7, 9, 11)
 private val RAISED_SEMITONES = setOf(1, 3, 6, 8, 10)
 
 /** The steps of room to drag a note past the highest and lowest of a track. */
-private const val DRAG_ROOM_STEPS = 4
+private const val DRAG_ROOM_STEPS = 2
 
 /** The bottom line of the treble staff, E4, and its top line, F5. */
 private const val STAFF_LOW = 37

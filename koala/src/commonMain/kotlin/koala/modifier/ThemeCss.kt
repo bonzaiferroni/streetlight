@@ -135,6 +135,7 @@ val ThemeCss get() = with(Koala) { """
     --gamma-shine-y: ${gamma.position.shineAnchor().second}%;
     --color-flux: hueSpin 30s linear infinite;
     
+    --opacity-ghost: 0.125;
     --opacity-low: 0.25;
     --opacity-half: 0.5;
     --opacity-high: 0.85;
