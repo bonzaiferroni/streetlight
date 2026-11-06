@@ -6,7 +6,6 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import streetlight.web.utility.downloadFile
 import streetlight.model.data.Beats
 import streetlight.model.data.ChordTrack
 import streetlight.model.data.DrumTrack
@@ -35,13 +34,6 @@ class MusicEditor(
 
     /** The text of the song's music. */
     val properties = MusicPropertyEditor(scope, musicState)
-
-    /** Hands the viewer the song's tracks as a MIDI file, laid along its arrangement. */
-    fun exportMidi() {
-        val editor = state.now
-        val trackTones = songTonesOf(editor.music, editor.tracks, editor.tracks).filter { it.isSounding }
-        downloadFile(writeMidi(editor.music, trackTones), "${song.title}.mid", MIDI_TYPE)
-    }
 
     /** The warnings on the track at [index]: each section it defines whose repeats fall short of another track's. */
     fun sectionWarningsState(index: Int) = state.tapOf { editor ->
@@ -131,5 +123,3 @@ val Track.label get() = name ?: when (this) {
     is LyricTrack -> "Lyrics"
     is DrumTrack -> "Drums"
 }
-
-private const val MIDI_TYPE = "audio/midi"

@@ -131,7 +131,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`StarCache`](../../web/src/jsMain/kotlin/streetlight/web/model/StarCache.kt) | The items a star has lit |
 | [`Fleet`](../../web/src/jsMain/kotlin/streetlight/web/model/Fleet.kt) | A list loaded on first request |
 | [`songTonesOf`](../../web/src/jsMain/kotlin/streetlight/web/model/SongTones.kt) | The tones of a song's tracks laid along its arrangement, which playback and export share |
-| [`writeMidi`](../../web/src/jsMain/kotlin/streetlight/web/model/writeMidi.kt) | A song's tones as a Standard MIDI File |
+| [`writeMidi`](../../web/src/jsMain/kotlin/streetlight/web/model/writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
 | [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums the player strikes |
 | [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |

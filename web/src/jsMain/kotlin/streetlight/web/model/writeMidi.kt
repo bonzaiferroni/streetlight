@@ -6,6 +6,13 @@ import streetlight.model.data.DrumHit
 import streetlight.model.data.DrumTrack
 import streetlight.model.data.MelodyTrack
 import streetlight.model.data.Music
+import streetlight.web.utility.downloadFile
+
+/** Hands the viewer the tracks of [song] as a MIDI file, laid along its arrangement. */
+fun exportMidi(song: StoredSong) {
+    val trackTones = songTonesOf(song.music, song.tracks, song.tracks).filter { it.isSounding }
+    downloadFile(writeMidi(song.music, trackTones), "${song.song.title}.mid", MIDI_TYPE)
+}
 
 /**
  * Writes [trackTones] as a Standard MIDI File of format 1: a conductor track holding the tempo and time signature of
@@ -145,3 +152,5 @@ private const val DRUM_CHANNEL = 9
 private const val DRUM_NOTE_TICKS = 120
 private const val MELODY_VELOCITY = 100
 private const val ACCOMPANIMENT_VELOCITY = 80
+
+private const val MIDI_TYPE = "audio/midi"

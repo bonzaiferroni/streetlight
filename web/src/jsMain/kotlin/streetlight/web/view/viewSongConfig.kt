@@ -37,6 +37,7 @@ import streetlight.model.data.NotationError
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
+import streetlight.web.model.exportMidi
 import streetlight.web.model.label
 import streetlight.web.model.getMusicStudio
 import streetlight.web.utility.setTitle
@@ -155,7 +156,7 @@ private fun ViewScope.trackList() {
         actions = listOf(
             MenuAction("Play") { player.play(model.storedState.now) },
             MenuAction("Stop") { player.stop() },
-            MenuAction("Export") { model.exportMidi() },
+            MenuAction("Export") { exportMidi(model.storedState.now) },
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
