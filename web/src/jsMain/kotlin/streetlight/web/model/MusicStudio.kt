@@ -1,13 +1,9 @@
 package streetlight.web.model
 
-import kampfire.model.Tap
 import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.plus
 import streetlight.model.data.Chroma
 import streetlight.model.data.Key
 import streetlight.model.data.Mode
@@ -19,56 +15,45 @@ import streetlight.model.data.SongId
 import streetlight.model.data.TimeSignature
 import streetlight.web.utility.localStoreOf
 
-/** The songs held in [db] and the [MusicEditor] of the one open, whose changes it saves there. */
+/** The songs held in [db] and the [MusicStudioState.focus] the studio shows in place of them. */
 class MusicStudio(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     private val db: SongDb,
 ) {
-    private val openEditor = storeOf<MusicEditor?>(null)
-    private var editorJob: Job? = null
+    private val state = storeOf(MusicStudioState())
 
+    val focusState = state.tapOf { it.focus }
     val songList = db.songsState.tapOf { songs -> songs.map { it.song } }
-    val editorState: Tap<MusicEditor?> = openEditor
 
     /** The style every song is written in. */
     val notationStyleState = localStoreOf(scope, NOTATION_STYLE_KEY, NotationStyle.Letters)
 
-    /** Opens the song of [songId], leaving it as it is when already open. */
-    fun load(songId: SongId) {
-        if (openEditor.now?.song?.songId == songId) return
-        db.read(songId)?.let { open(it) }
-    }
+    fun load(songId: SongId) = state.set { copy(focus = songId) }
 
-    /** Stores a new song titled [title] and opens it. */
+    /** Stores a new song titled [title] and focuses it. */
     fun create(title: String) {
         val song = newStoredSong(title)
         db.save(song)
-        open(song)
+        load(song.song.songId)
     }
 
-    /** Removes the song of [songId], closing it if open. */
-    fun remove(songId: SongId) {
-        // closing first, or the open editor's last save would store the song again
-        if (openEditor.now?.song?.songId == songId) close()
-        db.remove(songId)
-    }
+    fun cancelFocus() = state.set { copy(focus = null) }
 
-    private fun open(song: StoredSong) {
-        close()
-        val job = SupervisorJob(scope.coroutineContext[Job])
-        val editorScope = scope + job
-        val editor = MusicEditor(editorScope, song, notationStyleState)
-        editor.storedState.reactIn(editorScope) { db.save(it) }
-        editorJob = job
-        openEditor.set(editor)
-    }
+    fun remove(songId: SongId) = db.remove(songId)
 
-    private fun close() {
-        editorJob?.cancel()
-        editorJob = null
-        openEditor.set(null)
+    /** An editor of the song of [songId] for as long as [scope] lasts, saving its changes, or `null` with no such song. */
+    fun editorOf(scope: CoroutineScope, songId: SongId): MusicEditor? {
+        val song = db.read(songId) ?: return null
+        val editor = MusicEditor(scope, song, notationStyleState)
+        editor.storedState.reactIn(scope) { db.save(it) }
+        return editor
     }
 }
+
+/** The state of the studio, with [focus] the song it shows, or `null` to list the songs. */
+data class MusicStudioState(
+    val focus: SongId? = null,
+)
 
 private fun newStoredSong(title: String): StoredSong {
     val songId = SongId.random()

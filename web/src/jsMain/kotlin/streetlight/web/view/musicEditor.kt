@@ -4,15 +4,11 @@ import kampfire.model.storeOf
 import koala.SvgFile
 import koala.component.IconStyle
 import koala.SvgPack
-import koala.component.heading3
 import koala.component.heading5
-import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
-import koala.dom.routeBlock
 import koala.model.MenuAction
-import koala.model.NullContent
 import koala.modifier.*
 import koala.page.Id
 import kampfire.model.mutableTapOf
@@ -21,12 +17,9 @@ import streetlight.model.data.MelodyTrack
 import streetlight.model.data.DrumTrack
 import streetlight.model.data.LyricTrack
 import streetlight.model.data.Track
-import streetlight.model.ui.SongConfigRoute
 import streetlight.web.dom.layout.actionMenu
-import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.menuActionsRow
 import streetlight.web.dom.layout.actionSection
-import streetlight.web.dom.layout.mainBody
 import streetlight.web.model.ChordEditor
 import streetlight.web.model.DrumEditor
 import streetlight.web.model.LyricEditor
@@ -34,94 +27,26 @@ import streetlight.web.model.MelodyEditor
 import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.model.data.NotationError
+import streetlight.model.data.SongId
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
 import streetlight.web.model.label
-import streetlight.web.model.getMusicStudio
-import streetlight.web.utility.setTitle
-import web.dom.document
 import kotlin.uuid.Uuid
 
-/** Renders the music studio: the stored songs and the editor of the one open. */
-fun ViewScope.viewSongConfig() {
-    val model = app.getMusicStudio(contentScope)
-    val player = app.get<TrackPlayer>()
-    context(model, player) {
-        mainBody("viewSongConfig.kt") {
-            column {
-                songList()
-                musicEditor()
-            }
-        }
-    }
-
-    document.setTitle(SongConfigRoute)
-}
-
-fun RouteScope.viewSongConfigRoute() {
-    routeBlock<SongConfigRoute, NullContent> {
-        viewSongConfig()
-    }
-}
-
-context(model: MusicStudio)
-private fun ViewScope.songList() {
-    val newId = Id(Uuid.random().toString())
-    newSongPopover(newId)
-    actionSection(
-        label = "Songs",
-        actions = listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { }),
-    ) {
-        flowBlock(model.songList) { songs ->
-            songs.forEach { song ->
-                val songId = song.songId
-                actionRow(
-                    label = song.title,
-                    actions = listOf(
-                        MenuAction("Edit") { model.load(songId) },
-                        MenuAction("Remove") { model.remove(songId) },
-                    ),
-                )
-            }
-            if (songs.isEmpty()) {
-                textBlock("No songs yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-            }
-        }
-    }
-}
-
-/** A popover with [id] holding a field for a new song's title. */
-context(model: MusicStudio)
-private fun ViewScope.newSongPopover(id: Id) {
-    popover(id) { popover ->
-        val titleState = storeOf("")
-        val save = save@{
-            val title = titleState.now.takeIf { it.isNotBlank() }?.trim() ?: return@save
-            model.create(title)
-            titleState.set("")
-            popover.close()
-        }
-        row(modify(AlignItemsCenter, Padding(2))) {
-            textField(titleState, "title", Flex1, onEnterSubmit = save)
-            button(SvgFile.Check.small, save, Height(5))
-        }
-    }
-}
-
-/** Renders the open song's music and the style it is written in, or nothing while no song is open. */
+/** Renders the editor of the song of [songId], in a section headed by its title with a way back to the songs. */
 context(model: MusicStudio, player: TrackPlayer)
-private fun ViewScope.musicEditor() {
-    flowBlock(model.editorState) { editor ->
-        if (editor == null) return@flowBlock
-        // playback left running when the song closes would keep sounding
-        onDispose { player.stop() }
+fun ViewScope.musicEditor(songId: SongId) {
+    val editor = model.editorOf(contentScope, songId) ?: return
+    // playback left running when the song closes would keep sounding
+    onDispose { player.stop() }
+    actionSection(
+        label = editor.song.title,
+        actions = listOf(MenuAction("Back") { model.cancelFocus() }),
+    ) {
         column {
-            row(AlignItemsCenter) {
-                heading3(editor.song.title, Flex1)
-                dropMenu(model.notationStyleState)
-            }
+            dropMenu(model.notationStyleState)
             with(editor.properties) { notationPanes("music", textState, errorsState, notationState, rows = 4) }
             context(editor) { trackList() }
         }

@@ -50,7 +50,7 @@ enum class Screen(
     Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.BusinessOwner) }, null, true),
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
     Studio(StaticParse { StudioRoute }),
-    SongConfig(StaticParse { SongConfigRoute }),
+    MusicStudio(StaticParse { MusicStudioRoute }),
 
     // star
     SkillProfile(UuidParse { SkillRoute(SkillId(it)) }),
@@ -219,8 +219,8 @@ object StudioRoute: StreetlightRoute {
     override val title get() = "Studio"
 }
 
-object SongConfigRoute: StreetlightRoute {
-    override val screen get() = Screen.SongConfig
+object MusicStudioRoute: StreetlightRoute {
+    override val screen get() = Screen.MusicStudio
     override val title get() = "Songs"
 }
 

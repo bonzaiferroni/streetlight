@@ -16,7 +16,7 @@ fun RouteScope.viewStudioPortal() {
         Screen.Chat -> viewChatRoomRoute()
         Screen.Feedback -> viewFrontDeskRoute()
         Screen.Studio -> viewStudioRoute()
-        Screen.SongConfig -> viewSongConfigRoute()
+        Screen.MusicStudio -> viewMusicStudioRoute()
 
         // location
         Screen.LocationConfig -> viewLocationConfigRoute()
