@@ -6,6 +6,7 @@ object StudioStyle {
     val Track = Class("studio-track")
     val Timeline = Class("studio-timeline")
     val WindowRegion = Timeline.withBemElement("window-region")
+    val WindowEdge = Timeline.withBemElement("window-edge")
     val CursorHandle = Timeline.withBemElement("cursor-handle")
     val Lane = Class("studio-lane")
     val Extent = Lane.withBemElement("extent")
@@ -18,7 +19,7 @@ object StudioStyle {
 //language="CSS"
 val StudioCss get() = with(StudioStyle) { """
     
-$Timeline { position: relative; touch-action: none; }
+$Timeline { position: relative; touch-action: none; min-height: var(--unit-4); }
 $Lane     { position: relative; touch-action: pan-y; }
 $Extent   { position: absolute; inset-block: 0; }
 
@@ -34,6 +35,15 @@ $WindowRegion {
     inset-block: 0;
     background: color-mix(in srgb, var(--accent-fg) 25%, transparent);
     cursor: grab;
+}
+
+$WindowEdge {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: var(--unit-2);
+    background: var(--accent-fg);
+    cursor: ew-resize;
 }
 
 $Track {

@@ -22,10 +22,8 @@ class MelodyEditor(
     val textState = field.textState
     val errorsState = field.errorsState
 
-    /** The track written as the jianpu it reads from. */
-    val notationState = trackState.combine(model.musicState) { track, music ->
-        MelodyParser(music.key).write(track, music.time)
-    }
+    /** The notation of each section of the track. */
+    val sectionsState = trackState.combine(model.musicState) { track, music -> sectionNotationsOf(track, music.time) }
 
     init {
         // a change of key or time changes how the track is written, so the text follows the track

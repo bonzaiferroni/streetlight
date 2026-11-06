@@ -1,5 +1,7 @@
 package streetlight.web.model
 
+import kotlin.math.max
+
 /** The stretch of the timeline the lanes show, [spanSeconds] long from [startSeconds]. */
 data class TimeWindow(
     val startSeconds: Double,
@@ -13,6 +15,10 @@ data class TimeWindow(
     /** The seconds at [ratio] across the window, the inverse of [toRatio]. */
     fun toSeconds(ratio: Double) = startSeconds + ratio * spanSeconds
 
+    /** This window [spanSeconds] long from the same start, no shorter than ten seconds and within [totalSeconds]. */
+    fun resize(spanSeconds: Double, totalSeconds: Double) =
+        copy(spanSeconds = spanSeconds.coerceIn(MIN_SPAN_SECONDS, max(totalSeconds - startSeconds, MIN_SPAN_SECONDS)))
+
     /** This window moved as little as it can to show [seconds], keeping a fifth of its span ahead when it advances. */
     fun follow(seconds: Double) = when {
         seconds < startSeconds -> copy(startSeconds = seconds)
@@ -22,3 +28,4 @@ data class TimeWindow(
 }
 
 private const val LEAD_SHARE = 0.2
+private const val MIN_SPAN_SECONDS = 10.0

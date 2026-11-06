@@ -21,6 +21,9 @@ import streetlight.model.data.repeatsOf
 import streetlight.model.data.sectionOrderOf
 import streetlight.model.data.sectionsOf
 
+/** The seconds a tick of this music lasts at its tempo. */
+val Music.secondsPerTick get() = 60.0 / bpm / time.beat.ticks
+
 /** The MIDI numbers of [midi] sounding together from [startTick] for [ticks]. */
 class SongTone(
     val startTick: Int,

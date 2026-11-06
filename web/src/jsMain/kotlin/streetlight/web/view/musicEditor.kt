@@ -27,30 +27,26 @@ import streetlight.web.model.MelodyEditor
 import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.model.data.NotationError
-import streetlight.model.data.SongId
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
+import streetlight.web.model.SectionNotation
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
 import streetlight.web.model.label
 import kotlin.uuid.Uuid
 
-/** Renders the editor of the song of [songId], in a section headed by its title with a way back to the songs. */
-context(model: MusicStudio, player: TrackPlayer)
-fun ViewScope.musicEditor(songId: SongId) {
-    val editor = model.editorOf(contentScope, songId) ?: return
-    // playback left running when the song closes would keep sounding
-    onDispose { player.stop() }
-    actionSection(
-        label = editor.song.title,
-        actions = listOf(MenuAction("Back") { model.cancelFocus() }),
-    ) {
-        column {
-            dropMenu(model.notationStyleState)
-            with(editor.properties) { notationPanes("music", textState, errorsState, notationState, rows = 4) }
-            context(editor) { trackList() }
+/** Renders the song's music, the style it is written in and its tracks. */
+context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
+fun ViewScope.musicEditor() = column {
+    dropMenu(studio.notationStyleState)
+    with(model.properties) {
+        notationPanes("music", textState, errorsState, rows = 4) {
+            flowBlock(notationState) { notation ->
+                textBlock(notation, modify(MonoFont, WhiteSpacePreLine))
+            }
         }
     }
+    trackList()
 }
 
 context(model: MusicEditor, player: TrackPlayer)
@@ -144,20 +140,20 @@ private fun ViewScope.trackEditor(index: Int) {
             is ChordTrack -> {
                 trackPlayer(index)
                 with(ChordEditor(contentScope, model, index)) {
-                    notationPanes("chords", textState, errorsState, notationState)
+                    notationPanes("chords", textState, errorsState) { sectionList(sectionsState) }
                 }
             }
             is MelodyTrack -> {
                 trackPlayer(index)
                 with(MelodyEditor(contentScope, model, index)) {
-                    notationPanes("jianpu", textState, errorsState, notationState)
+                    notationPanes("jianpu", textState, errorsState) { sectionList(sectionsState) }
                 }
             }
             is LyricTrack -> with(LyricEditor(contentScope, model, index)) {
-                notationPanes("lyrics", textState, errorsState, notationState)
+                notationPanes("lyrics", textState, errorsState) { sectionList(sectionsState) }
             }
             is DrumTrack -> with(DrumEditor(contentScope, model, index)) {
-                notationPanes("drums", textState, errorsState, notationState)
+                notationPanes("drums", textState, errorsState) { sectionList(sectionsState) }
             }
         }
         flowBlock(model.sectionWarningsState(index)) { warnings ->
@@ -180,16 +176,13 @@ private fun ViewScope.trackPlayer(index: Int) = flowBlock(player.isPlayingState)
     }
 }
 
-/**
- * Renders the text in [textState] and its [errorsState] beside the text written back in [notationState], so the two
- * can be compared.
- */
+/** Renders the text in [textState] and its [errorsState] beside [output], what the text reads as. */
 private fun ViewScope.notationPanes(
     label: String,
     textState: MutableTap<String>,
     errorsState: Tap<List<NotationError>>,
-    notationState: Tap<String>,
     rows: Int = 16,
+    output: ViewScope.() -> Unit,
 ) {
     row(AlignItemsStart) {
         column(Flex1) {
@@ -198,9 +191,15 @@ private fun ViewScope.notationPanes(
                 errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
             }
         }
-        flowBlock(notationState, Flex1) { notation ->
-            textBlock(notation, modify(MonoFont, WhiteSpacePreLine))
-        }
+        column(Flex1) { output() }
+    }
+}
+
+/** Renders each section of [sectionsState] under its name. */
+private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
+    sections.forEach { section ->
+        textBlock(section.sectionId.name, TextSmall)
+        sectionMeasures(section, Height(8))
     }
 }
 

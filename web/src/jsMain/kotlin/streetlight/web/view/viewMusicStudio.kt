@@ -6,15 +6,18 @@ import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
+import koala.dom.layout.lazyTabs
 import koala.dom.routeBlock
 import koala.model.MenuAction
 import koala.model.NullContent
 import koala.modifier.*
 import koala.page.Id
+import streetlight.model.data.SongId
 import streetlight.model.ui.MusicStudioRoute
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
+import streetlight.web.model.LaneEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.getMusicStudio
@@ -29,7 +32,7 @@ fun ViewScope.viewMusicStudio() {
     context(model, player) {
         mainBody("viewMusicStudio.kt") {
             flowBlock(model.focusState) { focus ->
-                if (focus == null) songList() else musicEditor(focus)
+                if (focus == null) songList() else songFocus(focus)
             }
         }
     }
@@ -40,6 +43,24 @@ fun ViewScope.viewMusicStudio() {
 fun RouteScope.viewMusicStudioRoute() {
     routeBlock<MusicStudioRoute, NullContent> {
         viewMusicStudio()
+    }
+}
+
+/** Renders the song of [songId] in a section headed by its title, with a way back to the songs, as a tab for each layout. */
+context(model: MusicStudio, player: TrackPlayer)
+private fun ViewScope.songFocus(songId: SongId) {
+    val editor = model.editorOf(contentScope, songId) ?: return
+    val lanes = LaneEditor(contentScope, editor, player)
+    // playback left running when the song closes would keep sounding
+    onDispose { player.stop() }
+    actionSection(
+        label = editor.song.title,
+        actions = listOf(MenuAction("Back") { model.cancelFocus() }),
+    ) {
+        lazyTabs {
+            tab("Arrangement") { context(editor) { musicEditor() } }
+            tab("Lanes") { context(lanes) { laneEditor() } }
+        }
     }
 }
 

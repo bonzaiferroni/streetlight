@@ -21,10 +21,8 @@ class DrumEditor(
     val textState = field.textState
     val errorsState = field.errorsState
 
-    /** The track written as the tab it reads from. */
-    val notationState = trackState.combine(model.musicState) { track, music ->
-        DrumParser.write(track, music.time)
-    }
+    /** The notation of each section of the track. */
+    val sectionsState = trackState.combine(model.musicState) { track, music -> sectionNotationsOf(track, music.time) }
 
     init {
         // a change of time changes how the track is written, so the text follows the track

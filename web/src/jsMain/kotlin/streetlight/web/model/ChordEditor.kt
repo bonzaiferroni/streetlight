@@ -22,12 +22,8 @@ class ChordEditor(
     val textState = field.textState
     val errorsState = field.errorsState
 
-    /** The track written as the text it reads from. */
-    val notationState = trackState
-        .combine(model.musicState) { track, music -> track to music }
-        .combine(model.notationStyleState) { (track, music), style ->
-            ChordParser(music.key, style).write(track, music.time)
-        }
+    /** The notation of each section of the track. */
+    val sectionsState = trackState.combine(model.musicState) { track, music -> sectionNotationsOf(track, music.time) }
 
     init {
         // a change of key transposes the track, and a change of time or style respells it, so the text follows it

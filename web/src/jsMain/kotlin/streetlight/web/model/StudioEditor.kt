@@ -22,12 +22,12 @@ class StudioEditor(
     private val recorder: AudioRecorder,
     private val player: AudioPlayer,
     private val audio: StudioAudio,
-) {
+) : TimelineModel {
     private val state = storeOf(StudioEditorState())
     val sampleIdsState = state.tapOf { it.samples.map { sample -> sample.id } }
-    val endSecondsState = state.tapOf { it.endSeconds }
-    val totalSecondsState = state.tapOf { it.totalSeconds }
-    val windowState = state.tapOf { it.window }
+    override val endSecondsState = state.tapOf { it.endSeconds }
+    override val totalSecondsState = state.tapOf { it.totalSeconds }
+    override val windowState = state.tapOf { it.window }
     val isRecordingState = recorder.isRecordingState
     val isPlayingState = player.isPlayingState
     val profileState = state.tapOf { it.profile }
@@ -35,7 +35,7 @@ class StudioEditor(
 
     // the cursor moves every frame of playback and recording, so it keeps a store of its own
     private val cursorStore = storeOf(0.0)
-    val cursorSecondsState: Tap<Double> = cursorStore
+    override val cursorSecondsState: Tap<Double> = cursorStore
 
     private val sampleMap = mutableMapOf<Int, PcmSample>()
     private val filteredMap = mutableMapOf<Int, PcmSample>()
@@ -195,21 +195,23 @@ class StudioEditor(
         }
     }
 
-    /** Moves the cursor to [seconds] on the timeline, stopping playback. */
-    fun moveCursor(seconds: Double) {
+    override fun moveCursor(seconds: Double) {
         if (recorder.isRecordingState.now) return
         playJob?.cancel()
         player.stop()
         moveCursorTo(seconds.coerceIn(0.0, state.now.totalSeconds))
     }
 
-    /** Moves the window to start at [seconds], keeping it within the samples. */
-    fun moveWindow(seconds: Double) {
+    override fun moveWindow(seconds: Double) {
         state.update { state ->
             val window = state.window
             val lastStart = max((state.endSeconds ?: 0.0) - window.spanSeconds, 0.0)
             state.copy(window = window.copy(startSeconds = seconds.coerceIn(0.0, lastStart)))
         }
+    }
+
+    override fun resizeWindow(spanSeconds: Double) {
+        state.update { it.copy(window = it.window.resize(spanSeconds, it.totalSeconds)) }
     }
 
     // move the cursor, and the window with it when the cursor leaves it
@@ -233,7 +235,7 @@ data class StudioEditorState(
     val endSeconds get() = samples.maxOfOrNull { it.endSeconds }
 
     /** The length of the whole timeline, through the samples and the window. */
-    val totalSeconds get() = max(window.endSeconds, endSeconds ?: 0.0)
+    val totalSeconds get() = maxOf(window.endSeconds, endSeconds ?: 0.0, DEFAULT_WINDOW_SECONDS)
 }
 
 private const val DEFAULT_WINDOW_SECONDS = 10.0

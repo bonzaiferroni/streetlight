@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.Flow
 import koala.dom.launchEffect
 import streetlight.web.model.BLOCK_FRAMES
 import streetlight.web.model.TimeWindow
+import streetlight.web.model.TimelineModel
 import web.animations.awaitAnimationFrame
 
 /** Renders the studio, where samples are recorded and played together from a cursor on a timeline. */
@@ -120,19 +121,24 @@ private fun ViewScope.calibrationSection() = column {
 /**
  * Renders the timeline, which pulls double duty: the region places the window the lanes show within the whole
  * composition, while the handle places the cursor within the window, in line with the lanes. Dragging the region
- * moves the window, and pressing or dragging anywhere else moves the cursor.
+ * moves the window, dragging its right edge changes the window's length, and pressing or dragging anywhere else moves
+ * the cursor. The timeline is laid out by [rowMod], the
+ * layout of the lanes below it.
  */
-context(model: StudioEditor)
-private fun ViewScope.studioTimeline() {
+context(model: TimelineModel)
+fun ViewScope.studioTimeline(rowMod: Modifier = StudioStyle.Track) {
     lateinit var timelineElement: HTMLElement
     lateinit var regionElement: HTMLElement
+    lateinit var edgeElement: HTMLElement
     lateinit var handleElement: HTMLElement
-    div(modify(StudioStyle.Track, CardBg)) {
+    div(modify(rowMod, CardBg)) {
         flowBlock(model.endSecondsState, Padding(1)) { endSeconds ->
             textBlock(endSeconds?.toDurationText() ?: "0:00")
         }
         timelineElement = div(modify(StudioStyle.Timeline, VoidBg)) {
-            regionElement = div(StudioStyle.WindowRegion)
+            regionElement = div(StudioStyle.WindowRegion) {
+                edgeElement = div(StudioStyle.WindowEdge)
+            }
             handleElement = div(StudioStyle.CursorHandle)
         }
     }
@@ -181,6 +187,17 @@ private fun ViewScope.studioTimeline() {
         if (!isDragging) moveCursor(event)
     })
 
+    // drag the region's right edge to change the window's length, which the region must not take for a press
+    edgeElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
+        event.stopPropagation()
+        edgeElement.setPointerCapture(event.pointerId)
+    })
+    edgeElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
+        if (!edgeElement.hasPointerCapture(event.pointerId)) return@addEventListener
+        readTotalSeconds(event)?.let { model.resizeWindow(it - model.windowState.now.startSeconds) }
+    })
+    edgeElement.addEventListener(PointerEvent.POINTER_UP, { event -> event.stopPropagation() })
+
     launchEffect("studioTimeline") {
         combine(model.windowState.flow, model.totalSecondsState.flow) { window, total -> window to total }
             .collect { (window, total) ->
@@ -205,11 +222,11 @@ private fun ViewScope.sampleStage() = flowBlock(model.sampleIdsState, modify(Fle
     }
 }
 
-/** Renders the cursor as one line across every lane, in line with the cursor's place in the window. */
-context(model: StudioEditor)
-private fun ViewScope.cursorOverlay() {
+/** Renders the cursor as one line across every lane, in line with the cursor's place in the window, over [overlayMod]. */
+context(model: TimelineModel)
+fun ViewScope.cursorOverlay(overlayMod: Modifier = StudioStyle.CursorOverlay) {
     lateinit var lineElement: HTMLElement
-    div(StudioStyle.CursorOverlay) {
+    div(overlayMod) {
         lineElement = div(StudioStyle.CursorLine)
     }
     placeAt(lineElement, readCursorRatioFlow())
@@ -373,7 +390,7 @@ private fun ViewScope.placeAt(element: HTMLElement, ratioFlow: Flow<Double>) {
 }
 
 /** The cursor's position across the window, as it moves. */
-context(model: StudioEditor)
+context(model: TimelineModel)
 private fun readCursorRatioFlow() =
     combine(model.cursorSecondsState.flow, model.windowState.flow) { cursor, window -> window.toRatio(cursor) }
 

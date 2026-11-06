@@ -10,6 +10,7 @@ import web.audio.AudioContext
 import web.audio.AudioScheduledSourceNode
 import web.audio.GainNode
 import web.events.EventHandler
+import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -20,6 +21,7 @@ class TrackPlayer(
     private val kit = DrumKit()
     private val sources = mutableListOf<AudioScheduledSourceNode>()
     private var bus: GainNode? = null
+    private var startClock = 0.0
 
     private val playingStore = storeOf(false)
     val isPlayingState: Tap<Boolean> = playingStore
@@ -27,9 +29,10 @@ class TrackPlayer(
     /**
      * Plays [track] of [song] alone, or every track when it is `null`, through the song's arrangement. Each section
      * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
-     * of. Any playback already running is stopped first.
+     * of. Playback begins at [fromSeconds] on the timeline, a pickup sounding before a start at 0, or at the first sound
+     * when it is `null`. Any playback already running is stopped first.
      */
-    fun play(song: StoredSong, track: Track? = null) {
+    fun play(song: StoredSong, track: Track? = null, fromSeconds: Double? = null) {
         stop()
         val music = song.music
         val playing = track?.let { listOf(it) } ?: song.tracks
@@ -39,25 +42,35 @@ class TrackPlayer(
         val context = audio.readContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
-        val secondsPerTick = 60.0 / music.bpm / music.time.beat.ticks
+        val secondsPerTick = music.secondsPerTick
         // a pickup sounds before the first downbeat, so the earliest tone sets the start
         val firstTick = trackTones.mapNotNull { it.firstTick }.min()
-        val startClock = context.currentTime + START_DELAY_SECONDS - firstTick * secondsPerTick
+        val startTick = when {
+            fromSeconds == null -> firstTick
+            fromSeconds <= 0.0 -> minOf(firstTick, 0)
+            else -> (fromSeconds / secondsPerTick).toInt()
+        }
+        startClock = context.currentTime + START_DELAY_SECONDS - startTick * secondsPerTick
         trackTones.forEach { (track, tones, drums) ->
-            drums.forEach { drum ->
+            drums.filter { it.startTick >= startTick }.forEach { drum ->
                 val start = startClock + drum.startTick * secondsPerTick
                 kit.strike(context, runBus, drum.drum, drum.hit, start).forEach { keep(it) }
             }
             val level = if (track is MelodyTrack) MELODY_LEVEL else ACCOMPANIMENT_LEVEL
-            tones.forEach { tone ->
-                val start = startClock + tone.startTick * secondsPerTick
-                val duration = tone.ticks * secondsPerTick
+            // a tone already sounding where playback begins sounds what is left of it
+            tones.filter { it.startTick + it.ticks > startTick }.forEach { tone ->
+                val toneStart = max(tone.startTick, startTick)
+                val start = startClock + toneStart * secondsPerTick
+                val duration = (tone.startTick + tone.ticks - toneStart) * secondsPerTick
                 val voiceLevel = level / sqrt(tone.midi.size.toDouble())
                 tone.midi.forEach { midi -> voice(context, runBus, midi, start, duration, voiceLevel) }
             }
         }
         playingStore.set(sources.isNotEmpty())
     }
+
+    /** The place on the timeline the latest playback has reached, before 0 while it counts in or sounds a pickup. */
+    fun readSeconds() = audio.clockSeconds - startClock
 
     /** Stops every tone playing, silencing their release tails at once. */
     fun stop() {

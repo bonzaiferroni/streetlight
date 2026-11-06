@@ -11,6 +11,8 @@ import streetlight.web.layout.EntityBodyCss
 import streetlight.web.layout.FeedSectionCss
 import streetlight.web.component.LogoCss
 import streetlight.web.view.EarthCss
+import streetlight.web.view.LaneCss
+import streetlight.web.view.MeasureCss
 import streetlight.web.view.StudioCss
 import streetlight.web.view.RouteDockCss
 import streetlight.web.component.TagFilterMenuCss
@@ -97,6 +99,8 @@ private val KtStyles = listOf(
     LayoutStyleCss,
     InboxCss,
     StudioCss,
+    LaneCss,
+    MeasureCss,
     CuratorMenuStyle,
     ConnectPickerCss,
     ConnectCss,

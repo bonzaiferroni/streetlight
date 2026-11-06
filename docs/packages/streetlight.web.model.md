@@ -185,8 +185,11 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`DrumEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumEditor.kt) | Edits a drum track through its tab |
 | [`LyricEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LyricEditor.kt) | Edits a lyric track through its text |
 | [`MusicPropertyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicPropertyEditor.kt) | Edits a song's music through its text, as a submodel of `MusicEditor` |
+| [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of section slots on a timeline, and plays them from its cursor |
+| [`SectionNotation`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionNotation.kt) | The notation of a section as the track editors and lanes show it |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
+| [`TimelineModel`](../../web/src/jsMain/kotlin/streetlight/web/model/TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditor` share |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |
 | [`Sandbox`](../../web/src/jsMain/kotlin/streetlight/web/model/Sandbox.kt) | The state of the sandbox |
