@@ -62,13 +62,13 @@ class LaneEditor(
         editorState.drag?.takeIf { it.laneIndex == laneIndex }?.cursor
     }
 
-    /** Starts a drag of [note] of [slot] in the lane at [laneIndex], returning whether the lane allows one. */
-    fun startNoteDrag(laneIndex: Int, slot: LaneSlot, note: NoteNotation): Boolean {
+    /** Starts a drag of [note] of [section] in the lane at [laneIndex], returning whether the lane allows one. */
+    fun startNoteDrag(laneIndex: Int, section: LaneSection, note: NoteNotation): Boolean {
         if (state.now.selectedLane != laneIndex) return false
         val track = readNotedTrack(laneIndex) ?: return false
         val source = note.source ?: return false
-        val cursor = cursorOf(source, slot, track)
-        state.update { it.copy(drag = NoteDrag(laneIndex, slot, source, source, cursor)) }
+        val cursor = cursorOf(source, section, track)
+        state.update { it.copy(drag = NoteDrag(laneIndex, section, source, source, cursor)) }
         return true
     }
 
@@ -82,7 +82,7 @@ class LaneEditor(
             .snapTick(tick, track, music, state.now.timeStep)
             .snapPitch(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
         if (moved == drag.moved) return
-        state.update { it.copy(drag = drag.copy(moved = moved, cursor = cursorOf(moved, drag.slot, track))) }
+        state.update { it.copy(drag = drag.copy(moved = moved, cursor = cursorOf(moved, drag.section, track))) }
         if (moved.midi != drag.moved.midi) {
             val capo = (music.capo ?: 0) + (track.capo ?: 0)
             val midis = moved.chord?.toMidi(music.key) ?: listOf(moved.midi)
@@ -106,9 +106,9 @@ class LaneEditor(
         editor.readTrack(laneIndex)?.takeIf { it is MelodyTrack || it is ChordTrack }
 
     // the cursor sits across the window, so its onset is a share of that and not of a measure
-    private fun cursorOf(source: NoteSource, slot: LaneSlot, track: Track): NoteNotation {
+    private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
         val music = editor.storedState.now.music
-        val seconds = slot.startSeconds + source.tick * music.secondsPerTick
+        val seconds = section.startSeconds + source.tick * music.secondsPerTick
         return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
     }
 
@@ -167,28 +167,28 @@ data class LaneEditorState(
 )
 
 /**
- * The lane of a track, shown as [label] and [steps] of the staff tall, holding a slot for each time it plays a section
- * after a lead-in [leadSeconds] long.
+ * The lane of a track, shown as [label] and [steps] of the staff tall, holding a [LaneSection] for each time it plays
+ * one after a lead-in [leadSeconds] long.
  */
 data class Lane(
     val label: String,
     val steps: Int,
     val leadSeconds: Double,
-    val slots: List<LaneSlot>,
+    val sections: List<LaneSection>,
 )
 
 /**
- * A time a track plays the section of [notation], [durationSeconds] long from [startSeconds]. A slot [isRepeat] when
- * the lane has already played the section.
+ * A section of a lane: a time its track plays the section of [notation], [durationSeconds] long from [startSeconds]. It
+ * [isRepeat] when the lane has already played the section.
  */
-data class LaneSlot(
+data class LaneSection(
     val notation: SectionNotation,
     val startSeconds: Double,
     val durationSeconds: Double,
     val isRepeat: Boolean,
 )
 
-/** The lanes of [song], with each track's slots laid along its arrangement as playback lays them. */
+/** The lanes of [song], with each track's sections laid along its arrangement as playback lays them. */
 private fun lanesOf(song: StoredSong): List<Lane> {
     val tracks = song.tracks
     val secondsPerTick = song.music.secondsPerTick
@@ -198,11 +198,11 @@ private fun lanesOf(song: StoredSong): List<Lane> {
         val window = staffWindowOf(track, song.music.key)
         val played = mutableSetOf<SectionId>()
         var onset = 0
-        val slots = order.flatMap { sectionId ->
+        val sections = order.flatMap { sectionId ->
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
             val notation = sectionNotationOf(track, sectionId, song.music, window)
-            val sectionSlots = if (notation == null) emptyList() else List(track.repeatsOf(sectionId, span)) { repeat ->
-                LaneSlot(
+            val laneSections = if (notation == null) emptyList() else List(track.repeatsOf(sectionId, span)) { repeat ->
+                LaneSection(
                     notation = notation,
                     startSeconds = leadSeconds + (onset + repeat * notation.ticks) * secondsPerTick,
                     durationSeconds = notation.ticks * secondsPerTick,
@@ -210,9 +210,9 @@ private fun lanesOf(song: StoredSong): List<Lane> {
                 )
             }
             onset += span.ticks
-            sectionSlots
+            laneSections
         }
-        Lane(track.label, window.steps, leadSeconds, slots)
+        Lane(track.label, window.steps, leadSeconds, sections)
     }
 }
 

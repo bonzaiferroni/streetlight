@@ -8,10 +8,10 @@ object LaneStyle {
     val Selected = Row.withBemModifier("selected")
     val Meta = Row.withBemElement("meta")
     val Content = Class("lane-content")
-    val Slot = Content.withBemElement("slot")
-    val SlotLabel = Slot.withBemElement("label")
+    val Section = Content.withBemElement("section")
+    val SectionLabel = Section.withBemElement("label")
     val LeadIn = Content.withBemElement("lead-in")
-    val RepeatSlot = Slot.withBemModifier("repeat")
+    val RepeatSection = Section.withBemModifier("repeat")
     val CursorOverlay = Class("lane-cursor-overlay")
     val NoteCursor = Content.withBemElement("note-cursor")
 }
@@ -45,18 +45,18 @@ $Selected ${MeasureStyle.Grabbable} {
 }
 
 /* a unit of room above the label, which with the label's height makes the three units a lane keeps above its staff */
-$Slot {
+$Section {
     position: absolute;
     inset-block: var(--unit-1) 0;
 }
 
-/* below the height of the labels, level with the measures of the slots */
+/* below the height of the labels, level with the measures of the sections */
 $LeadIn {
     position: absolute;
     inset-block: var(--unit-3) 0;
 }
 
-$SlotLabel {
+$SectionLabel {
     height: var(--unit-2);
     line-height: 1;
     padding-inline: var(--unit-1);
@@ -66,9 +66,9 @@ $SlotLabel {
     opacity: 0.5;
 }
 
-$RepeatSlot { opacity: 0.6; }
+$RepeatSection ${MeasureStyle.Note} { opacity: 0.6; }
 
-/* above the slots, and clear of the pointer so a drag stays on its note */
+/* above the sections, and clear of the pointer so a drag stays on its note */
 $NoteCursor {
     position: absolute;
     inset: 0;

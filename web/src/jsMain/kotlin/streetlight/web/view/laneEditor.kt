@@ -16,7 +16,7 @@ import kotlinx.css.pct
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
 import streetlight.web.model.LaneEditor
-import streetlight.web.model.LaneSlot
+import streetlight.web.model.LaneSection
 import streetlight.web.model.NoteNotation
 import streetlight.web.model.NoteValue
 import streetlight.web.model.TimeWindow
@@ -76,23 +76,23 @@ private fun ViewScope.timeStepControl() {
 }
 
 /**
- * Renders [lane], the one at [laneIndex], as its meta panel and a slot for each time its track plays a section, placed
- * within the window, under the note cursor of a drag.
+ * Renders [lane], the one at [laneIndex], as its meta panel and each of its sections, placed within the window, under
+ * the note cursor of a drag.
  */
 context(model: LaneEditor)
 private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
     lateinit var leadElement: HTMLElement
     lateinit var contentElement: HTMLElement
-    val slots = mutableListOf<Pair<LaneSlot, HTMLElement>>()
+    val sections = mutableListOf<Pair<LaneSection, HTMLElement>>()
     val rowElement = div(LaneStyle.Row) {
         textBlock(lane.label, LaneStyle.Meta)
         contentElement = div(modify(Css.Height.of(laneHeight(lane)), LaneStyle.Content, LaneStyle.Lane, CardBg)) {
             leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
-            lane.slots.forEach { slot ->
-                slots += slot to div(modify(LaneStyle.Slot, LaneStyle.RepeatSlot.takeIf { slot.isRepeat })) {
-                    textBlock(slot.notation.sectionId.name, modify(LaneStyle.SlotLabel, TextSmall))
-                    sectionMeasures(slot.notation, VoidBg) { note, noteElement, stripElement ->
-                        wireNoteDrag(laneIndex, slot, note, noteElement, stripElement)
+            lane.sections.forEach { section ->
+                sections += section to div(modify(LaneStyle.Section, LaneStyle.RepeatSection.takeIf { section.isRepeat })) {
+                    textBlock(section.notation.sectionId.name, modify(LaneStyle.SectionLabel, TextSmall))
+                    sectionMeasures(section.notation, VoidBg) { note, noteElement, stripElement ->
+                        wireNoteDrag(laneIndex, section, note, noteElement, stripElement)
                     }
                 }
             }
@@ -113,19 +113,19 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
     launchEffect("lane") {
         model.windowState.flow.collect { window ->
             leadElement.placeSpan(0.0, lane.leadSeconds, window)
-            slots.forEach { (slot, element) -> element.placeSpan(slot.startSeconds, slot.durationSeconds, window) }
+            sections.forEach { (section, element) -> element.placeSpan(section.startSeconds, section.durationSeconds, window) }
         }
     }
 }
 
 /**
- * Lets [noteElement] be dragged across [stripElement] to edit [note] of [slot], while its lane is selected. A release
+ * Lets [noteElement] be dragged across [stripElement] to edit [note] of [section], while its lane is selected. A release
  * back over the note cancels the drag.
  */
 context(model: LaneEditor)
 private fun wireNoteDrag(
     laneIndex: Int,
-    slot: LaneSlot,
+    section: LaneSection,
     note: NoteNotation,
     noteElement: HTMLElement,
     stripElement: HTMLElement,
@@ -134,7 +134,7 @@ private fun wireNoteDrag(
     var isGrabbed = false
 
     noteElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
-        if (!model.startNoteDrag(laneIndex, slot, note)) return@addEventListener
+        if (!model.startNoteDrag(laneIndex, section, note)) return@addEventListener
         event.stopPropagation()
         noteElement.setPointerCapture(event.pointerId)
         grabY = event.clientY
@@ -144,8 +144,8 @@ private fun wireNoteDrag(
         if (!noteElement.hasPointerCapture(event.pointerId)) return@addEventListener
         val strip = stripElement.getBoundingClientRect()
         if (strip.width == 0.0 || strip.height == 0.0) return@addEventListener
-        val tick = (event.clientX - strip.left) / strip.width * slot.notation.ticks
-        val stepsUp = (grabY - event.clientY) / (strip.height / slot.notation.steps)
+        val tick = (event.clientX - strip.left) / strip.width * section.notation.ticks
+        val stepsUp = (grabY - event.clientY) / (strip.height / section.notation.steps)
         model.dragNote(tick, stepsUp)
     })
     noteElement.addEventListener(PointerEvent.POINTER_UP, { event ->

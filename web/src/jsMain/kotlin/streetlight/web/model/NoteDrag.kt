@@ -21,10 +21,10 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-/** A note of [slot] in the lane at [laneIndex] being dragged from [source] to [moved], drawn as [cursor]. */
+/** A note of [section] in the lane at [laneIndex] being dragged from [source] to [moved], drawn as [cursor]. */
 data class NoteDrag(
     val laneIndex: Int,
-    val slot: LaneSlot,
+    val section: LaneSection,
     val source: NoteSource,
     val moved: NoteSource,
     val cursor: NoteNotation,
