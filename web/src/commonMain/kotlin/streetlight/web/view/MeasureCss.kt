@@ -11,6 +11,7 @@ object MeasureStyle {
     val Bar = Strip.withBemElement("bar")
     val Measure = Strip.withBemElement("measure")
     val Note = Strip.withBemElement("note")
+    val Head = Strip.withBemElement("head")
     val OpenNote = Note.withBemModifier("open")
     val StemNote = Note.withBemModifier("stem")
     val OneFlagNote = Note.withBemModifier("one-flag")
@@ -52,20 +53,26 @@ $Bar {
 
 $Measure { position: relative; }
 
-/* centered on its onset, so it sounds as the cursor meets its middle, and on its step */
+/* reaching from a chord's lowest head to its highest, centered on its onset so it sounds as the cursor meets its middle */
 $Note {
     position: absolute;
     width: calc(var(--unit) * 2.4);
     height: var(--unit-2);
-    translate: -50% 50%;
+    translate: -50% 0;
+}
+
+$Head {
+    position: absolute;
+    inset-inline: 0;
+    height: var(--unit-2);
     border-radius: 50%;
     background: var(--note-ink, rgb(var(--ink)));
 }
 
-$OpenNote { background: none; }
+$OpenNote $Head { background: none; }
 
-/* a border thicker at the sides swells the stroke there, and a border on the head itself would move its bars */
-$OpenNote::before {
+/* a border thicker at the sides swells the stroke there */
+$OpenNote $Head::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -123,8 +130,8 @@ $ControlNote {
 $Accidental {
     position: absolute;
     inset-inline-end: 100%;
-    top: 50%;
-    translate: 0 -50%;
+    bottom: var(--unit-1);
+    translate: 0 50%;
     line-height: 1;
     color: var(--note-ink, rgb(var(--ink)));
 }
@@ -132,10 +139,10 @@ $Accidental {
 $Dot {
     position: absolute;
     inset-inline-start: calc(100% + var(--unit-1) / 2);
-    top: 50%;
+    bottom: var(--unit-1);
     width: 6px;
     aspect-ratio: 1;
-    translate: 0 -50%;
+    translate: 0 50%;
     border-radius: 50%;
     background: var(--note-ink, rgb(var(--ink)));
 }

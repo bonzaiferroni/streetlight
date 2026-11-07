@@ -66,13 +66,14 @@ class TrackPlayer(
         playingStore.set(sources.isNotEmpty())
     }
 
-    /** Sounds [midi] briefly over any playback, cutting off the note this last sounded. */
-    fun playNote(midi: Int) {
+    /** Sounds [midis] together briefly over any playback, cutting off what this last sounded. */
+    fun playNotes(midis: List<Int>) {
         val context = audio.readContext()
         noteBus?.disconnect()
         val runBus = context.createGain().also { it.connect(context.destination) }
         noteBus = runBus
-        voice(context, runBus, midi, context.currentTime, NOTE_SECONDS, MELODY_LEVEL)
+        val level = MELODY_LEVEL / sqrt(midis.size.toDouble())
+        midis.forEach { voice(context, runBus, it, context.currentTime, NOTE_SECONDS, level) }
     }
 
     /** The seconds from the first downbeat the latest playback has reached, below 0 before it. */

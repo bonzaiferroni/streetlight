@@ -116,7 +116,7 @@ private fun <N> List<N>.toTones(onset: Int, beatsOf: (N) -> Beats, midiOf: (N) -
 }
 
 /** The MIDI numbers of the root, third, fifth and seventh of the chord in [key], rooted below middle C. */
-private fun Chord.toMidi(key: Key): List<Int> {
+fun Chord.toMidi(key: Key): List<Int> {
     val root = CHORD_ROOT_MIDI + (key.tonic.value + root.value).mod(12)
     val third = when (quality) {
         ChordQuality.Minor, ChordQuality.Diminished -> 3

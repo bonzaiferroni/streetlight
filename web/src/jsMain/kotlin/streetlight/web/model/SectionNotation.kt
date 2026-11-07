@@ -1,10 +1,11 @@
 package streetlight.web.model
 
 import streetlight.model.data.Beats
+import streetlight.model.data.Chord
 import streetlight.model.data.Key
-import streetlight.model.data.MelodyNote
 import streetlight.model.data.Music
 import streetlight.model.data.Phrase
+import streetlight.model.data.Progression
 import streetlight.model.data.Section
 import streetlight.model.data.SectionId
 import streetlight.model.data.Track
@@ -35,31 +36,34 @@ data class MeasureNotation(
 )
 
 /**
- * A note starting [onset] of the way through its measure, or for a pickup that far before its section, centered [step]
- * steps above the bottom of its section. Each of its [ledgers] is a ledger line, in steps from the note's center. A note
- * [isRaised] sits between two degrees of the scale, on the line of the lower.
+ * A note or chord starting [onset] of the way through its measure, or for a pickup that far before its section, its
+ * lowest head centered [step] steps above the bottom of its section. Each of its [heads] and [ledgers] is a head or
+ * ledger line, in steps from that lowest head. A note [isRaised] sits between two degrees of the scale, on the line of
+ * the lower.
  */
 data class NoteNotation(
     val onset: Double,
     val step: Int,
     val value: NoteValue,
     val isDotted: Boolean,
+    val heads: List<Int>,
     val ledgers: List<Int>,
     val isRaised: Boolean,
     val source: NoteSource,
 )
 
 /**
- * The place of a note in its track: [index] of the notes of [phraseId], or of its pickup when [isPickup], sounding
- * [midi] for [ticks] from [tick] of its section.
+ * The place of a note in its track: [index] of the notes of [sectionId], or of its pickup when [isPickup], drawn at
+ * [midi] for [ticks] from [tick] of its section. A chord's [midi] is its root, and [chord] is what it plays.
  */
 data class NoteSource(
-    val phraseId: SectionId,
+    val sectionId: SectionId,
     val index: Int,
     val isPickup: Boolean,
     val tick: Int,
     val ticks: Int,
     val midi: Int,
+    val chord: Chord? = null,
 )
 
 /** The written length of a note. */
@@ -82,8 +86,7 @@ data class StaffWindow(
 
 /** The window of [track] in [key]: the treble staff, stretched to reach every note of the track, with room to drag past. */
 fun staffWindowOf(track: Track, key: Key): StaffWindow {
-    val steps = track.sections.filterIsInstance<Phrase>().flatMap { it.pickup + it.notes }
-        .mapNotNull { note -> note.interval?.let { staffStepOf(it.toMidi(key), key) } }
+    val steps = track.sections.flatMap { drawnMidisOf(it, key) }.map { staffStepOf(it, key) }
     val low = minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW)
     val high = maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH)
     return StaffWindow(low - DRAG_ROOM_STEPS, high + DRAG_ROOM_STEPS)
@@ -92,24 +95,18 @@ fun staffWindowOf(track: Track, key: Key): StaffWindow {
 /** The notation of [sectionId] in [track] against [music] within [window], or `null` when it has no length there. */
 fun sectionNotationOf(track: Track, sectionId: SectionId, music: Music, window: StaffWindow): SectionNotation? {
     val ticks = track.lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return null
-    val placed = placedNotesOf(track.sectionsOf(sectionId).orEmpty())
-    fun notationOf(placedNote: PlacedNote, onset: Double): NoteNotation? {
-        val (tick, note, phraseId, index, isPickup) = placedNote
-        val midi = note.interval?.toMidi(music.key) ?: return null
-        val source = NoteSource(phraseId, index, isPickup, tick, note.beats.ticks, midi)
-        return noteNotationOf(source, onset, window, music.key)
-    }
+    val sources = noteSourcesOf(track.sectionsOf(sectionId).orEmpty(), music.key)
     val measure = music.time.measure.ticks
     val count = (ticks + measure - 1) / measure
     val measures = List(count) { index ->
         val start = index * measure
         val length = minOf(measure, ticks - start)
-        val notes = placed.filter { it.tick in start until start + length }.mapNotNull {
-            notationOf(it, (it.tick - start).toDouble() / length)
+        val notes = sources.filter { it.tick in start until start + length }.map {
+            noteNotationOf(it, (it.tick - start).toDouble() / length, window, music.key)
         }
         MeasureNotation(length.toDouble() / ticks, notes)
     }
-    val pickup = placed.filter { it.tick < 0 }.mapNotNull { notationOf(it, it.tick.toDouble() / ticks) }
+    val pickup = sources.filter { it.tick < 0 }.map { noteNotationOf(it, it.tick.toDouble() / ticks, window, music.key) }
     return SectionNotation(sectionId, ticks, window.steps, STAFF_LOW - window.low + 2, measures, pickup)
 }
 
@@ -123,47 +120,74 @@ fun sectionNotationsOf(track: Track, music: Music): List<SectionNotation> {
 /** The notation of the note at [source], [onset] across what holds it, within [window]. */
 fun noteNotationOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteNotation {
     val (value, isDotted) = noteValueOf(source.ticks)
-    val staffStep = staffStepOf(source.midi, key)
+    val staffSteps = (source.chord?.let { drawnMidisOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
+    val lowest = staffSteps.min()
     val isRaised = (source.midi - key.majorTonic.value).mod(12) in RAISED_SEMITONES
-    return NoteNotation(onset, staffStep - window.low + 2, value, isDotted, ledgersOf(staffStep), isRaised, source)
+    return NoteNotation(
+        onset = onset,
+        step = lowest - window.low + 2,
+        value = value,
+        isDotted = isDotted,
+        heads = staffSteps.map { it - lowest },
+        ledgers = ledgersOf(lowest, staffSteps.max()).map { it - lowest },
+        isRaised = isRaised,
+        source = source,
+    )
 }
 
-/** A [note] placed at [tick] of its section, before 0 for a pickup, being [index] of the notes or pickup of [phraseId]. */
-private data class PlacedNote(
-    val tick: Int,
-    val note: MelodyNote,
-    val phraseId: SectionId,
-    val index: Int,
-    val isPickup: Boolean,
-)
+/** The MIDI numbers [chord] is drawn at in [key], an octave above where it sounds, so it sits on the treble staff. */
+fun drawnMidisOf(chord: Chord, key: Key) = chord.toMidi(key).map { it + CHORD_DRAWN_SEMITONES }
 
-/** The notes of each phrase of [sections], laid end to end with the sections around them, each pickup before its phrase. */
-private fun placedNotesOf(sections: List<Section>): List<PlacedNote> {
-    val placed = mutableListOf<PlacedNote>()
+/** The MIDI numbers of every note [section] draws in [key]. */
+private fun drawnMidisOf(section: Section, key: Key): List<Int> = when (section) {
+    is Phrase -> (section.pickup + section.notes).mapNotNull { it.interval?.toMidi(key) }
+    is Progression -> (section.pickup + section.notes).flatMap { note -> note.chord?.let { drawnMidisOf(it, key) }.orEmpty() }
+    else -> emptyList()
+}
+
+/** The place of each note and chord of [sections], laid end to end, each pickup before its section. */
+private fun noteSourcesOf(sections: List<Section>, key: Key): List<NoteSource> {
+    val sources = mutableListOf<NoteSource>()
     var onset = 0
     for (section in sections) {
-        if (section is Phrase) {
-            var tick = onset - section.pickup.sumOf { it.beats.ticks }
-            section.pickup.forEachIndexed { index, note ->
-                placed.add(PlacedNote(tick, note, section.sectionId, index, true))
-                tick += note.beats.ticks
+        when (section) {
+            is Phrase -> {
+                fun place(notes: List<Pair<Int?, Int>>, start: Int, isPickup: Boolean) {
+                    var tick = start
+                    notes.forEachIndexed { index, (midi, ticks) ->
+                        if (midi != null) sources.add(NoteSource(section.sectionId, index, isPickup, tick, ticks, midi))
+                        tick += ticks
+                    }
+                }
+                val pickup = section.pickup.map { it.interval?.toMidi(key) to it.beats.ticks }
+                place(pickup, onset - pickup.sumOf { it.second }, true)
+                place(section.notes.map { it.interval?.toMidi(key) to it.beats.ticks }, onset, false)
             }
-            section.notes.forEachIndexed { index, note ->
-                placed.add(PlacedNote(tick, note, section.sectionId, index, false))
-                tick += note.beats.ticks
+            is Progression -> {
+                fun place(notes: List<Pair<Chord?, Int>>, start: Int, isPickup: Boolean) {
+                    var tick = start
+                    notes.forEachIndexed { index, (chord, ticks) ->
+                        if (chord != null) {
+                            val midi = drawnMidisOf(chord, key).first()
+                            sources.add(NoteSource(section.sectionId, index, isPickup, tick, ticks, midi, chord))
+                        }
+                        tick += ticks
+                    }
+                }
+                val pickup = section.pickup.map { it.chord to it.beats.ticks }
+                place(pickup, onset - pickup.sumOf { it.second }, true)
+                place(section.notes.map { it.chord to it.beats.ticks }, onset, false)
             }
+            else -> Unit
         }
         onset += section.length.ticks
     }
-    return placed
+    return sources
 }
 
-/** The ledger lines a note on [staffStep] wants, one on each line between it and the staff, in steps from the note. */
-private fun ledgersOf(staffStep: Int) = when {
-    staffStep > STAFF_HIGH -> (STAFF_HIGH + 2..staffStep step 2).toList()
-    staffStep < STAFF_LOW -> (STAFF_LOW - 2 downTo staffStep step 2).toList()
-    else -> emptyList()
-}.map { it - staffStep }
+/** The ledger lines a note reaching from [lowest] to [highest] wants, one on each line between it and the staff. */
+private fun ledgersOf(lowest: Int, highest: Int) =
+    (STAFF_HIGH + 2..highest step 2).toList() + (STAFF_LOW - 2 downTo lowest step 2).toList()
 
 /** The value written for [ticks], the longest that fits, and whether it wants a dot for the half more. */
 private fun noteValueOf(ticks: Int): Pair<NoteValue, Boolean> {
@@ -202,6 +226,9 @@ private val RAISED_SEMITONES = setOf(1, 3, 6, 8, 10)
 
 /** The steps of room to drag a note past the highest and lowest of a track. */
 private const val DRAG_ROOM_STEPS = 2
+
+/** The semitones a chord is drawn above where it sounds. */
+const val CHORD_DRAWN_SEMITONES = 12
 
 /** The bottom line of the treble staff, E4, and its top line, F5. */
 private const val STAFF_LOW = 37

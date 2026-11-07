@@ -4,8 +4,11 @@ import kampfire.model.combine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import streetlight.model.data.ChordParser
 import streetlight.model.data.ChordTrack
+import streetlight.model.data.Progression
 
 /**
  * The state behind the editor of the chord track at [index] of [model], read from chord symbols in the song's
@@ -19,6 +22,7 @@ class ChordEditor(
 ) {
     private val trackState = model.trackState(index, ChordTrack(emptyList(), emptyList()))
     private val field = NotationField(writeNow())
+    private var readSections: List<Progression>? = null
     val textState = field.textState
     val errorsState = field.errorsState
 
@@ -31,9 +35,16 @@ class ChordEditor(
             Triple(music.key, music.time, style)
         }
         field.launchRewrites(scope, changes.distinctUntilChanged()) { writeNow() }
+        // an edit from elsewhere replaces the track under the text, which a later read would otherwise undo
+        scope.launch {
+            trackState.flow.filter { readSections != null && it.sections != readSections }.collect {
+                field.setText(writeNow())
+            }
+        }
         field.launchReads(scope) { text ->
             val music = model.musicState.now
             val read = ChordParser(music.key, model.notationStyleState.now).read(text, music.time)
+            readSections = read.value.sections
             trackState.update { track ->
                 track.copy(
                     sections = read.value.sections,

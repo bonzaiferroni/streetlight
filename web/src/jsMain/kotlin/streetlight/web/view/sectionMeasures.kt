@@ -47,16 +47,22 @@ private fun ViewScope.staff(notation: SectionNotation) {
 }
 
 /**
- * Renders [note] with [mod] at its onset and step: a head with the bars of its value above and below it, its dot, its
- * ledger lines, and a sharp when it sits between degrees of the scale.
+ * Renders [note] with [mod] at its onset and step: its heads, with the bars of its value above and below them, its dot,
+ * its ledger lines, and a sharp when it sits between degrees of the scale.
  */
 fun ViewScope.note(note: NoteNotation, mod: Modifier? = null): HTMLElement {
-    val place = modify(Css.Left.of((note.onset * 100).pct), Css.Bottom.of(stepsHeight(note.step)))
+    val span = note.heads.max()
+    val place = modify(
+        Css.Left.of((note.onset * 100).pct),
+        Css.Bottom.of(LinearDimension("calc(var(--unit) * ${STAFF_STEP_UNITS * note.step} - var(--unit))")),
+        Css.Height.of(LinearDimension("calc(var(--unit-2) + var(--unit) * ${STAFF_STEP_UNITS * span})")),
+    )
     return div(modify(mod, MeasureStyle.Note, note.value.shape, place)) {
+        note.heads.forEach { div(modify(MeasureStyle.Head, Css.Bottom.of(stepsHeight(it)))) }
         if (note.isDotted) div(MeasureStyle.Dot)
         if (note.isRaised) textBlock("♯", MeasureStyle.Accidental)
         note.ledgers.forEach { steps ->
-            val bottom = LinearDimension("calc(50% + var(--unit) * ${STAFF_STEP_UNITS * steps} - 1px)")
+            val bottom = LinearDimension("calc(var(--unit) * ${1 + STAFF_STEP_UNITS * steps} - 1px)")
             div(modify(MeasureStyle.Ledger, Css.Bottom.of(bottom)))
         }
     }

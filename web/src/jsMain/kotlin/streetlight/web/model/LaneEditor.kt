@@ -9,7 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import streetlight.model.data.Beats
+import streetlight.model.data.ChordTrack
 import streetlight.model.data.MelodyTrack
+import streetlight.model.data.Track
 import streetlight.model.data.SectionId
 import streetlight.model.data.lengthOf
 import streetlight.model.data.repeatsOf
@@ -63,7 +65,7 @@ class LaneEditor(
     /** Starts a drag of [note] of [slot] in the lane at [laneIndex], returning whether the lane allows one. */
     fun startNoteDrag(laneIndex: Int, slot: LaneSlot, note: NoteNotation): Boolean {
         if (state.now.selectedLane != laneIndex) return false
-        val track = readMelodyTrack(laneIndex) ?: return false
+        val track = readNotedTrack(laneIndex) ?: return false
         val cursor = cursorOf(note.source, slot, track)
         state.update { it.copy(drag = NoteDrag(laneIndex, slot, note.source, note.source, cursor)) }
         return true
@@ -72,16 +74,19 @@ class LaneEditor(
     /** Moves the note dragged to the nearest place to [tick] of its section, [stepsUp] staff steps from where it began. */
     fun dragNote(tick: Double, stepsUp: Double) {
         val drag = state.now.drag ?: return
-        val track = readMelodyTrack(drag.laneIndex) ?: return
-        val phrase = track.sections.firstOrNull { it.sectionId == drag.source.phraseId } ?: return
+        val track = readNotedTrack(drag.laneIndex) ?: return
         val music = editor.storedState.now.music
         val window = staffWindowOf(track, music.key)
         val moved = drag.source
-            .snapTick(tick, phrase, music, state.now.timeStep)
-            .snapMidi(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
+            .snapTick(tick, track, music, state.now.timeStep)
+            .snapPitch(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
         if (moved == drag.moved) return
         state.update { it.copy(drag = drag.copy(moved = moved, cursor = cursorOf(moved, drag.slot, track))) }
-        if (moved.midi != drag.moved.midi) player.playNote(moved.midi + (music.capo ?: 0) + (track.capo ?: 0))
+        if (moved.midi != drag.moved.midi) {
+            val capo = (music.capo ?: 0) + (track.capo ?: 0)
+            val midis = moved.chord?.toMidi(music.key) ?: listOf(moved.midi)
+            player.playNotes(midis.map { it + capo })
+        }
     }
 
     /** Ends the drag, making its edit when [isCommitted] and the note has moved. */
@@ -91,14 +96,16 @@ class LaneEditor(
         if (!isCommitted || drag.moved == drag.source) return
         val key = editor.storedState.now.music.key
         editor.trackState(drag.laneIndex).update { track ->
-            (track as? MelodyTrack)?.withMovedNote(drag.source, drag.moved, key) ?: track
+            track?.withMovedNote(drag.source, drag.moved, key)
         }
     }
 
-    private fun readMelodyTrack(laneIndex: Int) = editor.readTrack(laneIndex) as? MelodyTrack
+    // the tracks whose notes can be dragged
+    private fun readNotedTrack(laneIndex: Int) =
+        editor.readTrack(laneIndex)?.takeIf { it is MelodyTrack || it is ChordTrack }
 
     // the cursor sits across the window, so its onset is a share of that and not of a measure
-    private fun cursorOf(source: NoteSource, slot: LaneSlot, track: MelodyTrack): NoteNotation {
+    private fun cursorOf(source: NoteSource, slot: LaneSlot, track: Track): NoteNotation {
         val music = editor.storedState.now.music
         val seconds = slot.startSeconds + source.tick * music.secondsPerTick
         return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
