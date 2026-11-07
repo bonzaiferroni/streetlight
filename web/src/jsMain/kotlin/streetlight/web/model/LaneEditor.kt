@@ -220,7 +220,7 @@ private fun lanesOf(song: StoredSong): List<Lane> {
             onset += span.ticks
             laneSections
         }
-        Lane(track.label, window.steps, leadSeconds, sections)
+        Lane(track.trackId.name, window.steps, leadSeconds, sections)
     }
 }
 

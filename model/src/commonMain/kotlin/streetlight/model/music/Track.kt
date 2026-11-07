@@ -4,18 +4,23 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 /**
- * A part played by a voice or instrument: its [sections], and its [arrangements] of sections into larger ones.
+ * A part played by a voice or instrument, named by its [trackId], unique within its song: its [sections], and its
+ * [arrangements] of sections into larger ones.
  *
  * The track sounds [capo] semitones higher than written, or lower for a negative one, on top of the [Music.capo] of
  * its song.
  */
 @Serializable
 sealed interface Track {
+    val trackId: TrackId
     val sections: List<Section>
     val arrangements: List<Arrangement>
     val capo: Int?
-    val name: String?
 }
+
+/** The name of a track, unique within its song. */
+@JvmInline @Serializable
+value class TrackId(val name: String)
 
 @Serializable
 sealed interface Section {
@@ -37,10 +42,10 @@ data class Arrangement(
 
 @Serializable
 data class ChordTrack(
+    override val trackId: TrackId,
     override val sections: List<Progression>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-    override val name: String? = null,
 ) : Track
 
 /** The [notes] of a chord section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -65,10 +70,10 @@ data class ChordNote(
 
 @Serializable
 data class MelodyTrack(
+    override val trackId: TrackId,
     override val sections: List<Phrase>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-    override val name: String? = null,
 ) : Track
 
 /** The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -107,10 +112,10 @@ private const val MIDDLE_C_MIDI = 60
 
 @Serializable
 data class LyricTrack(
+    override val trackId: TrackId,
     override val sections: List<Stanza>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-    override val name: String? = null,
 ) : Track
 
 /** The [notes] of a lyric section, led by a [pickup] that sounds at the end of the measure before it. */
@@ -135,10 +140,10 @@ data class LyricNote(
 
 @Serializable
 data class DrumTrack(
+    override val trackId: TrackId,
     override val sections: List<Groove>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-    override val name: String? = null,
 ) : Track
 
 /**

@@ -19,6 +19,7 @@ import streetlight.web.component.TagFilterMenuCss
 import koala.markdown.MarkdownCss
 import koala.component.GlowControlCss
 import koala.layout.LazyColumnCss
+import koala.layout.OrderColumnCss
 import koala.markdown.TextEditorCss
 import streetlight.web.component.StarToggleCss
 import streetlight.web.layout.BodyCss
@@ -56,6 +57,7 @@ private val KtStyles = listOf(
     SubrouterCss,
     FlowBlockCss,
     ItemsBlockCss,
+    OrderColumnCss,
     WireBlockCss,
     FillImageCss,
     CarouselCss,

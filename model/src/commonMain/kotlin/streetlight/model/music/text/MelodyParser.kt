@@ -7,6 +7,7 @@ import streetlight.model.music.MelodyNote
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Phrase
 import streetlight.model.music.TimeSignature
+import streetlight.model.music.TrackId
 
 /**
  * The parser of a melody track's jianpu, with degrees counted from the [Key.majorTonic] of [key].
@@ -19,8 +20,8 @@ import streetlight.model.music.TimeSignature
 class MelodyParser(
     private val key: Key,
 ) {
-    /** Reads a melody track from [text], with measures checked against [time]. */
-    fun read(text: String, time: TimeSignature): NotationRead<MelodyTrack> {
+    /** Reads the melody track [trackId] from [text], with measures checked against [time]. */
+    fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors)
         val phrases = trackText.sections.map { section ->
@@ -42,7 +43,7 @@ class MelodyParser(
             }
             Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(MelodyTrack(phrases, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(MelodyTrack(trackId, phrases, trackText.arrangements, trackText.capo), errors)
     }
 
     /** The ticks a segment of jianpu filled, and whether it ends on a tie to the next note. */

@@ -5,21 +5,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import streetlight.model.music.LyricTrack
+import streetlight.model.music.TrackId
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.text.LyricParser
 import streetlight.model.music.ui.sectionNotationsOf
 
 /**
- * The state behind the editor of the lyric track at [index] of [model]. A read replaces the track's sections,
+ * The state behind the editor of the lyric track [trackId] of [model]. A read replaces the track's sections,
  * arrangements and capo, and leaves the rest of it alone. A read is checked against the song's first melody track. A
  * change of time rewrites the text from the track.
  */
 class LyricEditor(
     scope: CoroutineScope,
     private val model: MusicEditor,
-    index: Int,
+    trackId: TrackId,
 ) {
-    private val trackState = model.trackState(index, LyricTrack(emptyList(), emptyList()))
+    private val trackState = model.trackState(trackId, LyricTrack(trackId, emptyList(), emptyList()))
     private val field = NotationField(writeNow())
     val textState = field.textState
     val errorsState = field.errorsState
@@ -34,7 +35,7 @@ class LyricEditor(
         field.launchReads(scope) { text ->
             val music = model.musicState.now
             val melody = model.tracksState.now.firstNotNullOfOrNull { it as? MelodyTrack }
-            val read = LyricParser.read(text, music.time, melody)
+            val read = LyricParser.read(trackId, text, music.time, melody)
             trackState.update { track ->
                 track.copy(
                     sections = read.value.sections,

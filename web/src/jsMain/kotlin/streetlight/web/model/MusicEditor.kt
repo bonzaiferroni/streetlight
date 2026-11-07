@@ -13,6 +13,7 @@ import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.text.NotationStyle
@@ -26,8 +27,7 @@ class MusicEditor(
     private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
     val song = stored.song
     val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }
-    val tracksState = state.tapOf { it.tracks }
-    val trackLabelsState = state.tapOf { editor -> editor.tracks.map { it.label } }
+    val tracksState = state.mutableTapOf({ it.tracks }) { copy(tracks = it) }
 
     /** The song as it is kept, following each change to its music and tracks. */
     val storedState = state.tapOf { StoredSong(song, it.music, it.tracks) }
@@ -35,10 +35,10 @@ class MusicEditor(
     /** The text of the song's music. */
     val properties = MusicPropertyEditor(scope, musicState)
 
-    /** The warnings on the track at [index]: each section it defines whose repeats fall short of another track's. */
-    fun sectionWarningsState(index: Int) = state.tapOf { editor ->
+    /** The warnings on the track [trackId]: each section it defines whose repeats fall short of another track's. */
+    fun sectionWarningsState(trackId: TrackId) = state.tapOf { editor ->
         val tracks = editor.tracks
-        val track = tracks.getOrNull(index) ?: return@tapOf emptyList()
+        val track = tracks.firstOrNull { it.trackId == trackId } ?: return@tapOf emptyList()
         val ids = track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId }
         ids.mapNotNull { sectionId ->
             val length = track.lengthOf(sectionId) ?: return@mapNotNull null
@@ -51,75 +51,83 @@ class MusicEditor(
 
     fun readTrack(index: Int) = state.now.tracks.getOrNull(index)
 
+    fun readTrack(trackId: TrackId) = state.now.tracks.firstOrNull { it.trackId == trackId }
+
     /** The track at [index]. */
     fun trackState(index: Int) = state.mutableTapOf({ it.tracks.getOrNull(index) }) { track ->
         if (track == null) this
         else copy(tracks = tracks.toMutableList().apply { set(index, track) })
     }
 
+    /** The track [trackId]. */
+    fun trackState(trackId: TrackId) = state.mutableTapOf({ editor -> editor.tracks.firstOrNull { it.trackId == trackId } }) { track ->
+        if (track == null) this
+        else copy(tracks = tracks.map { if (it.trackId == trackId) track else it })
+    }
+
     /**
-     * The track at [index] as a [T], reading [empty] while there is no such track.
+     * The track [trackId] as a [T], reading [empty] while there is no such track.
      *
      * A removal can reach the lens before the view reading it is rebuilt, which then reads [empty].
      */
-    inline fun <reified T : Track> trackState(index: Int, empty: T): MutableTap<T> =
-        trackState(index).mutableTapOf({ it as? T ?: empty }) { it }
+    inline fun <reified T : Track> trackState(trackId: TrackId, empty: T): MutableTap<T> =
+        trackState(trackId).mutableTapOf({ it as? T ?: empty }) { it }
 
-    /** Whether the editor of the track at [index] is open. */
-    fun isTrackOpenState(index: Int) = state.tapOf { index in it.openTracks }
+    /** Whether the editor of the track [trackId] is open. */
+    fun isTrackOpenState(trackId: TrackId) = state.tapOf { trackId in it.openTracks }
+
+    /** A name for a new track that no track of the song holds: [base], or [base] with the first number that frees it. */
+    fun newTrackId(base: String) = state.now.tracks.newTrackId(base)
 
     /** Adds [track] to the song and opens its editor. */
     fun addTrack(track: Track) = state.update { editor ->
-        editor.copy(tracks = editor.tracks + track, openTracks = editor.openTracks + editor.tracks.size)
+        editor.copy(tracks = editor.tracks + track, openTracks = editor.openTracks + track.trackId)
     }
 
-    /** Opens the editor of the track at [index], or closes it when open. */
-    fun toggleTrack(index: Int) = state.update { editor ->
-        editor.copy(openTracks = if (index in editor.openTracks) editor.openTracks - index else editor.openTracks + index)
+    /** Opens the editor of the track [trackId], or closes it when open. */
+    fun toggleTrack(trackId: TrackId) = state.update { editor ->
+        val openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId else editor.openTracks + trackId
+        editor.copy(openTracks = openTracks)
     }
 
-    /** Names the track at [index] [name], or clears its name when [name] is blank. */
-    fun renameTrack(index: Int, name: String) = state.update { editor ->
-        val track = editor.tracks.getOrNull(index) ?: return@update editor
-        val trackName = name.trim().ifEmpty { null }
+    /**
+     * Names the track [trackId] [name], numbered when another track holds it. A blank name leaves the track as it
+     * is.
+     */
+    fun renameTrack(trackId: TrackId, name: String) = state.update { editor ->
+        val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
+        val base = name.trim().takeIf { it.isNotEmpty() && it != trackId.name } ?: return@update editor
+        val renamedId = editor.tracks.filter { it.trackId != trackId }.newTrackId(base)
         val renamed = when (track) {
-            is ChordTrack -> track.copy(name = trackName)
-            is MelodyTrack -> track.copy(name = trackName)
-            is LyricTrack -> track.copy(name = trackName)
-            is DrumTrack -> track.copy(name = trackName)
+            is ChordTrack -> track.copy(trackId = renamedId)
+            is MelodyTrack -> track.copy(trackId = renamedId)
+            is LyricTrack -> track.copy(trackId = renamedId)
+            is DrumTrack -> track.copy(trackId = renamedId)
         }
-        editor.copy(tracks = editor.tracks.toMutableList().apply { set(index, renamed) })
+        editor.copy(
+            tracks = editor.tracks.map { if (it.trackId == trackId) renamed else it },
+            openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId + renamedId else editor.openTracks,
+        )
     }
 
-    /** Removes the track at [index], keeping open the editors of the tracks after it. */
-    fun removeTrack(index: Int) = state.update { editor ->
-        editor.copy(
-            tracks = editor.tracks.filterIndexed { i, _ -> i != index },
-            openTracks = editor.openTracks.mapNotNull { open ->
-                when {
-                    open == index -> null
-                    open > index -> open - 1
-                    else -> open
-                }
-            }.toSet(),
-        )
+    /** Removes the track [trackId]. */
+    fun removeTrack(trackId: TrackId) = state.update { editor ->
+        editor.copy(tracks = editor.tracks.filter { it.trackId != trackId }, openTracks = editor.openTracks - trackId)
     }
 }
 
 data class MusicEditorState(
     val music: Music,
     val tracks: List<Track> = emptyList(),
-    val openTracks: Set<Int> = emptySet(),
+    val openTracks: Set<TrackId> = emptySet(),
 )
 
 private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
     if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
 }
 
-/** The track's name, or the name of its type when it has none. */
-val Track.label get() = name ?: when (this) {
-    is ChordTrack -> "Chords"
-    is MelodyTrack -> "Melody"
-    is LyricTrack -> "Lyrics"
-    is DrumTrack -> "Drums"
+/** [base], or [base] with the first number from 2 that no track of these holds. */
+private fun List<Track>.newTrackId(base: String): TrackId {
+    val held = map { it.trackId }.toSet()
+    return generateSequence(1) { it + 1 }.map { TrackId(if (it == 1) base else "$base $it") }.first { it !in held }
 }

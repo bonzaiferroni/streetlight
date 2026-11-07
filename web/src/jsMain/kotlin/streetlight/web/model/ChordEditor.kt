@@ -7,21 +7,22 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import streetlight.model.music.ChordTrack
+import streetlight.model.music.TrackId
 import streetlight.model.music.Progression
 import streetlight.model.music.text.ChordParser
 import streetlight.model.music.ui.sectionNotationsOf
 
 /**
- * The state behind the editor of the chord track at [index] of [model], read from chord symbols in the song's
+ * The state behind the editor of the chord track [trackId] of [model], read from chord symbols in the song's
  * notation style. A read replaces the track's sections, arrangements and capo, and leaves the rest of it alone. A
  * change of key, time or style rewrites the text from the track.
  */
 class ChordEditor(
     scope: CoroutineScope,
     private val model: MusicEditor,
-    index: Int,
+    trackId: TrackId,
 ) {
-    private val trackState = model.trackState(index, ChordTrack(emptyList(), emptyList()))
+    private val trackState = model.trackState(trackId, ChordTrack(trackId, emptyList(), emptyList()))
     private val field = NotationField(writeNow())
     private var readSections: List<Progression>? = null
     val textState = field.textState
@@ -44,7 +45,7 @@ class ChordEditor(
         }
         field.launchReads(scope) { text ->
             val music = model.musicState.now
-            val read = ChordParser(music.key, model.notationStyleState.now).read(text, music.time)
+            val read = ChordParser(music.key, model.notationStyleState.now).read(trackId, text, music.time)
             readSections = read.value.sections
             trackState.update { track ->
                 track.copy(

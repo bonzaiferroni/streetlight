@@ -8,6 +8,7 @@ import streetlight.model.music.DrumLane
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.Groove
 import streetlight.model.music.TimeSignature
+import streetlight.model.music.TrackId
 
 /**
  * The parser of a drum track's tab.
@@ -18,12 +19,12 @@ import streetlight.model.music.TimeSignature
  * row naming a drum the system already holds starts the next, so a long groove wraps.
  */
 object DrumParser {
-    /** Reads a drum track from [text], with measures cut by [time]. */
-    fun read(text: String, time: TimeSignature): NotationRead<DrumTrack> {
+    /** Reads the drum track [trackId] from [text], with measures cut by [time]. */
+    fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<DrumTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors)
         val grooves = trackText.sections.map { section -> readGroove(section, time, errors) }
-        return NotationRead(DrumTrack(grooves, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(DrumTrack(trackId, grooves, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Writes [track] as the tab [read] reads, with measures cut by [time]. */

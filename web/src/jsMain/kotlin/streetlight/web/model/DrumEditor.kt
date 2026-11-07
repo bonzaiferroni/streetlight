@@ -5,19 +5,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import streetlight.model.music.DrumTrack
+import streetlight.model.music.TrackId
 import streetlight.model.music.text.DrumParser
 import streetlight.model.music.ui.sectionNotationsOf
 
 /**
- * The state behind the editor of the drum track at [index] of [model]. A read replaces the track's sections,
+ * The state behind the editor of the drum track [trackId] of [model]. A read replaces the track's sections,
  * arrangements and capo, and leaves the rest of it alone. A change of time rewrites the text from the track.
  */
 class DrumEditor(
     scope: CoroutineScope,
     private val model: MusicEditor,
-    index: Int,
+    trackId: TrackId,
 ) {
-    private val trackState = model.trackState(index, DrumTrack(emptyList(), emptyList()))
+    private val trackState = model.trackState(trackId, DrumTrack(trackId, emptyList(), emptyList()))
     private val field = NotationField(writeNow())
     val textState = field.textState
     val errorsState = field.errorsState
@@ -31,7 +32,7 @@ class DrumEditor(
         field.launchRewrites(scope, changes) { writeNow() }
         field.launchReads(scope) { text ->
             val music = model.musicState.now
-            val read = DrumParser.read(text, music.time)
+            val read = DrumParser.read(trackId, text, music.time)
             trackState.update { track ->
                 track.copy(
                     sections = read.value.sections,

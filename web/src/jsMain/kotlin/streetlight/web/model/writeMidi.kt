@@ -56,7 +56,7 @@ private fun conductorChunk(music: Music) = buildBytes {
 /** The notes of [tones] on [channel], each event moved [shift] ticks later. */
 private fun noteChunk(tones: TrackTones, channel: Int, shift: Int) = buildBytes {
     chunk("MTrk") {
-        val name = tones.track.label.encodeToByteArray()
+        val name = tones.track.trackId.name.encodeToByteArray()
         event(0, 0xFF, 0x03, name.size)
         addAll(name.toList())
         val velocity = if (tones.track is MelodyTrack) MELODY_VELOCITY else ACCOMPANIMENT_VELOCITY

@@ -3,21 +3,24 @@ package streetlight.web.view
 import kampfire.model.storeOf
 import koala.SvgFile
 import koala.component.IconStyle
-import koala.SvgPack
 import koala.component.heading5
 import koala.dom.ViewScope
 import koala.dom.component.*
+import koala.dom.layout.OrderHandle
 import koala.dom.layout.flowBlock
+import koala.dom.layout.orderColumn
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
 import kampfire.model.mutableTapOf
+import kampfire.model.tapOf
 import kotlinx.css.pct
 import streetlight.model.music.ChordTrack
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.music.text.NotationError
 import streetlight.model.music.ui.SectionNotation
 import streetlight.web.dom.layout.actionMenu
@@ -33,7 +36,6 @@ import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
-import streetlight.web.model.label
 import kotlin.uuid.Uuid
 
 /** Renders the song's music, the style it is written in and its tracks. */
@@ -56,19 +58,19 @@ private fun ViewScope.trackList() {
     popover(newId) { popover ->
         actionMenu(listOf(
             MenuAction("Chords") {
-                model.addTrack(ChordTrack(emptyList(), emptyList()))
+                model.addTrack(ChordTrack(model.newTrackId("Chords"), emptyList(), emptyList()))
                 popover.close()
             },
             MenuAction("Melody") {
-                model.addTrack(MelodyTrack(emptyList(), emptyList()))
+                model.addTrack(MelodyTrack(model.newTrackId("Melody"), emptyList(), emptyList()))
                 popover.close()
             },
             MenuAction("Lyrics") {
-                model.addTrack(LyricTrack(emptyList(), emptyList()))
+                model.addTrack(LyricTrack(model.newTrackId("Lyrics"), emptyList(), emptyList()))
                 popover.close()
             },
             MenuAction("Drums") {
-                model.addTrack(DrumTrack(emptyList(), emptyList()))
+                model.addTrack(DrumTrack(model.newTrackId("Drums"), emptyList(), emptyList()))
                 popover.close()
             },
         ))
@@ -82,47 +84,48 @@ private fun ViewScope.trackList() {
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
-        // the list follows the labels alone, so an edit to a track's content leaves its open editor in place
-        flowBlock(model.trackLabelsState) { labels ->
-            labels.forEachIndexed { index, label ->
-                model.readTrack(index)?.let { trackRow(index, label, it.svg) }
-            }
-            if (labels.isEmpty()) {
-                textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-            }
+        // keyed by name, so an edit to a track's content or a move leaves its open editor in place
+        orderColumn(model.tracksState, { it.trackId }) { track -> trackRow(track) }
+        flowBlock(model.tracksState.tapOf { it.isEmpty() }) { isEmpty ->
+            if (isEmpty) textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
         }
     }
 }
 
-/** Renders the row of the track at [index] shown as [svg] and [label], which opens its editor below it or closes it. */
-context(model: MusicEditor, player: TrackPlayer)
-private fun ViewScope.trackRow(index: Int, label: String, svg: SvgPack) {
+/**
+ * Renders the row of [track], which opens its editor below it or closes it, with a grip that moves it among the
+ * tracks.
+ */
+context(handle: OrderHandle, model: MusicEditor, player: TrackPlayer)
+private fun ViewScope.trackRow(track: Track) {
+    val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
-    trackNamePopover(nameId, index, label)
+    trackNamePopover(nameId, trackId)
     row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
-        button({ model.toggleTrack(index) }, Flex1) {
+        handle.grip(icon(SvgFile.GripVertical.small, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Move"))))
+        button({ model.toggleTrack(trackId) }, Flex1) {
             row(AlignItemsCenter) {
-                icon(svg.large, Height(5))
-                heading5(label)
+                icon(track.svg.large, Height(5))
+                heading5(trackId.name)
             }
         }
         menuActionsRow(listOf(
             MenuAction("Edit", config = { setPopoverTarget(nameId, true) }) { },
-            MenuAction("Remove") { model.removeTrack(index) },
+            MenuAction("Remove") { model.removeTrack(trackId) },
         ))
     }
-    flowBlock(model.isTrackOpenState(index)) { isOpen ->
-        if (isOpen) trackEditor(index)
+    flowBlock(model.isTrackOpenState(trackId)) { isOpen ->
+        if (isOpen) trackEditor(trackId)
     }
 }
 
-/** A popover with [id] holding a field for the name of the track at [index], starting from [label]. */
+/** A popover with [id] holding a field for the name of the track [trackId]. */
 context(model: MusicEditor)
-private fun ViewScope.trackNamePopover(id: Id, index: Int, label: String) {
+private fun ViewScope.trackNamePopover(id: Id, trackId: TrackId) {
     popover(id) { popover ->
-        val nameState = storeOf(model.readTrack(index)?.name ?: label)
+        val nameState = storeOf(trackId.name)
         val save = {
-            model.renameTrack(index, nameState.now)
+            model.renameTrack(trackId, nameState.now)
             popover.close()
         }
         row(modify(AlignItemsCenter, Padding(2))) {
@@ -132,46 +135,46 @@ private fun ViewScope.trackNamePopover(id: Id, index: Int, label: String) {
     }
 }
 
-/** Renders the editor of the track at [index]. */
+/** Renders the editor of the track [trackId]. */
 context(model: MusicEditor, player: TrackPlayer)
-private fun ViewScope.trackEditor(index: Int) {
-    val track = model.readTrack(index) ?: return
+private fun ViewScope.trackEditor(trackId: TrackId) {
+    val track = model.readTrack(trackId) ?: return
     column {
         when (track) {
             is ChordTrack -> {
-                trackPlayer(index)
-                with(ChordEditor(contentScope, model, index)) {
+                trackPlayer(trackId)
+                with(ChordEditor(contentScope, model, trackId)) {
                     notationPanes("chords", textState, errorsState) { sectionList(sectionsState) }
                 }
             }
             is MelodyTrack -> {
-                trackPlayer(index)
-                with(MelodyEditor(contentScope, model, index)) {
+                trackPlayer(trackId)
+                with(MelodyEditor(contentScope, model, trackId)) {
                     notationPanes("jianpu", textState, errorsState) { sectionList(sectionsState) }
                 }
             }
-            is LyricTrack -> with(LyricEditor(contentScope, model, index)) {
+            is LyricTrack -> with(LyricEditor(contentScope, model, trackId)) {
                 notationPanes("lyrics", textState, errorsState) { sectionList(sectionsState) }
             }
-            is DrumTrack -> with(DrumEditor(contentScope, model, index)) {
+            is DrumTrack -> with(DrumEditor(contentScope, model, trackId)) {
                 notationPanes("drums", textState, errorsState) { sectionList(sectionsState) }
             }
         }
-        flowBlock(model.sectionWarningsState(index)) { warnings ->
+        flowBlock(model.sectionWarningsState(trackId)) { warnings ->
             warnings.forEach { textBlock("Warning: $it", modify(TextSmall, InkDimFg)) }
         }
     }
 }
 
-/** Renders the button that plays the track at [index], or stops it while it plays. */
+/** Renders the button that plays the track [trackId], or stops it while it plays. */
 context(model: MusicEditor, player: TrackPlayer)
-private fun ViewScope.trackPlayer(index: Int) = flowBlock(player.isPlayingState) { isPlaying ->
+private fun ViewScope.trackPlayer(trackId: TrackId) = flowBlock(player.isPlayingState) { isPlaying ->
     if (isPlaying) {
         button(SvgFile.PlayerStop.filled, { player.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     } else {
         button(
             SvgFile.PlayerPlay.filled,
-            { model.readTrack(index)?.let { player.play(model.storedState.now, it) } },
+            { model.readTrack(trackId)?.let { player.play(model.storedState.now, it) } },
             modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")),
         )
     }

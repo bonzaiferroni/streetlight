@@ -6,6 +6,7 @@ import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Phrase
 import streetlight.model.music.Stanza
 import streetlight.model.music.TimeSignature
+import streetlight.model.music.TrackId
 
 /**
  * The parser of a lyric track's text, which keeps its own time with the lengths of the melody's jianpu.
@@ -17,12 +18,12 @@ import streetlight.model.music.TimeSignature
  */
 object LyricParser {
     /**
-     * Reads a lyric track from [text], with measures checked against [time].
+     * Reads the lyric track [trackId] from [text], with measures checked against [time].
      *
      * Each stanza that shares a section with [melody] is checked against its phrase: every syllable starts on a note
      * of the melody, and the stanza ends with it or before.
      */
-    fun read(text: String, time: TimeSignature, melody: MelodyTrack? = null): NotationRead<LyricTrack> {
+    fun read(trackId: TrackId, text: String, time: TimeSignature, melody: MelodyTrack? = null): NotationRead<LyricTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors)
         val stanzas = trackText.sections.map { section ->
@@ -48,7 +49,7 @@ object LyricParser {
             }
             stanza
         }
-        return NotationRead(LyricTrack(stanzas, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(LyricTrack(trackId, stanzas, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time]. */

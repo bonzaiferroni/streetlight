@@ -10,6 +10,7 @@ import streetlight.model.music.Key
 import streetlight.model.music.Progression
 import streetlight.model.music.Seventh
 import streetlight.model.music.TimeSignature
+import streetlight.model.music.TrackId
 
 /**
  * The parser of a chord track's text, with chords written in [style] against [key].
@@ -22,8 +23,8 @@ class ChordParser(
     private val key: Key,
     private val style: NotationStyle,
 ) {
-    /** Reads a chord track from [text], with measures cut by [time]. */
-    fun read(text: String, time: TimeSignature): NotationRead<ChordTrack> {
+    /** Reads the chord track [trackId] from [text], with measures cut by [time]. */
+    fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<ChordTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors)
         val progressions = trackText.sections.map { section ->
@@ -40,7 +41,7 @@ class ChordParser(
             }
             Progression(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
-        return NotationRead(ChordTrack(progressions, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(ChordTrack(trackId, progressions, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time]. */
