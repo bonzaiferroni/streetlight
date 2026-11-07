@@ -4,9 +4,22 @@ import streetlight.model.music.Arrangement
 import streetlight.model.music.Beats
 import streetlight.model.music.Key
 import streetlight.model.music.SectionId
+import streetlight.model.music.TimeSignature
 
 /** The heading that opens the arrangement of a track's text. */
 const val ARRANGEMENT_HEADING = "Arrangement:"
+
+/** The length of a plain note, a quarter note in every meter. */
+internal val QUARTER = Beats.of(1)
+
+/** The mark that adds half a note's length. */
+internal const val DOT = "."
+
+/** The mark that halves a note's length. */
+internal const val EIGHTH = "\\"
+
+/** The mark that quarters a note's length. */
+internal const val SIXTEENTH = "\\\\"
 
 /** A problem found on [line] of a text, counted from 1. */
 data class NotationError(
@@ -126,6 +139,94 @@ internal fun NotationLine.toBarLine(): BarLine {
     val parts = text.split('|')
     val measures = parts.drop(1).let { if (it.lastOrNull()?.isBlank() == true) it.dropLast(1) else it }
     return BarLine(parts.first().trim().ifEmpty { null }, measures.map { it.trim() })
+}
+
+/** The text of a pickup or a measure and the [line] it was written on. */
+internal data class SegmentText(
+    val text: String,
+    val line: Int,
+)
+
+/** A section's text cut into its [pickup], or `null` for none, and its [measures]. */
+internal data class SectionSegments(
+    val pickup: SegmentText?,
+    val measures: List<SegmentText>,
+)
+
+/** Cuts this section into segments: the text before its first bar line is the pickup, and any other is a measure. */
+internal fun SectionText.toSegments(): SectionSegments {
+    val barLines = lines.map { it.number to it.toBarLine() }
+    val pickup = barLines.firstOrNull()?.let { (number, barLine) -> barLine.lead?.let { SegmentText(it, number) } }
+    val measures = barLines.flatMapIndexed { index, (number, barLine) ->
+        (listOfNotNull(barLine.lead?.takeIf { index > 0 }) + barLine.measures).map { SegmentText(it, number) }
+    }
+    return SectionSegments(pickup, measures)
+}
+
+/** The problem with a pickup of [ticks] under [time], or `null` for none. */
+internal fun pickupProblemOf(ticks: Int, time: TimeSignature) =
+    "A pickup of a measure or more".takeIf { ticks >= time.measure.ticks }
+
+/** The problem with a measure of [ticks] under [time], or `null` for none. Only the last measure may fall short. */
+internal fun measureProblemOf(ticks: Int, isLast: Boolean, time: TimeSignature): String? {
+    val measure = time.measure.ticks
+    return "A measure of ${ticks.toBeatsText(time.beat)} beats".takeIf { ticks > measure || (ticks < measure && !isLast) }
+}
+
+/** The ticks counted in beats of [beat]. */
+private fun Int.toBeatsText(beat: Beats) = (this.toDouble() / beat.ticks).let {
+    if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
+}
+
+/** The length a note's [halving] and [dot] marks give it, a plain note being [beat] long. */
+internal fun lengthOf(halving: String, dot: String, beat: Beats): Beats {
+    val base = when (halving) {
+        EIGHTH -> beat.ticks / 2
+        SIXTEENTH -> beat.ticks / 4
+        else -> beat.ticks
+    }
+    return Beats(if (dot.isEmpty()) base else base * 3 / 2)
+}
+
+/** The length marks of the pieces that fill [ticks] shorter than a [beat], longest first. */
+internal fun fractionSuffixesOf(ticks: Int, beat: Int): List<String> {
+    val suffixes = mutableListOf<String>()
+    var remaining = ticks
+    for ((length, suffix) in listOf(beat * 3 / 4 to "$EIGHTH$DOT", beat / 2 to EIGHTH,
+        beat * 3 / 8 to "$SIXTEENTH$DOT", beat / 4 to SIXTEENTH)) {
+        while (remaining >= length) {
+            suffixes.add(suffix)
+            remaining -= length
+        }
+    }
+    return suffixes
+}
+
+/**
+ * Writes [notes] as the text of each measure they fill, each piece of a note written by [write] with the ticks it holds
+ * and whether it carries on a note already written, as it does past a bar line.
+ */
+internal fun <T> writeMeasures(
+    notes: List<T>,
+    measure: Beats,
+    ticksOf: (T) -> Int,
+    write: (T, Int, Boolean) -> List<String>,
+): List<String> {
+    val measures = mutableListOf<MutableList<String>>()
+    var tick = 0
+    for (note in notes) {
+        var remaining = ticksOf(note)
+        var isContinuation = false
+        while (remaining > 0) {
+            if (tick % measure.ticks == 0) measures.add(mutableListOf())
+            val piece = minOf(remaining, measure.ticks - tick % measure.ticks)
+            measures.last().addAll(write(note, piece, isContinuation))
+            tick += piece
+            remaining -= piece
+            isContinuation = true
+        }
+    }
+    return measures.map { it.joinToString(" ") }
 }
 
 /** The tokens of [text], split on whitespace. */

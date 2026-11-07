@@ -27,26 +27,18 @@ class MelodyParser(
             val notes = mutableListOf<MelodyNote>()
             val pickup = mutableListOf<MelodyNote>()
             var isTied = false
-            val measures = section.lines.flatMapIndexed { lineIndex, line ->
-                val barLine = line.toBarLine()
-                barLine.lead?.let { lead ->
-                    if (lineIndex == 0) {
-                        val read = readSegment(lead, QUARTER, pickup, isTied) { errors.add(NotationError(line.number, it)) }
-                        isTied = read.isTied
-                        if (read.ticks >= time.measure.ticks) errors.add(NotationError(line.number, "A pickup of a measure or more"))
-                    }
-                }
-                val leadMeasure = barLine.lead?.takeIf { lineIndex > 0 }
-                (listOfNotNull(leadMeasure) + barLine.measures).map { it to line.number }
-            }
-            measures.forEachIndexed { index, (measure, lineNumber) ->
-                fun error(message: String) = errors.add(NotationError(lineNumber, message))
-                val read = readSegment(measure, QUARTER, notes, isTied, ::error)
+            val segments = section.toSegments()
+            segments.pickup?.let { segment ->
+                fun error(message: String) = errors.add(NotationError(segment.line, message))
+                val read = readSegment(segment.text, QUARTER, pickup, isTied, ::error)
                 isTied = read.isTied
-                val isLast = index == measures.lastIndex
-                if (read.ticks > time.measure.ticks || (read.ticks < time.measure.ticks && !isLast)) {
-                    error("A measure of ${read.ticks.toBeatsText(time.beat)} beats")
-                }
+                pickupProblemOf(read.ticks, time)?.let(::error)
+            }
+            segments.measures.forEachIndexed { index, segment ->
+                fun error(message: String) = errors.add(NotationError(segment.line, message))
+                val read = readSegment(segment.text, QUARTER, notes, isTied, ::error)
+                isTied = read.isTied
+                measureProblemOf(read.ticks, index == segments.measures.lastIndex, time)?.let(::error)
             }
             Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
         }
@@ -104,12 +96,7 @@ class MelodyParser(
     private fun readNote(token: String, beat: Beats): MelodyNote? {
         val match = NOTE.matchEntire(token) ?: return null
         val (accidental, degreeText, octaves, length, dot) = match.destructured
-        val base = when (length) {
-            EIGHTH -> beat.ticks / 2
-            SIXTEENTH -> beat.ticks / 4
-            else -> beat.ticks
-        }
-        val beats = Beats(if (dot.isEmpty()) base else base * 3 / 2)
+        val beats = lengthOf(length, dot, beat)
         val degree = degreeText.toInt()
         if (degree == 0) return if (accidental.isEmpty() && octaves.isEmpty()) MelodyNote(null, beats) else null
         val octave = octaves.count { it == OCTAVE_UP } - octaves.count { it == OCTAVE_DOWN }
@@ -125,31 +112,13 @@ class MelodyParser(
                 pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
                     pickup.flatMap { writeNote(it.interval, it.beats.ticks, QUARTER.ticks, false) }.joinToString(" ")
                 },
-                measures = writeMeasures(phrase.notes, time),
+                measures = writeMeasures(phrase.notes, time.measure, { it.beats.ticks }) { note, ticks, isContinuation ->
+                    writeNote(note.interval, ticks, QUARTER.ticks, isContinuation)
+                },
                 measuresPerLine = phrase.measuresPerLine,
             )
         }
         return writeTrackText(sections, track.arrangements, track.capo)
-    }
-
-    /** Writes [notes] as the jianpu of each measure they fill, holding a note across a bar line where it crosses one. */
-    private fun writeMeasures(notes: List<MelodyNote>, time: TimeSignature): List<String> {
-        val measureTicks = time.measure.ticks
-        val measures = mutableListOf<MutableList<String>>()
-        var tick = 0
-        for (note in notes) {
-            var remaining = note.beats.ticks
-            var isContinuation = false
-            while (remaining > 0) {
-                if (tick % measureTicks == 0) measures.add(mutableListOf())
-                val piece = minOf(remaining, measureTicks - tick % measureTicks)
-                measures.last().addAll(writeNote(note.interval, piece, QUARTER.ticks, isContinuation))
-                tick += piece
-                remaining -= piece
-                isContinuation = true
-            }
-        }
-        return measures.map { it.joinToString(" ") }
     }
 
     /**
@@ -186,18 +155,8 @@ class MelodyParser(
     }
 
     /** Writes [ticks] shorter than a [beat] as eighths and sixteenths of [degree], longest first. */
-    private fun writeFraction(degree: String, ticks: Int, beat: Int): List<String> {
-        val tokens = mutableListOf<String>()
-        var remaining = ticks
-        for ((length, token) in listOf(beat * 3 / 4 to "$degree$EIGHTH$DOT", beat / 2 to "$degree$EIGHTH",
-            beat * 3 / 8 to "$degree$SIXTEENTH$DOT", beat / 4 to "$degree$SIXTEENTH")) {
-            while (remaining >= length) {
-                tokens.add(token)
-                remaining -= length
-            }
-        }
-        return tokens
-    }
+    private fun writeFraction(degree: String, ticks: Int, beat: Int) =
+        fractionSuffixesOf(ticks, beat).map { "$degree$it" }
 
     /** Writes [interval] as its degree, with an octave mark for each octave from the middle one. */
     private fun writeInterval(interval: Interval): String {
@@ -211,21 +170,10 @@ class MelodyParser(
 /** The measures on each line of a phrase when its text gives none. */
 private const val MEASURES_PER_LINE = 4
 
-/** The ticks counted in beats of [beat]. */
-private fun Int.toBeatsText(beat: Beats) = (this.toDouble() / beat.ticks).let {
-    if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
-}
-
-/** The length of a plain note, which jianpu keeps a quarter note in every meter. */
-private val QUARTER = Beats.of(1)
-
 private val NOTE = Regex("""^([#b]?)([0-7])([',]*)(\\{0,2})(\.?)$""")
 private const val MIDDLE_C = 60
 private const val HOLD = "-"
 private const val TIE = "~"
-private const val DOT = "."
-private const val EIGHTH = "\\"
-private const val SIXTEENTH = "\\\\"
 private const val REST_DEGREE = "0"
 private const val OCTAVE_UP = '\''
 private const val OCTAVE_DOWN = ','
