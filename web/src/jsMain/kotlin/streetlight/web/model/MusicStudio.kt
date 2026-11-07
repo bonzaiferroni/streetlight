@@ -24,6 +24,9 @@ class MusicStudio(
     /** The style every song is written in. */
     val notationStyleState = localStoreOf(scope, NOTATION_STYLE_KEY, NotationStyle.Letters)
 
+    /** The parts of each track's notation its editor shows. */
+    val notationViewState = localStoreOf(scope, NOTATION_VIEW_KEY, NotationView.Both)
+
     /** Stores a new song titled [title], returning its id. */
     fun create(title: String): SongId {
         val song = newStoredSong(title)
@@ -56,3 +59,4 @@ private fun newStoredSong(title: String): StoredSong {
 }
 
 private const val NOTATION_STYLE_KEY = "streetlight.notation-style"
+private const val NOTATION_VIEW_KEY = "streetlight.notation-view"

@@ -38,6 +38,7 @@ import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
+import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
 import kotlin.uuid.Uuid
@@ -45,7 +46,10 @@ import kotlin.uuid.Uuid
 /** Renders the song's music, the style it is written in and its tracks. */
 context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
 fun ViewScope.musicEditor() = column {
-    dropMenu(studio.notationStyleState)
+    row {
+        dropMenu(studio.notationStyleState)
+        dropMenu(studio.notationViewState)
+    }
     with(model.properties) {
         notationPanes("music", textState, errorsState) {
             flowBlock(notationState) { notation ->
@@ -56,7 +60,7 @@ fun ViewScope.musicEditor() = column {
     trackList()
 }
 
-context(model: MusicEditor, player: TrackPlayer)
+context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackList() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
@@ -100,7 +104,7 @@ private fun ViewScope.trackList() {
  * Renders the row of [track], which opens its editor below it or closes it, with a grip that moves it among the
  * tracks.
  */
-context(handle: OrderHandle, model: MusicEditor, player: TrackPlayer)
+context(handle: OrderHandle, studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
@@ -146,22 +150,22 @@ private fun ViewScope.trackNamePopover(id: Id, trackId: TrackId) {
 }
 
 /** Renders the editor of the track [trackId]. */
-context(model: MusicEditor)
+context(studio: MusicStudio, model: MusicEditor)
 private fun ViewScope.trackEditor(trackId: TrackId) {
     val track = model.readTrack(trackId) ?: return
     column(PaddingY(1)) {
         when (track) {
             is ChordTrack -> with(ChordEditor(contentScope, model, trackId)) {
-                notationPanes("chords", textState, errorsState) { sectionList(sectionsState) }
+                notationPanes("chords", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
             }
             is MelodyTrack -> with(MelodyEditor(contentScope, model, trackId)) {
-                notationPanes("jianpu", textState, errorsState) { sectionList(sectionsState) }
+                notationPanes("jianpu", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
             }
             is LyricTrack -> with(LyricEditor(contentScope, model, trackId)) {
-                notationPanes("lyrics", textState, errorsState) { sectionList(sectionsState) }
+                notationPanes("lyrics", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
             }
             is DrumTrack -> with(DrumEditor(contentScope, model, trackId)) {
-                notationPanes("drums", textState, errorsState) { sectionList(sectionsState) }
+                notationPanes("drums", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
             }
         }
         flowBlock(model.sectionWarningsState(trackId)) { warnings ->
@@ -170,18 +174,25 @@ private fun ViewScope.trackEditor(trackId: TrackId) {
     }
 }
 
-/** Renders the text in [textState], then [output], what the text reads as, then its [errorsState]. */
+/**
+ * Renders the text in [textState], then [output], what the text reads as, then its [errorsState], each part as
+ * [viewState] shows it. The errors go with the text.
+ */
 private fun ViewScope.notationPanes(
     label: String,
     textState: MutableTap<String>,
     errorsState: Tap<List<NotationError>>,
+    viewState: Tap<NotationView> = storeOf(NotationView.Both),
     output: ViewScope.() -> Unit,
 ) {
-    column {
-        textEditor(textState, label, MonoFont, spellcheck = false)
-        output()
-        flowBlock(errorsState) { errors ->
-            errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
+    // one block for every part, so a hidden part leaves no gap behind
+    flowBlock(viewState, FlexColumn) { view ->
+        if (view != NotationView.NotesOnly) textEditor(textState, label, MonoFont, spellcheck = false)
+        if (view != NotationView.TextOnly) output()
+        if (view != NotationView.NotesOnly) {
+            flowBlock(errorsState) { errors ->
+                errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
+            }
         }
     }
 }
