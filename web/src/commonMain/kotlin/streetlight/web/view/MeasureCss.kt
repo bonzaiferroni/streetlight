@@ -12,6 +12,7 @@ object MeasureStyle {
     val Measure = Strip.withBemElement("measure")
     val Note = Strip.withBemElement("note")
     val Head = Strip.withBemElement("head")
+    val CrossHead = Head.withBemModifier("cross")
     val OpenNote = Note.withBemModifier("open")
     val StemNote = Note.withBemModifier("stem")
     val OneFlagNote = Note.withBemModifier("one-flag")
@@ -68,6 +69,23 @@ $Head {
     border-radius: 50%;
     background: var(--note-ink, rgb(var(--ink)));
 }
+
+$CrossHead { background: none; }
+
+/* two bars crossing at the center, each the diagonal of a square as tall as the head */
+$CrossHead::before, $CrossHead::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--unit-2) * 1.414);
+    height: 2px;
+    translate: -50% -50%;
+    rotate: 45deg;
+    background: var(--note-ink, rgb(var(--ink)));
+}
+
+$CrossHead::after { rotate: -45deg; }
 
 $OpenNote $Head { background: none; }
 

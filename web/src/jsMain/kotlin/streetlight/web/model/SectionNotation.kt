@@ -2,6 +2,8 @@ package streetlight.web.model
 
 import streetlight.model.data.Beats
 import streetlight.model.data.Chord
+import streetlight.model.data.Drum
+import streetlight.model.data.Groove
 import streetlight.model.data.Key
 import streetlight.model.data.Music
 import streetlight.model.data.Phrase
@@ -37,20 +39,33 @@ data class MeasureNotation(
 
 /**
  * A note or chord starting [onset] of the way through its measure, or for a pickup that far before its section, its
- * lowest head centered [step] steps above the bottom of its section. Each of its [heads] and [ledgers] is a head or
- * ledger line, in steps from that lowest head. A note [isRaised] sits between two degrees of the scale, on the line of
- * the lower.
+ * lowest head centered [step] steps above the bottom of its section. Each of its [ledgers] is a ledger line, in steps
+ * from that lowest head, as its [heads] are placed. A note [isRaised] sits between two degrees of the scale, on the line
+ * of the lower. Its [value] is `null` for heads alone, and its [source] is its place in its track, or `null` for the
+ * hits of a drum track, which draw as one note.
  */
 data class NoteNotation(
     val onset: Double,
     val step: Int,
-    val value: NoteValue,
+    val value: NoteValue?,
     val isDotted: Boolean,
-    val heads: List<Int>,
+    val heads: List<NoteHead>,
     val ledgers: List<Int>,
     val isRaised: Boolean,
-    val source: NoteSource,
+    val source: NoteSource?,
 )
+
+/** A head of a note, [step] steps above its lowest head. */
+data class NoteHead(
+    val step: Int,
+    val shape: HeadShape,
+)
+
+/** The shape of a note's head: round for pitches and drums, a cross for cymbals. */
+enum class HeadShape {
+    Round,
+    Cross,
+}
 
 /**
  * The place of a note in its track: [index] of the notes of [sectionId], or of its pickup when [isPickup], drawn at
@@ -95,18 +110,20 @@ fun staffWindowOf(track: Track, key: Key): StaffWindow {
 /** The notation of [sectionId] in [track] against [music] within [window], or `null` when it has no length there. */
 fun sectionNotationOf(track: Track, sectionId: SectionId, music: Music, window: StaffWindow): SectionNotation? {
     val ticks = track.lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return null
-    val sources = noteSourcesOf(track.sectionsOf(sectionId).orEmpty(), music.key)
+    val sections = track.sectionsOf(sectionId).orEmpty()
+    val notes = noteSourcesOf(sections, music.key).map { it.tick to noteNotationOf(it, 0.0, window, music.key) } +
+        drumNotesOf(sections, window)
     val measure = music.time.measure.ticks
     val count = (ticks + measure - 1) / measure
     val measures = List(count) { index ->
         val start = index * measure
         val length = minOf(measure, ticks - start)
-        val notes = sources.filter { it.tick in start until start + length }.map {
-            noteNotationOf(it, (it.tick - start).toDouble() / length, window, music.key)
+        val measureNotes = notes.filter { (tick) -> tick in start until start + length }.map { (tick, note) ->
+            note.copy(onset = (tick - start).toDouble() / length)
         }
-        MeasureNotation(length.toDouble() / ticks, notes)
+        MeasureNotation(length.toDouble() / ticks, measureNotes)
     }
-    val pickup = sources.filter { it.tick < 0 }.map { noteNotationOf(it, it.tick.toDouble() / ticks, window, music.key) }
+    val pickup = notes.filter { (tick) -> tick < 0 }.map { (tick, note) -> note.copy(onset = tick.toDouble() / ticks) }
     return SectionNotation(sectionId, ticks, window.steps, STAFF_LOW - window.low + 2, measures, pickup)
 }
 
@@ -128,7 +145,7 @@ fun noteNotationOf(source: NoteSource, onset: Double, window: StaffWindow, key: 
         step = lowest - window.low + 2,
         value = value,
         isDotted = isDotted,
-        heads = staffSteps.map { it - lowest },
+        heads = staffSteps.map { NoteHead(it - lowest, HeadShape.Round) },
         ledgers = ledgersOf(lowest, staffSteps.max()).map { it - lowest },
         isRaised = isRaised,
         source = source,
@@ -183,6 +200,59 @@ private fun noteSourcesOf(sections: List<Section>, key: Key): List<NoteSource> {
         onset += section.length.ticks
     }
     return sources
+}
+
+/** The tick of each note of the [Groove]s of [sections], laid end to end, paired with its notation within [window]. */
+private fun drumNotesOf(sections: List<Section>, window: StaffWindow): List<Pair<Int, NoteNotation>> {
+    val notes = mutableListOf<Pair<Int, NoteNotation>>()
+    var onset = 0
+    for (section in sections) {
+        if (section is Groove) notes += grooveNotesOf(section, window).map { (tick, note) -> onset + tick to note }
+        onset += section.length.ticks
+    }
+    return notes
+}
+
+/** The tick of each note of [groove], paired with its notation within [window]: the hits of a tick as one note. */
+private fun grooveNotesOf(groove: Groove, window: StaffWindow): List<Pair<Int, NoteNotation>> {
+    return groove.lanes.flatMap { lane ->
+        lane.beats.runningFold(0) { tick, beat -> tick + beat.beats.ticks }
+            .zip(lane.beats)
+            .filter { (_, beat) -> beat.hit != null }
+            .map { (tick, _) -> tick to lane.drum }
+    }.groupBy({ (tick) -> tick }, { (_, drum) -> drum }).map { (tick, drums) -> tick to drumNotationOf(drums, window) }
+}
+
+/** The notation of [drums] struck together within [window], as heads alone. */
+private fun drumNotationOf(drums: List<Drum>, window: StaffWindow): NoteNotation {
+    val staffSteps = drums.map { staffStepOf(it) }
+    val lowest = staffSteps.min()
+    return NoteNotation(
+        onset = 0.0,
+        step = lowest - window.low + 2,
+        value = null,
+        isDotted = false,
+        heads = drums.map { NoteHead(staffStepOf(it) - lowest, headShapeOf(it)) },
+        ledgers = ledgersOf(lowest, staffSteps.max()).map { it - lowest },
+        isRaised = false,
+        source = null,
+    )
+}
+
+/** The staff step [drum] is written on, counted from C of octave 0. */
+private fun staffStepOf(drum: Drum) = when (drum) {
+    Drum.Kick -> 38
+    Drum.Snare -> 42
+    Drum.Tom -> 44
+    Drum.Ride -> 45
+    Drum.HiHat -> 46
+    Drum.Crash -> 47
+}
+
+/** The head [drum] is written with. */
+private fun headShapeOf(drum: Drum) = when (drum) {
+    Drum.Kick, Drum.Snare, Drum.Tom -> HeadShape.Round
+    Drum.HiHat, Drum.Crash, Drum.Ride -> HeadShape.Cross
 }
 
 /** The ledger lines a note reaching from [lowest] to [highest] wants, one on each line between it and the staff. */

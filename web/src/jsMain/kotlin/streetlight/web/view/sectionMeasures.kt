@@ -6,6 +6,7 @@ import koala.dom.component.textBlock
 import koala.modifier.*
 import kotlinx.css.LinearDimension
 import kotlinx.css.pct
+import streetlight.web.model.HeadShape
 import streetlight.web.model.NoteNotation
 import streetlight.web.model.NoteValue
 import streetlight.web.model.SectionNotation
@@ -13,23 +14,26 @@ import web.html.HTMLElement
 
 /**
  * Renders the measures of [notation] as a strip with [mod]: a staff crossed by each measure's bar, then its notes. With
- * [onNote], the notes can be grabbed, and each is handed over with its element and the strip's.
+ * [onNote], the notes with a place in their track can be grabbed, and each note is handed over with its element and
+ * the strip's.
  */
 fun ViewScope.sectionMeasures(
     notation: SectionNotation,
     mod: Modifier? = null,
     onNote: ((NoteNotation, HTMLElement, HTMLElement) -> Unit)? = null,
 ) {
-    val grab = MeasureStyle.Grabbable.takeIf { onNote != null }
     val notes = mutableListOf<Pair<NoteNotation, HTMLElement>>()
+    fun ViewScope.placeNote(note: NoteNotation) {
+        notes += note to note(note, MeasureStyle.Grabbable.takeIf { onNote != null && note.source != null })
+    }
     val strip = div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
         staff(notation)
         notation.measures.forEach { measure ->
             div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
-                measure.notes.forEach { notes += it to note(it, grab) }
+                measure.notes.forEach { placeNote(it) }
             }
         }
-        notation.pickup.forEach { notes += it to note(it, grab) }
+        notation.pickup.forEach { placeNote(it) }
     }
     if (onNote != null) notes.forEach { (note, element) -> onNote(note, element, strip) }
 }
@@ -47,18 +51,21 @@ private fun ViewScope.staff(notation: SectionNotation) {
 }
 
 /**
- * Renders [note] with [mod] at its onset and step: its heads, with the bars of its value above and below them, its dot,
+ * Renders [note] with [mod] at its onset and step: its heads, with any bars of its value above and below them, its dot,
  * its ledger lines, and a sharp when it sits between degrees of the scale.
  */
 fun ViewScope.note(note: NoteNotation, mod: Modifier? = null): HTMLElement {
-    val span = note.heads.max()
+    val span = note.heads.maxOf { it.step }
     val place = modify(
         Css.Left.of((note.onset * 100).pct),
         Css.Bottom.of(LinearDimension("calc(var(--unit) * ${STAFF_STEP_UNITS * note.step} - var(--unit))")),
         Css.Height.of(LinearDimension("calc(var(--unit-2) + var(--unit) * ${STAFF_STEP_UNITS * span})")),
     )
-    return div(modify(mod, MeasureStyle.Note, note.value.shape, place)) {
-        note.heads.forEach { div(modify(MeasureStyle.Head, Css.Bottom.of(stepsHeight(it)))) }
+    return div(modify(mod, MeasureStyle.Note, note.value?.shape, place)) {
+        note.heads.forEach { head ->
+            val crossMod = MeasureStyle.CrossHead.takeIf { head.shape == HeadShape.Cross }
+            div(modify(MeasureStyle.Head, crossMod, Css.Bottom.of(stepsHeight(head.step))))
+        }
         if (note.isDotted) div(MeasureStyle.Dot)
         if (note.isRaised) textBlock("♯", MeasureStyle.Accidental)
         note.ledgers.forEach { steps ->

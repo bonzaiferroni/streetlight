@@ -66,8 +66,9 @@ class LaneEditor(
     fun startNoteDrag(laneIndex: Int, slot: LaneSlot, note: NoteNotation): Boolean {
         if (state.now.selectedLane != laneIndex) return false
         val track = readNotedTrack(laneIndex) ?: return false
-        val cursor = cursorOf(note.source, slot, track)
-        state.update { it.copy(drag = NoteDrag(laneIndex, slot, note.source, note.source, cursor)) }
+        val source = note.source ?: return false
+        val cursor = cursorOf(source, slot, track)
+        state.update { it.copy(drag = NoteDrag(laneIndex, slot, source, source, cursor)) }
         return true
     }
 
