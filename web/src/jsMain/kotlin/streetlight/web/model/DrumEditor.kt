@@ -4,8 +4,9 @@ import kampfire.model.combine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import streetlight.model.data.DrumParser
-import streetlight.model.data.DrumTrack
+import streetlight.model.music.DrumTrack
+import streetlight.model.music.text.DrumParser
+import streetlight.model.music.ui.sectionNotationsOf
 
 /**
  * The state behind the editor of the drum track at [index] of [model]. A read replaces the track's sections,

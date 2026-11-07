@@ -2,9 +2,10 @@ package streetlight.model.data
 
 import kampfire.api.TableId
 import kotlin.uuid.Uuid
+import streetlight.model.music.SongId
 
 /** The id of a record, wrapping its [Uuid]. Each record type has its own. */
-sealed interface RecordId: TableId<Uuid> {
+interface RecordId: TableId<Uuid> {
     val string get() = value.toString()
 }
 

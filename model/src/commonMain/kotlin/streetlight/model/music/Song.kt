@@ -1,8 +1,9 @@
-package streetlight.model.data
+package streetlight.model.music
 
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
+import streetlight.model.data.RecordId
 
 @Serializable
 data class Song(

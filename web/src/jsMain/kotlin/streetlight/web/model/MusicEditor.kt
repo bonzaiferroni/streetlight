@@ -6,16 +6,16 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.data.Beats
-import streetlight.model.data.ChordTrack
-import streetlight.model.data.DrumTrack
-import streetlight.model.data.LyricTrack
-import streetlight.model.data.MelodyTrack
-import streetlight.model.data.lengthOf
-import streetlight.model.data.repeatsOf
-import streetlight.model.data.Music
-import streetlight.model.data.NotationStyle
-import streetlight.model.data.Track
+import streetlight.model.music.Beats
+import streetlight.model.music.ChordTrack
+import streetlight.model.music.DrumTrack
+import streetlight.model.music.LyricTrack
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Music
+import streetlight.model.music.Track
+import streetlight.model.music.lengthOf
+import streetlight.model.music.repeatsOf
+import streetlight.model.music.text.NotationStyle
 
 /** The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState]. */
 class MusicEditor(

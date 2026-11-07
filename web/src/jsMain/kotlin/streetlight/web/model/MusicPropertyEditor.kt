@@ -3,8 +3,8 @@ package streetlight.web.model
 import kampfire.model.MutableTap
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.data.Music
-import streetlight.model.data.MusicParser
+import streetlight.model.music.Music
+import streetlight.model.music.text.MusicParser
 
 /** The text of the key, time, tempo, capo and arrangement of the music at [musicState], and the problems found reading it. */
 class MusicPropertyEditor(

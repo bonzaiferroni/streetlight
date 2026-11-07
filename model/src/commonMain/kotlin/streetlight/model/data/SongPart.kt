@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kotlinx.serialization.Serializable
+import streetlight.model.music.text.NotationStyle
 
 /** A part of a song played by one instrument, with its sequences. */
 @Serializable

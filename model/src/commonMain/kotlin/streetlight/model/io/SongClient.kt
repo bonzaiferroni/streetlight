@@ -6,6 +6,7 @@ import kampfire.api.postApi
 import kampfire.model.Outcome
 import streetlight.model.Api
 import streetlight.model.data.*
+import streetlight.model.music.*
 
 /** The calls of `Api.Songs`. */
 class SongClient(private val transport: ApiTransport) {

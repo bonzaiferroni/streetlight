@@ -14,6 +14,7 @@ import koala.model.DocId
 import koala.model.DocTableItem
 import streetlight.model.data.*
 import streetlight.model.data.Feedback as FeedbackDto
+import streetlight.model.music.*
 
 /**
  * The endpoints of the Streetlight API, as a tree of nodes under `/api/v1`. Both the server and the web client

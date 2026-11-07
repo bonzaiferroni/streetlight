@@ -4,8 +4,8 @@ package streetlight.web.model
 
 import kampfire.model.Tap
 import kampfire.model.storeOf
-import streetlight.model.data.MelodyTrack
-import streetlight.model.data.Track
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Track
 import web.audio.AudioContext
 import web.audio.AudioScheduledSourceNode
 import web.audio.GainNode

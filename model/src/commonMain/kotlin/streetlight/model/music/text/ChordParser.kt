@@ -1,4 +1,15 @@
-package streetlight.model.data
+package streetlight.model.music.text
+
+import streetlight.model.music.Beats
+import streetlight.model.music.Chord
+import streetlight.model.music.ChordNote
+import streetlight.model.music.ChordQuality
+import streetlight.model.music.ChordTrack
+import streetlight.model.music.Chroma
+import streetlight.model.music.Key
+import streetlight.model.music.Progression
+import streetlight.model.music.Seventh
+import streetlight.model.music.TimeSignature
 
 /**
  * The parser of a chord track's text, with chords written in [style] against [key].

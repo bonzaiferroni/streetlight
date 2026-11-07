@@ -3,6 +3,7 @@ package streetlight.model.data
 import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 import kotlin.collections.listOf
+import streetlight.model.music.ChordQuality
 
 /** The notation of a song: its parts, and the sections they are composed into. */
 @Stable

@@ -6,10 +6,10 @@ import koala.dom.component.textBlock
 import koala.modifier.*
 import kotlinx.css.LinearDimension
 import kotlinx.css.pct
-import streetlight.web.model.HeadShape
-import streetlight.web.model.NoteNotation
-import streetlight.web.model.NoteValue
-import streetlight.web.model.SectionNotation
+import streetlight.model.music.ui.HeadShape
+import streetlight.model.music.ui.NoteNotation
+import streetlight.model.music.ui.NoteValue
+import streetlight.model.music.ui.SectionNotation
 import web.html.HTMLElement
 
 /**

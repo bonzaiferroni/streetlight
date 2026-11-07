@@ -14,13 +14,13 @@ import pondui.ui.services.playChord
 import pondui.ui.services.playNote
 import pondui.ui.theme.Pond
 import streetlight.model.data.ChordHelper
-import streetlight.model.data.Chromatic
 import streetlight.model.data.PartSequence
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 import streetlight.model.data.VocalNote
 import streetlight.model.data.VocalSequence
 import streetlight.model.data.parseVocalNote
+import streetlight.model.music.text.Chromatic
 
 @Composable
 fun VocalSequenceEditor(

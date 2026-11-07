@@ -12,7 +12,7 @@ import streetlight.app.ui.BarLine
 import streetlight.model.data.ChordSequence
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
-import streetlight.model.data.notationOf
+import streetlight.model.music.text.notationOf
 
 
 @Composable

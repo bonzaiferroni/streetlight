@@ -5,6 +5,7 @@ import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
+import streetlight.model.music.SongId
 
 /** A user's practice of a song, with their notes and how it went. */
 @Serializable

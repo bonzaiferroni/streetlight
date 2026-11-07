@@ -4,6 +4,7 @@ import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
+import streetlight.model.music.SongId
 
 /** A song requested at an event, by name or to join in playing. */
 @Serializable

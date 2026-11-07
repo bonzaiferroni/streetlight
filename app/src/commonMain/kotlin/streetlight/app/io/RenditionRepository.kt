@@ -6,8 +6,8 @@ import pondui.io.NeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.NewRendition
 import streetlight.model.data.Rendition
-import streetlight.model.data.SongId
 import streetlight.model.data.RenditionId
+import streetlight.model.music.SongId
 
 interface RenditionRepository {
     suspend fun readById(renditionId: RenditionId): Rendition?

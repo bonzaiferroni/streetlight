@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import streetlight.model.data.NotationError
+import streetlight.model.music.text.NotationError
 
 /** The text a user writes in a notation, starting from [initialText], and the problems found reading it. */
 class NotationField(

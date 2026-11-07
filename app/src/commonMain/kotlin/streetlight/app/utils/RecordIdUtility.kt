@@ -9,7 +9,7 @@ import streetlight.model.data.GalaxyId
 import streetlight.model.data.EventId
 import streetlight.model.data.LocationId
 import streetlight.model.data.RecordId
-import streetlight.model.data.SongId
+import streetlight.model.music.SongId
 
 inline fun <reified T: IdRoute<String>> RecordId.toRoute(): T = when (this) {
     is GalaxyId -> StreetProfileRoute(value) as T

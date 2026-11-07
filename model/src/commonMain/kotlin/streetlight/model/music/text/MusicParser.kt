@@ -1,4 +1,11 @@
-package streetlight.model.data
+package streetlight.model.music.text
+
+import streetlight.model.music.Chroma
+import streetlight.model.music.Key
+import streetlight.model.music.Mode
+import streetlight.model.music.Music
+import streetlight.model.music.SectionId
+import streetlight.model.music.TimeSignature
 
 /**
  * The parser of a song's music written as labeled lines, as `Key: C Major`, `Time: 3/4`, `Tempo: 90`, `Capo: 2`

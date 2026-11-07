@@ -29,11 +29,11 @@ import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 import streetlight.model.data.OfferingId
 import streetlight.model.data.RecordId
-import streetlight.model.data.SongId
 import streetlight.model.data.SkillId
 import streetlight.model.data.SpaceType
 import streetlight.model.data.toRecordId
 import kotlin.uuid.Uuid
+import streetlight.model.music.SongId
 
 /**
  * The screens of the app, each with the parse that turns its path into a route.

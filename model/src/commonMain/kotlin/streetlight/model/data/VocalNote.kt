@@ -1,6 +1,9 @@
 package streetlight.model.data
 
 import kotlinx.serialization.Serializable
+import streetlight.model.music.text.NotationStyle
+import streetlight.model.music.text.notationOf
+import streetlight.model.music.text.pitchOf
 
 /** A sung note held for a duration. A `null` pitch is a rest. */
 @Serializable

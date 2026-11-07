@@ -1,6 +1,12 @@
 package streetlight.model.data
 
 import kotlinx.serialization.Serializable
+import streetlight.model.music.ChordQuality
+import streetlight.model.music.Seventh
+import streetlight.model.music.text.Chromatic
+import streetlight.model.music.text.Diatonic
+import streetlight.model.music.text.NotationStyle
+import streetlight.model.music.text.notationOf
 
 /** A chord by its pitch, quality and extensions. */
 @Serializable

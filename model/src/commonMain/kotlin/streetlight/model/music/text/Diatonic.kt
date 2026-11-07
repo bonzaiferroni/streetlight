@@ -1,4 +1,4 @@
-package streetlight.model.data
+package streetlight.model.music.text
 
 /** The seven degrees of the diatonic scale. */
 enum class Diatonic(val degree: Int, val letter: Char, val pitch: Int) {

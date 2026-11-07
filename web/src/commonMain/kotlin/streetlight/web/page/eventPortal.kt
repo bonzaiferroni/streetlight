@@ -12,6 +12,7 @@ import koala.component.*
 import koala.interop.*
 import koala.layout.*
 import koala.page.*
+import streetlight.model.music.*
 import streetlight.web.component.textLogo
 
 /** A standalone page for requesting songs at [event]. */

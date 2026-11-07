@@ -1,4 +1,12 @@
-package streetlight.model.data
+package streetlight.model.music.text
+
+import streetlight.model.music.Beats
+import streetlight.model.music.Interval
+import streetlight.model.music.Key
+import streetlight.model.music.MelodyNote
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Phrase
+import streetlight.model.music.TimeSignature
 
 /**
  * The parser of a melody track's jianpu, with degrees counted from the [Key.majorTonic] of [key].

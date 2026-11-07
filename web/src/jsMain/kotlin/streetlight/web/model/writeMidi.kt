@@ -1,11 +1,11 @@
 package streetlight.web.model
 
-import streetlight.model.data.Beats
-import streetlight.model.data.Drum
-import streetlight.model.data.DrumHit
-import streetlight.model.data.DrumTrack
-import streetlight.model.data.MelodyTrack
-import streetlight.model.data.Music
+import streetlight.model.music.Beats
+import streetlight.model.music.Drum
+import streetlight.model.music.DrumHit
+import streetlight.model.music.DrumTrack
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Music
 import streetlight.web.utility.downloadFile
 
 /** Hands the viewer the tracks of [song] as a MIDI file, laid along its arrangement. */

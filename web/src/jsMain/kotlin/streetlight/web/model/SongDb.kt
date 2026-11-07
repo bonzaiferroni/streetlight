@@ -3,10 +3,10 @@ package streetlight.web.model
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
-import streetlight.model.data.Music
-import streetlight.model.data.Song
-import streetlight.model.data.SongId
-import streetlight.model.data.Track
+import streetlight.model.music.Music
+import streetlight.model.music.Song
+import streetlight.model.music.SongId
+import streetlight.model.music.Track
 import streetlight.web.utility.localStoreOf
 
 /** The songs kept in local storage while the song model is shaped in the editor. */

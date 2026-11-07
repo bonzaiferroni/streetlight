@@ -3,15 +3,15 @@ package streetlight.web.model
 import kampfire.model.reactIn
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.data.Chroma
-import streetlight.model.data.Key
-import streetlight.model.data.Mode
-import streetlight.model.data.Music
-import streetlight.model.data.MusicId
-import streetlight.model.data.NotationStyle
-import streetlight.model.data.Song
-import streetlight.model.data.SongId
-import streetlight.model.data.TimeSignature
+import streetlight.model.music.Chroma
+import streetlight.model.music.Key
+import streetlight.model.music.Mode
+import streetlight.model.music.Music
+import streetlight.model.music.MusicId
+import streetlight.model.music.Song
+import streetlight.model.music.SongId
+import streetlight.model.music.TimeSignature
+import streetlight.model.music.text.NotationStyle
 import streetlight.web.utility.localStoreOf
 
 /** The songs held in [db], and the editors of them. */

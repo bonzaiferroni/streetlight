@@ -25,6 +25,7 @@ import pondui.utils.electrify
 import streetlight.model.data.*
 import streetlight.model.mockDb
 import kotlin.time.Duration.Companion.minutes
+import streetlight.model.music.*
 
 @Composable
 fun EventStatusDash(

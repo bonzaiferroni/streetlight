@@ -6,8 +6,8 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.SongLegacy
-import streetlight.model.data.SongId
 import streetlight.model.io.ApiClient
+import streetlight.model.music.SongId
 
 /** Shows and edits one song. */
 class SongProfile(

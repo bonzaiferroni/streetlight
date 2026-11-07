@@ -17,13 +17,13 @@ import pondui.utils.PreviewFrame
 import streetlight.app.appTheme
 import streetlight.model.data.ChordHelper
 import streetlight.model.data.ChordSequence
-import streetlight.model.data.Chromatic
 import streetlight.model.data.MeasureChord
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 import streetlight.model.data.PartSequence
 import streetlight.model.data.parseMeasureChord
 import streetlight.model.mockDb
+import streetlight.model.music.text.Chromatic
 
 @Composable
 fun ChordSequenceEditor(

@@ -15,6 +15,7 @@ import streetlight.model.data.*
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.app.audio.toMidiSequence
+import streetlight.model.music.text.*
 
 @Composable
 fun SongNotationView(

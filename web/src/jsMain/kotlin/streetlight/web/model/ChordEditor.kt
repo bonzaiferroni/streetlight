@@ -6,9 +6,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import streetlight.model.data.ChordParser
-import streetlight.model.data.ChordTrack
-import streetlight.model.data.Progression
+import streetlight.model.music.ChordTrack
+import streetlight.model.music.Progression
+import streetlight.model.music.text.ChordParser
+import streetlight.model.music.ui.sectionNotationsOf
 
 /**
  * The state behind the editor of the chord track at [index] of [model], read from chord symbols in the song's

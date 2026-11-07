@@ -1,4 +1,4 @@
-package streetlight.model.data
+package streetlight.model.music
 
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline

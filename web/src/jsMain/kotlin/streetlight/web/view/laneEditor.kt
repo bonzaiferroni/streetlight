@@ -13,12 +13,12 @@ import koala.modifier.*
 import koala.page.Id
 import kotlinx.css.LinearDimension
 import kotlinx.css.pct
+import streetlight.model.music.ui.NoteNotation
+import streetlight.model.music.ui.NoteValue
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
 import streetlight.web.model.LaneEditor
 import streetlight.web.model.LaneSection
-import streetlight.web.model.NoteNotation
-import streetlight.web.model.NoteValue
 import streetlight.web.model.TimeWindow
 import web.events.addEventListener
 import web.html.HTMLElement

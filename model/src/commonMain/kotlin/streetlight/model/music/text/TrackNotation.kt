@@ -1,4 +1,9 @@
-package streetlight.model.data
+package streetlight.model.music.text
+
+import streetlight.model.music.Arrangement
+import streetlight.model.music.Beats
+import streetlight.model.music.Key
+import streetlight.model.music.SectionId
 
 /** The heading that opens the arrangement of a track's text. */
 const val ARRANGEMENT_HEADING = "Arrangement:"

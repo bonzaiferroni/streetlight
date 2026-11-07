@@ -1,25 +1,31 @@
 package streetlight.web.model
 
-import streetlight.model.data.Beats
-import streetlight.model.data.Chord
-import streetlight.model.data.ChordNote
-import streetlight.model.data.ChordQuality
-import streetlight.model.data.ChordTrack
-import streetlight.model.data.Chroma
-import streetlight.model.data.Interval
-import streetlight.model.data.Key
-import streetlight.model.data.MelodyNote
-import streetlight.model.data.MelodyTrack
-import streetlight.model.data.Music
-import streetlight.model.data.Phrase
-import streetlight.model.data.Progression
-import streetlight.model.data.Seventh
-import streetlight.model.data.Track
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import streetlight.model.music.Beats
+import streetlight.model.music.Chord
+import streetlight.model.music.ChordNote
+import streetlight.model.music.ChordQuality
+import streetlight.model.music.ChordTrack
+import streetlight.model.music.Chroma
+import streetlight.model.music.Interval
+import streetlight.model.music.Key
+import streetlight.model.music.MelodyNote
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Music
+import streetlight.model.music.Phrase
+import streetlight.model.music.Progression
+import streetlight.model.music.Seventh
+import streetlight.model.music.Track
+import streetlight.model.music.ui.NoteNotation
+import streetlight.model.music.ui.NoteSource
+import streetlight.model.music.ui.NoteValue
+import streetlight.model.music.ui.StaffWindow
+import streetlight.model.music.ui.midiOfStaffStep
+import streetlight.model.music.ui.staffStepOf
 
 /** A note of [section] in the lane at [laneIndex] being dragged from [source] to [moved], drawn as [cursor]. */
 data class NoteDrag(

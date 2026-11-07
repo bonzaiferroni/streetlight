@@ -4,8 +4,8 @@ package streetlight.web.model
 
 import js.buffer.ArrayBuffer
 import js.typedarrays.Float32Array
-import streetlight.model.data.Drum
-import streetlight.model.data.DrumHit
+import streetlight.model.music.Drum
+import streetlight.model.music.DrumHit
 import web.audio.AudioBuffer
 import web.audio.AudioContext
 import web.audio.AudioNode

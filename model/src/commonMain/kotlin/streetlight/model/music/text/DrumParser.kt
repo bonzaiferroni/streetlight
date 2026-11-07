@@ -1,4 +1,13 @@
-package streetlight.model.data
+package streetlight.model.music.text
+
+import streetlight.model.music.Beats
+import streetlight.model.music.Drum
+import streetlight.model.music.DrumBeat
+import streetlight.model.music.DrumHit
+import streetlight.model.music.DrumLane
+import streetlight.model.music.DrumTrack
+import streetlight.model.music.Groove
+import streetlight.model.music.TimeSignature
 
 /**
  * The parser of a drum track's tab.

@@ -9,9 +9,9 @@ import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.SongLegacy
-import streetlight.model.data.SongId
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import streetlight.model.music.SongId
 
 class SongProfileModel(
     songId: SongId,

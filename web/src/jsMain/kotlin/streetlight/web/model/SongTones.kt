@@ -1,25 +1,24 @@
 package streetlight.web.model
 
-import streetlight.model.data.Beats
-import streetlight.model.data.Chord
-import streetlight.model.data.ChordNote
-import streetlight.model.data.ChordQuality
-import streetlight.model.data.Drum
-import streetlight.model.data.DrumHit
-import streetlight.model.data.Groove
-import streetlight.model.data.Key
-import streetlight.model.data.MelodyNote
-import streetlight.model.data.Music
-import streetlight.model.data.Phrase
-import streetlight.model.data.Progression
-import streetlight.model.data.Section
-import streetlight.model.data.Seventh
-import streetlight.model.data.Stanza
-import streetlight.model.data.Track
-import streetlight.model.data.lengthOf
-import streetlight.model.data.repeatsOf
-import streetlight.model.data.sectionOrderOf
-import streetlight.model.data.sectionsOf
+import streetlight.model.music.Beats
+import streetlight.model.music.ChordNote
+import streetlight.model.music.Drum
+import streetlight.model.music.DrumHit
+import streetlight.model.music.Groove
+import streetlight.model.music.Key
+import streetlight.model.music.MelodyNote
+import streetlight.model.music.Music
+import streetlight.model.music.Phrase
+import streetlight.model.music.Progression
+import streetlight.model.music.Section
+import streetlight.model.music.Stanza
+import streetlight.model.music.Track
+import streetlight.model.music.lengthOf
+import streetlight.model.music.repeatsOf
+import streetlight.model.music.sectionOrderOf
+import streetlight.model.music.sectionsOf
+import streetlight.model.music.toMidi
+
 
 /** The seconds a tick of this music lasts at its tempo. */
 val Music.secondsPerTick get() = 60.0 / bpm / time.beat.ticks
@@ -114,28 +113,3 @@ private fun <N> List<N>.toTones(onset: Int, beatsOf: (N) -> Beats, midiOf: (N) -
         tone
     }
 }
-
-/** The MIDI numbers of the root, third, fifth and seventh of the chord in [key], rooted below middle C. */
-fun Chord.toMidi(key: Key): List<Int> {
-    val root = CHORD_ROOT_MIDI + (key.tonic.value + root.value).mod(12)
-    val third = when (quality) {
-        ChordQuality.Minor, ChordQuality.Diminished -> 3
-        ChordQuality.Major, ChordQuality.Augmented -> 4
-        ChordQuality.Sus2 -> 2
-        ChordQuality.Sus4 -> 5
-    }
-    val fifth = when (quality) {
-        ChordQuality.Diminished -> 6
-        ChordQuality.Augmented -> 8
-        else -> 7
-    }
-    val seventh = when (seventh) {
-        Seventh.Minor -> 10
-        Seventh.Major -> 11
-        Seventh.Diminished -> 9
-        null -> null
-    }
-    return listOfNotNull(0, third, fifth, seventh).map { root + it }
-}
-
-private const val CHORD_ROOT_MIDI = 48

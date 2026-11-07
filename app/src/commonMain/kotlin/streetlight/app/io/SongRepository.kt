@@ -8,8 +8,8 @@ import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
 import streetlight.model.data.NewSong
 import streetlight.model.data.SongLegacy
-import streetlight.model.data.SongId
 import streetlight.model.mockDb
+import streetlight.model.music.SongId
 
 interface SongRepository {
     suspend fun readSongs(): List<SongLegacy>?

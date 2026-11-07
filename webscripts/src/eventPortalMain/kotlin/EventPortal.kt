@@ -2,7 +2,7 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.EventId
 import streetlight.model.data.NewRequest
-import streetlight.model.data.SongId
+import streetlight.model.music.SongId
 import streetlight.web.io.ApiClient
 
 class EventPortal(

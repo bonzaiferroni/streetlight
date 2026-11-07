@@ -3,7 +3,7 @@ import koala.core.queryAttribute
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
-import streetlight.model.data.SongId
+import streetlight.model.music.SongId
 import streetlight.web.page.EventPortalSelector
 
 fun main() {

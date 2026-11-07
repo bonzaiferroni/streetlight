@@ -1,4 +1,4 @@
-package streetlight.model.data
+package streetlight.model.music
 
 import kotlinx.serialization.Serializable
 
@@ -52,3 +52,28 @@ enum class Addition {
     Ninth,
     Eleventh,
 }
+
+/** The MIDI numbers of the root, third, fifth and seventh of the chord in [key], rooted below middle C. */
+fun Chord.toMidi(key: Key): List<Int> {
+    val root = CHORD_ROOT_MIDI + (key.tonic.value + root.value).mod(12)
+    val third = when (quality) {
+        ChordQuality.Minor, ChordQuality.Diminished -> 3
+        ChordQuality.Major, ChordQuality.Augmented -> 4
+        ChordQuality.Sus2 -> 2
+        ChordQuality.Sus4 -> 5
+    }
+    val fifth = when (quality) {
+        ChordQuality.Diminished -> 6
+        ChordQuality.Augmented -> 8
+        else -> 7
+    }
+    val seventh = when (seventh) {
+        Seventh.Minor -> 10
+        Seventh.Major -> 11
+        Seventh.Diminished -> 9
+        null -> null
+    }
+    return listOfNotNull(0, third, fifth, seventh).map { root + it }
+}
+
+private const val CHORD_ROOT_MIDI = 48

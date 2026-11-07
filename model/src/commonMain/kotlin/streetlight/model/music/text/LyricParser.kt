@@ -1,4 +1,10 @@
-package streetlight.model.data
+package streetlight.model.music.text
+
+import streetlight.model.music.Beats
+import streetlight.model.music.LyricNote
+import streetlight.model.music.LyricTrack
+import streetlight.model.music.Stanza
+import streetlight.model.music.TimeSignature
 
 /**
  * The parser of a lyric track's text.

@@ -1,7 +1,8 @@
-package streetlight.model.data
+package streetlight.model.music.text
 
 import kampfire.model.Labeled
 import kotlinx.serialization.Serializable
+import streetlight.model.data.ChordLegacy
 
 /** The style pitches and chords are written in. */
 @Serializable

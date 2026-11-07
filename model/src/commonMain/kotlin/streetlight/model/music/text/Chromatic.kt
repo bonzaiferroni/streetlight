@@ -1,4 +1,4 @@
-package streetlight.model.data
+package streetlight.model.music.text
 
 /** The twelve pitches of the chromatic scale. */
 enum class Chromatic(val pitch: Int, val label: String, val diatonic: Diatonic, val isSharp: Boolean) {

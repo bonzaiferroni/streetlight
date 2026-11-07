@@ -1,0 +1,27 @@
+# Package streetlight.model.music
+
+## Introduction
+
+The domain model of music: songs, their tracks, and the sections and notes those hold. It is the source of truth that storage keeps and playback reads.
+
+Notation is the written representation of music. Its forms live in the subpackages: `streetlight.model.music.text` reads and writes music as text, and `streetlight.model.music.ui` lays it out for a UI to draw. This package depends on neither.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `streetlight.model.data` | `RecordId` |
+
+## Tracks
+
+`Music.arrangement` lists the sections every track follows, in order. A `Track` holds its `sections` and its `arrangements`, each an `Arrangement` naming a section built of other sections or arrangements, so content repeated within a section is written once. `sectionsOf` resolves an id into the sections it stands for.
+
+A section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole times as fit, and rests through a section it lacks or what is left after its repeats.
+
+Sections play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
+
+A section may open with a `pickup`, notes that sound at the end of the measure before it. A pickup is shorter than a measure and does not count toward the section's length, and an arrangement takes the pickup of its first section. A section's `measuresPerLine` is the layout of its text, read from the measures on its first line.
+
+A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `Capo: 2`, before its first heading.
+
+A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.

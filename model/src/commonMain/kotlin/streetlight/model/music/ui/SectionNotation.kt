@@ -1,18 +1,20 @@
-package streetlight.web.model
+package streetlight.model.music.ui
 
-import streetlight.model.data.Beats
-import streetlight.model.data.Chord
-import streetlight.model.data.Drum
-import streetlight.model.data.Groove
-import streetlight.model.data.Key
-import streetlight.model.data.Music
-import streetlight.model.data.Phrase
-import streetlight.model.data.Progression
-import streetlight.model.data.Section
-import streetlight.model.data.SectionId
-import streetlight.model.data.Track
-import streetlight.model.data.lengthOf
-import streetlight.model.data.sectionsOf
+import streetlight.model.music.Beats
+import streetlight.model.music.Chord
+import streetlight.model.music.Drum
+import streetlight.model.music.Groove
+import streetlight.model.music.Key
+import streetlight.model.music.Music
+import streetlight.model.music.Phrase
+import streetlight.model.music.Progression
+import streetlight.model.music.Section
+import streetlight.model.music.SectionId
+import streetlight.model.music.Track
+import streetlight.model.music.lengthOf
+import streetlight.model.music.sectionsOf
+import streetlight.model.music.toMidi
+
 
 /**
  * The notation of [sectionId] in a track, [ticks] long and [steps] of the staff tall, with a step the distance from a

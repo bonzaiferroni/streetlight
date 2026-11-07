@@ -6,9 +6,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import streetlight.model.data.MelodyParser
-import streetlight.model.data.MelodyTrack
-import streetlight.model.data.Phrase
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Phrase
+import streetlight.model.music.text.MelodyParser
+import streetlight.model.music.ui.sectionNotationsOf
 
 /**
  * The state behind the editor of the melody track at [index] of [model], read from jianpu. A read replaces the track's
