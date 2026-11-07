@@ -16,6 +16,8 @@ import koala.page.Id
 import kampfire.model.mutableTapOf
 import kampfire.model.tapOf
 import kotlinx.css.pct
+import streetlight.model.music.Beats
+import kotlinx.css.LinearDimension
 import streetlight.model.music.ChordTrack
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.LyricTrack
@@ -186,7 +188,7 @@ private fun ViewScope.notationPanes(
 
 /**
  * Renders each section of [sectionsState] under its name, a strip for each line of its text. A measure takes the same
- * width on every line, so a short line stays short.
+ * width on every line, so a short line stays short, and a beat no more than [MAX_BEAT_UNITS] units.
  */
 private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
@@ -195,12 +197,16 @@ private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = f
         // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
         val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
         val paneTicks = section.measuresPerLine * section.measureTicks + leadTicks
-        lines.forEach { line ->
-            val place = modify(
-                Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
-                Css.Width.of((line.ticks / paneTicks * 100).pct),
-            )
-            sectionMeasures(line, place)
+        // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
+        val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
+        column(Css.MaxWidth.of(maxWidth)) {
+            lines.forEach { line ->
+                val place = modify(
+                    Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
+                    Css.Width.of((line.ticks / paneTicks * 100).pct),
+                )
+                sectionMeasures(line, place)
+            }
         }
     }
 }
@@ -212,3 +218,6 @@ private val Track.svg get() = when (this) {
     is LyricTrack -> SvgFile.Microphone
     is DrumTrack -> SvgFile.Drum
 }
+
+/** The widest a beat of a section's notation is drawn, in units. */
+private const val MAX_BEAT_UNITS = 6
