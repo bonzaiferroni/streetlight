@@ -60,7 +60,7 @@ A container is a `div`. `box` is reserved for children stacked over one another.
 | Component | Role |
 |---|---|
 | [`textField`](../../koala/src/jsMain/kotlin/koala/dom/component/textField.kt) | A text input bound to a field |
-| [`textEditor`](../../koala/src/jsMain/kotlin/koala/dom/component/textEditor.kt) | A plain text area bound to a field |
+| [`textAreaEditor`](../../koala/src/jsMain/kotlin/koala/dom/component/textAreaEditor.kt) | A plain text area bound to a field |
 | [`searchField`](../../koala/src/jsMain/kotlin/koala/dom/component/searchField.kt) | A search input bound to a field |
 | [`checkBox`](../../koala/src/jsMain/kotlin/koala/dom/component/checkBox.kt) | A checkbox bound to a field |
 | [`switch`](../../koala/src/jsMain/kotlin/koala/dom/component/switch.kt) | A labeled on/off switch bound to a field |

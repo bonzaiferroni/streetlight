@@ -16,7 +16,7 @@ import koala.dom.ViewScope
 import koala.dom.launchEffect
 
 /** A plain text area of [rows] rows bound to the markdown [state], labeled [label] over its corner. */
-fun ViewScope.textEditor(
+fun ViewScope.textAreaEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
     mod: Modifier? = null,
@@ -25,7 +25,7 @@ fun ViewScope.textEditor(
     rows: Int = 5,
     placeholder: String? = label,
     block: TEXTAREA.() -> Unit = {}
-) = textEditor(
+) = textAreaEditor(
     text = state.mutableTapOf({ it.value }) { it.toMarkdown() },
     label = label,
     mod = mod,
@@ -37,7 +37,7 @@ fun ViewScope.textEditor(
 )
 
 /** A plain text area of [rows] rows bound to [text], labeled [label] over its corner. */
-fun ViewScope.textEditor(
+fun ViewScope.textAreaEditor(
     text: MutableTap<String>,
     label: String? = null,
     mod: Modifier? = null,
@@ -82,7 +82,7 @@ fun ViewScope.textEditor(
             block()
         }
 
-        launchEffect("textEditor") {
+        launchEffect("textAreaEditor") {
             text.flow.collect {
                 display(it)
             }

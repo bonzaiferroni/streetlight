@@ -13,15 +13,15 @@ import koala.dom.ViewScope
 import koala.dom.launchEffect
 import koala.markdown.EditorStyle
 
-/** [basicEditor] bound to the markdown [state]. */
-fun ViewScope.basicEditor(
+/** [textEditor] bound to the markdown [state]. */
+fun ViewScope.textEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
     mod: Modifier? = null,
     placeholder: String? = label,
     spellcheck: Boolean = true,
     block: DIV.() -> Unit = {}
-) = basicEditor(
+) = textEditor(
     text = state.mutableTapOf({ it.value }) { it.toMarkdown() },
     label = label,
     mod = mod,
@@ -36,7 +36,7 @@ fun ViewScope.basicEditor(
  *
  * Typing writes to [text], and a change to [text] from elsewhere replaces the text.
  */
-fun ViewScope.basicEditor(
+fun ViewScope.textEditor(
     text: MutableTap<String>,
     label: String? = null,
     mod: Modifier? = null,
@@ -81,7 +81,7 @@ fun ViewScope.basicEditor(
         block()
     }
 
-    launchEffect("basicEditor") {
+    launchEffect("textEditor") {
         text.flow.collect {
             display(it)
         }

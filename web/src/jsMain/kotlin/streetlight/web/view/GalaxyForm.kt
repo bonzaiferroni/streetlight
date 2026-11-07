@@ -53,7 +53,7 @@ fun ViewScope.galaxyNameFormRow() = formRow {
 context(model: GalaxyEditor)
 fun ViewScope.galaxyDescriptionFormRow() = formRow {
     formSection("Description") {
-        textEditor(model.descriptionField, "description")
+        textAreaEditor(model.descriptionField, "description")
         bulletsOf(
             FormMod.Bullets,
             "Can be brief or detailed.",
@@ -69,7 +69,7 @@ fun ViewScope.galaxyDescriptionFormRow() = formRow {
 
     formSection("Post Guide") {
         formField {
-            textEditor(model.postGuideField, "Post Guide")
+            textAreaEditor(model.postGuideField, "Post Guide")
             centeredText("Provide guidelines or requirements for the content of community posts.")
         }
     }

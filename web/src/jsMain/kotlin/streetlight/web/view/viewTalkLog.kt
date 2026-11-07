@@ -147,7 +147,7 @@ fun ViewScope.commentEditor(
     val text = storeOf(initialText)
 
     column(modify(Height100Pct, mod)) {
-        textEditor(text, label, Flex1)
+        textAreaEditor(text, label, Flex1)
         row {
             spacer(Flex1)
             button("send", onClick = {

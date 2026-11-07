@@ -7,7 +7,7 @@ import koala.component.heading5
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.OrderHandle
-import koala.dom.markdown.basicEditor
+import koala.dom.markdown.textEditor
 import koala.dom.layout.flowBlock
 import koala.dom.layout.orderColumn
 import koala.model.MenuAction
@@ -190,7 +190,7 @@ private fun ViewScope.notationPanes(
 ) {
     row(AlignItemsStart) {
         column(Flex1) {
-            basicEditor(textState, label, MonoFont, spellcheck = false)
+            textEditor(textState, label, MonoFont, spellcheck = false)
             flowBlock(errorsState) { errors ->
                 errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
             }

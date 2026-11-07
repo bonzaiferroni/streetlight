@@ -17,7 +17,7 @@ fun ViewScope.starProfileForm() = formColumn {
         formSection("Content") {
             textField(model.taglineField, "tagline", maxLength = 50)
             centeredText("The tagline will appear under your name.")
-            textEditor(model.descriptionField, "description")
+            textAreaEditor(model.descriptionField, "description")
             centeredText("The description will appear under the image, before your posts.")
         }
     }

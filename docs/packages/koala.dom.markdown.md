@@ -26,7 +26,7 @@ Markdown rendered in the browser, and the editors that style markdown as it is t
 | Part | Role |
 |---|---|
 | [`markdownEditor`](../../koala/src/jsMain/kotlin/koala/dom/markdown/styledMarkdownEditor.kt) | An editor that styles its markdown as it is typed |
-| [`basicEditor`](../../koala/src/jsMain/kotlin/koala/dom/markdown/basicEditor.kt) | An editable plain-text area as tall as its lines, bound to text or markdown |
+| [`textEditor`](../../koala/src/jsMain/kotlin/koala/dom/markdown/textEditor.kt) | An editable plain-text area as tall as its lines, bound to text or markdown |
 | [`MarkdownEditor`](../../koala/src/jsMain/kotlin/koala/dom/markdown/MarkdownEditor.kt) | The parsed blocks of an editor, cached by chunk |
 | [`MarkdownEditorRenderer`](../../koala/src/jsMain/kotlin/koala/dom/markdown/MarkdownEditorRenderer.kt) | Renders a parsed block as editor markup |
 | [`MarkdownInputParser`](../../koala/src/jsMain/kotlin/koala/dom/markdown/MarkdownInputParser.kt) | Reads an editor's DOM after input and matches it to the parsed markdown |
