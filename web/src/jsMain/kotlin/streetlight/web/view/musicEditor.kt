@@ -7,6 +7,7 @@ import koala.component.heading5
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.OrderHandle
+import koala.dom.markdown.basicEditor
 import koala.dom.layout.flowBlock
 import koala.dom.layout.orderColumn
 import koala.model.MenuAction
@@ -43,7 +44,7 @@ context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
 fun ViewScope.musicEditor() = column {
     dropMenu(studio.notationStyleState)
     with(model.properties) {
-        notationPanes("music", textState, errorsState, rows = 4) {
+        notationPanes("music", textState, errorsState) {
             flowBlock(notationState) { notation ->
                 textBlock(notation, modify(MonoFont, WhiteSpacePreLine))
             }
@@ -185,12 +186,11 @@ private fun ViewScope.notationPanes(
     label: String,
     textState: MutableTap<String>,
     errorsState: Tap<List<NotationError>>,
-    rows: Int = 16,
     output: ViewScope.() -> Unit,
 ) {
     row(AlignItemsStart) {
         column(Flex1) {
-            textEditor(textState, label, rows = rows, textMod = MonoFont)
+            basicEditor(textState, label, MonoFont, spellcheck = false)
             flowBlock(errorsState) { errors ->
                 errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
             }

@@ -4,34 +4,53 @@ import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.modifier.*
 import kampfire.model.MutableTap
+import kampfire.model.mutableTapOf
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLElement
-import koala.dom.component.textEditor
 import koala.dom.ViewScope
 import koala.dom.launchEffect
 import koala.markdown.EditorStyle
 
-/**
- * An editable plain-text area bound to [state], labeled [label] over its corner.
- *
- * Typing writes to [state], and a change to [state] from elsewhere replaces the text.
- */
-fun ViewScope.basicMarkdownEditor(
+/** [basicEditor] bound to the markdown [state]. */
+fun ViewScope.basicEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
     mod: Modifier? = null,
     placeholder: String? = label,
+    spellcheck: Boolean = true,
+    block: DIV.() -> Unit = {}
+) = basicEditor(
+    text = state.mutableTapOf({ it.value }) { it.toMarkdown() },
+    label = label,
+    mod = mod,
+    placeholder = placeholder,
+    spellcheck = spellcheck,
+    block = block,
+)
+
+/**
+ * An editable plain-text area bound to [text], labeled [label] over its corner, as tall as its lines. With
+ * [spellcheck], the browser marks words it does not know.
+ *
+ * Typing writes to [text], and a change to [text] from elsewhere replaces the text.
+ */
+fun ViewScope.basicEditor(
+    text: MutableTap<String>,
+    label: String? = null,
+    mod: Modifier? = null,
+    placeholder: String? = label,
+    spellcheck: Boolean = true,
     block: DIV.() -> Unit = {}
 ): HTMLElement {
-    var currentValue = state.now
+    var currentValue = text.now
     lateinit var element: HTMLElement
 
-    fun display(value: Markdown) {
+    fun display(value: String) {
         if (currentValue == value) return
         currentValue = value
-        element.textContent = value.value
+        element.textContent = value
     }
 
     element = div {
@@ -42,6 +61,7 @@ fun ViewScope.basicMarkdownEditor(
         setAttribute(Attribute.ContentEditable, "plaintext-only")
         setAttribute(Attribute.Role, "textbox")
         setAttribute(Attribute.AriaMultiline, true)
+        setAttribute(Attribute.Spellcheck, spellcheck)
         label?.let {
             setAttribute(Attribute.AriaLabel , it)
         }
@@ -50,19 +70,19 @@ fun ViewScope.basicMarkdownEditor(
         }
 
         onInputFunction = {
-            val newValue = element.innerText.toMarkdown()
+            val newValue = element.innerText
             if (newValue != currentValue) {
                 currentValue = newValue
-                state.set(newValue)
+                text.set(newValue)
             }
         }
 
-        +currentValue.value
+        +currentValue
         block()
     }
 
-    launchEffect("textEditor") {
-        state.flow.collect {
+    launchEffect("basicEditor") {
+        text.flow.collect {
             display(it)
         }
     }
