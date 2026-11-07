@@ -200,8 +200,9 @@ private fun ViewScope.notationPanes(
 private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
         textBlock(section.sectionId.name, TextSmall)
-        // the pickup hangs off the left of the strip, so a margin keeps it within the pane
-        val margin = section.pickupShare / (1 + section.pickupShare)
+        // the pickup and staff hang off the left of the strip, so a margin keeps them within the pane
+        val leadShare = maxOf(section.pickupShare, section.staffLeadShare)
+        val margin = leadShare / (1 + leadShare)
         sectionMeasures(section, Css.MarginLeft.of((margin * 100).pct))
     }
 }

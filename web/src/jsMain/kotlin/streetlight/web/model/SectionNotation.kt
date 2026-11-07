@@ -29,6 +29,9 @@ data class SectionNotation(
 ) {
     /** The length of the pickup, as a share of the section. */
     val pickupShare get() = -(pickup.minOfOrNull { it.onset } ?: 0.0)
+
+    /** The distance the staff sits ahead of the section, a sixteenth, as a share of the section. */
+    val staffLeadShare get() = NoteValue.Sixteenth.ticks.toDouble() / ticks
 }
 
 /** A measure filling [share] of its section, with the [notes] that start in it. */

@@ -38,17 +38,28 @@ fun ViewScope.sectionMeasures(
     if (onNote != null) notes.forEach { (note, element) -> onNote(note, element, strip) }
 }
 
-/** Renders the staff of [notation], with a bar at the start of each measure and one closing it. */
+/**
+ * Renders the staff of [notation] a sixteenth ahead of its section, so each downbeat's note falls within its measure,
+ * with a bar at each end. A bar between measures comes closer to its downbeat to stay halfway from a nearer last note.
+ */
 private fun ViewScope.staff(notation: SectionNotation) {
     val bottom = LinearDimension("calc(var(--unit) * ${STAFF_STEP_UNITS * notation.staffStep} - 1px)")
-    div(modify(MeasureStyle.Staff, Css.Bottom.of(bottom))) {
-        var start = 0.0
-        notation.measures.forEach { measure ->
-            div(modify(MeasureStyle.Bar, Css.Left.of((start * 100).pct)))
-            start += measure.share
+    val leadShare = notation.staffLeadShare
+    val place = modify(Css.Left.of((-leadShare * 100).pct), Css.Right.of((leadShare * 100).pct), Css.Bottom.of(bottom))
+    div(modify(MeasureStyle.Staff, place)) {
+        bar(0.0)
+        var end = 0.0
+        notation.measures.dropLast(1).forEach { measure ->
+            end += measure.share
+            val lastOnset = measure.notes.maxOfOrNull { it.onset } ?: 0.0
+            bar(end + leadShare - minOf(leadShare, (1 - lastOnset) * measure.share / 2))
         }
+        bar(1.0)
     }
 }
+
+/** Renders a bar [share] of the way across its staff. */
+private fun ViewScope.bar(share: Double) = div(modify(MeasureStyle.Bar, Css.Left.of((share * 100).pct)))
 
 /**
  * Renders [note] with [mod] at its onset and step: its heads, with any bars of its value above and below them, its dot,

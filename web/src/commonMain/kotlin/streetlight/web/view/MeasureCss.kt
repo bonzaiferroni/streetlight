@@ -35,15 +35,13 @@ $Strip {
 /* five lines a staff space apart, faded as one so they do not darken where the bars cross them */
 $Staff {
     position: absolute;
-    inset-inline: 0;
     height: calc(var(--unit) * ${STAFF_STEP_UNITS * 8} + 2px);
     opacity: var(--opacity-low);
     overflow: clip;
-    border-inline-end: 2px solid rgb(var(--ink));
     background: repeating-linear-gradient(to top, rgb(var(--ink)) 0 2px, transparent 2px calc(var(--unit) * ${STAFF_STEP_UNITS * 2}));
 }
 
-/* centered on the downbeat, so a section's edges each keep half a bar and two sections meet in a whole one */
+/* centered on its place, so a staff's ends each keep half a bar and two staffs meet in a whole one */
 $Bar {
     position: absolute;
     inset-block: 0;
