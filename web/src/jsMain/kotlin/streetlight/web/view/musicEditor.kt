@@ -110,7 +110,13 @@ private fun ViewScope.trackRow(track: Track) {
                 heading5(trackId.name)
             }
         }
-        menuActionsRow(listOf(
+        // a lyric track makes no sound, so it has nothing to play
+        val play = MenuAction("Play") {
+            if (player.isPlayingState.now) player.stop()
+            else model.readTrack(trackId)?.let { player.play(model.storedState.now, it) }
+        }.takeIf { track !is LyricTrack }
+        menuActionsRow(listOfNotNull(
+            play,
             MenuAction("Edit", config = { setPopoverTarget(nameId, true) }) { },
             MenuAction("Remove") { model.removeTrack(trackId) },
         ))
@@ -137,22 +143,16 @@ private fun ViewScope.trackNamePopover(id: Id, trackId: TrackId) {
 }
 
 /** Renders the editor of the track [trackId]. */
-context(model: MusicEditor, player: TrackPlayer)
+context(model: MusicEditor)
 private fun ViewScope.trackEditor(trackId: TrackId) {
     val track = model.readTrack(trackId) ?: return
-    column {
+    column(PaddingY(1)) {
         when (track) {
-            is ChordTrack -> {
-                trackPlayer(trackId)
-                with(ChordEditor(contentScope, model, trackId)) {
-                    notationPanes("chords", textState, errorsState) { sectionList(sectionsState) }
-                }
+            is ChordTrack -> with(ChordEditor(contentScope, model, trackId)) {
+                notationPanes("chords", textState, errorsState) { sectionList(sectionsState) }
             }
-            is MelodyTrack -> {
-                trackPlayer(trackId)
-                with(MelodyEditor(contentScope, model, trackId)) {
-                    notationPanes("jianpu", textState, errorsState) { sectionList(sectionsState) }
-                }
+            is MelodyTrack -> with(MelodyEditor(contentScope, model, trackId)) {
+                notationPanes("jianpu", textState, errorsState) { sectionList(sectionsState) }
             }
             is LyricTrack -> with(LyricEditor(contentScope, model, trackId)) {
                 notationPanes("lyrics", textState, errorsState) { sectionList(sectionsState) }
@@ -167,35 +167,19 @@ private fun ViewScope.trackEditor(trackId: TrackId) {
     }
 }
 
-/** Renders the button that plays the track [trackId], or stops it while it plays. */
-context(model: MusicEditor, player: TrackPlayer)
-private fun ViewScope.trackPlayer(trackId: TrackId) = flowBlock(player.isPlayingState) { isPlaying ->
-    if (isPlaying) {
-        button(SvgFile.PlayerStop.filled, { player.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
-    } else {
-        button(
-            SvgFile.PlayerPlay.filled,
-            { model.readTrack(trackId)?.let { player.play(model.storedState.now, it) } },
-            modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")),
-        )
-    }
-}
-
-/** Renders the text in [textState] and its [errorsState] beside [output], what the text reads as. */
+/** Renders the text in [textState], then [output], what the text reads as, then its [errorsState]. */
 private fun ViewScope.notationPanes(
     label: String,
     textState: MutableTap<String>,
     errorsState: Tap<List<NotationError>>,
     output: ViewScope.() -> Unit,
 ) {
-    row(AlignItemsStart) {
-        column(Flex1) {
-            textEditor(textState, label, MonoFont, spellcheck = false)
-            flowBlock(errorsState) { errors ->
-                errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
-            }
+    column {
+        textEditor(textState, label, MonoFont, spellcheck = false)
+        output()
+        flowBlock(errorsState) { errors ->
+            errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
         }
-        column(Flex1) { output() }
     }
 }
 
