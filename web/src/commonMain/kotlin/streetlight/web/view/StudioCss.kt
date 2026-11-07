@@ -14,6 +14,12 @@ object StudioStyle {
     val Stage = Class("studio-stage")
     val CursorOverlay = Stage.withBemElement("cursor-overlay")
     val CursorLine = Stage.withBemElement("cursor-line")
+    val Panes = Class("notation-panes")
+    val PanesGrid = Panes.withBemElement("grid")
+    val SplitPanes = PanesGrid.withBemModifier("split")
+    val TextPane = Panes.withBemElement("text")
+    val NotesPane = Panes.withBemElement("notes")
+    val ErrorsPane = Panes.withBemElement("errors")
 }
 
 //language="CSS"
@@ -79,5 +85,30 @@ $CursorLine {
     inset-block: 0;
     width: 1px;
     background: var(--primary-fg);
+}
+
+/* the panes measure the editor's own width, which a drawer narrows below the screen's */
+$Panes { container-type: inline-size; }
+
+$PanesGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--unit);
+}
+
+/* with room, the text and its errors on the left and the notes beside them */
+@container (min-width: 960px) {
+    $SplitPanes {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "text notes"
+            "errors notes";
+    }
+
+    $SplitPanes $TextPane { grid-area: text; }
+    $SplitPanes $NotesPane { grid-area: notes; }
+    $SplitPanes $ErrorsPane { grid-area: errors; }
 }
 """}

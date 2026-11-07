@@ -176,7 +176,7 @@ private fun ViewScope.trackEditor(trackId: TrackId) {
 
 /**
  * Renders the text in [textState], then [output], what the text reads as, then its [errorsState], each part as
- * [viewState] shows it. The errors go with the text.
+ * [viewState] shows it. The errors go with the text. Showing both, a wide pane puts the notes beside the text.
  */
 private fun ViewScope.notationPanes(
     label: String,
@@ -185,13 +185,18 @@ private fun ViewScope.notationPanes(
     viewState: Tap<NotationView> = storeOf(NotationView.Both),
     output: ViewScope.() -> Unit,
 ) {
-    // one block for every part, so a hidden part leaves no gap behind
-    flowBlock(viewState, FlexColumn) { view ->
-        if (view != NotationView.NotesOnly) textEditor(textState, label, MonoFont, spellcheck = false)
-        if (view != NotationView.TextOnly) output()
-        if (view != NotationView.NotesOnly) {
-            flowBlock(errorsState) { errors ->
-                errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
+    flowBlock(viewState, StudioStyle.Panes) { view ->
+        // a lone part keeps the whole width, so only both parts split
+        val split = StudioStyle.SplitPanes.takeIf { view == NotationView.Both }
+        div(modify(StudioStyle.PanesGrid, split)) {
+            if (view != NotationView.NotesOnly) {
+                textEditor(textState, label, modify(MonoFont, StudioStyle.TextPane), spellcheck = false)
+            }
+            if (view != NotationView.TextOnly) div(StudioStyle.NotesPane) { output() }
+            if (view != NotationView.NotesOnly) {
+                flowBlock(errorsState, StudioStyle.ErrorsPane) { errors ->
+                    errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
+                }
             }
         }
     }
