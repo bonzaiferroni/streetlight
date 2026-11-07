@@ -66,7 +66,7 @@ $SectionLabel {
     opacity: 0.5;
 }
 
-$RepeatSection ${MeasureStyle.Note} { opacity: 0.6; }
+$RepeatSection ${MeasureStyle.Note}, $RepeatSection ${MeasureStyle.Syllable} { opacity: 0.6; }
 
 /* above the sections, and clear of the pointer so a drag stays on its note */
 $NoteCursor {

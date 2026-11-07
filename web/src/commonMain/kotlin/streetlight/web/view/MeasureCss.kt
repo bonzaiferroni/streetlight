@@ -5,6 +5,9 @@ import koala.modifier.*
 /** The height of a staff step in units, two to a staff space. */
 const val STAFF_STEP_UNITS = 1.2
 
+/** The width of a note's head in units. */
+private const val HEAD_WIDTH_UNITS = 2.4
+
 object MeasureStyle {
     val Strip = Class("measure-strip")
     val Staff = Strip.withBemElement("staff")
@@ -20,6 +23,7 @@ object MeasureStyle {
     val Dot = Strip.withBemElement("dot")
     val Ledger = Strip.withBemElement("ledger")
     val Accidental = Strip.withBemElement("accidental")
+    val Syllable = Strip.withBemElement("syllable")
     val Grabbable = Note.withBemModifier("grabbable")
     val ControlNote = Note.withBemModifier("control")
 }
@@ -55,7 +59,7 @@ $Measure { position: relative; }
 /* reaching from a chord's lowest head to its highest, centered on its onset so it sounds as the cursor meets its middle */
 $Note {
     position: absolute;
-    width: calc(var(--unit) * 2.4);
+    width: calc(var(--unit) * $HEAD_WIDTH_UNITS);
     height: var(--unit-2);
     translate: -50% 0;
 }
@@ -150,6 +154,15 @@ $Accidental {
     translate: 0 50%;
     line-height: 1;
     color: var(--note-ink, rgb(var(--ink)));
+}
+
+/* on one line through the middle of the strip, however long the word, starting where a head on its onset would */
+$Syllable {
+    position: absolute;
+    top: 50%;
+    translate: calc(var(--unit) * ${-HEAD_WIDTH_UNITS / 2}) -50%;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 $Dot {

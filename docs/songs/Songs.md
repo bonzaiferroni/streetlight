@@ -61,7 +61,7 @@ D A C G
 D A C G
 
 # Streets of Laredo
-Frank H_ Maynard
+Frank H Maynard
 Fret 5
 
 Verse x2

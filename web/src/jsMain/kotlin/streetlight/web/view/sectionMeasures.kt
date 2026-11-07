@@ -10,11 +10,12 @@ import streetlight.model.music.ui.HeadShape
 import streetlight.model.music.ui.NoteNotation
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.SectionNotation
+import streetlight.model.music.ui.SyllableNotation
 import web.html.HTMLElement
 
 /**
- * Renders the measures of [notation] as a strip with [mod]: a staff crossed by each measure's bar, then its notes. With
- * [onNote], the notes with a place in their track can be grabbed, and each note is handed over with its element and
+ * Renders the measures of [notation] as a strip with [mod]: a staff crossed by each measure's bar when it has one, then
+ * its notes and syllables. With [onNote], the notes with a place in their track can be grabbed, and each note is handed over with its element and
  * the strip's.
  */
 fun ViewScope.sectionMeasures(
@@ -27,13 +28,15 @@ fun ViewScope.sectionMeasures(
         notes += note to note(note, MeasureStyle.Grabbable.takeIf { onNote != null && note.source != null })
     }
     val strip = div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
-        staff(notation)
+        if (notation.hasStaff) staff(notation)
         notation.measures.forEach { measure ->
             div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
                 measure.notes.forEach { placeNote(it) }
+                measure.syllables.forEach { syllable(it) }
             }
         }
         notation.pickup.forEach { placeNote(it) }
+        notation.pickupSyllables.forEach { syllable(it) }
     }
     if (onNote != null) notes.forEach { (note, element) -> onNote(note, element, strip) }
 }
@@ -60,6 +63,10 @@ private fun ViewScope.staff(notation: SectionNotation) {
 
 /** Renders a bar [share] of the way across its staff. */
 private fun ViewScope.bar(share: Double) = div(modify(MeasureStyle.Bar, Css.Left.of((share * 100).pct)))
+
+/** Renders [syllable] at its onset, lined up with the left edge of a note's head there. */
+private fun ViewScope.syllable(syllable: SyllableNotation) =
+    textBlock(syllable.text, modify(MeasureStyle.Syllable, Css.Left.of((syllable.onset * 100).pct)))
 
 /**
  * Renders [note] with [mod] at its onset and step: its heads, with any bars of its value above and below them, its dot,
