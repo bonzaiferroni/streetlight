@@ -22,10 +22,12 @@ sealed interface Track {
 @JvmInline @Serializable
 value class TrackId(val name: String)
 
+/** A section of a track, [length] long, written [measuresPerLine] measures to a line of its text. */
 @Serializable
 sealed interface Section {
     val sectionId: SectionId
     val length: Beats
+    val measuresPerLine: Int
 }
 
 @JvmInline @Serializable
@@ -54,7 +56,7 @@ data class Progression(
     override val sectionId: SectionId,
     val notes: List<ChordNote>,
     val pickup: List<ChordNote> = emptyList(),
-    val measuresPerLine: Int = 4,
+    override val measuresPerLine: Int = 4,
 ) : Section {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
@@ -82,7 +84,7 @@ data class Phrase(
     override val sectionId: SectionId,
     val notes: List<MelodyNote>,
     val pickup: List<MelodyNote> = emptyList(),
-    val measuresPerLine: Int = 4,
+    override val measuresPerLine: Int = 4,
 ) : Section {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
@@ -124,7 +126,7 @@ data class Stanza(
     override val sectionId: SectionId,
     val notes: List<LyricNote>,
     val pickup: List<LyricNote> = emptyList(),
-    val measuresPerLine: Int = 2,
+    override val measuresPerLine: Int = 2,
 ) : Section {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
@@ -155,7 +157,7 @@ data class Groove(
     override val sectionId: SectionId,
     val lanes: List<DrumLane>,
     val slotsPerMeasure: Int = 16,
-    val measuresPerLine: Int = 2,
+    override val measuresPerLine: Int = 2,
 ) : Section {
     override val length get() = Beats(lanes.maxOfOrNull { lane -> lane.beats.sumOf { it.beats.ticks } } ?: 0)
 }

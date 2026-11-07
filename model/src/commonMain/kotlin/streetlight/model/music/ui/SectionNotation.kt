@@ -16,12 +16,14 @@ import streetlight.model.music.Track
 import streetlight.model.music.lengthOf
 import streetlight.model.music.sectionsOf
 import streetlight.model.music.toMidi
+import kotlin.math.roundToInt
 
 
 /**
  * The notation of [sectionId] in a track, [ticks] long and [steps] of the staff tall, with a step the distance from a
  * line to the space beside it. The bottom line of the staff sits [staffStep] steps up. The [pickup] notes sound before
- * and [pickupSyllables] the section starts. A section with no [hasStaff] is drawn as its syllables alone.
+ * and [pickupSyllables] the section starts. A section with no [hasStaff] is drawn as its syllables alone. Its text
+ * holds [measuresPerLine] measures of [measureTicks] to a line.
  */
 data class SectionNotation(
     val sectionId: SectionId,
@@ -32,6 +34,8 @@ data class SectionNotation(
     val pickup: List<NoteNotation>,
     val pickupSyllables: List<SyllableNotation>,
     val hasStaff: Boolean,
+    val measuresPerLine: Int,
+    val measureTicks: Int,
 ) {
     /** The length of the pickup, as a share of the section. */
     val pickupShare get() = -((pickup.map { it.onset } + pickupSyllables.map { it.onset }).minOrNull() ?: 0.0)
@@ -39,6 +43,21 @@ data class SectionNotation(
     /** The distance the staff sits ahead of the section, a sixteenth, as a share of the section. */
     val staffLeadShare get() = NoteValue.Sixteenth.ticks.toDouble() / ticks
 }
+
+/**
+ * The notation of each line of this section as its text breaks it, each line's measures sharing the line alone and
+ * the pickup leading the first.
+ */
+fun SectionNotation.lines(): List<SectionNotation> =
+    measures.chunked(measuresPerLine.coerceAtLeast(1)).mapIndexed { index, lineMeasures ->
+        val share = lineMeasures.sumOf { it.share }
+        copy(
+            ticks = (ticks * share).roundToInt(),
+            measures = lineMeasures.map { it.copy(share = it.share / share) },
+            pickup = if (index == 0) pickup.map { it.copy(onset = it.onset / share) } else emptyList(),
+            pickupSyllables = if (index == 0) pickupSyllables.map { it.copy(onset = it.onset / share) } else emptyList(),
+        )
+    }
 
 /** A measure filling [share] of its section, with the [notes] and [syllables] that start in it. */
 data class MeasureNotation(
@@ -157,14 +176,15 @@ fun sectionNotationOf(track: Track, sectionId: SectionId, music: Music, window: 
         pickup = pickup,
         pickupSyllables = pickupSyllables,
         hasStaff = track !is LyricTrack,
+        measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE,
+        measureTicks = measure,
     )
 }
 
-/** The notation of each section and arrangement [track] defines, against [music]. */
+/** The notation of each section [track] defines, against [music], leaving out its arrangements of them. */
 fun sectionNotationsOf(track: Track, music: Music): List<SectionNotation> {
     val window = staffWindowOf(track, music.key)
-    return (track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId })
-        .mapNotNull { sectionNotationOf(track, it, music, window) }
+    return track.sections.mapNotNull { sectionNotationOf(track, it.sectionId, music, window) }
 }
 
 /** The notation of the note at [source], [onset] across what holds it, within [window]. */
@@ -356,3 +376,6 @@ private const val STAFF_HIGH = 45
 
 /** The window of a lyric track, which has no staff: tall enough for a line of text. */
 private val LYRIC_WINDOW = StaffWindow(0, 0)
+
+/** The measures to a line of a section that gives none. */
+private const val DEFAULT_MEASURES_PER_LINE = 4

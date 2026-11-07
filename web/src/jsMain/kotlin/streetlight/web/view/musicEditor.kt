@@ -24,6 +24,7 @@ import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.text.NotationError
 import streetlight.model.music.ui.SectionNotation
+import streetlight.model.music.ui.lines
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.menuActionsRow
 import streetlight.web.dom.layout.actionSection
@@ -183,14 +184,24 @@ private fun ViewScope.notationPanes(
     }
 }
 
-/** Renders each section of [sectionsState] under its name. */
+/**
+ * Renders each section of [sectionsState] under its name, a strip for each line of its text. A measure takes the same
+ * width on every line, so a short line stays short.
+ */
 private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
         textBlock(section.sectionId.name, TextSmall)
-        // the pickup and staff hang off the left of the strip, so a margin keeps them within the pane
-        val leadShare = maxOf(section.pickupShare, section.staffLeadShare)
-        val margin = leadShare / (1 + leadShare)
-        sectionMeasures(section, Css.MarginLeft.of((margin * 100).pct))
+        val lines = section.lines()
+        // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
+        val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
+        val paneTicks = section.measuresPerLine * section.measureTicks + leadTicks
+        lines.forEach { line ->
+            val place = modify(
+                Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
+                Css.Width.of((line.ticks / paneTicks * 100).pct),
+            )
+            sectionMeasures(line, place)
+        }
     }
 }
 
