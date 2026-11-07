@@ -16,6 +16,7 @@ import koala.page.Id
 import kampfire.model.mutableTapOf
 import kampfire.model.tapOf
 import kotlinx.css.pct
+import kotlinx.css.px
 import streetlight.model.music.Beats
 import kotlinx.css.LinearDimension
 import streetlight.model.music.ChordTrack
@@ -215,13 +216,16 @@ private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = f
         val paneTicks = section.measuresPerLine * section.measureTicks + leadTicks
         // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
         val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
-        column(Css.MaxWidth.of(maxWidth)) {
+        // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
+        val headRoom = LinearDimension("calc(var(--unit) * $HEAD_ROOM_UNITS)")
+        column(modify(Css.MaxWidth.of(maxWidth), Css.Gap.of(2.px))) {
             lines.forEach { line ->
                 val place = modify(
                     Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
                     Css.Width.of((line.ticks / paneTicks * 100).pct),
                 )
-                sectionMeasures(line, place)
+                // each line on a band of its own, the band reaching the whole width however short the line
+                div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) { sectionMeasures(line, place) }
             }
         }
     }
@@ -237,3 +241,6 @@ private val Track.svg get() = when (this) {
 
 /** The widest a beat of a section's notation is drawn, in units. */
 private const val MAX_BEAT_UNITS = 6
+
+/** The room left of a section's notation for half a note's head and a sharp before it, in units. */
+private const val HEAD_ROOM_UNITS = 2.4

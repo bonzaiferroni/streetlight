@@ -134,13 +134,16 @@ data class StaffWindow(
     val steps get() = high - low + 4
 }
 
-/** The window of [track] in [key]: the treble staff, stretched to reach every note of the track, with room to drag past. */
-fun staffWindowOf(track: Track, key: Key): StaffWindow {
+/**
+ * The window of [track] in [key]: the treble staff, stretched to reach every note of the track, with [dragRoom] steps
+ * beyond at each end to drag a note past.
+ */
+fun staffWindowOf(track: Track, key: Key, dragRoom: Int = DRAG_ROOM_STEPS): StaffWindow {
     if (track is LyricTrack) return LYRIC_WINDOW
     val steps = track.sections.flatMap { drawnMidisOf(it, key) }.map { staffStepOf(it, key) }
     val low = minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW)
     val high = maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH)
-    return StaffWindow(low - DRAG_ROOM_STEPS, high + DRAG_ROOM_STEPS)
+    return StaffWindow(low - dragRoom, high + dragRoom)
 }
 
 /** The notation of [sectionId] in [track] against [music] within [window], or `null` when it has no length there. */
@@ -181,9 +184,12 @@ fun sectionNotationOf(track: Track, sectionId: SectionId, music: Music, window: 
     )
 }
 
-/** The notation of each section [track] defines, against [music], leaving out its arrangements of them. */
+/**
+ * The notation of each section [track] defines, against [music], leaving out its arrangements of them. Its notes are
+ * not dragged, so its window keeps no room for it.
+ */
 fun sectionNotationsOf(track: Track, music: Music): List<SectionNotation> {
-    val window = staffWindowOf(track, music.key)
+    val window = staffWindowOf(track, music.key, dragRoom = 0)
     return track.sections.mapNotNull { sectionNotationOf(track, it.sectionId, music, window) }
 }
 
