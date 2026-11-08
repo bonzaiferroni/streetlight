@@ -12,7 +12,7 @@ val studioModule = module {
     single { AudioPlayer(get()) }
     single { SongDb(get()) }
     single { TrackPlayer(get()) }
-    single { ClipLibrary() }
+    single { ClipLibrary(get()) }
     single { localDbOf() }
     single { ClipDb(get()) }
     single<MixDb> { LocalMixDb(get()) }

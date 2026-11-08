@@ -24,6 +24,8 @@ A view model with per-view state is not registered in the module. It is built by
 
 What a user keeps on the device lives in the one database `localDbOf` opens, a store per model. Audio stays on the device whether or not the user has an account; the server only knows where a shared clip lives.
 
+A clip's audio is encoded once, as mono Opus at 48 kHz and 96 kbps, beyond which quality gains don't matter to a playground. Every later change to a clip, such as its trim or an effect, stays in its metadata, so the only second encode is a deliberate one, as a mix's export. Stereo returns at mix time.
+
 ## Entity Properties
 
 A property that depends on the entity type is an `Entity` extension function in `EntityUtility.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
@@ -139,7 +141,8 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums the player strikes |
 | [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones |
 | [`ClipDb`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipDb.kt) | The clips a user plays, kept on the device with or without an account |
-| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The audio of each clip, kept as a WAV file in the browser's private file system |
+| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The audio of each clip, kept as an Ogg Opus file in the browser's private file system |
+| [`OpusCodec`](../../web/src/jsMain/kotlin/streetlight/web/model/OpusCodec.kt), [`OggOpus`](../../web/src/jsMain/kotlin/streetlight/web/model/OggOpus.kt) | A clip's one encode to Ogg Opus through WebCodecs, and its decode |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |
 
 ### Editors
