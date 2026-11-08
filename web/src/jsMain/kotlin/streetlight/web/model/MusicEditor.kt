@@ -19,6 +19,7 @@ import streetlight.model.io.MixDb
 import streetlight.model.music.Mix
 import streetlight.model.music.MixId
 import streetlight.model.music.SectionClip
+import streetlight.model.music.SectionId
 import streetlight.model.music.mixOf
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
@@ -163,13 +164,20 @@ class MusicEditor(
     }
 
     /** Binds [clip] to its section in the mix being edited, in place of the clip it held. */
-    fun putClip(clip: SectionClip) {
+    fun putClip(clip: SectionClip) = updateOpenMixClips { clips ->
+        clips.filterNot { it.trackId == clip.trackId && it.sectionId == clip.sectionId } + clip
+    }
+
+    /** Unbinds the clip of the section [sectionId] of the track [trackId] in the mix being edited. */
+    fun removeClip(trackId: TrackId, sectionId: SectionId) = updateOpenMixClips { clips ->
+        clips.filterNot { it.trackId == trackId && it.sectionId == sectionId }
+    }
+
+    private fun updateOpenMixClips(transform: (List<SectionClip>) -> List<SectionClip>) {
         val before = state.now.mixes
         state.update { editor ->
             editor.copy(mixes = editor.mixes.map { mix ->
-                if (mix.mixId != editor.mixId) mix
-                else mix.copy(clips = mix.clips.filterNot { it.trackId == clip.trackId && it.sectionId == clip.sectionId }
-                    + clip)
+                if (mix.mixId != editor.mixId) mix else mix.copy(clips = transform(mix.clips))
             })
         }
         saveMixesChangedSince(before)

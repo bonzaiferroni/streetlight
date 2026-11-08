@@ -201,6 +201,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`LatencyStore`](../../web/src/jsMain/kotlin/streetlight/web/model/LatencyStore.kt) | The setup's round-trip latency from the last calibration |
 | [`LocalMixDb`](../../web/src/jsMain/kotlin/streetlight/web/model/LocalMixDb.kt) | The `MixDb` kept on the device |
+| [`SectionClipEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionClipEditor.kt) | Chooses the clip a mix binds to a track's section among those that fit it |
 | [`SectionMic`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`TakeShelf`](../../web/src/jsMain/kotlin/streetlight/web/model/SongTakes.kt) | Reads the clips of a mix that still fit its song, decoded for playback |

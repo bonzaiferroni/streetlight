@@ -44,6 +44,8 @@ import streetlight.web.model.MusicStudio
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.SectionMic
+import streetlight.web.model.SectionClipEditor
+import streetlight.web.model.getSectionClipEditor
 import streetlight.web.model.SectionMicPhase
 import streetlight.web.model.getSectionMic
 import kotlinx.html.span
@@ -228,11 +230,16 @@ private fun ViewScope.notationPanes(
 context(model: MusicEditor)
 private fun ViewScope.sectionList(trackId: TrackId, sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
+        val clipId = Id(Uuid.random().toString())
         val recordId = Id(Uuid.random().toString())
+        sectionClipPopover(clipId, app.getSectionClipEditor(contentScope, model, trackId, section.sectionId))
         sectionMicPopover(recordId, app.getSectionMic(contentScope, model, trackId, section.sectionId))
         actionSection(
             label = section.sectionId.name,
-            actions = listOf(MenuAction("Record", config = { setPopoverTarget(recordId, true) }) { }),
+            actions = listOf(
+                MenuAction("Clip", config = { setPopoverTarget(clipId, true) }) { },
+                MenuAction("Record", config = { setPopoverTarget(recordId, true) }) { },
+            ),
             heading = { span { +it } },
         ) {
             sectionStrips(section)
@@ -258,6 +265,15 @@ private fun ViewScope.sectionStrips(section: SectionNotation) {
             )
             // each line on a band of its own, the band reaching the whole width however short the line
             div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) { sectionMeasures(line, place) }
+        }
+    }
+}
+
+/** A popover with [id] holding the choice of the clip [clipEditor] binds to its section, or none. */
+private fun ViewScope.sectionClipPopover(id: Id, clipEditor: SectionClipEditor) {
+    popover(id) {
+        flowBlock(clipEditor.namesState, modify(Padding(2), MinWidth(48))) { names ->
+            dropMenu(names, clipEditor.selectedNameState, Flex1)
         }
     }
 }
