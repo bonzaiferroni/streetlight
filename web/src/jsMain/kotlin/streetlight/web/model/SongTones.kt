@@ -76,8 +76,10 @@ fun songTonesOf(
             var tick = onset
             val sections = track.sectionsOf(sectionId).orEmpty()
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
-            val isTaken = TrackSection(track.trackId, sectionId) in taken
             List(track.repeatsOf(sectionId, span)) { sections }.flatten().forEach { section ->
+                // an arrangement expands into its sections, and a take may stand for either
+                val isTaken = TrackSection(track.trackId, sectionId) in taken ||
+                    TrackSection(track.trackId, section.sectionId) in taken
                 if (!isTaken) {
                     tones.addAll(tonesOf(section, tick, music.key, capo))
                     if (section is Groove) drums.addAll(drumTonesOf(section, tick))
@@ -91,15 +93,24 @@ fun songTonesOf(
 
 /**
  * The tick at which [track], one of [tracks], starts [sectionId] each time it plays it along the arrangement of
- * [music], each of its repeats included.
+ * [music], each of its repeats included, whether it is played by name or within an arrangement.
  */
 fun sectionStartsOf(music: Music, tracks: List<Track>, track: Track, sectionId: SectionId): List<Int> {
-    val length = track.lengthOf(sectionId)?.ticks ?: return emptyList()
     val order = tracks.sectionOrderOf(music)
     val onsets = order.runningFold(0) { onset, id -> onset + (tracks.lengthOf(id)?.ticks ?: 0) }
-    return order.zip(onsets).filter { it.first == sectionId }.flatMap { (_, onset) ->
-        val span = tracks.lengthOf(sectionId) ?: Beats(0)
-        List(track.repeatsOf(sectionId, span)) { onset + it * length }
+    return order.zip(onsets).flatMap { (orderId, onset) ->
+        val sections = track.sectionsOf(orderId).orEmpty()
+        val span = tracks.lengthOf(orderId) ?: Beats(0)
+        var tick = onset
+        buildList {
+            repeat(track.repeatsOf(orderId, span)) {
+                if (orderId == sectionId) add(tick)
+                sections.forEach { section ->
+                    if (orderId != sectionId && section.sectionId == sectionId) add(tick)
+                    tick += section.length.ticks
+                }
+            }
+        }
     }
 }
 

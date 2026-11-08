@@ -50,6 +50,9 @@ import streetlight.web.model.SectionMicPhase
 import streetlight.web.model.getSectionMic
 import kotlinx.html.span
 import streetlight.web.model.exportMidi
+import streetlight.web.model.exportOgg
+import streetlight.web.model.toaster
+import kampfire.model.toDataOr
 import kotlin.uuid.Uuid
 
 /** Renders the song's music, the style it is written in and its tracks. */
@@ -78,6 +81,12 @@ private fun ViewScope.trackList() {
             MenuAction("MIDI") {
                 exportMidi(model.storedState.now)
                 popover.close()
+            },
+            MenuAction("Ogg") {
+                popover.close()
+                contentScope.launch {
+                    exportOgg(player, model.storedState.now, model.readTakes()).toDataOr(toaster) { return@launch }
+                }
             },
         ))
     }

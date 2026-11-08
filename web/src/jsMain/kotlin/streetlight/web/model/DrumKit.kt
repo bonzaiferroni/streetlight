@@ -7,7 +7,7 @@ import js.typedarrays.Float32Array
 import streetlight.model.music.Drum
 import streetlight.model.music.DrumHit
 import web.audio.AudioBuffer
-import web.audio.AudioContext
+import web.audio.BaseAudioContext
 import web.audio.AudioNode
 import web.audio.AudioScheduledSourceNode
 import web.audio.BiquadFilterType
@@ -23,7 +23,7 @@ class DrumKit {
 
     /** Strikes [drum] with [hit] into [bus] at [start], and returns the sources it started so they can be stopped. */
     fun strike(
-        context: AudioContext,
+        context: BaseAudioContext,
         bus: AudioNode,
         drum: Drum,
         hit: DrumHit,
@@ -51,7 +51,7 @@ class DrumKit {
      * Clicks a pair of sticks together into [bus] at [start], a drummer's count-off, louder for an [accent], and
      * returns the sources it started.
      */
-    fun sticks(context: AudioContext, bus: AudioNode, start: Double, accent: Boolean): List<AudioScheduledSourceNode> {
+    fun sticks(context: BaseAudioContext, bus: AudioNode, start: Double, accent: Boolean): List<AudioScheduledSourceNode> {
         val scale = if (accent) ACCENT_SCALE else 1.0
         return listOf(
             noise(context, bus, start, BiquadFilterType.bandpass, 3000f, 0.04, 0.3 * scale),
@@ -61,7 +61,7 @@ class DrumKit {
 
     /** A sine falling from [from] to [to] hertz over [drop] seconds, fading out over [decay] seconds from [level]. */
     private fun fallingTone(
-        context: AudioContext,
+        context: BaseAudioContext,
         bus: AudioNode,
         start: Double,
         from: Float,
@@ -81,7 +81,7 @@ class DrumKit {
 
     /** A triangle at [frequency] hertz fading out over [decay] seconds from [level], the body under a snare's noise. */
     private fun bodyTone(
-        context: AudioContext,
+        context: BaseAudioContext,
         bus: AudioNode,
         start: Double,
         frequency: Float,
@@ -99,7 +99,7 @@ class DrumKit {
 
     /** White noise through a filter of [type] at [frequency] hertz, fading out over [decay] seconds from [level]. */
     private fun noise(
-        context: AudioContext,
+        context: BaseAudioContext,
         bus: AudioNode,
         start: Double,
         type: BiquadFilterType,
@@ -121,7 +121,7 @@ class DrumKit {
 
     /** A gain into [bus] that starts at [level] and fades to silence over [decay] seconds. */
     private fun decayGain(
-        context: AudioContext,
+        context: BaseAudioContext,
         bus: AudioNode,
         start: Double,
         decay: Double,
@@ -135,7 +135,7 @@ class DrumKit {
     }
 
     /** A second of white noise, made once for [context]. */
-    private fun readNoise(context: AudioContext): AudioBuffer = noise ?: run {
+    private fun readNoise(context: BaseAudioContext): AudioBuffer = noise ?: run {
         val sampleRate = context.sampleRate
         val samples = FloatArray(sampleRate.toInt()) { Random.nextFloat() * 2 - 1 }
         val buffer = context.createBuffer(1, samples.size, sampleRate)
