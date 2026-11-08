@@ -22,6 +22,11 @@ sealed interface Track {
 @JvmInline @Serializable
 value class TrackId(val name: String)
 
+/** The track id [base], or [base] with the first number after it that [held] leaves free, as `Melody 2`. */
+fun freeTrackIdOf(base: String, held: Set<TrackId>) = generateSequence(1) { it + 1 }
+    .map { TrackId(if (it == 1) base else "$base $it") }
+    .first { it !in held }
+
 /** A section of a track, [length] long, written [measuresPerLine] measures to a line of its text. */
 @Serializable
 sealed interface Section {

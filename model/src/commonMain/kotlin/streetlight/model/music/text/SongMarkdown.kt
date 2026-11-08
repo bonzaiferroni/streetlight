@@ -11,6 +11,7 @@ import streetlight.model.music.Music
 import streetlight.model.music.Song
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
+import streetlight.model.music.freeTrackIdOf
 
 /**
  * The reader and writer of a whole song as markdown: its title as a heading with its artist on the next line, the text
@@ -46,7 +47,7 @@ object SongMarkdown {
             val match = TRACK_HEADING.matchEntire(heading.trim())
             val type = match?.let { TrackType.entries.firstOrNull { it.name.equals(match.groupValues[2], ignoreCase = true) } }
                 ?: return SongMarkdownProblem.trackHeadingOf(headingIndex + 1, heading)
-            val trackId = trackIds.addFreeTrackId(match.groupValues[1].trim())
+            val trackId = freeTrackIdOf(match.groupValues[1].trim(), trackIds).also { trackIds.add(it) }
             val end = trackIndexes.getOrNull(index + 1) ?: lines.size
             val trackText = lines.subList(headingIndex + 1, end).joinToString("\n")
             when (type) {
@@ -92,11 +93,6 @@ object SongMarkdownProblem {
     /** The problem of the track [heading] on [line], which names no known type. */
     fun trackHeadingOf(line: Int, heading: String) = Problem("Line $line: $heading needs a track type, as ## Melody (Melody)")
 }
-
-/** Adds and gives [base] as a track id, or [base] with the first free number after it when this holds it. */
-private fun MutableSet<TrackId>.addFreeTrackId(base: String) = generateSequence(1) { it + 1 }
-    .map { TrackId(if (it == 1) base else "$base $it") }
-    .first { add(it) }
 
 private val Track.type get() = when (this) {
     is ChordTrack -> TrackType.Chords

@@ -14,6 +14,7 @@ import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
+import streetlight.model.music.freeTrackIdOf
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.text.NotationStyle
@@ -127,7 +128,4 @@ private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
 }
 
 /** [base], or [base] with the first number from 2 that no track of these holds. */
-private fun List<Track>.newTrackId(base: String): TrackId {
-    val held = map { it.trackId }.toSet()
-    return generateSequence(1) { it + 1 }.map { TrackId(if (it == 1) base else "$base $it") }.first { it !in held }
-}
+private fun List<Track>.newTrackId(base: String) = freeTrackIdOf(base, mapTo(mutableSetOf()) { it.trackId })
