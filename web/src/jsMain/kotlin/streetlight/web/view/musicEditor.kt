@@ -40,6 +40,7 @@ import streetlight.web.model.MelodyEditor
 import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.web.model.MusicEditor
+import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
@@ -69,7 +70,24 @@ fun ViewScope.musicEditor() = column {
             }
         }
     }
+    mixRow()
     trackList()
+}
+
+/** Renders the name, tempo and sounding key of the open mix, once one loads. */
+context(model: MusicEditor)
+private fun ViewScope.mixRow() = with(model.mix) {
+    flowBlock(isOpenState) { isOpen ->
+        if (!isOpen) return@flowBlock
+        actionSection(label = "Mix") {
+            row(modify(AlignItemsCenter, Padding(1))) {
+                textField(nameState, "name", Flex1)
+                textField(bpmTextState, "tempo", size = 4)
+                dropMenu(MixEditor.TONICS, tonicState)
+                dropMenu(MixEditor.MODES, modeState)
+            }
+        }
+    }
 }
 
 context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)

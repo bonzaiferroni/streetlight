@@ -8,6 +8,8 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.music.Beats
 import streetlight.model.music.ChordTrack
@@ -53,10 +55,26 @@ class MusicEditor(
     val storedState = state.tapOf { StoredSong(song, it.music, it.tracks) }
 
     /** The mix being edited, or `null` while the mixes load. */
-    val mixState = state.tapOf { editor -> editor.mixes.firstOrNull { it.mixId == editor.mixId } }
+    val mixState: MutableTap<Mix?> = state.mutableTapOf(
+        { editor -> editor.mixes.firstOrNull { it.mixId == editor.mixId } },
+    ) { mix ->
+        if (mix == null) this else copy(mixes = mixes.map { if (it.mixId == mix.mixId) mix else it })
+    }
+
+    /** The name, tempo and key of the mix being edited. */
+    val mix = MixEditor(mixState)
+
+    /** The seconds a tick lasts in playback: at the tempo of the mix being edited, or of the music before one loads. */
+    val playbackSecondsPerTickState = state.tapOf { editor ->
+        val bpm = editor.mixes.firstOrNull { it.mixId == editor.mixId }?.bpm ?: editor.music.bpm
+        60.0 / bpm / editor.music.time.pulse.ticks
+    }
 
     init {
-        scope.launch { loadMixes() }
+        scope.launch {
+            loadMixes()
+            saveMixChanges()
+        }
     }
 
     /** The takes of the open mix that still fit the song, or `null` while the mixes load. */
@@ -128,7 +146,6 @@ class MusicEditor(
      * is.
      */
     fun renameTrack(trackId: TrackId, name: String) {
-        val before = state.now.mixes
         state.update { editor ->
             val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
             val base = name.trim().takeIf { it.isNotEmpty() && it != trackId.name } ?: return@update editor
@@ -147,12 +164,10 @@ class MusicEditor(
                 },
             )
         }
-        saveMixesChangedSince(before)
     }
 
     /** Removes the track [trackId], and its clips from every mix. */
     fun removeTrack(trackId: TrackId) {
-        val before = state.now.mixes
         state.update { editor ->
             editor.copy(
                 tracks = editor.tracks.filter { it.trackId != trackId },
@@ -160,7 +175,6 @@ class MusicEditor(
                 mixes = editor.mixes.map { mix -> mix.copy(clips = mix.clips.filter { it.trackId != trackId }) },
             )
         }
-        saveMixesChangedSince(before)
     }
 
     /** Binds [clip] to its section in the mix being edited, in place of the clip it held. */
@@ -174,13 +188,11 @@ class MusicEditor(
     }
 
     private fun updateOpenMixClips(transform: (List<SectionClip>) -> List<SectionClip>) {
-        val before = state.now.mixes
         state.update { editor ->
             editor.copy(mixes = editor.mixes.map { mix ->
                 if (mix.mixId != editor.mixId) mix else mix.copy(clips = transform(mix.clips))
             })
         }
-        saveMixesChangedSince(before)
     }
 
     private suspend fun loadMixes() {
@@ -190,10 +202,13 @@ class MusicEditor(
         state.update { editor -> editor.copy(mixes = mixes, mixId = editor.mixId ?: mixes.first().mixId) }
     }
 
-    private fun saveMixesChangedSince(before: List<Mix>) {
-        val changed = state.now.mixes.filter { it !in before }
-        if (changed.isEmpty()) return
-        scope.launch { changed.forEach { save(it) } }
+    /** Saves each mix as it changes, from whatever edit changes it. */
+    private suspend fun saveMixChanges() {
+        var saved = state.now.mixes
+        state.flow.map { it.mixes }.distinctUntilChanged().collect { mixes ->
+            mixes.filter { it !in saved }.forEach { save(it) }
+            saved = mixes
+        }
     }
 
     private suspend fun save(mix: Mix) {

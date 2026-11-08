@@ -43,8 +43,15 @@ class LaneEditor(
     private val cursorStore = storeOf(0.0)
     private var playJob: Job? = null
 
-    val lanesState = editor.storedState.tapOf { lanesOf(it) }
-    override val endSecondsState: Tap<Double?> = editor.storedState.tapOf { endSecondsOf(it).takeIf { end -> end > 0 } }
+    // laid out at the tempo playback runs at, so the cursor keeps with what sounds
+    val lanesState = editor.storedState.combine(editor.playbackSecondsPerTickState) { song, perTick ->
+        lanesOf(song, perTick)
+    }
+    override val endSecondsState: Tap<Double?> = editor.storedState.combine(
+        editor.playbackSecondsPerTickState,
+    ) { song, perTick ->
+        endSecondsOf(song, perTick).takeIf { it > 0 }
+    }
     override val windowState = state.tapOf { it.window }
     override val totalSecondsState: Tap<Double> = windowState.combine(endSecondsState) { window, endSeconds ->
         maxOf(window.endSeconds, endSeconds ?: 0.0, DEFAULT_WINDOW_SECONDS)
@@ -116,7 +123,7 @@ class LaneEditor(
     // the cursor sits across the window, so its onset is a share of that and not of a measure
     private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
         val music = editor.storedState.now.music
-        val seconds = section.startSeconds + source.tick * music.secondsPerTick
+        val seconds = section.startSeconds + source.tick * editor.playbackSecondsPerTickState.now
         return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
     }
 
@@ -127,8 +134,8 @@ class LaneEditor(
             val endSeconds = endSecondsState.now ?: return@launch
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
             val song = editor.storedState.now
-            val leadSeconds = leadSecondsOf(song)
-            player.play(song, fromSeconds = cursorStore.now - leadSeconds)
+            val leadSeconds = leadSecondsOf(song, editor.playbackSecondsPerTickState.now)
+            player.play(song, fromSeconds = cursorStore.now - leadSeconds, takes = editor.readTakes())
 
             while (true) {
                 awaitAnimationFrame()
@@ -197,11 +204,10 @@ data class LaneSection(
 )
 
 /** The lanes of [song], with each track's sections laid along its arrangement as playback lays them. */
-private fun lanesOf(song: StoredSong): List<Lane> {
+private fun lanesOf(song: StoredSong, secondsPerTick: Double): List<Lane> {
     val tracks = song.tracks
-    val secondsPerTick = song.music.secondsPerTick
     val order = tracks.sectionOrderOf(song.music)
-    val leadSeconds = leadSecondsOf(song)
+    val leadSeconds = leadSecondsOf(song, secondsPerTick)
     return tracks.map { track ->
         val window = staffWindowOf(track, song.music.key)
         val played = mutableSetOf<SectionId>()
@@ -224,15 +230,15 @@ private fun lanesOf(song: StoredSong): List<Lane> {
     }
 }
 
-private fun endSecondsOf(song: StoredSong): Double {
+private fun endSecondsOf(song: StoredSong, secondsPerTick: Double): Double {
     val ticks = song.tracks.sectionOrderOf(song.music).sumOf { song.tracks.lengthOf(it)?.ticks ?: 0 }
-    return leadSecondsOf(song) + ticks * song.music.secondsPerTick
+    return leadSecondsOf(song, secondsPerTick) + ticks * secondsPerTick
 }
 
 /** The length of the lead-in of [song]: its earliest pickup, and room before it for the head of the first note. */
-private fun leadSecondsOf(song: StoredSong): Double {
+private fun leadSecondsOf(song: StoredSong, secondsPerTick: Double): Double {
     val firstTick = songTonesOf(song.music, song.tracks, song.tracks).mapNotNull { it.firstTick }.minOrNull() ?: 0
-    return -minOf(firstTick, 0) * song.music.secondsPerTick + LEAD_ROOM_SECONDS
+    return -minOf(firstTick, 0) * secondsPerTick + LEAD_ROOM_SECONDS
 }
 
 private const val DEFAULT_WINDOW_SECONDS = 12.0
