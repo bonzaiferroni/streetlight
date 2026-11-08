@@ -24,3 +24,7 @@ Each track type has a text notation, read and written by its `FooParser`, as `Ch
 A lyric track read against a melody is checked by section: each syllable starts on a melody note, and the stanza ends with the phrase or before.
 
 A notation that names absolute pitches, such as letter chords, adds the tonic when written and subtracts it when read.
+
+## Song Markdown
+
+`SongMarkdown` carries a whole song as one markdown document built from the same notations, with a heading per track naming its type. A read refuses only a document whose structure it cannot follow; the notation within is read as leniently as an editor reads it. `docs/songs/amazing-grace.md` is an example.

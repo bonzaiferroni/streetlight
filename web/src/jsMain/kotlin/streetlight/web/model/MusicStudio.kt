@@ -1,5 +1,8 @@
 package streetlight.web.model
 
+import kampfire.model.Ok
+import kampfire.model.Outcome
+import kampfire.model.toDataOr
 import kampfire.model.reactIn
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
@@ -12,6 +15,7 @@ import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.text.NotationStyle
+import streetlight.model.music.text.SongMarkdown
 import streetlight.web.utility.localStoreOf
 
 /** The songs held in [db], and the editors of them. */
@@ -35,6 +39,20 @@ class MusicStudio(
     }
 
     fun remove(songId: SongId) = db.remove(songId)
+
+    fun readSong(songId: SongId) = db.read(songId)
+
+    /**
+     * Stores a new song read from the markdown [text], titled for [fileName] when it names no title, returning its id,
+     * or gives the problem that kept it from being read.
+     */
+    fun importSong(text: String, fileName: String): Outcome<SongId> {
+        val blank = newStoredSong(fileName.substringBeforeLast('.'))
+        val imported = SongMarkdown.read(text, blank.song, blank.music, notationStyleState.now).toDataOr { return it }
+
+        db.save(StoredSong(imported.song, imported.music, imported.tracks))
+        return Ok(imported.song.songId)
+    }
 
     /** An editor of the song of [songId] for as long as [scope] lasts, saving its changes, or `null` with no such song. */
     fun editorOf(scope: CoroutineScope, songId: SongId): MusicEditor? {

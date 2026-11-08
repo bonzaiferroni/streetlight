@@ -64,6 +64,15 @@ fun ViewScope.musicEditor() = column {
 context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackList() {
     val newId = Id(Uuid.random().toString())
+    val exportId = Id(Uuid.random().toString())
+    popover(exportId) { popover ->
+        actionMenu(listOf(
+            MenuAction("MIDI") {
+                exportMidi(model.storedState.now)
+                popover.close()
+            },
+        ))
+    }
     popover(newId) { popover ->
         actionMenu(listOf(
             MenuAction("Chords") {
@@ -89,7 +98,7 @@ private fun ViewScope.trackList() {
         actions = listOf(
             MenuAction("Play") { player.play(model.storedState.now) },
             MenuAction("Stop") { player.stop() },
-            MenuAction("Export") { exportMidi(model.storedState.now) },
+            MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {

@@ -1,32 +1,38 @@
 # Amazing Grace
+John Newton
+
 Key: G Major
 Time: 3/4
 Tempo: 90
 Capo: -5
 Arrangement: Song
 
-## Chords
+## Chords (Chords)
+
 Song:
 | G | G7 | C | G |
 | G | Am | D | D |
 | G | G7 | C | G |
 | Em | D | G | G |
 
-## Melody
+## Melody (Melody)
+
 Song:
 5, | 1 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 5 - - | - - 3 |
 | 5 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 1 - - | - - - |
 
-## Harmony
+## Harmony (Melody)
+
 Song:
 5, | 5, - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 7, - - | - - 1 |
 | 3 - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 3, - - | - - - |
 
-## Drums
+## Drums (Drums)
+
 FillA:
 HH|x-x-x-x-x-x-|x-x-x-x-x-x-|
 SD|----o---o---|----o---o---|
@@ -39,7 +45,7 @@ BD|o-----------|----o-o-o-o-|
 
 Song: FillA FillB
 
-## Lyrics
+## Lyrics (Lyrics)
 
 VerseA:
 A- | ma- _ zing | grace _ how |

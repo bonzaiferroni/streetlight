@@ -48,3 +48,4 @@ tools/svg/**/__pycache__/
 /docs/kdoc/
 /logs
 /data
+/.claude/
