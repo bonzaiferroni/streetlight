@@ -34,16 +34,16 @@ class TrackPlayer(
     val isPlayingState: Tap<Boolean> = playingStore
 
     /**
-     * Plays [track] of [song] alone, or every track when it is `null`, through the song's arrangement. Each section
+     * Plays [tracks] of [song], or every track when it is `null`, through the song's arrangement. Each section
      * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
      * of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
      * sound when it is `null`. Any playback already running is stopped first.
      *
      * Each of [takes] plays in place of the tones of its section, and the song then runs at the takes' tempo.
      */
-    fun play(song: StoredSong, track: Track? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
+    fun play(song: StoredSong, tracks: List<Track>? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
         stop()
-        val plan = songPlanOf(song, track?.let { listOf(it) } ?: song.tracks, takes) ?: return
+        val plan = songPlanOf(song, tracks ?: song.tracks, takes) ?: return
         val context = audio.readContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus

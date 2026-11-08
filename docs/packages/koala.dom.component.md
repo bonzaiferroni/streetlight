@@ -89,7 +89,8 @@ A container is a `div`. `box` is reserved for children stacked over one another.
 | Component | Role |
 |---|---|
 | [`image`](../../koala/src/jsMain/kotlin/koala/dom/component/image.kt) | An image, hidden while there is none |
-| [`icon`](../../koala/src/jsMain/kotlin/koala/dom/component/icon.kt) | An SVG icon in the current color |
+| [`icon`](../../koala/src/jsMain/kotlin/koala/dom/component/icon.kt) | An SVG icon in the current color, fixed or following a tap |
+| [`iconToggle`](../../koala/src/jsMain/kotlin/koala/dom/component/iconToggle.kt) | A button whose icon shows a boolean tap, pressed while on |
 | [`lottie`](../../koala/src/jsMain/kotlin/koala/dom/component/lottie.kt) | A Lottie animation, started at once |
 | [`geoMapMount`](../../koala/src/jsMain/kotlin/koala/dom/component/geoMapMount.kt) | The element a map is mounted into |
 | [`lineChart`](../../koala/src/jsMain/kotlin/koala/dom/component/lineChart.kt) | A line chart redrawn from a flow |

@@ -13,6 +13,7 @@ import streetlight.model.music.ChordTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.SectionId
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionOrderOf
@@ -66,6 +67,24 @@ class LaneEditor(
 
     /** Whether the lane at [laneIndex] is selected, which lets its notes be dragged. */
     fun isLaneSelectedState(laneIndex: Int) = state.tapOf { it.selectedLane == laneIndex }
+
+    /** Whether the track [trackId] plays its tones in place of its takes. */
+    fun isTonedState(trackId: TrackId) = state.tapOf { trackId in it.tonedTracks }
+
+    /** Whether the track [trackId] is silent in playback. */
+    fun isMutedState(trackId: TrackId) = state.tapOf { trackId in it.mutedTracks }
+
+    /** Whether the track [trackId] plays alone. */
+    fun isSoloedState(trackId: TrackId) = state.tapOf { it.soloId == trackId }
+
+    /** Plays the tones of the track [trackId] in place of its takes, or its takes again. */
+    fun toggleTones(trackId: TrackId) = state.update { it.copy(tonedTracks = it.tonedTracks.toggled(trackId)) }
+
+    /** Silences the track [trackId] in playback, or sounds it again. */
+    fun toggleMute(trackId: TrackId) = state.update { it.copy(mutedTracks = it.mutedTracks.toggled(trackId)) }
+
+    /** Plays the track [trackId] alone, muted or not, or every track again when it already plays alone. */
+    fun toggleSolo(trackId: TrackId) = state.update { it.copy(soloId = trackId.takeIf { id -> id != it.soloId }) }
 
     /** Selects the lane at [laneIndex], or clears the selection when it is already selected. */
     fun toggleLane(laneIndex: Int) = state.update {
@@ -127,7 +146,10 @@ class LaneEditor(
         return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
     }
 
-    /** Plays every track together from the cursor, which follows playback; from the start once past the end. */
+    /**
+     * Plays the tracks together from the cursor, which follows playback; from the start once past the end. A soloed
+     * track plays alone, muted tracks drop out, and a track playing its tones leaves its takes out.
+     */
     fun play() {
         playJob?.cancel()
         playJob = scope.launch {
@@ -135,7 +157,14 @@ class LaneEditor(
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
             val song = editor.storedState.now
             val leadSeconds = leadSecondsOf(song, editor.playbackSecondsPerTickState.now)
-            player.play(song, fromSeconds = cursorStore.now - leadSeconds, takes = editor.readTakes())
+            val lanes = state.now
+            val playing = song.tracks.filter { track ->
+                lanes.soloId?.let { it == track.trackId } ?: (track.trackId !in lanes.mutedTracks)
+            }
+            val takes = editor.readTakes()?.let { takes ->
+                SongTakes(takes.bpm, takes.takes.filterKeys { it.trackId !in lanes.tonedTracks })
+            }
+            player.play(song, playing, fromSeconds = cursorStore.now - leadSeconds, takes = takes)
 
             while (true) {
                 awaitAnimationFrame()
@@ -179,6 +208,9 @@ data class LaneEditorState(
     val isScaleSnap: Boolean = true,
     val selectedLane: Int? = null,
     val drag: NoteDrag? = null,
+    val tonedTracks: Set<TrackId> = emptySet(),
+    val mutedTracks: Set<TrackId> = emptySet(),
+    val soloId: TrackId? = null,
 )
 
 /**
@@ -186,6 +218,7 @@ data class LaneEditorState(
  * one after a lead-in [leadSeconds] long.
  */
 data class Lane(
+    val trackId: TrackId,
     val label: String,
     val steps: Int,
     val leadSeconds: Double,
@@ -226,7 +259,7 @@ private fun lanesOf(song: StoredSong, secondsPerTick: Double): List<Lane> {
             onset += span.ticks
             laneSections
         }
-        Lane(track.trackId.name, window.steps, leadSeconds, sections)
+        Lane(track.trackId, track.trackId.name, window.steps, leadSeconds, sections)
     }
 }
 
@@ -240,6 +273,9 @@ private fun leadSecondsOf(song: StoredSong, secondsPerTick: Double): Double {
     val firstTick = songTonesOf(song.music, song.tracks, song.tracks).mapNotNull { it.firstTick }.minOrNull() ?: 0
     return -minOf(firstTick, 0) * secondsPerTick + LEAD_ROOM_SECONDS
 }
+
+/** This set with [value] added, or taken out when it holds it. */
+private fun <T> Set<T>.toggled(value: T) = if (value in this) this - value else this + value
 
 private const val DEFAULT_WINDOW_SECONDS = 12.0
 private const val LEAD_ROOM_SECONDS = 0.5

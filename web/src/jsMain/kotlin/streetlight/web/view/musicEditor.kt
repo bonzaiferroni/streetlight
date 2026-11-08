@@ -166,7 +166,7 @@ private fun ViewScope.trackRow(track: Track) {
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
             else model.readTrack(trackId)?.let { track ->
-                contentScope.launch { player.play(model.storedState.now, track, takes = model.readTakes()) }
+                contentScope.launch { player.play(model.storedState.now, listOf(track), takes = model.readTakes()) }
             }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(

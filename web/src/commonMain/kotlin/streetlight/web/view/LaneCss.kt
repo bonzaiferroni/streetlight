@@ -7,6 +7,7 @@ object LaneStyle {
     val Lane = Class("lane")
     val Selected = Row.withBemModifier("selected")
     val Meta = Row.withBemElement("meta")
+    val Toggles = Meta.withBemElement("toggles")
     val Content = Class("lane-content")
     val Section = Content.withBemElement("section")
     val SectionLabel = Section.withBemElement("label")
@@ -24,6 +25,12 @@ $Row { display: grid; grid-template-columns: minmax(0, 1fr); }
 $Meta {
     padding: var(--unit-1) var(--unit-1) 0;
     text-align: center;
+}
+
+$Toggles {
+    display: flex;
+    justify-content: center;
+    gap: var(--unit-1);
 }
 
 $Content { position: relative; overflow: clip; }
@@ -94,6 +101,8 @@ $CursorOverlay {
         padding: var(--unit-1);
         text-align: start;
     }
+
+    $Toggles { justify-content: start; }
 
     $CursorOverlay { inset-inline-start: calc(var(--unit-16) + var(--unit-1)); }
 }

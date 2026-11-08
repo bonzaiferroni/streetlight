@@ -3,6 +3,7 @@
 package streetlight.web.view
 
 import koala.SvgFile
+import streetlight.model.music.TrackId
 import koala.component.IconStyle
 import koala.dom.ViewScope
 import koala.dom.component.*
@@ -75,6 +76,18 @@ private fun ViewScope.timeStepControl() {
     }
 }
 
+/** Renders the toggles of the track [trackId]'s lane: its tones in place of its takes, its mute and its solo. */
+context(model: LaneEditor)
+private fun ViewScope.laneToggles(trackId: TrackId) = div(LaneStyle.Toggles) {
+    val iconMod = modify(IconStyle.DefaultMod, Height(3))
+    iconToggle("Tones", model.isTonedState(trackId), SvgFile.Music.small, SvgFile.Microphone.small,
+        { model.toggleTones(trackId) }, iconMod = iconMod)
+    iconToggle("Mute", model.isMutedState(trackId), SvgFile.VolumeOff.small, SvgFile.Volume.small,
+        { model.toggleMute(trackId) }, iconMod = iconMod)
+    iconToggle("Solo", model.isSoloedState(trackId), SvgFile.Headphones.filled, SvgFile.Headphones.small,
+        { model.toggleSolo(trackId) }, iconMod = iconMod)
+}
+
 /**
  * Renders [lane], the one at [laneIndex], as its meta panel and each of its sections, placed within the window, under
  * the note cursor of a drag.
@@ -85,7 +98,10 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
     lateinit var contentElement: HTMLElement
     val sections = mutableListOf<Pair<LaneSection, HTMLElement>>()
     val rowElement = div(LaneStyle.Row) {
-        textBlock(lane.label, LaneStyle.Meta)
+        div(LaneStyle.Meta) {
+            textBlock(lane.label)
+            laneToggles(lane.trackId)
+        }
         contentElement = div(modify(Css.Height.of(laneHeight(lane)), LaneStyle.Content, LaneStyle.Lane, CardBg)) {
             leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
             lane.sections.forEach { section ->
