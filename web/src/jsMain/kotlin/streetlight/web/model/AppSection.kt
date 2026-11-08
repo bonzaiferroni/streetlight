@@ -8,6 +8,9 @@ enum class AppSection {
     Core,
 
     /** Sharing and configuring content. */
+    Dash,
+
+    /** Making music: editing songs and recording them. */
     Studio,
 }
 
@@ -33,9 +36,10 @@ fun Screen.toAppSection() = when (this) {
     Screen.Offering,
     Screen.Error -> AppSection.Core
 
-    Screen.Onboard,
     Screen.Studio,
-    Screen.MusicStudio,
+    Screen.MusicStudio -> AppSection.Studio
+
+    Screen.Onboard,
     Screen.Sandbox,
     Screen.SiteMonitor,
     Screen.Chat,
@@ -60,5 +64,5 @@ fun Screen.toAppSection() = when (this) {
     Screen.EventScout,
     Screen.MediaForge,
     Screen.SiteConfig,
-    Screen.CityConfig -> AppSection.Studio
+    Screen.CityConfig -> AppSection.Dash
 }

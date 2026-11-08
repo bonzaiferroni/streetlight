@@ -149,7 +149,8 @@ sealed interface SandboxRoute: StreetlightRoute, SubRoute<SandboxRoute> {
 | Section | Holds | Portal |
 |---|---|---|
 | `Core` | Viewing content | `viewCorePortal`, in the main bundle |
-| `Studio` | Sharing and configuring content | `viewStudioPortal`, in its own chunk |
+| `Dash` | Sharing and configuring content | `viewDashPortal`, in its own chunk |
+| `Studio` | Making music: editing songs and recording them | `viewStudioPortal`, in its own chunk |
 
 To add a screen: declare the `Screen` entry and its route, write `viewFoo` and `viewFooRoute`, add the screen to its section in `toAppSection`, then add the branch in that section's portal.
 
@@ -163,12 +164,12 @@ Code reached only through a `@Lazy` `LazyFunction` is delivered in its own chunk
 |---|---|
 | One `@Lazy` val per file | The file is named `lazyFoo.kt` and holds nothing else. Each lazy val in a file loads the whole file's chunk |
 | No direct reference | Code in the main bundle never references a declaration in a file the lazy val reaches, or that file joins the main bundle |
-| Section portal in its own file | `viewStudioPortal` is reached only through `lazyStudio` |
+| Section portal in its own file | Each section portal, such as `viewDashPortal`, is reached only through its lazy val, such as `lazyDash` |
 
 ```kotlin
 @Lazy
-val lazyStudio = LazyFunction<RouteScope.() -> Unit> {
-    { viewStudioPortal() }
+val lazyDash = LazyFunction<RouteScope.() -> Unit> {
+    { viewDashPortal() }
 }
 ```
 

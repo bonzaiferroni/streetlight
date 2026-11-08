@@ -20,6 +20,8 @@ View models, each holding the state behind one view and the calls that change it
 
 A view model with per-view state is not registered in the module. It is built by a factory extension on `AppContainer` that takes the scope and any starting value, so each view gets its own.
 
+`webModule` joins the main bundle, and so does everything it constructs. A service or factory used only by a lazily loaded section lives in that section's chunk: its services in a `fooModule` its portal loads into Koin on first use, as `studioModule`, and its factories in a file of their own, as `dashFactories.kt`.
+
 ## Entity Properties
 
 A property that depends on the entity type is an `Entity` extension function in `EntityUtility.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.

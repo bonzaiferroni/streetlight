@@ -43,6 +43,7 @@ fun ViewScope.viewPortal() {
         with (routeScope) {
             when ((screen as Screen).toAppSection()) {
                 AppSection.Core -> viewCorePortal()
+                AppSection.Dash -> lazyRoute(lazyDash)
                 AppSection.Studio -> lazyRoute(lazyStudio)
             }
         }

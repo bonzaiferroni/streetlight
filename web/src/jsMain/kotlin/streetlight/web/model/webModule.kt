@@ -1,7 +1,6 @@
 package streetlight.web.model
 
 import koala.model.Toaster
-import kampfire.api.Username
 import kampfire.model.Messenger
 import koala.utility.LaunchTelemetry
 import koala.core.appExceptionHandler
@@ -16,13 +15,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.plus
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import streetlight.model.data.Account
-import streetlight.model.data.EventEdit
-import streetlight.model.data.Galaxy
-import streetlight.model.data.LocationEdit
-import streetlight.model.data.GalaxyEdit
-import streetlight.model.data.MediaEdit
-import streetlight.model.data.StarEdit
 import streetlight.model.ui.EarthMap
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
@@ -58,12 +50,6 @@ val webModule = module {
     single(createdAtStart = true) { StarLocator(get()) }
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
-    single { StudioAudio() }
-    single { AudioRecorder(get()) }
-    single { AudioPlayer(get()) }
-    single { SongDb(get()) }
-    single { TrackPlayer(get()) }
-    single { ClipLibrary() }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
@@ -71,36 +57,3 @@ fun AppContainer.getUserCreator(scope: CoroutineScope) =
 
 fun AppContainer.getEarthMap(scope: CoroutineScope, initialMap: EarthMap?) =
     Earth(scope, initialMap, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
-
-fun AppContainer.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
-    LocationEditor(edit, scope, koin.get())
-
-fun AppContainer.getMediaEditor(edit: MediaEdit, scope: CoroutineScope) =
-    MediaEditor(edit, scope, koin.get(), koin.get())
-
-fun AppContainer.getLocationScout(galaxy: Galaxy?, editor: LocationEditor, scope: CoroutineScope) =
-    LocationScout(galaxy, editor, scope, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
-
-fun AppContainer.getEventEditor(edit: EventEdit, scope: CoroutineScope) =
-    EventEditor(edit, scope, koin.get())
-
-fun AppContainer.getEventScout(galaxy: Galaxy?, editor: EventEditor, location: LocationScout, scope: CoroutineScope) =
-    EventScout(galaxy, editor, location, scope, koin.get(), koin.get(), koin.get())
-
-fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
-    GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())
-
-fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get())
-
-fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get())
-
-fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
-
-fun AppContainer.getAccountEditor(edit: Account, scope: CoroutineScope) =
-    AccountEditor(edit, scope, koin.get(), koin.get(), koin.get())
-
-fun AppContainer.getProfileEditor(edit: StarEdit, scope: CoroutineScope) =
-    ProfileEditor(edit, scope, koin.get(), koin.get())
-
-fun AppContainer.getLocationOnboarder(username: Username, editor: LocationEditor, scope: CoroutineScope) =
-    LocationOnboarder(username, editor, scope, koin.get(), koin.get())
