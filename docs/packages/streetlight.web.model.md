@@ -22,6 +22,8 @@ A view model with per-view state is not registered in the module. It is built by
 
 `webModule` joins the main bundle, and so does everything it constructs. A service or factory used only by a lazily loaded section lives in that section's chunk: its services in a `fooModule` its portal loads into Koin on first use, as `studioModule`, and its factories in a file of their own, as `dashFactories.kt`.
 
+What a user keeps on the device lives in the one database `localDbOf` opens, a store per model. Audio stays on the device whether or not the user has an account; the server only knows where a shared clip lives.
+
 ## Entity Properties
 
 A property that depends on the entity type is an `Entity` extension function in `EntityUtility.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
@@ -136,7 +138,8 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`writeMidi`](../../web/src/jsMain/kotlin/streetlight/web/model/writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
 | [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums the player strikes |
 | [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones |
-| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The recorded clips, kept as WAV files in the browser's private file system |
+| [`ClipDb`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipDb.kt) | The clips a user plays, kept on the device with or without an account |
+| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The audio of each clip, kept as a WAV file in the browser's private file system |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |
 
 ### Editors
@@ -182,7 +185,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
 | [`MusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicStudio.kt) | Lists, creates and removes the songs in `SongDb`, and builds the `MusicEditor` of the one in focus, saving its changes |
-| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song in focus in `MusicStudio` |
+| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song in focus in `MusicStudio`, and the mixes of its music |
 | [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track through its text |
 | [`MelodyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MelodyEditor.kt) | Edits a melody track through its jianpu |
 | [`DrumEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumEditor.kt) | Edits a drum track through its tab |
@@ -191,6 +194,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
 | [`NoteDrag`](../../web/src/jsMain/kotlin/streetlight/web/model/NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
+| [`LocalMixDb`](../../web/src/jsMain/kotlin/streetlight/web/model/LocalMixDb.kt) | The `MixDb` kept on the device |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`TimelineModel`](../../web/src/jsMain/kotlin/streetlight/web/model/TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditor` share |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |

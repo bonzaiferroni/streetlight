@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.MutableTap
+import kampfire.model.toDataOr
 import kampfire.model.Tap
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
@@ -13,7 +14,11 @@ import streetlight.model.music.DrumTrack
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
+import streetlight.model.io.MixDb
+import streetlight.model.music.Mix
+import streetlight.model.music.MixId
 import streetlight.model.music.SectionClip
+import streetlight.model.music.mixOf
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.freeTrackIdOf
@@ -22,23 +27,32 @@ import streetlight.model.music.repeatsOf
 import streetlight.model.music.text.NotationStyle
 
 /**
- * The state behind the editor of the music, tracks and clips of [stored], written in the style at [notationStyleState].
+ * The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState], and
+ * of the mixes of the music held in [mixDb].
  *
- * A clip whose track is removed, or that another clip of its section replaces, is removed from [clipLibrary].
+ * The mixes load once the editor opens, starting with a first one seeded from the music when there is none. A track
+ * renamed or removed re-keys or drops its clips in every mix of the music.
  */
 class MusicEditor(
     private val scope: CoroutineScope,
     stored: StoredSong,
     val notationStyleState: Tap<NotationStyle>,
-    private val clipLibrary: ClipLibrary,
+    private val mixDb: MixDb,
 ) {
-    private val state = storeOf(MusicEditorState(stored.music, stored.tracks, stored.clips))
+    private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
     val song = stored.song
     val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }
     val tracksState = state.mutableTapOf({ it.tracks }) { copy(tracks = it) }
 
-    /** The song as it is kept, following each change to its music, tracks and clips. */
-    val storedState = state.tapOf { StoredSong(song, it.music, it.tracks, it.clips) }
+    /** The song as it is kept, following each change to its music and tracks. */
+    val storedState = state.tapOf { StoredSong(song, it.music, it.tracks) }
+
+    /** The mix being edited, or `null` while the mixes load. */
+    val mixState = state.tapOf { editor -> editor.mixes.firstOrNull { it.mixId == editor.mixId } }
+
+    init {
+        scope.launch { loadMixes() }
+    }
 
     /** The text of the song's music. */
     val properties = MusicPropertyEditor(scope, musicState)
@@ -102,55 +116,78 @@ class MusicEditor(
      * Names the track [trackId] [name], numbered when another track holds it. A blank name leaves the track as it
      * is.
      */
-    fun renameTrack(trackId: TrackId, name: String) = state.update { editor ->
-        val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
-        val base = name.trim().takeIf { it.isNotEmpty() && it != trackId.name } ?: return@update editor
-        val renamedId = editor.tracks.filter { it.trackId != trackId }.newTrackId(base)
-        val renamed = when (track) {
-            is ChordTrack -> track.copy(trackId = renamedId)
-            is MelodyTrack -> track.copy(trackId = renamedId)
-            is LyricTrack -> track.copy(trackId = renamedId)
-            is DrumTrack -> track.copy(trackId = renamedId)
+    fun renameTrack(trackId: TrackId, name: String) {
+        val before = state.now.mixes
+        state.update { editor ->
+            val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
+            val base = name.trim().takeIf { it.isNotEmpty() && it != trackId.name } ?: return@update editor
+            val renamedId = editor.tracks.filter { it.trackId != trackId }.newTrackId(base)
+            val renamed = when (track) {
+                is ChordTrack -> track.copy(trackId = renamedId)
+                is MelodyTrack -> track.copy(trackId = renamedId)
+                is LyricTrack -> track.copy(trackId = renamedId)
+                is DrumTrack -> track.copy(trackId = renamedId)
+            }
+            editor.copy(
+                tracks = editor.tracks.map { if (it.trackId == trackId) renamed else it },
+                openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId + renamedId else editor.openTracks,
+                mixes = editor.mixes.map { mix ->
+                    mix.copy(clips = mix.clips.map { if (it.trackId == trackId) it.copy(trackId = renamedId) else it })
+                },
+            )
         }
-        editor.copy(
-            tracks = editor.tracks.map { if (it.trackId == trackId) renamed else it },
-            openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId + renamedId else editor.openTracks,
-            clips = editor.clips.map { if (it.trackId == trackId) it.copy(trackId = renamedId) else it },
-        )
+        saveMixesChangedSince(before)
     }
 
-    /** Removes the track [trackId] and its clips. */
+    /** Removes the track [trackId], and its clips from every mix. */
     fun removeTrack(trackId: TrackId) {
-        val removed = state.now.clips.filter { it.trackId == trackId }
+        val before = state.now.mixes
         state.update { editor ->
             editor.copy(
                 tracks = editor.tracks.filter { it.trackId != trackId },
                 openTracks = editor.openTracks - trackId,
-                clips = editor.clips - removed.toSet(),
+                mixes = editor.mixes.map { mix -> mix.copy(clips = mix.clips.filter { it.trackId != trackId }) },
             )
         }
-        removeClipFiles(removed)
+        saveMixesChangedSince(before)
     }
 
-    /** Keeps [clip] as the take of its section, in place of the one it held. */
+    /** Binds [clip] to its section in the mix being edited, in place of the clip it held. */
     fun putClip(clip: SectionClip) {
-        val replaced = state.now.clips.filter { it.trackId == clip.trackId && it.sectionId == clip.sectionId }
-        state.update { editor -> editor.copy(clips = editor.clips - replaced.toSet() + clip) }
-        removeClipFiles(replaced)
+        val before = state.now.mixes
+        state.update { editor ->
+            editor.copy(mixes = editor.mixes.map { mix ->
+                if (mix.mixId != editor.mixId) mix
+                else mix.copy(clips = mix.clips.filterNot { it.trackId == clip.trackId && it.sectionId == clip.sectionId }
+                    + clip)
+            })
+        }
+        saveMixesChangedSince(before)
     }
 
-    private fun removeClipFiles(clips: List<SectionClip>) {
-        if (clips.isEmpty()) return
-        scope.launch { clips.forEach { clipLibrary.remove(it.clipId) } }
+    private suspend fun loadMixes() {
+        val music = state.now.music
+        val stored = mixDb.readMixes(music.musicId).toDataOr { return }
+        val mixes = stored.ifEmpty { listOf(mixOf(music, FIRST_MIX_NAME).also { mixDb.saveMix(it) }) }
+        state.update { editor -> editor.copy(mixes = mixes, mixId = editor.mixId ?: mixes.first().mixId) }
+    }
+
+    private fun saveMixesChangedSince(before: List<Mix>) {
+        val changed = state.now.mixes.filter { it !in before }
+        if (changed.isEmpty()) return
+        scope.launch { changed.forEach { mixDb.saveMix(it) } }
     }
 }
 
 data class MusicEditorState(
     val music: Music,
     val tracks: List<Track> = emptyList(),
-    val clips: List<SectionClip> = emptyList(),
     val openTracks: Set<TrackId> = emptySet(),
+    val mixes: List<Mix> = emptyList(),
+    val mixId: MixId? = null,
 )
+
+private const val FIRST_MIX_NAME = "Mix 1"
 
 private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
     if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()

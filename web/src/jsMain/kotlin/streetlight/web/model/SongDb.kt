@@ -4,7 +4,6 @@ import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import streetlight.model.music.Music
-import streetlight.model.music.SectionClip
 import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.Track
@@ -36,13 +35,12 @@ data class SongDbState(
     val songs: List<StoredSong> = emptyList(),
 )
 
-/** A song as it is kept, with its music and tracks, and the [clips] recorded of their sections. */
+/** A song as it is kept, with its music and tracks. */
 @Serializable
 data class StoredSong(
     val song: Song,
     val music: Music,
     val tracks: List<Track> = emptyList(),
-    val clips: List<SectionClip> = emptyList(),
 )
 
 private const val SONG_DB_KEY = "streetlight.song-db"

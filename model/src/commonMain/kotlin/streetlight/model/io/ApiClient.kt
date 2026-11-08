@@ -18,6 +18,7 @@ class ApiClient(transport: ApiTransport) {
     val location = LocationClient(transport)
     val media = MediaClient(transport)
     val message = MessageClient(transport)
+    val mix = MixClient(transport)
     val omniLog = OmniLogClient(transport)
     val post = PostClient(transport)
     val seller = SellerClient(transport)

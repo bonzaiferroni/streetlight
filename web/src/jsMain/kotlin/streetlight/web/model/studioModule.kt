@@ -3,6 +3,7 @@ package streetlight.web.model
 import koala.dom.AppContainer
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
+import streetlight.model.io.MixDb
 
 /** The services of the Studio section, one of each, loaded into the app's Koin by [loadStudioModule]. */
 val studioModule = module {
@@ -12,6 +13,9 @@ val studioModule = module {
     single { SongDb(get()) }
     single { TrackPlayer(get()) }
     single { ClipLibrary() }
+    single { localDbOf() }
+    single { ClipDb(get()) }
+    single<MixDb> { LocalMixDb(get()) }
 }
 
 /** Loads [studioModule] into the app's Koin, unless it is loaded. */

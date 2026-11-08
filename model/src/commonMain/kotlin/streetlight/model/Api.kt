@@ -98,6 +98,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
+    object Mixes: ApiNode(this) {
+        object ByMusic: GetByIdEndpoint<MusicId, List<Mix>>(this)
+        object Save: PostEndpoint<Mix, Boolean>(this)
+        object Delete: DeleteEndpoint<MixId>(this)
+    }
+
     object RenditionFeed: GetByIdEndpoint<RenditionId, Rendition>(this) {
         object BySong: GetByIdEndpoint<SongId, List<Rendition>>(this)
         object Create: PostEndpoint<NewRendition, RenditionId>(this)

@@ -7,6 +7,7 @@ import kampfire.model.reactIn
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.io.MixDb
 import streetlight.model.music.Chroma
 import streetlight.model.music.Key
 import streetlight.model.music.Mode
@@ -19,11 +20,11 @@ import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.SongMarkdown
 import streetlight.web.utility.localStoreOf
 
-/** The songs held in [db], their clips in [clipLibrary], and the editors of them. */
+/** The songs held in [db], their mixes in [mixDb], and the editors of them. */
 class MusicStudio(
     private val scope: CoroutineScope,
     private val db: SongDb,
-    private val clipLibrary: ClipLibrary,
+    private val mixDb: MixDb,
 ) {
     val songList = db.songsState.tapOf { songs -> songs.map { it.song } }
 
@@ -40,11 +41,15 @@ class MusicStudio(
         return song.song.songId
     }
 
-    /** Removes the song of [songId] and its clips. */
+    /** Removes the song of [songId] and the mixes of its music. Their clips stay in the user's library. */
     fun remove(songId: SongId) {
-        val clips = db.read(songId)?.clips.orEmpty()
+        val musicId = db.read(songId)?.music?.musicId
         db.remove(songId)
-        scope.launch { clips.forEach { clipLibrary.remove(it.clipId) } }
+        if (musicId == null) return
+        scope.launch {
+            val mixes = mixDb.readMixes(musicId).toDataOr { return@launch }
+            mixes.forEach { mixDb.removeMix(it.mixId) }
+        }
     }
 
     fun readSong(songId: SongId) = db.read(songId)
@@ -64,7 +69,7 @@ class MusicStudio(
     /** An editor of the song of [songId] for as long as [scope] lasts, saving its changes, or `null` with no such song. */
     fun editorOf(scope: CoroutineScope, songId: SongId): MusicEditor? {
         val song = db.read(songId) ?: return null
-        val editor = MusicEditor(scope, song, notationStyleState, clipLibrary)
+        val editor = MusicEditor(scope, song, notationStyleState, mixDb)
         editor.storedState.reactIn(scope) { db.save(it) }
         return editor
     }

@@ -15,6 +15,7 @@ Utilities whose target is not a web type. A utility for a web type lives in the 
 
 | Utility | Role |
 |---|---|
+| [`IdbDatabase`, `IdbStore`](../../web/src/jsMain/kotlin/streetlight/web/utility/IdbDatabase.kt) | A browser IndexedDB database, and an object store of it holding values as JSON |
 | [`localStoreOf`](../../web/src/jsMain/kotlin/streetlight/web/utility/localStoreOf.kt) | A store kept in `localStorage` |
 | [`setTitle`, `requireElement`](../../web/src/jsMain/kotlin/streetlight/web/utility/DocumentUtility.kt) | The tab title, and elements by id |
 | [`downloadFile`](../../web/src/jsMain/kotlin/streetlight/web/utility/downloadFile.kt) | Hands the viewer bytes to save as a file |

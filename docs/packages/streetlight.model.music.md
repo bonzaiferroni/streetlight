@@ -29,3 +29,7 @@ A scale degree counts from the `Key.majorTonic`, the tonic of the major scale th
 ## Performance
 
 The domain model holds the composition alone. A performance of it, such as a `SectionClip` recorded of a track's section, is its own type, kept beside a song and never on a `Track`, so it stays out of song files.
+
+A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClip` binds one to a track's section, so a clip whose properties line up can be placed elsewhere.
+
+A `Mix` holds those bindings for one music. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.

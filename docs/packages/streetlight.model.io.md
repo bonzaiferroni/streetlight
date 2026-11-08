@@ -17,12 +17,15 @@ The clients of the Streetlight API, shared by the web client and the app. Each p
 | Type | Pattern |
 |---|---|
 | `FooClient` | A class holding the calls of one model, taking an `ApiTransport` |
+| `FooDb` | An interface over a model's data wherever it is kept, met by its `FooClient` and by a store on the device |
 
 ## Clients
 
 `ApiClient` is a facade holding one client per model, as `api.event`, all over one transport. It mirrors `DaoFacade` on the server. A client covers a model, not an endpoint root.
 
 A call is one line, declaring its return type and delegating to a transport wrapper with the `Api` endpoint and any id, parameters or body. A call that streams returns a `Flow` from `openEvents` or a `MessageSocket` from `openSocket`.
+
+A model a user can keep without an account has a `FooDb` interface, as `MixDb`. Its client is the server's implementation, and the platform holds one over device storage, as `LocalMixDb`; Koin chooses which a view gets.
 
 A service outside the Streetlight API, such as OpenStreetMap, has its own client outside the facade, in the platform's own `io` package.
 
