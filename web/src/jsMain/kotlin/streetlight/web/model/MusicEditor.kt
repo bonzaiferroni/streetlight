@@ -6,12 +6,14 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import streetlight.model.music.Beats
 import streetlight.model.music.ChordTrack
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
+import streetlight.model.music.SectionClip
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.freeTrackIdOf
@@ -19,19 +21,24 @@ import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.text.NotationStyle
 
-/** The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState]. */
+/**
+ * The state behind the editor of the music, tracks and clips of [stored], written in the style at [notationStyleState].
+ *
+ * A clip whose track is removed, or that another clip of its section replaces, is removed from [clipLibrary].
+ */
 class MusicEditor(
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     stored: StoredSong,
     val notationStyleState: Tap<NotationStyle>,
+    private val clipLibrary: ClipLibrary,
 ) {
-    private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
+    private val state = storeOf(MusicEditorState(stored.music, stored.tracks, stored.clips))
     val song = stored.song
     val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }
     val tracksState = state.mutableTapOf({ it.tracks }) { copy(tracks = it) }
 
-    /** The song as it is kept, following each change to its music and tracks. */
-    val storedState = state.tapOf { StoredSong(song, it.music, it.tracks) }
+    /** The song as it is kept, following each change to its music, tracks and clips. */
+    val storedState = state.tapOf { StoredSong(song, it.music, it.tracks, it.clips) }
 
     /** The text of the song's music. */
     val properties = MusicPropertyEditor(scope, musicState)
@@ -108,18 +115,40 @@ class MusicEditor(
         editor.copy(
             tracks = editor.tracks.map { if (it.trackId == trackId) renamed else it },
             openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId + renamedId else editor.openTracks,
+            clips = editor.clips.map { if (it.trackId == trackId) it.copy(trackId = renamedId) else it },
         )
     }
 
-    /** Removes the track [trackId]. */
-    fun removeTrack(trackId: TrackId) = state.update { editor ->
-        editor.copy(tracks = editor.tracks.filter { it.trackId != trackId }, openTracks = editor.openTracks - trackId)
+    /** Removes the track [trackId] and its clips. */
+    fun removeTrack(trackId: TrackId) {
+        val removed = state.now.clips.filter { it.trackId == trackId }
+        state.update { editor ->
+            editor.copy(
+                tracks = editor.tracks.filter { it.trackId != trackId },
+                openTracks = editor.openTracks - trackId,
+                clips = editor.clips - removed.toSet(),
+            )
+        }
+        removeClipFiles(removed)
+    }
+
+    /** Keeps [clip] as the take of its section, in place of the one it held. */
+    fun putClip(clip: SectionClip) {
+        val replaced = state.now.clips.filter { it.trackId == clip.trackId && it.sectionId == clip.sectionId }
+        state.update { editor -> editor.copy(clips = editor.clips - replaced.toSet() + clip) }
+        removeClipFiles(replaced)
+    }
+
+    private fun removeClipFiles(clips: List<SectionClip>) {
+        if (clips.isEmpty()) return
+        scope.launch { clips.forEach { clipLibrary.remove(it.clipId) } }
     }
 }
 
 data class MusicEditorState(
     val music: Music,
     val tracks: List<Track> = emptyList(),
+    val clips: List<SectionClip> = emptyList(),
     val openTracks: Set<TrackId> = emptySet(),
 )
 

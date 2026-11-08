@@ -25,3 +25,7 @@ A section may open with a `pickup`, notes that sound at the end of the measure b
 A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `Capo: 2`, before its first heading.
 
 A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.
+
+## Performance
+
+The domain model holds the composition alone. A performance of it, such as a `SectionClip` recorded of a track's section, is its own type, kept beside a song and never on a `Track`, so it stays out of song files.

@@ -134,6 +134,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`writeMidi`](../../web/src/jsMain/kotlin/streetlight/web/model/writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
 | [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums the player strikes |
 | [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones |
+| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The recorded clips, kept as WAV files in the browser's private file system |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |
 
 ### Editors

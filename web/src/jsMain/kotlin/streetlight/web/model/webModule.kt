@@ -63,6 +63,7 @@ val webModule = module {
     single { AudioPlayer(get()) }
     single { SongDb(get()) }
     single { TrackPlayer(get()) }
+    single { ClipLibrary() }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
@@ -91,7 +92,7 @@ fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
 
 fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get())
 
-fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get())
+fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get())
 
 fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
 
