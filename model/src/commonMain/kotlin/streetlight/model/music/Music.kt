@@ -9,7 +9,7 @@ import streetlight.model.data.RecordId
  * A musical understanding of a song: its key, time and tempo, and the [arrangement] of sections every track follows.
  *
  * The key and every track are written as played, and sound [capo] semitones higher, as chord shapes played behind a
- * guitar capo. A track's own [Track.capo] adds to it.
+ * guitar capo. A track's own [Track.capo] adds to it. The [bpm] counts the [TimeSignature.pulse].
  */
 @Serializable
 data class Music(
@@ -61,6 +61,12 @@ data class TimeSignature(
 ) {
     /** The length of one beat of the signature, counting a quarter note as one of [Beats]. */
     val beat get() = Beats.of(4, beatUnit)
+
+    /**
+     * The length of the beat a tempo counts: a dotted [beat] in a compound meter such as 6/8, where [beats] is a
+     * multiple of 3 above 3, and [beat] otherwise.
+     */
+    val pulse get() = if (beats > 3 && beats % 3 == 0) Beats.of(12, beatUnit) else beat
 
     /** The length of a measure, counting a quarter note as one of [Beats]. */
     val measure get() = Beats.of(beats * 4, beatUnit)

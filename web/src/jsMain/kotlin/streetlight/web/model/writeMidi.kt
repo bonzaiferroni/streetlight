@@ -43,7 +43,7 @@ fun writeMidi(music: Music, trackTones: List<TrackTones>): ByteArray {
 private fun conductorChunk(music: Music) = buildBytes {
     chunk("MTrk") {
         // the tempo counts beats of the time signature, and MIDI counts microseconds per quarter note
-        val microsPerQuarter = 60_000_000L * Beats.TICKS_PER_BEAT / music.bpm / music.time.beat.ticks
+        val microsPerQuarter = 60_000_000L * Beats.TICKS_PER_BEAT / music.bpm / music.time.pulse.ticks
         event(0, 0xFF, 0x51, 3)
         add((microsPerQuarter shr 16).toByte())
         add((microsPerQuarter shr 8).toByte())

@@ -21,7 +21,7 @@ import streetlight.model.music.toMidi
 
 
 /** The seconds a tick of this music lasts at its tempo. */
-val Music.secondsPerTick get() = 60.0 / bpm / time.beat.ticks
+val Music.secondsPerTick get() = 60.0 / bpm / time.pulse.ticks
 
 /** The MIDI numbers of [midi] sounding together from [startTick] for [ticks]. */
 class SongTone(

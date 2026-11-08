@@ -16,8 +16,8 @@ import streetlight.model.music.TrackId
  * The parser of a chord track's text, with chords written in [style] against [key].
  *
  * Each measure's beats are shared evenly by its tokens: a chord, `.` to hold the note before, or `_` for a rest. The
- * tokens before the first bar line of a progression are its pickup, a beat each. A token that cannot be read is
- * reported and skipped.
+ * tokens before the first bar line of a progression are its pickup, a [TimeSignature.pulse] each. A token that
+ * cannot be read is reported and skipped.
  */
 class ChordParser(
     private val key: Key,
@@ -34,7 +34,7 @@ class ChordParser(
                 fun error(message: String) = errors.add(NotationError(line.number, message))
                 val barLine = line.toBarLine()
                 barLine.lead?.let { lead ->
-                    if (lineIndex == 0) tokensOf(lead).forEach { readToken(it, time.beat, pickup, ::error) }
+                    if (lineIndex == 0) tokensOf(lead).forEach { readToken(it, time.pulse, pickup, ::error) }
                     else readMeasure(lead, time.measure, notes, ::error)
                 }
                 barLine.measures.forEach { readMeasure(it, time.measure, notes, ::error) }
@@ -49,7 +49,7 @@ class ChordParser(
         val sections = track.sections.map { progression ->
             SectionLines(
                 sectionId = progression.sectionId,
-                pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.beat) },
+                pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.pulse) },
                 measures = writeMeasures(progression.notes, time.measure),
                 measuresPerLine = progression.measuresPerLine,
             )
