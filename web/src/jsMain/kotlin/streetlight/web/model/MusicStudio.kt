@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Messenger
 import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
@@ -20,11 +21,12 @@ import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.SongMarkdown
 import streetlight.web.utility.localStoreOf
 
-/** The songs held in [db], their mixes in [mixDb], and the editors of them. */
+/** The songs held in [db], their mixes in [mixDb], and the editors of them, whose problems go to [messenger]. */
 class MusicStudio(
     private val scope: CoroutineScope,
     private val db: SongDb,
     private val mixDb: MixDb,
+    private val messenger: Messenger,
 ) {
     val songList = db.songsState.tapOf { songs -> songs.map { it.song } }
 
@@ -47,7 +49,7 @@ class MusicStudio(
         db.remove(songId)
         if (musicId == null) return
         scope.launch {
-            val mixes = mixDb.readMixes(musicId).toDataOr { return@launch }
+            val mixes = mixDb.readMixes(musicId).toDataOr(messenger) { return@launch }
             mixes.forEach { mixDb.removeMix(it.mixId) }
         }
     }
@@ -69,7 +71,7 @@ class MusicStudio(
     /** An editor of the song of [songId] for as long as [scope] lasts, saving its changes, or `null` with no such song. */
     fun editorOf(scope: CoroutineScope, songId: SongId): MusicEditor? {
         val song = db.read(songId) ?: return null
-        val editor = MusicEditor(scope, song, notationStyleState, mixDb)
+        val editor = MusicEditor(scope, song, notationStyleState, mixDb, messenger)
         editor.storedState.reactIn(scope) { db.save(it) }
         return editor
     }

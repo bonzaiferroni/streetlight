@@ -27,6 +27,6 @@ fun AppContainer.loadStudioModule() {
 
 fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get())
 
-fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get())
+fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get(), koin.get())
 
 private var isStudioModuleLoaded = false

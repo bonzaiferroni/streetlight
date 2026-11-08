@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Messenger
 import kampfire.model.MutableTap
 import kampfire.model.toDataOr
 import kampfire.model.Tap
@@ -28,7 +29,7 @@ import streetlight.model.music.text.NotationStyle
 
 /**
  * The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState], and
- * of the mixes of the music held in [mixDb].
+ * of the mixes of the music held in [mixDb], whose problems go to [messenger].
  *
  * The mixes load once the editor opens, starting with a first one seeded from the music when there is none. A track
  * renamed or removed re-keys or drops its clips in every mix of the music.
@@ -38,6 +39,7 @@ class MusicEditor(
     stored: StoredSong,
     val notationStyleState: Tap<NotationStyle>,
     private val mixDb: MixDb,
+    private val messenger: Messenger,
 ) {
     private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
     val song = stored.song
@@ -167,15 +169,19 @@ class MusicEditor(
 
     private suspend fun loadMixes() {
         val music = state.now.music
-        val stored = mixDb.readMixes(music.musicId).toDataOr { return }
-        val mixes = stored.ifEmpty { listOf(mixOf(music, FIRST_MIX_NAME).also { mixDb.saveMix(it) }) }
+        val stored = mixDb.readMixes(music.musicId).toDataOr(messenger) { return }
+        val mixes = stored.ifEmpty { listOf(mixOf(music, FIRST_MIX_NAME).also { save(it) }) }
         state.update { editor -> editor.copy(mixes = mixes, mixId = editor.mixId ?: mixes.first().mixId) }
     }
 
     private fun saveMixesChangedSince(before: List<Mix>) {
         val changed = state.now.mixes.filter { it !in before }
         if (changed.isEmpty()) return
-        scope.launch { changed.forEach { mixDb.saveMix(it) } }
+        scope.launch { changed.forEach { save(it) } }
+    }
+
+    private suspend fun save(mix: Mix) {
+        mixDb.saveMix(mix).toDataOr(messenger) { return }
     }
 }
 
