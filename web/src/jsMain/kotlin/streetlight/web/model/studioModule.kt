@@ -4,6 +4,8 @@ import koala.dom.AppContainer
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
 import streetlight.model.io.MixDb
+import streetlight.model.music.SectionId
+import streetlight.model.music.TrackId
 
 /** The services of the Studio section, one of each, loaded into the app's Koin by [loadStudioModule]. */
 val studioModule = module {
@@ -16,6 +18,8 @@ val studioModule = module {
     single { localDbOf() }
     single { ClipDb(get()) }
     single<MixDb> { LocalMixDb(get()) }
+    single { LatencyStore(get()) }
+    single { TakeShelf(get(), get()) }
 }
 
 /** Loads [studioModule] into the app's Koin, unless it is loaded. */
@@ -25,8 +29,12 @@ fun AppContainer.loadStudioModule() {
     isStudioModuleLoaded = true
 }
 
-fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get())
+fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get(), koin.get(), koin.get(), koin.get())
 
-fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get(), koin.get())
+/** The capture of takes of the section [sectionId] of the track [trackId] in [editor]'s open mix. */
+fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MusicEditor, trackId: TrackId, sectionId: SectionId) =
+    SectionMic(scope, editor, trackId, sectionId, koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
+
+fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get(), koin.get(), koin.get())
 
 private var isStudioModuleLoaded = false

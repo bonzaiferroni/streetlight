@@ -47,6 +47,18 @@ class DrumKit {
         }
     }
 
+    /**
+     * Clicks a pair of sticks together into [bus] at [start], a drummer's count-off, louder for an [accent], and
+     * returns the sources it started.
+     */
+    fun sticks(context: AudioContext, bus: AudioNode, start: Double, accent: Boolean): List<AudioScheduledSourceNode> {
+        val scale = if (accent) ACCENT_SCALE else 1.0
+        return listOf(
+            noise(context, bus, start, BiquadFilterType.bandpass, 3000f, 0.04, 0.3 * scale),
+            bodyTone(context, bus, start, 2200f, 0.025, 0.12 * scale),
+        )
+    }
+
     /** A sine falling from [from] to [to] hertz over [drop] seconds, fading out over [decay] seconds from [level]. */
     private fun fallingTone(
         context: AudioContext,

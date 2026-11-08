@@ -29,7 +29,8 @@ import streetlight.model.music.text.NotationStyle
 
 /**
  * The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState], and
- * of the mixes of the music held in [mixDb], whose problems go to [messenger].
+ * of the mixes of the music held in [mixDb], whose problems go to [messenger]. The takes of the open mix are read
+ * from [takeShelf].
  *
  * The mixes load once the editor opens, starting with a first one seeded from the music when there is none. A track
  * renamed or removed re-keys or drops its clips in every mix of the music.
@@ -40,6 +41,7 @@ class MusicEditor(
     val notationStyleState: Tap<NotationStyle>,
     private val mixDb: MixDb,
     private val messenger: Messenger,
+    private val takeShelf: TakeShelf,
 ) {
     private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
     val song = stored.song
@@ -54,6 +56,12 @@ class MusicEditor(
 
     init {
         scope.launch { loadMixes() }
+    }
+
+    /** The takes of the open mix that still fit the song, or `null` while the mixes load. */
+    suspend fun readTakes(): SongTakes? {
+        val mix = mixState.now ?: return null
+        return takeShelf.takesOf(storedState.now, mix)
     }
 
     /** The text of the song's music. */

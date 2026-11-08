@@ -15,6 +15,8 @@ import koala.modifier.*
 import koala.page.Id
 import kampfire.model.mutableTapOf
 import kampfire.model.tapOf
+import kotlinx.coroutines.launch
+import kotlinx.css.Flex
 import kotlinx.css.pct
 import kotlinx.css.px
 import streetlight.model.music.Beats
@@ -41,6 +43,10 @@ import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
+import streetlight.web.model.SectionMic
+import streetlight.web.model.SectionMicPhase
+import streetlight.web.model.getSectionMic
+import kotlinx.html.span
 import streetlight.web.model.exportMidi
 import kotlin.uuid.Uuid
 
@@ -96,7 +102,7 @@ private fun ViewScope.trackList() {
     actionSection(
         label = "Tracks",
         actions = listOf(
-            MenuAction("Play") { player.play(model.storedState.now) },
+            MenuAction("Play") { contentScope.launch { player.play(model.storedState.now, takes = model.readTakes()) } },
             MenuAction("Stop") { player.stop() },
             MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
@@ -130,7 +136,9 @@ private fun ViewScope.trackRow(track: Track) {
         // a lyric track makes no sound, so it has nothing to play
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
-            else model.readTrack(trackId)?.let { player.play(model.storedState.now, it) }
+            else model.readTrack(trackId)?.let { track ->
+                contentScope.launch { player.play(model.storedState.now, track, takes = model.readTakes()) }
+            }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(
             play,
@@ -166,16 +174,16 @@ private fun ViewScope.trackEditor(trackId: TrackId) {
     column(PaddingY(1)) {
         when (track) {
             is ChordTrack -> with(ChordEditor(contentScope, model, trackId)) {
-                notationPanes("chords", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
+                notationPanes("chords", textState, errorsState, studio.notationViewState) { sectionList(trackId, sectionsState) }
             }
             is MelodyTrack -> with(MelodyEditor(contentScope, model, trackId)) {
-                notationPanes("jianpu", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
+                notationPanes("jianpu", textState, errorsState, studio.notationViewState) { sectionList(trackId, sectionsState) }
             }
             is LyricTrack -> with(LyricEditor(contentScope, model, trackId)) {
-                notationPanes("lyrics", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
+                notationPanes("lyrics", textState, errorsState, studio.notationViewState) { sectionList(trackId, sectionsState) }
             }
             is DrumTrack -> with(DrumEditor(contentScope, model, trackId)) {
-                notationPanes("drums", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
+                notationPanes("drums", textState, errorsState, studio.notationViewState) { sectionList(trackId, sectionsState) }
             }
         }
         flowBlock(model.sectionWarningsState(trackId)) { warnings ->
@@ -213,28 +221,72 @@ private fun ViewScope.notationPanes(
 }
 
 /**
- * Renders each section of [sectionsState] under its name, a strip for each line of its text. A measure takes the same
- * width on every line, so a short line stays short, and a beat no more than [MAX_BEAT_UNITS] units.
+ * Renders each section of [sectionsState] of the track [trackId] under its name, with the action that records a take
+ * of it, a strip for each line of its text. A measure takes the same width on every line, so a short line stays
+ * short, and a beat no more than [MAX_BEAT_UNITS] units.
  */
-private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
+context(model: MusicEditor)
+private fun ViewScope.sectionList(trackId: TrackId, sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
     sections.forEach { section ->
-        textBlock(section.sectionId.name, TextSmall)
-        val lines = section.lines()
-        // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
-        val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
-        val paneTicks = section.measuresPerLine * section.measureTicks + leadTicks
-        // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
-        val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
-        // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
-        val headRoom = LinearDimension("calc(var(--unit) * $HEAD_ROOM_UNITS)")
-        column(modify(Css.MaxWidth.of(maxWidth), Css.Gap.of(2.px))) {
-            lines.forEach { line ->
-                val place = modify(
-                    Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
-                    Css.Width.of((line.ticks / paneTicks * 100).pct),
-                )
-                // each line on a band of its own, the band reaching the whole width however short the line
-                div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) { sectionMeasures(line, place) }
+        val recordId = Id(Uuid.random().toString())
+        sectionMicPopover(recordId, app.getSectionMic(contentScope, model, trackId, section.sectionId))
+        actionSection(
+            label = section.sectionId.name,
+            actions = listOf(MenuAction("Record", config = { setPopoverTarget(recordId, true) }) { }),
+            heading = { span { +it } },
+        ) {
+            sectionStrips(section)
+        }
+    }
+}
+
+/** The strips of [section], a line of its text to each. */
+private fun ViewScope.sectionStrips(section: SectionNotation) {
+    val lines = section.lines()
+    // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
+    val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
+    val paneTicks = section.measuresPerLine * section.measureTicks + leadTicks
+    // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
+    val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
+    // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
+    val headRoom = LinearDimension("calc(var(--unit) * $HEAD_ROOM_UNITS)")
+    column(modify(Css.MaxWidth.of(maxWidth), Css.Gap.of(2.px))) {
+        lines.forEach { line ->
+            val place = modify(
+                Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
+                Css.Width.of((line.ticks / paneTicks * 100).pct),
+            )
+            // each line on a band of its own, the band reaching the whole width however short the line
+            div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) { sectionMeasures(line, place) }
+        }
+    }
+}
+
+/**
+ * A popover with [id] that records takes through [mic]: the lead-in's progress beside the take's, then the name
+ * the take is kept under and the button that starts it, or stops it early and discards it.
+ */
+private fun ViewScope.sectionMicPopover(id: Id, mic: SectionMic) {
+    popover(id) {
+        column(modify(Padding(2), MinWidth(64))) {
+            row(AlignItemsCenter) {
+                progressBar(mic.leadProgressState, modify(Flex1, Height(2), ZenBg), isSmooth = false)
+                progressBar(mic.takeProgressState, modify(Css.Flex.of(Flex(4)), Height(2), ZenBg), isSmooth = false)
+            }
+            row(AlignItemsCenter) {
+                textField(mic.nameState, "name", Flex1)
+                flowBlock(mic.phaseState) { phase ->
+                    val label = when (phase) {
+                        SectionMicPhase.Idle -> "Record"
+                        SectionMicPhase.LeadIn, SectionMicPhase.Recording -> "Stop"
+                        SectionMicPhase.Saving -> "Saving"
+                    }
+                    button(label, { mic.toggle() })
+                }
+            }
+            switch("Click", mic.isClickOnState)
+            flowBlock(mic.isCalibratedState) { isCalibrated ->
+                if (!isCalibrated) textBlock("Calibrate in the Studio so takes land on the beat.", modify(TextSmall, InkDimFg))
             }
         }
     }

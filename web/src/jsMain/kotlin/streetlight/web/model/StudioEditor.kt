@@ -22,6 +22,7 @@ class StudioEditor(
     private val recorder: AudioRecorder,
     private val player: AudioPlayer,
     private val audio: StudioAudio,
+    private val latencyStore: LatencyStore,
 ) : TimelineModel {
     private val state = storeOf(StudioEditorState())
     val sampleIdsState = state.tapOf { it.samples.map { sample -> sample.id } }
@@ -169,7 +170,7 @@ class StudioEditor(
 
     /**
      * Measures the setup's [AcousticProfile]: captures a lead-in of silence, then a sine sweep played through the
-     * speakers and the tail that follows it.
+     * speakers and the tail that follows it. Its latency is kept in [latencyStore] for later takes.
      */
     fun calibrate() {
         if (recorder.isRecordingState.now || calibrateJob?.isActive == true) return
@@ -187,6 +188,7 @@ class StudioEditor(
                 val response = recorder.stop() ?: return@launch
                 val profile = measureAcousticProfile(sweep, sweepClock, response)
                 state.update { it.copy(profile = profile) }
+                latencyStore.save(profile.latencySeconds)
             } finally {
                 recorder.cancel()
                 player.stop()

@@ -24,6 +24,8 @@ A view model with per-view state is not registered in the module. It is built by
 
 What a user keeps on the device lives in the one database `localDbOf` opens, a store per model. Audio stays on the device whether or not the user has an account; the server only knows where a shared clip lives.
 
+A take's downbeat sits `leadSeconds` into its recording: the time from the capture's start to the scheduled downbeat, plus the round-trip latency, since the player hears the count late and their sound arrives late again. Playback then needs no compensation, as clips and generated tones leave by the same path. A take plays in place of its section's tones while its tempo, time, key and bars still fit the mix, and the tones return once they don't.
+
 A clip's audio is encoded once, as mono Opus at 48 kHz and 96 kbps, beyond which quality gains don't matter to a playground. Every later change to a clip, such as its trim or an effect, stays in its metadata, so the only second encode is a deliberate one, as a mix's export. Stereo returns at mix time.
 
 ## Entity Properties
@@ -197,8 +199,11 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
 | [`NoteDrag`](../../web/src/jsMain/kotlin/streetlight/web/model/NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
+| [`LatencyStore`](../../web/src/jsMain/kotlin/streetlight/web/model/LatencyStore.kt) | The setup's round-trip latency from the last calibration |
 | [`LocalMixDb`](../../web/src/jsMain/kotlin/streetlight/web/model/LocalMixDb.kt) | The `MixDb` kept on the device |
+| [`SectionMic`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
+| [`TakeShelf`](../../web/src/jsMain/kotlin/streetlight/web/model/SongTakes.kt) | Reads the clips of a mix that still fit its song, decoded for playback |
 | [`TimelineModel`](../../web/src/jsMain/kotlin/streetlight/web/model/TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditor` share |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/model/SiteMonitor.kt) | Charts the site's status |

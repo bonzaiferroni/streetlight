@@ -2,6 +2,8 @@
 
 package streetlight.web.model
 
+import js.buffer.ArrayBuffer
+import js.typedarrays.Float32Array
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import streetlight.model.music.MelodyTrack
@@ -32,22 +34,38 @@ class TrackPlayer(
      * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
      * of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
      * sound when it is `null`. Any playback already running is stopped first.
+     *
+     * Each of [takes] plays in place of the tones of its section, and the song then runs at the takes' tempo.
      */
-    fun play(song: StoredSong, track: Track? = null, fromSeconds: Double? = null) {
+    fun play(song: StoredSong, track: Track? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
         stop()
         val music = song.music
         val playing = track?.let { listOf(it) } ?: song.tracks
-        val trackTones = songTonesOf(music, song.tracks, playing).filter { it.isSounding }
-        if (trackTones.isEmpty()) return
+        val playingTakes = takes?.takes.orEmpty().filterKeys { key -> playing.any { it.trackId == key.trackId } }
+        val trackTones = songTonesOf(music, song.tracks, playing, playingTakes.keys).filter { it.isSounding }
+        // each time a take's track plays its section, placed by the section's tick
+        val takeStarts = playingTakes.flatMap { (key, take) ->
+            val takeTrack = playing.first { it.trackId == key.trackId }
+            sectionStartsOf(music, song.tracks, takeTrack, key.sectionId).map { it to take }
+        }
+        if (trackTones.isEmpty() && takeStarts.isEmpty()) return
 
         val context = audio.readContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
-        val secondsPerTick = music.secondsPerTick
-        // a pickup sounds before the first downbeat, so the earliest tone sets the start
-        val firstTick = trackTones.mapNotNull { it.firstTick }.min()
+        val secondsPerTick = takes?.let { 60.0 / it.bpm / music.time.pulse.ticks } ?: music.secondsPerTick
+        // a pickup or a take's lead sounds before the first downbeat, so the earliest sound sets the start
+        val firstTick = (trackTones.mapNotNull { it.firstTick } +
+            takeStarts.map { (tick, take) -> tick - (take.leadSeconds / secondsPerTick).toInt() }).min()
         val startTick = fromSeconds?.let { (it / secondsPerTick).toInt() } ?: firstTick
         startClock = context.currentTime + START_DELAY_SECONDS - startTick * secondsPerTick
+        val playClock = startClock + startTick * secondsPerTick
+        takeStarts.forEach { (tick, take) ->
+            val at = startClock + tick * secondsPerTick - take.leadSeconds
+            // a take already under way where playback begins plays what is left of it
+            val offset = max(playClock - at, 0.0)
+            if (offset < take.pcm.durationSeconds) keep(pcmSource(context, runBus, take.pcm, at + offset, offset))
+        }
         trackTones.forEach { (track, tones, drums) ->
             drums.filter { it.startTick >= startTick }.forEach { drum ->
                 val start = startClock + drum.startTick * secondsPerTick
@@ -66,14 +84,23 @@ class TrackPlayer(
         playingStore.set(sources.isNotEmpty())
     }
 
-    /** Sounds [midis] together briefly over any playback, cutting off what this last sounded. */
-    fun playNotes(midis: List<Int>) {
+    /**
+     * Sounds [midis] together over any playback for [seconds] from [startClock] on the audio clock, or briefly from
+     * now, cutting off what this last sounded.
+     */
+    fun playNotes(midis: List<Int>, startClock: Double? = null, seconds: Double = NOTE_SECONDS) {
         val context = audio.readContext()
         noteBus?.disconnect()
         val runBus = context.createGain().also { it.connect(context.destination) }
         noteBus = runBus
         val level = MELODY_LEVEL / sqrt(midis.size.toDouble())
-        midis.forEach { voice(context, runBus, it, context.currentTime, NOTE_SECONDS, level) }
+        midis.forEach { voice(context, runBus, it, startClock ?: context.currentTime, seconds, level) }
+    }
+
+    /** Silences what [playNotes] last sounded. */
+    fun stopNotes() {
+        noteBus?.disconnect()
+        noteBus = null
     }
 
     /** The seconds from the first downbeat the latest playback has reached, below 0 before it. */
@@ -117,6 +144,19 @@ class TrackPlayer(
             oscillator.stop(start + duration + TAIL_SECONDS)
             keep(oscillator)
         }
+    }
+
+    /** Plays [pcm] into [bus] from [start] on the audio clock, [offset] seconds into it. */
+    private fun pcmSource(context: AudioContext, bus: GainNode, pcm: PcmSample, start: Double, offset: Double): AudioScheduledSourceNode {
+        val buffer = context.createBuffer(pcm.channels.size, pcm.frameCount, pcm.sampleRate.toFloat())
+        pcm.channels.forEachIndexed { index, samples ->
+            buffer.copyToChannel(samples.unsafeCast<Float32Array<ArrayBuffer>>(), index)
+        }
+        val source = context.createBufferSource()
+        source.buffer = buffer
+        source.connect(bus)
+        source.start(start, offset)
+        return source
     }
 
     /** Keeps [source] until it ends, so playback is known to run while any source does. */

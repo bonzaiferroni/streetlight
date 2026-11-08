@@ -11,8 +11,10 @@ import streetlight.model.music.Music
 import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Section
+import streetlight.model.music.SectionId
 import streetlight.model.music.Stanza
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionOrderOf
@@ -55,9 +57,15 @@ data class TrackTones(
  *
  * Each section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole
  * times as fit, and rests through a section it lacks or what is left after its repeats. A pickup starts before its
- * section, so the first tones may start before tick 0.
+ * section, so the first tones may start before tick 0. A section of a track in [taken] sounds no tones, as a take
+ * plays in its place.
  */
-fun songTonesOf(music: Music, tracks: List<Track>, playing: List<Track>): List<TrackTones> {
+fun songTonesOf(
+    music: Music,
+    tracks: List<Track>,
+    playing: List<Track>,
+    taken: Set<TrackSection> = emptySet(),
+): List<TrackTones> {
     val order = tracks.sectionOrderOf(music)
     val onsets = order.runningFold(0) { onset, sectionId -> onset + (tracks.lengthOf(sectionId)?.ticks ?: 0) }
     return playing.map { track ->
@@ -68,14 +76,46 @@ fun songTonesOf(music: Music, tracks: List<Track>, playing: List<Track>): List<T
             var tick = onset
             val sections = track.sectionsOf(sectionId).orEmpty()
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
+            val isTaken = TrackSection(track.trackId, sectionId) in taken
             List(track.repeatsOf(sectionId, span)) { sections }.flatten().forEach { section ->
-                tones.addAll(tonesOf(section, tick, music.key, capo))
-                if (section is Groove) drums.addAll(drumTonesOf(section, tick))
+                if (!isTaken) {
+                    tones.addAll(tonesOf(section, tick, music.key, capo))
+                    if (section is Groove) drums.addAll(drumTonesOf(section, tick))
+                }
                 tick += section.length.ticks
             }
         }
         TrackTones(track, tones, drums.sortedBy { it.startTick })
     }
+}
+
+/**
+ * The tick at which [track], one of [tracks], starts [sectionId] each time it plays it along the arrangement of
+ * [music], each of its repeats included.
+ */
+fun sectionStartsOf(music: Music, tracks: List<Track>, track: Track, sectionId: SectionId): List<Int> {
+    val length = track.lengthOf(sectionId)?.ticks ?: return emptyList()
+    val order = tracks.sectionOrderOf(music)
+    val onsets = order.runningFold(0) { onset, id -> onset + (tracks.lengthOf(id)?.ticks ?: 0) }
+    return order.zip(onsets).filter { it.first == sectionId }.flatMap { (_, onset) ->
+        val span = tracks.lengthOf(sectionId) ?: Beats(0)
+        List(track.repeatsOf(sectionId, span)) { onset + it * length }
+    }
+}
+
+/** A section of a track. */
+data class TrackSection(val trackId: TrackId, val sectionId: SectionId)
+
+/**
+ * The first pitched tone of [sectionId] in [track], its pickup's first when it has one, with both capos of [music]
+ * applied, or `null` when the section sounds no pitch.
+ */
+fun firstToneOf(music: Music, track: Track, sectionId: SectionId): SongTone? {
+    val capo = (music.capo ?: 0) + (track.capo ?: 0)
+    var onset = 0
+    return track.sectionsOf(sectionId).orEmpty().flatMap { section ->
+        tonesOf(section, onset, music.key, capo).also { onset += section.length.ticks }
+    }.minByOrNull { it.startTick }
 }
 
 /** The tones of [section] in [key] placed at [onset] and raised [capo] semitones, its pickup sounding before it. */

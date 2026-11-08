@@ -45,6 +45,7 @@ A container is a `div`. `box` is reserved for children stacked over one another.
 |---|---|
 | [`dialog`, `dialogContent`, `dialogCard`](../../koala/src/jsMain/kotlin/koala/dom/component/dialog.kt) | A modal dialog open while a field is `true`, and its content |
 | [`popover`, `popoverCard`](../../koala/src/jsMain/kotlin/koala/dom/component/popover.kt) | A popover, with or without a card |
+| [`progressBar`](../../koala/src/jsMain/kotlin/koala/dom/component/progressBar.kt) | A bar following a progress tap |
 
 ### Buttons and Links
 
