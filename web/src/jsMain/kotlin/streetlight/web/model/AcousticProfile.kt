@@ -15,12 +15,14 @@ import kotlin.math.sqrt
  *
  * [rumbleDb] and [hissDb] are the noise below 120 Hz and from 4 to 16 kHz, and [humHz] the mains frequency when a
  * hum stands out. [reverbSeconds] is the room's RT60 and [clarityDb] its C50, each `null` when the measurement
- * lacked the range to find it. [processing] is what the browser applied despite the studio's constraints.
+ * lacked the range to find it. [arrivalDb] is how far the stimulus's arrival stands above the noise of the impulse
+ * response, low when the mic never heard it. [processing] is what the browser applied despite the studio's constraints.
  */
 data class AcousticProfile(
     val micLabel: String,
     val sampleRate: Int,
     val latencySeconds: Double,
+    val arrivalDb: Double,
     val noiseFloorDb: Double,
     val rumbleDb: Double,
     val hissDb: Double,
@@ -43,7 +45,8 @@ fun measureAcousticProfile(stimulus: PcmSample, stimulusClock: Double, response:
     val sampleRate = response.pcm.sampleRate
     val signal = response.pcm.channels.first()
     val playFrame = ((stimulusClock - response.startClock) * sampleRate).roundToInt().coerceIn(0, signal.size)
-    val leadIn = signal.copyOfRange(min((LEAD_IN_SKIP_SECONDS * sampleRate).toInt(), playFrame), playFrame)
+    val leadInStart = min((LEAD_IN_SKIP_SECONDS * sampleRate).toInt(), playFrame)
+    val leadIn = signal.copyOfRange(leadInStart, playFrame)
 
     // find the impulse response, and where it arrives within the latency a setup can have
     val impulse = impulseResponseOf(signal, stimulus.channels.first())
@@ -62,6 +65,7 @@ fun measureAcousticProfile(stimulus: PcmSample, stimulusClock: Double, response:
         micLabel = response.micLabel,
         sampleRate = sampleRate,
         latencySeconds = (arrivalFrame - playFrame).toDouble() / sampleRate,
+        arrivalDb = impulse.readArrivalDb(arrivalFrame, leadInStart, playFrame),
         noiseFloorDb = leadIn.readRmsDb(0, leadIn.size),
         rumbleDb = noise.readBandDb(20.0, 120.0),
         hissDb = noise.readBandDb(4_000.0, 16_000.0),
@@ -135,6 +139,16 @@ private class NoiseSpectrum(val power: DoubleArray, val binHz: Double) {
             return NoiseSpectrum(power, sampleRate.toDouble() / size)
         }
     }
+}
+
+/**
+ * The peak of this impulse response at [arrivalFrame] over its level at the lags from [noiseStart] until [noiseEnd],
+ * before the stimulus played, where nothing but noise can answer it.
+ */
+private fun DoubleArray.readArrivalDb(arrivalFrame: Int, noiseStart: Int, noiseEnd: Int): Double {
+    val noisePower = readMeanSquare(noiseStart, noiseEnd)
+    if (noisePower == 0.0) return 0.0
+    return toPowerDb(this[arrivalFrame] * this[arrivalFrame] / noisePower)
 }
 
 /** The length of this decay before it sinks into the noise of its own tail. */

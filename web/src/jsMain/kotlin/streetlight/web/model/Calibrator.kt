@@ -27,7 +27,7 @@ class Calibrator(
 
     /**
      * Captures a lead-in of silence, then the sweep and the tail that follows it, and measures the profile from them,
-     * or gives the problem. Does nothing while a recording or calibration runs.
+     * or gives the problem, as when the mic never heard the sweep. Does nothing while a recording or calibration runs.
      */
     suspend fun calibrate(): Outcome<AcousticProfile>? {
         if (calibratingStore.now || recorder.isRecordingState.now) return null
@@ -40,6 +40,9 @@ class Calibrator(
             delay((sweep.durationSeconds * 1000).toLong() + TAIL_MILLIS)
             val response = recorder.stop() ?: return null
             val profile = measureAcousticProfile(sweep, sweepClock, response)
+            if (profile.arrivalDb < MIN_ARRIVAL_DB) {
+                return Problem("The mic was unable to detect the calibration sweep.")
+            }
             latencyStore.save(profile.latencySeconds)
             Ok(profile)
         } catch (error: CancellationException) {
@@ -56,3 +59,6 @@ class Calibrator(
 
 private const val LEAD_IN_MILLIS = 1000L
 private const val TAIL_MILLIS = 1000L
+
+// noise alone peaks near 13 dB over a second of lags
+private const val MIN_ARRIVAL_DB = 20.0
