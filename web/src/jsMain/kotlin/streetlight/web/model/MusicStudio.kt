@@ -28,6 +28,7 @@ class MusicStudio(
     private val mixDb: MixDb,
     private val messenger: Messenger,
     private val takeShelf: TakeShelf,
+    private val clipDb: ClipDb,
 ) {
     val songList = db.songsState.tapOf { songs -> songs.map { it.song } }
 
@@ -72,7 +73,7 @@ class MusicStudio(
     /** An editor of the song of [songId] for as long as [scope] lasts, saving its changes, or `null` with no such song. */
     fun editorOf(scope: CoroutineScope, songId: SongId): MusicEditor? {
         val song = db.read(songId) ?: return null
-        val editor = MusicEditor(scope, song, notationStyleState, mixDb, messenger, takeShelf)
+        val editor = MusicEditor(scope, song, notationStyleState, mixDb, messenger, takeShelf, clipDb)
         editor.storedState.reactIn(scope) { db.save(it) }
         return editor
     }

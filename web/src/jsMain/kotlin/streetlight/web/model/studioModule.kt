@@ -43,6 +43,6 @@ fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MusicEditor, track
 fun AppContainer.getSectionClipEditor(scope: CoroutineScope, editor: MusicEditor, trackId: TrackId, sectionId: SectionId) =
     SectionClipEditor(scope, editor, trackId, sectionId, koin.get())
 
-fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get(), koin.get(), koin.get())
+fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
 
 private var isStudioModuleLoaded = false

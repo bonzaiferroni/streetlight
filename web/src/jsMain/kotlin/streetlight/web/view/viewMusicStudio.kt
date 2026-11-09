@@ -70,8 +70,9 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {
                     when (studioTab) {
-                        MusicStudioTab.Arrangement -> context(editor) { musicEditor() }
-                        MusicStudioTab.Lanes -> context(lanes) { laneEditor() }
+                        MusicStudioTab.Compose -> context(editor) { musicEditor() }
+                        MusicStudioTab.Mix -> context(editor) { mixEditor() }
+                        MusicStudioTab.Timeline -> context(lanes) { laneEditor() }
                     }
                 }
             }
