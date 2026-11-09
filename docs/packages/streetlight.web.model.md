@@ -142,6 +142,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`writeMidi`](../../web/src/jsMain/kotlin/streetlight/web/model/writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
 | [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums the player strikes |
 | [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones, or renders them offline for an export |
+| [`Calibrator`](../../web/src/jsMain/kotlin/streetlight/web/model/Calibrator.kt) | Measures the setup's acoustics with a sine sweep, keeping its latency for later takes |
 | [`ClipDb`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipDb.kt) | The clips a user plays, kept on the device with or without an account |
 | [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The audio of each clip, kept as an Ogg Opus file in the browser's private file system |
 | [`OpusCodec`](../../web/src/jsMain/kotlin/streetlight/web/model/OpusCodec.kt), [`OggOpus`](../../web/src/jsMain/kotlin/streetlight/web/model/OggOpus.kt) | A clip's one encode to Ogg Opus through WebCodecs, and its decode |

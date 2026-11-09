@@ -329,7 +329,16 @@ private fun ViewScope.sectionMicPopover(id: Id, mic: SectionMic) {
             }
             switch("Click", mic.isClickOnState)
             flowBlock(mic.isCalibratedState) { isCalibrated ->
-                if (!isCalibrated) textBlock("Calibrate in the Studio so takes land on the beat.", modify(TextSmall, InkDimFg))
+                if (isCalibrated) return@flowBlock
+                row(AlignItemsCenter) {
+                    textBlock(
+                        "A calibration measures how late sound reaches the mic, so takes line up with the beat.",
+                        modify(Flex1, TextSmall, InkDimFg),
+                    )
+                    flowBlock(mic.isCalibratingState) { isCalibrating ->
+                        button(if (isCalibrating) "Calibrating" else "Calibrate", { mic.calibrate() })
+                    }
+                }
             }
         }
     }

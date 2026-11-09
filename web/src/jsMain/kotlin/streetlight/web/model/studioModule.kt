@@ -20,6 +20,7 @@ val studioModule = module {
     single<MixDb> { LocalMixDb(get()) }
     single { LatencyStore(get()) }
     single { TakeShelf(get(), get()) }
+    single { Calibrator(get(), get(), get(), get()) }
 }
 
 /** Loads [studioModule] into the app's Koin, unless it is loaded. */
@@ -33,7 +34,10 @@ fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, ko
 
 /** The capture of takes of the section [sectionId] of the track [trackId] in [editor]'s open mix. */
 fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MusicEditor, trackId: TrackId, sectionId: SectionId) =
-    SectionMic(scope, editor, trackId, sectionId, koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
+    SectionMic(
+        scope, editor, trackId, sectionId,
+        koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get(), koin.get(),
+    )
 
 /** The editor of the clip bound to the section [sectionId] of the track [trackId] in [editor]'s open mix. */
 fun AppContainer.getSectionClipEditor(scope: CoroutineScope, editor: MusicEditor, trackId: TrackId, sectionId: SectionId) =

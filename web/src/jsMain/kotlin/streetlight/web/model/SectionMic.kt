@@ -41,6 +41,7 @@ class SectionMic(
     private val clipLibrary: ClipLibrary,
     private val clipDb: ClipDb,
     private val latencyStore: LatencyStore,
+    private val calibrator: Calibrator,
     private val messenger: Messenger,
 ) {
     private val state = storeOf(SectionMicState())
@@ -52,7 +53,8 @@ class SectionMic(
     val isClickOnState: MutableTap<Boolean> = storeOf(true)
 
     /** Whether a calibration has measured the setup's latency. */
-    val isCalibratedState = latencyStore.latencySecondsState.tapOf { it != null }
+    val isCalibratedState = calibrator.isCalibratedState
+    val isCalibratingState = calibrator.isCalibratingState
 
     private val kit = DrumKit()
     private val clicks = mutableListOf<AudioScheduledSourceNode>()
@@ -62,9 +64,19 @@ class SectionMic(
         scope.launch { nameState.set(nextName()) }
     }
 
+    /** Measures the setup's latency, so later takes land on the beat. */
+    fun calibrate() {
+        if (job?.isActive == true) return
+        scope.launch {
+            val outcome = calibrator.calibrate() ?: return@launch
+            outcome.toDataOr(messenger) { return@launch }
+            messenger.deliverSuccess("Calibrated")
+        }
+    }
+
     /** Starts a take, or stops the one under way and discards it. A take being saved runs on. */
     fun toggle() {
-        if (state.now.phase == SectionMicPhase.Saving) return
+        if (state.now.phase == SectionMicPhase.Saving || calibrator.isCalibratingState.now) return
         if (job?.isActive == true) {
             job?.cancel()
             return
