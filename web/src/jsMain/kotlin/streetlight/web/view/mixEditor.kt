@@ -10,7 +10,6 @@ import kotlinx.css.Flex
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.formRow
 import streetlight.web.model.MixEditor
-import streetlight.web.model.MusicEditor
 import streetlight.web.model.SectionClipEditor
 import streetlight.web.model.SectionMic
 import streetlight.web.model.SectionMicPhase
@@ -22,12 +21,12 @@ import streetlight.web.model.getSectionMic
  * Renders the open mix: its name, tempo and sounding key, the sections of every track with the clip each plays, and
  * the selected section's notation, the clip bound to it and the recorder of its takes.
  */
-context(model: MusicEditor)
+context(model: MixEditor)
 fun ViewScope.mixEditor() = column {
     formRow {
-        flowBlock(model.mix.isOpenState) { isOpen ->
+        flowBlock(model.isOpenState) { isOpen ->
             if (!isOpen) return@flowBlock
-            with(model.mix) {
+            with(model) {
                 column {
                     row {
                         textField(nameState, "name", Flex1)
@@ -41,27 +40,27 @@ fun ViewScope.mixEditor() = column {
             }
         }
         selectorContainer {
-            selectorBlock(model.mix.sectionsState, model.mix.selectionState) { section ->
+            selectorBlock(model.sectionsState, model.selectionState) { section ->
                 row(modify(AlignItemsCenter, Padding(1))) {
                     textBlock("${section.trackId.name} · ${section.sectionId.name}", Flex1)
-                    flowBlock(model.mix.statusOf(section)) { status -> textBlock(status, modify(TextSmall, InkDimFg)) }
+                    flowBlock(model.statusOf(section)) { status -> textBlock(status, modify(TextSmall, InkDimFg)) }
                 }
             }
         }
     }
-    flowBlock(model.mix.selectionState) { section ->
+    flowBlock(model.selectionState) { section ->
         section ?: return@flowBlock
         sectionWork(section)
     }
 }
 
 /** Renders the notation of [section], then the choice of its clip and the recorder of its takes. */
-context(model: MusicEditor)
+context(model: MixEditor)
 private fun ViewScope.sectionWork(section: TrackSection) {
     val clipEditor = app.getSectionClipEditor(contentScope, model, section.trackId, section.sectionId)
     val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
     actionSection(label = "${section.trackId.name} · ${section.sectionId.name}") {
-        flowBlock(model.mix.notationOf(section)) { notation ->
+        flowBlock(model.notationOf(section)) { notation ->
             notation ?: return@flowBlock
             sectionStrips(notation)
         }

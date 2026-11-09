@@ -17,18 +17,16 @@ import web.audio.GainNode
 import web.events.EventHandler
 import kotlin.math.ceil
 import kotlin.math.max
-import kotlin.math.pow
 import kotlin.math.sqrt
 
-/** Plays the tracks of a song through the speakers, each note a few harmonics shaped by an envelope. */
+/** Plays the tracks of a song through the speakers on [audio], its tones sounded by [synth]. */
 class TrackPlayer(
     private val audio: StudioAudio,
+    private val synth: ToneSynth,
 ) {
-    private val kit = DrumKit()
     private val sources = mutableListOf<AudioScheduledSourceNode>()
     private var bus: GainNode? = null
     private var startClock = 0.0
-    private var noteBus: GainNode? = null
 
     private val playingStore = storeOf(false)
     val isPlayingState: Tap<Boolean> = playingStore
@@ -44,7 +42,7 @@ class TrackPlayer(
     fun play(song: StoredSong, tracks: List<Track>? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
         stop()
         val plan = songPlanOf(song, tracks ?: song.tracks, takes) ?: return
-        val context = audio.readContext()
+        val context = audio.startContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
         val startTick = fromSeconds?.let { (it / plan.secondsPerTick).toInt() } ?: plan.firstTick
@@ -105,37 +103,18 @@ class TrackPlayer(
         plan.trackTones.forEach { (track, tones, drums) ->
             drums.filter { it.startTick >= startTick }.forEach { drum ->
                 val start = startClock + drum.startTick * secondsPerTick
-                kit.strike(context, bus, drum.drum, drum.hit, start).forEach(keep)
+                synth.strike(context, bus, drum.drum, drum.hit, start).forEach(keep)
             }
-            val level = if (track is MelodyTrack) MELODY_LEVEL else ACCOMPANIMENT_LEVEL
+            val level = if (track is MelodyTrack) ToneSynth.MELODY_LEVEL else ToneSynth.ACCOMPANIMENT_LEVEL
             // a tone already sounding where playback begins sounds what is left of it
             tones.filter { it.startTick + it.ticks > startTick }.forEach { tone ->
                 val toneStart = max(tone.startTick, startTick)
                 val start = startClock + toneStart * secondsPerTick
                 val duration = (tone.startTick + tone.ticks - toneStart) * secondsPerTick
                 val voiceLevel = level / sqrt(tone.midi.size.toDouble())
-                tone.midi.forEach { midi -> voice(context, bus, midi, start, duration, voiceLevel).forEach(keep) }
+                tone.midi.forEach { midi -> synth.voice(context, bus, midi, start, duration, voiceLevel).forEach(keep) }
             }
         }
-    }
-
-    /**
-     * Sounds [midis] together over any playback for [seconds] from [startClock] on the audio clock, or briefly from
-     * now, cutting off what this last sounded.
-     */
-    fun playNotes(midis: List<Int>, startClock: Double? = null, seconds: Double = NOTE_SECONDS) {
-        val context = audio.readContext()
-        noteBus?.disconnect()
-        val runBus = context.createGain().also { it.connect(context.destination) }
-        noteBus = runBus
-        val level = MELODY_LEVEL / sqrt(midis.size.toDouble())
-        midis.forEach { voice(context, runBus, it, startClock ?: context.currentTime, seconds, level).forEach(::keep) }
-    }
-
-    /** Silences what [playNotes] last sounded. */
-    fun stopNotes() {
-        noteBus?.disconnect()
-        noteBus = null
     }
 
     /** The seconds from the first downbeat the latest playback has reached, below 0 before it. */
@@ -152,40 +131,6 @@ class TrackPlayer(
             source.stop()
         }
         playingStore.set(false)
-    }
-
-    /**
-     * Sounds [midi] into [bus] from [start] for [duration] seconds at [level]: its first harmonics under one envelope
-     * that blooms, relaxes into a softer sustain, and releases just before the note ends. Returns the oscillators.
-     */
-    private fun voice(
-        context: BaseAudioContext,
-        bus: AudioNode,
-        midi: Int,
-        start: Double,
-        duration: Double,
-        level: Double,
-    ): List<AudioScheduledSourceNode> {
-        val envelope = context.createGain()
-        envelope.gain.setValueAtTime(0f, start)
-        envelope.gain.linearRampToValueAtTime(level.toFloat(), start + ATTACK_SECONDS)
-        envelope.gain.setTargetAtTime((level * SUSTAIN_RATIO).toFloat(), start + SETTLE_SECONDS, SETTLE_TIME_CONSTANT)
-        envelope.gain.setTargetAtTime(0f, start + duration * RELEASE_POINT, RELEASE_TIME_CONSTANT)
-        envelope.connect(bus)
-
-        val frequency = 440.0 * 2.0.pow((midi - 69) / 12.0)
-        return HARMONICS.map { (multiple, amplitude) ->
-            val oscillator = context.createOscillator()
-            oscillator.frequency.value = (frequency * multiple).toFloat()
-            val gain = context.createGain()
-            gain.gain.value = amplitude.toFloat()
-            oscillator.connect(gain)
-            gain.connect(envelope)
-            oscillator.start(start)
-            // the release tail outlasts the note, so the oscillators run on until it has faded
-            oscillator.stop(start + duration + TAIL_SECONDS)
-            oscillator
-        }
     }
 
     /** Plays [pcm] into [bus] from [start] on the audio clock, [offset] seconds into it. */
@@ -244,19 +189,3 @@ private class SongPlan(
         return max(toneEnd, takeEnd)
     }
 }
-private const val NOTE_SECONDS = 0.35
-private const val MELODY_LEVEL = 0.18
-private const val ACCOMPANIMENT_LEVEL = 0.12
-
-/** The multiple of the fundamental and the relative level of each harmonic a voice sounds. */
-private val HARMONICS = listOf(1 to 1.0, 2 to 0.3, 3 to 0.12)
-
-private const val ATTACK_SECONDS = 0.03
-private const val SETTLE_SECONDS = 0.05
-private const val SETTLE_TIME_CONSTANT = 0.2f
-private const val SUSTAIN_RATIO = 0.65
-
-/** The point in a note, as a share of its length, where its release begins. */
-private const val RELEASE_POINT = 0.92
-private const val RELEASE_TIME_CONSTANT = 0.05f
-private const val TAIL_SECONDS = 0.3

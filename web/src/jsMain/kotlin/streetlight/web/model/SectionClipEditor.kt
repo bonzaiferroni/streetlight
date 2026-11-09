@@ -15,15 +15,15 @@ import streetlight.model.music.TrackId
 
 /**
  * Edits the clip bound to the section [sectionId] of the track [trackId] in the mix [editor] has open, choosing among
- * the clips of [clipDb] that fit the section, or none. The clips are read again whenever the mix changes, so a new
+ * the clips of [clipLibrary] that fit the section, or none. The clips are read again whenever the mix changes, so a new
  * take joins them.
  */
 class SectionClipEditor(
     scope: CoroutineScope,
-    private val editor: MusicEditor,
+    private val editor: MixEditor,
     private val trackId: TrackId,
     private val sectionId: SectionId,
-    private val clipDb: ClipDb,
+    private val clipLibrary: ClipLibrary,
 ) {
     private val clipsStore = storeOf<List<Clip>>(emptyList())
 
@@ -47,7 +47,7 @@ class SectionClipEditor(
     }
 
     init {
-        scope.launch { editor.mixState.flow.collect { clipsStore.set(clipDb.readClips()) } }
+        scope.launch { editor.mixState.flow.collect { clipsStore.set(clipLibrary.readClips()) } }
     }
 
     private fun select(name: String) {
@@ -58,8 +58,8 @@ class SectionClipEditor(
 
     private fun choicesOf(clips: List<Clip>, mix: Mix?): List<Clip> {
         mix ?: return emptyList()
-        val track = editor.readTrack(trackId) ?: return emptyList()
-        val music = editor.musicState.now
+        val track = editor.musicEditor.readTrack(trackId) ?: return emptyList()
+        val music = editor.musicEditor.musicState.now
         val boundId = mix.boundClipId()
         return clips.filter { it.clipId == boundId || it.fits(music, mix, track, sectionId) }.sortedBy { it.name }
     }

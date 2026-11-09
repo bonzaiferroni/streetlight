@@ -22,9 +22,9 @@ import web.navigator.navigator
 import web.url.URL
 import web.worklets.addModule
 
-/** Records PCM from the microphone, one capture at a time. */
+/** Records PCM from the microphone on the context [startContext] starts, one capture at a time. */
 class AudioRecorder(
-    private val audio: StudioAudio,
+    private val startContext: () -> AudioContext,
 ) {
     private var capture: AudioCapture? = null
     private var isStarting = false
@@ -41,7 +41,7 @@ class AudioRecorder(
         if (capture != null || isStarting) return
         isStarting = true
         try {
-            val context = audio.readContext()
+            val context = startContext()
             loadModule(context)
             val stream = navigator.mediaDevices.getUserMedia(MediaStreamConstraints(audio = MediaTrackConstraints(
                 echoCancellation = false,

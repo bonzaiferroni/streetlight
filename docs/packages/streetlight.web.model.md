@@ -28,6 +28,8 @@ A take's downbeat sits `leadSeconds` into its recording: the time from the captu
 
 A clip's audio is encoded once, as mono Opus at 48 kHz and 96 kbps, beyond which quality gains don't matter to a playground. Every later change to a clip, such as its trim or an effect, stays in its metadata, so the only second encode is a deliberate one, as a mix's export. Stereo returns at mix time.
 
+A song's music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it, and follows its `trackChanges` for what a reading of the tracks can't tell, such as a rename.
+
 ## Entity Properties
 
 A property that depends on the entity type is an `Entity` extension function in `EntityUtility.kt`, resolved by a `when` over every entity type. A new `Entity` type adds a branch to each.
@@ -140,11 +142,12 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`Fleet`](../../web/src/jsMain/kotlin/streetlight/web/model/Fleet.kt) | A list loaded on first request |
 | [`songTonesOf`](../../web/src/jsMain/kotlin/streetlight/web/model/SongTones.kt) | The tones of a song's tracks laid along its arrangement, which playback and export share |
 | [`writeMidi`](../../web/src/jsMain/kotlin/streetlight/web/model/writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
-| [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums the player strikes |
+| [`StudioAudio`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioAudio.kt) | The audio context the studio shares, resumed as recording or playback starts, with the recorder and PCM player on it, its calibration and latency |
+| [`DrumKit`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumKit.kt) | The synthesized drums `ToneSynth` strikes |
+| [`ToneSynth`](../../web/src/jsMain/kotlin/streetlight/web/model/ToneSynth.kt) | The synthesized tones and drums, sounded into a live or offline context |
+| [`TonePlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TonePlayer.kt) | Plays notes and clicks live, apart from any song |
 | [`TrackPlayer`](../../web/src/jsMain/kotlin/streetlight/web/model/TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones, or renders them offline for an export |
-| [`Calibrator`](../../web/src/jsMain/kotlin/streetlight/web/model/Calibrator.kt) | Measures the setup's acoustics with a sine sweep, keeping its latency for later takes |
-| [`ClipDb`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipDb.kt) | The clips a user plays, kept on the device with or without an account |
-| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The audio of each clip, kept as an Ogg Opus file in the browser's private file system |
+| [`ClipLibrary`](../../web/src/jsMain/kotlin/streetlight/web/model/ClipLibrary.kt) | The clips a user plays, kept on the device with or without an account: each record in the local database, its audio as an Ogg Opus file in the browser's private file system |
 | [`OpusCodec`](../../web/src/jsMain/kotlin/streetlight/web/model/OpusCodec.kt), [`OggOpus`](../../web/src/jsMain/kotlin/streetlight/web/model/OggOpus.kt) | A clip's one encode to Ogg Opus through WebCodecs, and its decode |
 | [`readDeviceAgent`](../../web/src/jsMain/kotlin/streetlight/web/model/DeviceAgent.kt) | The browser described for a bug report |
 
@@ -190,9 +193,9 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/model/ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
-| [`MusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicStudio.kt) | Lists, creates and removes the songs in `SongDb`, and builds the `MusicEditor` of the one in focus, saving its changes |
-| [`MixEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MixEditor.kt) | Edits the name, tempo and sounding key of the mix open in `MusicEditor`, and the clip each track's section plays in it |
-| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song in focus in `MusicStudio`, and the mixes of its music, whose tempo playback and the lanes follow |
+| [`MusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicStudio.kt) | Lists, creates and removes the songs in `SongDb`, and builds the `MusicEditor` and `MixEditor` of the one in focus, saving its changes |
+| [`MixEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MixEditor.kt) | Edits the mixes of a song's music, whose tempo and takes playback follows |
+| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song in focus in `MusicStudio` |
 | [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track through its text |
 | [`MelodyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MelodyEditor.kt) | Edits a melody track through its jianpu |
 | [`DrumEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumEditor.kt) | Edits a drum track through its tab |
@@ -201,7 +204,6 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
 | [`NoteDrag`](../../web/src/jsMain/kotlin/streetlight/web/model/NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
-| [`LatencyStore`](../../web/src/jsMain/kotlin/streetlight/web/model/LatencyStore.kt) | The setup's round-trip latency from the last calibration |
 | [`LocalMixDb`](../../web/src/jsMain/kotlin/streetlight/web/model/LocalMixDb.kt) | The `MixDb` kept on the device |
 | [`SectionClipEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionClipEditor.kt) | Chooses the clip a mix binds to a track's section among those that fit it |
 | [`SectionMic`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |

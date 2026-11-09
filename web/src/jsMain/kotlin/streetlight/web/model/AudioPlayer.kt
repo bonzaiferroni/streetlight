@@ -11,9 +11,9 @@ import web.audio.AudioBufferSourceNode
 import web.audio.AudioContext
 import web.events.EventHandler
 
-/** Plays PCM samples together through the speakers. */
+/** Plays PCM samples together through the speakers on the context [startContext] starts. */
 class AudioPlayer(
-    private val audio: StudioAudio,
+    private val startContext: () -> AudioContext,
 ) {
     private val sources = mutableListOf<AudioBufferSourceNode>()
 
@@ -21,13 +21,13 @@ class AudioPlayer(
     val isPlayingState: Tap<Boolean> = playingStore
 
     /**
-     * Plays [placements] together from [fromSeconds] on the timeline, and returns the [StudioAudio.clockSeconds]
+     * Plays [placements] together from [fromSeconds] on the timeline, and returns the clock time
      * playback began at. A placement that begins later waits for its start. Any playback already running is stopped
      * first.
      */
     fun play(placements: List<PlacedPcm>, fromSeconds: Double): Double {
         stop()
-        val context = audio.readContext()
+        val context = startContext()
         val startClock = context.currentTime
 
         placements.forEach { placement ->

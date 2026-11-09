@@ -59,7 +59,8 @@ fun RouteScope.viewMusicStudioRoute() {
 /** Renders the song of [editor] in a section headed by its title, with a way back to the songs, as a tab for each layout. */
 context(model: MusicStudio, player: TrackPlayer)
 private fun ViewScope.songFocus(editor: MusicEditor) {
-    val lanes = LaneEditor(contentScope, editor, player)
+    val mix = model.mixEditorOf(contentScope, editor)
+    val lanes = LaneEditor(contentScope, editor, mix, player, app.get())
     // playback left running when the song closes would keep sounding
     onDispose { player.stop() }
     actionSection(
@@ -70,8 +71,8 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {
                     when (studioTab) {
-                        MusicStudioTab.Compose -> context(editor) { musicEditor() }
-                        MusicStudioTab.Mix -> context(editor) { mixEditor() }
+                        MusicStudioTab.Compose -> context(editor, mix) { musicEditor() }
+                        MusicStudioTab.Mix -> context(mix) { mixEditor() }
                         MusicStudioTab.Timeline -> context(lanes) { laneEditor() }
                     }
                 }

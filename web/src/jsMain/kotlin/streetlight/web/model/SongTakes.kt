@@ -23,9 +23,8 @@ class Take(
     val leadSeconds: Double,
 )
 
-/** Reads the takes of a mix from [clipDb] and [clipLibrary], keeping each clip it decodes for later plays. */
+/** Reads the takes of a mix from [clipLibrary], keeping each clip it decodes for later plays. */
 class TakeShelf(
-    private val clipDb: ClipDb,
     private val clipLibrary: ClipLibrary,
 ) {
     private val decoded = mutableMapOf<ClipId, PcmSample>()
@@ -34,10 +33,10 @@ class TakeShelf(
     suspend fun takesOf(song: StoredSong, mix: Mix): SongTakes {
         val takes = mix.clips.mapNotNull { binding ->
             val track = song.tracks.firstOrNull { it.trackId == binding.trackId } ?: return@mapNotNull null
-            val clip = clipDb.readClip(binding.clipId)
+            val clip = clipLibrary.readClip(binding.clipId)
                 ?.takeIf { it.fits(song.music, mix, track, binding.sectionId) } ?: return@mapNotNull null
             val pcm = decoded[clip.clipId]
-                ?: clipLibrary.read(clip.clipId)?.also { decoded[clip.clipId] = it } ?: return@mapNotNull null
+                ?: clipLibrary.readPcm(clip.clipId)?.also { decoded[clip.clipId] = it } ?: return@mapNotNull null
             TrackSection(binding.trackId, binding.sectionId) to Take(pcm, clip.leadSeconds)
         }.toMap()
         return SongTakes(mix.bpm, takes)

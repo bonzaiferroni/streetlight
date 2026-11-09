@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Ok
 import kampfire.model.MutableTap
 import kampfire.model.Tap
 import kampfire.model.mutableTapOf
@@ -19,18 +20,15 @@ import kotlin.math.min
  */
 class StudioEditor(
     private val scope: CoroutineScope,
-    private val recorder: AudioRecorder,
-    private val player: AudioPlayer,
     private val audio: StudioAudio,
-    private val latencyStore: LatencyStore,
 ) : TimelineModel {
     private val state = storeOf(StudioEditorState())
     val sampleIdsState = state.tapOf { it.samples.map { sample -> sample.id } }
     override val endSecondsState = state.tapOf { it.endSeconds }
     override val totalSecondsState = state.tapOf { it.totalSeconds }
     override val windowState = state.tapOf { it.window }
-    val isRecordingState = recorder.isRecordingState
-    val isPlayingState = player.isPlayingState
+    val isRecordingState = audio.recorder.isRecordingState
+    val isPlayingState = audio.pcmPlayer.isPlayingState
     val profileState = state.tapOf { it.profile }
     val isCalibratingState = state.tapOf { it.isCalibrating }
 
@@ -49,8 +47,8 @@ class StudioEditor(
     init {
         // a capture or playback left running when the studio closes would hold the microphone or keep sounding
         scope.coroutineContext[Job]?.invokeOnCompletion {
-            recorder.cancel()
-            player.stop()
+            audio.recorder.cancel()
+            audio.pcmPlayer.stop()
         }
     }
 
@@ -63,7 +61,7 @@ class StudioEditor(
     fun readPcm(id: Int) = filteredMap[id]
 
     /** The peaks of the capture in progress, or `null` when none is recording. */
-    fun readLivePeaks() = recorder.livePeaks
+    fun readLivePeaks() = audio.recorder.livePeaks
 
     /** Where the capture in progress began on the timeline. */
     fun readLiveStartSeconds() = captureStartSeconds
@@ -104,18 +102,18 @@ class StudioEditor(
 
     /** Starts a capture at the cursor, with the cursor following it. */
     fun record() {
-        if (recorder.isRecordingState.now || calibrateJob?.isActive == true) return
+        if (audio.recorder.isRecordingState.now || calibrateJob?.isActive == true) return
         playJob?.cancel()
-        player.stop()
+        audio.pcmPlayer.stop()
 
         recordJob = scope.launch {
             captureStartSeconds = cursorStore.now
-            recorder.start()
-            if (!recorder.isRecordingState.now) return@launch
+            audio.recorder.start()
+            if (!audio.recorder.isRecordingState.now) return@launch
 
             while (true) {
                 awaitAnimationFrame()
-                val peaks = recorder.livePeaks ?: break
+                val peaks = audio.recorder.livePeaks ?: break
                 moveCursorTo(captureStartSeconds + peaks.durationSeconds)
             }
         }
@@ -131,14 +129,14 @@ class StudioEditor(
             return@launch
         }
 
-        if (!recorder.isRecordingState.now) {
+        if (!audio.recorder.isRecordingState.now) {
             playJob?.cancel()
-            player.stop()
+            audio.pcmPlayer.stop()
             return@launch
         }
 
         recordJob?.cancel()
-        val pcm = recorder.stop()?.pcm ?: return@launch
+        val pcm = audio.recorder.stop()?.pcm ?: return@launch
         val id = nextSampleId++
         sampleMap[id] = pcm
         filteredMap[id] = pcm
@@ -148,7 +146,7 @@ class StudioEditor(
 
     /** Plays every sample together from the cursor, which follows playback; from the start once past the end. */
     fun play() {
-        if (recorder.isRecordingState.now) return
+        if (audio.recorder.isRecordingState.now) return
         playJob?.cancel()
         playJob = scope.launch {
             val endSeconds = state.now.endSeconds ?: return@launch
@@ -158,49 +156,37 @@ class StudioEditor(
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
 
             val fromSeconds = cursorStore.now
-            val startClock = player.play(placements, fromSeconds)
+            val startClock = audio.pcmPlayer.play(placements, fromSeconds)
 
             while (true) {
                 awaitAnimationFrame()
-                if (!player.isPlayingState.now) break
+                if (!audio.pcmPlayer.isPlayingState.now) break
                 moveCursorTo(min(fromSeconds + audio.clockSeconds - startClock, endSeconds))
             }
         }
     }
 
-    /**
-     * Measures the setup's [AcousticProfile]: captures a lead-in of silence, then a sine sweep played through the
-     * speakers and the tail that follows it. Its latency is kept in [latencyStore] for later takes.
-     */
+    /** Measures the setup's [AcousticProfile] through [StudioAudio.calibrate]. */
     fun calibrate() {
-        if (recorder.isRecordingState.now || calibrateJob?.isActive == true) return
+        if (audio.recorder.isRecordingState.now || calibrateJob?.isActive == true) return
         playJob?.cancel()
-        player.stop()
+        audio.pcmPlayer.stop()
 
         calibrateJob = scope.launch {
             state.update { it.copy(isCalibrating = true) }
             try {
-                recorder.start()
-                delay(LEAD_IN_MILLIS)
-                val sweep = sineSweepOf(audio.sampleRate)
-                val sweepClock = player.play(listOf(PlacedPcm(sweep, 0.0)), 0.0)
-                delay((sweep.durationSeconds * 1000).toLong() + TAIL_MILLIS)
-                val response = recorder.stop() ?: return@launch
-                val profile = measureAcousticProfile(sweep, sweepClock, response)
+                val profile = (audio.calibrate() as? Ok)?.data ?: return@launch
                 state.update { it.copy(profile = profile) }
-                latencyStore.save(profile.latencySeconds)
             } finally {
-                recorder.cancel()
-                player.stop()
                 state.update { it.copy(isCalibrating = false) }
             }
         }
     }
 
     override fun moveCursor(seconds: Double) {
-        if (recorder.isRecordingState.now) return
+        if (audio.recorder.isRecordingState.now) return
         playJob?.cancel()
-        player.stop()
+        audio.pcmPlayer.stop()
         moveCursorTo(seconds.coerceIn(0.0, state.now.totalSeconds))
     }
 
@@ -243,8 +229,6 @@ data class StudioEditorState(
 private const val DEFAULT_WINDOW_SECONDS = 10.0
 
 // a lead-in long enough to measure the noise floor, and a tail long enough for the sweep to arrive and decay
-private const val LEAD_IN_MILLIS = 1000L
-private const val TAIL_MILLIS = 1000L
 
 /** A toggle's state, read from [tap] and written by handing each value to [onSet]. */
 private class SettingTap(

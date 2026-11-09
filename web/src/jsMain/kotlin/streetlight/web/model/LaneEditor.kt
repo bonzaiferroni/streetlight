@@ -30,13 +30,16 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * The state behind the lanes of the song in [editor]: a lane for each track on a timeline played from a cursor. The
+ * The state behind the lanes of the song in [editor], at the tempo and with the takes of [mix]: a lane for each track on
+ * a timeline played from a cursor. The
  * timeline opens with a lead-in before the first downbeat, which holds any pickup and the first note's head.
  */
 class LaneEditor(
     private val scope: CoroutineScope,
     private val editor: MusicEditor,
+    private val mix: MixEditor,
     private val player: TrackPlayer,
+    private val tones: TonePlayer,
 ) : TimelineModel {
     private val state = storeOf(LaneEditorState())
 
@@ -45,11 +48,11 @@ class LaneEditor(
     private var playJob: Job? = null
 
     // laid out at the tempo playback runs at, so the cursor keeps with what sounds
-    val lanesState = editor.storedState.combine(editor.playbackSecondsPerTickState) { song, perTick ->
+    val lanesState = editor.storedState.combine(mix.playbackSecondsPerTickState) { song, perTick ->
         lanesOf(song, perTick)
     }
     override val endSecondsState: Tap<Double?> = editor.storedState.combine(
-        editor.playbackSecondsPerTickState,
+        mix.playbackSecondsPerTickState,
     ) { song, perTick ->
         endSecondsOf(song, perTick).takeIf { it > 0 }
     }
@@ -120,7 +123,7 @@ class LaneEditor(
         if (moved.midi != drag.moved.midi) {
             val capo = (music.capo ?: 0) + (track.capo ?: 0)
             val midis = moved.chord?.toMidi(music.key) ?: listOf(moved.midi)
-            player.playNotes(midis.map { it + capo })
+            tones.playNotes(midis.map { it + capo })
         }
     }
 
@@ -142,7 +145,7 @@ class LaneEditor(
     // the cursor sits across the window, so its onset is a share of that and not of a measure
     private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
         val music = editor.storedState.now.music
-        val seconds = section.startSeconds + source.tick * editor.playbackSecondsPerTickState.now
+        val seconds = section.startSeconds + source.tick * mix.playbackSecondsPerTickState.now
         return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
     }
 
@@ -156,12 +159,12 @@ class LaneEditor(
             val endSeconds = endSecondsState.now ?: return@launch
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
             val song = editor.storedState.now
-            val leadSeconds = leadSecondsOf(song, editor.playbackSecondsPerTickState.now)
+            val leadSeconds = leadSecondsOf(song, mix.playbackSecondsPerTickState.now)
             val lanes = state.now
             val playing = song.tracks.filter { track ->
                 lanes.soloId?.let { it == track.trackId } ?: (track.trackId !in lanes.mutedTracks)
             }
-            val takes = editor.readTakes()?.let { takes ->
+            val takes = mix.readTakes()?.let { takes ->
                 SongTakes(takes.bpm, takes.takes.filterKeys { it.trackId !in lanes.tonedTracks })
             }
             player.play(song, playing, fromSeconds = cursorStore.now - leadSeconds, takes = takes)

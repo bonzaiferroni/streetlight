@@ -19,29 +19,24 @@ import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.soundingKey
 import web.animations.awaitAnimationFrame
-import web.audio.AudioScheduledSourceNode
 import kotlin.math.abs
 
 /**
  * Records a take of the section [sectionId] of the track [trackId] in the mix [editor] has open: a lead-in of the
- * section's first note held a measure on [player], when it sounds one, and two measures counted on sticks, then the section, with a click through it while [isClickOnState] is on.
+ * section's first note held a measure, when it sounds one, and two measures counted on sticks, then the section, with a click through it while [isClickOnState] is on.
  *
- * A take that reaches the end of the section is encoded into [clipLibrary], kept in [clipDb] under the name in
+ * A take that reaches the end of the section is kept in [clipLibrary] under the name in
  * [nameState], and bound to the section. One stopped early is discarded. Its downbeat is placed by the round trip
  * the last calibration measured, or none before one, so it lands late by the setup's latency.
  */
 class SectionMic(
     private val scope: CoroutineScope,
-    private val editor: MusicEditor,
+    private val editor: MixEditor,
     private val trackId: TrackId,
     private val sectionId: SectionId,
     private val audio: StudioAudio,
-    private val recorder: AudioRecorder,
-    private val player: TrackPlayer,
+    private val tones: TonePlayer,
     private val clipLibrary: ClipLibrary,
-    private val clipDb: ClipDb,
-    private val latencyStore: LatencyStore,
-    private val calibrator: Calibrator,
     private val messenger: Messenger,
 ) {
     private val state = storeOf(SectionMicState())
@@ -53,11 +48,9 @@ class SectionMic(
     val isClickOnState: MutableTap<Boolean> = storeOf(true)
 
     /** Whether a calibration has measured the setup's latency. */
-    val isCalibratedState = calibrator.isCalibratedState
-    val isCalibratingState = calibrator.isCalibratingState
+    val isCalibratedState = audio.isCalibratedState
+    val isCalibratingState = audio.isCalibratingState
 
-    private val kit = DrumKit()
-    private val clicks = mutableListOf<AudioScheduledSourceNode>()
     private var job: Job? = null
 
     init {
@@ -68,7 +61,7 @@ class SectionMic(
     fun calibrate() {
         if (job?.isActive == true) return
         scope.launch {
-            val outcome = calibrator.calibrate() ?: return@launch
+            val outcome = audio.calibrate() ?: return@launch
             outcome.toDataOr(messenger) { return@launch }
             messenger.deliverSuccess("Calibrated")
         }
@@ -76,7 +69,7 @@ class SectionMic(
 
     /** Starts a take, or stops the one under way and discards it. A take being saved runs on. */
     fun toggle() {
-        if (state.now.phase == SectionMicPhase.Saving || calibrator.isCalibratingState.now) return
+        if (state.now.phase == SectionMicPhase.Saving || audio.isCalibratingState.now) return
         if (job?.isActive == true) {
             job?.cancel()
             return
@@ -85,9 +78,8 @@ class SectionMic(
             try {
                 record()
             } finally {
-                recorder.cancel()
-                player.stopNotes()
-                clearClicks()
+                audio.recorder.cancel()
+                tones.stop()
                 state.set(SectionMicState())
             }
         }
@@ -96,21 +88,21 @@ class SectionMic(
     private suspend fun record() {
         val plan = planOf() ?: return messenger.deliver(SectionMicProblem.noSection)
         try {
-            recorder.start()
+            audio.recorder.start()
         } catch (error: Throwable) {
             return messenger.deliver(SectionMicProblem.micFailed(error.message))
         }
 
         // schedule against the clock once the mic is open, so the lead-in starts in full
-        val context = audio.readContext()
+        val context = audio.context
         val leadStart = context.currentTime + START_DELAY_SECONDS
         val downbeat = leadStart + plan.leadSeconds
         val end = downbeat + plan.takeSeconds
-        plan.guideMidis?.let { player.playNotes(it, leadStart, plan.measureSeconds) }
+        plan.guideMidis?.let { tones.playNotes(it, leadStart, plan.measureSeconds) }
         scheduleClicks(plan, leadStart + plan.guideSeconds)
 
         state.set(SectionMicState(SectionMicPhase.LeadIn))
-        val latency = latencyStore.latencySecondsState.now ?: 0.0
+        val latency = audio.latencySecondsState.now ?: 0.0
         // the last notes arrive a round trip after the section ends
         while (audio.clockSeconds < end + latency + TAIL_SECONDS) {
             val clock = audio.clockSeconds
@@ -123,7 +115,7 @@ class SectionMic(
         }
 
         state.update { it.copy(phase = SectionMicPhase.Saving) }
-        val captured = recorder.stop() ?: return
+        val captured = audio.recorder.stop() ?: return
         val clip = Clip(
             clipId = ClipId.random(),
             name = nameState.now.trim().ifEmpty { nextName() },
@@ -133,8 +125,7 @@ class SectionMic(
             bars = plan.bars,
             leadSeconds = downbeat - captured.startClock + latency,
         )
-        clipLibrary.write(clip.clipId, captured.pcm).toDataOr(messenger) { return }
-        clipDb.saveClip(clip)
+        clipLibrary.saveClip(clip, captured.pcm).toDataOr(messenger) { return }
         editor.putClip(SectionClip(trackId, sectionId, clip.clipId))
         messenger.deliverSuccess("Saved ${clip.name}")
         nameState.set(nextName())
@@ -143,9 +134,9 @@ class SectionMic(
     /** The timing of a take in the open mix, or `null` while there is no mix or the track lacks the section. */
     private fun planOf(): CapturePlan? {
         val mix = editor.mixState.now ?: return null
-        val track = editor.readTrack(trackId) ?: return null
+        val track = editor.musicEditor.readTrack(trackId) ?: return null
         val length = track.lengthOf(sectionId)?.takeIf { it.ticks > 0 } ?: return null
-        val music = editor.musicState.now
+        val music = editor.musicEditor.musicState.now
         val secondsPerTick = 60.0 / mix.bpm / music.time.pulse.ticks
         val measureTicks = music.time.measure.ticks
         // the mix may sound in another key than the music, so the guide moves the nearest way to it
@@ -169,7 +160,6 @@ class SectionMic(
      * every pulse. The click, when on, keeps every pulse through the take.
      */
     private fun scheduleClicks(plan: CapturePlan, countStart: Double) {
-        val context = audio.readContext()
         val pulses = plan.pulsesPerMeasure
         val firstMeasure = if (pulses > 2 && pulses % 2 == 0) listOf(0.0, plan.measureSeconds / 2) else listOf(0.0)
         val secondMeasure = List(pulses) { plan.measureSeconds + it * plan.pulseSeconds }
@@ -178,19 +168,14 @@ class SectionMic(
         val measureStarts = (0..plan.bars + 1).map { it * plan.measureSeconds }
         (firstMeasure + secondMeasure + takePulses).forEach { offset ->
             val isDownbeat = measureStarts.any { abs(it - offset) < 1e-6 }
-            clicks.addAll(kit.sticks(context, context.destination, countStart + offset, accent = isDownbeat))
+            tones.click(countStart + offset, accent = isDownbeat)
         }
-    }
-
-    private fun clearClicks() {
-        clicks.forEach { it.stop() }
-        clicks.clear()
     }
 
     /** The track and section's name with the first number from 1 that no kept clip holds. */
     private suspend fun nextName(): String {
         val base = "${trackId.name} ${sectionId.name}"
-        val names = clipDb.readClips().mapTo(mutableSetOf()) { it.name }
+        val names = clipLibrary.readClips().mapTo(mutableSetOf()) { it.name }
         return generateSequence(1) { it + 1 }.map { "$base $it" }.first { it !in names }
     }
 }

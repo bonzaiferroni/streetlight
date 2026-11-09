@@ -8,7 +8,10 @@ import kampfire.model.Outcome
 import kampfire.model.Tap
 import kampfire.model.toDataOr
 import kampfire.model.storeOf
+import streetlight.model.music.Clip
 import streetlight.model.music.ClipId
+import streetlight.web.utility.IdbDatabase
+import streetlight.web.utility.IdbStore
 import web.blob.arrayBuffer
 import web.fs.FileSystemDirectoryHandle
 import web.fs.FileSystemGetDirectoryOptions
@@ -25,12 +28,15 @@ import web.storage.persist
 import web.streams.close
 
 /**
- * The audio of each clip, kept as a mono Ogg Opus file in the browser's private file system under its [ClipId], and
- * decoded at the sample rate of [audio].
+ * The clips a user plays, kept on the device whether or not they have an account: each [Clip] in [db], and its audio
+ * as a mono Ogg Opus file in the browser's private file system, decoded at the sample rate of [audio]. A shared
+ * clip's [Clip.url] is its public home.
  */
 class ClipLibrary(
     private val audio: StudioAudio,
+    db: IdbDatabase,
 ) {
+    private val store = IdbStore(db, CLIP_STORE, Clip.serializer()) { it.clipId.key }
     private var directory: FileSystemDirectoryHandle? = null
 
     private val persistedStore = storeOf<Boolean?>(null)
@@ -38,26 +44,31 @@ class ClipLibrary(
     /** Whether the browser keeps the clips when space runs low, or `null` before the first clip is stored. */
     val isPersistedState: Tap<Boolean?> = persistedStore
 
-    /** Encodes [pcm] and stores it as the clip [clipId], in place of any clip it held, or gives the problem. */
-    suspend fun write(clipId: ClipId, pcm: PcmSample): Outcome<Unit> {
+    suspend fun readClip(clipId: ClipId) = store.read(clipId.key)
+    suspend fun readClips() = store.readAll()
+
+    /** Encodes [pcm] and stores it as the audio of [clip], in place of any clip of its id, or gives the problem. */
+    suspend fun saveClip(clip: Clip, pcm: PcmSample): Outcome<Unit> {
         val bytes = encodeOggOpus(pcm).toDataOr { return it }
         if (persistedStore.now == null) persistedStore.set(navigator.storage.persist())
-        val handle = readDirectory().getFileHandle(clipId.fileName, FileSystemGetFileOptions(create = true))
+        val handle = readDirectory().getFileHandle(clip.clipId.fileName, FileSystemGetFileOptions(create = true))
         val stream = handle.createWritable()
         stream.write(bytes.toUint8Array())
         stream.close()
+        store.write(clip)
         return Ok(Unit)
     }
 
-    /** The clip [clipId], or `null` when none is stored or its file cannot be read. */
-    suspend fun read(clipId: ClipId): PcmSample? {
+    /** The audio of the clip [clipId], or `null` when none is stored or its file cannot be read. */
+    suspend fun readPcm(clipId: ClipId): PcmSample? {
         val handle = readFileHandle(clipId.fileName) ?: return null
         val buffer = handle.getFile().arrayBuffer()
-        return decodeOggOpus(audio.readContext(), Int8Array(buffer).toByteArray())
+        return decodeOggOpus(audio.context, Int8Array(buffer).toByteArray())
     }
 
-    /** Removes the clip [clipId], if one is stored. */
-    suspend fun remove(clipId: ClipId) {
+    /** Removes the clip [clipId] and its audio, if stored. */
+    suspend fun removeClip(clipId: ClipId) {
+        store.remove(clipId.key)
         if (readFileHandle(clipId.fileName) == null) return
         readDirectory().removeEntry(clipId.fileName)
     }
@@ -73,6 +84,8 @@ class ClipLibrary(
         ?: navigator.storage.getDirectory().getDirectoryHandle(CLIP_DIRECTORY, FileSystemGetDirectoryOptions(create = true))
             .also { directory = it }
 }
+
+private val ClipId.key get() = value.toString()
 
 /** The name of the file holding the clip. */
 private val ClipId.fileName get() = "$value.opus"

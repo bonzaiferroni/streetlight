@@ -40,6 +40,7 @@ import streetlight.web.model.MelodyEditor
 import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.web.model.MusicEditor
+import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
@@ -51,7 +52,7 @@ import kampfire.model.toDataOr
 import kotlin.uuid.Uuid
 
 /** Renders the song's music, the style it is written in and its tracks. */
-context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
+context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 fun ViewScope.musicEditor() = column {
     row {
         dropMenu(studio.notationStyleState)
@@ -67,7 +68,7 @@ fun ViewScope.musicEditor() = column {
     trackList()
 }
 
-context(studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
+context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 private fun ViewScope.trackList() {
     val newId = Id(Uuid.random().toString())
     val exportId = Id(Uuid.random().toString())
@@ -80,7 +81,7 @@ private fun ViewScope.trackList() {
             MenuAction("Ogg") {
                 popover.close()
                 contentScope.launch {
-                    exportOgg(player, model.storedState.now, model.readTakes()).toDataOr(toaster) { return@launch }
+                    exportOgg(player, model.storedState.now, mix.readTakes()).toDataOr(toaster) { return@launch }
                 }
             },
         ))
@@ -108,7 +109,7 @@ private fun ViewScope.trackList() {
     actionSection(
         label = "Tracks",
         actions = listOf(
-            MenuAction("Play") { contentScope.launch { player.play(model.storedState.now, takes = model.readTakes()) } },
+            MenuAction("Play") { contentScope.launch { player.play(model.storedState.now, takes = mix.readTakes()) } },
             MenuAction("Stop") { player.stop() },
             MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
@@ -126,7 +127,7 @@ private fun ViewScope.trackList() {
  * Renders the row of [track], which opens its editor below it or closes it, with a grip that moves it among the
  * tracks.
  */
-context(handle: OrderHandle, studio: MusicStudio, model: MusicEditor, player: TrackPlayer)
+context(handle: OrderHandle, studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
@@ -143,7 +144,7 @@ private fun ViewScope.trackRow(track: Track) {
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
             else model.readTrack(trackId)?.let { track ->
-                contentScope.launch { player.play(model.storedState.now, listOf(track), takes = model.readTakes()) }
+                contentScope.launch { player.play(model.storedState.now, listOf(track), takes = mix.readTakes()) }
             }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(
