@@ -8,7 +8,6 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import web.animations.awaitAnimationFrame
 import kotlin.math.max
@@ -28,7 +27,7 @@ class StudioEditor(
     override val totalSecondsState = state.tapOf { it.totalSeconds }
     override val windowState = state.tapOf { it.window }
     val isRecordingState = audio.recorder.isRecordingState
-    val isPlayingState = audio.pcmPlayer.isPlayingState
+    val isPlayingState = audio.player.isPlayingState
     val profileState = state.tapOf { it.profile }
     val isCalibratingState = state.tapOf { it.isCalibrating }
 
@@ -48,7 +47,7 @@ class StudioEditor(
         // a capture or playback left running when the studio closes would hold the microphone or keep sounding
         scope.coroutineContext[Job]?.invokeOnCompletion {
             audio.recorder.cancel()
-            audio.pcmPlayer.stop()
+            audio.player.stop()
         }
     }
 
@@ -104,7 +103,7 @@ class StudioEditor(
     fun record() {
         if (audio.recorder.isRecordingState.now || calibrateJob?.isActive == true) return
         playJob?.cancel()
-        audio.pcmPlayer.stop()
+        audio.player.stop()
 
         recordJob = scope.launch {
             captureStartSeconds = cursorStore.now
@@ -131,7 +130,7 @@ class StudioEditor(
 
         if (!audio.recorder.isRecordingState.now) {
             playJob?.cancel()
-            audio.pcmPlayer.stop()
+            audio.player.stop()
             return@launch
         }
 
@@ -156,11 +155,11 @@ class StudioEditor(
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
 
             val fromSeconds = cursorStore.now
-            val startClock = audio.pcmPlayer.play(placements, fromSeconds)
+            val startClock = audio.player.play(placements, fromSeconds)
 
             while (true) {
                 awaitAnimationFrame()
-                if (!audio.pcmPlayer.isPlayingState.now) break
+                if (!audio.player.isPlayingState.now) break
                 moveCursorTo(min(fromSeconds + audio.clockSeconds - startClock, endSeconds))
             }
         }
@@ -170,7 +169,7 @@ class StudioEditor(
     fun calibrate() {
         if (audio.recorder.isRecordingState.now || calibrateJob?.isActive == true) return
         playJob?.cancel()
-        audio.pcmPlayer.stop()
+        audio.player.stop()
 
         calibrateJob = scope.launch {
             state.update { it.copy(isCalibrating = true) }
@@ -186,7 +185,7 @@ class StudioEditor(
     override fun moveCursor(seconds: Double) {
         if (audio.recorder.isRecordingState.now) return
         playJob?.cancel()
-        audio.pcmPlayer.stop()
+        audio.player.stop()
         moveCursorTo(seconds.coerceIn(0.0, state.now.totalSeconds))
     }
 

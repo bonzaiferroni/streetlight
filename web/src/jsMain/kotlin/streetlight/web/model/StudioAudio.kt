@@ -20,7 +20,7 @@ class StudioAudio(scope: CoroutineScope) {
     val context = AudioContext()
 
     val recorder = AudioRecorder(::startContext)
-    val pcmPlayer = AudioPlayer(::startContext)
+    val player = AudioPlayer(::startContext)
 
     private val latencyStore = localStoreOf<Double?>(scope, LATENCY_KEY, null)
     private val calibratingStore = storeOf(false)
@@ -59,7 +59,7 @@ class StudioAudio(scope: CoroutineScope) {
             recorder.start()
             delay(LEAD_IN_MILLIS)
             val sweep = sineSweepOf(sampleRate)
-            val sweepClock = pcmPlayer.play(listOf(PlacedPcm(sweep, 0.0)), 0.0)
+            val sweepClock = player.play(listOf(PlacedPcm(sweep, 0.0)), 0.0)
             delay((sweep.durationSeconds * 1000).toLong() + TAIL_MILLIS)
             val response = recorder.stop() ?: return null
             val profile = measureAcousticProfile(sweep, sweepClock, response)
@@ -74,7 +74,7 @@ class StudioAudio(scope: CoroutineScope) {
             Problem("Calibration failed${error.message?.let { ": $it" } ?: ""}")
         } finally {
             recorder.cancel()
-            pcmPlayer.stop()
+            player.stop()
             calibratingStore.set(false)
         }
     }
