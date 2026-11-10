@@ -7,6 +7,7 @@ import streetlight.model.music.Key
 import streetlight.model.music.Mix
 import streetlight.model.music.Music
 import streetlight.model.music.SectionId
+import streetlight.model.music.TrackSection
 import streetlight.model.music.Track
 import streetlight.model.music.lengthOf
 import kotlin.math.ceil

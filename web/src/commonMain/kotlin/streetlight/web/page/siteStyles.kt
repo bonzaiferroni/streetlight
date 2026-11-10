@@ -13,6 +13,7 @@ import streetlight.web.component.LogoCss
 import streetlight.web.view.EarthCss
 import streetlight.web.view.LaneCss
 import streetlight.web.view.MeasureCss
+import streetlight.web.view.MixCss
 import streetlight.web.view.StudioCss
 import streetlight.web.view.RouteDockCss
 import streetlight.web.component.TagFilterMenuCss
@@ -103,6 +104,7 @@ private val KtStyles = listOf(
     StudioCss,
     LaneCss,
     MeasureCss,
+    MixCss,
     CuratorMenuStyle,
     ConnectPickerCss,
     ConnectCss,

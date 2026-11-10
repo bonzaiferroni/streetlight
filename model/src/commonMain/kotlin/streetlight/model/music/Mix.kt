@@ -8,8 +8,8 @@ import streetlight.model.data.StarId
 
 /**
  * A way of playing the music [musicId] at [bpm] in [soundingKey], with the [clips] bound to its sections. It is seeded
- * from the music and keeps its own tempo and key after, so its clips still fit when the music drifts. Owned by
- * [starId], or by the device when `null`.
+ * from the music and keeps its own tempo and key after, so its clips still fit when the music drifts. The [hidden]
+ * sections are left out of its overview. Owned by [starId], or by the device when `null`.
  */
 @Serializable
 data class Mix(
@@ -20,6 +20,7 @@ data class Mix(
     val bpm: Int,
     val soundingKey: Key,
     val clips: List<SectionClip> = emptyList(),
+    val hidden: List<TrackSection> = emptyList(),
 )
 
 @JvmInline @Serializable

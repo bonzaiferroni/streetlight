@@ -301,7 +301,7 @@ private fun ViewScope.notationPanes(
 }
 
 /** The icon of the track's type. */
-private val Track.svg get() = when (this) {
+val Track.svg get() = when (this) {
     is ChordTrack -> SvgFile.AcousticGuitar
     is MelodyTrack -> SvgFile.Music
     is LyricTrack -> SvgFile.Microphone

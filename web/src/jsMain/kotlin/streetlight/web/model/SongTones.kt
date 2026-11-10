@@ -12,6 +12,7 @@ import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
+import streetlight.model.music.TrackSection
 import streetlight.model.music.Stanza
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
@@ -115,7 +116,7 @@ fun sectionStartsOf(music: Music, tracks: List<Track>, track: Track, sectionId: 
 }
 
 /** A section of a track. */
-data class TrackSection(val trackId: TrackId, val sectionId: SectionId)
+
 
 /**
  * The first pitched tone of [sectionId] in [track], its pickup's first when it has one, with both capos of [music]

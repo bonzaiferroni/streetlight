@@ -38,4 +38,4 @@ The domain model holds the composition alone. A performance of it, such as a `Se
 
 A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClip` binds one to a track's section, so a clip whose properties line up can be placed elsewhere.
 
-A `Mix` holds those bindings for one music. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.
+A `Mix` holds those bindings for one music, and the sections it hides from its overview, each a `TrackSection`, since tracks share a section's id. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.

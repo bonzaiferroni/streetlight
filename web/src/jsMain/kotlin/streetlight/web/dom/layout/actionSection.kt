@@ -1,5 +1,6 @@
 package streetlight.web.dom.layout
 
+import koala.Svg
 import koala.SvgFile
 import koala.component.buttonPopover
 import koala.component.heading3
@@ -13,17 +14,24 @@ import koala.modifier.*
 import koala.modifier.invoke
 import kampfire.model.Url
 import koala.model.WebRoute
+import kotlinx.css.Align
 import kotlinx.html.DIV
 import streetlight.model.data.Entity
 import streetlight.web.model.toRoute
 
+/**
+ * A section headed by [label], built by [heading], with [svg] before it as tall as the heading's row, and its
+ * [actions] at the end of that row, above its [content].
+ */
 fun AppendScope.actionSection(
     label: String,
     actions: List<MenuAction>? = null,
     heading: DIV.(String) -> Unit = DIV::defaultSectionHeading,
+    svg: Svg? = null,
     content: AppendScope.() -> Unit,
 ) = section {
     row(modify(BorderBottom2Px, AlignItemsCenter)) {
+        svg?.let { icon(it, Css.AlignSelf.of(Align.stretch)) }
         heading(label)
         menuActionsRow(actions)
     }
@@ -36,9 +44,10 @@ fun DIV.defaultSectionHeading(label: String) = heading3(label, modify(OpacityHig
 fun AppendScope.actionSectionCard(
     label: String,
     actions: List<MenuAction>? = null,
+    svg: Svg? = null,
     content: AppendScope.() -> Unit,
 ) = card(Padding(2)) {
-    actionSection(label, actions, heading = { heading5(it) }, content = content)
+    actionSection(label, actions, heading = { heading5(it) }, svg = svg, content = content)
 }
 
 fun AppendScope.actionRow(
