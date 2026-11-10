@@ -8,17 +8,25 @@ import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import streetlight.model.music.Arrangement
 import streetlight.model.music.Beats
-import streetlight.model.music.ChordTrack
-import streetlight.model.music.DrumTrack
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
+import streetlight.model.music.MusicSection
+import streetlight.model.music.Phrase
+import streetlight.model.music.Section
+import streetlight.model.music.SectionId
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
+import streetlight.model.music.copyTrack
+import streetlight.model.music.emptySectionOf
 import streetlight.model.music.freeTrackIdOf
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
+import streetlight.model.music.sectionsOf
+import streetlight.model.music.withSection
+import streetlight.model.music.withoutSection
 import streetlight.model.music.text.NotationStyle
 
 /**
@@ -44,9 +52,6 @@ class MusicEditor(
     /** Each track renamed or removed, as it happens. */
     val trackChanges: SharedFlow<TrackChange> = trackChangeFlow
 
-    /** The text of the song's music. */
-    val properties = MusicPropertyEditor(scope, musicState)
-
     /** The warnings on the track [trackId]: each section it defines whose repeats fall short of another track's. */
     fun sectionWarningsState(trackId: TrackId) = state.tapOf { editor ->
         val tracks = editor.tracks
@@ -57,7 +62,7 @@ class MusicEditor(
             val longest = tracks.lengthOf(sectionId) ?: return@mapNotNull null
             val shortfall = longest.ticks - length.ticks * track.repeatsOf(sectionId, longest)
             if (shortfall <= 0) null
-            else "${sectionId.name} falls ${shortfall.toBeatsText()} beats short of another track after its repeats"
+            else "${editor.music.nameOf(sectionId)} falls ${shortfall.toBeatsText()} beats short of another track after its repeats"
         }
     }
 
@@ -112,12 +117,7 @@ class MusicEditor(
             val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
             val base = name.trim().takeIf { it.isNotEmpty() && it != trackId.name } ?: return@update editor
             val renamedId = editor.tracks.filter { it.trackId != trackId }.newTrackId(base)
-            val renamed = when (track) {
-                is ChordTrack -> track.copy(trackId = renamedId)
-                is MelodyTrack -> track.copy(trackId = renamedId)
-                is LyricTrack -> track.copy(trackId = renamedId)
-                is DrumTrack -> track.copy(trackId = renamedId)
-            }
+            val renamed = track.copyTrack(trackId = renamedId)
             editor.copy(
                 tracks = editor.tracks.map { if (it.trackId == trackId) renamed else it },
                 openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId + renamedId else editor.openTracks,
@@ -138,7 +138,140 @@ class MusicEditor(
         trackChangeFlow.tryEmit(TrackChange.Removed(trackId))
     }
 
+    /** Sets the capo of the track [trackId], `null` for none. */
+    fun setTrackCapo(trackId: TrackId, capo: Int?) = updateTrack(trackId) { it.copyTrack(capo = capo) }
+
+    /** The sections the track [trackId] holds notation for, in its order, each with its name. */
+    fun trackSectionsState(trackId: TrackId): Tap<List<MusicSection>> = state.tapOf { editor ->
+        editor.tracks.firstOrNull { it.trackId == trackId }?.sections.orEmpty().map { editor.music.namedSectionOf(it.sectionId) }
+    }
+
+    /** The arrangements of the track [trackId], and the sections of the track they may play. */
+    fun trackArrangementsState(trackId: TrackId): Tap<TrackArrangements> = state.tapOf { editor ->
+        val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@tapOf TrackArrangements()
+        val music = editor.music
+        TrackArrangements(
+            arrangements = track.arrangements.map { arrangement ->
+                NamedArrangement(music.namedSectionOf(arrangement.sectionId), arrangement.sections.map { music.namedSectionOf(it) })
+            },
+            choices = (track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId }).map { music.namedSectionOf(it) },
+        )
+    }
+
+    /** The arrangement of the music, each section with its name. */
+    val arrangementState: Tap<List<MusicSection>> = state.tapOf { editor ->
+        editor.music.arrangement.map { editor.music.namedSectionOf(it) }
+    }
+
+    /** The sections of the music. */
+    val sectionsState: Tap<List<MusicSection>> = state.tapOf { it.music.sections }
+
+    /** The stanzas and arrangements of stanzas a phrase may name as its lyrics: those of the first lyric track. */
+    fun readLyricChoices(): List<MusicSection> {
+        val lyrics = state.now.tracks.firstNotNullOfOrNull { it as? LyricTrack } ?: return emptyList()
+        return (lyrics.sections.map { it.sectionId } + lyrics.arrangements.map { it.sectionId })
+            .map { state.now.music.namedSectionOf(it) }
+    }
+
+    /**
+     * Gives the track [trackId] an empty section for the section of the music named [name], which joins the music
+     * when no section holds the name. Returns whether it was added: not for a blank name, or one the track holds.
+     */
+    fun addSection(trackId: TrackId, name: String) = addToTrack(trackId, name) { withSection(emptySectionOf(it)) }
+
+    /** Gives the track [trackId] an empty arrangement for the section of the music named [name], as [addSection] does. */
+    fun addArrangement(trackId: TrackId, name: String) =
+        addToTrack(trackId, name) { copyTrack(arrangements = arrangements + Arrangement(it, emptyList())) }
+
+    private fun addToTrack(trackId: TrackId, name: String, add: Track.(SectionId) -> Track): Boolean {
+        val sectionName = name.trim().ifEmpty { return false }
+        val track = readTrack(trackId) ?: return false
+        val section = state.now.music.sectionOf(sectionName) ?: MusicSection(SectionId.random(), sectionName)
+        if (track.sectionsOf(section.sectionId) != null || track.arrangements.any { it.sectionId == section.sectionId }) return false
+
+        state.update { editor ->
+            val sections = if (section in editor.music.sections) editor.music.sections else editor.music.sections + section
+            editor.copy(
+                music = editor.music.copy(sections = sections),
+                tracks = editor.tracks.map { if (it.trackId == trackId) it.add(section.sectionId) else it },
+            )
+        }
+        return true
+    }
+
+    /** Puts [section] in the track [trackId], in place of its section of the same id. */
+    fun putSection(trackId: TrackId, section: Section) = updateTrack(trackId) { it.withSection(section) }
+
+    /**
+     * Removes the section or arrangement [sectionId] from the track [trackId], and from its arrangements. A section no
+     * track holds any longer, and the music's arrangement does not play, leaves the music.
+     */
+    fun removeSection(trackId: TrackId, sectionId: SectionId) = state.update { editor ->
+        val tracks = editor.tracks.map { track ->
+            if (track.trackId != trackId) return@map track
+            val removed = track.withoutSection(sectionId)
+            removed.copyTrack(arrangements = removed.arrangements.map { it.copy(sections = it.sections - sectionId) })
+        }
+        val isHeld = sectionId in editor.music.arrangement ||
+            tracks.any { track -> track.sections.any { it.sectionId == sectionId } || track.arrangements.any { it.sectionId == sectionId } }
+        if (isHeld) return@update editor.copy(tracks = tracks)
+
+        editor.copy(
+            music = editor.music.copy(sections = editor.music.sections.filter { it.sectionId != sectionId }),
+            tracks = tracks.map { track ->
+                if (track !is MelodyTrack) track
+                else track.copy(sections = track.sections.map { it.copy(lyrics = it.lyrics?.minus(sectionId)) })
+            },
+        )
+    }
+
+    /**
+     * Names the section [sectionId] [name] in every track, numbered when another section holds the name. A blank name
+     * leaves the section as it is.
+     */
+    fun renameSection(sectionId: SectionId, name: String) = state.update { editor ->
+        val base = name.trim().takeIf { it.isNotEmpty() && it != editor.music.nameOf(sectionId) } ?: return@update editor
+        val held = editor.music.sections.filter { it.sectionId != sectionId }.mapTo(mutableSetOf()) { it.name }
+        val freeName = generateSequence(1) { it + 1 }.map { if (it == 1) base else "$base $it" }.first { it !in held }
+        val sections = editor.music.sections.map { if (it.sectionId == sectionId) it.copy(name = freeName) else it }
+        editor.copy(music = editor.music.copy(sections = sections))
+    }
+
+    /** Names the stanzas sung to the phrase [sectionId] of the track [trackId], `null` for any. */
+    fun setSectionLyrics(trackId: TrackId, sectionId: SectionId, lyrics: List<SectionId>?) = updateTrack(trackId) { track ->
+        val phrase = track.sections.firstOrNull { it.sectionId == sectionId } as? Phrase ?: return@updateTrack track
+        track.withSection(phrase.copy(lyrics = lyrics))
+    }
+
+    /** Sets the sections the arrangement [sectionId] of the track [trackId] plays, in order. */
+    fun setArrangement(trackId: TrackId, sectionId: SectionId, sections: List<SectionId>) = updateTrack(trackId) { track ->
+        track.copyTrack(arrangements = track.arrangements.map {
+            if (it.sectionId == sectionId) it.copy(sections = sections) else it
+        })
+    }
+
+    /** Sets the sections every track follows, in order. */
+    fun setMusicArrangement(sections: List<SectionId>) = state.update { it.copy(music = it.music.copy(arrangement = sections)) }
+
+    private fun updateTrack(trackId: TrackId, transform: (Track) -> Track) = state.update { editor ->
+        editor.copy(tracks = editor.tracks.map { if (it.trackId == trackId) transform(it) else it })
+    }
 }
+
+/** The arrangement of [section] as it is shown: the [sections] it plays in order. */
+data class NamedArrangement(
+    val section: MusicSection,
+    val sections: List<MusicSection>,
+)
+
+/** The [arrangements] of a track, and the [choices] of its sections an arrangement may play. */
+data class TrackArrangements(
+    val arrangements: List<NamedArrangement> = emptyList(),
+    val choices: List<MusicSection> = emptyList(),
+)
+
+/** The section [sectionId] with the name this music knows it by. */
+private fun Music.namedSectionOf(sectionId: SectionId) = MusicSection(sectionId, nameOf(sectionId))
 
 data class MusicEditorState(
     val music: Music,

@@ -7,6 +7,7 @@ import streetlight.model.music.DrumHit
 import streetlight.model.music.DrumLane
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.Groove
+import streetlight.model.music.SectionId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackId
 
@@ -19,19 +20,28 @@ import streetlight.model.music.TrackId
  * row naming a drum the system already holds starts the next, so a long groove wraps.
  */
 object DrumParser {
-    /** Reads the drum track [trackId] from [text], with measures cut by [time]. */
-    fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<DrumTrack> {
+    /** Reads the drum track [trackId] from [text], with measures cut by [time] and sections found in [names]. */
+    fun read(trackId: TrackId, text: String, time: TimeSignature, names: SectionNames): NotationRead<DrumTrack> {
         val errors = mutableListOf<NotationError>()
-        val trackText = readTrackText(text, errors)
+        val trackText = readTrackText(text, errors, names)
         val grooves = trackText.sections.map { section -> readGroove(section, time, errors) }
         return NotationRead(DrumTrack(trackId, grooves, trackText.arrangements, trackText.capo), errors)
     }
 
-    /** Writes [track] as the tab [read] reads, with measures cut by [time]. */
-    fun write(track: DrumTrack, time: TimeSignature): String {
-        val bodies = track.sections.map { SectionBody(it.sectionId, writeGroove(it, time.measure)) }
-        return writeTrackBodies(bodies, track.arrangements, track.capo)
+    /** Reads the section [sectionId] from [text], the rows of its tab alone, cut by [time]. */
+    fun readSection(sectionId: SectionId, text: String, time: TimeSignature): NotationRead<Groove> {
+        val errors = mutableListOf<NotationError>()
+        return NotationRead(readGroove(sectionTextOf(sectionId, text, errors), time, errors), errors)
     }
+
+    /** Writes [track] as the tab [read] reads, with measures cut by [time] and sections named by [names]. */
+    fun write(track: DrumTrack, time: TimeSignature, names: SectionNames): String {
+        val bodies = track.sections.map { SectionBody(it.sectionId, writeGroove(it, time.measure)) }
+        return writeTrackBodies(bodies, track.arrangements, track.capo, names)
+    }
+
+    /** Writes [groove] as the tab [readSection] reads, with measures cut by [time]. */
+    fun writeSection(groove: Groove, time: TimeSignature) = writeGroove(groove, time.measure).joinToString("\n")
 
     private fun readGroove(section: SectionText, time: TimeSignature, errors: MutableList<NotationError>): Groove {
         val lanes = linkedMapOf<Drum, MutableList<DrumBeat>>()

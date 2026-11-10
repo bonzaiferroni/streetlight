@@ -6,7 +6,8 @@ import kotlin.uuid.Uuid
 import streetlight.model.data.RecordId
 
 /**
- * A musical understanding of a song: its key, time and tempo, and the [arrangement] of sections every track follows.
+ * A musical understanding of a song: its key, time and tempo, the [sections] its tracks hold content for, and the
+ * [arrangement] of them every track follows.
  *
  * The key and every track are written as played, and sound [capo] semitones higher, as chord shapes played behind a
  * guitar capo. A track's own [Track.capo] adds to it. The [bpm] counts the [TimeSignature.pulse].
@@ -19,8 +20,25 @@ data class Music(
     val time: TimeSignature,
     val bpm: Int = 90,
     val capo: Int? = null,
+    val sections: List<MusicSection> = emptyList(),
     val arrangement: List<SectionId> = emptyList(),
+) {
+    /** The name of the section [sectionId], or a placeholder when the music holds no such section. */
+    fun nameOf(sectionId: SectionId) = sections.firstOrNull { it.sectionId == sectionId }?.name ?: UNNAMED_SECTION
+
+    /** The section named [name], or `null` for none. */
+    fun sectionOf(name: String) = sections.firstOrNull { it.name == name }
+}
+
+/** A section of a music, known by a [name] no other section of the music holds. */
+@Serializable
+data class MusicSection(
+    val sectionId: SectionId,
+    val name: String,
 )
+
+/** The name shown for a section its music does not hold. */
+const val UNNAMED_SECTION = "?"
 
 @JvmInline @Serializable
 value class MusicId(override val value: Uuid): RecordId {

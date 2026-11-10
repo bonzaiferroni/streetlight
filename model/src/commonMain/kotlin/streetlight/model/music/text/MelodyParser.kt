@@ -23,31 +23,41 @@ import streetlight.model.music.TrackId
 class MelodyParser(
     private val key: Key,
 ) {
-    /** Reads the melody track [trackId] from [text], with measures checked against [time]. */
-    fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<MelodyTrack> {
+    /** Reads the melody track [trackId] from [text], with measures checked against [time] and sections found in [names]. */
+    fun read(trackId: TrackId, text: String, time: TimeSignature, names: SectionNames): NotationRead<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
-        val trackText = readTrackText(text, errors, setOf(LYRICS))
+        val trackText = readTrackText(text, errors, names, setOf(LYRICS))
         val phrases = trackText.sections.map { section ->
-            val notes = mutableListOf<MelodyNote>()
-            val pickup = mutableListOf<MelodyNote>()
-            var isTied = false
-            val segments = section.toSegments()
-            segments.pickup?.let { segment ->
-                fun error(message: String) = errors.add(NotationError(segment.line, message))
-                val read = readSegment(segment.text, QUARTER, pickup, isTied, ::error)
-                isTied = read.isTied
-                pickupProblemOf(read.ticks, time)?.let(::error)
-            }
-            segments.measures.forEachIndexed { index, segment ->
-                fun error(message: String) = errors.add(NotationError(segment.line, message))
-                val read = readSegment(segment.text, QUARTER, notes, isTied, ::error)
-                isTied = read.isTied
-                measureProblemOf(read.ticks, index == segments.measures.lastIndex, time)?.let(::error)
-            }
-            val lyrics = section.propertyOf(LYRICS)?.let { names -> tokensOf(names).map { SectionId(it) } }
-            Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE), lyrics)
+            val lyrics = section.propertyOf(LYRICS)?.let { stanzas -> tokensOf(stanzas).map { names.idOf(it) } }
+            readSection(section, time, errors).copy(lyrics = lyrics)
         }
         return NotationRead(MelodyTrack(trackId, phrases, trackText.arrangements, trackText.capo), errors)
+    }
+
+    /** Reads the section [sectionId] from [text], the lines of its measures alone, checked against [time]. */
+    fun readSection(sectionId: SectionId, text: String, time: TimeSignature): NotationRead<Phrase> {
+        val errors = mutableListOf<NotationError>()
+        return NotationRead(readSection(sectionTextOf(sectionId, text, errors), time, errors), errors)
+    }
+
+    private fun readSection(section: SectionText, time: TimeSignature, errors: MutableList<NotationError>): Phrase {
+        val notes = mutableListOf<MelodyNote>()
+        val pickup = mutableListOf<MelodyNote>()
+        var isTied = false
+        val segments = section.toSegments()
+        segments.pickup?.let { segment ->
+            fun error(message: String) = errors.add(NotationError(segment.line, message))
+            val read = readSegment(segment.text, QUARTER, pickup, isTied, ::error)
+            isTied = read.isTied
+            pickupProblemOf(read.ticks, time)?.let(::error)
+        }
+        segments.measures.forEachIndexed { index, segment ->
+            fun error(message: String) = errors.add(NotationError(segment.line, message))
+            val read = readSegment(segment.text, QUARTER, notes, isTied, ::error)
+            isTied = read.isTied
+            measureProblemOf(read.ticks, index == segments.measures.lastIndex, time)?.let(::error)
+        }
+        return Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
     }
 
     /** The ticks a segment of jianpu filled, and whether it ends on a tie to the next note. */
@@ -109,23 +119,28 @@ class MelodyParser(
         return MelodyNote(Interval.ofMidi(MIDDLE_C + semitones + octave * 12, key), beats)
     }
 
-    /** Writes [track] as the jianpu [read] reads, with measures cut by [time]. */
-    fun write(track: MelodyTrack, time: TimeSignature): String {
+    /** Writes [track] as the jianpu [read] reads, with measures cut by [time] and sections named by [names]. */
+    fun write(track: MelodyTrack, time: TimeSignature, names: SectionNames): String {
         val sections = track.sections.map { phrase ->
-            SectionLines(
-                sectionId = phrase.sectionId,
-                pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
-                    pickup.flatMap { writeNote(it.interval, it.beats.ticks, QUARTER.ticks, false) }.joinToString(" ")
-                },
-                measures = writeMeasures(phrase.notes, time.measure, { it.beats.ticks }) { note, ticks, isContinuation ->
-                    writeNote(note.interval, ticks, QUARTER.ticks, isContinuation)
-                },
-                measuresPerLine = phrase.measuresPerLine,
-                properties = phrase.lyrics?.let { lyrics -> mapOf(LYRICS to lyrics.joinToString(" ") { it.name }) }.orEmpty(),
-            )
+            val lyrics = phrase.lyrics?.let { lyrics -> mapOf(LYRICS to lyrics.joinToString(" ") { names.nameOf(it) }) }
+            linesOf(phrase, time).copy(properties = lyrics.orEmpty())
         }
-        return writeTrackText(sections, track.arrangements, track.capo)
+        return writeTrackText(sections, track.arrangements, track.capo, names)
     }
+
+    /** Writes [phrase] as the jianpu [readSection] reads, with measures cut by [time]. */
+    fun writeSection(phrase: Phrase, time: TimeSignature) = linesOf(phrase, time).toLines().joinToString("\n")
+
+    private fun linesOf(phrase: Phrase, time: TimeSignature) = SectionLines(
+        sectionId = phrase.sectionId,
+        pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
+            pickup.flatMap { writeNote(it.interval, it.beats.ticks, QUARTER.ticks, false) }.joinToString(" ")
+        },
+        measures = writeMeasures(phrase.notes, time.measure, { it.beats.ticks }) { note, ticks, isContinuation ->
+            writeNote(note.interval, ticks, QUARTER.ticks, isContinuation)
+        },
+        measuresPerLine = phrase.measuresPerLine,
+    )
 
     /**
      * Writes [ticks] of [interval] as jianpu tokens: the note, `-` for each further beat, and a tied note for what is left

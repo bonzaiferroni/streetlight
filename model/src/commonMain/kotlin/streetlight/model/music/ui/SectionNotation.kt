@@ -22,13 +22,14 @@ import kotlin.math.roundToInt
 
 
 /**
- * The notation of [sectionId] in a track, [ticks] long and [steps] of the staff tall, with a step the distance from a
+ * The notation of [sectionId] in a track, shown as [name], [ticks] long and [steps] of the staff tall, with a step the distance from a
  * line to the space beside it. The bottom line of the staff sits [staffStep] steps up. The [pickup] notes sound before
  * and [pickupSyllables] the section starts. A section with no [hasStaff] is drawn as its syllables alone. Its text
  * holds [measuresPerLine] measures of [measureTicks] to a line.
  */
 data class SectionNotation(
     val sectionId: SectionId,
+    val name: String,
     val ticks: Int,
     val steps: Int,
     val staffStep: Int,
@@ -199,6 +200,7 @@ fun sectionNotationOf(
     }
     return SectionNotation(
         sectionId = sectionId,
+        name = music.nameOf(sectionId),
         ticks = ticks,
         steps = window.steps,
         staffStep = window.stepOf(STAFF_LOW),

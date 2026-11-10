@@ -9,6 +9,7 @@ import streetlight.model.music.Chroma
 import streetlight.model.music.Key
 import streetlight.model.music.Progression
 import streetlight.model.music.Seventh
+import streetlight.model.music.SectionId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackId
 
@@ -23,39 +24,48 @@ class ChordParser(
     private val key: Key,
     private val style: NotationStyle,
 ) {
-    /** Reads the chord track [trackId] from [text], with measures cut by [time]. */
-    fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<ChordTrack> {
+    /** Reads the chord track [trackId] from [text], with measures cut by [time] and sections found in [names]. */
+    fun read(trackId: TrackId, text: String, time: TimeSignature, names: SectionNames): NotationRead<ChordTrack> {
         val errors = mutableListOf<NotationError>()
-        val trackText = readTrackText(text, errors)
-        val progressions = trackText.sections.map { section ->
-            val notes = mutableListOf<ChordNote>()
-            val pickup = mutableListOf<ChordNote>()
-            section.lines.forEachIndexed { lineIndex, line ->
-                fun error(message: String) = errors.add(NotationError(line.number, message))
-                val barLine = line.toBarLine()
-                barLine.lead?.let { lead ->
-                    if (lineIndex == 0) tokensOf(lead).forEach { readToken(it, time.pulse, pickup, ::error) }
-                    else readMeasure(lead, time.measure, notes, ::error)
-                }
-                barLine.measures.forEach { readMeasure(it, time.measure, notes, ::error) }
-            }
-            Progression(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
-        }
+        val trackText = readTrackText(text, errors, names)
+        val progressions = trackText.sections.map { readSection(it, time, errors) }
         return NotationRead(ChordTrack(trackId, progressions, trackText.arrangements, trackText.capo), errors)
     }
 
-    /** Writes [track] as the text [read] reads, with measures cut by [time]. */
-    fun write(track: ChordTrack, time: TimeSignature): String {
-        val sections = track.sections.map { progression ->
-            SectionLines(
-                sectionId = progression.sectionId,
-                pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.pulse) },
-                measures = writeMeasures(progression.notes, time.measure),
-                measuresPerLine = progression.measuresPerLine,
-            )
-        }
-        return writeTrackText(sections, track.arrangements, track.capo)
+    /** Reads the section [sectionId] from [text], the lines of its measures alone, cut by [time]. */
+    fun readSection(sectionId: SectionId, text: String, time: TimeSignature): NotationRead<Progression> {
+        val errors = mutableListOf<NotationError>()
+        return NotationRead(readSection(sectionTextOf(sectionId, text, errors), time, errors), errors)
     }
+
+    private fun readSection(section: SectionText, time: TimeSignature, errors: MutableList<NotationError>): Progression {
+        val notes = mutableListOf<ChordNote>()
+        val pickup = mutableListOf<ChordNote>()
+        section.lines.forEachIndexed { lineIndex, line ->
+            fun error(message: String) = errors.add(NotationError(line.number, message))
+            val barLine = line.toBarLine()
+            barLine.lead?.let { lead ->
+                if (lineIndex == 0) tokensOf(lead).forEach { readToken(it, time.pulse, pickup, ::error) }
+                else readMeasure(lead, time.measure, notes, ::error)
+            }
+            barLine.measures.forEach { readMeasure(it, time.measure, notes, ::error) }
+        }
+        return Progression(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
+    }
+
+    /** Writes [track] as the text [read] reads, with measures cut by [time] and sections named by [names]. */
+    fun write(track: ChordTrack, time: TimeSignature, names: SectionNames) =
+        writeTrackText(track.sections.map { linesOf(it, time) }, track.arrangements, track.capo, names)
+
+    /** Writes [progression] as the text [readSection] reads, with measures cut by [time]. */
+    fun writeSection(progression: Progression, time: TimeSignature) = linesOf(progression, time).toLines().joinToString("\n")
+
+    private fun linesOf(progression: Progression, time: TimeSignature) = SectionLines(
+        sectionId = progression.sectionId,
+        pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.pulse) },
+        measures = writeMeasures(progression.notes, time.measure),
+        measuresPerLine = progression.measuresPerLine,
+    )
 
     private fun readMeasure(measure: String, length: Beats, notes: MutableList<ChordNote>, error: (String) -> Unit) {
         val tokens = tokensOf(measure)

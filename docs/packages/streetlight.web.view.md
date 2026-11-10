@@ -110,6 +110,10 @@ flowBlock(config.focusState) { focus ->
 }
 ```
 
+## Properties and Edit Popovers
+
+A record whose properties change seldom shows them as one dim line of small text at the top of its section, as `90 bpm · G Major`. Its section carries an Edit action that opens a popover of fields bound to a `FooForm`, and a save button that applies them and closes it. A property is not edited in place. The mix, the music, and a track and section of the compose tab are the examples.
+
 ## Form Lists
 
 A list the user builds in a form, such as a skill's tags, a record's links (`linksFormSection`) or the skills a record shows (`skillLinksSection`), is an `actionSectionCard`. Its "add new" action opens a popover through `setPopoverTarget`, each item is a row with its own actions, such as Remove, and an empty list shows one short line of guidance in its place.

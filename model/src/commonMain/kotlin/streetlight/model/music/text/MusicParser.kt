@@ -4,14 +4,14 @@ import streetlight.model.music.Chroma
 import streetlight.model.music.Key
 import streetlight.model.music.Mode
 import streetlight.model.music.Music
-import streetlight.model.music.SectionId
 import streetlight.model.music.TimeSignature
 
 /**
  * The parser of a song's music written as labeled lines, as `Key: C Major`, `Time: 3/4`, `Tempo: 90`, `Capo: 2`
  * and `Arrangement: Intro Verse Chorus`.
  *
- * A label is read in any case. A line left out keeps the value it had, and a line that cannot be read is reported.
+ * A label is read in any case. A line left out keeps the value it had, and a line that cannot be read is reported. An
+ * arrangement that names a section the music lacks gives it a new one.
  */
 object MusicParser {
     /** Reads [text] onto [music]. */
@@ -34,8 +34,11 @@ object MusicParser {
                     ?: error("Unknown tempo $value")
                 label.equals(CAPO, ignoreCase = true) -> if (value.isEmpty()) result = result.copy(capo = null)
                     else readCapo(value)?.let { result = result.copy(capo = it) } ?: error("Unknown capo $value")
-                label.equals(ARRANGEMENT, ignoreCase = true) ->
-                    result = result.copy(arrangement = tokensOf(value).map { SectionId(it) })
+                label.equals(ARRANGEMENT, ignoreCase = true) -> {
+                    val names = SectionNames(result.sections)
+                    val arrangement = tokensOf(value).map { names.idOf(it) }
+                    result = result.copy(sections = names.sections, arrangement = arrangement)
+                }
                 else -> error("Unknown line $line")
             }
         }
@@ -48,7 +51,7 @@ object MusicParser {
         appendLine("$TIME: ${music.time.beats}/${music.time.beatUnit}")
         appendLine("$TEMPO: ${music.bpm}")
         appendLine("$CAPO: ${music.capo ?: ""}".trimEnd())
-        append("$ARRANGEMENT: ${music.arrangement.joinToString(" ") { it.name }}".trimEnd())
+        append("$ARRANGEMENT: ${music.arrangement.joinToString(" ") { music.nameOf(it) }}".trimEnd())
     }
 
     /** Reads a key as its tonic and mode, as `F# Minor`. */

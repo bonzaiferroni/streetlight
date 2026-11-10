@@ -174,7 +174,7 @@ class SectionMic(
 
     /** The track and section's name with the first number from 1 that no kept clip holds. */
     private suspend fun nextName(): String {
-        val base = "${trackId.name} ${sectionId.name}"
+        val base = "${trackId.name} ${editor.musicEditor.musicState.now.nameOf(sectionId)}"
         val names = clipLibrary.readClips().mapTo(mutableSetOf()) { it.name }
         return generateSequence(1) { it + 1 }.map { "$base $it" }.first { it !in names }
     }

@@ -3,7 +3,9 @@ package streetlight.model.music.text
 import streetlight.model.music.Arrangement
 import streetlight.model.music.Beats
 import streetlight.model.music.Key
+import streetlight.model.music.MusicSection
 import streetlight.model.music.SectionId
+import streetlight.model.music.UNNAMED_SECTION
 import streetlight.model.music.TimeSignature
 
 /** The heading that opens the arrangement of a track's text. */
@@ -32,6 +34,23 @@ data class NotationRead<out T>(
     val value: T,
     val errors: List<NotationError>,
 )
+
+/**
+ * The [sections] of a music as a text names them. A text that names a section the music lacks gives it a new one, so
+ * the sections are read back once every text of the music has been.
+ */
+class SectionNames(sections: List<MusicSection> = emptyList()) {
+    private val held = sections.toMutableList()
+    val sections: List<MusicSection> get() = held.toList()
+
+    /** The section named [name], a new one when no section holds the name. */
+    fun idOf(name: String) = findId(name) ?: SectionId.random().also { held.add(MusicSection(it, name)) }
+
+    /** The section named [name], or `null` for none. */
+    fun findId(name: String) = held.firstOrNull { it.name == name }?.sectionId
+
+    fun nameOf(sectionId: SectionId) = held.firstOrNull { it.sectionId == sectionId }?.name ?: UNNAMED_SECTION
+}
 
 /** A line of a track's text, numbered from 1. */
 internal data class NotationLine(
@@ -63,7 +82,7 @@ internal data class TrackText(
 )
 
 /**
- * Reads the layout every track's text shares, reporting into [errors].
+ * Reads the layout every track's text shares, reporting into [errors], its sections found by name in [names].
  *
  * A line ending in `:` without a bar line is a heading naming a section, and the lines under it are its measures, which
  * hold `|`. A label followed by names is an arrangement, as `Song: VerseA VerseB`, playing those sections in order. An
@@ -75,6 +94,7 @@ internal data class TrackText(
 internal fun readTrackText(
     text: String,
     errors: MutableList<NotationError>,
+    names: SectionNames,
     sectionLabels: Set<String> = emptySet(),
 ): TrackText {
     val headings = mutableListOf<HeadingText>()
@@ -86,7 +106,6 @@ internal fun readTrackText(
         fun error(message: String) = errors.add(NotationError(line.number, message))
         val label = line.text.substringBefore(':', "").trim()
         val value = line.text.substringAfter(':').trim()
-        val sectionId = SectionId(label)
         when {
             line.text.isEmpty() -> Unit
             '|' in line.text -> heading?.measureLines?.add(line) ?: error("A line before any heading")
@@ -102,12 +121,18 @@ internal fun readTrackText(
                     else -> error("Unknown property ${property.label}")
                 }
             }
-            headings.any { it.sectionId == sectionId } || arrangementLines.any { it.sectionId == sectionId } ->
-                error("A second section named $label")
-            value.isEmpty() -> heading = HeadingText(sectionId).also { headings.add(it) }
+            label.isEmpty() -> error("A heading with no name")
             else -> {
-                arrangementLines.add(ArrangementLine(sectionId, value, line.number))
-                heading = null
+                val sectionId = names.idOf(label)
+                when {
+                    headings.any { it.sectionId == sectionId } || arrangementLines.any { it.sectionId == sectionId } ->
+                        error("A second section named $label")
+                    value.isEmpty() -> heading = HeadingText(sectionId).also { headings.add(it) }
+                    else -> {
+                        arrangementLines.add(ArrangementLine(sectionId, value, line.number))
+                        heading = null
+                    }
+                }
             }
         }
     }
@@ -115,14 +140,14 @@ internal fun readTrackText(
     val ids = (headings.map { it.sectionId } + arrangementLines.map { it.sectionId }).toSet()
     val arranged = arrangementLines.map { line ->
         val sections = tokensOf(line.names).mapNotNull { name ->
-            SectionId(name).takeIf { it in ids }
+            names.findId(name)?.takeIf { it in ids }
                 ?: null.also { errors.add(NotationError(line.number, "No section named $name")) }
         }
         line to Arrangement(line.sectionId, sections)
     }
     val arrangements = arranged.filter { (line, arrangement) ->
         val holdsItself = arrangement.sectionId.isReachedFrom(arrangement.sections, arranged.map { it.second })
-        if (holdsItself) errors.add(NotationError(line.number, "${arrangement.sectionId.name} holds itself"))
+        if (holdsItself) errors.add(NotationError(line.number, "${names.nameOf(arrangement.sectionId)} holds itself"))
         !holdsItself
     }.map { it.second }
     return TrackText(headings.map { SectionText(it.sectionId, it.measureLines, it.properties) }, arrangements, capo)
@@ -152,6 +177,16 @@ private fun SectionId.isReachedFrom(sectionIds: List<SectionId>, arrangements: L
         arrangements.firstOrNull { it.sectionId == next }?.let { pending.addAll(it.sections) }
     }
     return false
+}
+
+/**
+ * The notation of the section [sectionId] alone, each line of [text] a line of its measures, reporting into [errors] a
+ * line that holds no bar line.
+ */
+internal fun sectionTextOf(sectionId: SectionId, text: String, errors: MutableList<NotationError>): SectionText {
+    val lines = text.lines().mapIndexed { index, line -> NotationLine(index + 1, line.trim()) }.filter { it.text.isNotEmpty() }
+    lines.filter { '|' !in it.text }.forEach { errors.add(NotationError(it.number, "A line with no bar line")) }
+    return SectionText(sectionId, lines.filter { '|' in it.text })
 }
 
 /** A line of measures cut at its bar lines: the text before the first, if any, and each measure after it. */
@@ -258,26 +293,40 @@ internal fun <T> writeMeasures(
 internal fun tokensOf(text: String) = text.split(WHITESPACE).filter { it.isNotEmpty() }
 
 /**
- * Writes a track's text: each section under its heading, its [SectionLines.pickup] before the first bar line, its
- * measures [SectionLines.measuresPerLine] to a line and its properties after them, then each of the [arrangements]
- * under its own. A [capo] opens the text when there is one.
+ * Writes a track's text: each section under its heading, named by [names], its [SectionLines.pickup] before the first
+ * bar line, its measures [SectionLines.measuresPerLine] to a line and its properties after them, then each of the
+ * [arrangements] under its own. A [capo] opens the text when there is one.
  */
-internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>, capo: Int?) =
-    writeTrackBodies(sections.map { SectionBody(it.sectionId, it.toLines() + it.toPropertyLines()) }, arrangements, capo)
+internal fun writeTrackText(
+    sections: List<SectionLines>,
+    arrangements: List<Arrangement>,
+    capo: Int?,
+    names: SectionNames,
+) = writeTrackBodies(
+    bodies = sections.map { SectionBody(it.sectionId, it.toLines() + it.toPropertyLines()) },
+    arrangements = arrangements,
+    capo = capo,
+    names = names,
+)
 
 /** Writes a track's text from the [bodies] of its sections, each its heading and lines, then its [arrangements]. */
-internal fun writeTrackBodies(bodies: List<SectionBody>, arrangements: List<Arrangement>, capo: Int?) = buildString {
+internal fun writeTrackBodies(
+    bodies: List<SectionBody>,
+    arrangements: List<Arrangement>,
+    capo: Int?,
+    names: SectionNames,
+) = buildString {
     capo?.let {
         appendLine("$PROPERTY_MARK$CAPO: $it")
         appendLine()
     }
     for (body in bodies) {
-        appendLine("${body.sectionId.name}:")
+        appendLine("${names.nameOf(body.sectionId)}:")
         body.lines.forEach { appendLine(it) }
         appendLine()
     }
     for (arrangement in arrangements) {
-        appendLine("${arrangement.sectionId.name}: ${arrangement.sections.joinToString(" ") { it.name }}")
+        appendLine("${names.nameOf(arrangement.sectionId)}: ${arrangement.sections.joinToString(" ") { names.nameOf(it) }}")
         appendLine()
     }
 }.trimEnd()
@@ -288,7 +337,7 @@ internal data class SectionBody(
     val lines: List<String>,
 )
 
-private fun SectionLines.toLines(): List<String> {
+internal fun SectionLines.toLines(): List<String> {
     val lines = measures.chunked(measuresPerLine.coerceAtLeast(1))
     if (lines.isEmpty()) return listOfNotNull(pickup?.let { "$it |" })
     return lines.mapIndexed { index, line ->

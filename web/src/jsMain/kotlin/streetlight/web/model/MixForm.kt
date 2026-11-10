@@ -17,7 +17,7 @@ class MixForm(private val seed: Mix) {
     val bpmTextState = storeOf(seed.bpm.toString())
 
     /** The tonic of the sounding key, by name. */
-    val tonicState = storeOf(TONICS[seed.soundingKey.tonic.value])
+    val tonicState = storeOf(TONIC_NAMES[seed.soundingKey.tonic.value])
 
     /** The mode of the sounding key, by name. */
     val modeState = storeOf(seed.soundingKey.mode.name)
@@ -26,15 +26,9 @@ class MixForm(private val seed: Mix) {
     fun readMix(): Outcome<Mix> {
         val name = nameState.now.trim().ifEmpty { return MixFormProblem.name }
         val bpm = bpmTextState.now.trim().toIntOrNull()?.takeIf { it in BPM_RANGE } ?: return MixFormProblem.tempo
-        val tonic = TONICS.indexOf(tonicState.now).takeIf { it >= 0 } ?: seed.soundingKey.tonic.value
+        val tonic = TONIC_NAMES.indexOf(tonicState.now).takeIf { it >= 0 } ?: seed.soundingKey.tonic.value
         val mode = Mode.entries.firstOrNull { it.name == modeState.now } ?: seed.soundingKey.mode
         return Ok(seed.copy(name = name, bpm = bpm, soundingKey = Key(Chroma.of(tonic), mode)))
-    }
-
-    companion object {
-        /** The name of each tonic, by its semitones above C. */
-        val TONICS = listOf("C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B")
-        val MODES = Mode.entries.map { it.name }
     }
 }
 
@@ -43,5 +37,3 @@ object MixFormProblem {
     val name = Problem("A mix needs a name")
     val tempo = Problem("A tempo is a whole number from ${BPM_RANGE.first} to ${BPM_RANGE.last}")
 }
-
-private val BPM_RANGE = 20..400

@@ -28,6 +28,10 @@ A take's downbeat sits `leadSeconds` into its recording: the time from the captu
 
 A clip's audio is encoded once, as mono Opus at 48 kHz and 96 kbps, beyond which quality gains don't matter to a playground. Every later change to a clip, such as its trim or an effect, stays in its metadata, so the only second encode is a deliberate one, as a mix's export. Stereo returns at mix time.
 
+A form model, named `FooForm`, holds the properties of a record apart from it, seeded from the record, until a save reads them back. It is what an edit popover binds its fields to, so the record changes once, on save. A form that would carry no functions is not a model: its popover declares the stores itself with `storeOf`.
+
+A section's text is its notation alone. Its name, its properties and the arrangements that play it are set through the UI, and a section is created by an action that names it: a name the music holds joins that section, and any other gives the music a new one.
+
 A song's music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it, and follows its `trackChanges` for what a reading of the tracks can't tell, such as a rename.
 
 ## Entity Properties
@@ -197,11 +201,8 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MixEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MixEditor.kt) | Edits the mixes of a song's music, whose tempo and takes playback follows |
 | [`MixForm`](../../web/src/jsMain/kotlin/streetlight/web/model/MixForm.kt) | Holds a mix's name, tempo and sounding key apart from the mix until `MixEditor` applies them |
 | [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song in focus in `MusicStudio` |
-| [`ChordEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/ChordEditor.kt) | Edits a chord track through its text |
-| [`MelodyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MelodyEditor.kt) | Edits a melody track through its jianpu |
-| [`DrumEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/DrumEditor.kt) | Edits a drum track through its tab |
-| [`LyricEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LyricEditor.kt) | Edits a lyric track through its text |
-| [`MusicPropertyEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicPropertyEditor.kt) | Edits a song's music through its text, as a submodel of `MusicEditor` |
+| [`SectionEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionEditor.kt) | Edits one section of a track through the text of its notation |
+| [`MusicForm`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
 | [`NoteDrag`](../../web/src/jsMain/kotlin/streetlight/web/model/NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |

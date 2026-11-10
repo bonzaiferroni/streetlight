@@ -93,6 +93,9 @@ class MixEditor(
         tracks.flatMap { track -> track.sections.map { TrackSection(track.trackId, it.sectionId) } }
     }
 
+    /** The names of the track and section of [section], as `Melody · Verse`. */
+    fun labelOf(section: TrackSection) = "${section.trackId.name} · ${musicEditor.musicState.now.nameOf(section.sectionId)}"
+
     /** The section selected to work on, or `null`. */
     val selectionState = storeOf<TrackSection?>(null)
 

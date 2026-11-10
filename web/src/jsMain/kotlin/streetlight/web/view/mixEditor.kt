@@ -13,7 +13,9 @@ import streetlight.model.music.Mix
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.formRow
 import streetlight.web.model.MixEditor
+import streetlight.web.model.MODE_NAMES
 import streetlight.web.model.MixForm
+import streetlight.web.model.TONIC_NAMES
 import streetlight.web.model.SectionClipEditor
 import streetlight.web.model.SectionMic
 import streetlight.web.model.SectionMicPhase
@@ -45,7 +47,7 @@ fun ViewScope.mixEditor() = flowBlock(model.mixState) { mix ->
         selectorContainer {
             selectorBlock(model.sectionsState, model.selectionState) { section ->
                 row(modify(AlignItemsCenter, Padding(1))) {
-                    textBlock("${section.trackId.name} · ${section.sectionId.name}", Flex1)
+                    textBlock(model.labelOf(section), Flex1)
                     flowBlock(model.statusOf(section)) { status -> textBlock(status, modify(TextSmall, InkDimFg)) }
                 }
             }
@@ -95,20 +97,20 @@ private fun ViewScope.mixForm() {
     textField(form.nameState, "name")
     row {
         textField(form.bpmTextState, "tempo", size = 4)
-        dropMenu(MixForm.TONICS, form.tonicState)
-        dropMenu(MixForm.MODES, form.modeState)
+        dropMenu(TONIC_NAMES, form.tonicState)
+        dropMenu(MODE_NAMES, form.modeState)
     }
 }
 
 /** The tempo and sounding key of this mix, as `90 bpm · G Major`. */
-private val Mix.summary get() = "$bpm bpm · ${MixForm.TONICS[soundingKey.tonic.value]} ${soundingKey.mode.name}"
+private val Mix.summary get() = "$bpm bpm · ${TONIC_NAMES[soundingKey.tonic.value]} ${soundingKey.mode.name}"
 
 /** Renders the notation of [section], then the choice of its clip and the recorder of its takes. */
 context(model: MixEditor)
 private fun ViewScope.sectionWork(section: TrackSection) {
     val clipEditor = app.getSectionClipEditor(contentScope, model, section.trackId, section.sectionId)
     val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
-    actionSection(label = "${section.trackId.name} · ${section.sectionId.name}") {
+    actionSection(label = model.labelOf(section)) {
         formRow {
             flowBlock(model.notationOf(section)) { notation ->
                 notation ?: return@flowBlock

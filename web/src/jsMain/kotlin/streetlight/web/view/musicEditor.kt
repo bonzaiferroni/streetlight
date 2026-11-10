@@ -1,52 +1,32 @@
 package streetlight.web.view
 
 import kampfire.model.storeOf
-import koala.SvgFile
-import koala.component.IconStyle
-import koala.component.heading5
 import koala.dom.ViewScope
 import koala.dom.component.*
-import koala.dom.layout.OrderHandle
-import koala.dom.markdown.textEditor
 import koala.dom.layout.flowBlock
-import koala.dom.layout.orderColumn
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
-import kampfire.model.mutableTapOf
-import kampfire.model.tapOf
-import kotlinx.coroutines.launch
-import kotlinx.css.Flex
 import kotlinx.css.pct
 import kotlinx.css.px
 import streetlight.model.music.Beats
 import kotlinx.css.LinearDimension
-import streetlight.model.music.ChordTrack
-import streetlight.model.music.DrumTrack
-import streetlight.model.music.LyricTrack
-import streetlight.model.music.MelodyTrack
-import streetlight.model.music.Track
-import streetlight.model.music.TrackId
-import streetlight.model.music.text.NotationError
 import streetlight.model.music.ui.SectionNotation
 import streetlight.model.music.ui.lines
 import streetlight.web.dom.layout.actionMenu
-import streetlight.web.dom.layout.menuActionsRow
 import streetlight.web.dom.layout.actionSection
-import streetlight.web.model.ChordEditor
-import streetlight.web.model.DrumEditor
-import streetlight.web.model.LyricEditor
-import streetlight.web.model.MelodyEditor
-import kampfire.model.MutableTap
-import kampfire.model.Tap
+import streetlight.web.model.MODE_NAMES
 import streetlight.web.model.MusicEditor
+import streetlight.web.model.MusicForm
+import streetlight.web.model.TONIC_NAMES
+import kampfire.model.combine
+import streetlight.model.music.Music
+import streetlight.model.music.MusicSection
+import streetlight.model.music.SectionId
+import streetlight.web.dom.layout.actionSectionCard
 import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
-import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
-import kotlinx.html.span
-import streetlight.web.model.exportMidi
-import streetlight.web.model.exportOgg
 import streetlight.web.model.toaster
 import kampfire.model.toDataOr
 import kotlin.uuid.Uuid
@@ -59,183 +39,90 @@ fun ViewScope.musicEditor() = column {
         dropMenu(studio.notationViewState)
         switch("Lyrics", studio.isLyricsShownState)
     }
-    with(model.properties) {
-        notationPanes("music", textState, errorsState) {
-            flowBlock(notationState) { notation ->
-                textBlock(notation, modify(MonoFont, WhiteSpacePreLine))
+    musicSection()
+    trackEditor()
+}
+
+/** Renders the music's properties, with an action to edit them, above the arrangement every track follows. */
+context(model: MusicEditor)
+private fun ViewScope.musicSection() {
+    val editId = Id(Uuid.random().toString())
+    musicEditPopover(editId)
+    actionSection("Music", listOf(MenuAction("Edit", config = { setPopoverTarget(editId, true) }) { })) {
+        flowBlock(model.musicState) { music -> textBlock(music.summary, modify(TextSmall, InkDimFg)) }
+        actionSectionCard("Arrangement") {
+            val picksState = model.arrangementState.combine(model.sectionsState) { picks, choices -> picks to choices }
+            flowBlock(picksState) { (picks, choices) ->
+                sectionPicks(picks, choices) { model.setMusicArrangement(it) }
             }
         }
     }
-    trackList()
 }
 
-context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
-private fun ViewScope.trackList() {
-    val newId = Id(Uuid.random().toString())
-    val exportId = Id(Uuid.random().toString())
-    popover(exportId) { popover ->
-        actionMenu(listOf(
-            MenuAction("MIDI") {
-                exportMidi(model.storedState.now)
+/** A popover with [id] holding the key, time, tempo and capo of the music, which its save button applies. */
+context(model: MusicEditor)
+private fun ViewScope.musicEditPopover(id: Id) {
+    popover(id) { popover ->
+        val form = MusicForm(model.musicState.now)
+        column(Padding(2)) {
+            row {
+                dropMenu(TONIC_NAMES, form.tonicState)
+                dropMenu(MODE_NAMES, form.modeState)
+            }
+            row {
+                textField(form.timeTextState, "time", size = 4)
+                textField(form.bpmTextState, "tempo", size = 4)
+                textField(form.capoTextState, "capo", size = 4)
+            }
+            button("Save", {
+                val music = form.readOnto(model.musicState.now).toDataOr(toaster) { return@button }
+                model.musicState.set(music)
                 popover.close()
-            },
-            MenuAction("Ogg") {
-                popover.close()
-                contentScope.launch {
-                    exportOgg(player, model.storedState.now, mix.readTakes()).toDataOr(toaster) { return@launch }
-                }
-            },
-        ))
-    }
-    popover(newId) { popover ->
-        actionMenu(listOf(
-            MenuAction("Chords") {
-                model.addTrack(ChordTrack(model.newTrackId("Chords"), emptyList(), emptyList()))
-                popover.close()
-            },
-            MenuAction("Melody") {
-                model.addTrack(MelodyTrack(model.newTrackId("Melody"), emptyList(), emptyList()))
-                popover.close()
-            },
-            MenuAction("Lyrics") {
-                model.addTrack(LyricTrack(model.newTrackId("Lyrics"), emptyList(), emptyList()))
-                popover.close()
-            },
-            MenuAction("Drums") {
-                model.addTrack(DrumTrack(model.newTrackId("Drums"), emptyList(), emptyList()))
-                popover.close()
-            },
-        ))
-    }
-    actionSection(
-        label = "Tracks",
-        actions = listOf(
-            MenuAction("Play") { contentScope.launch { player.play(model.storedState.now, takes = mix.readTakes()) } },
-            MenuAction("Stop") { player.stop() },
-            MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
-            MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
-        ),
-    ) {
-        // keyed by name, so an edit to a track's content or a move leaves its open editor in place
-        orderColumn(model.tracksState, { it.trackId }) { track -> trackRow(track) }
-        flowBlock(model.tracksState.tapOf { it.isEmpty() }) { isEmpty ->
-            if (isEmpty) textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
+            })
         }
     }
 }
 
 /**
- * Renders the row of [track], which opens its editor below it or closes it, with a grip that moves it among the
- * tracks.
+ * Renders [picks] in order, each a button that takes it out, then a button that opens a menu of [choices] to add one.
+ * Each change is handed to [onChange].
  */
-context(handle: OrderHandle, studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
-private fun ViewScope.trackRow(track: Track) {
-    val trackId = track.trackId
-    val nameId = Id(Uuid.random().toString())
-    trackNamePopover(nameId, trackId)
-    row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
-        handle.grip(icon(SvgFile.GripVertical.small, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Move"))))
-        button({ model.toggleTrack(trackId) }, Flex1) {
-            row(AlignItemsCenter) {
-                icon(track.svg.large, Height(5))
-                heading5(trackId.name)
+fun ViewScope.sectionPicks(
+    picks: List<MusicSection>,
+    choices: List<MusicSection>,
+    onChange: (List<SectionId>) -> Unit,
+) {
+    val menuId = Id(Uuid.random().toString())
+    val sectionIds = picks.map { it.sectionId }
+    popover(menuId) { popover ->
+        actionMenu(choices.map { choice ->
+            MenuAction(choice.name) {
+                popover.close()
+                onChange(sectionIds + choice.sectionId)
             }
-        }
-        // a lyric track makes no sound, so it has nothing to play
-        val play = MenuAction("Play") {
-            if (player.isPlayingState.now) player.stop()
-            else model.readTrack(trackId)?.let { track ->
-                contentScope.launch { player.play(model.storedState.now, listOf(track), takes = mix.readTakes()) }
-            }
-        }.takeIf { track !is LyricTrack }
-        menuActionsRow(listOfNotNull(
-            play,
-            MenuAction("Edit", config = { setPopoverTarget(nameId, true) }) { },
-            MenuAction("Remove") { model.removeTrack(trackId) },
-        ))
+        })
     }
-    flowBlock(model.isTrackOpenState(trackId)) { isOpen ->
-        if (isOpen) trackEditor(trackId)
+    row(modify(AlignItemsCenter, FlexWrap, Flex1)) {
+        picks.forEachIndexed { index, pick ->
+            button("${pick.name} ×", { onChange(sectionIds.filterIndexed { at, _ -> at != index }) }, TextSmall)
+        }
+        button("Add", mod = TextSmall, block = { setPopoverTarget(menuId, true) })
     }
 }
 
-/** A popover with [id] holding a field for the name of the track [trackId]. */
-context(model: MusicEditor)
-private fun ViewScope.trackNamePopover(id: Id, trackId: TrackId) {
+/** A popover with [id] holding a field for a name and a button labeled [label], which closes it once [onSubmit] takes the name. */
+fun ViewScope.namePopover(id: Id, label: String, onSubmit: (String) -> Boolean) {
     popover(id) { popover ->
-        val nameState = storeOf(trackId.name)
-        val save = {
-            model.renameTrack(trackId, nameState.now)
-            popover.close()
+        val nameState = storeOf("")
+        val submit = {
+            if (onSubmit(nameState.now)) {
+                nameState.set("")
+                popover.close()
+            }
         }
         row(modify(AlignItemsCenter, Padding(2))) {
-            textField(nameState, "name", Flex1, onEnterSubmit = save)
-            button(SvgFile.Check.small, save, Height(5))
-        }
-    }
-}
-
-/** Renders the editor of the track [trackId]. */
-context(studio: MusicStudio, model: MusicEditor)
-private fun ViewScope.trackEditor(trackId: TrackId) {
-    val track = model.readTrack(trackId) ?: return
-    column(PaddingY(1)) {
-        when (track) {
-            is ChordTrack -> with(ChordEditor(contentScope, model, trackId)) {
-                notationPanes("chords", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
-            }
-            is MelodyTrack -> with(MelodyEditor(contentScope, model, trackId)) {
-                notationPanes("jianpu", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
-            }
-            is LyricTrack -> with(LyricEditor(contentScope, model, trackId)) {
-                notationPanes("lyrics", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
-            }
-            is DrumTrack -> with(DrumEditor(contentScope, model, trackId)) {
-                notationPanes("drums", textState, errorsState, studio.notationViewState) { sectionList(sectionsState) }
-            }
-        }
-        flowBlock(model.sectionWarningsState(trackId)) { warnings ->
-            warnings.forEach { textBlock("Warning: $it", modify(TextSmall, InkDimFg)) }
-        }
-    }
-}
-
-/**
- * Renders the text in [textState], then [output], what the text reads as, then its [errorsState], each part as
- * [viewState] shows it. The errors go with the text. Showing both, a wide pane puts the notes beside the text.
- */
-private fun ViewScope.notationPanes(
-    label: String,
-    textState: MutableTap<String>,
-    errorsState: Tap<List<NotationError>>,
-    viewState: Tap<NotationView> = storeOf(NotationView.Both),
-    output: ViewScope.() -> Unit,
-) {
-    flowBlock(viewState, StudioStyle.Panes) { view ->
-        // a lone part keeps the whole width, so only both parts split
-        val split = StudioStyle.SplitPanes.takeIf { view == NotationView.Both }
-        div(modify(StudioStyle.PanesGrid, split)) {
-            if (view != NotationView.NotesOnly) {
-                textEditor(textState, label, modify(MonoFont, StudioStyle.TextPane), spellcheck = false)
-            }
-            if (view != NotationView.TextOnly) div(StudioStyle.NotesPane) { output() }
-            if (view != NotationView.NotesOnly) {
-                flowBlock(errorsState, StudioStyle.ErrorsPane) { errors ->
-                    errors.forEach { textBlock("Line ${it.line}: ${it.message}", modify(TextSmall, InkDimFg)) }
-                }
-            }
-        }
-    }
-}
-
-/**
- * Renders each section of [sectionsState] under its name, a strip for each line of its text. A measure takes the same
- * width on every line, so a short line stays short, and a beat no more than [MAX_BEAT_UNITS] units.
- */
-private fun ViewScope.sectionList(sectionsState: Tap<List<SectionNotation>>) = flowBlock(sectionsState, FlexColumn) { sections ->
-    sections.forEach { section ->
-        actionSection(label = section.sectionId.name, heading = { span { +it } }) {
-            sectionStrips(section)
+            textField(nameState, "name", Flex1, onEnterSubmit = submit)
+            button(label, submit)
         }
     }
 }
@@ -262,13 +149,13 @@ fun ViewScope.sectionStrips(section: SectionNotation) {
     }
 }
 
-/** The icon of the track's type. */
-private val Track.svg get() = when (this) {
-    is ChordTrack -> SvgFile.AcousticGuitar
-    is MelodyTrack -> SvgFile.Music
-    is LyricTrack -> SvgFile.Microphone
-    is DrumTrack -> SvgFile.Drum
-}
+/** The key, time, tempo and capo of this music, as `G Major · 3/4 · 90 bpm · capo 2`. */
+private val Music.summary get() = listOfNotNull(
+    "${TONIC_NAMES[key.tonic.value]} ${key.mode.name}",
+    "${time.beats}/${time.beatUnit}",
+    "$bpm bpm",
+    capo?.let { "capo $it" },
+).joinToString(" · ")
 
 /** The widest a beat of a section's notation is drawn, in units. */
 private const val MAX_BEAT_UNITS = 6

@@ -41,6 +41,7 @@ object SongMarkdown {
         )
 
         // read each track
+        val names = SectionNames(readMusic.sections)
         val trackIds = mutableSetOf<TrackId>()
         val tracks = trackIndexes.mapIndexed { index, headingIndex ->
             val heading = lines[headingIndex]
@@ -51,14 +52,14 @@ object SongMarkdown {
             val end = trackIndexes.getOrNull(index + 1) ?: lines.size
             val trackText = lines.subList(headingIndex + 1, end).joinToString("\n")
             when (type) {
-                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, trackText, readMusic.time)
-                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, trackText, readMusic.time)
-                TrackType.Lyrics -> LyricParser.read(trackId, trackText, readMusic.time)
-                TrackType.Drums -> DrumParser.read(trackId, trackText, readMusic.time)
+                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, trackText, readMusic.time, names)
+                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, trackText, readMusic.time, names)
+                TrackType.Lyrics -> LyricParser.read(trackId, trackText, readMusic.time, names)
+                TrackType.Drums -> DrumParser.read(trackId, trackText, readMusic.time, names)
             }.value
         }
 
-        return Ok(SongMarkdownRead(readSong, readMusic, tracks))
+        return Ok(SongMarkdownRead(readSong, readMusic.copy(sections = names.sections), tracks))
     }
 
     /** Writes [song] with its [music] and [tracks], chords spelled in [style]. */
@@ -70,11 +71,13 @@ object SongMarkdown {
         return blocks.joinToString("\n\n", postfix = "\n")
     }
 
-    private fun writeTrack(track: Track, music: Music, style: NotationStyle) = when (track) {
-        is ChordTrack -> ChordParser(music.key, style).write(track, music.time)
-        is MelodyTrack -> MelodyParser(music.key).write(track, music.time)
-        is LyricTrack -> LyricParser.write(track, music.time)
-        is DrumTrack -> DrumParser.write(track, music.time)
+    private fun writeTrack(track: Track, music: Music, style: NotationStyle) = SectionNames(music.sections).let { names ->
+        when (track) {
+            is ChordTrack -> ChordParser(music.key, style).write(track, music.time, names)
+            is MelodyTrack -> MelodyParser(music.key).write(track, music.time, names)
+            is LyricTrack -> LyricParser.write(track, music.time, names)
+            is DrumTrack -> DrumParser.write(track, music.time, names)
+        }
     }
 }
 

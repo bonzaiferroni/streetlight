@@ -2,6 +2,7 @@ package streetlight.model.music
 
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 /**
  * A part played by a voice or instrument, named by its [trackId], unique within its song: its [sections], and its
@@ -35,8 +36,11 @@ sealed interface Section {
     val measuresPerLine: Int
 }
 
+/** The identity of a section of a music, which every track shares. Its name is kept by [Music.sections]. */
 @JvmInline @Serializable
-value class SectionId(val name: String)
+value class SectionId(val value: Uuid) {
+    companion object { fun random() = SectionId(Uuid.random()) }
+}
 
 /** A section made of other [sections] played in order, each a section or another arrangement. */
 @Serializable
@@ -199,6 +203,49 @@ enum class Drum {
     Crash,
     Ride,
     Tom,
+}
+
+/** This track named [trackId], with [arrangements] and [capo], and the sections it has. */
+fun Track.copyTrack(
+    trackId: TrackId = this.trackId,
+    arrangements: List<Arrangement> = this.arrangements,
+    capo: Int? = this.capo,
+): Track = when (this) {
+    is ChordTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
+    is MelodyTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
+    is LyricTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
+    is DrumTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
+}
+
+/**
+ * This track with [section] in place of its section of the same id, or after its sections when it has none. A section
+ * of another track's type leaves the track as it is.
+ */
+fun Track.withSection(section: Section): Track = when (this) {
+    is ChordTrack -> (section as? Progression)?.let { copy(sections = sections.withSection(it)) }
+    is MelodyTrack -> (section as? Phrase)?.let { copy(sections = sections.withSection(it)) }
+    is LyricTrack -> (section as? Stanza)?.let { copy(sections = sections.withSection(it)) }
+    is DrumTrack -> (section as? Groove)?.let { copy(sections = sections.withSection(it)) }
+} ?: this
+
+private fun <T : Section> List<T>.withSection(section: T) =
+    if (any { it.sectionId == section.sectionId }) map { if (it.sectionId == section.sectionId) section else it }
+    else this + section
+
+/** This track without its section or arrangement [sectionId]. */
+fun Track.withoutSection(sectionId: SectionId): Track = when (this) {
+    is ChordTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
+    is MelodyTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
+    is LyricTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
+    is DrumTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
+}.copyTrack(arrangements = arrangements.filter { it.sectionId != sectionId })
+
+/** A section [sectionId] of this track's type, holding nothing. */
+fun Track.emptySectionOf(sectionId: SectionId): Section = when (this) {
+    is ChordTrack -> Progression(sectionId, emptyList())
+    is MelodyTrack -> Phrase(sectionId, emptyList())
+    is LyricTrack -> Stanza(sectionId, emptyList())
+    is DrumTrack -> Groove(sectionId, emptyList())
 }
 
 /**
