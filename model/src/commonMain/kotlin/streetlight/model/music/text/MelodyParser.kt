@@ -6,6 +6,7 @@ import streetlight.model.music.Key
 import streetlight.model.music.MelodyNote
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Phrase
+import streetlight.model.music.SectionId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackId
 
@@ -16,6 +17,8 @@ import streetlight.model.music.TrackId
  * raises or lowers it, and `'` or `,` after it moves it an octave up or down. Then `\` halves it, `\\` quarters it, and
  * `.` adds half its length, as `#4,\.`. `-` holds the note before for a quarter note, and `~` ties the next note to it.
  * The notes before the first bar line of a phrase are its pickup. A token that cannot be read is reported and skipped.
+ *
+ * A phrase's `-lyrics:` property names the stanzas sung to it, as `-lyrics: VerseB VerseC`.
  */
 class MelodyParser(
     private val key: Key,
@@ -23,7 +26,7 @@ class MelodyParser(
     /** Reads the melody track [trackId] from [text], with measures checked against [time]. */
     fun read(trackId: TrackId, text: String, time: TimeSignature): NotationRead<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
-        val trackText = readTrackText(text, errors)
+        val trackText = readTrackText(text, errors, setOf(LYRICS))
         val phrases = trackText.sections.map { section ->
             val notes = mutableListOf<MelodyNote>()
             val pickup = mutableListOf<MelodyNote>()
@@ -41,7 +44,8 @@ class MelodyParser(
                 isTied = read.isTied
                 measureProblemOf(read.ticks, index == segments.measures.lastIndex, time)?.let(::error)
             }
-            Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
+            val lyrics = section.propertyOf(LYRICS)?.let { names -> tokensOf(names).map { SectionId(it) } }
+            Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE), lyrics)
         }
         return NotationRead(MelodyTrack(trackId, phrases, trackText.arrangements, trackText.capo), errors)
     }
@@ -117,6 +121,7 @@ class MelodyParser(
                     writeNote(note.interval, ticks, QUARTER.ticks, isContinuation)
                 },
                 measuresPerLine = phrase.measuresPerLine,
+                properties = phrase.lyrics?.let { lyrics -> mapOf(LYRICS to lyrics.joinToString(" ") { it.name }) }.orEmpty(),
             )
         }
         return writeTrackText(sections, track.arrangements, track.capo)
@@ -173,6 +178,7 @@ private const val MEASURES_PER_LINE = 4
 
 private val NOTE = Regex("""^([#b]?)([0-7])([',]*)(\\{0,2})(\.?)$""")
 private const val MIDDLE_C = 60
+private const val LYRICS = "lyrics"
 private const val HOLD = "-"
 private const val TIE = "~"
 private const val REST_DEGREE = "0"

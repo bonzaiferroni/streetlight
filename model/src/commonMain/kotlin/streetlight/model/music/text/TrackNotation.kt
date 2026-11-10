@@ -39,10 +39,20 @@ internal data class NotationLine(
     val text: String,
 )
 
-/** The heading of a section in a track's text and the lines of measures under it. */
+/** The heading of a section in a track's text, the lines of measures under it and its [properties]. */
 internal data class SectionText(
     val sectionId: SectionId,
     val lines: List<NotationLine>,
+    val properties: List<PropertyLine> = emptyList(),
+) {
+    /** The value of the property [label], or `null` when the section does not state it. */
+    fun propertyOf(label: String) = properties.firstOrNull { it.label.equals(label, ignoreCase = true) }?.value
+}
+
+/** A property line of a track's text, as `-capo: 2`: its [label] without the mark, and its [value]. */
+internal data class PropertyLine(
+    val label: String,
+    val value: String,
 )
 
 /** The sections, arrangements and [capo] of a track's text, before the sections' measures are read. */
@@ -55,12 +65,18 @@ internal data class TrackText(
 /**
  * Reads the layout every track's text shares, reporting into [errors].
  *
- * The text opens with the track's properties, each a labeled line such as `Capo: 2`, whose labels name no section.
- * After them, a line ending in `:` without a bar line is a heading naming a section, and the lines under it are its
- * measures, which hold `|`. A label followed by names is an arrangement, as `Song: VerseA VerseB`, playing those
- * sections in order. An arrangement that names a missing section or holds itself is reported and left out.
+ * A line ending in `:` without a bar line is a heading naming a section, and the lines under it are its measures, which
+ * hold `|`. A label followed by names is an arrangement, as `Song: VerseA VerseB`, playing those sections in order. An
+ * arrangement that names a missing section or holds itself is reported and left out.
+ *
+ * A label led by `-` is a property, as `-capo: 2`. It belongs to the section whose heading it follows, or to the track
+ * when it follows none. A section's property is kept when [sectionLabels] names it, and reported otherwise.
  */
-internal fun readTrackText(text: String, errors: MutableList<NotationError>): TrackText {
+internal fun readTrackText(
+    text: String,
+    errors: MutableList<NotationError>,
+    sectionLabels: Set<String> = emptySet(),
+): TrackText {
     val headings = mutableListOf<HeadingText>()
     val arrangementLines = mutableListOf<ArrangementLine>()
     var heading: HeadingText? = null
@@ -75,7 +91,17 @@ internal fun readTrackText(text: String, errors: MutableList<NotationError>): Tr
             line.text.isEmpty() -> Unit
             '|' in line.text -> heading?.measureLines?.add(line) ?: error("A line before any heading")
             ':' !in line.text -> error("A line with no bar line")
-            label.equals(CAPO, ignoreCase = true) -> readCapo(value)?.let { capo = it } ?: error("Unknown capo $value")
+            label.startsWith(PROPERTY_MARK) -> {
+                val property = PropertyLine(label.removePrefix(PROPERTY_MARK).trim(), value)
+                val section = heading
+                when {
+                    section != null && sectionLabels.any { it.equals(property.label, ignoreCase = true) } ->
+                        section.properties.add(property)
+                    section == null && property.label.equals(CAPO, ignoreCase = true) ->
+                        readCapo(value)?.let { capo = it } ?: error("Unknown capo $value")
+                    else -> error("Unknown property ${property.label}")
+                }
+            }
             headings.any { it.sectionId == sectionId } || arrangementLines.any { it.sectionId == sectionId } ->
                 error("A second section named $label")
             value.isEmpty() -> heading = HeadingText(sectionId).also { headings.add(it) }
@@ -99,12 +125,13 @@ internal fun readTrackText(text: String, errors: MutableList<NotationError>): Tr
         if (holdsItself) errors.add(NotationError(line.number, "${arrangement.sectionId.name} holds itself"))
         !holdsItself
     }.map { it.second }
-    return TrackText(headings.map { SectionText(it.sectionId, it.measureLines) }, arrangements, capo)
+    return TrackText(headings.map { SectionText(it.sectionId, it.measureLines, it.properties) }, arrangements, capo)
 }
 
-/** A heading of a track's text and the lines of measures under it, as they are read. */
+/** A heading of a track's text, the lines of measures under it and its properties, as they are read. */
 private class HeadingText(val sectionId: SectionId) {
     val measureLines = mutableListOf<NotationLine>()
+    val properties = mutableListOf<PropertyLine>()
 }
 
 /** A line of a track's text arranging the sections in [names] as [sectionId], numbered from 1. */
@@ -231,17 +258,17 @@ internal fun <T> writeMeasures(
 internal fun tokensOf(text: String) = text.split(WHITESPACE).filter { it.isNotEmpty() }
 
 /**
- * Writes a track's text: each section under its heading, its [SectionLines.pickup] before the first bar line and its
- * measures [SectionLines.measuresPerLine] to a line, then each of the [arrangements] under its own. A [capo] opens
- * the text when there is one.
+ * Writes a track's text: each section under its heading, its [SectionLines.pickup] before the first bar line, its
+ * measures [SectionLines.measuresPerLine] to a line and its properties after them, then each of the [arrangements]
+ * under its own. A [capo] opens the text when there is one.
  */
 internal fun writeTrackText(sections: List<SectionLines>, arrangements: List<Arrangement>, capo: Int?) =
-    writeTrackBodies(sections.map { SectionBody(it.sectionId, it.toLines()) }, arrangements, capo)
+    writeTrackBodies(sections.map { SectionBody(it.sectionId, it.toLines() + it.toPropertyLines()) }, arrangements, capo)
 
 /** Writes a track's text from the [bodies] of its sections, each its heading and lines, then its [arrangements]. */
 internal fun writeTrackBodies(bodies: List<SectionBody>, arrangements: List<Arrangement>, capo: Int?) = buildString {
     capo?.let {
-        appendLine("$CAPO: $it")
+        appendLine("$PROPERTY_MARK$CAPO: $it")
         appendLine()
     }
     for (body in bodies) {
@@ -270,12 +297,19 @@ private fun SectionLines.toLines(): List<String> {
     }
 }
 
-/** A section written as the text of its [pickup], or `null` for none, and of each of its [measures]. */
+private fun SectionLines.toPropertyLines() =
+    properties.map { (label, value) -> "$PROPERTY_MARK$label: $value".trimEnd() }
+
+/**
+ * A section written as the text of its [pickup], or `null` for none, and of each of its [measures], with the value of
+ * each of its [properties] by its label.
+ */
 internal data class SectionLines(
     val sectionId: SectionId,
     val pickup: String?,
     val measures: List<String>,
     val measuresPerLine: Int,
+    val properties: Map<String, String> = emptyMap(),
 )
 
 /** The measures on the first line of [lines], or [default] when there are none. */
@@ -322,7 +356,10 @@ internal fun measureSlotsOf(onsets: List<Int>, measure: Beats): List<List<Int>> 
 /** Reads a capo, a shift of up to 12 semitones up or down, or returns `null`. */
 internal fun readCapo(text: String) = text.toIntOrNull()?.takeIf { it in -MAX_CAPO..MAX_CAPO }
 
-private const val CAPO = "Capo"
+/** The mark that leads the label of a property. */
+private const val PROPERTY_MARK = "-"
+
+private const val CAPO = "capo"
 private const val MAX_CAPO = 12
 
 internal tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)

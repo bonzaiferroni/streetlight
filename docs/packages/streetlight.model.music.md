@@ -22,13 +22,13 @@ Sections play end to end, so an onset is the running sum of the lengths before i
 
 A section may open with a `pickup`, notes that sound at the end of the measure before it. A pickup is shorter than a measure and does not count toward the section's length, and an arrangement takes the pickup of its first section. A section's `measuresPerLine` is the layout of its text, read from the measures on its first line.
 
-A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `Capo: 2`, before its first heading.
+A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `-capo: 2`, before its first heading.
 
 A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.
 
 ## Lyrics
 
-Lyrics are tied to a melody by timing alone, with no reference between the tracks. The first lyric track is sung to every melody track, and a stanza belongs to the section the melody plays as the stanza starts, so the verses of a melody played three times are its three lines. `lyricLinesOf` gives those lines, one for each time a track plays a section.
+Lyrics are tied to a melody by timing alone, with no reference between the tracks. The first lyric track is sung to every melody track, and a stanza belongs to the section the melody plays as the stanza starts, so the verses of a melody played three times are its three lines. A phrase that names its `lyrics` is sung only the stanzas it names, still placed by timing. `lyricLinesOf` gives those lines, one for each time a track plays a section.
 
 ## Performance
 

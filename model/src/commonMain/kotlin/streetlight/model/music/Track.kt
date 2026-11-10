@@ -83,13 +83,17 @@ data class MelodyTrack(
     override val capo: Int? = null,
 ) : Track
 
-/** The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. */
+/**
+ * The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. Its [lyrics] name
+ * the stanzas and arrangements of stanzas that may be sung to it, `null` for any.
+ */
 @Serializable
 data class Phrase(
     override val sectionId: SectionId,
     val notes: List<MelodyNote>,
     val pickup: List<MelodyNote> = emptyList(),
     override val measuresPerLine: Int = 4,
+    val lyrics: List<SectionId>? = null,
 ) : Section {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }

@@ -12,7 +12,7 @@ The text form of notation, the one a user edits: the parsers that translate betw
 
 ## Track Notations
 
-Each track type has a text notation, read and written by its `FooParser`, as `ChordParser`. The parsers share the ambient functions of `TrackNotation.kt`, which work on text, beats and ticks and know nothing of notes. The layout every notation shares is a heading per section, a line ending in `:`, then its lines of measures, and an arrangement on a line of its own, as `Song: VerseA VerseB`. The notes before a section's first bar line are its pickup. A read reports each problem by line and skips what it cannot read, so a partly written text still gives a track.
+Each track type has a text notation, read and written by its `FooParser`, as `ChordParser`. The parsers share the ambient functions of `TrackNotation.kt`, which work on text, beats and ticks and know nothing of notes. The layout every notation shares is a heading per section, a line ending in `:`, then its lines of measures, and an arrangement on a line of its own, as `Song: VerseA VerseB`. The notes before a section's first bar line are its pickup. A property is a labeled line led by `-`, which holds no bar line, so its label never collides with a section's name. It belongs to the section whose heading it follows, after its measures when written, or to the track when it follows no heading. A read reports each problem by line and skips what it cannot read, so a partly written text still gives a track.
 
 | Track | Notation | Lengths |
 |---|---|---|
@@ -22,6 +22,11 @@ Each track type has a text notation, read and written by its `FooParser`, as `Ch
 | `DrumTrack` | ASCII drum tab, a row per drum labeled before its first bar line | A measure's characters share it evenly; a hit rings until the next |
 
 A lyric track read against a melody is checked by section: each syllable starts on a melody note, and the stanza ends with the phrase or before.
+
+| Property | Belongs to | States |
+|---|---|---|
+| `-capo: 2` | A track | The track's own capo |
+| `-lyrics: VerseB VerseC` | A melody section | The stanzas that may be sung to it, any when left out and none when empty |
 
 A notation that names absolute pitches, such as letter chords, adds the tonic when written and subtracts it when read.
 

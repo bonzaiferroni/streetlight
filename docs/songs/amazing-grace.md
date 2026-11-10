@@ -22,6 +22,7 @@ Song:
 | 1 - 3\ 1\ | 3 - 2 | 5 - - | - - 3 |
 | 5 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 1 - - | - - - |
+-lyrics: VerseA VerseB VerseC
 
 ## Harmony (Melody)
 
@@ -30,6 +31,7 @@ Song:
 | 5, - 1\ 5,\ | 1 - 7, | 7, - - | - - 1 |
 | 3 - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 3, - - | - - - |
+-lyrics: VerseA VerseB VerseC
 
 ## Drums (Drums)
 

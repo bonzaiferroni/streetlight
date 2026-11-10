@@ -15,11 +15,20 @@ fun List<Track>.lyricsOf(track: Track): LyricTrack? {
 /**
  * The lines of lyrics sung to [sectionId] of [track] in a song of these tracks and [music]: one for each time the track
  * plays the section, in order, holding the syllables that start during it. A stanza's pickup goes with the play its
- * stanza starts in. There are no lines when [lyricsOf] gives the track no lyrics.
+ * stanza starts in, and a phrase that names its [Phrase.lyrics] leaves out the syllables of any other stanza. There are
+ * no lines when [lyricsOf] gives the track no lyrics.
  */
 fun List<Track>.lyricLinesOf(track: Track, sectionId: SectionId, music: Music): List<List<LineSyllable>> {
     val lyrics = lyricsOf(track) ?: return emptyList()
     val ticks = track.lengthOf(sectionId)?.ticks ?: return emptyList()
+    val plays = playsOf(track, music)
+
+    // find the stanzas each play of a phrase admits, `null` for any
+    val admissions = plays.mapNotNull { (playedId, start) ->
+        val phrase = track.sections.firstOrNull { it.sectionId == playedId } as? Phrase ?: return@mapNotNull null
+        val stanzaIds = phrase.lyrics?.flatMap { lyrics.sectionsOf(it).orEmpty() }?.map { it.sectionId }?.toSet()
+        Admission(start until start + phrase.length.ticks, stanzaIds)
+    }
 
     // place each syllable in the song, anchored to the tick that decides its line
     val anchored = mutableListOf<Pair<Int, LineSyllable>>()
@@ -27,16 +36,24 @@ fun List<Track>.lyricLinesOf(track: Track, sectionId: SectionId, music: Music): 
         val stanza = lyrics.sections.firstOrNull { it.sectionId == stanzaId } ?: return@forEach
         var tick = start - stanza.pickup.sumOf { it.beats.ticks }
         (stanza.pickup + stanza.notes).forEach { note ->
-            note.text?.let { anchored.add(maxOf(tick, start) to LineSyllable(tick, it)) }
+            val anchor = maxOf(tick, start)
+            val isAdmitted = admissions.firstOrNull { anchor in it.ticks }?.stanzaIds?.let { stanzaId in it } ?: true
+            if (isAdmitted) note.text?.let { anchored.add(anchor to LineSyllable(tick, it)) }
             tick += note.beats.ticks
         }
     }
 
-    return playsOf(track, music).filter { (playedId) -> playedId == sectionId }.map { (_, start) ->
+    return plays.filter { (playedId) -> playedId == sectionId }.map { (_, start) ->
         anchored.filter { (anchor) -> anchor in start until start + ticks }
             .map { (_, syllable) -> syllable.copy(tick = syllable.tick - start) }
     }
 }
+
+/** The [stanzaIds] a play of a phrase lets be sung through its [ticks] of the song, `null` for any. */
+private class Admission(
+    val ticks: IntRange,
+    val stanzaIds: Set<SectionId>?,
+)
 
 /**
  * Each time [track] starts a section or an arrangement in a song of these tracks and [music], in order, paired with the
