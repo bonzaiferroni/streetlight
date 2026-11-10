@@ -12,7 +12,7 @@ import streetlight.model.music.Progression
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
 import streetlight.model.music.Stanza
-import streetlight.model.music.SungSyllable
+import streetlight.model.music.LineSyllable
 import streetlight.model.music.Track
 import streetlight.model.music.lengthOf
 import streetlight.model.music.lyricLinesOf
@@ -171,7 +171,7 @@ fun sectionNotationOf(
     sectionId: SectionId,
     music: Music,
     window: StaffWindow,
-    lyrics: List<List<SungSyllable>> = emptyList(),
+    lyrics: List<List<LineSyllable>> = emptyList(),
 ): SectionNotation? {
     val ticks = track.lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return null
     val sections = track.sectionsOf(sectionId).orEmpty()
@@ -237,7 +237,7 @@ fun drawnLyricLinesOf(
     sectionId: SectionId,
     music: Music,
     play: Int? = null,
-): List<List<SungSyllable>> {
+): List<List<LineSyllable>> {
     val lines = tracks.lyricLinesOf(track, sectionId, music)
     return if (play == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(play))
 }

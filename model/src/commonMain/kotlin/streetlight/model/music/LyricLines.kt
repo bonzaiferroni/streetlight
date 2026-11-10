@@ -1,7 +1,7 @@
 package streetlight.model.music
 
 /** A syllable or word of [text] that starts at [tick] of the section it is sung to, or before the section for a pickup. */
-data class SungSyllable(
+data class LineSyllable(
     val tick: Int,
     val text: String,
 )
@@ -17,17 +17,17 @@ fun List<Track>.lyricsOf(track: Track): LyricTrack? {
  * plays the section, in order, holding the syllables that start during it. A stanza's pickup goes with the play its
  * stanza starts in. There are no lines when [lyricsOf] gives the track no lyrics.
  */
-fun List<Track>.lyricLinesOf(track: Track, sectionId: SectionId, music: Music): List<List<SungSyllable>> {
+fun List<Track>.lyricLinesOf(track: Track, sectionId: SectionId, music: Music): List<List<LineSyllable>> {
     val lyrics = lyricsOf(track) ?: return emptyList()
     val ticks = track.lengthOf(sectionId)?.ticks ?: return emptyList()
 
     // place each syllable in the song, anchored to the tick that decides its line
-    val anchored = mutableListOf<Pair<Int, SungSyllable>>()
+    val anchored = mutableListOf<Pair<Int, LineSyllable>>()
     playsOf(lyrics, music).forEach { (stanzaId, start) ->
         val stanza = lyrics.sections.firstOrNull { it.sectionId == stanzaId } ?: return@forEach
         var tick = start - stanza.pickup.sumOf { it.beats.ticks }
         (stanza.pickup + stanza.notes).forEach { note ->
-            note.text?.let { anchored.add(maxOf(tick, start) to SungSyllable(tick, it)) }
+            note.text?.let { anchored.add(maxOf(tick, start) to LineSyllable(tick, it)) }
             tick += note.beats.ticks
         }
     }
