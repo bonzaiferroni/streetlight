@@ -15,19 +15,19 @@ import web.html.HTMLElement
 
 /**
  * Renders the measures of [notation] as a strip with [mod]: a staff crossed by each measure's bar when it has one, then
- * its notes and syllables. With [onNote], the notes with a place in their track can be grabbed, and each note is handed over with its element and
- * the strip's.
+ * its notes and syllables. With [onNote], the notes with a place in their track can be grabbed, and each note is handed
+ * over with its element.
  */
 fun ViewScope.sectionMeasures(
     notation: SectionNotation,
     mod: Modifier? = null,
-    onNote: ((NoteNotation, HTMLElement, HTMLElement) -> Unit)? = null,
+    onNote: ((NoteNotation, HTMLElement) -> Unit)? = null,
 ) {
-    val notes = mutableListOf<Pair<NoteNotation, HTMLElement>>()
     fun ViewScope.placeNote(note: NoteNotation) {
-        notes += note to note(note, MeasureStyle.Grabbable.takeIf { onNote != null && note.source != null })
+        val element = note(note, MeasureStyle.Grabbable.takeIf { onNote != null && note.source != null })
+        onNote?.invoke(note, element)
     }
-    val strip = div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
+    div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
         if (notation.hasStaff) staff(notation)
         notation.measures.forEach { measure ->
             div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
@@ -38,7 +38,6 @@ fun ViewScope.sectionMeasures(
         notation.pickup.forEach { placeNote(it) }
         notation.pickupSyllables.forEach { syllable(it) }
     }
-    if (onNote != null) notes.forEach { (note, element) -> onNote(note, element, strip) }
 }
 
 /**

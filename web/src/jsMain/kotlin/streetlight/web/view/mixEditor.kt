@@ -22,35 +22,31 @@ import streetlight.web.model.getSectionMic
  * the selected section's notation, the clip bound to it and the recorder of its takes.
  */
 context(model: MixEditor)
-fun ViewScope.mixEditor() = column {
-    formRow {
-        flowBlock(model.isOpenState) { isOpen ->
-            if (!isOpen) return@flowBlock
-            with(model) {
-                column {
-                    row {
-                        textField(nameState, "name", Flex1)
-                        textField(bpmTextState, "tempo", size = 4)
-                    }
-                    row {
-                        dropMenu(MixEditor.TONICS, tonicState)
-                        dropMenu(MixEditor.MODES, modeState)
+fun ViewScope.mixEditor() = flowBlock(model.mixState) { mix ->
+    if (mix == null) return@flowBlock
+    actionSection(mix.name) {
+        formRow {
+            column {
+                row {
+                    textField(model.bpmTextState, "tempo", size = 4)
+                    dropMenu(MixEditor.TONICS, model.tonicState)
+                    dropMenu(MixEditor.MODES, model.modeState)
+                }
+            }
+
+            selectorContainer {
+                selectorBlock(model.sectionsState, model.selectionState) { section ->
+                    row(modify(AlignItemsCenter, Padding(1))) {
+                        textBlock("${section.trackId.name} · ${section.sectionId.name}", Flex1)
+                        flowBlock(model.statusOf(section)) { status -> textBlock(status, modify(TextSmall, InkDimFg)) }
                     }
                 }
             }
         }
-        selectorContainer {
-            selectorBlock(model.sectionsState, model.selectionState) { section ->
-                row(modify(AlignItemsCenter, Padding(1))) {
-                    textBlock("${section.trackId.name} · ${section.sectionId.name}", Flex1)
-                    flowBlock(model.statusOf(section)) { status -> textBlock(status, modify(TextSmall, InkDimFg)) }
-                }
-            }
+        flowBlock(model.selectionState) { section ->
+            section ?: return@flowBlock
+            sectionWork(section)
         }
-    }
-    flowBlock(model.selectionState) { section ->
-        section ?: return@flowBlock
-        sectionWork(section)
     }
 }
 
@@ -60,12 +56,17 @@ private fun ViewScope.sectionWork(section: TrackSection) {
     val clipEditor = app.getSectionClipEditor(contentScope, model, section.trackId, section.sectionId)
     val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
     actionSection(label = "${section.trackId.name} · ${section.sectionId.name}") {
-        flowBlock(model.notationOf(section)) { notation ->
-            notation ?: return@flowBlock
-            sectionStrips(notation)
+        formRow {
+            flowBlock(model.notationOf(section)) { notation ->
+                notation ?: return@flowBlock
+                sectionStrips(notation)
+            }
+
+            column {
+                sectionClipPicker(clipEditor)
+                sectionRecorder(mic)
+            }
         }
-        sectionClipPicker(clipEditor)
-        sectionRecorder(mic)
     }
 }
 

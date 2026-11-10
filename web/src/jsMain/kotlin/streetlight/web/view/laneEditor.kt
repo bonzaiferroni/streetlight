@@ -8,6 +8,7 @@ import koala.component.IconStyle
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.launchEffect
+import koala.dom.requireClosest
 import koala.dom.layout.flowBlock
 import koala.model.MenuAction
 import koala.modifier.*
@@ -107,8 +108,8 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
             lane.sections.forEach { section ->
                 sections += section to div(modify(LaneStyle.Section, LaneStyle.RepeatSection.takeIf { section.isRepeat })) {
                     textBlock(section.notation.sectionId.name, modify(LaneStyle.SectionLabel, TextSmall))
-                    sectionMeasures(section.notation, VoidBg) { note, noteElement, stripElement ->
-                        wireNoteDrag(laneIndex, section, note, noteElement, stripElement)
+                    sectionMeasures(section.notation, VoidBg) { note, noteElement ->
+                        wireNoteDrag(laneIndex, section, note, noteElement)
                     }
                 }
             }
@@ -135,7 +136,7 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
 }
 
 /**
- * Lets [noteElement] be dragged across [stripElement] to edit [note] of [section], while its lane is selected. A release
+ * Lets [noteElement] be dragged across its strip to edit [note] of [section], while its lane is selected. A release
  * back over the note cancels the drag.
  */
 context(model: LaneEditor)
@@ -144,7 +145,6 @@ private fun wireNoteDrag(
     section: LaneSection,
     note: NoteNotation,
     noteElement: HTMLElement,
-    stripElement: HTMLElement,
 ) {
     var grabY = 0
     var isGrabbed = false
@@ -158,7 +158,7 @@ private fun wireNoteDrag(
     })
     noteElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
         if (!noteElement.hasPointerCapture(event.pointerId)) return@addEventListener
-        val strip = stripElement.getBoundingClientRect()
+        val strip = noteElement.requireClosest(MeasureStyle.Strip).getBoundingClientRect()
         if (strip.width == 0.0 || strip.height == 0.0) return@addEventListener
         val tick = (event.clientX - strip.left) / strip.width * section.notation.ticks
         val stepsUp = (grabY - event.clientY) / (strip.height / section.notation.steps)
