@@ -13,16 +13,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.io.MixDb
-import streetlight.model.music.Chroma
 import streetlight.model.music.Clip
-import streetlight.model.music.Key
 import streetlight.model.music.Mix
 import streetlight.model.music.MixId
 import streetlight.model.music.SectionClip
 import streetlight.model.music.SectionId
 import streetlight.model.music.TrackId
 import streetlight.model.music.mixOf
-import streetlight.model.music.Mode
 import streetlight.model.music.ui.SectionNotation
 import streetlight.model.music.ui.sectionNotationsOf
 
@@ -55,26 +52,38 @@ class MixEditor(
     /** Whether a mix is open to edit. */
     val isOpenState = mixState.tapOf { it != null }
 
-    val nameState: MutableTap<String> = mixState.mutableTapOf({ it?.name.orEmpty() }) { name -> this?.copy(name = name) }
+    /** The mixes of the music. */
+    val mixesState: Tap<List<Mix>> = state.tapOf { it.mixes }
 
-    /** The tempo as text, counting the pulse as the music's does. */
-    val bpmTextState: MutableTap<String> = mixState.mutableTapOf({ it?.bpm?.toString().orEmpty() }) { text ->
-        val bpm = text.trim().toIntOrNull()?.takeIf { it in BPM_RANGE } ?: return@mutableTapOf this
-        this?.copy(bpm = bpm)
+    /** The mix being edited, which a write opens another of the mixes as. */
+    val openMixState: MutableTap<Mix?> = state.mutableTapOf(
+        { editor -> editor.mixes.firstOrNull { it.mixId == editor.mixId } },
+    ) { mix ->
+        if (mix == null) this else copy(mixId = mix.mixId)
     }
 
-    /** The tonic of the sounding key, by name. */
-    val tonicState: MutableTap<String> = mixState.mutableTapOf(
-        { it?.let { mix -> TONICS[mix.soundingKey.tonic.value] }.orEmpty() },
-    ) { name ->
-        val tonic = TONICS.indexOf(name).takeIf { it >= 0 } ?: return@mutableTapOf this
-        this?.copy(soundingKey = Key(Chroma.of(tonic), soundingKey.mode))
+    /** A form of a new mix, at the tempo and sounding key of the music, under the first free name. */
+    fun newMixForm(): MixForm {
+        val names = state.now.mixes.map { it.name }.toSet()
+        val name = generateSequence(1) { it + 1 }.map { "$MIX_NAME_BASE $it" }.first { it !in names }
+        return MixForm(mixOf(musicEditor.musicState.now, name))
     }
 
-    /** The mode of the sounding key, by name. */
-    val modeState: MutableTap<String> = mixState.mutableTapOf({ it?.soundingKey?.mode?.name.orEmpty() }) { name ->
-        val mode = Mode.entries.firstOrNull { it.name == name } ?: return@mutableTapOf this
-        this?.copy(soundingKey = soundingKey.copy(mode = mode))
+    /**
+     * Reads the mix of [form] into the mixes, in place of the one it was seeded from, or as a new mix that opens.
+     * Returns whether the form could be read.
+     */
+    fun applyMixForm(form: MixForm): Boolean {
+        val mix = form.readMix().toDataOr(messenger) { return false }
+        state.update { editor ->
+            if (editor.mixes.any { it.mixId == mix.mixId }) {
+                // only what the form holds, so clips bound since it was seeded stay
+                editor.copy(mixes = editor.mixes.map {
+                    if (it.mixId == mix.mixId) it.copy(name = mix.name, bpm = mix.bpm, soundingKey = mix.soundingKey) else it
+                })
+            } else editor.copy(mixes = editor.mixes + mix, mixId = mix.mixId)
+        }
+        return true
     }
 
     private val clipsStore = storeOf<List<Clip>>(emptyList())
@@ -150,7 +159,7 @@ class MixEditor(
     private suspend fun loadMixes() {
         val music = musicEditor.musicState.now
         val stored = mixDb.readMixes(music.musicId).toDataOr(messenger) { return }
-        val mixes = stored.ifEmpty { listOf(mixOf(music, FIRST_MIX_NAME).also { save(it) }) }
+        val mixes = stored.ifEmpty { listOf(mixOf(music, "$MIX_NAME_BASE 1").also { save(it) }) }
         state.update { editor -> editor.copy(mixes = mixes, mixId = editor.mixId ?: mixes.first().mixId) }
     }
 
@@ -166,12 +175,6 @@ class MixEditor(
     private suspend fun save(mix: Mix) {
         mixDb.saveMix(mix).toDataOr(messenger) { return }
     }
-
-    companion object {
-        /** The name of each tonic, by its semitones above C. */
-        val TONICS = listOf("C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B")
-        val MODES = Mode.entries.map { it.name }
-    }
 }
 
 data class MixEditorState(
@@ -179,6 +182,5 @@ data class MixEditorState(
     val mixId: MixId? = null,
 )
 
-private val BPM_RANGE = 20..400
-private const val FIRST_MIX_NAME = "Mix 1"
+private const val MIX_NAME_BASE = "Mix"
 private const val TONES = "(tones)"
