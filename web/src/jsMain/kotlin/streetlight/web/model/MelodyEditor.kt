@@ -28,8 +28,11 @@ class MelodyEditor(
     val textState = field.textState
     val errorsState = field.errorsState
 
-    /** The notation of each section of the track. */
-    val sectionsState = trackState.combine(model.musicState) { track, music -> sectionNotationsOf(track, music) }
+    /** The notation of each section of the track, with the lyrics sung to it while they are shown. */
+    val sectionsState = model.storedState.combine(model.isLyricsShownState) { song, isLyricsShown ->
+        val track = song.tracks.firstOrNull { it.trackId == trackId } ?: return@combine emptyList()
+        sectionNotationsOf(track, song.music, song.tracks, isLyricsShown)
+    }
 
     init {
         // a change of key or time changes how the track is written, so the text follows the track

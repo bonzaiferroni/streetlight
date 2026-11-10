@@ -123,9 +123,10 @@ class MixEditor(
 
     /** The notation of [section], or `null` once its track no longer holds it. */
     fun notationOf(section: TrackSection): Tap<SectionNotation?> =
-        musicEditor.tracksState.combine(musicEditor.musicState) { tracks, music ->
-            val track = tracks.firstOrNull { it.trackId == section.trackId } ?: return@combine null
-            sectionNotationsOf(track, music).firstOrNull { it.sectionId == section.sectionId }
+        musicEditor.storedState.combine(musicEditor.isLyricsShownState) { song, isLyricsShown ->
+            val track = song.tracks.firstOrNull { it.trackId == section.trackId } ?: return@combine null
+            sectionNotationsOf(track, song.music, song.tracks, isLyricsShown)
+                .firstOrNull { it.sectionId == section.sectionId }
         }
 
     private fun updateOpenMixClips(transform: (List<SectionClip>) -> List<SectionClip>) {

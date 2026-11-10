@@ -57,6 +57,7 @@ fun ViewScope.musicEditor() = column {
     row {
         dropMenu(studio.notationStyleState)
         dropMenu(studio.notationViewState)
+        switch("Lyrics", studio.isLyricsShownState)
     }
     with(model.properties) {
         notationPanes("music", textState, errorsState) {

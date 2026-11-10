@@ -26,6 +26,10 @@ A melody note's `Interval` and a chord's root count from the tonic of the key, s
 
 A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.
 
+## Lyrics
+
+Lyrics are tied to a melody by timing alone, with no reference between the tracks. The first lyric track is sung to every melody track, and a stanza belongs to the section the melody plays as the stanza starts, so the verses of a melody played three times are its three lines. `lyricLinesOf` gives those lines, one for each time a track plays a section.
+
 ## Performance
 
 The domain model holds the composition alone. A performance of it, such as a `SectionClip` recorded of a track's section, is its own type, kept beside a song and never on a `Track`, so it stays out of song files.

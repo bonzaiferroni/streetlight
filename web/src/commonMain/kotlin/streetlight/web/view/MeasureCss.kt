@@ -156,11 +156,10 @@ $Accidental {
     color: var(--note-ink, rgb(var(--ink)));
 }
 
-/* on one line through the middle of the strip, however long the word, starting where a head on its onset would */
+/* its middle on the step it is placed at, however long the word, starting where a head on its onset would */
 $Syllable {
     position: absolute;
-    top: 50%;
-    translate: calc(var(--unit) * ${-HEAD_WIDTH_UNITS / 2}) -50%;
+    translate: calc(var(--unit) * ${-HEAD_WIDTH_UNITS / 2}) 50%;
     line-height: 1;
     white-space: nowrap;
 }

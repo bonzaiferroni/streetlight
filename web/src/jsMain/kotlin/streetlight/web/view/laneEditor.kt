@@ -53,6 +53,7 @@ private fun ViewScope.laneControls() = row(modify(AlignSelfCenter, AlignItemsCen
     button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     timeStepControl()
     switch("scale", model.isScaleSnapState)
+    switch("lyrics", model.isLyricsShownState)
 }
 
 /** Renders the button that shows the grid dragged notes snap to, drawn as its note, and opens a menu of the others. */

@@ -15,6 +15,7 @@ import streetlight.model.music.SectionId
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
+import streetlight.model.music.lyricsOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionOrderOf
 import streetlight.model.music.toMidi
@@ -22,6 +23,8 @@ import streetlight.model.music.ui.NoteNotation
 import streetlight.model.music.ui.NoteSource
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.SectionNotation
+import streetlight.model.music.ui.StaffWindow
+import streetlight.model.music.ui.drawnLyricLinesOf
 import streetlight.model.music.ui.noteNotationOf
 import streetlight.model.music.ui.sectionNotationOf
 import streetlight.model.music.ui.staffWindowOf
@@ -48,8 +51,11 @@ class LaneEditor(
     private var playJob: Job? = null
 
     // laid out at the tempo playback runs at, so the cursor keeps with what sounds
-    val lanesState = editor.storedState.combine(mix.playbackSecondsPerTickState) { song, perTick ->
-        lanesOf(song, perTick)
+    private val layoutState = mix.playbackSecondsPerTickState.combine(editor.isLyricsShownState) { perTick, isLyricsShown ->
+        perTick to isLyricsShown
+    }
+    val lanesState = editor.storedState.combine(layoutState) { song, (perTick, isLyricsShown) ->
+        lanesOf(song, perTick, isLyricsShown)
     }
     override val endSecondsState: Tap<Double?> = editor.storedState.combine(
         mix.playbackSecondsPerTickState,
@@ -67,6 +73,9 @@ class LaneEditor(
 
     /** Whether a dragged note's pitch keeps to the scale, moving by semitones otherwise. */
     val isScaleSnapState = state.mutableTapOf({ it.isScaleSnap }) { copy(isScaleSnap = it) }
+
+    /** Whether a melody's lane shows the lyrics sung to it. */
+    val isLyricsShownState = editor.isLyricsShownState
 
     /** Whether the lane at [laneIndex] is selected, which lets its notes be dragged. */
     fun isLaneSelectedState(laneIndex: Int) = state.tapOf { it.selectedLane == laneIndex }
@@ -114,7 +123,7 @@ class LaneEditor(
         val drag = state.now.drag ?: return
         val track = readNotedTrack(drag.laneIndex) ?: return
         val music = editor.storedState.now.music
-        val window = staffWindowOf(track, music.key)
+        val window = laneWindowOf(track, editor.storedState.now, editor.isLyricsShownState.now)
         val moved = drag.source
             .snapTick(tick, track, music, state.now.timeStep)
             .snapPitch(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
@@ -144,9 +153,10 @@ class LaneEditor(
 
     // the cursor sits across the window, so its onset is a share of that and not of a measure
     private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
-        val music = editor.storedState.now.music
+        val song = editor.storedState.now
         val seconds = section.startSeconds + source.tick * mix.playbackSecondsPerTickState.now
-        return noteNotationOf(source, windowState.now.toRatio(seconds), staffWindowOf(track, music.key), music.key)
+        val window = laneWindowOf(track, song, editor.isLyricsShownState.now)
+        return noteNotationOf(source, windowState.now.toRatio(seconds), window, song.music.key)
     }
 
     /**
@@ -239,31 +249,45 @@ data class LaneSection(
     val isRepeat: Boolean,
 )
 
-/** The lanes of [song], with each track's sections laid along its arrangement as playback lays them. */
-private fun lanesOf(song: StoredSong, secondsPerTick: Double): List<Lane> {
+/**
+ * The lanes of [song], with each track's sections laid along its arrangement as playback lays them. With
+ * [isLyricsShown], each time a track plays a section carries the line of lyrics sung to it then.
+ */
+private fun lanesOf(song: StoredSong, secondsPerTick: Double, isLyricsShown: Boolean): List<Lane> {
     val tracks = song.tracks
     val order = tracks.sectionOrderOf(song.music)
     val leadSeconds = leadSecondsOf(song, secondsPerTick)
     return tracks.map { track ->
-        val window = staffWindowOf(track, song.music.key)
-        val played = mutableSetOf<SectionId>()
+        val window = laneWindowOf(track, song, isLyricsShown)
+        val plays = mutableMapOf<SectionId, Int>()
         var onset = 0
         val sections = order.flatMap { sectionId ->
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
-            val notation = sectionNotationOf(track, sectionId, song.music, window)
-            val laneSections = if (notation == null) emptyList() else List(track.repeatsOf(sectionId, span)) { repeat ->
+            val ticks = track.lengthOf(sectionId)?.ticks ?: 0
+            val laneSections = List(track.repeatsOf(sectionId, span)) { repeat ->
+                val play = plays[sectionId] ?: 0
+                val lyrics = if (window.lyricLines == 0) emptyList()
+                else drawnLyricLinesOf(tracks, track, sectionId, song.music, play)
+                val notation = sectionNotationOf(track, sectionId, song.music, window, lyrics) ?: return@List null
+                plays[sectionId] = play + 1
                 LaneSection(
                     notation = notation,
-                    startSeconds = leadSeconds + (onset + repeat * notation.ticks) * secondsPerTick,
-                    durationSeconds = notation.ticks * secondsPerTick,
-                    isRepeat = !played.add(sectionId),
+                    startSeconds = leadSeconds + (onset + repeat * ticks) * secondsPerTick,
+                    durationSeconds = ticks * secondsPerTick,
+                    isRepeat = play > 0,
                 )
-            }
+            }.filterNotNull()
             onset += span.ticks
             laneSections
         }
         Lane(track.trackId, track.trackId.name, window.steps, leadSeconds, sections)
     }
+}
+
+/** The window of the lane of [track] in [song], with room for a line of lyrics when [isLyricsShown] and it has them. */
+private fun laneWindowOf(track: Track, song: StoredSong, isLyricsShown: Boolean): StaffWindow {
+    val lyricLines = if (isLyricsShown && song.tracks.lyricsOf(track) != null) 1 else 0
+    return staffWindowOf(track, song.music.key, lyricLines = lyricLines)
 }
 
 private fun endSecondsOf(song: StoredSong, secondsPerTick: Double): Double {

@@ -63,9 +63,11 @@ private fun ViewScope.staff(notation: SectionNotation) {
 /** Renders a bar [share] of the way across its staff. */
 private fun ViewScope.bar(share: Double) = div(modify(MeasureStyle.Bar, Css.Left.of((share * 100).pct)))
 
-/** Renders [syllable] at its onset, lined up with the left edge of a note's head there. */
-private fun ViewScope.syllable(syllable: SyllableNotation) =
-    textBlock(syllable.text, modify(MeasureStyle.Syllable, Css.Left.of((syllable.onset * 100).pct)))
+/** Renders [syllable] at its onset and step, lined up with the left edge of a note's head there. */
+private fun ViewScope.syllable(syllable: SyllableNotation) {
+    val place = modify(Css.Left.of((syllable.onset * 100).pct), Css.Bottom.of(stepsHeight(syllable.step)))
+    textBlock(syllable.text, modify(MeasureStyle.Syllable, place))
+}
 
 /**
  * Renders [note] with [mod] at its onset and step: its heads, with any bars of its value above and below them, its dot,

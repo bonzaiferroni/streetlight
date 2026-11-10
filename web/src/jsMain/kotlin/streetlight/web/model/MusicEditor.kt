@@ -21,11 +21,15 @@ import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.text.NotationStyle
 
-/** The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState]. */
+/**
+ * The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState], a
+ * melody's notation showing its lyrics while [isLyricsShownState].
+ */
 class MusicEditor(
     private val scope: CoroutineScope,
     stored: StoredSong,
     val notationStyleState: Tap<NotationStyle>,
+    val isLyricsShownState: MutableTap<Boolean>,
 ) {
     private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
     val song = stored.song

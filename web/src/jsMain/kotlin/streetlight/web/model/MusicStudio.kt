@@ -38,6 +38,9 @@ class MusicStudio(
     /** The parts of each track's notation its editor shows. */
     val notationViewState = localStoreOf(scope, NOTATION_VIEW_KEY, NotationView.Both)
 
+    /** Whether a melody's notation shows the lyrics sung to it. */
+    val isLyricsShownState = localStoreOf(scope, LYRICS_SHOWN_KEY, true)
+
     /** Stores a new song titled [title], returning its id. */
     fun create(title: String): SongId {
         val song = newStoredSong(title)
@@ -73,7 +76,7 @@ class MusicStudio(
     /** An editor of the song of [songId] for as long as [scope] lasts, saving its changes, or `null` with no such song. */
     fun editorOf(scope: CoroutineScope, songId: SongId): MusicEditor? {
         val song = db.read(songId) ?: return null
-        val editor = MusicEditor(scope, song, notationStyleState)
+        val editor = MusicEditor(scope, song, notationStyleState, isLyricsShownState)
         editor.storedState.reactIn(scope) { db.save(it) }
         return editor
     }
@@ -98,3 +101,4 @@ private fun newStoredSong(title: String): StoredSong {
 
 private const val NOTATION_STYLE_KEY = "streetlight.notation-style"
 private const val NOTATION_VIEW_KEY = "streetlight.notation-view"
+private const val LYRICS_SHOWN_KEY = "streetlight.lyrics-shown"
