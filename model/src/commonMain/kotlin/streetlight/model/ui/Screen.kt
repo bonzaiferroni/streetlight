@@ -243,8 +243,8 @@ data class MusicStudioRoute(
     override val screen get() = Screen.MusicStudio
     override val title get() = "Songs"
 
-    // a change of tab is a change within the view
-    override val screenKey get() = copy(tab = null)
+    // a change of song or tab is a change within the view
+    override val screenKey: Any get() = Screen.MusicStudio
     override fun toRelativePath() = buildRelativePath(listOfNotNull(songId?.value?.toString())) {
         writeParam(tabParam, tab)
     }

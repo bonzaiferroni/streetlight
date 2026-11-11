@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
 import streetlight.model.io.MixDb
 import streetlight.model.music.SectionId
+import streetlight.model.music.SongId
 import streetlight.model.music.TrackId
 
 /** The services of the Studio section, one of each, loaded into the app's Koin by [loadStudioModule]. */
@@ -40,6 +41,7 @@ fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MixEditor, trackId
 fun AppContainer.getSectionClipEditor(scope: CoroutineScope, editor: MixEditor, trackId: TrackId, sectionId: SectionId) =
     SectionClipEditor(scope, editor, trackId, sectionId, koin.get())
 
-fun AppContainer.getMusicStudio(scope: CoroutineScope) = MusicStudio(scope, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
+fun AppContainer.getMusicStudio(scope: CoroutineScope, initialId: SongId?) =
+    MusicStudio(scope, initialId, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
 
 private var isStudioModuleLoaded = false

@@ -4,6 +4,8 @@ import kampfire.model.storeOf
 import koala.SvgFile
 import koala.dom.RouteScope
 import koala.dom.ViewScope
+import koala.dom.launchEffect
+import koala.component.heading3
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
 import koala.dom.layout.lazyTabs
@@ -38,17 +40,27 @@ import web.blob.text
 /** Renders the music studio: the song the route names, or the stored songs when it names none that is stored. */
 context(route: MusicStudioRoute)
 fun ViewScope.viewMusicStudio() {
-    val model = app.getMusicStudio(contentScope)
+    val model = app.getMusicStudio(contentScope, route.songId)
     val player = app.get<TrackPlayer>()
-    context(model, player) {
-        mainBody("viewMusicStudio.kt") {
-            val editor = route.songId?.let { model.editorOf(contentScope, it) }
-            if (editor == null) songList() else songFocus(editor)
+    // a change of song keeps the view, so the routes that follow reach it here
+    launchEffect("viewMusicStudio > route") {
+        portal.routeFlowOf<MusicStudioRoute>().collect { next ->
+            model.setSongId(next.songId)
+            document.setTitle(next)
         }
     }
-
-    document.setTitle(route)
+    context(model, player) {
+        mainBody("Music", "Studio", "viewMusicStudio.kt") {
+            flowBlock(model.songIdState, Transitioner) { songId ->
+                val editor = songId?.let { model.editorOf(contentScope, it) }
+                if (editor == null) songList() else songFocus(editor)
+            }
+        }
+    }
 }
+
+/** The view transition name of the title of the song of [songId], shared by its row and its heading. */
+private fun songTitleTransition(songId: SongId) = transition("song-${songId.value}")
 
 fun RouteScope.viewMusicStudioRoute() {
     routeBlock<MusicStudioRoute, NullContent> {
@@ -63,7 +75,11 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
     val lanes = LaneEditor(contentScope, editor, mix, player, app.get())
     // playback left running when the song closes would keep sounding
     onDispose { player.stop() }
-    actionSection(label = editor.song.title, onBack = { portal.go(MusicStudioRoute()) }) {
+    actionSection(
+        label = editor.song.title,
+        onBack = { portal.go(MusicStudioRoute()) },
+        heading = { heading3(it, modify(OpacityHigh, Bold, songTitleTransition(editor.song.songId))) },
+    ) {
         lazyTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {
@@ -101,6 +117,7 @@ private fun ViewScope.songList() {
                         MenuAction("Edit") { portal.go(MusicStudioRoute(songId)) },
                         MenuAction("Remove") { model.remove(songId) },
                     ),
+                    labelMod = songTitleTransition(songId),
                 )
             }
             if (songs.isEmpty()) {

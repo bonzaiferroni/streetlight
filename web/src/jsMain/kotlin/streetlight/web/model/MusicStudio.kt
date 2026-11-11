@@ -3,8 +3,10 @@ package streetlight.web.model
 import kampfire.model.Messenger
 import kampfire.model.Ok
 import kampfire.model.Outcome
+import kampfire.model.mutableTapOf
 import kampfire.model.toDataOr
 import kampfire.model.reactIn
+import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -24,12 +26,17 @@ import streetlight.web.utility.localStoreOf
 /** The songs held in [db], their mixes in [mixDb], and the editors of them, whose problems go to [messenger]. */
 class MusicStudio(
     private val scope: CoroutineScope,
+    initialSongId: SongId?,
     private val db: SongDb,
     private val mixDb: MixDb,
     private val messenger: Messenger,
     private val takeShelf: TakeShelf,
     private val clipLibrary: ClipLibrary,
 ) {
+    private val state = storeOf(MusicStudioState(initialSongId))
+
+    val songIdState = state.tapOf { it.songId }
+
     val songList = db.songsState.tapOf { songs -> songs.map { it.song } }
 
     /** The style every song is written in. */
@@ -61,6 +68,10 @@ class MusicStudio(
 
     fun readSong(songId: SongId) = db.read(songId)
 
+    fun setSongId(songId: SongId?) {
+        state.set { copy(songId = songId) }
+    }
+
     /**
      * Stores a new song read from the markdown [text], titled for [fileName] when it names no title, returning its id,
      * or gives the problem that kept it from being read.
@@ -85,6 +96,10 @@ class MusicStudio(
     fun mixEditorOf(scope: CoroutineScope, editor: MusicEditor) =
         MixEditor(scope, editor, mixDb, clipLibrary, takeShelf, messenger)
 }
+
+data class MusicStudioState(
+    val songId: SongId? = null
+)
 
 private fun newStoredSong(title: String): StoredSong {
     val songId = SongId.random()

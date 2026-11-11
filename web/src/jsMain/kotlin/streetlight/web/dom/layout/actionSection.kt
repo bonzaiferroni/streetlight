@@ -67,18 +67,22 @@ fun AppendScope.actionRow(
     popoverActions: List<MenuAction>? = null
 ) = actionRow(entity.label, entity.image?.thumb, entity.toRoute(), actions, popoverActions)
 
-/** A row showing the thumb at [imageUrl] and [label], linked to [route] when given, beside its actions. */
+/**
+ * A row showing the thumb at [imageUrl] and [label], modified by [labelMod], linked to [route] when given, beside its
+ * actions.
+ */
 fun AppendScope.actionRow(
     label: String,
     imageUrl: Url? = null,
     route: WebRoute? = null,
     actions: List<MenuAction>? = null,
-    popoverActions: List<MenuAction>? = null
+    popoverActions: List<MenuAction>? = null,
+    labelMod: Modifier? = null,
 ) {
     row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
         image(imageUrl, modify(Height(5), BorderRadius1, OverflowClip))
         navigationIfNotNull(route) {
-            heading5(label)
+            heading5(label, labelMod)
         }
         menuActionsRow(actions)
         popoverActions?.let {
