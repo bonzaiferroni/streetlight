@@ -7,6 +7,7 @@ import streetlight.model.ui.Screen
 import koala.component.*
 import koala.page.*
 import streetlight.web.component.starBadge
+import streetlight.web.view.PrestoSelf
 
 /**
  * The bar of the site and star helm buttons, each opening its popover. A button hides while its panel is shown
@@ -16,7 +17,7 @@ fun FlowContent.helmBar() {
     val cardMod = modify(HelmBar.CardClass, PointerEventsAuto)
     siteHelmPopover()
     starHelmPopover()
-    row(HelmBar.StickyBarId, Padding(1)) {
+    row(HelmBar.StickyBarId, modify(Padding(1), PrestoSelf)) {
         div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
             button(SvgFile.Helm, modify(HelmBar.IconMod, PrimaryFg)) {

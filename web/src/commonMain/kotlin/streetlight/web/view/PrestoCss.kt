@@ -4,6 +4,7 @@ package streetlight.web.view
 
 import koala.modifier.Class
 import koala.modifier.Css
+import koala.modifier.MagicStyle
 
 val PrestoSelf = Class("presto-self")
 
@@ -12,12 +13,14 @@ object Presto {
     val Height = Css.ViewTransitionClass.of(PrestoKey.Height)
     val Card = Css.ViewTransitionClass.of(PrestoKey.Card)
     val Pill = Css.ViewTransitionClass.of(PrestoKey.Pill)
+    val Pop = Css.ViewTransitionClass.of(PrestoKey.Pop)
 }
 
 object PrestoKey {
     const val Height = "presto-height"
     const val Card = "presto-card"
     const val Pill = "presto-pill"
+    const val Pop = "presto-pop"
 }
 
 //language="CSS"
@@ -63,5 +66,12 @@ $PrestoSelf { view-transition-name: match-element; }
     object-fit: none;
     object-position: left;
 }
+
+/* an element on one side of the change only, its snapshot alone in its pair, pops in or out */
+::view-transition-new(*.$Pop):only-child { animation: presto-pop-in var(--magic-interval) var(--magic-cubic-bounce); }
+::view-transition-old(*.$Pop):only-child { animation: presto-pop-out var(--magic-interval) var(--magic-easing) forwards; }
+
+@keyframes presto-pop-in  { from { opacity: 0; transform: scale(${MagicStyle.InitialScale}); } }
+@keyframes presto-pop-out { to   { opacity: 0; transform: scale(${MagicStyle.InitialScale}); } }
 
 """}

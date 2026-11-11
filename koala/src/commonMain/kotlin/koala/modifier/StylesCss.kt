@@ -36,10 +36,8 @@ body {
 }
 
 /* the page outside named elements changes in place during a view transition */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: none;
-}
+::view-transition-old(root) { display: none; }
+::view-transition-new(root) { animation: none; }
 
 @keyframes hueSpin {
     to { filter: hue-rotate(360deg); }

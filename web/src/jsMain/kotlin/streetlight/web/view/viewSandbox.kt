@@ -73,6 +73,20 @@ fun ViewScope.viewSandbox() = mainBody("Sand", "Box", "viewSandbox.kt") {
             }
         }
     }
+
+    val hands = listOf("Bosun", "Cook", "Lookout", "Gunner", "Carpenter", "Surgeon", "Swabbie")
+    val deckState = storeOf(hands.take(3))
+    button("Hire", { deckState.set { this + (hands.firstOrNull { it !in this } ?: return@set this) } })
+    flowBlock(deckState, modify(Transitioner)) { deck ->
+        column {
+            deck.forEach { hand ->
+                card(modify(FlexRow, AlignItemsCenter, JustifyContentSpaceBetween, transition("deck-$hand"), Presto.Pop)) {
+                    +hand
+                    button("Dismiss", { deckState.set { this - hand } })
+                }
+            }
+        }
+    }
 }
 
 fun RouteScope.viewSandboxRoute() {
