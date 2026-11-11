@@ -14,6 +14,7 @@ import streetlight.web.view.EarthCss
 import streetlight.web.view.LaneCss
 import streetlight.web.view.MeasureCss
 import streetlight.web.view.MixCss
+import streetlight.web.view.PrestoCss
 import streetlight.web.view.StudioCss
 import streetlight.web.view.RouteDockCss
 import streetlight.web.component.TagFilterMenuCss
@@ -109,6 +110,7 @@ private val KtStyles = listOf(
     ConnectPickerCss,
     ConnectCss,
     SiteDocCss,
+    PrestoCss,
 )
 
 /** The site-wide stylesheet: the base sheets of koala, then the stylesheet of each component and layout. */

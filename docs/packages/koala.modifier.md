@@ -57,6 +57,10 @@ The second group takes only a class because it schedules the change on a later a
 
 A utility class is a `Class` val declared in `LayoutCss.kt`, `DisplayCss.kt` or `TextCss.kt`, with its rule in the stylesheet of the same file. Declarations and rules follow the same groups, under the same comments.
 
+## Signal Classes
+
+A signal class is a `Class` that a component reads from its `mod` with `contains` to choose a behavior, such as `Magic` and `Transitioner` in `MagicCss.kt`. It may have no rule of its own. `Transitioner` runs a component's change inside a view transition and takes precedence over `Magic`.
+
 ## Stylesheets
 
 A stylesheet declared in Kotlin is written as `docs/css-style.md` specifies.

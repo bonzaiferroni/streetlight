@@ -25,7 +25,7 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
 
 /** Renders an [appFooter] into this div, listing the [additional] source links beneath the main one. */
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
-    addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16)))
+    addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16), transition("app-footer")))
     lottie(LottieFile.SpinningCircles, Height(24))
     textBlock(prayers.random(), modify(Italic, OpacityHigh))
     row(JustifyContentCenter) {

@@ -37,6 +37,12 @@ body {
     transition: var(--transition-background-color), var(--transition-color);
 }
 
+/* the page outside named elements changes in place during a view transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+}
+
 @keyframes hueSpin {
     to { filter: hue-rotate(360deg); }
 }

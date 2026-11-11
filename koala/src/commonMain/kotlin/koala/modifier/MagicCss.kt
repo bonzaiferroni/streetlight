@@ -7,6 +7,7 @@ object MagicStyle {
 }
 
 val Magic = Class("magic")
+val Transitioner = Class("transitioner")
 val Transitioning = Class("transitioning")
 val Dummy = Class("dummy")
 val Reveal = Class("reveal")

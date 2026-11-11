@@ -1,10 +1,9 @@
 package koala.dom.layout
 
-import koala.modifier.Blur
 import koala.modifier.Magic
 import koala.modifier.MagicStyle
 import koala.modifier.Reveal
-import koala.modifier.SlideLeft
+import koala.modifier.Transitioner
 import koala.modifier.Transitioning
 import koala.modifier.addModifiers
 import koala.modifier.modify
@@ -25,7 +24,6 @@ import kotlin.time.Duration.Companion.milliseconds
 import koala.dom.View
 import koala.dom.ViewScope
 import koala.dom.asWeb
-import koala.dom.launchEffect
 import koala.dom.mountChildView
 import koala.dom.viewTransition
 import web.dom.document
@@ -35,7 +33,7 @@ import koala.layout.FlowBlockStyle
  * Renders [block] as a child view for each value of [flow], starting with [initialValue].
  *
  * The previous child view is disposed before the next is built. With [Magic] in [mod], the change is animated.
- * With [isTransitioner], each change runs inside a view transition instead, and [Magic] is ignored.
+ * With [Transitioner] in [mod], each change runs inside a view transition instead, and [Magic] is ignored.
  */
 fun <Value> ViewScope.flowBlock(
     initialValue: Value,
@@ -44,10 +42,10 @@ fun <Value> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
-    isTransitioner: Boolean = false,
     block: ViewScope.(Value) -> Unit
 ): HTMLDivElement {
-    val magic = mod?.contains(Magic) ?: false
+    val isMagic = mod?.contains(Magic) ?: false
+    val isTransitioner = mod?.contains(Transitioner) ?: false
     val element = div {
         addModifiers(mod, FlowBlockStyle.Class)
         config?.invoke(this)
@@ -60,7 +58,7 @@ fun <Value> ViewScope.flowBlock(
         view = this@flowBlock.mountChildView(name, element) {
             block(value)
         }
-        if (magic) {
+        if (isMagic) {
             element.modify(Reveal)
         }
     }
@@ -94,7 +92,7 @@ fun <Value> ViewScope.flowBlock(
             }
 
             view?.dispose()
-            if (magic) {
+            if (isMagic) {
                 val interval = MagicStyle.Interval.milliseconds
                 launchJob?.cancel()
                 launchJob = launch("$name > transition") {
@@ -119,7 +117,7 @@ fun <Value> ViewScope.flowBlock(
  * Renders [block] as a child view for each value of [tap], rebuilding when it changes.
  *
  * The previous child view is disposed before the next is built. With [Magic] in [mod], the change is animated.
- * With [isTransitioner], each change runs inside a view transition instead, and [Magic] is ignored.
+ * With [Transitioner] in [mod], each change runs inside a view transition instead, and [Magic] is ignored.
  */
 fun <Value> ViewScope.flowBlock(
     tap: Tap<Value>,
@@ -127,7 +125,6 @@ fun <Value> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
-    isTransitioner: Boolean = false,
     block: ViewScope.(Value) -> Unit
 ) = flowBlock(
     initialValue = tap.now,
@@ -136,7 +133,6 @@ fun <Value> ViewScope.flowBlock(
     name = name,
     config = config,
     onTransition = onTransition,
-    isTransitioner = isTransitioner,
     block = block
 )
 

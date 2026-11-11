@@ -61,7 +61,10 @@ val ZIndex1 = Css.ZIndex.of(1)
 val ZIndex2 = Css.ZIndex.of(2)
 val ZIndex3 = Css.ZIndex.of(3)
 
-val ContainerTypeInlineSize = Css.ContainerType.of(ContainerType.inlineSize)
+/** Names the element [name] for view transitions, pairing it with the element of the same name on the other side. */
+fun transition(name: String) = Css.ViewTransitionName.of(name)
+
+val ContainerTypeInlineSize =Css.ContainerType.of(ContainerType.inlineSize)
 
 val Top0 = Css.Top.of(0.px)
 val Left0 = Css.Left.of(0.px)
