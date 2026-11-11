@@ -7,6 +7,7 @@ import koala.dom.component.div
 import koala.dom.createDiv
 import koala.dom.launchEffect
 import koala.dom.mountChildView
+import koala.dom.viewTransition
 import koala.layout.OrderColumnStyle
 import koala.modifier.*
 import kotlinx.coroutines.Job
@@ -53,6 +54,8 @@ class OrderHandle internal constructor(
  * item fades and takes its place among the others as the pointer passes their middles, each item sliding to its new
  * place, and scrolls the column's scroller near its edges. Releasing the pointer writes the new order to [state], and Escape puts the items back, as
  * does an item added or removed along the way.
+ *
+ * With [Transitioner] in [mod], an item added or removed pops in or out inside a view transition.
  */
 fun <T, K> ViewScope.orderColumn(
     state: MutableTap<List<T>>,
@@ -168,18 +171,36 @@ fun <T, K> ViewScope.orderColumn(
         return OrderItem(view, element)
     }
 
+    fun show(list: List<T>) {
+        val keys = list.map(keyOf)
+        // an edit to an item leaves a move alone, while an item added or removed ends it
+        if (move != null) {
+            if (keys.toSet() == items.keys) return
+            end(isCommitted = false)
+        }
+        (items.keys - keys.toSet()).forEach { key -> items.remove(key)?.dispose() }
+        list.forEach { item -> if (keyOf(item) !in items) items[keyOf(item)] = create(item) }
+        order = keys
+        place()
+    }
+
+    // the items held now are in place from the start, so a view built inside a transition captures them
+    val initialList = state.now
+    show(initialList)
+
+    val isTransitioner = mod?.contains(Transitioner) ?: false
     launchEffect {
+        var isFirst = true
         state.flow.collect { list ->
-            val keys = list.map(keyOf)
-            // an edit to an item leaves a move alone, while an item added or removed ends it
-            if (move != null) {
-                if (keys.toSet() == items.keys) return@collect
-                end(isCommitted = false)
+            val isReplay = isFirst && list == initialList
+            isFirst = false
+            if (isReplay) return@collect
+            // only an item added or removed has anything to pop; a reorder from a drop is already in place
+            val isMembershipChange = list.map(keyOf).toSet() != items.keys
+            when {
+                isTransitioner && isMembershipChange -> document.viewTransition { show(list) }
+                else -> show(list)
             }
-            (items.keys - keys.toSet()).forEach { key -> items.remove(key)?.dispose() }
-            list.forEach { item -> if (keyOf(item) !in items) items[keyOf(item)] = create(item) }
-            order = keys
-            place()
         }
     }
 

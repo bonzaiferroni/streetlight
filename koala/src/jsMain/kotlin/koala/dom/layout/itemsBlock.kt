@@ -61,10 +61,17 @@ fun <Item> ViewScope.itemsBlock(
         displayedItems = nextItems
     }
 
+    // the items held now are in place from the start, so a view built inside a transition captures them
+    display(state.now)
+
     launchEffect {
+        // the items last sent to display, ahead of displayedItems while a transition waits to run
+        var requestedItems = state.now
         state.flow.collect { items ->
+            if (items == requestedItems) return@collect
+            requestedItems = items
             when {
-                isTransitioner && displayedItems != null -> document.viewTransition { display(items) }
+                isTransitioner -> document.viewTransition { display(items) }
                 else -> display(items)
             }
         }

@@ -23,4 +23,10 @@ $Grip {
 }
 
 $Column:has($Moving) { cursor: grabbing; }
+
+/* each item pairs with itself, so items that arrive or leave pop */
+$Column$Transitioner > * {
+    view-transition-name: match-element;
+    view-transition-class: ${PrestoKey.Pop};
+}
 """ }

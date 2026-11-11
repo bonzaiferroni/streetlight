@@ -8,6 +8,9 @@ import koala.dom.launchEffect
 import koala.component.heading3
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
+import koala.dom.layout.itemsBlock
+import koala.dom.flowModifier
+import kampfire.model.tapOf
 import koala.dom.layout.lazyTabs
 import koala.dom.routeBlock
 import koala.model.MenuAction
@@ -51,7 +54,7 @@ fun ViewScope.viewMusicStudio() {
     }
     context(model, player) {
         mainBody("Music", "Studio", "viewMusicStudio.kt") {
-            flowBlock(model.songIdState, Transitioner) { songId ->
+            flowBlock(model.songIdState, modify(Transitioner)) { songId ->
                 val editor = songId?.let { model.editorOf(contentScope, it) }
                 if (editor == null) songList() else songFocus(editor)
             }
@@ -105,25 +108,22 @@ private fun ViewScope.songList() {
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
-        flowBlock(model.songList) { songs ->
-            songs.forEach { song ->
-                val songId = song.songId
-                val exportId = Id(Uuid.random().toString())
-                songExportPopover(exportId, songId)
-                actionRow(
-                    label = song.title,
-                    actions = listOf(
-                        MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
-                        MenuAction("Edit") { portal.go(MusicStudioRoute(songId)) },
-                        MenuAction("Remove") { model.remove(songId) },
-                    ),
-                    labelMod = songTitleTransition(songId),
-                )
-            }
-            if (songs.isEmpty()) {
-                textBlock("No songs yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-            }
+        itemsBlock(model.songList, Transitioner, gapRems = null) { song ->
+            val songId = song.songId
+            val exportId = Id(Uuid.random().toString())
+            songExportPopover(exportId, songId)
+            actionRow(
+                label = song.title,
+                actions = listOf(
+                    MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
+                    MenuAction("Edit") { portal.go(MusicStudioRoute(songId)) },
+                    MenuAction("Remove") { model.remove(songId) },
+                ),
+                labelMod = songTitleTransition(songId),
+            )
         }
+        textBlock("No songs yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
+            .flowModifier(model.songList.tapOf { it.isNotEmpty() }, DisplayNone, contentScope)
     }
 }
 

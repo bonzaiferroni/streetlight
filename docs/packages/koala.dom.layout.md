@@ -22,6 +22,10 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 
 `selectorBlock` draws no container and shows nothing when it has no items. The caller wraps it in `selectorContainer`, together with any content that follows the items, such as a prompt shown while the list is empty.
 
+## Building From State
+
+A layout that follows a flow builds its content from the state's value when it is called, then collects the flow and skips the emission that repeats it. Content built only in the collector arrives a frame late, after a view transition has captured the page without it. `flowBlock`, `itemsBlock` and `orderColumn` follow this.
+
 ## Layouts
 
 ### Feedback

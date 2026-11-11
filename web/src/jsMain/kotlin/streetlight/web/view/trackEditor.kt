@@ -97,7 +97,7 @@ fun ViewScope.trackEditor() {
         ),
     ) {
         // keyed by name, so an edit to a track's content or a move leaves its open editor in place
-        orderColumn(model.tracksState, { it.trackId }) { track -> trackRow(track) }
+        orderColumn(model.tracksState, { it.trackId }, Transitioner) { track -> trackRow(track) }
         flowBlock(model.tracksState.tapOf { it.isEmpty() }) { isEmpty ->
             if (isEmpty) textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
         }
