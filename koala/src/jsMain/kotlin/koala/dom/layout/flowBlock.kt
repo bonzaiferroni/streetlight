@@ -27,12 +27,15 @@ import koala.dom.ViewScope
 import koala.dom.asWeb
 import koala.dom.launchEffect
 import koala.dom.mountChildView
+import koala.dom.viewTransition
+import web.dom.document
 import koala.layout.FlowBlockStyle
 
 /**
  * Renders [block] as a child view for each value of [flow], starting with [initialValue].
  *
  * The previous child view is disposed before the next is built. With [Magic] in [mod], the change is animated.
+ * With [isTransitioner], each change runs inside a view transition instead, and [Magic] is ignored.
  */
 fun <Value> ViewScope.flowBlock(
     initialValue: Value,
@@ -41,6 +44,7 @@ fun <Value> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
+    isTransitioner: Boolean = false,
     block: ViewScope.(Value) -> Unit
 ): HTMLDivElement {
     val magic = mod?.contains(Magic) ?: false
@@ -80,8 +84,16 @@ fun <Value> ViewScope.flowBlock(
             val isReplay = isFirstEmission && value == initialValue && view != null
             isFirstEmission = false
             if (isReplay) return@collect
-            view?.dispose()
 
+            if (isTransitioner) {
+                document.viewTransition {
+                    view?.dispose()
+                    tryMountView(value)
+                }
+                return@collect
+            }
+
+            view?.dispose()
             if (magic) {
                 val interval = MagicStyle.Interval.milliseconds
                 launchJob?.cancel()
@@ -107,6 +119,7 @@ fun <Value> ViewScope.flowBlock(
  * Renders [block] as a child view for each value of [tap], rebuilding when it changes.
  *
  * The previous child view is disposed before the next is built. With [Magic] in [mod], the change is animated.
+ * With [isTransitioner], each change runs inside a view transition instead, and [Magic] is ignored.
  */
 fun <Value> ViewScope.flowBlock(
     tap: Tap<Value>,
@@ -114,6 +127,7 @@ fun <Value> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
+    isTransitioner: Boolean = false,
     block: ViewScope.(Value) -> Unit
 ) = flowBlock(
     initialValue = tap.now,
@@ -122,6 +136,7 @@ fun <Value> ViewScope.flowBlock(
     name = name,
     config = config,
     onTransition = onTransition,
+    isTransitioner = isTransitioner,
     block = block
 )
 
