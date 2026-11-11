@@ -7,7 +7,9 @@ object SwitchMenuStyle {
     val Class = Class("switch-menu")
     val Option = Class("switch-menu__option")
     val Label = Class("switch-menu__label")
+    val Light = Class("switch-menu__light")
     val OptionWidth = Property<LinearDimension>("option-width", true)
+    const val LabelTransition = "switch-menu-label"
 }
 
 // language="CSS"
@@ -38,30 +40,9 @@ $Option {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 
-    /* the light behind a selected option, scaled out as ScaleOut does */
-    &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        border-radius: var(--btn-border-radius);
-        background: var(--primary-button);
-        box-shadow: var(--primary-shadow);
-        opacity: 0;
-        transform: scale(${MagicStyle.InitialScale});
-        transition: var(--transition-transform), var(--transition-opacity);
-    }
-
     &[aria-checked="true"] {
         color: white;
         cursor: default;
-
-        /* scaled in as ScaleIn does */
-        &::before {
-            opacity: 1;
-            transform: scale(1);
-            transition: var(--transition-transform-bounce), var(--transition-opacity);
-        }
     }
 
     &:focus-visible {
@@ -70,8 +51,27 @@ $Option {
     }
 }
 
+/* the light behind the selected option, moved between options and paired with itself in a view transition */
+$Light {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--btn-border-radius);
+    background: var(--primary-button);
+    box-shadow: var(--primary-shadow);
+    view-transition-name: match-element;
+}
+
+/* labels paired with themselves, drawn over the light while it travels */
+$Label {
+    view-transition-name: match-element;
+    view-transition-class: $LabelTransition;
+}
+
+::view-transition-group(*.$LabelTransition) { z-index: 1; }
+
 /* the day light matches the day button: darker, without the glow */
-$DayTheme $Option::before {
+$DayTheme $Light {
     background: var(--primary-button-day);
     box-shadow: var(--btn-outline);
 }

@@ -174,7 +174,8 @@ body {
 
     /* declared on body, where --curve is set, so it reads the page's curve */
     --curve-unit: calc(var(--unit) * var(--curve));
-    transition: --curve ${KoalaTheme.ThemeTransitionSeconds}s var(--magic-cubic-bounce);
+    transition: --curve ${KoalaTheme.ThemeTransitionSeconds}s var(--magic-cubic-bounce),
+        var(--transition-background-color), var(--transition-color);
 
     --primary-button: oklch(from rgb(var(--primary)) calc(l * 0.93) calc(c * 0.8) h);
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));

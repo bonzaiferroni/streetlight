@@ -5,7 +5,6 @@ package koala.modifier
 const val CONTENT_PANEL_WIDTH_PX = 1080
 const val RIGHT_PANEL_WIDTH_PX = 360
 const val SIDE_PANEL_WIDTH_PX = 192
-
 // language="CSS"
 val StylesCss get() = """
 :root {
@@ -34,7 +33,6 @@ body {
     line-height: var(--paragraph-line-height);
     color: var(--ink-fg);
     -webkit-font-smoothing: antialiased;
-    transition: var(--transition-background-color), var(--transition-color);
 }
 
 /* the page outside named elements changes in place during a view transition */

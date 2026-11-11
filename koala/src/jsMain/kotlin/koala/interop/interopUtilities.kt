@@ -47,8 +47,7 @@ fun applyRootSwitch(name: String, value: String) {
 
 /** [toggleRootModifier] inside a view transition. */
 fun toggleRootModifierWithTransition(mod: String) {
-    document.startViewTransition {
+    document.viewTransition {
         toggleRootModifier(mod)
-        null
     }
 }

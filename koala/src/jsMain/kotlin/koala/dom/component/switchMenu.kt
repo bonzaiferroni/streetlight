@@ -21,6 +21,7 @@ import koala.dom.launchEffect
 import koala.dom.onClick
 import koala.dom.querySelector
 import koala.dom.querySelectorAll
+import koala.dom.viewTransition
 import kotlin.js.Promise
 
 /** A row of [options] bound to [state], the selected option lighted, wrapping onto more rows as needed. */
@@ -38,6 +39,9 @@ fun ViewScope.switchMenu(
             button(type = ButtonType.button) {
                 addModifiers(SwitchMenuStyle.Option)
                 attributes["role"] = "radio"
+                if (option == currentValue) {
+                    span { addModifiers(SwitchMenuStyle.Light) }
+                }
                 span {
                     addModifiers(SwitchMenuStyle.Label)
                     +option
@@ -47,11 +51,14 @@ fun ViewScope.switchMenu(
     }.asWeb()
 
     val optionElements = element.querySelectorAll(SwitchMenuStyle.Option).map { it as HTMLElement }
+    val light = element.querySelector(SwitchMenuStyle.Light)
 
     fun display(value: String) {
         currentValue = value
         optionElements.forEachIndexed { index, option ->
-            option.setAttribute("aria-checked", (options[index] == value).toString())
+            val isSelected = options[index] == value
+            option.setAttribute("aria-checked", isSelected.toString())
+            if (isSelected && light != null) option.prepend(light)
         }
     }
 
@@ -64,7 +71,13 @@ fun ViewScope.switchMenu(
     display(currentValue)
 
     launchEffect("switchMenu") {
-        state.flow.collect { display(it) }
+        // the value last sent to display, ahead of currentValue while a transition waits to run
+        var requestedValue = currentValue
+        state.flow.collect { value ->
+            if (value == requestedValue) return@collect
+            requestedValue = value
+            document.viewTransition { display(value) }
+        }
     }
 
     // the widest label sets the width every option shares, measured once the fonts are in
