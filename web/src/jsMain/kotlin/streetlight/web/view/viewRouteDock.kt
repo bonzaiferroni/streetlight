@@ -26,21 +26,23 @@ fun ViewScope.wireRouteDock() {
 fun ViewScope.viewRouteDock() {
     val model = dock
 
-    row(modify(RouteDockStyle.Container, TextUppercase, TextSmall, Gap(1), AlignItemsCenter, MarginBottom(2))) {
+    row(modify(RouteDockStyle.Container,TextUppercase, TextSmall, Gap(1), AlignItemsCenter, MarginBottom(2))) {
         flowBlock(model.focusDockState, modify(Flex1, Magic, DisplayFlex, JustifyContentEnd)) { focusDock ->
             focusDock ?: return@flowBlock
             flowBlock(model.isFocusShownState) { isFocusShown ->
                 val icon = focusDock.icon.takeIf { isFocusShown } ?: SvgFile.Flame
                 val glassMod = modify(RouteDockStyle.Glass, RouteDockStyle.Focus.takeIf { isFocusShown }, BlurBackdrop)
-                row(modify(glassMod, BorderRadiusPill, BorderSolid2Px, Padding(1))) {
+                val prestoMod = modify(transition("route-dock-tray"), Presto.Pill)
+                row(modify(glassMod, prestoMod, BorderRadiusPill, BorderSolid2Px, Padding(1))) {
                     this@flowBlock.button(icon.small, model::toggleFocus, modify(SmallIconHeight, Aspect1))
                 }
             }
         }
-        flowBlock(model.shownDockState, Magic) { routes ->
+        flowBlock(model.shownDockState, Transitioner) { routes ->
             val isStable = routes == StableDock
             val glassMod = modify(RouteDockStyle.Glass, RouteDockStyle.Focus.takeIf { !isStable }, BlurBackdrop)
-            row(modify(glassMod, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
+            val prestoMod = modify(transition("route-dock-glass"), Presto.Pill)
+            row(modify(glassMod, prestoMod, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
                 routes.forEach { labeledRoute ->
                     val route = labeledRoute.route
                     val isRouteNow = when {

@@ -61,6 +61,7 @@ object Css {
     val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns")
     val GridTemplateRows = Property<GridTemplateRows>("grid-template-rows")
     val ViewTransitionName = Property<String>("view-transition-name")
+    val ViewTransitionClass = Property<String>("view-transition-class")
     val AspectRatio = Property<Number>("aspect-ratio")
     val LineHeight = Property<Number>("line-height")
     val ListStyleType = Property<String>("list-style-type") { "\"$it \"" }

@@ -300,6 +300,12 @@ The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`.
 
 Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.
 
+## View Transitions
+
+An element animated by a view transition takes a name and, optionally, a `Presto` style from `PrestoCss.kt`. An element that survives the change is named with `PrestoSelf`; an element that is rebuilt, such as one inside a `Transitioner` `flowBlock`, is named with `transition(key)`, a key unique on the page. A `Presto` style is a view transition class, so many named elements share it.
+
+A named element is a backdrop root, so a `backdrop-filter` within it blurs nothing behind it. The element carrying the filter is named, never an ancestor of it, as each glass of the route dock is.
+
 ## Theme Colors
 
 Primary marks a selection, such as a timeline's cursor. Accent marks a focus, such as the window a timeline shows.
