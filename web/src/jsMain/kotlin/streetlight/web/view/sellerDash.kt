@@ -36,9 +36,7 @@ fun ViewScope.sellerDash() {
                     val messages = MessageStore()
                     context(editor) {
                         val label = if (focus.offeringId == null) "New Offer" else "Update Offer"
-                        actionSection(label, listOf(
-                            MenuAction("back", onClick = config::cancelFocus)
-                        )) {
+                        actionSection(label, onBack = config::cancelFocus) {
                             offeringEditForm()
                         }
 
@@ -59,9 +57,7 @@ fun ViewScope.sellerDash() {
                     val editor = PaymentEditor(focus, api)
                     val messages = MessageStore()
                     context(editor) {
-                        actionSection("Send Invoice", listOf(
-                            MenuAction("back", onClick = config::cancelFocus)
-                        )) {
+                        actionSection("Send Invoice", onBack = config::cancelFocus) {
                             paymentEditForm()
                         }
 

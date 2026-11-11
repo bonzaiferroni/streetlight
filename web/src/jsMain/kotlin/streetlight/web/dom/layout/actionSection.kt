@@ -14,29 +14,40 @@ import koala.modifier.*
 import koala.modifier.invoke
 import kampfire.model.Url
 import koala.model.WebRoute
-import kotlinx.css.Align
 import kotlinx.html.DIV
 import streetlight.model.data.Entity
 import streetlight.web.model.toRoute
 
 /**
- * A section headed by [label], built by [heading], with [svg] before it as tall as the heading's row, and its
- * [actions] at the end of that row, above its [content].
+ * A section headed by [label], built by [heading], with [svg] before it, and its [actions] at the end of that row,
+ * above its [content]. With [onClickIcon], the icon is a button that calls it.
  */
 fun AppendScope.actionSection(
     label: String,
     actions: List<MenuAction>? = null,
     heading: DIV.(String) -> Unit = DIV::defaultSectionHeading,
     svg: Svg? = null,
+    onClickIcon: (() -> Unit)? = null,
     content: AppendScope.() -> Unit,
 ) = section {
     row(modify(BorderBottom2Px, AlignItemsCenter)) {
-        svg?.let { icon(it, Css.AlignSelf.of(Align.stretch)) }
+        svg?.let {
+            if (onClickIcon == null) icon(it, LargeIconHeight) else button(it, onClickIcon, LargeIconHeight)
+        }
         heading(label)
         menuActionsRow(actions)
     }
     content()
 }
+
+/** An [actionSection] whose icon is a back arrow that calls [onBack]. */
+fun AppendScope.actionSection(
+    label: String,
+    onBack: () -> Unit,
+    actions: List<MenuAction>? = null,
+    heading: DIV.(String) -> Unit = DIV::defaultSectionHeading,
+    content: AppendScope.() -> Unit,
+) = actionSection(label, actions, heading, SvgFile.ArrowLeft.large, onBack, content)
 
 fun DIV.defaultSectionHeading(label: String) = heading3(label, modify(OpacityHigh, Bold))
 

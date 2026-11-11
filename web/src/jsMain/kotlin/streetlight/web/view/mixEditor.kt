@@ -2,6 +2,7 @@ package streetlight.web.view
 
 import koala.SvgFile
 import koala.component.IconStyle
+import koala.component.heading5
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
@@ -122,20 +123,18 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
 }
 
 /**
- * Renders [section] alone in a card under its label and its track's icon, with an action that returns to the
- * overview: its notation beside the recorder of its takes.
+ * Renders [section] alone in a card under its label, with a back arrow that returns to the overview: its notation
+ * beside the recorder of its takes.
  */
 context(model: MixEditor)
 private fun ViewScope.sectionFocus(section: TrackSection) {
     val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
-    actionSectionCard(
-        label = model.labelOf(section),
-        actions = listOf(MenuAction("Back") { model.clearFocus() }),
-        svg = model.musicEditor.readTrack(section.trackId)?.svg?.small,
-    ) {
-        formRow {
-            flowBlock(model.notationOf(section)) { notation -> notation?.let { sectionStrips(it) } }
-            sectionRecorder(mic)
+    card(Padding(2)) {
+        actionSection(model.labelOf(section), onBack = { model.clearFocus() }, heading = { heading5(it) }) {
+            formRow {
+                flowBlock(model.notationOf(section)) { notation -> notation?.let { sectionStrips(it) } }
+                sectionRecorder(mic)
+            }
         }
     }
 }

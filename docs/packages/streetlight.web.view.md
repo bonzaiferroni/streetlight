@@ -92,7 +92,7 @@ A form takes as context only the models whose state it declares UI from, such as
 
 ```kotlin
 context(editor) {
-    actionSection(label, listOf(MenuAction("back", onClick = config::cancelFocus))) {
+    actionSection(label, onBack = config::cancelFocus) {
         skillEditForm()
     }
     formSubmit("Save", onClick = { /* editor.submitSuspend, then config.finishSkillEdit */ }, messenger = messages)

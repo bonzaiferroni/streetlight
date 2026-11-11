@@ -63,10 +63,7 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
     val lanes = LaneEditor(contentScope, editor, mix, player, app.get())
     // playback left running when the song closes would keep sounding
     onDispose { player.stop() }
-    actionSection(
-        label = editor.song.title,
-        actions = listOf(MenuAction("Back") { portal.go(MusicStudioRoute()) }),
-    ) {
+    actionSection(label = editor.song.title, onBack = { portal.go(MusicStudioRoute()) }) {
         lazyTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {

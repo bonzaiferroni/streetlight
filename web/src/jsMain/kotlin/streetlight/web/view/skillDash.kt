@@ -34,9 +34,7 @@ fun ViewScope.skillDash() {
                     val messages = MessageStore()
                     context(editor) {
                         val label = if (focus.skillId == null) "New Skill" else "Update Skill"
-                        actionSection(label, listOf(
-                            MenuAction("back", onClick = model::cancelFocus)
-                        )) {
+                        actionSection(label, onBack = model::cancelFocus) {
                             skillEditForm()
                         }
 
