@@ -15,6 +15,7 @@ import kotlinx.html.FlowContent
 import koala.model.ExtraLink
 import streetlight.web.model.SiteDoc
 import streetlight.web.model.route
+import streetlight.web.view.PrestoSelf
 
 /** The footer of a page, with a link to the source at [sourcePath] when given. */
 fun FlowContent.appFooter(sourcePath: String? = null) {
@@ -25,7 +26,7 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
 
 /** Renders an [appFooter] into this div, listing the [additional] source links beneath the main one. */
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
-    addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16), transition("app-footer")))
+    addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16), PrestoSelf))
     lottie(LottieFile.SpinningCircles, Height(24))
     textBlock(prayers.random(), modify(Italic, OpacityHigh))
     row(JustifyContentCenter) {
