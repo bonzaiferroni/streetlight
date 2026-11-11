@@ -302,9 +302,7 @@ Routes of one group share one `stateOf` branch, or a function it calls, so their
 
 ## View Transitions
 
-An element animated by a view transition takes a name and, optionally, a `Presto` style from `PrestoCss.kt`. An element that survives the change is named with `PrestoSelf`; an element that is rebuilt, such as one inside a `Transitioner` `flowBlock`, is named with `transition(key)`, a key unique on the page. A `Presto` style is a view transition class, so many named elements share it.
-
-A named element is a backdrop root, so a `backdrop-filter` within it blurs nothing behind it. The element carrying the filter is named, never an ancestor of it, as each glass of the route dock is.
+View transitions follow `koala.modifier`. Each glass of the route dock is named itself, never its row, so its `backdrop-filter` keeps the page behind it.
 
 ## Theme Colors
 

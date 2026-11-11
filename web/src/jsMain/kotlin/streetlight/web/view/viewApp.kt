@@ -5,6 +5,7 @@ import koala.modifier.KoalaBody
 import koala.dom.*
 import koala.interop.addGlobalFunctions
 import koala.model.Portal
+import koala.model.Toaster
 import koala.modifier.modify
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -14,6 +15,7 @@ import streetlight.web.io.OmniClient
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionClient
 import koala.utility.launch
+import kotlinx.coroutines.delay
 import streetlight.web.interop.appGlobalFunctions
 import streetlight.web.page.AppOverlay
 import web.dom.document
@@ -35,6 +37,7 @@ import streetlight.web.interop.wireStarHelm
 import streetlight.web.interop.wireStarMenu
 import streetlight.web.interop.wireTagFilterMenu
 import streetlight.web.interop.wireToaster
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -52,6 +55,7 @@ fun viewApp() {
         val omni: OmniClient = get()
         val transit: TransitMap = get()
         val portal: Portal = get()
+        val toaster: Toaster = get()
         transit.init()
 
         scope.launch(::viewApp) {
@@ -89,6 +93,12 @@ fun viewApp() {
                     // document.getElementById(KoalaBody.ShellMount).modify(DisplayNone)
                     document.getElementById(AppOverlay.WorkSignal).modify(DisplayNone)
                 }
+
+                toaster.toast("ey")
+                delay(1.seconds)
+                toaster.toast("toast!")
+                delay(3.seconds)
+                toaster.toast("retoast!")
 
                 // td: reimplement as sidebar option
                 // omni.connect()

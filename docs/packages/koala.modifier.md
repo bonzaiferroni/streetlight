@@ -61,6 +61,12 @@ A utility class is a `Class` val declared in `LayoutCss.kt`, `DisplayCss.kt` or 
 
 A signal class is a `Class` that a component reads from its `mod` with `contains` to choose a behavior, such as `Magic` and `Transitioner` in `MagicCss.kt`. It may have no rule of its own. `Transitioner` runs a component's change inside a view transition and takes precedence over `Magic`.
 
+## View Transitions
+
+An element animated by a view transition takes a name and, optionally, a `Presto` style from `PrestoCss.kt`. An element that survives the change is named with `PrestoSelf`, and a container whose surviving children move as their siblings resize takes `PrestoItems`, which names each direct child the same way; an element that is rebuilt, such as one inside a `Transitioner` `flowBlock`, is named with `transition(key)`, a key unique on the page. A `Presto` style is a view transition class, so many named elements share it.
+
+A named element is a backdrop root, so a `backdrop-filter` within it blurs nothing behind it. The element carrying the filter is named, never an ancestor of it.
+
 ## Stylesheets
 
 A stylesheet declared in Kotlin is written as `docs/css-style.md` specifies.

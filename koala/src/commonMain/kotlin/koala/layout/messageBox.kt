@@ -12,17 +12,17 @@ object MessageBox {
 val MessageBoxCss get() = with(MessageBox) { """
 $Mod {
     position: relative;
-    background-color: var(--primary-card-bg);
+    background: var(--primary-bg);
     border-radius: var(--curve-unit);
     overflow: hidden;
     white-space: pre-wrap;
-    
+
     &$Error {
-        background-color: var(--error-bg);
+        background: var(--error-bg);
     }
-    
+
     &$Success {
-        background-color: var(--success-bg);
+        background: var(--success-bg);
     }
 }
 

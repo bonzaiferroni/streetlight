@@ -1,12 +1,9 @@
 @file:Suppress("CssInvalidHtmlTagReference")
 
-package streetlight.web.view
-
-import koala.modifier.Class
-import koala.modifier.Css
-import koala.modifier.MagicStyle
+package koala.modifier
 
 val PrestoSelf = Class("presto-self")
+val PrestoItems = Class("presto-items")
 
 /** The view transition classes, each paired with a name from [PrestoSelf] or `transition(key)`. */
 object Presto {
@@ -28,6 +25,9 @@ val PrestoCss get() = with(PrestoKey) { """
 
 /* an element that survives a change, paired with itself */
 $PrestoSelf { view-transition-name: match-element; }
+
+/* each direct child that survives a change, paired with itself, so items move as their siblings change size */
+$PrestoItems > * { view-transition-name: match-element; }
 
 /* the snapshots fill the animating box, clipped by it and anchored to its top */
 ::view-transition-old(*.$Height),

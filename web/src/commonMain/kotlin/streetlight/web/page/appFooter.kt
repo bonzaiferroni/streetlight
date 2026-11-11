@@ -15,7 +15,6 @@ import kotlinx.html.FlowContent
 import koala.model.ExtraLink
 import streetlight.web.model.SiteDoc
 import streetlight.web.model.route
-import streetlight.web.view.PrestoSelf
 
 /** The footer of a page, with a link to the source at [sourcePath] when given. */
 fun FlowContent.appFooter(sourcePath: String? = null) {

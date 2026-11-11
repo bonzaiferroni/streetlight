@@ -39,6 +39,13 @@ body {
 ::view-transition-old(root) { display: none; }
 ::view-transition-new(root) { animation: none; }
 
+/* view transitions keep Magic's time and easing */
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+    animation-duration: var(--magic-interval);
+    animation-timing-function: var(--magic-easing);
+}
 @keyframes hueSpin {
     to { filter: hue-rotate(360deg); }
 }

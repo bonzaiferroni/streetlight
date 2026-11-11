@@ -14,11 +14,11 @@ fun ViewScope.wireToaster() {
 
     mountChildView(AppBody.ToasterId) {
         column(Padding(2)) {
-            itemsBlock(model.toastsState, modify(Magic, SlideLeft)) { toast ->
+            itemsBlock(model.toastsState, Transitioner) { toast ->
                 val message = toast.message
                 val typeMod = message.messageType.toModifier()
                 row {
-                    card(modify(MessageBox.Mod, BlurBackdrop, typeMod)) {
+                    card(modify(MessageBox.Mod, typeMod)) {
                         textBlock(message.text)
                     }
                 }

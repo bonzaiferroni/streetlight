@@ -3,30 +3,25 @@ package koala.dom.layout
 import koala.modifier.*
 import kampfire.model.Tap
 import kampfire.model.tapOf
-import kotlinx.browser.document
-import kotlinx.browser.window
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.css.rem
 import kotlinx.html.DIV
-import kotlinx.html.classes
 import kotlinx.html.js.div
+import web.dom.document
 import web.html.HTMLDivElement
 import web.html.HTMLElement
-import kotlin.collections.plus
-import kotlin.time.Duration.Companion.milliseconds
 import koala.dom.View
 import koala.dom.ViewScope
 import koala.dom.appendChildView
 import koala.dom.asWeb
 import koala.dom.launchEffect
+import koala.dom.viewTransition
 import koala.layout.ItemsBlockStyle
 
 /**
- * Renders each item of [state] as a child view, keeping the views of items that stay and positioning them in a
- * column.
+ * Renders each item of [state] as a child view in a column [gapRems] apart, keeping the views of items that stay.
  *
- * With [Magic] in [mod], items fade in and out. The block hides itself while empty.
+ * With [Transitioner] in [mod], each change runs inside a view transition: items that stay move to their places, and
+ * items that arrive or leave pop in or out. The block hides itself while empty.
  */
 fun <Item> ViewScope.itemsBlock(
     state: Tap<List<Item>>,
@@ -35,17 +30,11 @@ fun <Item> ViewScope.itemsBlock(
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> Unit
 ): HTMLDivElement {
-    val magic = mod?.contains(Magic) ?: false
+    val isTransitioner = mod?.contains(Transitioner) ?: false
     var displayedItems: Map<Item, ViewElement>? = null
-    val gapPx = gapRems?.let { remToPx(it) }
-    var resizeJob: Job? = null
-    // var heightNow = 0
 
     val parent = div {
-        addModifiers(ItemsBlockStyle.Class, mod)
-        if (magic) {
-            classes += Magic.identifier
-        }
+        addModifiers(ItemsBlockStyle.Class, mod, gapRems?.let { Css.Gap.of(it.rem) })
         config?.invoke(this)
     }.asWeb()
 
@@ -59,63 +48,24 @@ fun <Item> ViewScope.itemsBlock(
         return ViewElement(view, element)
     }
 
+    fun display(items: List<Item>) {
+        displayedItems?.forEach { (item, viewElement) ->
+            if (item !in items) viewElement.dispose()
+        }
+        val nextItems = items.associateWith { item -> displayedItems?.get(item) ?: createItem(item) }
+        // only an element out of place is moved, since moving one restarts its animations
+        nextItems.values.forEachIndexed { index, viewElement ->
+            val occupant = parent.children.item(index)
+            if (occupant !== viewElement.element) parent.insertBefore(viewElement.element, occupant)
+        }
+        displayedItems = nextItems
+    }
+
     launchEffect {
         state.flow.collect { items ->
-            if (items.isNotEmpty()) parent.unmodify(DisplayNone)
-
-            displayedItems?.forEach { (item, viewElement) ->
-                if (!items.contains(item)) {
-                    if (magic) {
-                        parentScope.launch {
-                            viewElement.element.unmodify(Reveal)
-                            delay(MagicStyle.Interval.milliseconds)
-                            viewElement.dispose()
-                        }
-                    } else {
-                        viewElement.dispose()
-                    }
-                }
-            }
-
-            displayedItems = items.associateWith { item ->
-                val isCurrentlyDisplayed = displayedItems?.contains(item) ?: false
-                val viewElement = displayedItems?.get(item) ?: createItem(item)
-
-                if (magic && !isCurrentlyDisplayed) {
-                    parentScope.launch {
-                        delay(MagicStyle.Interval.milliseconds)
-                        viewElement.element.modify(Reveal)
-                    }
-                }
-
-                viewElement
-            }
-
-            // the base element height is set/animated each time the items change
-            resizeJob?.cancel()
-            resizeJob = launch {
-                // val isShrinking = height < heightNow
-                // heightNow = height
-                if (magic) {
-                    // allow animated content to exit before shrink
-                    delay(MagicStyle.Interval.milliseconds)
-                }
-
-                var index = 0
-                var height = 0
-
-                displayedItems.forEach {
-                    val viewElement = it.value
-                    viewElement.element.style.top = "${height}px"
-                    height += viewElement.element.offsetHeight
-                    if (gapPx != null && index + 1 < items.size) {
-                        height += gapPx
-                    }
-                    index++
-                }
-
-                if (height == 0) parent.modify(DisplayNone)
-                parent.style.height = "${height}px"
+            when {
+                isTransitioner && displayedItems != null -> document.viewTransition { display(items) }
+                else -> display(items)
             }
         }
     }
@@ -156,7 +106,3 @@ data class IndexedItem<T>(
     val index: Int,
     val value: T,
 )
-
-private fun remToPx(rem: Float) = window.getComputedStyle(document.documentElement!!).fontSize.dropLast(2).toDouble().let {
-    (it * rem).toInt()
-}

@@ -7,7 +7,6 @@ import streetlight.model.ui.Screen
 import koala.component.*
 import koala.page.*
 import streetlight.web.component.starBadge
-import streetlight.web.view.PrestoSelf
 
 /**
  * The bar of the site and star helm buttons, each opening its popover. A button hides while its panel is shown
