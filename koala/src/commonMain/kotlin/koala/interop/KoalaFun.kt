@@ -7,6 +7,7 @@ object KoalaFun {
     val toggleRootModifier = JsSignature("toggleRootModifier")
     val toggleRootModifierWithTransition = JsSignature("toggleRootModifierWithTransition")
     val applyRootSwitch = JsSignature("applyRootSwitch")
+    val applyRootSwitchWithTransition = JsSignature("applyRootSwitchWithTransition")
     val findAndInitTabs = JsSignature("findAndInitTabs")
 
     /** Adds a root class when `localStorage` holds it as on. Defined and invoked by [buildHeadScript]. */

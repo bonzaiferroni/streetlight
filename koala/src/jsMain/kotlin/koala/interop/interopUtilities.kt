@@ -2,6 +2,9 @@ package koala.interop
 
 import koala.dom.getElementOrNullById
 import koala.dom.viewTransition
+import koala.modifier.TransitioningRoot
+import koala.modifier.modify
+import koala.modifier.unmodify
 import web.cssom.ClassName
 import web.dom.document
 import web.scroll.ScrollBehavior
@@ -15,6 +18,7 @@ val interopUtilities = listOf(
     KtFunction(KoalaFun.toggleRootModifier, ::toggleRootModifier),
     KtFunction(KoalaFun.toggleRootModifierWithTransition, ::toggleRootModifierWithTransition),
     KtFunction(KoalaFun.applyRootSwitch, ::applyRootSwitch),
+    KtFunction(KoalaFun.applyRootSwitchWithTransition, ::applyRootSwitchWithTransition),
 )
 
 /** Scrolls smoothly to the element with [id]. */
@@ -45,9 +49,23 @@ fun applyRootSwitch(name: String, value: String) {
     localStorage.setItem(name, value)
 }
 
-/** [toggleRootModifier] inside a view transition. */
-fun toggleRootModifierWithTransition(mod: String) {
-    document.viewTransition {
-        toggleRootModifier(mod)
+/** [toggleRootModifier] inside a view transition, with [TransitioningRoot] on the root until it is finished. */
+fun toggleRootModifierWithTransition(mod: String) = transitionRoot { toggleRootModifier(mod) }
+
+/** [applyRootSwitch] inside a view transition, with [TransitioningRoot] on the root until it is finished. */
+fun applyRootSwitchWithTransition(name: String, value: String) = transitionRoot { applyRootSwitch(name, value) }
+
+/** The root transitions under way, which keep [TransitioningRoot] on the root while any runs. */
+private var rootTransitionCount = 0
+
+/** Runs [update], a change to the root, inside a view transition with [TransitioningRoot] on the root until it is finished. */
+private fun transitionRoot(update: () -> Unit) {
+    val root = document.documentElement
+    rootTransitionCount++
+    root.modify(TransitioningRoot)
+    document.viewTransition(update).finished.then {
+        rootTransitionCount--
+        if (rootTransitionCount == 0) root.unmodify(TransitioningRoot)
+        null
     }
 }

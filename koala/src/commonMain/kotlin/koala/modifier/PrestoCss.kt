@@ -5,6 +5,9 @@ package koala.modifier
 val PrestoSelf = Class("presto-self")
 val PrestoItems = Class("presto-items")
 
+/** On the root while a change to the root runs as a view transition, so a stylesheet names what moves only then. */
+val TransitioningRoot = Class("transitioning-root")
+
 /** The view transition classes, each paired with a name from [PrestoSelf] or `transition(key)`. */
 object Presto {
     val Height = Css.ViewTransitionClass.of(PrestoKey.Height)

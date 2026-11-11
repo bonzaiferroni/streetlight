@@ -110,6 +110,9 @@ fun FlowContent.postLine(entity: Entity, isUniverse: Boolean) {
     }
 }
 
+/** The number of rows at the top of a feed that move to their new place when the feed mode switches. */
+private const val SWITCHING_ROWS = 12
+
 /** The layouts of a feed row, chosen by the viewer with a root switch. */
 enum class FeedMode { Minimal, Row, Grid }
 
@@ -144,6 +147,13 @@ $Base {
     --text-inset: calc(var(--unit) / 2);
     container-type: inline-size;
     padding: var(--unit);
+}
+
+/* only while the feed mode switches, the first rows of a feed pair with themselves and move to the new layout; the rest
+   change in place, since each named element is a snapshot the renderer must draw */
+$TransitioningRoot $Feed > $Base:nth-child(-n + $SWITCHING_ROWS of $Base) {
+    view-transition-name: match-element;
+    view-transition-class: ${PrestoKey.Card};
 }
 
 $Content {

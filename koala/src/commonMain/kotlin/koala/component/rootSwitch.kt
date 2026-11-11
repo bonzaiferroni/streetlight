@@ -9,19 +9,22 @@ import kotlinx.html.onClick
 /**
  * Renders a row of buttons, one per value of the root setting [attribute].
  *
- * Each button applies its value to the root element and to `localStorage`, and [content] builds what it shows.
- * [rootSwitchCss] marks the selected button.
+ * Each button applies its value to the root element and to `localStorage`, and [content] builds what it shows. With
+ * [isTransition], the change runs inside a view transition with `TransitioningRoot` on the root. [rootSwitchCss] marks
+ * the selected button.
  */
 inline fun <reified T : Enum<T>> FlowContent.rootSwitch(
     attribute: Attribute<T>,
     mod: Modifier? = null,
+    isTransition: Boolean = false,
     crossinline content: BUTTON.(T) -> Unit,
 ) {
+    val apply = if (isTransition) KoalaFun.applyRootSwitchWithTransition else KoalaFun.applyRootSwitch
     row(mod) {
         enumValues<T>().forEach { value ->
             button {
                 setAttribute(attribute.optionAttribute.to(value))
-                onClick = KoalaFun.applyRootSwitch.invokeJs(attribute.identifier, attribute.toStringValue(value))
+                onClick = apply.invokeJs(attribute.identifier, attribute.toStringValue(value))
                 content(value)
             }
         }

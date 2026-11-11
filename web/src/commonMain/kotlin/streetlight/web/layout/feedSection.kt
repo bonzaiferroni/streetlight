@@ -40,7 +40,7 @@ fun FlowContent.feedSection(
                     navigationIfNotNull(typeRoute?.invoke(type), modify(FeedSection.TypeOption, current)) { +type.label }
                 }
             }
-            rootSwitch(FeedRowStyle.Mode, OpacityHigh) { icon(it.toSvg()) }
+            rootSwitch(FeedRowStyle.Mode, OpacityHigh, isTransition = true) { icon(it.toSvg()) }
         }
 
         feedSectionBody(feed)
