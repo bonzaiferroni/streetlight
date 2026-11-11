@@ -21,7 +21,8 @@ Layouts declared on `FlowContent`, which compose components in markup built with
 | Layout | Role |
 |---|---|
 | [`tabs`](../../koala/src/commonMain/kotlin/koala/layout/tabs.kt) | Tabs over panels, wired by the browser with `initTabs` |
-| [`TabScope`](../../koala/src/commonMain/kotlin/koala/layout/TabScope.kt) | Collects the tabs of a `tabs` block |
+| [`TabScope`](../../koala/src/commonMain/kotlin/koala/layout/TabScope.kt) | Collects the tabs of a `tabs` or `transTabs` block |
+| [`transTabs`](../../koala/src/commonMain/kotlin/koala/layout/transTabs.kt) | Tabs whose changes run as view transitions, wired by the browser with `initTransTabs` |
 
 ### Stylesheets of Browser Layouts
 

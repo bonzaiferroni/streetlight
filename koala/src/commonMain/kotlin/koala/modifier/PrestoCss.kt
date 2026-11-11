@@ -11,6 +11,7 @@ object Presto {
     val Card = Css.ViewTransitionClass.of(PrestoKey.Card)
     val Pill = Css.ViewTransitionClass.of(PrestoKey.Pill)
     val Pop = Css.ViewTransitionClass.of(PrestoKey.Pop)
+    val Raised = Css.ViewTransitionClass.of(PrestoKey.Raised)
 }
 
 object PrestoKey {
@@ -18,6 +19,7 @@ object PrestoKey {
     const val Card = "presto-card"
     const val Pill = "presto-pill"
     const val Pop = "presto-pop"
+    const val Raised = "presto-raised"
 }
 
 //language="CSS"
@@ -73,5 +75,8 @@ $PrestoItems > * { view-transition-name: match-element; }
 
 @keyframes presto-pop-in  { from { opacity: 0; transform: scale(${MagicStyle.InitialScale}); } }
 @keyframes presto-pop-out { to   { opacity: 0; transform: scale(${MagicStyle.InitialScale}); } }
+
+/* drawn above the other named elements while they move, as a label over a light that slides beneath it */
+::view-transition-group(*.$Raised) { z-index: 1; }
 
 """}

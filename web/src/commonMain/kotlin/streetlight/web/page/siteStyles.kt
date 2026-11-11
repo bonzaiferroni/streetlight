@@ -80,6 +80,7 @@ private val KtStyles = listOf(
     LazyColumnCss,
     ProgressBarCss,
     TabsCss,
+    TransTabsCss,
     PrestoCss,
 
     // web module

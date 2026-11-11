@@ -49,6 +49,7 @@ A layout that follows a flow builds its content from the state's value when it i
 | Layout | Role |
 |---|---|
 | [`tabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/tabs.kt) | Tabs over panels, the selected tab bound to a field when given |
+| [`transTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/transTabs.kt) | `tabs` whose changes run as view transitions |
 | [`sideTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/sideTabs.kt) | A column of tabs bound to a field, beside the panel the selected tab shows |
 | [`subrouter`](../../koala/src/jsMain/kotlin/koala/dom/layout/subrouter.kt) | Breadcrumbs, a menu panel when wide, and the content of the current route of a screen's routes |
 | [`lazyTabs`](../../koala/src/jsMain/kotlin/koala/dom/layout/lazyTabs.kt) | Tabs whose panels are built when first shown |

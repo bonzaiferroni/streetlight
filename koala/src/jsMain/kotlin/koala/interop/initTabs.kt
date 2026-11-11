@@ -124,11 +124,11 @@ fun readStorageIndex(storageKey: String): Int? =
     localStorage.getItem("$STORAGE_KEY_BASE.$storageKey")?.toIntOrNull()
 
 /** Stores [index] under [storageKey]. */
-private fun writeStorageIndex(storageKey: String, index: Int) =
+internal fun writeStorageIndex(storageKey: String, index: Int) =
     localStorage.setItem("$STORAGE_KEY_BASE.$storageKey", index.toString())
 
 /** Asks [Portal] to set the query [param] of the current route to [index]. */
-private fun writeParamIndex(param: String, index: Int) {
+internal fun writeParamIndex(param: String, index: Int) {
     val change = QueryParamChange(key = param, value = index.toString())
     window.dispatchEvent(CustomEvent(QUERY_PARAM_CHANGE, CustomEventInit(detail = change)))
 }

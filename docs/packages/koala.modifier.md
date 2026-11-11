@@ -67,7 +67,7 @@ An element animated by a view transition takes a name and, optionally, a `Presto
 
 A named element is a backdrop root, so a `backdrop-filter` within it blurs nothing behind it. The element carrying the filter is named, never an ancestor of it.
 
-Every view transition starts through `Document.viewTransition` in `koala.dom`, never `startViewTransition` directly. A call made while a transition waits to capture the page joins it, so the changes of one state update animate together rather than the last cutting the others short.
+Every view transition starts through `Document.viewTransition` in `koala.dom`, never `startViewTransition` directly. A call made while a transition waits to capture the page joins it, so the changes of one state update animate together rather than the last cutting the others short. A class that styles only one change, such as the direction of a `transTabs` switch, is set before the call and removed when the returned transition is `finished`, so it does not style a later transition elsewhere.
 
 ## Stylesheets
 

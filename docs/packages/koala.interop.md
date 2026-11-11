@@ -66,6 +66,7 @@ A `wire` function binds a view to markup the server rendered without the bundle.
 | [`KtFunction`](../../koala/src/jsMain/kotlin/koala/interop/KtFunction.kt) | A Kotlin function exposed to markup |
 | [`interopUtilities`](../../koala/src/jsMain/kotlin/koala/interop/interopUtilities.kt) | The Kotlin functions Koala exposes, and the root setting functions |
 | [`initTabs`](../../koala/src/jsMain/kotlin/koala/interop/initTabs.kt) | Wires server-rendered tabs |
+| [`initTransTabs`](../../koala/src/jsMain/kotlin/koala/interop/initTransTabs.kt) | Wires trans tabs, rendered by the server or the browser |
 | [`wiringBlock`](../../koala/src/commonMain/kotlin/koala/interop/wireBlock.kt) | An element the browser wires a view into |
 | [`wireBlock`](../../koala/src/jsMain/kotlin/koala/interop/wireBlock.kt) | Mounts a child view into a server-rendered element |
 | [`wireGeoMap`, `wireMapContext`](../../koala/src/jsMain/kotlin/koala/interop/wireGeoMap.kt) | Attaches the shared map to its mount |
