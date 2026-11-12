@@ -5,6 +5,7 @@ import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
 import koala.SvgFile
+import koala.model.HeadingLevel
 import koala.model.IconAction
 import koala.model.MenuAction
 import koala.modifier.*
@@ -30,11 +31,12 @@ import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
 import kampfire.model.toDataOr
+import streetlight.web.dom.layout.formRow
 import kotlin.uuid.Uuid
 
 /** Renders the song's music and its tracks. */
 context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
-fun ViewScope.musicEditor() = column {
+fun ViewScope.musicEditor() = formRow {
     musicSection()
     trackEditor()
 }
@@ -51,7 +53,7 @@ private fun ViewScope.musicSection() {
     arrangementAddPopover(addId)
     val add = IconAction(SvgFile.Plus.small, "Add", config = { setPopoverTarget(addId, true) }) { }
     val edit = IconAction(SvgFile.Gear.small, "Edit", config = { setPopoverTarget(editId, true) }) { }
-    actionSection("Arrangement", icons = listOf(add, edit)) {
+    actionSection("Arrangement", level = HeadingLevel.H4, icons = listOf(add, edit)) {
         flowBlock(model.musicState) { music -> textBlock(music.summary, modify(TextSmall, InkDimFg)) }
         flowBlock(model.arrangementState, FlexColumn) { musicSections ->
             val sectionIds = musicSections.map { it.sectionId }

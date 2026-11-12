@@ -11,6 +11,7 @@ import koala.dom.layout.OrderHandle
 import koala.dom.markdown.textEditor
 import koala.dom.layout.flowBlock
 import koala.dom.layout.orderColumn
+import koala.model.HeadingLevel
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
@@ -90,6 +91,7 @@ fun ViewScope.trackEditor() {
     }
     actionSection(
         label = "Tracks",
+        level = HeadingLevel.H4,
         actions = listOf(
             MenuAction("Play") { contentScope.launch { player.play(model.storedState.now, takes = mix.readTakes()) } },
             MenuAction("Stop") { player.stop() },
