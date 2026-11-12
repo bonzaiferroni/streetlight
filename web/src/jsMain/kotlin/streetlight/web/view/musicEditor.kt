@@ -23,7 +23,7 @@ import kampfire.model.combine
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSection
 import streetlight.model.music.SectionId
-import streetlight.web.dom.layout.actionSectionCard
+import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
@@ -50,7 +50,7 @@ private fun ViewScope.musicSection() {
     musicEditPopover(editId)
     actionSection("Music", listOf(MenuAction("Edit", config = { setPopoverTarget(editId, true) }) { })) {
         flowBlock(model.musicState) { music -> textBlock(music.summary, modify(TextSmall, InkDimFg)) }
-        actionSectionCard("Arrangement") {
+        actionCard("Arrangement") {
             val picksState = model.arrangementState.combine(model.sectionsState) { picks, choices -> picks to choices }
             flowBlock(picksState) { (picks, choices) ->
                 sectionPicks(picks, choices) { model.setMusicArrangement(it) }

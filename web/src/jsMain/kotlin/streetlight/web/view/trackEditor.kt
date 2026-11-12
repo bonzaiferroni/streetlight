@@ -32,11 +32,10 @@ import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicFormProblem
 import streetlight.web.model.SectionEditor
 import streetlight.web.model.readCapoText
-import streetlight.model.music.Music
 import streetlight.model.music.MusicSection
 import streetlight.model.music.Phrase
 import streetlight.model.music.UNNAMED_SECTION
-import streetlight.web.dom.layout.actionSectionCard
+import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.NotationView
@@ -197,7 +196,7 @@ private fun ViewScope.sectionCard(trackId: TrackId, section: MusicSection, label
     val editor = SectionEditor(contentScope, model, trackId, section.sectionId)
     val editId = Id(Uuid.random().toString())
     sectionEditPopover(editId, trackId, section)
-    actionSectionCard(
+    actionCard(
         label = section.name,
         actions = listOf(
             MenuAction("Edit", config = { setPopoverTarget(editId, true) }) { },
@@ -256,7 +255,7 @@ context(model: MusicEditor)
 private fun ViewScope.arrangementsCard(trackId: TrackId) {
     val newId = Id(Uuid.random().toString())
     namePopover(newId, "Add") { model.addArrangement(trackId, it) }
-    actionSectionCard("Arrangements", listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { })) {
+    actionCard("Arrangements", listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { })) {
         flowBlock(model.trackArrangementsState(trackId), FlexColumn) { board ->
             board.arrangements.forEach { arrangement ->
                 row(AlignItemsCenter) {

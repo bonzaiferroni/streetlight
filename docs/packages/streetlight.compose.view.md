@@ -85,7 +85,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `ColorPicker` | `colorPicker` (`koala.dom.component`) |
 | `GlowField` | `glowField` (`koala.dom.component`), its three fields in one |
 | `ThemeForm` | `themeForm` (`streetlight.web.view`) |
-| `ActionSection`, `ActionSectionCard`, `ActionRow`, `ActionButton` | `actionSection`, `actionSectionCard`, `actionRow`, `menuActionButton` (`streetlight.web.dom.layout`) |
+| `ActionSection`, `ActionSectionCard`, `ActionRow`, `ActionButton` | `actionSection`, `actionCard`, `actionRow`, `menuActionButton` (`streetlight.web.dom.layout`) |
 | `LinksSection` | `linksFormSection` (`streetlight.web.view`) |
 | `DateField`, `TimeField`, `DayStepper`, `TimeStepper` | `dateInput`, `timeInput`, `dayIndicator`, `timeIndicator` |
 | `EventEditorForm` | `eventEditFormBody` (`streetlight.web.view`) |

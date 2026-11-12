@@ -1,6 +1,5 @@
 package streetlight.web.view
 
-import koala.component.textBlock
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
@@ -9,9 +8,8 @@ import koala.modifier.*
 import koala.page.Id
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
-import streetlight.web.dom.layout.actionSectionCard
+import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.SkillLinkEditor
-import streetlight.web.model.toFlair
 import kotlin.uuid.Uuid
 
 /** The caller's skills the edited record is linked to, each removable, with a popover of the rest to add. */
@@ -33,7 +31,7 @@ fun ViewScope.skillLinksSection() {
             actionMenu(actions)
         }
     }
-    actionSectionCard(
+    actionCard(
         label = "Skills",
         actions = listOf(
             MenuAction("add new", config = { setPopoverTarget(id, true) }) { }

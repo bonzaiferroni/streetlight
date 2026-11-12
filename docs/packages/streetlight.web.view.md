@@ -116,7 +116,7 @@ A record whose properties change seldom shows them as one dim line of small text
 
 ## Form Lists
 
-A list the user builds in a form, such as a skill's tags, a record's links (`linksFormSection`) or the skills a record shows (`skillLinksSection`), is an `actionSectionCard`. Its "add new" action opens a popover through `setPopoverTarget`, each item is a row with its own actions, such as Remove, and an empty list shows one short line of guidance in its place.
+A list the user builds in a form, such as a skill's tags, a record's links (`linksFormSection`) or the skills a record shows (`skillLinksSection`), is an `actionCard`. Its "add new" action opens a popover through `setPopoverTarget`, each item is a row with its own actions, such as Remove, and an empty list shows one short line of guidance in its place.
 
 ## Rendering State
 

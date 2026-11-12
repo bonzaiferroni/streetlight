@@ -16,7 +16,7 @@ import streetlight.model.music.Mix
 import streetlight.model.music.TrackSection
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionSection
-import streetlight.web.dom.layout.actionSectionCard
+import streetlight.web.dom.layout.actionCard
 import streetlight.web.dom.layout.formRow
 import streetlight.web.model.MixEditor
 import streetlight.web.model.MODE_NAMES
@@ -53,12 +53,17 @@ fun ViewScope.mixEditor() = flowBlock(model.propertiesState) { mix ->
     ) {
         row(AlignItemsCenter) {
             textBlock(mix.summary, modify(Flex1, TextSmall, InkDimFg))
-            button("hidden", mod = TextSmall, block = { setPopoverTarget(hiddenId, true) })
+            button({ setPopoverTarget(hiddenId, true) }, modify(TextSmall, TextUppercase)) {
+                setPopoverTarget(hiddenId, true)
+                textBlock("hidden")
+            }
         }
-        flowBlock(model.focusState) { focus ->
-            if (focus != null) return@flowBlock sectionFocus(focus)
-            flowBlock(model.shownSectionsState, MixStyle.Cards) { sections ->
-                sections.forEach { sectionCard(it) }
+        flowBlock(model.focusState, Transitioner) { focus ->
+            when (focus) {
+                null -> flowBlock(model.shownSectionsState, MixStyle.Cards) { sections ->
+                    sections.forEach { sectionCard(it) }
+                }
+                else -> sectionFocus(focus)
             }
         }
     }
@@ -90,9 +95,10 @@ private fun ViewScope.sectionCard(mixSection: MixSection) {
     val clipEditor = app.getSectionClipEditor(contentScope, model, section.trackId, section.sectionId)
     val clipsId = Id(Uuid.random().toString())
     clipsPopover(clipsId, clipEditor)
-    actionSectionCard(
+    actionCard(
         label = mixSection.label,
         actions = listOf(MenuAction("Hide") { model.hideSection(section) }),
+        mod = modify(transition(section.sectionId.value)),
         svg = model.musicEditor.readTrack(section.trackId)?.svg?.small,
     ) {
         row(AlignItemsCenter) {
@@ -129,7 +135,7 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
 context(model: MixEditor)
 private fun ViewScope.sectionFocus(section: TrackSection) {
     val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
-    card(Padding(2)) {
+    card(transition(section.sectionId.value)) {
         actionSection(model.labelOf(section), onBack = { model.clearFocus() }, heading = { heading5(it) }) {
             formRow {
                 flowBlock(model.notationOf(section)) { notation -> notation?.let { sectionStrips(it) } }

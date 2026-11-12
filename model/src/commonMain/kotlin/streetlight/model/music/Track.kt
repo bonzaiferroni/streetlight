@@ -39,6 +39,7 @@ sealed interface Section {
 /** The identity of a section of a music, which every track shares. Its name is kept by [Music.sections]. */
 @JvmInline @Serializable
 value class SectionId(val value: Uuid) {
+    override fun toString() = value.toString()
     companion object { fun random() = SectionId(Uuid.random()) }
 }
 

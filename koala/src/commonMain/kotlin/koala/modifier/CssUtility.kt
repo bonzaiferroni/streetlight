@@ -1,6 +1,7 @@
 package koala.modifier
 
 import kotlinx.css.*
+import kotlin.uuid.Uuid
 
 val Height get() = Css.Height
 val MinHeight get() = Css.MinHeight
@@ -63,6 +64,7 @@ val ZIndex3 = Css.ZIndex.of(3)
 
 /** Names the element [name] for view transitions, pairing it with the element of the same name on the other side. */
 fun transition(name: String) = Css.ViewTransitionName.of(name)
+fun transition(uuid: Uuid) = transition("id-${uuid}")
 
 val ContainerTypeInlineSize =Css.ContainerType.of(ContainerType.inlineSize)
 

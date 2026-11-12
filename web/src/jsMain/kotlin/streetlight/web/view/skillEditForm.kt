@@ -13,7 +13,7 @@ import koala.modifier.*
 import koala.page.Id
 import streetlight.model.data.SkillCategory
 import streetlight.model.data.SkillTag
-import streetlight.web.dom.layout.actionSectionCard
+import streetlight.web.dom.layout.actionCard
 import streetlight.web.dom.layout.centeredText
 import streetlight.web.dom.layout.formColumn
 import streetlight.web.dom.layout.formRow
@@ -69,7 +69,7 @@ private fun ViewScope.skillTagMenu() {
             }
         }
     }
-    actionSectionCard(
+    actionCard(
         label = "Tags",
         actions = listOf(
             MenuAction("add new", config = { setPopoverTarget(id, true) }) {  }

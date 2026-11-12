@@ -26,6 +26,10 @@ A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, 
 
 A layout that follows a flow builds its content from the state's value when it is called, then collects the flow and skips the emission that repeats it. Content built only in the collector arrives a frame late, after a view transition has captured the page without it. `flowBlock`, `itemsBlock` and `orderColumn` follow this.
 
+## Tabs
+
+`transTabs` is used where a tab change should run as a view transition, and `tabs` or `lazyTabs` elsewhere. Firefox and Safari drop every `backdrop-filter` during a view transition, so tabs inside a modal dialog stay `tabs` or `lazyTabs`, keeping the dialog's blurred backdrop.
+
 ## Layouts
 
 ### Feedback

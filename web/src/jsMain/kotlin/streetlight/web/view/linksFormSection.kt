@@ -8,26 +8,19 @@ import kampfire.model.toAbsoluteUrlOrNull
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
-import koala.component.heading4
-import koala.component.spacer
 import koala.component.textBlock
 import kampfire.model.append
 import kampfire.model.removeAt
 import kampfire.model.replaceAt
 import kampfire.model.storeOf
-import kampfire.model.toggle
-import koala.component.heading5
 import koala.model.ExtraLink
 import koala.dom.component.*
 import koala.dom.layout.*
 import koala.model.MenuAction
 import koala.model.toSvg
-import streetlight.model.data.SkillTag
-import streetlight.web.dom.layout.actionSectionCard
-import streetlight.web.dom.layout.centeredText
+import streetlight.web.dom.layout.actionCard
 import streetlight.web.dom.layout.formSection
 import streetlight.web.dom.layout.menuActionsRow
-import streetlight.web.model.SkillEditor
 
 fun ViewScope.linksFormSection(
     linksState: MutableTap<List<ExtraLink>>,
@@ -38,7 +31,7 @@ fun ViewScope.linksFormSection(
             val addId = Id(Uuid.random().toString())
             linkPopover(addId, ExtraLink.Empty) { linksState.append(it) }
 
-            actionSectionCard(
+            actionCard(
                 label = "Links",
                 actions = listOf(
                     MenuAction("add new", config = { setPopoverTarget(addId, true) }) { }
