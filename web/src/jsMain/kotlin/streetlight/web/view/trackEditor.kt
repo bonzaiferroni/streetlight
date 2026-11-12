@@ -43,32 +43,15 @@ import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
-import streetlight.web.model.exportMidi
-import streetlight.web.model.exportOgg
 import streetlight.web.model.toaster
 import kampfire.model.toDataOr
 import streetlight.model.music.SectionId
 import kotlin.uuid.Uuid
 
-/** Renders the tracks of the song under actions to play, export and add to them, each a row that opens its sections. */
+/** Renders the tracks of the song under an action that adds one, each a row that opens its sections. */
 context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 fun ViewScope.trackEditor() {
     val newId = Id(Uuid.random().toString())
-    val exportId = Id(Uuid.random().toString())
-    popover(exportId) { popover ->
-        actionMenu(listOf(
-            MenuAction("MIDI") {
-                exportMidi(model.storedState.now)
-                popover.close()
-            },
-            MenuAction("Ogg") {
-                popover.close()
-                contentScope.launch {
-                    exportOgg(player, model.storedState.now, mix.readTakes()).toDataOr(toaster) { return@launch }
-                }
-            },
-        ))
-    }
     popover(newId) { popover ->
         actionMenu(listOf(
             MenuAction("Chords") {
@@ -92,12 +75,7 @@ fun ViewScope.trackEditor() {
     actionSection(
         label = "Tracks",
         level = HeadingLevel.H4,
-        actions = listOf(
-            MenuAction("Play") { contentScope.launch { player.play(model.storedState.now, takes = mix.readTakes()) } },
-            MenuAction("Stop") { player.stop() },
-            MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
-            MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
-        ),
+        icons = listOf(IconAction(SvgFile.Plus.small, "New", config = { setPopoverTarget(newId, true) }) { }),
     ) {
         // keyed by id, so an edit to a track's content or name or a move leaves its open editor in place
         orderColumn(model.tracksState, { it.trackId }, Transitioner) { track -> trackRow(track) }

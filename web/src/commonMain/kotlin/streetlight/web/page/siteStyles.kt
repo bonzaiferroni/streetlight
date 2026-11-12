@@ -75,6 +75,7 @@ private val KtStyles = listOf(
     TagFilterMenuCss,
     BodyCss,
     HrCss,
+    FiligreeCss,
     GlowControlCss,
     TextEditorCss,
     LazyColumnCss,

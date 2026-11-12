@@ -26,11 +26,16 @@ import streetlight.web.dom.page.dimLights
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
+import streetlight.web.dom.layout.topSection
 import streetlight.web.model.LaneEditor
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMarkdown
+import streetlight.web.model.exportMidi
+import streetlight.web.model.exportOgg
+import streetlight.web.model.MixEditor
+import koala.component.heading6
 import streetlight.web.model.getMusicStudio
 import streetlight.web.model.portal
 import streetlight.web.utility.setTitle
@@ -59,7 +64,7 @@ fun ViewScope.viewMusicStudio() {
         }
     }
     context(model, player) {
-        mainBody("Music", "Studio", "viewMusicStudio.kt") {
+        mainBody("Music", "Studio", "viewMusicStudio.kt", MusicStudioRoute()) {
             flowBlock(model.songIdState, modify(Transitioner)) { songId ->
                 val editor = songId?.let { model.editorOf(contentScope, it) }
                 if (editor == null) songList() else songFocus(editor)
@@ -79,7 +84,7 @@ fun RouteScope.viewMusicStudioRoute() {
 
 /**
  * Renders the song of [editor] in a section headed by its title, with a way back to the songs and a gear that opens
- * how its notation is written and shown, as a tab for each layout.
+ * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
 context(model: MusicStudio, player: TrackPlayer)
 private fun ViewScope.songFocus(editor: MusicEditor) {
@@ -88,14 +93,12 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
     // playback left running when the song closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
-    notationSettingsPopover(settingsId)
-    actionSection(
+    songSettingsPopover(settingsId, editor, mix)
+    topSection(
         label = editor.song.title,
         onBack = { portal.go(MusicStudioRoute()) },
         headingMod = songTitleTransition(editor.song.songId),
-        icons = listOf(
-            IconAction(SvgFile.Gear.small, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
-        ),
+        icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
     ) {
         transTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->
@@ -111,14 +114,34 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
     }
 }
 
-/** A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show. */
-context(model: MusicStudio)
-private fun ViewScope.notationSettingsPopover(id: Id) {
-    popover(id) {
+/**
+ * A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show, above
+ * the formats the song of [editor] exports to, with the takes of [mix].
+ */
+context(model: MusicStudio, player: TrackPlayer)
+private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mix: MixEditor) {
+    popover(id) { popover ->
         column(Padding(2)) {
             dropMenu(model.notationStyleState)
             dropMenu(model.notationViewState)
             switch("Lyrics", model.isLyricsShownState)
+            filigree { heading6("export") }
+            actionMenu(listOf(
+                MenuAction("Markdown") {
+                    exportMarkdown(editor.storedState.now, model.notationStyleState.now)
+                    popover.close()
+                },
+                MenuAction("MIDI") {
+                    exportMidi(editor.storedState.now)
+                    popover.close()
+                },
+                MenuAction("Ogg") {
+                    popover.close()
+                    contentScope.launch {
+                        exportOgg(player, editor.storedState.now, mix.readTakes()).toDataOr(toaster) { return@launch }
+                    }
+                },
+            ))
         }
     }
 }
@@ -136,12 +159,9 @@ private fun ViewScope.songList() {
     ) {
         itemsBlock(model.songList, Transitioner, gapRems = null) { song ->
             val songId = song.songId
-            val exportId = Id(Uuid.random().toString())
-            songExportPopover(exportId, songId)
             actionRow(
                 label = song.title,
                 actions = listOf(
-                    MenuAction("Export", config = { setPopoverTarget(exportId, true) }) { },
                     MenuAction("Edit") { portal.go(MusicStudioRoute(songId)) },
                     MenuAction("Remove") { model.remove(songId) },
                 ),
@@ -159,19 +179,6 @@ private fun ViewScope.importSong() = pickFile(MARKDOWN_ACCEPT) { file ->
     contentScope.launch {
         val songId = model.importSong(file.text(), file.name).toDataOr(toaster) { return@launch }
         portal.go(MusicStudioRoute(songId))
-    }
-}
-
-/** A popover with [id] holding a menu of the formats the song of [songId] exports to. */
-context(model: MusicStudio)
-private fun ViewScope.songExportPopover(id: Id, songId: SongId) {
-    popover(id) { popover ->
-        actionMenu(listOf(
-            MenuAction("Markdown") {
-                model.readSong(songId)?.let { exportMarkdown(it, model.notationStyleState.now) }
-                popover.close()
-            },
-        ))
     }
 }
 
