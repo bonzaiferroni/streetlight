@@ -77,6 +77,7 @@ val PrimaryBg = Class("primary-bg")
 val PrimaryCardBg = Class("primary-card-bg")
 val SystemBg = Class("system-bg")
 val InkBg = Class("ink-bg")
+val PaperBg = Class("paper-bg")
 val ZenBg = Class("zen-card-bg")
 val CardBg = Class("card-bg")
 val VoidBg = Class("void-bg")
@@ -210,6 +211,7 @@ $PrimaryBg     { background:       var(--primary-bg); }
 $PrimaryCardBg { background-color: var(--primary-card-bg); }
 $SystemBg      { background-color: var(--system-bg); }
 $InkBg         { background-color: var(--ink-bg); }
+$PaperBg       { background-color: var(--paper-bg); }
 $ZenBg         { background:       var(--zen-bg); }
 $CardBg        { background:       var(--card-bg); }
 $VoidBg        { background:       var(--void-bg); }

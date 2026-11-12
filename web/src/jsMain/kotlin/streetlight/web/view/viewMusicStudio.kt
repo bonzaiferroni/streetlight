@@ -20,6 +20,8 @@ import streetlight.model.music.SongId
 import streetlight.model.ui.MusicStudioRoute
 import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.actionMenu
+import streetlight.web.dom.page.applyTheme
+import streetlight.web.dom.page.dimLights
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
@@ -45,6 +47,9 @@ context(route: MusicStudioRoute)
 fun ViewScope.viewMusicStudio() {
     val model = app.getMusicStudio(contentScope, route.songId)
     val player = app.get<TrackPlayer>()
+    // the studio's colors carry meaning, which the page's lights would tint
+    dimLights()
+    onDispose { applyTheme(null) }
     // a change of song keeps the view, so the routes that follow reach it here
     launchEffect("viewMusicStudio > route") {
         portal.routeFlowOf<MusicStudioRoute>().collect { next ->

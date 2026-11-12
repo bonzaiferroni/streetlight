@@ -10,6 +10,7 @@ import koala.component.textBlock
 import koala.dom.AppendScope
 import koala.dom.component.*
 import koala.model.HeadingLevel
+import koala.model.IconAction
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.modifier.invoke
@@ -19,27 +20,28 @@ import streetlight.model.data.Entity
 import streetlight.web.model.toRoute
 
 /**
- * A section headed by [label] at [level], modified by [headingMod], with [svg] before it, and its [actions] at the end
- * of that row, above its [content]. With [onClickIcon], the icon is a button that calls it. A [key] names its heading
- * for view transitions, as [actionHeading] does.
+ * A section headed by [label] at [level], modified by [headingMod], with [leadIcon] and [svg] before it, and its
+ * [actions] at the end of that row, then its [icons], above its [content]. A [key] names its heading for view
+ * transitions, as [actionHeading] does.
  */
 fun AppendScope.actionSection(
     label: String,
     actions: List<MenuAction>? = null,
     level: HeadingLevel = HeadingLevel.H3,
     svg: Svg? = null,
-    onClickIcon: (() -> Unit)? = null,
+    leadIcon: IconAction? = null,
     headingMod: Modifier? = null,
     key: String? = null,
+    icons: List<IconAction>? = null,
     content: AppendScope.() -> Unit,
 ) = section {
-    actionHeading(label, actions, BorderBottom2Px, level, svg, onClickIcon, headingMod, key)
+    actionHeading(label, actions, BorderBottom2Px, level, svg, leadIcon, headingMod, key, icons)
     content()
 }
 
 /**
- * A row headed by [label] at [level], modified by [headingMod], with [svg] before it and its [actions] at its end.
- * With [onClickIcon], the icon is a button that calls it.
+ * A row headed by [label] at [level], modified by [headingMod], with [leadIcon] and [svg] before it and its [actions]
+ * at its end, then its [icons].
  *
  * The row is as tall as its level, and its icon fills that height. A [key], unique on the page and free of spaces,
  * names the heading `heading-` and the key for view transitions.
@@ -50,18 +52,19 @@ fun AppendScope.actionHeading(
     mod: Modifier? = null,
     level: HeadingLevel = HeadingLevel.H3,
     svg: Svg? = null,
-    onClickIcon: (() -> Unit)? = null,
+    leadIcon: IconAction? = null,
     headingMod: Modifier? = null,
     key: String? = null,
+    icons: List<IconAction>? = null,
 ) = row(modify(mod, AlignItemsCenter, Height(level.rowUnits))) {
-    svg?.let {
-        if (onClickIcon == null) icon(it, Height100Pct) else button(it, onClickIcon, Height100Pct)
-    }
+    leadIcon?.let { iconActionButton(it) }
+    svg?.let { icon(it, Height100Pct) }
     heading(level, label, modify(level.headingMod, headingMod, key?.let { transition("heading-$it") }))
     menuActionsRow(actions)
+    iconActionsRow(icons, Height100Pct)
 }
 
-/** An [actionSection] whose icon is a back arrow that calls [onBack]. */
+/** An [actionSection] whose lead icon is a back arrow that calls [onBack]. */
 fun AppendScope.actionSection(
     label: String,
     onBack: () -> Unit,
@@ -69,8 +72,18 @@ fun AppendScope.actionSection(
     level: HeadingLevel = HeadingLevel.H3,
     headingMod: Modifier? = null,
     key: String? = null,
+    icons: List<IconAction>? = null,
     content: AppendScope.() -> Unit,
-) = actionSection(label, actions, level, SvgFile.ArrowLeft.large, onBack, headingMod, key, content)
+) = actionSection(
+    label = label,
+    actions = actions,
+    level = level,
+    leadIcon = IconAction(SvgFile.ArrowLeft.large, "Back", onClick = onBack),
+    headingMod = headingMod,
+    key = key,
+    icons = icons,
+    content = content,
+)
 
 /** The height of an action heading's row at this level, in units, near the height of its text. */
 private val HeadingLevel.rowUnits get() = when (this) {
@@ -91,12 +104,13 @@ private val HeadingLevel.headingMod get() = when (this) {
 fun AppendScope.actionRow(
     entity: Entity,
     actions: List<MenuAction>? = null,
-    popoverActions: List<MenuAction>? = null
-) = actionRow(entity.label, entity.image?.thumb, entity.toRoute(), actions, popoverActions)
+    popoverActions: List<MenuAction>? = null,
+    icons: List<IconAction>? = null,
+) = actionRow(entity.label, entity.image?.thumb, entity.toRoute(), actions, popoverActions, icons = icons)
 
 /**
  * A row showing the thumb at [imageUrl] and [label], modified by [labelMod], linked to [route] when given, beside its
- * actions.
+ * [actions], then its [icons].
  */
 fun AppendScope.actionRow(
     label: String,
@@ -105,6 +119,7 @@ fun AppendScope.actionRow(
     actions: List<MenuAction>? = null,
     popoverActions: List<MenuAction>? = null,
     labelMod: Modifier? = null,
+    icons: List<IconAction>? = null,
 ) {
     row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
         image(imageUrl, modify(Height(5), BorderRadius1, OverflowClip))
@@ -112,6 +127,7 @@ fun AppendScope.actionRow(
             heading5(label, labelMod)
         }
         menuActionsRow(actions)
+        iconActionsRow(icons, SmallIconHeight)
         popoverActions?.let {
             buttonPopover(SvgFile.Dots.filled, Height(3)) {
                 textBlock("hello actions")
@@ -125,6 +141,22 @@ fun AppendScope.menuActionsRow(actions: List<MenuAction>?) {
         actions?.forEach {
             menuActionButton(it)
         }
+    }
+}
+
+/** A row of a button for each of [icons], each as tall as the row, which takes its height from [mod]. */
+fun AppendScope.iconActionsRow(icons: List<IconAction>?, mod: Modifier) {
+    if (icons.isNullOrEmpty()) return
+    row(modify(mod, AlignItemsCenter)) {
+        icons.forEach { iconActionButton(it) }
+    }
+}
+
+/** A button showing the icon of [action] alone, as tall as what holds it. */
+fun AppendScope.iconActionButton(action: IconAction) {
+    button(action.svg, action.onClick, modify(Height100Pct, action.mod)) {
+        setAriaLabel(action.ariaLabel)
+        action.config(this)
     }
 }
 

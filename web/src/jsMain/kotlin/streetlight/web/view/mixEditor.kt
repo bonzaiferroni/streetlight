@@ -8,6 +8,7 @@ import koala.dom.layout.flowBlock
 import koala.dom.layout.selectorBlock
 import koala.dom.layout.selectorContainer
 import koala.model.HeadingLevel
+import koala.model.IconAction
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
@@ -98,10 +99,11 @@ private fun ViewScope.sectionCard(mixSection: MixSection) {
     actionCard(
         label = mixSection.label,
         actions = listOf(MenuAction("Hide") { model.hideSection(trackSectionId) }),
+        mod = modify(PrimaryCardBg, OutlineLow),
         svg = model.musicEditor.readTrack(trackSectionId.trackId)?.svg?.small,
         key = trackSectionId.toKey(),
     ) {
-        card {
+        card(modify(PaperBg, Outline, BorderRadius1)) {
             row(AlignItemsCenter) {
                 flowBlock(model.clipLabelOf(trackSectionId), Flex1) { label ->
                     button(mod = modify(MixStyle.Slot, VoidBg.takeIf { label == null })) {
@@ -138,8 +140,14 @@ context(model: MixEditor)
 private fun ViewScope.sectionFocus(trackSectionId: TrackSectionId) {
     val mic = app.getSectionMic(contentScope, model, trackSectionId)
     val key = trackSectionId.toKey()
-    card(transition("card-$key")) {
-        actionSection(model.labelOf(trackSectionId), onBack = { model.clearFocus() }, level = HeadingLevel.H5, key = key) {
+    actionCard(
+        label = model.labelOf(trackSectionId),
+        level = HeadingLevel.H3,
+        mod = modify(PrimaryCardBg, OutlineLow),
+        key = key,
+        icons = listOf(IconAction.close(model::clearFocus))
+    ) {
+        card(modify(PaperBg, Outline, BorderRadius1)) {
             formRow {
                 flowBlock(model.notationOf(trackSectionId)) { notation -> notation?.let { sectionStrips(it) } }
                 sectionRecorder(mic)

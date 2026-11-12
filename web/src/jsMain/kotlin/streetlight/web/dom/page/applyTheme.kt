@@ -44,3 +44,16 @@ fun applyTheme(theme: PageTheme?) {
         else -> body.setStyle(KoalaStyle.ColorFlux.of("none"))
     }
 }
+
+/**
+ * Turns the page's lights down to nothing, leaving the rest of its theme as it is, until [applyTheme] next sets or
+ * clears the page theme.
+ */
+fun dimLights() {
+    val body = document.body
+    body.setStyle(KoalaStyle.RhoColor, LIGHTLESS)
+    body.setStyle(KoalaStyle.BetaColor, LIGHTLESS)
+    body.setStyle(KoalaStyle.GammaColor, LIGHTLESS)
+}
+
+private const val LIGHTLESS = "transparent"

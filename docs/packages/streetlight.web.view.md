@@ -124,6 +124,8 @@ An `actionSection` and an `actionCard` head their content with an `actionHeading
 
 Each takes a `key` that names its parts for view transitions: the heading's text as `heading-<key>`, never its row, whose actions differ across a change, and an `actionCard` itself as `card-<key>`. A card built by hand around an `actionSection` takes `card-<key>` itself to pair with one.
 
+An action is a `MenuAction`, shown by its label, since a label is clearer than an icon. An `IconAction` is kept for the few icons as clear as a label, such as a cross that closes or an arrow that goes back. It carries an `ariaLabel` in place of a label, and is not a `MenuOption`, since each entry of a menu is labeled. An `actionSection`, `actionCard` and `actionRow` take them as `icons`, shown after the labeled actions. An action heading takes one more as its `leadIcon`, before the heading, as the back arrow of a focused section.
+
 ## Rendering State
 
 `flowBlock` renders a value as HTML. It takes a `Tap` or a `Flow`, and its block is rebuilt as a child view whenever the value changes. The previous child view is disposed first.
