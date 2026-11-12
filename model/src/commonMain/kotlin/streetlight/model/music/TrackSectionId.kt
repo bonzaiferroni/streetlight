@@ -10,9 +10,9 @@ data class TrackSectionId(
     val sectionId: SectionId,
 ) {
     /** A name for this id that is unique among them and valid as an identifier, as a view transition wants. */
-    fun toKey() = trackId.value.toLongs { trackMost, trackLeast ->
+    fun toKey(prefix: String = "id") = trackId.value.toLongs { trackMost, trackLeast ->
         sectionId.value.toLongs { sectionMost, sectionLeast ->
-            "id${Uuid.fromLongs(trackMost xor sectionMost, trackLeast xor sectionLeast).toHexString()}"
+            "$prefix-${Uuid.fromLongs(trackMost xor sectionMost, trackLeast xor sectionLeast).toHexString()}"
         }
     }
 }

@@ -3,7 +3,7 @@ package koala.dom.markdown
 import kampfire.model.Url
 import koala.modifier.*
 import koala.markdown.EditorStyle
-import koala.markdown.HeadingLevel
+import koala.model.HeadingLevel
 import koala.markdown.MarkdownBlockImage
 import koala.markdown.MarkdownHeading
 import koala.markdown.MarkdownInlineImage

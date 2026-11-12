@@ -118,6 +118,12 @@ A record whose properties change seldom shows them as one dim line of small text
 
 A list the user builds in a form, such as a skill's tags, a record's links (`linksFormSection`) or the skills a record shows (`skillLinksSection`), is an `actionCard`. Its "add new" action opens a popover through `setPopoverTarget`, each item is a row with its own actions, such as Remove, and an empty list shows one short line of guidance in its place.
 
+## Action Headings
+
+An `actionSection` and an `actionCard` head their content with an `actionHeading`, a row of an icon, a heading and actions. Each takes the heading's `HeadingLevel`, a section `H3` and a card `H5` unless stated. The level sets the height of the row, near the height of its text, and what sits in the row beside the heading, such as its icon, fills that height rather than stating a size of its own.
+
+Each takes a `key` that names its parts for view transitions: the heading's text as `heading-<key>`, never its row, whose actions differ across a change, and an `actionCard` itself as `card-<key>`. A card built by hand around an `actionSection` takes `card-<key>` itself to pair with one.
+
 ## Rendering State
 
 `flowBlock` renders a value as HTML. It takes a `Tap` or a `Flow`, and its block is rebuilt as a child view whenever the value changes. The previous child view is disposed first.

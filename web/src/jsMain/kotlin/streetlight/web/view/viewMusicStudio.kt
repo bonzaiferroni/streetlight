@@ -5,7 +5,6 @@ import koala.SvgFile
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.launchEffect
-import koala.component.heading3
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
 import koala.dom.layout.itemsBlock
@@ -82,7 +81,7 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
     actionSection(
         label = editor.song.title,
         onBack = { portal.go(MusicStudioRoute()) },
-        heading = { heading3(it, modify(OpacityHigh, Bold, songTitleTransition(editor.song.songId))) },
+        headingMod = songTitleTransition(editor.song.songId),
     ) {
         transTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->

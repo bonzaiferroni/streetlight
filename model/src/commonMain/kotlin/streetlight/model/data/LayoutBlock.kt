@@ -2,7 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.model.Labeled
-import koala.markdown.HeadingLevel
+import koala.model.HeadingLevel
 import kotlinx.serialization.Serializable
 
 /** A block of a page layout, placed by the page's design. */

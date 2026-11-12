@@ -2,12 +2,12 @@ package streetlight.web.view
 
 import koala.SvgFile
 import koala.component.IconStyle
-import koala.component.heading5
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
 import koala.dom.layout.selectorBlock
 import koala.dom.layout.selectorContainer
+import koala.model.HeadingLevel
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
@@ -98,8 +98,8 @@ private fun ViewScope.sectionCard(mixSection: MixSection) {
     actionCard(
         label = mixSection.label,
         actions = listOf(MenuAction("Hide") { model.hideSection(trackSectionId) }),
-        mod = modify(transition(trackSectionId.toKey())),
         svg = model.musicEditor.readTrack(trackSectionId.trackId)?.svg?.small,
+        key = trackSectionId.toKey(),
     ) {
         card {
             row(AlignItemsCenter) {
@@ -137,8 +137,9 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
 context(model: MixEditor)
 private fun ViewScope.sectionFocus(trackSectionId: TrackSectionId) {
     val mic = app.getSectionMic(contentScope, model, trackSectionId)
-    card(transition(trackSectionId.toKey())) {
-        actionSection(model.labelOf(trackSectionId), onBack = { model.clearFocus() }, heading = { heading5(it) }) {
+    val key = trackSectionId.toKey()
+    card(transition("card-$key")) {
+        actionSection(model.labelOf(trackSectionId), onBack = { model.clearFocus() }, level = HeadingLevel.H5, key = key) {
             formRow {
                 flowBlock(model.notationOf(trackSectionId)) { notation -> notation?.let { sectionStrips(it) } }
                 sectionRecorder(mic)

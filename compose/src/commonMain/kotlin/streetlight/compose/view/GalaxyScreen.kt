@@ -15,7 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
-import koala.markdown.HeadingLevel
+import koala.model.HeadingLevel
 import streetlight.compose.model.FeedModel
 import streetlight.compose.model.GalaxyModel
 import streetlight.compose.modifier.Outline

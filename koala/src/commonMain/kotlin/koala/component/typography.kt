@@ -5,7 +5,7 @@ import kotlinx.html.span as spanTag
 import kotlinx.html.em as emTag
 import kotlinx.html.strong as strongTag
 import koala.modifier.*
-import koala.markdown.HeadingLevel
+import koala.model.HeadingLevel
 
 /** [content] as a paragraph, after what [block] builds. */
 inline fun FlowContent.textBlock(
