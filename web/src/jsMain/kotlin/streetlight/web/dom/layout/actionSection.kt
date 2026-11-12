@@ -30,14 +30,27 @@ fun AppendScope.actionSection(
     onClickIcon: (() -> Unit)? = null,
     content: AppendScope.() -> Unit,
 ) = section {
-    row(modify(BorderBottom2Px, AlignItemsCenter)) {
-        svg?.let {
-            if (onClickIcon == null) icon(it, LargeIconHeight) else button(it, onClickIcon, LargeIconHeight)
-        }
-        heading(label)
-        menuActionsRow(actions)
-    }
+    actionHeading(label, actions, BorderBottom2Px, heading, svg, onClickIcon)
     content()
+}
+
+/**
+ * A row headed by [label], built by [heading], with [svg] before it and its [actions] at its end. With [onClickIcon],
+ * the icon is a button that calls it.
+ */
+fun AppendScope.actionHeading(
+    label: String,
+    actions: List<MenuAction>? = null,
+    mod: Modifier? = null,
+    heading: DIV.(String) -> Unit = DIV::defaultSectionHeading,
+    svg: Svg? = null,
+    onClickIcon: (() -> Unit)? = null,
+) = row(modify(mod, AlignItemsCenter)) {
+    svg?.let {
+        if (onClickIcon == null) icon(it, LargeIconHeight) else button(it, onClickIcon, LargeIconHeight)
+    }
+    heading(label)
+    menuActionsRow(actions)
 }
 
 /** An [actionSection] whose icon is a back arrow that calls [onBack]. */
@@ -50,17 +63,6 @@ fun AppendScope.actionSection(
 ) = actionSection(label, actions, heading, SvgFile.ArrowLeft.large, onBack, content)
 
 fun DIV.defaultSectionHeading(label: String) = heading3(label, modify(OpacityHigh, Bold))
-
-/** An [actionSection] in a card with a small heading, as a form shows a list the user adds to and edits. */
-fun AppendScope.actionCard(
-    label: String,
-    actions: List<MenuAction>? = null,
-    mod: ModifierSet? = null,
-    svg: Svg? = null,
-    content: AppendScope.() -> Unit,
-) = card(mod) {
-    actionSection(label, actions, heading = { heading5(it) }, svg = svg, content = content)
-}
 
 fun AppendScope.actionRow(
     entity: Entity,

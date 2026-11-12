@@ -15,15 +15,13 @@ import streetlight.model.music.Key
 import streetlight.model.music.Music
 import streetlight.model.music.SectionClipId
 import streetlight.model.music.TrackSectionId
-import streetlight.model.music.SectionId
-import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.soundingKey
 import web.animations.awaitAnimationFrame
 import kotlin.math.abs
 
 /**
- * Records a take of the section [sectionId] of the track [trackId] in the mix [editor] has open: a lead-in of the
+ * Records a take of the track's section [trackSectionId] in the mix [editor] has open: a lead-in of the
  * section's first note held a measure, when it sounds one, and two measures counted on sticks, then the section, with a click through it while [isClickOnState] is on.
  *
  * A take that reaches the end of the section is kept in [clipLibrary] under the name in
@@ -33,8 +31,7 @@ import kotlin.math.abs
 class SectionMic(
     private val scope: CoroutineScope,
     private val editor: MixEditor,
-    private val trackId: TrackId,
-    private val sectionId: SectionId,
+    private val trackSectionId: TrackSectionId,
     private val audio: StudioAudio,
     private val tones: TonePlayer,
     private val clipLibrary: ClipLibrary,
@@ -127,7 +124,7 @@ class SectionMic(
             leadSeconds = downbeat - captured.startClock + latency,
         )
         clipLibrary.saveClip(clip, captured.pcm).toDataOr(messenger) { return }
-        editor.putClip(SectionClipId(TrackSectionId(trackId, sectionId), clip.clipId))
+        editor.putClip(SectionClipId(trackSectionId, clip.clipId))
         messenger.deliverSuccess("Saved ${clip.name}")
         nameState.set(nextName())
     }
@@ -135,19 +132,19 @@ class SectionMic(
     /** The timing of a take in the open mix, or `null` while there is no mix or the track lacks the section. */
     private fun planOf(): CapturePlan? {
         val mix = editor.mixState.now ?: return null
-        val track = editor.musicEditor.readTrack(trackId) ?: return null
-        val length = track.lengthOf(sectionId)?.takeIf { it.ticks > 0 } ?: return null
+        val track = editor.musicEditor.readTrack(trackSectionId.trackId) ?: return null
+        val length = track.lengthOf(trackSectionId.sectionId)?.takeIf { it.ticks > 0 } ?: return null
         val music = editor.musicEditor.musicState.now
         val secondsPerTick = 60.0 / mix.bpm / music.time.pulse.ticks
         val measureTicks = music.time.measure.ticks
         // the mix may sound in another key than the music, so the guide moves the nearest way to it
         val shift = (mix.soundingKey.tonic.value - music.soundingKey.tonic.value + 6).mod(12) - 6
-        val guideMidis = firstToneOf(music, track, sectionId)?.midi?.map { it + shift }
+        val guideMidis = firstToneOf(music, track, trackSectionId.sectionId)?.midi?.map { it + shift }
         return CapturePlan(
             music = music,
             bpm = mix.bpm,
             soundingKey = mix.soundingKeyOf(track),
-            bars = barsOf(music, track, sectionId) ?: return null,
+            bars = barsOf(music, track, trackSectionId.sectionId) ?: return null,
             pulseSeconds = music.time.pulse.ticks * secondsPerTick,
             pulsesPerMeasure = measureTicks / music.time.pulse.ticks,
             takeSeconds = length.ticks * secondsPerTick,
@@ -175,8 +172,8 @@ class SectionMic(
 
     /** The track and section's name with the first number from 1 that no kept clip holds. */
     private suspend fun nextName(): String {
-        val trackName = editor.musicEditor.readTrack(trackId)?.name.orEmpty()
-        val base = "$trackName ${editor.musicEditor.musicState.now.nameOf(sectionId)}"
+        val trackName = editor.musicEditor.readTrack(trackSectionId.trackId)?.name.orEmpty()
+        val base = "$trackName ${editor.musicEditor.musicState.now.nameOf(trackSectionId.sectionId)}"
         val names = clipLibrary.readClips().mapTo(mutableSetOf()) { it.name }
         return generateSequence(1) { it + 1 }.map { "$base $it" }.first { it !in names }
     }

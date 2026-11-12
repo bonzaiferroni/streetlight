@@ -77,7 +77,7 @@ private fun ViewScope.hiddenSectionsPopover(id: Id) {
             sections.forEach { hidden ->
                 row(AlignItemsCenter) {
                     textBlock(hidden.label, Flex1)
-                    button("show", { model.showSection(hidden.section) }, TextSmall)
+                    button("show", { model.showSection(hidden.trackSectionId) }, TextSmall)
                 }
             }
             if (sections.isEmpty()) textBlock("No hidden sections.", modify(TextSmall, InkDimFg))
@@ -91,25 +91,27 @@ private fun ViewScope.hiddenSectionsPopover(id: Id) {
  */
 context(model: MixEditor)
 private fun ViewScope.sectionCard(mixSection: MixSection) {
-    val section = mixSection.section
-    val clipEditor = app.getSectionClipEditor(contentScope, model, section.trackId, section.sectionId)
+    val trackSectionId = mixSection.trackSectionId
+    val clipEditor = app.getSectionClipEditor(contentScope, model, trackSectionId)
     val clipsId = Id(Uuid.random().toString())
     clipsPopover(clipsId, clipEditor)
     actionCard(
         label = mixSection.label,
-        actions = listOf(MenuAction("Hide") { model.hideSection(section) }),
-        mod = modify(transition(section.toKey())),
-        svg = model.musicEditor.readTrack(section.trackId)?.svg?.small,
+        actions = listOf(MenuAction("Hide") { model.hideSection(trackSectionId) }),
+        mod = modify(transition(trackSectionId.toKey())),
+        svg = model.musicEditor.readTrack(trackSectionId.trackId)?.svg?.small,
     ) {
-        row(AlignItemsCenter) {
-            flowBlock(model.clipLabelOf(section), Flex1) { label ->
-                button(mod = modify(MixStyle.Slot, VoidBg.takeIf { label == null })) {
-                    setPopoverTarget(clipsId, true)
-                    +label.orEmpty()
+        card {
+            row(AlignItemsCenter) {
+                flowBlock(model.clipLabelOf(trackSectionId), Flex1) { label ->
+                    button(mod = modify(MixStyle.Slot, VoidBg.takeIf { label == null })) {
+                        setPopoverTarget(clipsId, true)
+                        +label.orEmpty()
+                    }
                 }
+                val recordMod = modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Record"))
+                button(SvgFile.PlayerRecord.filled, { model.focusSection(trackSectionId) }, recordMod)
             }
-            val recordMod = modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Record"))
-            button(SvgFile.PlayerRecord.filled, { model.focusSection(section) }, recordMod)
         }
     }
 }
@@ -129,16 +131,16 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
 }
 
 /**
- * Renders [section] alone in a card under its label, with a back arrow that returns to the overview: its notation
- * beside the recorder of its takes.
+ * Renders [trackSectionId] alone in a card under its label, with a back arrow that returns to the overview: its
+ * notation beside the recorder of its takes.
  */
 context(model: MixEditor)
-private fun ViewScope.sectionFocus(section: TrackSectionId) {
-    val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
-    card(transition(section.toKey())) {
-        actionSection(model.labelOf(section), onBack = { model.clearFocus() }, heading = { heading5(it) }) {
+private fun ViewScope.sectionFocus(trackSectionId: TrackSectionId) {
+    val mic = app.getSectionMic(contentScope, model, trackSectionId)
+    card(transition(trackSectionId.toKey())) {
+        actionSection(model.labelOf(trackSectionId), onBack = { model.clearFocus() }, heading = { heading5(it) }) {
             formRow {
-                flowBlock(model.notationOf(section)) { notation -> notation?.let { sectionStrips(it) } }
+                flowBlock(model.notationOf(trackSectionId)) { notation -> notation?.let { sectionStrips(it) } }
                 sectionRecorder(mic)
             }
         }

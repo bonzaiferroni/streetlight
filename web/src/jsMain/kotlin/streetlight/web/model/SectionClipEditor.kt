@@ -11,19 +11,16 @@ import streetlight.model.music.Clip
 import streetlight.model.music.Mix
 import streetlight.model.music.SectionClipId
 import streetlight.model.music.TrackSectionId
-import streetlight.model.music.SectionId
-import streetlight.model.music.TrackId
 
 /**
- * Edits the clip bound to the section [sectionId] of the track [trackId] in the mix [editor] has open, choosing among
+ * Edits the clip bound to the track's section [trackSectionId] in the mix [editor] has open, choosing among
  * the clips of [clipLibrary] that fit the section, or none. The clips are read again whenever the mix changes, so a new
  * take joins them.
  */
 class SectionClipEditor(
     scope: CoroutineScope,
     private val editor: MixEditor,
-    private val trackId: TrackId,
-    private val sectionId: SectionId,
+    private val trackSectionId: TrackSectionId,
     private val clipLibrary: ClipLibrary,
 ) {
     private val clipsStore = storeOf<List<Clip>>(emptyList())
@@ -52,20 +49,20 @@ class SectionClipEditor(
     }
 
     private fun select(name: String) {
-        if (name == NO_CLIP) return editor.removeClip(trackId, sectionId)
+        if (name == NO_CLIP) return editor.removeClip(trackSectionId)
         val clip = choicesState.now.firstOrNull { it.name == name } ?: return
-        editor.putClip(SectionClipId(TrackSectionId(trackId, sectionId), clip.clipId))
+        editor.putClip(SectionClipId(trackSectionId, clip.clipId))
     }
 
     private fun choicesOf(clips: List<Clip>, mix: Mix?): List<Clip> {
         mix ?: return emptyList()
-        val track = editor.musicEditor.readTrack(trackId) ?: return emptyList()
+        val track = editor.musicEditor.readTrack(trackSectionId.trackId) ?: return emptyList()
         val music = editor.musicEditor.musicState.now
         val boundId = mix.boundClipId()
-        return clips.filter { it.clipId == boundId || it.fits(music, mix, track, sectionId) }.sortedBy { it.name }
+        return clips.filter { it.clipId == boundId || it.fits(music, mix, track, trackSectionId.sectionId) }.sortedBy { it.name }
     }
 
-    private fun Mix.boundClipId() = clips.firstOrNull { it.trackSectionId == TrackSectionId(trackId, sectionId) }?.clipId
+    private fun Mix.boundClipId() = clips.firstOrNull { it.trackSectionId == trackSectionId }?.clipId
 }
 
 private const val NO_CLIP = "(none)"

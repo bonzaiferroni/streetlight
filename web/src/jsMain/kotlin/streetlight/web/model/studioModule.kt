@@ -4,9 +4,8 @@ import koala.dom.AppContainer
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
 import streetlight.model.io.MixDb
-import streetlight.model.music.SectionId
+import streetlight.model.music.TrackSectionId
 import streetlight.model.music.SongId
-import streetlight.model.music.TrackId
 
 /** The services of the Studio section, one of each, loaded into the app's Koin by [loadStudioModule]. */
 val studioModule = module {
@@ -30,16 +29,16 @@ fun AppContainer.loadStudioModule() {
 
 fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get())
 
-/** The capture of takes of the section [sectionId] of the track [trackId] in [editor]'s open mix. */
-fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MixEditor, trackId: TrackId, sectionId: SectionId) =
+/** The capture of takes of the track's section [trackSectionId] in [editor]'s open mix. */
+fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MixEditor, trackSectionId: TrackSectionId) =
     SectionMic(
-        scope, editor, trackId, sectionId,
+        scope, editor, trackSectionId,
         koin.get(), koin.get(), koin.get(), koin.get(),
     )
 
-/** The editor of the clip bound to the section [sectionId] of the track [trackId] in [editor]'s open mix. */
-fun AppContainer.getSectionClipEditor(scope: CoroutineScope, editor: MixEditor, trackId: TrackId, sectionId: SectionId) =
-    SectionClipEditor(scope, editor, trackId, sectionId, koin.get())
+/** The editor of the clip bound to the track's section [trackSectionId] in [editor]'s open mix. */
+fun AppContainer.getSectionClipEditor(scope: CoroutineScope, editor: MixEditor, trackSectionId: TrackSectionId) =
+    SectionClipEditor(scope, editor, trackSectionId, koin.get())
 
 fun AppContainer.getMusicStudio(scope: CoroutineScope, initialId: SongId?) =
     MusicStudio(scope, initialId, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
