@@ -4,7 +4,7 @@ Traditional
 Key: D Major
 Time: 6/8
 Tempo: 100
-Capo:
+Capo: -6
 Arrangement: Song
 
 ## Melody (Melody)

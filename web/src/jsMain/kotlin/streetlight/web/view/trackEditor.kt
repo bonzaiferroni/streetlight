@@ -69,19 +69,19 @@ fun ViewScope.trackEditor() {
     popover(newId) { popover ->
         actionMenu(listOf(
             MenuAction("Chords") {
-                model.addTrack(ChordTrack(model.newTrackId("Chords"), emptyList(), emptyList()))
+                model.addTrack(ChordTrack(TrackId.random(), model.newTrackName("Chords"), emptyList(), emptyList()))
                 popover.close()
             },
             MenuAction("Melody") {
-                model.addTrack(MelodyTrack(model.newTrackId("Melody"), emptyList(), emptyList()))
+                model.addTrack(MelodyTrack(TrackId.random(), model.newTrackName("Melody"), emptyList(), emptyList()))
                 popover.close()
             },
             MenuAction("Lyrics") {
-                model.addTrack(LyricTrack(model.newTrackId("Lyrics"), emptyList(), emptyList()))
+                model.addTrack(LyricTrack(TrackId.random(), model.newTrackName("Lyrics"), emptyList(), emptyList()))
                 popover.close()
             },
             MenuAction("Drums") {
-                model.addTrack(DrumTrack(model.newTrackId("Drums"), emptyList(), emptyList()))
+                model.addTrack(DrumTrack(TrackId.random(), model.newTrackName("Drums"), emptyList(), emptyList()))
                 popover.close()
             },
         ))
@@ -95,7 +95,7 @@ fun ViewScope.trackEditor() {
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
-        // keyed by name, so an edit to a track's content or a move leaves its open editor in place
+        // keyed by id, so an edit to a track's content or name or a move leaves its open editor in place
         orderColumn(model.tracksState, { it.trackId }, Transitioner) { track -> trackRow(track) }
         flowBlock(model.tracksState.tapOf { it.isEmpty() }) { isEmpty ->
             if (isEmpty) textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
@@ -117,7 +117,7 @@ private fun ViewScope.trackRow(track: Track) {
         button({ model.toggleTrack(trackId) }, Flex1) {
             row(AlignItemsCenter) {
                 icon(track.svg.large, Height(5))
-                heading5(trackId.name)
+                flowBlock(model.trackState(trackId).tapOf { it?.name.orEmpty() }) { heading5(it) }
             }
         }
         // a lyric track makes no sound, so it has nothing to play
@@ -142,7 +142,7 @@ private fun ViewScope.trackRow(track: Track) {
 context(model: MusicEditor)
 private fun ViewScope.trackEditPopover(id: Id, track: Track) {
     popover(id) { popover ->
-        val nameState = storeOf(track.trackId.name)
+        val nameState = storeOf(track.name)
         val capoTextState = storeOf(track.capo?.toString().orEmpty())
         val save = save@{
             val capo = readCapoText(capoTextState.now) ?: return@save toaster.deliver(MusicFormProblem.capo)

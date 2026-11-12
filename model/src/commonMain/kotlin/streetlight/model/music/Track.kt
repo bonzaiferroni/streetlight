@@ -5,8 +5,8 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 /**
- * A part played by a voice or instrument, named by its [trackId], unique within its song: its [sections], and its
- * [arrangements] of sections into larger ones.
+ * A part played by a voice or instrument, known by its [trackId] and shown under its [name], unique within its song:
+ * its [sections], and its [arrangements] of sections into larger ones.
  *
  * The track sounds [capo] semitones higher than written, or lower for a negative one, on top of the [Music.capo] of
  * its song.
@@ -14,18 +14,22 @@ import kotlin.uuid.Uuid
 @Serializable
 sealed interface Track {
     val trackId: TrackId
+    val name: String
     val sections: List<Section>
     val arrangements: List<Arrangement>
     val capo: Int?
 }
 
-/** The name of a track, unique within its song. */
+/** The identity of a track, which it keeps through a change of its name. */
 @JvmInline @Serializable
-value class TrackId(val name: String)
+value class TrackId(val value: Uuid) {
+    override fun toString() = value.toString()
+    companion object { fun random() = TrackId(Uuid.random()) }
+}
 
-/** The track id [base], or [base] with the first number after it that [held] leaves free, as `Melody 2`. */
-fun freeTrackIdOf(base: String, held: Set<TrackId>) = generateSequence(1) { it + 1 }
-    .map { TrackId(if (it == 1) base else "$base $it") }
+/** The track name [base], or [base] with the first number after it that [held] leaves free, as `Melody 2`. */
+fun freeTrackNameOf(base: String, held: Set<String>) = generateSequence(1) { it + 1 }
+    .map { if (it == 1) base else "$base $it" }
     .first { it !in held }
 
 /** A section of a track, [length] long, written [measuresPerLine] measures to a line of its text. */
@@ -55,6 +59,7 @@ data class Arrangement(
 @Serializable
 data class ChordTrack(
     override val trackId: TrackId,
+    override val name: String,
     override val sections: List<Progression>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
@@ -83,6 +88,7 @@ data class ChordNote(
 @Serializable
 data class MelodyTrack(
     override val trackId: TrackId,
+    override val name: String,
     override val sections: List<Phrase>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
@@ -129,6 +135,7 @@ private const val MIDDLE_C_MIDI = 60
 @Serializable
 data class LyricTrack(
     override val trackId: TrackId,
+    override val name: String,
     override val sections: List<Stanza>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
@@ -157,6 +164,7 @@ data class LyricNote(
 @Serializable
 data class DrumTrack(
     override val trackId: TrackId,
+    override val name: String,
     override val sections: List<Groove>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
@@ -206,16 +214,16 @@ enum class Drum {
     Tom,
 }
 
-/** This track named [trackId], with [arrangements] and [capo], and the sections it has. */
+/** This track named [name], with [arrangements] and [capo], and the sections it has. */
 fun Track.copyTrack(
-    trackId: TrackId = this.trackId,
+    name: String = this.name,
     arrangements: List<Arrangement> = this.arrangements,
     capo: Int? = this.capo,
 ): Track = when (this) {
-    is ChordTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
-    is MelodyTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
-    is LyricTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
-    is DrumTrack -> copy(trackId = trackId, arrangements = arrangements, capo = capo)
+    is ChordTrack -> copy(name = name, arrangements = arrangements, capo = capo)
+    is MelodyTrack -> copy(name = name, arrangements = arrangements, capo = capo)
+    is LyricTrack -> copy(name = name, arrangements = arrangements, capo = capo)
+    is DrumTrack -> copy(name = name, arrangements = arrangements, capo = capo)
 }
 
 /**

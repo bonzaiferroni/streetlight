@@ -16,6 +16,8 @@ Notation is the written representation of music. Its forms live in the subpackag
 
 `Music.sections` holds the sections of a music, each a `SectionId` and a name no other section of the music holds. A section is identified by its id everywhere in the model, so a rename changes one name and every reference follows. Each track holds what it plays for a section, and two tracks play the same section by holding the same id.
 
+A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its song holds, so a rename changes one name and every reference follows. What a track plays for a section is identified by the two ids together, as a `TrackSection`.
+
 `Music.arrangement` lists the sections every track follows, in order. A `Track` holds its `sections` and its `arrangements`, each an `Arrangement` naming a section built of other sections or arrangements, so content repeated within a section is written once. `sectionsOf` resolves an id into the sections it stands for.
 
 A section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole times as fit, and rests through a section it lacks or what is left after its repeats.

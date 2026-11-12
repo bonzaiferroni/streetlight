@@ -38,4 +38,4 @@ A notation that names absolute pitches, such as letter chords, adds the tonic wh
 
 ## Song Markdown
 
-`SongMarkdown` carries a whole song as one markdown document built from the same notations, with a heading per track naming its type. A read refuses only a document whose structure it cannot follow; the notation within is read as leniently as an editor reads it. `docs/songs/amazing-grace.md` is an example.
+`SongMarkdown` carries a whole song as one markdown document built from the same notations, with a heading per track giving its name and type. Text names a track and never states its id, so a read gives each track a new one. A read refuses only a document whose structure it cannot follow; the notation within is read as leniently as an editor reads it. `docs/songs/amazing-grace.md` is an example.

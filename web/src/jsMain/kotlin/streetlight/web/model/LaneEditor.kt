@@ -280,7 +280,7 @@ private fun lanesOf(song: StoredSong, secondsPerTick: Double, isLyricsShown: Boo
             onset += span.ticks
             laneSections
         }
-        Lane(track.trackId, track.trackId.name, window.steps, leadSeconds, sections)
+        Lane(track.trackId, track.name, window.steps, leadSeconds, sections)
     }
 }
 

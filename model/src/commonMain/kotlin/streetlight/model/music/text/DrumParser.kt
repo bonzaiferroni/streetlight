@@ -20,12 +20,12 @@ import streetlight.model.music.TrackId
  * row naming a drum the system already holds starts the next, so a long groove wraps.
  */
 object DrumParser {
-    /** Reads the drum track [trackId] from [text], with measures cut by [time] and sections found in [names]. */
-    fun read(trackId: TrackId, text: String, time: TimeSignature, names: SectionNames): NotationRead<DrumTrack> {
+    /** Reads the drum track [trackId] named [name] from [text], with measures cut by [time] and sections found in [names]. */
+    fun read(trackId: TrackId, name: String, text: String, time: TimeSignature, names: SectionNames): NotationRead<DrumTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
         val grooves = trackText.sections.map { section -> readGroove(section, time, errors) }
-        return NotationRead(DrumTrack(trackId, grooves, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(DrumTrack(trackId, name, grooves, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Reads the section [sectionId] from [text], the rows of its tab alone, cut by [time]. */

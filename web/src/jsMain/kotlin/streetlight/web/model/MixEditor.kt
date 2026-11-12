@@ -119,12 +119,13 @@ class MixEditor(
 
     private fun mixSectionsOf(song: StoredSong) = song.tracks.flatMap { track ->
         track.sections.map { section ->
-            MixSection(TrackSection(track.trackId, section.sectionId), "${track.trackId.name} · ${song.music.nameOf(section.sectionId)}")
+            MixSection(TrackSection(track.trackId, section.sectionId), "${track.name} · ${song.music.nameOf(section.sectionId)}")
         }
     }
 
     /** The names of the track and section of [section], as `Melody · Verse`. */
-    fun labelOf(section: TrackSection) = "${section.trackId.name} · ${musicEditor.musicState.now.nameOf(section.sectionId)}"
+    fun labelOf(section: TrackSection) =
+        "${musicEditor.readTrack(section.trackId)?.name.orEmpty()} · ${musicEditor.musicState.now.nameOf(section.sectionId)}"
 
 
     init {
@@ -179,10 +180,6 @@ class MixEditor(
     private fun applyTrackChange(change: TrackChange) = state.update { editor ->
         val mixes = editor.mixes.map { mix ->
             when (change) {
-                is TrackChange.Renamed -> mix.copy(
-                    clips = mix.clips.map { if (it.trackId == change.from) it.copy(trackId = change.to) else it },
-                    hidden = mix.hidden.map { if (it.trackId == change.from) it.copy(trackId = change.to) else it },
-                )
                 is TrackChange.Removed -> mix.copy(
                     clips = mix.clips.filter { it.trackId != change.trackId },
                     hidden = mix.hidden.filter { it.trackId != change.trackId },
@@ -190,7 +187,6 @@ class MixEditor(
             }
         }
         val focus = when (change) {
-            is TrackChange.Renamed -> editor.focus?.let { if (it.trackId == change.from) it.copy(trackId = change.to) else it }
             is TrackChange.Removed -> editor.focus?.takeIf { it.trackId != change.trackId }
         }
         editor.copy(mixes = mixes, focus = focus)

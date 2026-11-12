@@ -24,12 +24,12 @@ class ChordParser(
     private val key: Key,
     private val style: NotationStyle,
 ) {
-    /** Reads the chord track [trackId] from [text], with measures cut by [time] and sections found in [names]. */
-    fun read(trackId: TrackId, text: String, time: TimeSignature, names: SectionNames): NotationRead<ChordTrack> {
+    /** Reads the chord track [trackId] named [name] from [text], with measures cut by [time] and sections found in [names]. */
+    fun read(trackId: TrackId, name: String, text: String, time: TimeSignature, names: SectionNames): NotationRead<ChordTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
         val progressions = trackText.sections.map { readSection(it, time, errors) }
-        return NotationRead(ChordTrack(trackId, progressions, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(ChordTrack(trackId, name, progressions, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Reads the section [sectionId] from [text], the lines of its measures alone, cut by [time]. */

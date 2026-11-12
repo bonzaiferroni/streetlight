@@ -21,7 +21,7 @@ import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.copyTrack
 import streetlight.model.music.emptySectionOf
-import streetlight.model.music.freeTrackIdOf
+import streetlight.model.music.freeTrackNameOf
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionsOf
@@ -49,7 +49,7 @@ class MusicEditor(
 
     private val trackChangeFlow = MutableSharedFlow<TrackChange>(extraBufferCapacity = TRACK_CHANGE_BUFFER)
 
-    /** Each track renamed or removed, as it happens. */
+    /** Each track removed, as it happens. */
     val trackChanges: SharedFlow<TrackChange> = trackChangeFlow
 
     /** The warnings on the track [trackId]: each section it defines whose repeats fall short of another track's. */
@@ -94,7 +94,7 @@ class MusicEditor(
     fun isTrackOpenState(trackId: TrackId) = state.tapOf { trackId in it.openTracks }
 
     /** A name for a new track that no track of the song holds: [base], or [base] with the first number that frees it. */
-    fun newTrackId(base: String) = state.now.tracks.newTrackId(base)
+    fun newTrackName(base: String) = state.now.tracks.newTrackName(base)
 
     /** Adds [track] to the song and opens its editor. */
     fun addTrack(track: Track) = state.update { editor ->
@@ -111,19 +111,11 @@ class MusicEditor(
      * Names the track [trackId] [name], numbered when another track holds it. A blank name leaves the track as it
      * is.
      */
-    fun renameTrack(trackId: TrackId, name: String) {
-        var change: TrackChange? = null
-        state.update { editor ->
-            val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
-            val base = name.trim().takeIf { it.isNotEmpty() && it != trackId.name } ?: return@update editor
-            val renamedId = editor.tracks.filter { it.trackId != trackId }.newTrackId(base)
-            val renamed = track.copyTrack(trackId = renamedId)
-            editor.copy(
-                tracks = editor.tracks.map { if (it.trackId == trackId) renamed else it },
-                openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId + renamedId else editor.openTracks,
-            ).also { change = TrackChange.Renamed(trackId, renamedId) }
-        }
-        change?.let { trackChangeFlow.tryEmit(it) }
+    fun renameTrack(trackId: TrackId, name: String) = state.update { editor ->
+        val track = editor.tracks.firstOrNull { it.trackId == trackId } ?: return@update editor
+        val base = name.trim().takeIf { it.isNotEmpty() && it != track.name } ?: return@update editor
+        val freeName = editor.tracks.filter { it.trackId != trackId }.newTrackName(base)
+        editor.copy(tracks = editor.tracks.map { if (it.trackId == trackId) track.copyTrack(name = freeName) else it })
     }
 
     /** Removes the track [trackId]. */
@@ -279,11 +271,8 @@ data class MusicEditorState(
     val openTracks: Set<TrackId> = emptySet(),
 )
 
-/** A track renamed or removed, which a reading of the tracks alone can't tell. */
+/** A change to the tracks that what is built on them follows. */
 sealed interface TrackChange {
-    /** The track [from] now goes by [to]. */
-    data class Renamed(val from: TrackId, val to: TrackId) : TrackChange
-
     /** The track [trackId] is gone. */
     data class Removed(val trackId: TrackId) : TrackChange
 }
@@ -296,4 +285,4 @@ private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
 }
 
 /** [base], or [base] with the first number from 2 that no track of these holds. */
-private fun List<Track>.newTrackId(base: String) = freeTrackIdOf(base, mapTo(mutableSetOf()) { it.trackId })
+private fun List<Track>.newTrackName(base: String) = freeTrackNameOf(base, mapTo(mutableSetOf()) { it.name })

@@ -32,7 +32,7 @@ A form model, named `FooForm`, holds the properties of a record apart from it, s
 
 A section's text is its notation alone. Its name, its properties and the arrangements that play it are set through the UI, and a section is created by an action that names it: a name the music holds joins that section, and any other gives the music a new one.
 
-A song's music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it, and follows its `trackChanges` for what a reading of the tracks can't tell, such as a rename.
+A song's music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it, and follows its `trackChanges` to drop what it holds for a track removed. A rename needs no following, since a track keeps its id.
 
 ## Entity Properties
 

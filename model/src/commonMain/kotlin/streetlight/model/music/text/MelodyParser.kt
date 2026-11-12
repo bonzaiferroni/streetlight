@@ -23,15 +23,18 @@ import streetlight.model.music.TrackId
 class MelodyParser(
     private val key: Key,
 ) {
-    /** Reads the melody track [trackId] from [text], with measures checked against [time] and sections found in [names]. */
-    fun read(trackId: TrackId, text: String, time: TimeSignature, names: SectionNames): NotationRead<MelodyTrack> {
+    /**
+     * Reads the melody track [trackId] named [name] from [text], with measures checked against [time] and sections
+     * found in [names].
+     */
+    fun read(trackId: TrackId, name: String, text: String, time: TimeSignature, names: SectionNames): NotationRead<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names, setOf(LYRICS))
         val phrases = trackText.sections.map { section ->
             val lyrics = section.propertyOf(LYRICS)?.let { stanzas -> tokensOf(stanzas).map { names.idOf(it) } }
             readSection(section, time, errors).copy(lyrics = lyrics)
         }
-        return NotationRead(MelodyTrack(trackId, phrases, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(MelodyTrack(trackId, name, phrases, trackText.arrangements, trackText.capo), errors)
     }
 
     /** Reads the section [sectionId] from [text], the lines of its measures alone, checked against [time]. */

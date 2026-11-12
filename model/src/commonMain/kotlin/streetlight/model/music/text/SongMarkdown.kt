@@ -11,7 +11,7 @@ import streetlight.model.music.Music
 import streetlight.model.music.Song
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
-import streetlight.model.music.freeTrackIdOf
+import streetlight.model.music.freeTrackNameOf
 
 /**
  * The reader and writer of a whole song as markdown: its title as a heading with its artist on the next line, the text
@@ -21,8 +21,8 @@ object SongMarkdown {
     /**
      * Reads [text] onto [song] and [music], or gives the problem of a track heading that names no known type.
      *
-     * The notation of the music and each track is read as far as it can be, without its problems. A track named as an
-     * earlier one takes the name with the first free number after it, as `Melody 2`.
+     * The notation of the music and each track is read as far as it can be, without its problems. Each track is given
+     * a new id, and one named as an earlier one takes the name with the first free number after it, as `Melody 2`.
      */
     fun read(text: String, song: Song, music: Music, style: NotationStyle): Outcome<SongMarkdownRead> {
         val lines = text.lines()
@@ -42,20 +42,21 @@ object SongMarkdown {
 
         // read each track
         val names = SectionNames(readMusic.sections)
-        val trackIds = mutableSetOf<TrackId>()
+        val trackNames = mutableSetOf<String>()
         val tracks = trackIndexes.mapIndexed { index, headingIndex ->
             val heading = lines[headingIndex]
             val match = TRACK_HEADING.matchEntire(heading.trim())
             val type = match?.let { TrackType.entries.firstOrNull { it.name.equals(match.groupValues[2], ignoreCase = true) } }
                 ?: return SongMarkdownProblem.trackHeadingOf(headingIndex + 1, heading)
-            val trackId = freeTrackIdOf(match.groupValues[1].trim(), trackIds).also { trackIds.add(it) }
+            val trackId = TrackId.random()
+            val trackName = freeTrackNameOf(match.groupValues[1].trim(), trackNames).also { trackNames.add(it) }
             val end = trackIndexes.getOrNull(index + 1) ?: lines.size
             val trackText = lines.subList(headingIndex + 1, end).joinToString("\n")
             when (type) {
-                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, trackText, readMusic.time, names)
-                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, trackText, readMusic.time, names)
-                TrackType.Lyrics -> LyricParser.read(trackId, trackText, readMusic.time, names)
-                TrackType.Drums -> DrumParser.read(trackId, trackText, readMusic.time, names)
+                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, trackName, trackText, readMusic.time, names)
+                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, trackName, trackText, readMusic.time, names)
+                TrackType.Lyrics -> LyricParser.read(trackId, trackName, trackText, readMusic.time, names)
+                TrackType.Drums -> DrumParser.read(trackId, trackName, trackText, readMusic.time, names)
             }.value
         }
 
@@ -66,7 +67,7 @@ object SongMarkdown {
     fun write(song: Song, music: Music, tracks: List<Track>, style: NotationStyle): String {
         val heading = listOfNotNull("$TITLE_PREFIX${song.title}", song.artist.takeIf { it.isNotBlank() }).joinToString("\n")
         val blocks = listOf(heading, MusicParser.write(music)) + tracks.flatMap { track ->
-            listOf("$TRACK_PREFIX${track.trackId.name} (${track.type.name})", writeTrack(track, music, style))
+            listOf("$TRACK_PREFIX${track.name} (${track.type.name})", writeTrack(track, music, style))
         }
         return blocks.joinToString("\n\n", postfix = "\n")
     }
