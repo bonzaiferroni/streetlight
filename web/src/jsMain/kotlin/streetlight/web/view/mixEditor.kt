@@ -13,7 +13,7 @@ import koala.modifier.*
 import koala.page.Id
 import kotlinx.css.Flex
 import streetlight.model.music.Mix
-import streetlight.model.music.TrackSection
+import streetlight.model.music.TrackSectionId
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.actionCard
@@ -98,7 +98,7 @@ private fun ViewScope.sectionCard(mixSection: MixSection) {
     actionCard(
         label = mixSection.label,
         actions = listOf(MenuAction("Hide") { model.hideSection(section) }),
-        mod = modify(transition("section-${section.trackId}-${section.sectionId}")),
+        mod = modify(transition(section.toKey())),
         svg = model.musicEditor.readTrack(section.trackId)?.svg?.small,
     ) {
         row(AlignItemsCenter) {
@@ -133,9 +133,9 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
  * beside the recorder of its takes.
  */
 context(model: MixEditor)
-private fun ViewScope.sectionFocus(section: TrackSection) {
+private fun ViewScope.sectionFocus(section: TrackSectionId) {
     val mic = app.getSectionMic(contentScope, model, section.trackId, section.sectionId)
-    card(transition("section-${section.trackId}-${section.sectionId}")) {
+    card(transition(section.toKey())) {
         actionSection(model.labelOf(section), onBack = { model.clearFocus() }, heading = { heading5(it) }) {
             formRow {
                 flowBlock(model.notationOf(section)) { notation -> notation?.let { sectionStrips(it) } }

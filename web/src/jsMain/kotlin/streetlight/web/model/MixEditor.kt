@@ -16,10 +16,10 @@ import streetlight.model.io.MixDb
 import streetlight.model.music.Clip
 import streetlight.model.music.Mix
 import streetlight.model.music.MixId
-import streetlight.model.music.SectionClip
+import streetlight.model.music.SectionClipId
 import streetlight.model.music.SectionId
 import streetlight.model.music.TrackId
-import streetlight.model.music.TrackSection
+import streetlight.model.music.TrackSectionId
 import streetlight.model.music.mixOf
 import streetlight.model.music.ui.SectionNotation
 import streetlight.model.music.ui.sectionNotationsOf
@@ -103,28 +103,28 @@ class MixEditor(
     }
 
     /** The section whose takes are being recorded, in place of the overview, or `null`. */
-    val focusState: Tap<TrackSection?> = state.tapOf { it.focus }
+    val focusState: Tap<TrackSectionId?> = state.tapOf { it.focus }
 
     /** Shows [section] alone, to record its takes. */
-    fun focusSection(section: TrackSection) = state.update { it.copy(focus = section) }
+    fun focusSection(section: TrackSectionId) = state.update { it.copy(focus = section) }
 
     /** Returns from the section in focus to the overview. */
     fun clearFocus() = state.update { it.copy(focus = null) }
 
     /** Leaves [section] out of the overview of the open mix. */
-    fun hideSection(section: TrackSection) = updateOpenMix { it.copy(hidden = it.hidden - section + section) }
+    fun hideSection(section: TrackSectionId) = updateOpenMix { it.copy(hidden = it.hidden - section + section) }
 
     /** Returns [section] to the overview of the open mix. */
-    fun showSection(section: TrackSection) = updateOpenMix { it.copy(hidden = it.hidden - section) }
+    fun showSection(section: TrackSectionId) = updateOpenMix { it.copy(hidden = it.hidden - section) }
 
     private fun mixSectionsOf(song: StoredSong) = song.tracks.flatMap { track ->
         track.sections.map { section ->
-            MixSection(TrackSection(track.trackId, section.sectionId), "${track.name} · ${song.music.nameOf(section.sectionId)}")
+            MixSection(TrackSectionId(track.trackId, section.sectionId), "${track.name} · ${song.music.nameOf(section.sectionId)}")
         }
     }
 
     /** The names of the track and section of [section], as `Melody · Verse`. */
-    fun labelOf(section: TrackSection) =
+    fun labelOf(section: TrackSectionId) =
         "${musicEditor.readTrack(section.trackId)?.name.orEmpty()} · ${musicEditor.musicState.now.nameOf(section.sectionId)}"
 
 
@@ -144,18 +144,18 @@ class MixEditor(
     }
 
     /** Binds [clip] to its section in the mix being edited, in place of the clip it held. */
-    fun putClip(clip: SectionClip) = updateOpenMixClips { clips ->
-        clips.filterNot { it.trackId == clip.trackId && it.sectionId == clip.sectionId } + clip
+    fun putClip(clip: SectionClipId) = updateOpenMixClips { clips ->
+        clips.filterNot { it.trackSectionId == clip.trackSectionId } + clip
     }
 
     /** Unbinds the clip of the section [sectionId] of the track [trackId] in the mix being edited. */
     fun removeClip(trackId: TrackId, sectionId: SectionId) = updateOpenMixClips { clips ->
-        clips.filterNot { it.trackId == trackId && it.sectionId == sectionId }
+        clips.filterNot { it.trackSectionId == TrackSectionId(trackId, sectionId) }
     }
 
     /** The name of the clip bound to [section], marked when it no longer fits, or `null` while tones play it. */
-    fun clipLabelOf(section: TrackSection): Tap<String?> = clipsStore.combine(mixState) { clips, mix ->
-        val clipId = mix?.clips?.firstOrNull { it.trackId == section.trackId && it.sectionId == section.sectionId }
+    fun clipLabelOf(section: TrackSectionId): Tap<String?> = clipsStore.combine(mixState) { clips, mix ->
+        val clipId = mix?.clips?.firstOrNull { it.trackSectionId == section }
             ?.clipId ?: return@combine null
         val clip = clips.firstOrNull { it.clipId == clipId } ?: return@combine null
         val track = musicEditor.readTrack(section.trackId) ?: return@combine null
@@ -163,14 +163,14 @@ class MixEditor(
     }
 
     /** The notation of [section], or `null` once its track no longer holds it. */
-    fun notationOf(section: TrackSection): Tap<SectionNotation?> =
+    fun notationOf(section: TrackSectionId): Tap<SectionNotation?> =
         musicEditor.storedState.combine(musicEditor.isLyricsShownState) { song, isLyricsShown ->
             val track = song.tracks.firstOrNull { it.trackId == section.trackId } ?: return@combine null
             sectionNotationsOf(track, song.music, song.tracks, isLyricsShown)
                 .firstOrNull { it.sectionId == section.sectionId }
         }
 
-    private fun updateOpenMixClips(transform: (List<SectionClip>) -> List<SectionClip>) =
+    private fun updateOpenMixClips(transform: (List<SectionClipId>) -> List<SectionClipId>) =
         updateOpenMix { it.copy(clips = transform(it.clips)) }
 
     private fun updateOpenMix(transform: (Mix) -> Mix) = state.update { editor ->
@@ -181,7 +181,7 @@ class MixEditor(
         val mixes = editor.mixes.map { mix ->
             when (change) {
                 is TrackChange.Removed -> mix.copy(
-                    clips = mix.clips.filter { it.trackId != change.trackId },
+                    clips = mix.clips.filter { it.trackSectionId.trackId != change.trackId },
                     hidden = mix.hidden.filter { it.trackId != change.trackId },
                 )
             }
@@ -216,12 +216,12 @@ class MixEditor(
 data class MixEditorState(
     val mixes: List<Mix> = emptyList(),
     val mixId: MixId? = null,
-    val focus: TrackSection? = null,
+    val focus: TrackSectionId? = null,
 )
 
 /** A section of a track as the mix tab shows it, under [label], as `Melody · Verse`. */
 data class MixSection(
-    val section: TrackSection,
+    val section: TrackSectionId,
     val label: String,
 )
 

@@ -19,8 +19,8 @@ data class Mix(
     val name: String,
     val bpm: Int,
     val soundingKey: Key,
-    val clips: List<SectionClip> = emptyList(),
-    val hidden: List<TrackSection> = emptyList(),
+    val clips: List<SectionClipId> = emptyList(),
+    val hidden: List<TrackSectionId> = emptyList(),
 )
 
 @JvmInline @Serializable

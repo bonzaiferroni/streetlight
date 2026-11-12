@@ -16,7 +16,7 @@ Notation is the written representation of music. Its forms live in the subpackag
 
 `Music.sections` holds the sections of a music, each a `SectionId` and a name no other section of the music holds. A section is identified by its id everywhere in the model, so a rename changes one name and every reference follows. Each track holds what it plays for a section, and two tracks play the same section by holding the same id.
 
-A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its song holds, so a rename changes one name and every reference follows. What a track plays for a section is identified by the two ids together, as a `TrackSection`.
+A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its song holds, so a rename changes one name and every reference follows. What a track plays for a section is identified by the two ids together, as a `TrackSectionId`.
 
 `Music.arrangement` lists the sections every track follows, in order. A `Track` holds its `sections` and its `arrangements`, each an `Arrangement` naming a section built of other sections or arrangements, so content repeated within a section is written once. `sectionsOf` resolves an id into the sections it stands for.
 
@@ -36,8 +36,8 @@ Lyrics are tied to a melody by timing alone, with no reference between the track
 
 ## Performance
 
-The domain model holds the composition alone. A performance of it, such as a `SectionClip` recorded of a track's section, is its own type, kept beside a song and never on a `Track`, so it stays out of song files.
+The domain model holds the composition alone. A performance of it, such as a `Clip` recorded of a track's section, is its own type, kept beside a song and never on a `Track`, so it stays out of song files.
 
-A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClip` binds one to a track's section, so a clip whose properties line up can be placed elsewhere.
+A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClipId` binds one to a track's section by its `TrackSectionId`, so a clip whose properties line up can be placed elsewhere.
 
-A `Mix` holds those bindings for one music, and the sections it hides from its overview, each a `TrackSection`, since tracks share a section's id. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.
+A `Mix` holds those bindings for one music, and the sections it hides from its overview, each a `TrackSectionId`, since tracks share a section's id. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.

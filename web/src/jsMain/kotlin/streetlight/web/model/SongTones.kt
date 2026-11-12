@@ -12,10 +12,9 @@ import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
-import streetlight.model.music.TrackSection
+import streetlight.model.music.TrackSectionId
 import streetlight.model.music.Stanza
 import streetlight.model.music.Track
-import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionOrderOf
@@ -65,7 +64,7 @@ fun songTonesOf(
     music: Music,
     tracks: List<Track>,
     playing: List<Track>,
-    taken: Set<TrackSection> = emptySet(),
+    taken: Set<TrackSectionId> = emptySet(),
 ): List<TrackTones> {
     val order = tracks.sectionOrderOf(music)
     val onsets = order.runningFold(0) { onset, sectionId -> onset + (tracks.lengthOf(sectionId)?.ticks ?: 0) }
@@ -79,8 +78,8 @@ fun songTonesOf(
             val span = tracks.lengthOf(sectionId) ?: Beats(0)
             List(track.repeatsOf(sectionId, span)) { sections }.flatten().forEach { section ->
                 // an arrangement expands into its sections, and a take may stand for either
-                val isTaken = TrackSection(track.trackId, sectionId) in taken ||
-                    TrackSection(track.trackId, section.sectionId) in taken
+                val isTaken = TrackSectionId(track.trackId, sectionId) in taken ||
+                    TrackSectionId(track.trackId, section.sectionId) in taken
                 if (!isTaken) {
                     tones.addAll(tonesOf(section, tick, music.key, capo))
                     if (section is Groove) drums.addAll(drumTonesOf(section, tick))

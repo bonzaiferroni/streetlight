@@ -9,7 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.music.Clip
 import streetlight.model.music.Mix
-import streetlight.model.music.SectionClip
+import streetlight.model.music.SectionClipId
+import streetlight.model.music.TrackSectionId
 import streetlight.model.music.SectionId
 import streetlight.model.music.TrackId
 
@@ -53,7 +54,7 @@ class SectionClipEditor(
     private fun select(name: String) {
         if (name == NO_CLIP) return editor.removeClip(trackId, sectionId)
         val clip = choicesState.now.firstOrNull { it.name == name } ?: return
-        editor.putClip(SectionClip(trackId, sectionId, clip.clipId))
+        editor.putClip(SectionClipId(TrackSectionId(trackId, sectionId), clip.clipId))
     }
 
     private fun choicesOf(clips: List<Clip>, mix: Mix?): List<Clip> {
@@ -64,7 +65,7 @@ class SectionClipEditor(
         return clips.filter { it.clipId == boundId || it.fits(music, mix, track, sectionId) }.sortedBy { it.name }
     }
 
-    private fun Mix.boundClipId() = clips.firstOrNull { it.trackId == trackId && it.sectionId == sectionId }?.clipId
+    private fun Mix.boundClipId() = clips.firstOrNull { it.trackSectionId == TrackSectionId(trackId, sectionId) }?.clipId
 }
 
 private const val NO_CLIP = "(none)"
