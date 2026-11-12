@@ -75,6 +75,10 @@ val ScrollbarWidthNone = Class("scrollbar-width-none")
 // Background
 val PrimaryBg = Class("primary-bg")
 val PrimaryCardBg = Class("primary-card-bg")
+val MagentaCardBg = Class("magenta-card-bg")
+val CyanCardBg = Class("cyan-card-bg")
+val GoldCardBg = Class("gold-card-bg")
+val SeaGreenCardBg = Class("sea-green-card-bg")
 val SystemBg = Class("system-bg")
 val InkBg = Class("ink-bg")
 val PaperBg = Class("paper-bg")
@@ -209,6 +213,10 @@ $ScrollbarWidthNone        { scrollbar-width:     none; }
 /* Background */
 $PrimaryBg     { background:       var(--primary-bg); }
 $PrimaryCardBg { background-color: var(--primary-card-bg); }
+$MagentaCardBg { background-color: var(--magenta-card-bg); }
+$CyanCardBg    { background-color: var(--cyan-card-bg); }
+$GoldCardBg    { background-color: var(--gold-card-bg); }
+$SeaGreenCardBg { background-color: var(--sea-green-card-bg); }
 $SystemBg      { background-color: var(--system-bg); }
 $InkBg         { background-color: var(--ink-bg); }
 $PaperBg       { background-color: var(--paper-bg); }

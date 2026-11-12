@@ -95,12 +95,13 @@ private fun ViewScope.sectionCard(mixSection: MixSection) {
     val trackSectionId = mixSection.trackSectionId
     val clipEditor = app.getSectionClipEditor(contentScope, model, trackSectionId)
     val clipsId = Id(Uuid.random().toString())
+    val trackType = model.musicEditor.readTrack(trackSectionId.trackId)?.trackType
     clipsPopover(clipsId, clipEditor)
     actionCard(
         label = mixSection.label,
         actions = listOf(MenuAction("Hide") { model.hideSection(trackSectionId) }),
-        mod = modify(PrimaryCardBg, OutlineLow),
-        svg = model.musicEditor.readTrack(trackSectionId.trackId)?.svg?.small,
+        mod = modify(trackType?.color?.bg, OutlineLow),
+        svg = trackType?.svg?.small,
         key = trackSectionId.toKey(),
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
@@ -140,10 +141,11 @@ context(model: MixEditor)
 private fun ViewScope.sectionFocus(trackSectionId: TrackSectionId) {
     val mic = app.getSectionMic(contentScope, model, trackSectionId)
     val key = trackSectionId.toKey()
+    val trackType = model.musicEditor.readTrack(trackSectionId.trackId)?.trackType
     actionCard(
         label = model.labelOf(trackSectionId),
         level = HeadingLevel.H3,
-        mod = modify(PrimaryCardBg, OutlineLow),
+        mod = modify(trackType?.color?.bg, OutlineLow),
         key = key,
         icons = listOf(IconAction.close(model::clearFocus))
     ) {

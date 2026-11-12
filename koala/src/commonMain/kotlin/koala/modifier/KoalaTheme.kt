@@ -46,12 +46,15 @@ data class KoalaTheme(
     }
 }
 
-/** Assorted colors for any display that wants one, and the defaults of their [KoalaTheme] colors. [mod] colors text with it. */
-enum class Palette(val rgb: Rgb, val mod: Class) {
-    Magenta(Rgb(236, 46, 106), MagentaFg),
-    Cyan(Rgb(26, 188, 200), CyanFg),
-    Gold(Rgb(200, 178, 87), GoldFg),
-    SeaGreen(Rgb(58, 200, 158), SeaGreenFg);
+/**
+ * Assorted colors for any display that wants one, and the defaults of their [KoalaTheme] colors. [fg] colors text with
+ * it, and [bg] a card, as a tint over paper.
+ */
+enum class Palette(val rgb: Rgb, val fg: Class, val bg: Class) {
+    Magenta(Rgb(236, 46, 106), MagentaFg, MagentaCardBg),
+    Cyan(Rgb(26, 188, 200), CyanFg, CyanCardBg),
+    Gold(Rgb(200, 178, 87), GoldFg, GoldCardBg),
+    SeaGreen(Rgb(58, 200, 158), SeaGreenFg, SeaGreenCardBg);
 
     companion object {
         /** The color at [index], wrapping around the palette, so a list can color its items in turn. */

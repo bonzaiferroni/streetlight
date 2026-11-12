@@ -1,5 +1,8 @@
 package streetlight.model.music
 
+import koala.SvgFile
+import koala.SvgPack
+import koala.modifier.Palette
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
@@ -15,9 +18,18 @@ import kotlin.uuid.Uuid
 sealed interface Track {
     val trackId: TrackId
     val name: String
+    val trackType: TrackType
     val sections: List<Section>
     val arrangements: List<Arrangement>
     val capo: Int?
+}
+
+/** The types of [Track], each with the [svg] and [color] that stand for it. */
+enum class TrackType(val svg: SvgPack, val color: Palette) {
+    Chords(SvgFile.AcousticGuitar, Palette.Gold),
+    Melody(SvgFile.Music, Palette.Cyan),
+    Lyrics(SvgFile.Microphone, Palette.Magenta),
+    Drums(SvgFile.Drum, Palette.SeaGreen),
 }
 
 /** The identity of a track, which it keeps through a change of its name. */
@@ -63,7 +75,9 @@ data class ChordTrack(
     override val sections: List<Progression>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-) : Track
+) : Track {
+    override val trackType get() = TrackType.Chords
+}
 
 /** The [notes] of a chord section, led by a [pickup] that sounds at the end of the measure before it. */
 @Serializable
@@ -92,7 +106,9 @@ data class MelodyTrack(
     override val sections: List<Phrase>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-) : Track
+) : Track {
+    override val trackType get() = TrackType.Melody
+}
 
 /**
  * The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. Its [lyrics] name
@@ -139,7 +155,9 @@ data class LyricTrack(
     override val sections: List<Stanza>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-) : Track
+) : Track {
+    override val trackType get() = TrackType.Lyrics
+}
 
 /** The [notes] of a lyric section, led by a [pickup] that sounds at the end of the measure before it. */
 @Serializable
@@ -168,7 +186,9 @@ data class DrumTrack(
     override val sections: List<Groove>,
     override val arrangements: List<Arrangement>,
     override val capo: Int? = null,
-) : Track
+) : Track {
+    override val trackType get() = TrackType.Drums
+}
 
 /**
  * The [lanes] of a drum section, one per drum, sounding together. [slotsPerMeasure] and [measuresPerLine] are the

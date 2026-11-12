@@ -66,6 +66,7 @@ val ThemeCss get() = with(Koala) { """
     
     --sea-green: $seaGreen;
     --sea-green-fg: color-mix(in srgb, rgb(var(--sea-green)) 50%, rgb(var(--ink)));
+    --sea-green-card-bg: color-mix(in srgb, rgba(var(--sea-green), .2) 50%, var(--card-bg));
 
     --green: $green;
     --green-fg: color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--ink)));
@@ -83,14 +84,17 @@ val ThemeCss get() = with(Koala) { """
     --gold-bg: radial-gradient(circle farthest-side,
         color-mix(in srgb, var(--gold-fg) 25%, var(--paper-bg)), 70%,
         color-mix(in srgb, var(--gold-fg) 15%, var(--paper-bg)));
+    --gold-card-bg: color-mix(in srgb, rgba(var(--gold), .2) 50%, var(--card-bg));
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     --lamp-bg: color-mix(in srgb, rgb(var(--gold)) 50%, rgb(var(--paper)));
     
     --cyan: $cyan;
     --cyan-fg: color-mix(in srgb, rgb(var(--cyan)) 75%, rgb(var(--ink)));
+    --cyan-card-bg: color-mix(in srgb, rgba(var(--cyan), .2) 50%, var(--card-bg));
 
     --magenta: $magenta;
     --magenta-fg: color-mix(in srgb, rgb(var(--magenta)) 75%, rgb(var(--ink)));
+    --magenta-card-bg: color-mix(in srgb, rgba(var(--magenta), .2) 50%, var(--card-bg));
 
     --purple: $purple;
     --selection-overlay: rgba(var(--purple), .2);

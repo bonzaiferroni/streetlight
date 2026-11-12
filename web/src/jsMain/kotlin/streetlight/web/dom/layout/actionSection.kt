@@ -43,7 +43,8 @@ fun AppendScope.actionSection(
  * A row headed by [label] at [level], modified by [headingMod], with [leadIcon] and [svg] before it and its [actions]
  * at its end, then its [icons].
  *
- * The row is as tall as its level, and its icon fills that height. A [key], unique on the page and free of spaces,
+ * The row is as tall as its level, and its [leadIcon] and [svg] fill that height. Its [icons] keep the default size of
+ * an icon. A [key], unique on the page and free of spaces,
  * names the heading `heading-` and the key for view transitions.
  */
 fun AppendScope.actionHeading(
@@ -61,7 +62,7 @@ fun AppendScope.actionHeading(
     svg?.let { icon(it, Height100Pct) }
     heading(level, label, modify(level.headingMod, headingMod, key?.let { transition("heading-$it") }))
     menuActionsRow(actions)
-    iconActionsRow(icons, Height100Pct)
+    iconActionsRow(icons, SmallIconHeight)
 }
 
 /** An [actionSection] whose lead icon is a back arrow that calls [onBack]. */

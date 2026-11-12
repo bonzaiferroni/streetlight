@@ -12,6 +12,7 @@ import koala.dom.flowModifier
 import kampfire.model.tapOf
 import koala.dom.layout.lazyTabs
 import koala.dom.routeBlock
+import koala.model.IconAction
 import koala.model.MenuAction
 import koala.model.NullContent
 import koala.modifier.*
@@ -76,17 +77,25 @@ fun RouteScope.viewMusicStudioRoute() {
     }
 }
 
-/** Renders the song of [editor] in a section headed by its title, with a way back to the songs, as a tab for each layout. */
+/**
+ * Renders the song of [editor] in a section headed by its title, with a way back to the songs and a gear that opens
+ * how its notation is written and shown, as a tab for each layout.
+ */
 context(model: MusicStudio, player: TrackPlayer)
 private fun ViewScope.songFocus(editor: MusicEditor) {
     val mix = model.mixEditorOf(contentScope, editor)
     val lanes = LaneEditor(contentScope, editor, mix, player, app.get())
     // playback left running when the song closes would keep sounding
     onDispose { player.stop() }
+    val settingsId = Id(Uuid.random().toString())
+    notationSettingsPopover(settingsId)
     actionSection(
         label = editor.song.title,
         onBack = { portal.go(MusicStudioRoute()) },
         headingMod = songTitleTransition(editor.song.songId),
+        icons = listOf(
+            IconAction(SvgFile.Gear.small, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
+        ),
     ) {
         transTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->
@@ -98,6 +107,18 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
                     }
                 }
             }
+        }
+    }
+}
+
+/** A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show. */
+context(model: MusicStudio)
+private fun ViewScope.notationSettingsPopover(id: Id) {
+    popover(id) {
+        column(Padding(2)) {
+            dropMenu(model.notationStyleState)
+            dropMenu(model.notationViewState)
+            switch("Lyrics", model.isLyricsShownState)
         }
     }
 }

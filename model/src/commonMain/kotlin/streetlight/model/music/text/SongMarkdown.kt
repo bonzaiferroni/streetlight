@@ -11,6 +11,7 @@ import streetlight.model.music.Music
 import streetlight.model.music.Song
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
+import streetlight.model.music.TrackType
 import streetlight.model.music.freeTrackNameOf
 
 /**
@@ -67,7 +68,7 @@ object SongMarkdown {
     fun write(song: Song, music: Music, tracks: List<Track>, style: NotationStyle): String {
         val heading = listOfNotNull("$TITLE_PREFIX${song.title}", song.artist.takeIf { it.isNotBlank() }).joinToString("\n")
         val blocks = listOf(heading, MusicParser.write(music)) + tracks.flatMap { track ->
-            listOf("$TRACK_PREFIX${track.name} (${track.type.name})", writeTrack(track, music, style))
+            listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music, style))
         }
         return blocks.joinToString("\n\n", postfix = "\n")
     }
@@ -89,20 +90,10 @@ data class SongMarkdownRead(
     val tracks: List<Track>,
 )
 
-/** The type of a track, as its heading names it. */
-private enum class TrackType { Chords, Melody, Lyrics, Drums }
-
 /** Problems of reading a song from markdown. */
 object SongMarkdownProblem {
     /** The problem of the track [heading] on [line], which names no known type. */
     fun trackHeadingOf(line: Int, heading: String) = Problem("Line $line: $heading needs a track type, as ## Melody (Melody)")
-}
-
-private val Track.type get() = when (this) {
-    is ChordTrack -> TrackType.Chords
-    is MelodyTrack -> TrackType.Melody
-    is LyricTrack -> TrackType.Lyrics
-    is DrumTrack -> TrackType.Drums
 }
 
 private const val TITLE_PREFIX = "# "

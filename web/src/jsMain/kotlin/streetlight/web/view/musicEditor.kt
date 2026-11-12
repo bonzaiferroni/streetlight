@@ -4,6 +4,8 @@ import kampfire.model.storeOf
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
+import koala.SvgFile
+import koala.model.IconAction
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
@@ -14,16 +16,15 @@ import kotlinx.css.LinearDimension
 import streetlight.model.music.ui.SectionNotation
 import streetlight.model.music.ui.lines
 import streetlight.web.dom.layout.actionMenu
+import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.model.MODE_NAMES
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicForm
 import streetlight.web.model.TONIC_NAMES
-import kampfire.model.combine
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSection
 import streetlight.model.music.SectionId
-import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
@@ -31,30 +32,53 @@ import streetlight.web.model.toaster
 import kampfire.model.toDataOr
 import kotlin.uuid.Uuid
 
-/** Renders the song's music, the style it is written in and its tracks. */
+/** Renders the song's music and its tracks. */
 context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 fun ViewScope.musicEditor() = column {
-    row {
-        dropMenu(studio.notationStyleState)
-        dropMenu(studio.notationViewState)
-        switch("Lyrics", studio.isLyricsShownState)
-    }
     musicSection()
     trackEditor()
 }
 
-/** Renders the music's properties, with an action to edit them, above the arrangement every track follows. */
+/**
+ * Renders the arrangement every track follows under the music's properties, with actions to add a section to it and to
+ * edit the properties: a row for each section it plays, in order, with an action that takes it out.
+ */
 context(model: MusicEditor)
 private fun ViewScope.musicSection() {
     val editId = Id(Uuid.random().toString())
+    val addId = Id(Uuid.random().toString())
     musicEditPopover(editId)
-    actionSection("Music", listOf(MenuAction("Edit", config = { setPopoverTarget(editId, true) }) { })) {
+    arrangementAddPopover(addId)
+    val add = IconAction(SvgFile.Plus.small, "Add", config = { setPopoverTarget(addId, true) }) { }
+    val edit = IconAction(SvgFile.Gear.small, "Edit", config = { setPopoverTarget(editId, true) }) { }
+    actionSection("Arrangement", icons = listOf(add, edit)) {
         flowBlock(model.musicState) { music -> textBlock(music.summary, modify(TextSmall, InkDimFg)) }
-        actionCard("Arrangement") {
-            val picksState = model.arrangementState.combine(model.sectionsState) { picks, choices -> picks to choices }
-            flowBlock(picksState) { (picks, choices) ->
-                sectionPicks(picks, choices) { model.setMusicArrangement(it) }
+        flowBlock(model.arrangementState, FlexColumn) { musicSections ->
+            val sectionIds = musicSections.map { it.sectionId }
+            musicSections.forEachIndexed { index, musicSection ->
+                val remove = IconAction(SvgFile.Trash.small, "Remove") {
+                    model.setMusicArrangement(sectionIds.filterIndexed { at, _ -> at != index })
+                }
+                actionRow(musicSection.name, icons = listOf(remove))
             }
+            if (musicSections.isEmpty()) {
+                textBlock("Each section plays once, in the order of the tracks.", modify(TextSmall, InkDimFg))
+            }
+        }
+    }
+}
+
+/** A popover with [id] holding the sections of the music, where a click adds one to the end of the arrangement. */
+context(model: MusicEditor)
+private fun ViewScope.arrangementAddPopover(id: Id) {
+    popover(id) { popover ->
+        flowBlock(model.sectionsState) { musicSections ->
+            actionMenu(musicSections.map { musicSection ->
+                MenuAction(musicSection.name) {
+                    popover.close()
+                    model.setMusicArrangement(model.arrangementState.now.map { it.sectionId } + musicSection.sectionId)
+                }
+            })
         }
     }
 }

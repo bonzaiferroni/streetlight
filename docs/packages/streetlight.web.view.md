@@ -120,7 +120,7 @@ A list the user builds in a form, such as a skill's tags, a record's links (`lin
 
 ## Action Headings
 
-An `actionSection` and an `actionCard` head their content with an `actionHeading`, a row of an icon, a heading and actions. Each takes the heading's `HeadingLevel`, a section `H3` and a card `H5` unless stated. The level sets the height of the row, near the height of its text, and what sits in the row beside the heading, such as its icon, fills that height rather than stating a size of its own.
+An `actionSection` and an `actionCard` head their content with an `actionHeading`, a row of an icon, a heading and actions. Each takes the heading's `HeadingLevel`, a section `H3` and a card `H5` unless stated. The level sets the height of the row, near the height of its text, and what leads the row before the heading, its icon or its `leadIcon`, fills that height rather than stating a size of its own. The `icons` at the row's end keep the default size of an icon at every level.
 
 Each takes a `key` that names its parts for view transitions: the heading's text as `heading-<key>`, never its row, whose actions differ across a change, and an `actionCard` itself as `card-<key>`. A card built by hand around an `actionSection` takes `card-<key>` itself to pair with one.
 

@@ -15,7 +15,7 @@ fun FlowContent.skillsSection(skills: List<Skill>) {
         // MaxWidth(80.pct)
         row(modify(FlexWrap, Gap2Px, JustifyContentCenter)) {
             skills.forEachIndexed { index, skill ->
-                skillCard(skill, Palette.cycle(index).mod)
+                skillCard(skill, Palette.cycle(index).fg)
             }
         }
     }

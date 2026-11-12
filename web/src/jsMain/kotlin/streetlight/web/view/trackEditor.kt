@@ -25,6 +25,8 @@ import streetlight.model.music.TrackId
 import streetlight.model.music.text.NotationError
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.menuActionsRow
+import streetlight.web.dom.layout.iconActionsRow
+import koala.model.IconAction
 import streetlight.web.dom.layout.actionSection
 import kampfire.model.MutableTap
 import kampfire.model.Tap
@@ -112,11 +114,11 @@ private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
     trackEditPopover(nameId, track)
-    row(modify(AlignItemsCenter, ZenBg, Padding(1))) {
+    row(modify(AlignItemsCenter, track.trackType.color.bg, Padding(1))) {
         handle.grip(icon(SvgFile.GripVertical.small, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Move"))))
         button({ model.toggleTrack(trackId) }, Flex1) {
             row(AlignItemsCenter) {
-                icon(track.svg.large, Height(5))
+                icon(track.trackType.svg.large, Height(5))
                 flowBlock(model.trackState(trackId).tapOf { it?.name.orEmpty() }) { heading5(it) }
             }
         }
@@ -129,9 +131,10 @@ private fun ViewScope.trackRow(track: Track) {
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(
             play,
-            MenuAction("Edit", config = { setPopoverTarget(nameId, true) }) { },
             MenuAction("Remove") { model.removeTrack(trackId) },
         ))
+        val edit = IconAction(SvgFile.Gear.small, "Edit", config = { setPopoverTarget(nameId, true) }) { }
+        iconActionsRow(listOf(edit), SmallIconHeight)
     }
     flowBlock(model.isTrackOpenState(trackId)) { isOpen ->
         if (isOpen) trackContent(trackId)
@@ -297,14 +300,6 @@ private fun ViewScope.notationPanes(
             }
         }
     }
-}
-
-/** The icon of the track's type. */
-val Track.svg get() = when (this) {
-    is ChordTrack -> SvgFile.AcousticGuitar
-    is MelodyTrack -> SvgFile.Music
-    is LyricTrack -> SvgFile.Microphone
-    is DrumTrack -> SvgFile.Drum
 }
 
 /** The name of the notation the track's sections are written in. */
