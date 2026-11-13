@@ -31,13 +31,21 @@ import streetlight.web.model.getSectionClipEditor
 import streetlight.web.model.getSectionMic
 import kotlin.uuid.Uuid
 
+/** Renders the open mix and the sections it shows, or the section in focus alone. */
+context(model: MixEditor)
+fun ViewScope.mixEditor() = flowBlock(model.focusState, Transitioner) { focus ->
+    when (focus) {
+        null -> mixOverview()
+        else -> sectionFocus(focus)
+    }
+}
+
 /**
  * Renders the open mix under its name, with actions to edit its properties and to select or create another: its tempo
- * and sounding key beside the way to its hidden sections, then a card for each section it shows, or the section in
- * focus alone.
+ * and sounding key beside the way to its hidden sections, then a card for each section it shows.
  */
 context(model: MixEditor)
-fun ViewScope.mixEditor() = flowBlock(model.propertiesState) { mix ->
+private fun ViewScope.mixOverview() = flowBlock(model.propertiesState) { mix ->
     if (mix == null) return@flowBlock
     val editId = Id(Uuid.random().toString())
     val selectId = Id(Uuid.random().toString())
@@ -59,13 +67,8 @@ fun ViewScope.mixEditor() = flowBlock(model.propertiesState) { mix ->
                 textBlock("hidden")
             }
         }
-        flowBlock(model.focusState, Transitioner) { focus ->
-            when (focus) {
-                null -> flowBlock(model.shownSectionsState, MixStyle.Cards) { sections ->
-                    sections.forEach { sectionCard(it) }
-                }
-                else -> sectionFocus(focus)
-            }
+        flowBlock(model.shownSectionsState, MixStyle.Cards) { sections ->
+            sections.forEach { sectionCard(it) }
         }
     }
 }
@@ -100,7 +103,8 @@ private fun ViewScope.sectionCard(mixSection: MixSection) {
     actionCard(
         label = mixSection.label,
         actions = listOf(MenuAction("Hide") { model.hideSection(trackSectionId) }),
-        mod = modify(trackType?.color?.bg, OutlineLow),
+        // named apart from the tab, so the card pops in with it, and pairs with the focus card
+        mod = modify(trackType?.color?.bg, OutlineLow, Presto.Pop),
         svg = trackType?.svg?.small,
         key = trackSectionId.toKey(),
     ) {
@@ -134,7 +138,7 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
 }
 
 /**
- * Renders [trackSectionId] alone in a card under its label, with a back arrow that returns to the overview: its
+ * Renders [trackSectionId] alone in a card under its label, with an up arrow that returns to the overview: its
  * notation beside the recorder of its takes.
  */
 context(model: MixEditor)
@@ -146,8 +150,9 @@ private fun ViewScope.sectionFocus(trackSectionId: TrackSectionId) {
         label = model.labelOf(trackSectionId),
         level = HeadingLevel.H3,
         mod = modify(trackType?.color?.bg, OutlineLow),
+        svg = trackType?.svg?.large,
         key = key,
-        icons = listOf(IconAction.close(model::clearFocus))
+        onBack = model::clearFocus,
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
             formRow {

@@ -34,11 +34,16 @@ import kampfire.model.toDataOr
 import streetlight.web.dom.layout.formRow
 import kotlin.uuid.Uuid
 
-/** Renders the song's music and its tracks. */
+/** Renders the song's arrangement beside its tracks, or the editor of the track in focus alone. */
 context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
-fun ViewScope.musicEditor() = formRow {
-    musicSection()
-    trackEditor()
+fun ViewScope.musicEditor() = flowBlock(model.focusState, Transitioner) { focus ->
+    when (val track = focus?.let { model.readTrack(it) }) {
+        null -> formRow {
+            musicSection()
+            trackEditor()
+        }
+        else -> trackFocus(track)
+    }
 }
 
 /**

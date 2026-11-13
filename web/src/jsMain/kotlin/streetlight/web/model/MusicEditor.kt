@@ -90,21 +90,21 @@ class MusicEditor(
     inline fun <reified T : Track> trackState(trackId: TrackId, empty: T): MutableTap<T> =
         trackState(trackId).mutableTapOf({ it as? T ?: empty }) { it }
 
-    /** Whether the editor of the track [trackId] is open. */
-    fun isTrackOpenState(trackId: TrackId) = state.tapOf { trackId in it.openTracks }
+    /** The track whose editor is shown, in place of the overview, or `null`. */
+    val focusState: Tap<TrackId?> = state.tapOf { it.focus }
+
+    /** Shows the editor of the track [trackId] alone. */
+    fun focusTrack(trackId: TrackId) = state.update { it.copy(focus = trackId) }
+
+    /** Returns from the track in focus to the overview. */
+    fun clearFocus() = state.update { it.copy(focus = null) }
 
     /** A name for a new track that no track of the song holds: [base], or [base] with the first number that frees it. */
     fun newTrackName(base: String) = state.now.tracks.newTrackName(base)
 
-    /** Adds [track] to the song and opens its editor. */
+    /** Adds [track] to the song and brings its editor into focus. */
     fun addTrack(track: Track) = state.update { editor ->
-        editor.copy(tracks = editor.tracks + track, openTracks = editor.openTracks + track.trackId)
-    }
-
-    /** Opens the editor of the track [trackId], or closes it when open. */
-    fun toggleTrack(trackId: TrackId) = state.update { editor ->
-        val openTracks = if (trackId in editor.openTracks) editor.openTracks - trackId else editor.openTracks + trackId
-        editor.copy(openTracks = openTracks)
+        editor.copy(tracks = editor.tracks + track, focus = track.trackId)
     }
 
     /**
@@ -124,7 +124,7 @@ class MusicEditor(
         state.update { editor ->
             editor.copy(
                 tracks = editor.tracks.filter { it.trackId != trackId },
-                openTracks = editor.openTracks - trackId,
+                focus = editor.focus?.takeIf { it != trackId },
             )
         }
         trackChangeFlow.tryEmit(TrackChange.Removed(trackId))
@@ -268,7 +268,7 @@ private fun Music.namedSectionOf(sectionId: SectionId) = MusicSection(sectionId,
 data class MusicEditorState(
     val music: Music,
     val tracks: List<Track> = emptyList(),
-    val openTracks: Set<TrackId> = emptySet(),
+    val focus: TrackId? = null,
 )
 
 /** A change to the tracks that what is built on them follows. */

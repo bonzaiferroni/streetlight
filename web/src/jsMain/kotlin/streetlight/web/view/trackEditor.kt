@@ -48,7 +48,7 @@ import kampfire.model.toDataOr
 import streetlight.model.music.SectionId
 import kotlin.uuid.Uuid
 
-/** Renders the tracks of the song under an action that adds one, each a row that opens its sections. */
+/** Renders the tracks of the song under an action that adds one, each a row that brings its editor into focus. */
 context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 fun ViewScope.trackEditor() {
     val newId = Id(Uuid.random().toString())
@@ -77,7 +77,7 @@ fun ViewScope.trackEditor() {
         level = HeadingLevel.H4,
         icons = listOf(IconAction(SvgFile.Plus.small, "New", config = { setPopoverTarget(newId, true) }) { }),
     ) {
-        // keyed by id, so an edit to a track's content or name or a move leaves its open editor in place
+        // keyed by id, so an edit to a track's content or name or a move leaves its row in place
         orderColumn(model.tracksState, { it.trackId }, Transitioner) { track -> trackRow(track) }
         flowBlock(model.tracksState.tapOf { it.isEmpty() }) { isEmpty ->
             if (isEmpty) textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
@@ -86,20 +86,23 @@ fun ViewScope.trackEditor() {
 }
 
 /**
- * Renders the row of [track], which opens its editor below it or closes it, with a grip that moves it among the
- * tracks.
+ * Renders the row of [track], which brings its editor into focus, with a grip that moves it among the tracks.
  */
 context(handle: OrderHandle, studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
+    val key = trackId.toString()
     trackEditPopover(nameId, track)
-    row(modify(AlignItemsCenter, track.trackType.color.bg, Padding(1))) {
+    // named apart from its item, so it pops in with the tab as its item would, and pairs with its focus card
+    row(modify(AlignItemsCenter, track.trackType.color.bg, Padding(1), transition("card-$key"), Presto.Pop)) {
         handle.grip(icon(SvgFile.GripVertical.small, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Move"))))
-        button({ model.toggleTrack(trackId) }, Flex1) {
+        button({ model.focusTrack(trackId) }, Flex1) {
             row(AlignItemsCenter) {
                 icon(track.trackType.svg.large, Height(5))
-                flowBlock(model.trackState(trackId).tapOf { it?.name.orEmpty() }) { heading5(it) }
+                flowBlock(model.trackState(trackId).tapOf { it?.name.orEmpty() }) { name ->
+                    heading5(name)
+                }
             }
         }
         // a lyric track makes no sound, so it has nothing to play
@@ -116,8 +119,25 @@ private fun ViewScope.trackRow(track: Track) {
         val edit = IconAction(SvgFile.Gear.small, "Edit", config = { setPopoverTarget(nameId, true) }) { }
         iconActionsRow(listOf(edit), SmallIconHeight)
     }
-    flowBlock(model.isTrackOpenState(trackId)) { isOpen ->
-        if (isOpen) trackContent(trackId)
+}
+
+/**
+ * Renders [track] alone in a card under its name and its type's icon, with an up arrow that returns to the overview: its
+ * sections and arrangements.
+ */
+context(studio: MusicStudio, model: MusicEditor)
+fun ViewScope.trackFocus(track: Track) {
+    actionCard(
+        label = track.name,
+        level = HeadingLevel.H3,
+        mod = modify(track.trackType.color.bg, OutlineLow),
+        svg = track.trackType.svg.large,
+        key = track.trackId.toString(),
+        onBack = model::clearFocus,
+    ) {
+        card(modify(PaperBg, Outline, BorderRadius1)) {
+            trackContent(track.trackId)
+        }
     }
 }
 
