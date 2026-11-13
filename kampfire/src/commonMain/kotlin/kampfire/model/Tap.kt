@@ -54,6 +54,13 @@ fun <T> Tap<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Tap<T
     return this
 }
 
+/** The latest value of this flow, collected in [scope], reading [initial] until the first arrives. */
+fun <T> Flow<T>.tapIn(scope: CoroutineScope, initial: T): Tap<T> {
+    val store = Store(initial)
+    scope.launch { collect { store.set(it) } }
+    return store
+}
+
 /** The [MutableTap] made by [mutableTapOf]. */
 class MutableLens<State, Value>(
     private val store: MutableTap<State>,

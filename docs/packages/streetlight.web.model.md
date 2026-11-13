@@ -32,7 +32,9 @@ A form model, named `FooForm`, holds the properties of a record apart from it, s
 
 A section's text is its notation alone. Its name, its properties and the arrangements that play it are set through the UI, and a section is created by an action that names it: a name the music holds joins that section, and any other gives the music a new one.
 
-A song's music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it, and follows its `trackChanges` to drop what it holds for a track removed. A rename needs no following, since a track keeps its id.
+A music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it. A track removed takes its section clips and studies with it when the removal is saved, and what still names it, such as a mix's hidden sections or a focus, skips a track the music no longer holds. A rename needs no following, since a track keeps its id.
+
+`MusicEditor` holds its `MusicSheet` as an edit buffer, saved whole once edits pause for a second and once more as its scope ends. Every other studio edit, such as a mix's, saves at once and is seen back through the DAO's flows. A change made from what is shown reads the record again first, so changes in quick succession all land.
 
 ## Entity Properties
 
@@ -197,10 +199,10 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/model/ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](../../web/src/jsMain/kotlin/streetlight/web/model/SongProfile.kt) | Shows and edits a song |
-| [`MusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicStudio.kt) | Lists, creates and removes the songs in `SongDb`, and builds the `MusicEditor` and `MixEditor` of the one in focus, saving its changes |
+| [`MusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicStudio.kt) | Lists, creates and removes the musics in `StudioDb`, and reads the sheet of the one in focus for its `MusicEditor` and `MixEditor` |
 | [`MixEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MixEditor.kt) | Edits the mixes of a song's music, whose tempo and takes playback follows |
 | [`MixForm`](../../web/src/jsMain/kotlin/streetlight/web/model/MixForm.kt) | Holds a mix's name, tempo and sounding key apart from the mix until `MixEditor` applies them |
-| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the song in focus in `MusicStudio` |
+| [`MusicEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicEditor.kt) | Edits the music and tracks of the music in focus in `MusicStudio` |
 | [`SectionEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionEditor.kt) | Edits one section of a track through the text of its notation |
 | [`MusicForm`](../../web/src/jsMain/kotlin/streetlight/web/model/MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
@@ -209,7 +211,6 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`StudioIdbDb`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioIdbDb.kt) | The `StudioDb` kept in the browser, and its DAOs |
 | [`SectionClipEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionClipEditor.kt) | Chooses the clip a mix binds to a track's section among those that fit it |
 | [`SectionMic`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |
-| [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |
 | [`TakeShelf`](../../web/src/jsMain/kotlin/streetlight/web/model/SongTakes.kt) | Reads the clips of a mix that still fit its song, decoded for playback |
 | [`TimelineModel`](../../web/src/jsMain/kotlin/streetlight/web/model/TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditor` share |
 | [`StudioEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioEditor.kt) | Records and plays samples on a timeline |

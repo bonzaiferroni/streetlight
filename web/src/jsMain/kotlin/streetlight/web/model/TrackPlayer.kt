@@ -7,6 +7,7 @@ import js.typedarrays.Float32Array
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import streetlight.model.music.MelodyTrack
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Track
 import web.audio.AudioNode
 import web.audio.BaseAudioContext
@@ -32,16 +33,16 @@ class TrackPlayer(
     val isPlayingState: Tap<Boolean> = playingStore
 
     /**
-     * Plays [tracks] of [song], or every track when it is `null`, through the song's arrangement. Each section
+     * Plays [tracks] of [sheet], or every track when it is `null`, through the song's arrangement. Each section
      * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
      * of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
      * sound when it is `null`. Any playback already running is stopped first.
      *
      * Each of [takes] plays in place of the tones of its section, and the song then runs at the takes' tempo.
      */
-    fun play(song: StoredSong, tracks: List<Track>? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
+    fun play(sheet: MusicSheet, tracks: List<Track>? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
         stop()
-        val plan = songPlanOf(song, tracks ?: song.tracks, takes) ?: return
+        val plan = songPlanOf(sheet, tracks ?: sheet.tracks, takes) ?: return
         val context = audio.startContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
@@ -52,11 +53,11 @@ class TrackPlayer(
     }
 
     /**
-     * Renders every track of [song] from its first sound to the end of its last, with [takes] in place of their
+     * Renders every track of [sheet] from its first sound to the end of its last, with [takes] in place of their
      * sections' tones as [play] would sound them, into mono PCM at [RENDER_RATE], or `null` when it sounds nothing.
      */
-    suspend fun render(song: StoredSong, takes: SongTakes? = null): PcmSample? {
-        val plan = songPlanOf(song, song.tracks, takes) ?: return null
+    suspend fun render(sheet: MusicSheet, takes: SongTakes? = null): PcmSample? {
+        val plan = songPlanOf(sheet, sheet.tracks, takes) ?: return null
         val startClock = -plan.firstTick * plan.secondsPerTick
         val seconds = plan.endClockOf(startClock) + RENDER_TAIL_SECONDS
         val context = OfflineAudioContext(1, ceil(seconds * RENDER_RATE).toInt(), RENDER_RATE.toFloat())
@@ -65,15 +66,15 @@ class TrackPlayer(
         return PcmSample(RENDER_RATE, listOf(buffer.getChannelData(0).unsafeCast<FloatArray>()))
     }
 
-    /** What [playing], tracks of [song], sound with [takes] in place of their sections' tones, or `null` for nothing. */
-    private fun songPlanOf(song: StoredSong, playing: List<Track>, takes: SongTakes?): SongPlan? {
-        val music = song.music
+    /** What [playing], tracks of [sheet], sound with [takes] in place of their sections' tones, or `null` for nothing. */
+    private fun songPlanOf(sheet: MusicSheet, playing: List<Track>, takes: SongTakes?): SongPlan? {
+        val music = sheet.music
         val playingTakes = takes?.takes.orEmpty().filterKeys { key -> playing.any { it.trackId == key.trackId } }
-        val trackTones = songTonesOf(music, song.tracks, playing, playingTakes.keys).filter { it.isSounding }
+        val trackTones = songTonesOf(music, sheet.tracks, playing, playingTakes.keys).filter { it.isSounding }
         // each time a take's track plays its section, placed by the section's tick
         val takeStarts = playingTakes.flatMap { (key, take) ->
             val takeTrack = playing.first { it.trackId == key.trackId }
-            sectionStartsOf(music, song.tracks, takeTrack, key.sectionId).map { it to take }
+            sectionStartsOf(music, sheet.tracks, takeTrack, key.sectionId).map { it to take }
         }
         if (trackTones.isEmpty() && takeStarts.isEmpty()) return null
         val secondsPerTick = takes?.let { 60.0 / it.bpm / music.time.pulse.ticks } ?: music.secondsPerTick

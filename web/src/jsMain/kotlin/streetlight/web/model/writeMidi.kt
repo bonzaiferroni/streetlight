@@ -6,12 +6,13 @@ import streetlight.model.music.DrumHit
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
+import streetlight.model.music.MusicSheet
 import streetlight.web.utility.downloadFile
 
-/** Hands the viewer the tracks of [song] as a MIDI file, laid along its arrangement. */
-fun exportMidi(song: StoredSong) {
-    val trackTones = songTonesOf(song.music, song.tracks, song.tracks).filter { it.isSounding }
-    downloadFile(writeMidi(song.music, trackTones), "${song.song.title}.mid", MIDI_TYPE)
+/** Hands the viewer the tracks of [sheet] as a MIDI file, laid along its arrangement. */
+fun exportMidi(sheet: MusicSheet) {
+    val trackTones = songTonesOf(sheet.music, sheet.tracks, sheet.tracks).filter { it.isSounding }
+    downloadFile(writeMidi(sheet.music, trackTones), "${sheet.music.name}.mid", MIDI_TYPE)
 }
 
 /**

@@ -13,7 +13,6 @@ import streetlight.model.music.Clip
 import streetlight.model.music.ClipId
 import streetlight.model.music.Key
 import streetlight.model.music.Music
-import streetlight.model.music.SectionClipId
 import streetlight.model.music.TrackSectionId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.soundingKey
@@ -124,7 +123,7 @@ class SectionMic(
             leadSeconds = downbeat - captured.startClock + latency,
         )
         clipLibrary.saveClip(clip, captured.pcm).toDataOr(messenger) { return }
-        editor.putClip(SectionClipId(trackSectionId, clip.clipId))
+        editor.putClip(trackSectionId, clip.clipId)
         messenger.deliverSuccess("Saved ${clip.name}")
         nameState.set(nextName())
     }

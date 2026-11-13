@@ -274,6 +274,17 @@ fun Track.withoutSection(sectionId: SectionId): Track = when (this) {
     is DrumTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
 }.copyTrack(arrangements = arrangements.filter { it.sectionId != sectionId })
 
+/** An empty track of [trackType] in the music [musicId], named [name]. */
+fun emptyTrackOf(trackType: TrackType, musicId: MusicId, name: String): Track {
+    val trackId = TrackId.random()
+    return when (trackType) {
+        TrackType.Chords -> ChordTrack(trackId, musicId, name, emptyList(), emptyList())
+        TrackType.Melody -> MelodyTrack(trackId, musicId, name, emptyList(), emptyList())
+        TrackType.Lyrics -> LyricTrack(trackId, musicId, name, emptyList(), emptyList())
+        TrackType.Drums -> DrumTrack(trackId, musicId, name, emptyList(), emptyList())
+    }
+}
+
 /** A section [sectionId] of this track's type, holding nothing. */
 fun Track.emptySectionOf(sectionId: SectionId): Section = when (this) {
     is ChordTrack -> Progression(sectionId, emptyList())

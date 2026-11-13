@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.music.Beats
 import streetlight.model.music.ChordTrack
 import streetlight.model.music.MelodyTrack
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.SectionId
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
@@ -54,13 +55,13 @@ class LaneEditor(
     private val layoutState = mix.playbackSecondsPerTickState.combine(editor.isLyricsShownState) { perTick, isLyricsShown ->
         perTick to isLyricsShown
     }
-    val lanesState = editor.storedState.combine(layoutState) { song, (perTick, isLyricsShown) ->
-        lanesOf(song, perTick, isLyricsShown)
+    val lanesState = editor.sheetState.combine(layoutState) { sheet, (perTick, isLyricsShown) ->
+        lanesOf(sheet, perTick, isLyricsShown)
     }
-    override val endSecondsState: Tap<Double?> = editor.storedState.combine(
+    override val endSecondsState: Tap<Double?> = editor.sheetState.combine(
         mix.playbackSecondsPerTickState,
-    ) { song, perTick ->
-        endSecondsOf(song, perTick).takeIf { it > 0 }
+    ) { sheet, perTick ->
+        endSecondsOf(sheet, perTick).takeIf { it > 0 }
     }
     override val windowState = state.tapOf { it.window }
     override val totalSecondsState: Tap<Double> = windowState.combine(endSecondsState) { window, endSeconds ->
@@ -122,8 +123,8 @@ class LaneEditor(
     fun dragNote(tick: Double, stepsUp: Double) {
         val drag = state.now.drag ?: return
         val track = readNotedTrack(drag.laneIndex) ?: return
-        val music = editor.storedState.now.music
-        val window = laneWindowOf(track, editor.storedState.now, editor.isLyricsShownState.now)
+        val music = editor.sheetState.now.music
+        val window = laneWindowOf(track, editor.sheetState.now, editor.isLyricsShownState.now)
         val moved = drag.source
             .snapTick(tick, track, music, state.now.timeStep)
             .snapPitch(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
@@ -141,7 +142,7 @@ class LaneEditor(
         val drag = state.now.drag ?: return
         state.update { it.copy(drag = null) }
         if (!isCommitted || drag.moved == drag.source) return
-        val key = editor.storedState.now.music.key
+        val key = editor.sheetState.now.music.key
         editor.trackState(drag.laneIndex).update { track ->
             track?.withMovedNote(drag.source, drag.moved, key)
         }
@@ -153,10 +154,10 @@ class LaneEditor(
 
     // the cursor sits across the window, so its onset is a share of that and not of a measure
     private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
-        val song = editor.storedState.now
+        val sheet = editor.sheetState.now
         val seconds = section.startSeconds + source.tick * mix.playbackSecondsPerTickState.now
-        val window = laneWindowOf(track, song, editor.isLyricsShownState.now)
-        return noteNotationOf(source, windowState.now.toRatio(seconds), window, song.music.key)
+        val window = laneWindowOf(track, sheet, editor.isLyricsShownState.now)
+        return noteNotationOf(source, windowState.now.toRatio(seconds), window, sheet.music.key)
     }
 
     /**
@@ -168,16 +169,16 @@ class LaneEditor(
         playJob = scope.launch {
             val endSeconds = endSecondsState.now ?: return@launch
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
-            val song = editor.storedState.now
-            val leadSeconds = leadSecondsOf(song, mix.playbackSecondsPerTickState.now)
+            val sheet = editor.sheetState.now
+            val leadSeconds = leadSecondsOf(sheet, mix.playbackSecondsPerTickState.now)
             val lanes = state.now
-            val playing = song.tracks.filter { track ->
+            val playing = sheet.tracks.filter { track ->
                 lanes.soloId?.let { it == track.trackId } ?: (track.trackId !in lanes.mutedTracks)
             }
             val takes = mix.readTakes()?.let { takes ->
                 SongTakes(takes.bpm, takes.takes.filterKeys { it.trackId !in lanes.tonedTracks })
             }
-            player.play(song, playing, fromSeconds = cursorStore.now - leadSeconds, takes = takes)
+            player.play(sheet, playing, fromSeconds = cursorStore.now - leadSeconds, takes = takes)
 
             while (true) {
                 awaitAnimationFrame()
@@ -250,15 +251,15 @@ data class LaneSection(
 )
 
 /**
- * The lanes of [song], with each track's sections laid along its arrangement as playback lays them. With
+ * The lanes of [sheet], with each track's sections laid along its arrangement as playback lays them. With
  * [isLyricsShown], each time a track plays a section carries the line of lyrics sung to it then.
  */
-private fun lanesOf(song: StoredSong, secondsPerTick: Double, isLyricsShown: Boolean): List<Lane> {
-    val tracks = song.tracks
-    val order = tracks.sectionOrderOf(song.music)
-    val leadSeconds = leadSecondsOf(song, secondsPerTick)
+private fun lanesOf(sheet: MusicSheet, secondsPerTick: Double, isLyricsShown: Boolean): List<Lane> {
+    val tracks = sheet.tracks
+    val order = tracks.sectionOrderOf(sheet.music)
+    val leadSeconds = leadSecondsOf(sheet, secondsPerTick)
     return tracks.map { track ->
-        val window = laneWindowOf(track, song, isLyricsShown)
+        val window = laneWindowOf(track, sheet, isLyricsShown)
         val plays = mutableMapOf<SectionId, Int>()
         var onset = 0
         val sections = order.flatMap { sectionId ->
@@ -267,8 +268,8 @@ private fun lanesOf(song: StoredSong, secondsPerTick: Double, isLyricsShown: Boo
             val laneSections = List(track.repeatsOf(sectionId, span)) { repeat ->
                 val play = plays[sectionId] ?: 0
                 val lyrics = if (window.lyricLines == 0) emptyList()
-                else drawnLyricLinesOf(tracks, track, sectionId, song.music, play)
-                val notation = sectionNotationOf(track, sectionId, song.music, window, lyrics) ?: return@List null
+                else drawnLyricLinesOf(tracks, track, sectionId, sheet.music, play)
+                val notation = sectionNotationOf(track, sectionId, sheet.music, window, lyrics) ?: return@List null
                 plays[sectionId] = play + 1
                 LaneSection(
                     notation = notation,
@@ -284,20 +285,20 @@ private fun lanesOf(song: StoredSong, secondsPerTick: Double, isLyricsShown: Boo
     }
 }
 
-/** The window of the lane of [track] in [song], with room for a line of lyrics when [isLyricsShown] and it has them. */
-private fun laneWindowOf(track: Track, song: StoredSong, isLyricsShown: Boolean): StaffWindow {
-    val lyricLines = if (isLyricsShown && song.tracks.lyricsOf(track) != null) 1 else 0
-    return staffWindowOf(track, song.music.key, lyricLines = lyricLines)
+/** The window of the lane of [track] in [sheet], with room for a line of lyrics when [isLyricsShown] and it has them. */
+private fun laneWindowOf(track: Track, sheet: MusicSheet, isLyricsShown: Boolean): StaffWindow {
+    val lyricLines = if (isLyricsShown && sheet.tracks.lyricsOf(track) != null) 1 else 0
+    return staffWindowOf(track, sheet.music.key, lyricLines = lyricLines)
 }
 
-private fun endSecondsOf(song: StoredSong, secondsPerTick: Double): Double {
-    val ticks = song.tracks.sectionOrderOf(song.music).sumOf { song.tracks.lengthOf(it)?.ticks ?: 0 }
-    return leadSecondsOf(song, secondsPerTick) + ticks * secondsPerTick
+private fun endSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {
+    val ticks = sheet.tracks.sectionOrderOf(sheet.music).sumOf { sheet.tracks.lengthOf(it)?.ticks ?: 0 }
+    return leadSecondsOf(sheet, secondsPerTick) + ticks * secondsPerTick
 }
 
-/** The length of the lead-in of [song]: its earliest pickup, and room before it for the head of the first note. */
-private fun leadSecondsOf(song: StoredSong, secondsPerTick: Double): Double {
-    val firstTick = songTonesOf(song.music, song.tracks, song.tracks).mapNotNull { it.firstTick }.minOrNull() ?: 0
+/** The length of the lead-in of [sheet]: its earliest pickup, and room before it for the head of the first note. */
+private fun leadSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {
+    val firstTick = songTonesOf(sheet.music, sheet.tracks, sheet.tracks).mapNotNull { it.firstTick }.minOrNull() ?: 0
     return -minOf(firstTick, 0) * secondsPerTick + LEAD_ROOM_SECONDS
 }
 

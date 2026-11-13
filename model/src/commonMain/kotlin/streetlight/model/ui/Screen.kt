@@ -33,6 +33,7 @@ import streetlight.model.data.SkillId
 import streetlight.model.data.SpaceType
 import streetlight.model.data.toRecordId
 import kotlin.uuid.Uuid
+import streetlight.model.music.MusicId
 import streetlight.model.music.SongId
 
 /**
@@ -226,16 +227,16 @@ object StudioRoute: StreetlightRoute {
     override val title get() = "Studio"
 }
 
-/** The music studio, showing the song of [songId] in its [tab], or the list of songs when `null`. */
+/** The music studio, showing the music [musicId] in its [tab], or the list of musics when `null`. */
 data class MusicStudioRoute(
-    val songId: SongId? = null,
+    val musicId: MusicId? = null,
     val tab: MusicStudioTab? = null,
 ): StreetlightRoute {
     companion object {
         val tabParam = ordinalParamOf<MusicStudioTab>("tab")
 
         fun of(parameters: Parameters, slug: Slug?) = MusicStudioRoute(
-            songId = slug?.let { Uuid.parseOrNull(it.value) }?.let { SongId(it) },
+            musicId = slug?.let { Uuid.parseOrNull(it.value) }?.let { MusicId(it) },
             tab = parameters.read(tabParam),
         )
     }
@@ -243,9 +244,9 @@ data class MusicStudioRoute(
     override val screen get() = Screen.MusicStudio
     override val title get() = "Songs"
 
-    // a change of song or tab is a change within the view
+    // a change of music or tab is a change within the view
     override val screenKey: Any get() = Screen.MusicStudio
-    override fun toRelativePath() = buildRelativePath(listOfNotNull(songId?.value?.toString())) {
+    override fun toRelativePath() = buildRelativePath(listOfNotNull(musicId?.toString())) {
         writeParam(tabParam, tab)
     }
 }

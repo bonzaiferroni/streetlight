@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import streetlight.model.music.MelodyTrack
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
 import streetlight.model.music.TrackId
@@ -33,9 +34,9 @@ class SectionEditor(
     val errorsState = field.errorsState
 
     /** The notation of the section, with the lyrics sung to it while they are shown, or `null` once it is gone. */
-    val notationState: Tap<SectionNotation?> = model.storedState.combine(model.isLyricsShownState) { song, isLyricsShown ->
-        val track = song.tracks.firstOrNull { it.trackId == trackId } ?: return@combine null
-        sectionNotationsOf(track, song.music, song.tracks, isLyricsShown).firstOrNull { it.sectionId == sectionId }
+    val notationState: Tap<SectionNotation?> = model.sheetState.combine(model.isLyricsShownState) { sheet, isLyricsShown ->
+        val track = sheet.tracks.firstOrNull { it.trackId == trackId } ?: return@combine null
+        sectionNotationsOf(track, sheet.music, sheet.tracks, isLyricsShown).firstOrNull { it.sectionId == sectionId }
     }
 
     init {
@@ -46,7 +47,7 @@ class SectionEditor(
         field.launchRewrites(scope, changes.distinctUntilChanged()) { writeNow() }
         // an edit from elsewhere replaces the notes under the text, which a later read would otherwise undo
         scope.launch {
-            model.storedState.flow.filter { isChangedElsewhere() }.collect { field.setText(writeNow()) }
+            model.sheetState.flow.filter { isChangedElsewhere() }.collect { field.setText(writeNow()) }
         }
         field.launchReads(scope) { text ->
             val section = readNow() ?: return@launchReads emptyList()

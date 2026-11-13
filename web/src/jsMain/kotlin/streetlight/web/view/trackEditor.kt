@@ -23,6 +23,7 @@ import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
+import streetlight.model.music.TrackType
 import streetlight.model.music.text.NotationError
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.menuActionsRow
@@ -53,24 +54,12 @@ context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPl
 fun ViewScope.trackEditor() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
-        actionMenu(listOf(
-            MenuAction("Chords") {
-                model.addTrack(ChordTrack(TrackId.random(), model.newTrackName("Chords"), emptyList(), emptyList()))
+        actionMenu(TrackType.entries.map { trackType ->
+            MenuAction(trackType.name) {
+                model.addTrack(trackType)
                 popover.close()
-            },
-            MenuAction("Melody") {
-                model.addTrack(MelodyTrack(TrackId.random(), model.newTrackName("Melody"), emptyList(), emptyList()))
-                popover.close()
-            },
-            MenuAction("Lyrics") {
-                model.addTrack(LyricTrack(TrackId.random(), model.newTrackName("Lyrics"), emptyList(), emptyList()))
-                popover.close()
-            },
-            MenuAction("Drums") {
-                model.addTrack(DrumTrack(TrackId.random(), model.newTrackName("Drums"), emptyList(), emptyList()))
-                popover.close()
-            },
-        ))
+            }
+        })
     }
     actionSection(
         label = "Tracks",
@@ -109,7 +98,7 @@ private fun ViewScope.trackRow(track: Track) {
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
             else model.readTrack(trackId)?.let { track ->
-                contentScope.launch { player.play(model.storedState.now, listOf(track), takes = mix.readTakes()) }
+                contentScope.launch { player.play(model.sheetState.now, listOf(track), takes = mix.readTakes()) }
             }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(

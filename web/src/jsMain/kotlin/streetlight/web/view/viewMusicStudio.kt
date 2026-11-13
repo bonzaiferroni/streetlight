@@ -17,7 +17,7 @@ import koala.model.MenuAction
 import koala.model.NullContent
 import koala.modifier.*
 import koala.page.Id
-import streetlight.model.music.SongId
+import streetlight.model.music.MusicId
 import streetlight.model.ui.MusicStudioRoute
 import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.actionMenu
@@ -31,7 +31,6 @@ import streetlight.web.model.LaneEditor
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
-import streetlight.web.model.exportMarkdown
 import streetlight.web.model.exportMidi
 import streetlight.web.model.exportOgg
 import streetlight.web.model.MixEditor
@@ -48,33 +47,32 @@ import streetlight.web.model.toaster
 import streetlight.web.utility.pickFile
 import web.blob.text
 
-/** Renders the music studio: the song the route names, or the stored songs when it names none that is stored. */
+/** Renders the music studio: the music the route names, or the kept musics when it names none that is kept. */
 context(route: MusicStudioRoute)
 fun ViewScope.viewMusicStudio() {
-    val model = app.getMusicStudio(contentScope, route.songId)
+    val model = app.getMusicStudio(contentScope, route.musicId)
     val player = app.get<TrackPlayer>()
     // the studio's colors carry meaning, which the page's lights would tint
     dimLights()
     onDispose { applyTheme(null) }
-    // a change of song keeps the view, so the routes that follow reach it here
+    // a change of music keeps the view, so the routes that follow reach it here
     launchEffect("viewMusicStudio > route") {
         portal.routeFlowOf<MusicStudioRoute>().collect { next ->
-            model.setSongId(next.songId)
+            model.setMusicId(next.musicId)
             document.setTitle(next)
         }
     }
     context(model, player) {
         mainBody("Music", "Studio", "viewMusicStudio.kt", MusicStudioRoute()) {
-            flowBlock(model.songIdState, modify(Transitioner)) { songId ->
-                val editor = songId?.let { model.editorOf(contentScope, it) }
-                if (editor == null) songList() else songFocus(editor)
+            flowBlock(model.sheetState, modify(Transitioner)) { sheet ->
+                if (sheet == null) musicList() else musicFocus(model.editorOf(contentScope, sheet))
             }
         }
     }
 }
 
-/** The view transition name of the title of the song of [songId], shared by its row and its heading. */
-private fun songTitleTransition(songId: SongId) = transition("song-${songId.value}")
+/** The view transition name of the name of the music [musicId], shared by its row and its heading. */
+private fun musicNameTransition(musicId: MusicId) = transition("music-$musicId")
 
 fun RouteScope.viewMusicStudioRoute() {
     routeBlock<MusicStudioRoute, NullContent> {
@@ -83,21 +81,21 @@ fun RouteScope.viewMusicStudioRoute() {
 }
 
 /**
- * Renders the song of [editor] in a section headed by its title, with a way back to the songs and a gear that opens
+ * Renders the music of [editor] in a section headed by its name, with a way back to the musics and a gear that opens
  * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
 context(model: MusicStudio, player: TrackPlayer)
-private fun ViewScope.songFocus(editor: MusicEditor) {
+private fun ViewScope.musicFocus(editor: MusicEditor) {
     val mix = model.mixEditorOf(contentScope, editor)
     val lanes = LaneEditor(contentScope, editor, mix, player, app.get())
-    // playback left running when the song closes would keep sounding
+    // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
     songSettingsPopover(settingsId, editor, mix)
     topSection(
-        label = editor.song.title,
+        label = editor.musicState.now.name,
         onBack = { portal.go(MusicStudioRoute()) },
-        headingMod = songTitleTransition(editor.song.songId),
+        headingMod = musicNameTransition(editor.musicState.now.musicId),
         icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
     ) {
         transTabs(paramKey = MusicStudioRoute.tabParam.key) {
@@ -116,7 +114,7 @@ private fun ViewScope.songFocus(editor: MusicEditor) {
 
 /**
  * A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show, above
- * the formats the song of [editor] exports to, with the takes of [mix].
+ * the formats the music of [editor] exports to, with the takes of [mix].
  */
 context(model: MusicStudio, player: TrackPlayer)
 private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mix: MixEditor) {
@@ -128,17 +126,17 @@ private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mix: MixE
             filigree { heading6("export") }
             actionMenu(listOf(
                 MenuAction("Markdown") {
-                    exportMarkdown(editor.storedState.now, model.notationStyleState.now)
                     popover.close()
+                    contentScope.launch { model.exportMarkdown(editor.sheetState.now) }
                 },
                 MenuAction("MIDI") {
-                    exportMidi(editor.storedState.now)
+                    exportMidi(editor.sheetState.now)
                     popover.close()
                 },
                 MenuAction("Ogg") {
                     popover.close()
                     contentScope.launch {
-                        exportOgg(player, editor.storedState.now, mix.readTakes()).toDataOr(toaster) { return@launch }
+                        exportOgg(player, editor.sheetState.now, mix.readTakes()).toDataOr(toaster) { return@launch }
                     }
                 },
             ))
@@ -147,7 +145,7 @@ private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mix: MixE
 }
 
 context(model: MusicStudio)
-private fun ViewScope.songList() {
+private fun ViewScope.musicList() {
     val newId = Id(Uuid.random().toString())
     newSongPopover(newId)
     actionSection(
@@ -157,28 +155,28 @@ private fun ViewScope.songList() {
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
-        itemsBlock(model.songList, Transitioner, gapRems = null) { song ->
-            val songId = song.songId
+        itemsBlock(model.songMusicsState, Transitioner, gapRems = null) { songMusic ->
+            val musicId = songMusic.music.musicId
             actionRow(
-                label = song.title,
+                label = songMusic.music.name,
                 actions = listOf(
-                    MenuAction("Edit") { portal.go(MusicStudioRoute(songId)) },
-                    MenuAction("Remove") { model.remove(songId) },
+                    MenuAction("Edit") { portal.go(MusicStudioRoute(musicId)) },
+                    MenuAction("Remove") { model.remove(songMusic) },
                 ),
-                labelMod = songTitleTransition(songId),
+                labelMod = musicNameTransition(musicId),
             )
         }
         textBlock("No songs yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-            .flowModifier(model.songList.tapOf { it.isNotEmpty() }, DisplayNone, contentScope)
+            .flowModifier(model.songMusicsState.tapOf { it.isNotEmpty() }, DisplayNone, contentScope)
     }
 }
 
-/** Asks the viewer for a markdown file, stores the song it holds and opens it, or toasts its problem. */
+/** Asks the viewer for a markdown file, stores the song it holds and opens its music, or toasts its problem. */
 context(model: MusicStudio)
 private fun ViewScope.importSong() = pickFile(MARKDOWN_ACCEPT) { file ->
     contentScope.launch {
-        val songId = model.importSong(file.text(), file.name).toDataOr(toaster) { return@launch }
-        portal.go(MusicStudioRoute(songId))
+        val musicId = model.importSong(file.text(), file.name).toDataOr(toaster) { return@launch }
+        portal.go(MusicStudioRoute(musicId))
     }
 }
 
@@ -189,10 +187,9 @@ private fun ViewScope.newSongPopover(id: Id) {
         val titleState = storeOf("")
         val save = save@{
             val title = titleState.now.takeIf { it.isNotBlank() }?.trim() ?: return@save
-            val songId = model.create(title)
             titleState.set("")
             popover.close()
-            portal.go(MusicStudioRoute(songId))
+            contentScope.launch { portal.go(MusicStudioRoute(model.create(title))) }
         }
         row(modify(AlignItemsCenter, Padding(2))) {
             textField(titleState, "title", Flex1, onEnterSubmit = save)

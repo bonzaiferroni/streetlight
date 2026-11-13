@@ -14,7 +14,7 @@ Notation is the written representation of music. Its forms live in the subpackag
 
 ## Records
 
-A `Song` has many `Music`, each one way of playing and understanding it. A `Track` belongs to one music by its `musicId`. Songs, musics, tracks, mixes, section clips, clips and studies are each kept as separate records, so a reference between them is an id. `MusicSheet` joins a music to its song and tracks where the whole is read, written or exported.
+A `Song` has many `Music`, each one way of playing and understanding it, under a name of its own that starts as the song's title. A `Track` belongs to one music by its `musicId`. Songs, musics, tracks, mixes, section clips, clips and studies are each kept as separate records, so a reference between them is an id. `MusicSheet` joins a music to its tracks where the whole is edited, played or exported, and `SongMusic` joins it to its song where musics are listed.
 
 A `SectionId` is not a record. A reference to a section, held in a track, a mix or a study, outlives the section it names unless the edit that removes the section clears it, so a reader of one skips a section the music no longer holds.
 

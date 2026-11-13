@@ -27,7 +27,6 @@ import streetlight.web.model.TONIC_NAMES
 import streetlight.web.model.SectionClipEditor
 import streetlight.web.model.SectionMic
 import streetlight.web.model.SectionMicPhase
-import streetlight.web.model.getSectionClipEditor
 import streetlight.web.model.getSectionMic
 import kotlin.uuid.Uuid
 
@@ -96,7 +95,7 @@ private fun ViewScope.hiddenSectionsPopover(id: Id) {
 context(model: MixEditor)
 private fun ViewScope.sectionCard(mixSection: MixSection) {
     val trackSectionId = mixSection.trackSectionId
-    val clipEditor = app.getSectionClipEditor(contentScope, model, trackSectionId)
+    val clipEditor = SectionClipEditor(model, trackSectionId)
     val clipsId = Id(Uuid.random().toString())
     val trackType = model.musicEditor.readTrack(trackSectionId.trackId)?.trackType
     clipsPopover(clipsId, clipEditor)

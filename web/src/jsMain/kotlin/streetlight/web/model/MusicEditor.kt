@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package streetlight.web.model
 
 import kampfire.model.MutableTap
@@ -6,21 +8,27 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import streetlight.model.music.Arrangement
 import streetlight.model.music.Beats
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSection
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Phrase
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
+import streetlight.model.music.TrackType
 import streetlight.model.music.copyTrack
 import streetlight.model.music.emptySectionOf
+import streetlight.model.music.emptyTrackOf
 import streetlight.model.music.freeTrackNameOf
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
@@ -28,29 +36,29 @@ import streetlight.model.music.sectionsOf
 import streetlight.model.music.withSection
 import streetlight.model.music.withoutSection
 import streetlight.model.music.text.NotationStyle
+import streetlight.model.studio.MusicDao
 
 /**
- * The state behind the editor of the music and tracks of [stored], written in the style at [notationStyleState], a
- * melody's notation showing its lyrics while [isLyricsShownState].
+ * The state behind the editor of the music and tracks of [initialSheet], saved to [musicDao] once edits pause, written
+ * in the style at [notationStyleState], a melody's notation showing its lyrics while [isLyricsShownState].
  */
 class MusicEditor(
-    private val scope: CoroutineScope,
-    stored: StoredSong,
+    scope: CoroutineScope,
+    initialSheet: MusicSheet,
+    private val musicDao: MusicDao,
     val notationStyleState: Tap<NotationStyle>,
     val isLyricsShownState: MutableTap<Boolean>,
 ) {
-    private val state = storeOf(MusicEditorState(stored.music, stored.tracks))
-    val song = stored.song
+    private val state = storeOf(MusicEditorState(initialSheet.music, initialSheet.tracks))
     val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }
     val tracksState = state.mutableTapOf({ it.tracks }) { copy(tracks = it) }
 
-    /** The song as it is kept, following each change to its music and tracks. */
-    val storedState = state.tapOf { StoredSong(song, it.music, it.tracks) }
+    /** The music with its tracks, following each change to either. */
+    val sheetState: Tap<MusicSheet> = state.tapOf { MusicSheet(it.music, it.tracks) }
 
-    private val trackChangeFlow = MutableSharedFlow<TrackChange>(extraBufferCapacity = TRACK_CHANGE_BUFFER)
-
-    /** Each track removed, as it happens. */
-    val trackChanges: SharedFlow<TrackChange> = trackChangeFlow
+    init {
+        scope.launch { saveSheetChanges() }
+    }
 
     /** The warnings on the track [trackId]: each section it defines whose repeats fall short of another track's. */
     fun sectionWarningsState(trackId: TrackId) = state.tapOf { editor ->
@@ -99,11 +107,9 @@ class MusicEditor(
     /** Returns from the track in focus to the overview. */
     fun clearFocus() = state.update { it.copy(focus = null) }
 
-    /** A name for a new track that no track of the song holds: [base], or [base] with the first number that frees it. */
-    fun newTrackName(base: String) = state.now.tracks.newTrackName(base)
-
-    /** Adds [track] to the song and brings its editor into focus. */
-    fun addTrack(track: Track) = state.update { editor ->
+    /** Adds an empty track of [trackType], named for its type under a name no track holds, and brings it into focus. */
+    fun addTrack(trackType: TrackType) = state.update { editor ->
+        val track = emptyTrackOf(trackType, editor.music.musicId, editor.tracks.newTrackName(trackType.name))
         editor.copy(tracks = editor.tracks + track, focus = track.trackId)
     }
 
@@ -118,16 +124,12 @@ class MusicEditor(
         editor.copy(tracks = editor.tracks.map { if (it.trackId == trackId) track.copyTrack(name = freeName) else it })
     }
 
-    /** Removes the track [trackId]. */
-    fun removeTrack(trackId: TrackId) {
-        if (readTrack(trackId) == null) return
-        state.update { editor ->
-            editor.copy(
-                tracks = editor.tracks.filter { it.trackId != trackId },
-                focus = editor.focus?.takeIf { it != trackId },
-            )
-        }
-        trackChangeFlow.tryEmit(TrackChange.Removed(trackId))
+    /** Removes the track [trackId], and with the save that follows, its clips bound in mixes and its studies. */
+    fun removeTrack(trackId: TrackId) = state.update { editor ->
+        editor.copy(
+            tracks = editor.tracks.filter { it.trackId != trackId },
+            focus = editor.focus?.takeIf { it != trackId },
+        )
     }
 
     /** Sets the capo of the track [trackId], `null` for none. */
@@ -248,6 +250,21 @@ class MusicEditor(
     private fun updateTrack(trackId: TrackId, transform: (Track) -> Track) = state.update { editor ->
         editor.copy(tracks = editor.tracks.map { if (it.trackId == trackId) transform(it) else it })
     }
+
+    // saves each change once edits pause, and the last one unsaved as the editor closes
+    private suspend fun saveSheetChanges() {
+        var saved = sheetState.now
+        try {
+            sheetState.flow.debounce(SAVE_DELAY_MILLIS).collect { sheet ->
+                if (sheet == saved) return@collect
+                musicDao.saveMusicSheet(sheet)
+                saved = sheet
+            }
+        } finally {
+            val sheet = sheetState.now
+            if (sheet != saved) withContext(NonCancellable) { musicDao.saveMusicSheet(sheet) }
+        }
+    }
 }
 
 /** The arrangement of [section] as it is shown: the [sections] it plays in order. */
@@ -271,14 +288,7 @@ data class MusicEditorState(
     val focus: TrackId? = null,
 )
 
-/** A change to the tracks that what is built on them follows. */
-sealed interface TrackChange {
-    /** The track [trackId] is gone. */
-    data class Removed(val trackId: TrackId) : TrackChange
-}
-
-// the changes one edit can make, for a collector that falls behind
-private const val TRACK_CHANGE_BUFFER = 64
+private const val SAVE_DELAY_MILLIS = 1_000L
 
 private fun Int.toBeatsText() = (toDouble() / Beats.TICKS_PER_BEAT).let {
     if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()

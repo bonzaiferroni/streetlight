@@ -6,8 +6,9 @@ import kotlin.uuid.Uuid
 import streetlight.model.data.RecordId
 
 /**
- * A musical understanding of a song: its key, time and tempo, the [sections] its tracks hold content for, and the
- * [arrangement] of them every track follows.
+ * A musical understanding of the song [songId], shown under its [name]: its key, time and tempo, the [sections] its
+ * tracks hold content for, and the [arrangement] of them every track follows. A song has many, each one way of playing
+ * it.
  *
  * The key and every track are written as played, and sound [capo] semitones higher, as chord shapes played behind a
  * guitar capo. A track's own [Track.capo] adds to it. The [bpm] counts the [TimeSignature.pulse].
@@ -16,6 +17,7 @@ import streetlight.model.data.RecordId
 data class Music(
     val musicId: MusicId,
     val songId: SongId,
+    val name: String,
     val key: Key,
     val time: TimeSignature,
     val bpm: Int = 90,

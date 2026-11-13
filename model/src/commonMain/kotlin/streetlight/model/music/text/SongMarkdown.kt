@@ -23,10 +23,11 @@ object SongMarkdown {
     /**
      * Reads [text] onto [song] and [music], or gives the problem of a track heading that names no known type.
      *
-     * The notation of the music and each track is read as far as it can be, without its problems. Each track is given
-     * a new id, and one named as an earlier one takes the name with the first free number after it, as `Melody 2`.
+     * The notation of the music and each track is read as far as it can be, without its problems. The music is named
+     * for the song's title. Each track is given a new id, and one named as an earlier one takes the name with the first
+     * free number after it, as `Melody 2`.
      */
-    fun read(text: String, song: Song, music: Music, style: NotationStyle): Outcome<MusicSheet> {
+    fun read(text: String, song: Song, music: Music, style: NotationStyle): Outcome<SongMarkdownRead> {
         val lines = text.lines()
         val titleIndex = lines.indexOfFirst { it.startsWith(TITLE_PREFIX) }
         val trackIndexes = lines.indices.filter { lines[it].startsWith(TRACK_PREFIX) }
@@ -62,7 +63,8 @@ object SongMarkdown {
             }.value
         }
 
-        return Ok(MusicSheet(readSong, readMusic.copy(sections = names.sections), tracks))
+        val sheet = MusicSheet(readMusic.copy(name = readSong.title, sections = names.sections), tracks)
+        return Ok(SongMarkdownRead(readSong, sheet))
     }
 
     /** Writes [song] with its [music] and [tracks], chords spelled in [style]. */
@@ -83,6 +85,12 @@ object SongMarkdown {
         }
     }
 }
+
+/** A song read from markdown: its [song], and the [sheet] of its music. */
+data class SongMarkdownRead(
+    val song: Song,
+    val sheet: MusicSheet,
+)
 
 /** Problems of reading a song from markdown. */
 object SongMarkdownProblem {

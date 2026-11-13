@@ -89,9 +89,8 @@ class StudioIdbDbTest {
     @Test
     fun `a saved music sheet reads back whole from a newly opened database`() = runStudioTest {
         val name = testDbName()
-        val song = Song(SongId.random(), "Title", "Artist")
-        val music = musicOf(song.songId)
-        val sheet = MusicSheet(song, music, listOf(trackOf(music.musicId)))
+        val music = musicOf(SongId.random())
+        val sheet = MusicSheet(music, listOf(trackOf(music.musicId)))
 
         StudioIdbDb(name).musicDao().saveMusicSheet(sheet)
 
@@ -127,7 +126,7 @@ private suspend fun StudioDb.saveRecords(): StudioRecords {
 }
 
 private fun musicOf(songId: SongId) =
-    Music(MusicId.random(), songId, Key(Chroma.of(0), Mode.Major), TimeSignature(4, 4))
+    Music(MusicId.random(), songId, "Name", Key(Chroma.of(0), Mode.Major), TimeSignature(4, 4))
 
 private fun trackOf(musicId: MusicId) = ChordTrack(TrackId.random(), musicId, "Chords", emptyList(), emptyList())
 
