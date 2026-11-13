@@ -7,9 +7,9 @@ import streetlight.model.data.RecordId
 import streetlight.model.data.StarId
 
 /**
- * A way of playing the music [musicId] at [bpm] in [soundingKey], with the [clips] bound to its sections. It is seeded
- * from the music and keeps its own tempo and key after, so its clips still fit when the music drifts. The [hidden]
- * sections are left out of its overview. Owned by [starId], or by the device when `null`.
+ * A way of playing the music [musicId] at [bpm] in [soundingKey], with clips bound to its sections by [SectionClip]. It
+ * is seeded from the music and keeps its own tempo and key after, so its clips still fit when the music drifts. The
+ * [hidden] sections are left out of its overview. Owned by [starId], or by the device when `null`.
  */
 @Serializable
 data class Mix(
@@ -19,8 +19,15 @@ data class Mix(
     val name: String,
     val bpm: Int,
     val soundingKey: Key,
-    val clips: List<SectionClipId> = emptyList(),
     val hidden: List<TrackSectionId> = emptyList(),
+)
+
+/** Binds the clip [clipId] to the track's section [trackSectionId] in the mix [mixId], one clip to each. */
+@Serializable
+data class SectionClip(
+    val mixId: MixId,
+    val trackSectionId: TrackSectionId,
+    val clipId: ClipId,
 )
 
 @JvmInline @Serializable

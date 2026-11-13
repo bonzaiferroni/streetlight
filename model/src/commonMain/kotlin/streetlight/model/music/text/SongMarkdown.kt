@@ -8,6 +8,7 @@ import streetlight.model.music.DrumTrack
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Song
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
@@ -25,7 +26,7 @@ object SongMarkdown {
      * The notation of the music and each track is read as far as it can be, without its problems. Each track is given
      * a new id, and one named as an earlier one takes the name with the first free number after it, as `Melody 2`.
      */
-    fun read(text: String, song: Song, music: Music, style: NotationStyle): Outcome<SongMarkdownRead> {
+    fun read(text: String, song: Song, music: Music, style: NotationStyle): Outcome<MusicSheet> {
         val lines = text.lines()
         val titleIndex = lines.indexOfFirst { it.startsWith(TITLE_PREFIX) }
         val trackIndexes = lines.indices.filter { lines[it].startsWith(TRACK_PREFIX) }
@@ -54,14 +55,14 @@ object SongMarkdown {
             val end = trackIndexes.getOrNull(index + 1) ?: lines.size
             val trackText = lines.subList(headingIndex + 1, end).joinToString("\n")
             when (type) {
-                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, trackName, trackText, readMusic.time, names)
-                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, trackName, trackText, readMusic.time, names)
-                TrackType.Lyrics -> LyricParser.read(trackId, trackName, trackText, readMusic.time, names)
-                TrackType.Drums -> DrumParser.read(trackId, trackName, trackText, readMusic.time, names)
+                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
+                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
+                TrackType.Lyrics -> LyricParser.read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
+                TrackType.Drums -> DrumParser.read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
             }.value
         }
 
-        return Ok(SongMarkdownRead(readSong, readMusic.copy(sections = names.sections), tracks))
+        return Ok(MusicSheet(readSong, readMusic.copy(sections = names.sections), tracks))
     }
 
     /** Writes [song] with its [music] and [tracks], chords spelled in [style]. */
@@ -82,13 +83,6 @@ object SongMarkdown {
         }
     }
 }
-
-/** A song read from markdown: its [song], [music] and [tracks]. */
-data class SongMarkdownRead(
-    val song: Song,
-    val music: Music,
-    val tracks: List<Track>,
-)
 
 /** Problems of reading a song from markdown. */
 object SongMarkdownProblem {

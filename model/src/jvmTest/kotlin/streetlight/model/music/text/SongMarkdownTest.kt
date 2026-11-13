@@ -6,6 +6,7 @@ import streetlight.model.music.Key
 import streetlight.model.music.Mode
 import streetlight.model.music.Music
 import streetlight.model.music.MusicId
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.TimeSignature
@@ -44,12 +45,12 @@ class SongMarkdownTest {
         assertEquals(text.trimEnd(), written.trimEnd())
     }
 
-    private fun readSong(fileName: String): SongMarkdownRead {
+    private fun readSong(fileName: String): MusicSheet {
         val songId = SongId.random()
         val song = Song(songId, "", "")
         val music = Music(MusicId.random(), songId, Key(Chroma.of(0), Mode.Major), TimeSignature(4, 4))
         val outcome = SongMarkdown.read(File(SONGS_PATH, fileName).readText(), song, music, NotationStyle.Letters)
-        return assertIs<Ok<SongMarkdownRead>>(outcome).data
+        return assertIs<Ok<MusicSheet>>(outcome).data
     }
 }
 

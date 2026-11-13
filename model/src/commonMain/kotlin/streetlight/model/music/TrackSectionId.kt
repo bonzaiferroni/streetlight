@@ -16,10 +16,3 @@ data class TrackSectionId(
         }
     }
 }
-
-/** Binds the clip [clipId] to the track's section [trackSectionId]. */
-@Serializable
-data class SectionClipId(
-    val trackSectionId: TrackSectionId,
-    val clipId: ClipId,
-)

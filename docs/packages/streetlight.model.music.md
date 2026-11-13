@@ -12,11 +12,17 @@ Notation is the written representation of music. Its forms live in the subpackag
 |---|---|
 | `streetlight.model.data` | `RecordId` |
 
+## Records
+
+A `Song` has many `Music`, each one way of playing and understanding it. A `Track` belongs to one music by its `musicId`. Songs, musics, tracks, mixes, section clips, clips and studies are each kept as separate records, so a reference between them is an id. `MusicSheet` joins a music to its song and tracks where the whole is read, written or exported.
+
+A `SectionId` is not a record. A reference to a section, held in a track, a mix or a study, outlives the section it names unless the edit that removes the section clears it, so a reader of one skips a section the music no longer holds.
+
 ## Tracks
 
 `Music.sections` holds the sections of a music, each a `SectionId` and a name no other section of the music holds. A section is identified by its id everywhere in the model, so a rename changes one name and every reference follows. Each track holds what it plays for a section, and two tracks play the same section by holding the same id.
 
-A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its song holds, so a rename changes one name and every reference follows. What a track plays for a section is identified by the two ids together, as a `TrackSectionId`.
+A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its music holds, so a rename changes one name and every reference follows. What a track plays for a section is identified by the two ids together, as a `TrackSectionId`.
 
 `TrackType` mirrors the sealed types of `Track`, one entry each, and holds what stands for the type wherever it is shown: its icon and its `Palette` color. A track gives its entry as `trackType`, and a song's markdown names a track's type by the entry's name.
 
@@ -40,6 +46,6 @@ Lyrics are tied to a melody by timing alone, with no reference between the track
 
 The domain model holds the composition alone. A performance of it, such as a `Clip` recorded of a track's section, is its own type, kept beside a song and never on a `Track`, so it stays out of song files.
 
-A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClipId` binds one to a track's section by its `TrackSectionId`, so a clip whose properties line up can be placed elsewhere.
+A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClip` binds one to a track's section of a mix by its `TrackSectionId`, one clip to each section of the mix, so a clip whose properties line up can be placed elsewhere.
 
-A `Mix` holds those bindings for one music, and the sections it hides from its overview, each a `TrackSectionId`, since tracks share a section's id. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.
+A `Mix` is one way of playing a music, holding the sections it hides from its overview, each a `TrackSectionId`, since tracks share a section's id. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.

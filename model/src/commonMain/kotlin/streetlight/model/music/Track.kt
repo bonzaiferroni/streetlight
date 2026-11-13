@@ -8,8 +8,8 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 /**
- * A part played by a voice or instrument, known by its [trackId] and shown under its [name], unique within its song:
- * its [sections], and its [arrangements] of sections into larger ones.
+ * A part of the music [musicId] played by a voice or instrument, known by its [trackId] and shown under its [name],
+ * unique within its music: its [sections], and its [arrangements] of sections into larger ones.
  *
  * The track sounds [capo] semitones higher than written, or lower for a negative one, on top of the [Music.capo] of
  * its song.
@@ -17,6 +17,7 @@ import kotlin.uuid.Uuid
 @Serializable
 sealed interface Track {
     val trackId: TrackId
+    val musicId: MusicId
     val name: String
     val trackType: TrackType
     val sections: List<Section>
@@ -71,6 +72,7 @@ data class Arrangement(
 @Serializable
 data class ChordTrack(
     override val trackId: TrackId,
+    override val musicId: MusicId,
     override val name: String,
     override val sections: List<Progression>,
     override val arrangements: List<Arrangement>,
@@ -102,6 +104,7 @@ data class ChordNote(
 @Serializable
 data class MelodyTrack(
     override val trackId: TrackId,
+    override val musicId: MusicId,
     override val name: String,
     override val sections: List<Phrase>,
     override val arrangements: List<Arrangement>,
@@ -151,6 +154,7 @@ private const val MIDDLE_C_MIDI = 60
 @Serializable
 data class LyricTrack(
     override val trackId: TrackId,
+    override val musicId: MusicId,
     override val name: String,
     override val sections: List<Stanza>,
     override val arrangements: List<Arrangement>,
@@ -182,6 +186,7 @@ data class LyricNote(
 @Serializable
 data class DrumTrack(
     override val trackId: TrackId,
+    override val musicId: MusicId,
     override val name: String,
     override val sections: List<Groove>,
     override val arrangements: List<Arrangement>,

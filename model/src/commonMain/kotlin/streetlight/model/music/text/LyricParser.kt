@@ -7,6 +7,7 @@ import streetlight.model.music.Phrase
 import streetlight.model.music.SectionId
 import streetlight.model.music.Stanza
 import streetlight.model.music.TimeSignature
+import streetlight.model.music.MusicId
 import streetlight.model.music.TrackId
 
 /**
@@ -19,14 +20,15 @@ import streetlight.model.music.TrackId
  */
 object LyricParser {
     /**
-     * Reads the lyric track [trackId] named [name] from [text], with measures checked against [time] and sections found
-     * in [names].
+     * Reads the lyric track [trackId] of the music [musicId], named [name], from [text], with measures checked against
+     * [time] and sections found in [names].
      *
      * Each stanza that shares a section with [melody] is checked against its phrase: every syllable starts on a note
      * of the melody, and the stanza ends with it or before.
      */
     fun read(
         trackId: TrackId,
+        musicId: MusicId,
         name: String,
         text: String,
         time: TimeSignature,
@@ -38,7 +40,7 @@ object LyricParser {
         val stanzas = trackText.sections.map { section ->
             readSection(section, time, melody?.sections?.firstOrNull { it.sectionId == section.sectionId }, errors)
         }
-        return NotationRead(LyricTrack(trackId, name, stanzas, trackText.arrangements, trackText.capo), errors)
+        return NotationRead(LyricTrack(trackId, musicId, name, stanzas, trackText.arrangements, trackText.capo), errors)
     }
 
     /**
