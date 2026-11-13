@@ -23,5 +23,6 @@ data class Clip(
 
 @JvmInline @Serializable
 value class ClipId(val value: Uuid) {
+    override fun toString() = value.toString()
     companion object { fun random() = ClipId(Uuid.random()) }
 }

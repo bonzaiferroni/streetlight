@@ -42,6 +42,7 @@ const val UNNAMED_SECTION = "?"
 
 @JvmInline @Serializable
 value class MusicId(override val value: Uuid): RecordId {
+    override fun toString() = value.toString()
     companion object { fun random() = MusicId(Uuid.random()) }
 }
 

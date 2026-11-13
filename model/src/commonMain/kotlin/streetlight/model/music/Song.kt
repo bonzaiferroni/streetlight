@@ -14,5 +14,6 @@ data class Song(
 
 @JvmInline @Serializable
 value class SongId(override val value: Uuid): RecordId {
+    override fun toString() = value.toString()
     companion object { fun random() = SongId(Uuid.random()) }
 }

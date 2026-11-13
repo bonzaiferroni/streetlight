@@ -22,7 +22,7 @@ A view model with per-view state is not registered in the module. It is built by
 
 `webModule` joins the main bundle, and so does everything it constructs. A service or factory used only by a lazily loaded section lives in that section's chunk: its services in a `fooModule` its portal loads into Koin on first use, as `studioModule`, and its factories in a file of their own, as `dashFactories.kt`.
 
-What a user keeps on the device lives in the one database `localDbOf` opens, a store per model. Audio stays on the device whether or not the user has an account; the server only knows where a shared clip lives.
+The studio's records live in `StudioIdbDb`, the `StudioDb` over IndexedDB, with a table per record and a `FooIdbDao` over each. Audio stays on the device whether or not the user has an account; the server only knows where a shared clip lives.
 
 A take's downbeat sits `leadSeconds` into its recording: the time from the capture's start to the scheduled downbeat, plus the round-trip latency, since the player hears the count late and their sound arrives late again. Playback then needs no compensation, as clips and generated tones leave by the same path. A take plays in place of its section's tones while its tempo, time, key and bars still fit the mix, and the tones return once they don't.
 
@@ -206,7 +206,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`LaneEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
 | [`NoteDrag`](../../web/src/jsMain/kotlin/streetlight/web/model/NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](../../web/src/jsMain/kotlin/streetlight/web/model/NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
-| [`LocalMixDb`](../../web/src/jsMain/kotlin/streetlight/web/model/LocalMixDb.kt) | The `MixDb` kept on the device |
+| [`StudioIdbDb`](../../web/src/jsMain/kotlin/streetlight/web/model/StudioIdbDb.kt) | The `StudioDb` kept in the browser, and its DAOs |
 | [`SectionClipEditor`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionClipEditor.kt) | Chooses the clip a mix binds to a track's section among those that fit it |
 | [`SectionMic`](../../web/src/jsMain/kotlin/streetlight/web/model/SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |
 | [`SongDb`](../../web/src/jsMain/kotlin/streetlight/web/model/SongDb.kt) | The songs kept in local storage |

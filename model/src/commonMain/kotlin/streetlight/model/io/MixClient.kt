@@ -12,9 +12,9 @@ import streetlight.model.music.MixId
 import streetlight.model.music.MusicId
 
 /** The calls of `Api.Mixes`, the mixes of the signed-in user. */
-class MixClient(private val transport: ApiTransport): MixDb {
-    override suspend fun readMixes(musicId: MusicId): Outcome<List<Mix>> = transport.getApi(Api.Mixes.ByMusic, musicId)
-    override suspend fun saveMix(mix: Mix): Outcome<Boolean> = transport.postApi(Api.Mixes.Save, mix)
-    override suspend fun removeMix(mixId: MixId): Outcome<Boolean> =
+class MixClient(private val transport: ApiTransport) {
+    suspend fun readMixes(musicId: MusicId): Outcome<List<Mix>> = transport.getApi(Api.Mixes.ByMusic, musicId)
+    suspend fun saveMix(mix: Mix): Outcome<Boolean> = transport.postApi(Api.Mixes.Save, mix)
+    suspend fun removeMix(mixId: MixId): Outcome<Boolean> =
         transport.send(ApiCall(Api.Mixes.Delete, serializer(), sent = mixId, sentSerializer = serializer()))
 }

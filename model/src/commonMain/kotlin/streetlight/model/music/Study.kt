@@ -12,4 +12,6 @@ data class Study(
 )
 
 @JvmInline @Serializable
-value class StudyId(val value: Uuid)
+value class StudyId(val value: Uuid) {
+    override fun toString() = value.toString()
+}

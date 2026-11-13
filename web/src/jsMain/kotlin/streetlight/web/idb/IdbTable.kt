@@ -2,6 +2,7 @@ package streetlight.web.idb
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
@@ -26,6 +27,12 @@ class IdbTable<T : Any> internal constructor(
     val rowsFlow: Flow<List<T>> = flow {
         db.open()
         emitAll(state.filterNotNull().map { it.values.toList() })
+    }
+
+    /** The row under [key], or `null` when there is none, emitted once [db] opens and again each time it changes. */
+    fun flowRow(key: String): Flow<T?> = flow {
+        db.open()
+        emitAll(state.filterNotNull().map { it[key] }.distinctUntilChanged())
     }
 
     /** Each row as it stands. */

@@ -34,7 +34,7 @@ A foreign key acts only on removal, which removes each row referencing the remov
 
 ## Rows
 
-Every row of every table is held in memory once the database opens, so a query filters `rowsFlow` rather than reaching the store. A query passes its result through `distinctUntilChanged()`, since a table emits on any change to it. `rowsFlow` emits nothing before the rows are loaded, so an empty list means an empty table.
+Every row of every table is held in memory once the database opens, so a query filters `rowsFlow`, or follows one row with `flowRow`, rather than reaching the store. A query passes its result through `distinctUntilChanged()`, since a table emits on any change to it. `rowsFlow` emits nothing before the rows are loaded, so an empty list means an empty table.
 
 Row order carries no meaning.
 

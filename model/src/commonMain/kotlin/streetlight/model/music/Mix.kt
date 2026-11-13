@@ -32,6 +32,7 @@ data class SectionClip(
 
 @JvmInline @Serializable
 value class MixId(override val value: Uuid): RecordId {
+    override fun toString() = value.toString()
     companion object { fun random() = MixId(Uuid.random()) }
 }
 
