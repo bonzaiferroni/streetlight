@@ -25,8 +25,7 @@ import streetlight.model.data.Star
 
 /**
  * Shows [content] with the signed-in star in context, or [fallback] while no star is signed in, switching as the star
- * signs in or out. A screen of the star's own puts it ahead of reading its content, so nothing is read signed out. The
- * cousin of the web's `starGate`.
+ * signs in or out. A screen of the star's own puts it ahead of reading its content, so nothing is read signed out.
  */
 @Composable
 fun StarGate(fallback: @Composable () -> Unit = { SignInToContinue() }, content: @Composable context(Star) () -> Unit) {

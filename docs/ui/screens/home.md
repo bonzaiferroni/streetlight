@@ -10,7 +10,7 @@ Gives visitors an overview of the site — what it is, what's happening, and whe
 | Resource | Definition               | File                                                                                       |
 |----------|--------------------------|--------------------------------------------------------------------------------------------|
 | Route    | `HomeShell`              | [Screen.kt](../../../model/src/commonMain/kotlin/streetlight/model/ui/Screen.kt) |
-| View     | `viewHome()`             | [viewHome.kt](../../../web/src/jsMain/kotlin/streetlight/web/view/viewHome.kt)                  |
+| View     | `homeScreen()`             | [homeScreen.kt](../../../web/src/jsMain/kotlin/streetlight/web/view/homeScreen.kt)                  |
 | Shell    | `homeShell(HomeContent)` | [homeShell.kt](../../../web/src/commonMain/kotlin/streetlight/web/shell/homeShell.kt)        |
 | Model    | -                        |                                                                                            |
 

@@ -1,0 +1,67 @@
+package streetlight.web.view
+
+import koala.modifier.Accent
+import koala.dom.*
+import koala.model.MenuAction
+import streetlight.model.data.LocationEdit
+import streetlight.model.data.LocationUpdaterContent
+import streetlight.model.data.Star
+import streetlight.model.data.toEdit
+import streetlight.model.ui.LocationRoute
+import streetlight.model.ui.LocationUpdateRoute
+import koala.dom.component.*
+import koala.dom.layout.*
+import streetlight.web.dom.layout.mainBody
+import streetlight.web.dom.component.configHeading
+import streetlight.web.dom.layout.deltaRow
+import streetlight.web.dom.layout.formSubmit
+import streetlight.web.model.getLocationEditor
+import streetlight.web.model.portal
+
+context(star: Star)
+fun ViewScope.locationUpdaterScreen(content: LocationUpdaterContent) {
+    val edit = content.location.toEdit()
+    val model = edit.let { app.getLocationEditor(it, contentScope) }
+
+    mainBody("Location", "Config", "locationUpdaterScreen.kt") {
+        configHeading(content.location.name ?: "Location", LocationRoute(content.location.slug))
+
+        lazyTabs {
+            tab("edit") {
+                column {
+                    context(model) {
+                        locationEditFormBody()
+                    }
+                    formSubmit(
+                        label = "Save",
+                        onClick = {
+                            launchEffect("locationUpdaterScreen") {
+                                val location = model.submitSuspend()
+                                if (location != null) {
+                                    portal.go(LocationRoute(location.slug))
+                                }
+                            }
+                        },
+                        messenger = model.messages,
+                        buttonMod = Accent,
+                        back = MenuAction("go back", onClick = portal::goBack)
+                    )
+                }
+            }
+            tab("history") {
+                viewEditHistory<LocationEdit>(content.editLogs) { edit, compareEdit ->
+                    deltaRow("name", edit.name, compareEdit?.name)
+                    deltaRow("address", edit.address, compareEdit?.address)
+                    deltaRow("description", edit.description, compareEdit?.description)
+                    deltaRow("geolocation", edit.geoPoint, compareEdit?.geoPoint)
+                }
+            }
+        }
+    }
+}
+
+fun RouteScope.viewLocationUpdaterRoute() {
+    starRouteBlock<LocationUpdateRoute, LocationUpdaterContent> { content ->
+        locationUpdaterScreen(content)
+    }
+}

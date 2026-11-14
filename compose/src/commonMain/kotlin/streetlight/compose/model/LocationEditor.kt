@@ -16,7 +16,7 @@ import streetlight.model.io.ApiClient
 
 /**
  * The edit of a location being created or updated, its fields, its [imageEditor], and its saving. A submodel, held by
- * the view model of any view that edits a location, as `LocationScout` does. The cousin of the web's `LocationEditor`.
+ * the view model of any view that edits a location, as `LocationScout` does.
  */
 class LocationEditor(private val api: ApiClient, initialEdit: LocationEdit = LocationEdit()) {
     private val store = storeOf(LocationEditorState(initialEdit))

@@ -24,7 +24,7 @@ import streetlight.model.io.ApiClient
 
 /**
  * The fields of a username or email and a password, a problem from the last try, and the buttons to create an account,
- * which opens its dialog, and to sign in, held to the end of its column. The cousin of the web's `signInForm`.
+ * which opens its dialog, and to sign in, held to the end of its column.
  */
 @Composable
 fun SignInForm(modifier: Modifier = Modifier) {
@@ -64,8 +64,7 @@ fun SignInForm(modifier: Modifier = Modifier) {
 
 /**
  * The dialog to create an account while [state] is `true`: a tab for each kind of account, a guest's or a registered
- * star's, each form on its card, sharing one [UserCreator]. It closes once the new star is signed in. The cousin of the
- * web's sign-in dialog, whose third tab, signing in, is the [SignInForm].
+ * star's, each form on its card, sharing one [UserCreator]. It closes once the new star is signed in.
  */
 @Composable
 private fun CreateAccountDialog(state: MutableTap<Boolean>, session: StarSession) {

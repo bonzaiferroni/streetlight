@@ -32,7 +32,7 @@ fun EventEditorForm() {
 
 /**
  * The event's title, its cost or that it is free, its times and date with steppers to nudge them, its image, and its
- * description. The cousin of the web's `eventDetailsForm` and `eventImageForm`.
+ * description.
  */
 @Composable
 context(editor: EventEditor)
@@ -106,7 +106,7 @@ private fun EventTimeFields() {
     }
 }
 
-/** The event's website and its other links. The cousin of the web's `eventLinksForm`. */
+/** The event's website and its other links. */
 @Composable
 context(editor: EventEditor)
 private fun EventLinksCard() = FormCard("Event Links") {

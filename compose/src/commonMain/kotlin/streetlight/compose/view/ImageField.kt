@@ -26,7 +26,7 @@ import streetlight.compose.utility.collectAsState
 /**
  * The editor's image, the one picked or else the one stored, contained and held to [PreviewHeightUnits], and the
  * buttons to choose another from the device, with the system's own picker, a file dialog on a desktop and the photo
- * picker on a phone, and to remove it. The cousin of the web's `imageFormSection` and its image drop.
+ * picker on a phone, and to remove it.
  */
 @Composable
 context(editor: ImageEditor)

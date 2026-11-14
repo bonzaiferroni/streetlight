@@ -1,0 +1,54 @@
+package streetlight.web.view
+
+import koala.modifier.*
+import koala.dom.*
+import koala.dom.routeBlock
+import koala.model.WebRoute
+import koala.utility.dedupNotNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import streetlight.model.data.Media
+import streetlight.model.data.toEdit
+import streetlight.model.ui.MediaUpdateRoute
+import streetlight.model.ui.MediaRoute
+import streetlight.web.model.MediaEditor
+import koala.dom.component.*
+import streetlight.web.model.api
+import streetlight.web.dom.layout.mainBody
+import streetlight.web.dom.component.configHeading
+import streetlight.web.model.portal
+import streetlight.web.model.toaster
+
+context(model: MediaEditor)
+fun ViewScope.mediaConfigScreen(media: Media) {
+    val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
+    goOnRoute(routeFlow)
+
+    mainBody("Media", "Config", "mediaConfigScreen.kt") {
+        configHeading(media.title ?: "Post", MediaRoute(media.slug))
+
+        mediaForm()
+
+        row(JustifyContentEnd) {
+            button("Edit", onClick = model::submitPost)
+        }
+    }
+}
+
+fun RouteScope.viewMediaConfigRoute() {
+    routeBlock<MediaUpdateRoute, Media> {
+        val editor = MediaEditor(it.toEdit(), contentScope, api, toaster)
+        context(editor) {
+            mediaConfigScreen(it)
+        }
+    }
+}
+
+/** Goes to each route [routeFlow] emits. */
+fun ViewScope.goOnRoute(routeFlow: Flow<WebRoute>) {
+    contentScope.launch {
+        routeFlow.collect { route ->
+            portal.go(route)
+        }
+    }
+}

@@ -23,7 +23,7 @@ import streetlight.model.data.LocationEntity
 
 /**
  * The search for a location, by its name and city in Streetlight, or in OpenStreetMap on request, and the map to find
- * it where it lies or put a new one there, in the location's scheme color. The cousin of the web's `locationFinder`.
+ * it where it lies or put a new one there, in the location's scheme color.
  */
 @Composable
 context(finder: LocationFinder)
@@ -70,7 +70,6 @@ private fun LocationSearch() {
 
 /**
  * A [location] found in a search: its pin, its name over its address, and its city when known, in the scheme color.
- * The cousin of the web's `searchItem`.
  */
 @Composable
 private fun SearchItem(location: LocationEntity, modifier: Modifier = Modifier) {

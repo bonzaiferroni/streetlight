@@ -47,7 +47,6 @@ import streetlight.compose.model.isSearched
  * Adds the feed section of the [feed] model to this grid, showing [page], the feed as the view last read it, in [mode],
  * its entries opening their pages: the menu of the types its context offers with the switch of [FeedMode]; for a type
  * that is searched, the tag filter of an events feed and the search; then the entries, or a message when it has none.
- * The cousin of the web's `feedSection`.
  *
  * A lazy grid's builder cannot read state, so the view reads [page] and [mode] and passes them in; the controls read the
  * rest from [feed]. The menu and the message span the grid's row. An entry takes one column in `Grid` mode, and the
@@ -88,8 +87,7 @@ fun LazyStaggeredGridScope.feedSection(page: EntityFeed, mode: FeedMode) {
 }
 
 /**
- * The menu of [types], bound to the [feed]'s type, with the switch of its mode at the end, over a rule. The cousin of
- * the web's type menu.
+ * The menu of [types], bound to the [feed]'s type, with the switch of its mode at the end, over a rule.
  */
 @Composable
 context(feed: FeedModel)

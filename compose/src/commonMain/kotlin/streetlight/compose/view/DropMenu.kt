@@ -15,7 +15,7 @@ import streetlight.compose.utility.collectAsState
 
 /**
  * A button reading the [label] of the value of [state], opening a menu of [options] that sets it, the chosen one
- * checked. The cousin of the web's `dropMenu`.
+ * checked.
  */
 @Composable
 fun <T> DropMenu(state: MutableTap<T>, options: List<T>, label: (T) -> String, modifier: Modifier = Modifier) {

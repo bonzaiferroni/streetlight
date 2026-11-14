@@ -42,8 +42,7 @@ fun EventScoutScreen(route: EventScoutRoute) {
 
 /**
  * The view of [EventScoutRoute], in a column scrolled by [scrollState] under the top bar: the name of the galaxy the
- * event is posted to, if any, the stages of the scout with the one at hand lit, and the form of the focus. The cousin
- * of the web's `viewEventScout`.
+ * event is posted to, if any, the stages of the scout with the one at hand lit, and the form of the focus.
  */
 @Composable
 context(model: EventScout, star: Star)
@@ -86,7 +85,7 @@ private fun EventLocationEditStage() {
 
 /**
  * The search for an event at [location] by its name, which may already be on Streetlight, and the way to start it
- * there. The cousin of the web's `eventSearchForm`.
+ * there.
  */
 @Composable
 context(model: EventScout)

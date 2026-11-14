@@ -21,7 +21,7 @@ fun AppConfigScreen() {
 
 /**
  * The view of `AppConfigRoute`, in a column scrolled by [scrollState] under the top bar: the viewer's settings, in
- * tabs. The cousin of the web's `viewSiteConfig`.
+ * tabs.
  */
 @Composable
 context(config: AppConfig)

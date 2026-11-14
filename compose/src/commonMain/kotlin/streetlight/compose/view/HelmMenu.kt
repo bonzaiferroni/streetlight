@@ -19,9 +19,8 @@ import streetlight.compose.modifier.padding
 import streetlight.compose.modifier.pointerClick
 
 /**
- * The site's menu: the [helm] beside the logo, then the site's places, each closing the menu with [onClose] as it
- * opens its route. A place the app has no route for yet does nothing. The cousin of the
- * web's site menu.
+ * The site's menu: the [helm] beside the logo, then the site's places, each closing the menu with [onClose] as it opens
+ * its route. A place the app has no route for yet does nothing.
  */
 @Composable
 fun HelmMenu(onClose: () -> Unit, helm: @Composable () -> Unit) {

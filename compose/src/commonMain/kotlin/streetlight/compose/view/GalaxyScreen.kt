@@ -53,8 +53,7 @@ fun GalaxyScreen(route: GalaxyRoute) {
 
 /**
  * The view of [GalaxyRoute], in a grid scrolled by [gridState] under the top bar: the galaxy's page layout block by
- * block, as the web's `renderLayout` lays it out, in the galaxy's own theme, and the footer. The cousin of the
- * web's `galaxyShell`.
+ * block, as the web's `renderLayout` lays it out, in the galaxy's own theme, and the footer.
  */
 @Composable
 context(model: GalaxyModel)

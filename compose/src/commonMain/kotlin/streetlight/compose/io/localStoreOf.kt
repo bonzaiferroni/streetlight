@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 /**
- * A store starting from the value last saved in the app-data file [name], or [initial], that saves each change there
- * in [scope] once it settles. The cousin of the web's `localStoreOf`.
+ * A store starting from the value last saved in the app-data file [name], or [initial], that saves each change there in
+ * [scope] once it settles.
  */
 @OptIn(FlowPreview::class)
 inline fun <reified T> localStoreOf(scope: CoroutineScope, name: String, initial: T): Store<T> {

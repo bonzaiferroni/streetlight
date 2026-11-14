@@ -26,9 +26,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 
 /**
- * Labels the content with [label] on a pill over its top edge, two and a half units from its end. The label's background tells
- * whether the part is required and missing, while [isValid] is `false`, or required and given, while it is `true`. The
- * cousin of the web's `blockLabel` and `flowValid`.
+ * Labels the content with [label] on a pill over its top edge, two and a half units from its end. The label's
+ * background tells whether the part is required and missing, while [isValid] is `false`, or required and given, while
+ * it is `true`.
  */
 fun Modifier.blockLabel(label: String, isValid: Boolean? = null) = this then BlockLabelElement(label, isValid)
 

@@ -19,7 +19,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * The events map: its [markerMap], filled view by view by its [cache], the tag and search that filter it, and the
  * entities of the marker in focus. The cache starts over when the tag changes, or the search once it rests. A focused
- * location's events are read with the filters in place. The cousin of the web's `Earth`.
+ * location's events are read with the filters in place.
  */
 class EarthModel(private val api: ApiClient, geoMap: GeoMap) : ViewModel() {
     private val store = storeOf(EarthState())

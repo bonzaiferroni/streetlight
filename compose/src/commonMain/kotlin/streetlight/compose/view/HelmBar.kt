@@ -57,7 +57,7 @@ import streetlight.compose.modifier.pointerClick
 /**
  * The helm button at the top start of the page and the star button at its end, floating over the page in the logo's
  * colors, each opening its menu from its corner. The button's icon is the same element as the menu's, so it stays in
- * place as the menu grows around it. A click outside an open menu closes it. The cousin of the web's `helmBar`.
+ * place as the menu grows around it. A click outside an open menu closes it.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

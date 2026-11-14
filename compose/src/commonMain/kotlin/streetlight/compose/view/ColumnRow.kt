@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Columns side by side, centered, each a [rowColumn] sharing the width, wrapping onto more rows where two do not fit,
- * two units apart. The basis of a form's layout. The cousin of the web's `BodyStyle.ColumnRow`.
+ * two units apart. The basis of a form's layout.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

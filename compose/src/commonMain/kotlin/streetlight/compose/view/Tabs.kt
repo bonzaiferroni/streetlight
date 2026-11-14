@@ -54,7 +54,7 @@ class Tab(val label: String, val icon: SvgPack?, val content: @Composable () -> 
 /**
  * Tabs built by [content] in a [TabScope], a row of their buttons across the container's width over the chosen tab's
  * content, the [initialTab] at first. A newly chosen tab slides in a short way from the side its button lies on as the
- * other slides out the other way, and the content's height eases between them. The cousin of koala's `tabs`.
+ * other slides out the other way, and the content's height eases between them.
  */
 @Composable
 fun Tabs(modifier: Modifier = Modifier, initialTab: Int = 0, content: TabScope.() -> Unit) {

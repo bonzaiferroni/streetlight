@@ -14,8 +14,7 @@ import streetlight.compose.modifier.zenBg
 
 /**
  * An outlined container of a fixed height that scrolls the items to choose from built by [content], and whatever
- * follows them, so a list that grows or shrinks leaves the form around it in place. The cousin of koala's
- * `selectorContainer`.
+ * follows them, so a list that grows or shrinks leaves the form around it in place.
  */
 @Composable
 fun SelectorContainer(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {

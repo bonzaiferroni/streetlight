@@ -45,8 +45,8 @@ import streetlight.compose.utility.collectAsState
  * web's `blockLabel` does in words, at half opacity so it stays behind what is typed. A field that [isPassword] hides
  * what it holds. [keyboardType] and [capitalization] shape the keyboard a touch screen offers, such as one for a url,
  * or capitals at the start of each word of a name. [onSubmit] is called by the keyboard's done action. A field with a
- * check tints its icon and outline by [isValid]: the required color while `false`, the valid color while `true`, as
- * the web's `flowValid`. The cousin of koala's `textField`, styled as the [SearchField].
+ * check tints its icon and outline by [isValid]: the required color while `false`, the valid color while `true`, as the
+ * web's `flowValid`.
  */
 @Composable
 fun TextField(

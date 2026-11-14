@@ -47,16 +47,16 @@ import streetlight.compose.modifier.pointerClick
 import kotlin.math.roundToInt
 import androidx.compose.ui.layout.layout
 
-/** The layouts of a feed row, the cousin of the web's `FeedMode`. */
+/** The layouts of a feed row. */
 enum class FeedMode { Minimal, Row, Grid }
 
 /** The side padding in units of a full item of a grid in this mode: none in `Grid`, whose grid holds it from its edges. */
 val FeedMode.sideUnits get() = if (this == FeedMode.Grid) 0 else 1
 
 /**
- * An entity in a feed, laid out by [mode], within the entity's scheme color, showing its [details], read for the
- * [feed] it is in unless given, and opening the entity's page when the app has one. A row [isFeatured] takes the `Grid` layout in any mode, square, its
- * text clipped at 24 units. The cousin of the web's `feedRow` and its `FeedRowStyle.Featured`.
+ * An entity in a feed, laid out by [mode], within the entity's scheme color, showing its [details], read for the [feed]
+ * it is in unless given, and opening the entity's page when the app has one. A row [isFeatured] takes the `Grid` layout
+ * in any mode, square, its text clipped at 24 units.
  */
 @Composable
 context(feed: FeedContext?)
@@ -115,8 +115,8 @@ private fun MinimalFeedRow(entity: Entity, details: List<EntityDetail>) {
 
 /**
  * The main part of the row beside its cells: the thumbnail, outlined; the title on one line over the description,
- * clipped at the row's height and fading where it reaches it; and the flair badge. The cells sit beside it as the
- * row's right half from [WideRowWidth], below it otherwise. The cousin of the web's `Row` mode.
+ * clipped at the row's height and fading where it reaches it; and the flair badge. The cells sit beside it as the row's
+ * right half from [WideRowWidth], below it otherwise.
  */
 @Composable
 private fun RowFeedRow(entity: Entity, details: List<EntityDetail>) {
@@ -169,9 +169,9 @@ private fun RowFeedRow(entity: Entity, details: List<EntityDetail>) {
 }
 
 /**
- * An entry of a grid on [base]: the image across the top in its own shape, held between 3:4 and 4:1 and no taller
- * than 48 units, whole over its backdrop; the title over the description, clipped at [textUnits] and fading, beside
- * the flair badge; then the cells. The parts below the image are inset a unit at the sides and stand a unit apart. The cousin of the web's `Grid` mode.
+ * An entry of a grid on [base]: the image across the top in its own shape, held between 3:4 and 4:1 and no taller than
+ * 48 units, whole over its backdrop; the title over the description, clipped at [textUnits] and fading, beside the
+ * flair badge; then the cells. The parts below the image are inset a unit at the sides and stand a unit apart.
  */
 @Composable
 private fun GridFeedRow(entity: Entity, details: List<EntityDetail>, base: Modifier, textUnits: Int) {

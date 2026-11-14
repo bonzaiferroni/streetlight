@@ -40,7 +40,7 @@ fun EventScreen(route: EventRoute) {
 
 /**
  * The view of [EventRoute], showing [event] in a column scrolled by [scrollState] under the top bar: the header with
- * its time, cost and host, then its location and comments in tabs, and the footer. The cousin of the web's `eventShell`.
+ * its time, cost and host, then its location and comments in tabs, and the footer.
  */
 @Composable
 fun EventView(event: EventLocation, scrollState: ScrollState) {

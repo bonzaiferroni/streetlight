@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 
 /**
  * A slider setting [state] within [range], after the [icon] that names it, when given: a track filled up to its thumb,
- * moved by a tap or a drag. The cousin of the web's `slider`.
+ * moved by a tap or a drag.
  */
 @Composable
 fun Slider(state: MutableTap<Int>, range: IntRange, modifier: Modifier = Modifier, icon: Svg? = null) {

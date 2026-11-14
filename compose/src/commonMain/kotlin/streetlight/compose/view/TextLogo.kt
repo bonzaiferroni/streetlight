@@ -26,7 +26,7 @@ import streetlight.compose.utility.mixSrgb
 
 /**
  * The Streetlight logo: the wordmark, "street" in the accent color and "light" in the primary, with its flame glowing
- * through the page's lights, over the moon's drop shadow. The cousin of the web's `textLogo`.
+ * through the page's lights, over the moon's drop shadow.
  */
 @Composable
 fun TextLogo(modifier: Modifier = Modifier) {

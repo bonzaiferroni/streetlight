@@ -1,0 +1,107 @@
+package streetlight.web.view
+
+import kampfire.model.toDataOrNull
+import koala.dom.*
+import kampfire.model.storeOf
+import streetlight.model.data.DefaultLayout
+import streetlight.model.data.LocationConfigContent
+import streetlight.model.data.PageDesign
+import streetlight.model.data.toEdit
+import streetlight.model.ui.LocationConfigRoute
+import streetlight.web.model.route
+import streetlight.web.model.DesignEditor
+import streetlight.web.layout.cardOf
+import koala.dom.component.*
+import koala.dom.layout.*
+import koala.model.*
+import streetlight.web.model.api
+import streetlight.web.dom.layout.mainBody
+import streetlight.web.dom.component.configHeading
+import streetlight.web.dom.layout.dataBlock
+import streetlight.web.dom.layout.formSubmit
+import streetlight.web.model.getLocationEditor
+
+fun ViewScope.locationConfigScreen(
+    content: LocationConfigContent,
+) {
+    val locationState = storeOf(content.location)
+    val configState = storeOf(content.config)
+    val initialLayout = configState.now.design?.layout
+    val designer = DesignEditor(api, DefaultLayout.location, PageDesign(initialLayout, content.config.design?.theme))
+    val saveMessages = MessageStore()
+
+    fun saveConfig() {
+        launchEffect("save config") {
+            val design = designer.build(saveMessages)
+            configState.set { copy(design = design) }
+            saveMessages.deliverSending()
+            api.location.updateLocationConfig(configState.now).toDataOrNull(saveMessages, "Config saved.")
+        }
+    }
+
+    mainBody("Location", "Config", "locationConfigScreen.kt") {
+        flowBlock(locationState) { location ->
+            configHeading(location.name ?: "Location", location.route)
+        }
+
+        lazyTabs("location-config-tabs") {
+            tab("profile") {
+                val editor = app.getLocationEditor(locationState.now.toEdit(), contentScope)
+                column {
+                    context(editor) {
+                        locationEditFormBody()
+                    }
+                    formSubmit(
+                        label = "Save profile",
+                        onClick = {
+                            launchEffect {
+                                val editedLocation = editor.submitSuspend() ?: return@launchEffect
+                                editor.messages.deliverSuccess("Profile saved")
+                                locationState.set { editedLocation }
+                            }
+                        },
+                        messenger = editor.messages,
+                    )
+                }
+            }
+            tab("theme") {
+                column {
+                    context(designer.theme) {
+                        themeForm()
+                    }
+                    formSubmit("save config", ::saveConfig, saveMessages)
+                }
+            }
+            tab("layout") {
+                column {
+                    context(designer.layout) {
+                        layoutBuilder()
+                    }
+                    formSubmit("save config", ::saveConfig, saveMessages)
+                }
+            }
+            tab("events") {
+                val location = locationState.now
+                column {
+                    dataBlock({ api.event.readLocationEvents(location.slug) }) { events ->
+                        column {
+                            events.forEach { event ->
+                                cardOf(event)
+                            }
+                        }
+                    }
+                }
+            }
+            tab("settings") {
+                locationSettingsForm(configState)
+                // locationAutomationForm(content)
+            }
+        }
+    }
+}
+
+fun RouteScope.viewLocationConfigRoute() {
+    routeBlock<LocationConfigRoute, LocationConfigContent> { config ->
+        locationConfigScreen(config)
+    }
+}

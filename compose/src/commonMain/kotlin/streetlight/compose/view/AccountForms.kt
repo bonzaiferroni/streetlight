@@ -26,7 +26,7 @@ import streetlight.compose.utility.collectAsState
 
 /**
  * The form to create a guest account: what a guest account is and how it is kept, the username, and the age
- * requirement. The cousin of the web's `guestRegistrationForm`.
+ * requirement.
  */
 @Composable
 context(model: UserCreator)
@@ -69,8 +69,8 @@ fun GuestRegistrationForm() {
 }
 
 /**
- * The form to create a registered account: the username, an optional email, the password and its confirmation, and
- * the age requirement. The cousin of the web's `fullRegistrationForm`.
+ * The form to create a registered account: the username, an optional email, the password and its confirmation, and the
+ * age requirement.
  */
 @Composable
 context(model: UserCreator)

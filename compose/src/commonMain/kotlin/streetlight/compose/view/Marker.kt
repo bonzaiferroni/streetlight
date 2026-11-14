@@ -74,7 +74,6 @@ import streetlight.compose.utility.collectAsState
 /**
  * The markers of [markerMap] on the map of [mapState], each with its light beneath it; a click on one focuses it. A
  * marker shows once the zoom reaches its reveal zoom, or while it is focused, and its light alone shows before then.
- * The cousin of the web's `GeoLayerAdapter`.
  */
 @Composable
 fun MapOverlayScope.Markers(markerMap: MarkerMap, mapState: MapState) {
@@ -179,7 +178,7 @@ private fun GeoPoint.toWorldPoint(): Offset {
 /**
  * The base of [marker] at its point: its [body] placed so the marker's body is centered there, grown by half while it
  * [isFocused], in the marker's scheme color. It fades in as it comes into view, as the web's marker body does on its
- * `@starting-style`. The cousin of the web's `toPointElement` and `MarkerStyle.Base`.
+ * `@starting-style`.
  */
 @Composable
 fun MapOverlayScope.Marker(marker: MapMarker, isFocused: Boolean, onClick: () -> Unit, body: @Composable () -> Unit) {
@@ -235,8 +234,7 @@ fun IconMarkerBody(marker: IconMarker) {
 
 /**
  * The thumbnail of [marker], beside its label over a list of its type and sublabel, then its location's name in the
- * location's color, its type and location a step lighter than the web's. The cousin of the web's
- * `configureEventMarkerBody`.
+ * location's color, its type and location a step lighter than the web's.
  */
 @Composable
 fun EventMarkerBody(marker: EventMarker) {

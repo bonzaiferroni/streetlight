@@ -85,10 +85,9 @@ val LocalMapHost = staticCompositionLocalOf<MapHostState> { error("No MapHost pr
  * Holds the app's one map above [content] for as long as the app runs, so a page that shows the map never starts its
  * renderer. The map shows in the mount of the latest page that holds one, in its rounded frame and outline. When the
  * mount it shows in and the new one are both in the window, its frame grows or shrinks from one to the other as the
- * pages fade beneath it, gliding to the new mount's center, with the new mount's markers from the start. Otherwise
- * it fades out, moves to the mount, shows the mount's markers through [GeoMap] and looks over its center, then fades in,
- * as a page does. Without a mount it stays, unseen. It applies the camera's pans and reports where it looks, the cousin of the
- * web's `wireGeoMap`.
+ * pages fade beneath it, gliding to the new mount's center, with the new mount's markers from the start. Otherwise it
+ * fades out, moves to the mount, shows the mount's markers through [GeoMap] and looks over its center, then fades in,
+ * as a page does. Without a mount it stays, unseen. It applies the camera's pans and reports where it looks.
  */
 @Composable
 fun MapHost(content: @Composable () -> Unit) {

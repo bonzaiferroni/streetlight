@@ -87,7 +87,7 @@ val LocalDialogHost = staticCompositionLocalOf<DialogHostState> { error("No Dial
 /**
  * Shows a dialog of [content], built from scratch, while [state] is `true`, with its [title] in a filigree above it
  * when given. The dialog is drawn by the [DialogHost], over the whole app; it closes when the mount leaves the
- * composition. The cousin of koala's `dialog` with `rawDialogContent`.
+ * composition.
  */
 @Composable
 fun RawDialogMount(state: MutableTap<Boolean>, title: String? = null, content: @Composable () -> Unit) {
@@ -104,7 +104,7 @@ fun RawDialogMount(state: MutableTap<Boolean>, title: String? = null, content: @
 
 /**
  * Shows a dialog of [content] on the dialog's card while [state] is `true`, with its [title] in a filigree above it
- * when given. The cousin of koala's `dialog` with `dialogContent`.
+ * when given.
  */
 @Composable
 fun DialogMount(state: MutableTap<Boolean>, title: String? = null, content: @Composable () -> Unit) {
@@ -112,8 +112,7 @@ fun DialogMount(state: MutableTap<Boolean>, title: String? = null, content: @Com
 }
 
 /**
- * The card of a dialog holding [content], scrolling once it fills most of the space. The cousin of koala's
- * `dialogCard`.
+ * The card of a dialog holding [content], scrolling once it fills most of the space.
  */
 @Composable
 fun DialogCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {

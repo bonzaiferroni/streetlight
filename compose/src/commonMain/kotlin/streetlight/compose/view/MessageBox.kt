@@ -14,7 +14,7 @@ import streetlight.compose.modifier.borderRadius
 import streetlight.compose.modifier.padding
 import streetlight.compose.utility.collectAsState
 
-/** The message of [tap], or nothing while it is `null`. The cousin of the web's `messageBox`. */
+/** The message of [tap], or nothing while it is `null`. */
 @Composable
 fun MessageBox(tap: Tap<UIMessage?>, modifier: Modifier = Modifier) {
     val message by tap.collectAsState()

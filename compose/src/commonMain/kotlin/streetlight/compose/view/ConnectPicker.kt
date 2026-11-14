@@ -20,7 +20,7 @@ import streetlight.model.data.OnboardType
 
 /**
  * The four ways to connect, one quadrant per [OnboardType] in a 4:3 grid, each its animated icon over its label,
- * calling [onPick] with its type. The cousin of the web's `connectPicker`.
+ * calling [onPick] with its type.
  */
 @Composable
 fun ConnectPicker(modifier: Modifier = Modifier, onPick: (OnboardType) -> Unit) {

@@ -35,8 +35,7 @@ import streetlight.compose.utility.toRgb
 import kotlin.math.roundToInt
 
 /**
- * A pill in the color of [state] reading [label], opening sliders of its hue, saturation and lightness. The cousin of
- * koala's `colorPicker`.
+ * A pill in the color of [state] reading [label], opening sliders of its hue, saturation and lightness.
  */
 @Composable
 fun ColorPicker(label: String, state: MutableTap<Rgb>, modifier: Modifier = Modifier) {

@@ -33,7 +33,7 @@ import streetlight.compose.utility.collectAsState
 
 /**
  * The toasts of the [Toaster] over the bottom left of the page, above the dock, the newest at the bottom pushing the
- * others up. A click dismisses a toast, and hovering holds it. The cousin of the web's `wireToaster`.
+ * others up. A click dismisses a toast, and hovering holds it.
  */
 @Composable
 fun ToasterHost(modifier: Modifier = Modifier) {

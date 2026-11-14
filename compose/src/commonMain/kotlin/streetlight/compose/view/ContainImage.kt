@@ -17,8 +17,7 @@ import koala.Image
 
 /**
  * Shows [image] whole, its `medium` variant contained over a blurred, scaled and dimmed backdrop of itself, which fills
- * the space the image leaves. The variant is read once and drawn twice, so the image costs one request. The cousin of
- * koala's `containImage`.
+ * the space the image leaves. The variant is read once and drawn twice, so the image costs one request.
  */
 @Composable
 fun ContainImage(image: Image?, modifier: Modifier = Modifier) {

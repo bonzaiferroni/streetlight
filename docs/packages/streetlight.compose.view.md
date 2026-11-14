@@ -64,9 +64,9 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `GalaxyView`, its `layoutBlock` | `galaxyShell` and `renderLayout` (`streetlight.web.layout`) |
 | `EventView` | `eventShell` and `eventBody` (`streetlight.web.layout`) |
 | `LocationView` | `locationShell` (`streetlight.web.shell`) |
-| `EarthView` | `viewEarth` (`streetlight.web.view`) |
+| `EarthView` | `earthScreen` (`streetlight.web.view`) |
 | `EarthHeader` | `earthControls` (`streetlight.web.view`); the title of `earthHeader` is the earth's `TopBar.Title` |
-| `GalaxyMapView` | `viewEarth` (`streetlight.web.view`) on a galaxy's map |
+| `GalaxyMapView` | `earthScreen` (`streetlight.web.view`) on a galaxy's map |
 | `MapFocus` | `earthFocus` (`streetlight.web.view`) |
 | `renderLayout`, `renderBlock`, `RenderFoo` | `renderLayout`, `renderBlock`, `renderFoo` (`streetlight.web.layout`) |
 | `AppHeader` | `appHeader` (`streetlight.web.page`), unlinked |
@@ -96,15 +96,15 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `StarGate`, `SignInToContinue` | `starGate`, `signInToContinue` (`streetlight.web.view`) |
 | `SignInForm` | `signInForm` (`streetlight.web.view`) |
 | `ConfigBody` | `mainBody` (`streetlight.web.view`) |
-| `StarDashView` | `viewStarDash` (`streetlight.web.view`) |
-| `EventScoutView`, `LocationScoutView`, `MediaForgeView` | `viewEventScout`, `viewLocationScout`, `viewMediaForge` (`streetlight.web.view`) |
+| `StarDashView` | `starDashScreen` (`streetlight.web.view`) |
+| `EventScoutView`, `LocationScoutView`, `MediaForgeView` | `eventScoutScreen`, `locationScoutScreen`, `mediaForgeScreen` (`streetlight.web.view`) |
 | `CreatePostMenu` | `createPostMenu` (`streetlight.web.component`) and `wireCreatePost` |
 | `SelectorContainer` | `selectorContainer` (`koala.dom.layout`) |
 | `StageHeader` | `onboardStage` (`streetlight.web.view`), without its strikethrough |
-| `LocationScoutView` | `viewLocationScout` (`streetlight.web.view`) |
+| `LocationScoutView` | `locationScoutScreen` (`streetlight.web.view`) |
 | `LocationFinderForm` | `locationFinder` (`streetlight.web.view`) |
 | `AppConfigView` | `viewSiteConfig` (`streetlight.web.view`) |
-| `StarConfigView` | `viewStarConfig` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
+| `StarConfigView` | `starConfigScreen` (`streetlight.web.view`), its account tab, with `registerAccountForm`, `changeEmailForm` and `changePasswordForm` |
 | `ColumnRow` | `BodyStyle.ColumnRow` (`streetlight.web.layout`) |
 | `FormCard` | `formCard` (`streetlight.web.dom.layout`) |
 | `MarkdownEditor` | `markdownEditor` (`koala.dom.markdown`) |

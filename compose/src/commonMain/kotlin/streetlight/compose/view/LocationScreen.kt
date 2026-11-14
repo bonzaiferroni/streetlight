@@ -25,8 +25,8 @@ fun LocationScreen(route: LocationRoute) {
 }
 
 /**
- * The view of [LocationRoute], in a grid scrolled by [gridState] under the top bar: the location's page layout, in
- * the location's own theme, and the footer. The cousin of the web's `locationShell`.
+ * The view of [LocationRoute], in a grid scrolled by [gridState] under the top bar: the location's page layout, in the
+ * location's own theme, and the footer.
  */
 @Composable
 context(model: LocationModel)

@@ -25,8 +25,8 @@ fun StarScreen(route: StarRoute) {
 }
 
 /**
- * The view of [StarRoute], in a grid scrolled by [gridState] under the top bar: the star's page layout, in the
- * star's own theme, and the footer. The cousin of the web's `starShell`.
+ * The view of [StarRoute], in a grid scrolled by [gridState] under the top bar: the star's page layout, in the star's
+ * own theme, and the footer.
  */
 @Composable
 context(model: StarModel)

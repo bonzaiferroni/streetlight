@@ -58,8 +58,7 @@ fun StarFeedScreen() {
 
 /**
  * The view of a page of one feed, in a grid scrolled by [gridState] under the top bar: a [PageHeader] of [title],
- * [descriptor] and [image], the feed's [feedSection], and the footer. The cousin of the web's `galaxyFeedShell`,
- * `cityFeedShell` and `starFeedShell`.
+ * [descriptor] and [image], the feed's [feedSection], and the footer.
  */
 @Composable
 context(model: FeedPageModel)

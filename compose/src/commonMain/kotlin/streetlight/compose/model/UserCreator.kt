@@ -22,8 +22,8 @@ import kotlinx.coroutines.launch
 import streetlight.model.io.ApiClient
 
 /**
- * The form to create a guest or registered account, which signs the new star in through [session]. A plain class, not
- * a view model, built by the dialog that shows it in its [scope]. The cousin of the web's `UserCreator`.
+ * The form to create a guest or registered account, which signs the new star in through [session]. A plain class, not a
+ * view model, built by the dialog that shows it in its [scope].
  */
 class UserCreator(
     private val scope: CoroutineScope,

@@ -44,7 +44,7 @@ import streetlight.model.ui.TopBar
 
 /**
  * The screen of [route]: the logo as its top bar, the way to connect, and the pitch to the type chosen, first the
- * route's, then the one picked here. The cousin of the web's `viewConnect`, which changes its route as the type changes.
+ * route's, then the one picked here.
  */
 @Composable
 fun ConnectScreen(route: ConnectRoute) {

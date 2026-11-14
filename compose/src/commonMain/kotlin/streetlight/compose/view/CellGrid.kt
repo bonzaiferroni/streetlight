@@ -23,8 +23,7 @@ import streetlight.compose.modifier.padding
 /**
  * The [details] of an entity as cells in as many equal columns of at least [MinCellWidth] as fit, up to [MaxColumns],
  * wrapping onto more lines as needed. The last cell stretches to the end of its line, so the details can save a wide
- * fact for last. The cells stand a line apart, so the background between them draws the lines of the grid. The cousin
- * of the web's `cellGrid`.
+ * fact for last. The cells stand a line apart, so the background between them draws the lines of the grid.
  */
 @Composable
 fun CellGrid(details: List<EntityDetail>, modifier: Modifier = Modifier) {

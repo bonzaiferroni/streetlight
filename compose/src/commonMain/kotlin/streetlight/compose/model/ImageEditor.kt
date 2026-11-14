@@ -14,7 +14,7 @@ import streetlight.model.io.ApiClient
 /**
  * An image of an edit, at the sizes of [target]: the stored one, or one picked from the device and held until the edit
  * is saved, when it is uploaded. A submodel, held by the editor of anything with an image, as `LocationEditor` holds
- * one. The cousin of the web's `ImageEditor`.
+ * one.
  */
 class ImageEditor(private val target: ImageTarget, private val api: ApiClient) {
     private val store = storeOf(ImageEditorState())

@@ -15,8 +15,7 @@ import streetlight.compose.modifier.padding
 
 /**
  * The body of a page of settings or tools: [title] in a filigree, when given, over [content], in a column scrolled by
- * [scrollState] under the top bar, padded a unit all around as an item is, in the default theme. The cousin of the
- * web's `configBody`.
+ * [scrollState] under the top bar, padded a unit all around as an item is, in the default theme.
  */
 @Composable
 fun ConfigBody(title: String?, scrollState: ScrollState, content: @Composable ColumnScope.() -> Unit) {

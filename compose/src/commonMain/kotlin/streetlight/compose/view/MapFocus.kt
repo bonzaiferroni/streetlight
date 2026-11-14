@@ -30,8 +30,8 @@ import streetlight.model.data.FeedContext
 /**
  * The [entities] of the marker in focus, held to the bottom of the space it is given and to the web's 600px, the first
  * featured and the rest each a [FeedRow] in the `Row` mode, in a column that scrolls over the blurred map, fading in
- * and out with the focus. A narrow map leaves a sixth of the space to the map, as the web's `EarthStyle.Grid` does below
- * 800px; a wide one gives the focus its full height. The cousin of the web's `earthFocus`.
+ * and out with the focus. A narrow map leaves a sixth of the space to the map, as the web's `EarthStyle.Grid` does
+ * below 800px; a wide one gives the focus its full height.
  */
 @Composable
 fun MapFocus(entities: List<Entity>?, modifier: Modifier = Modifier) {

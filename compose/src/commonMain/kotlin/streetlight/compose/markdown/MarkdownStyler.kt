@@ -24,7 +24,7 @@ import koala.markdown.MarkdownUrl
 /**
  * The styled ranges of markdown text as an editor shows it, parsed a chunk at a time and kept by each chunk's text, so
  * a change parses again only the chunks it touched. A chunk is a run of lines between blank lines, a fenced code block
- * held whole. The cousin of the web's `MarkdownEditor`, which caches its blocks by their text the same way.
+ * held whole.
  */
 class MarkdownStyler {
     private val parser = MarkdownParser()
@@ -69,7 +69,7 @@ data class StyledRange(val from: Int, val to: Int, val style: MarkdownStyle) {
     fun shiftedBy(offset: Int) = copy(from = from + offset, to = to + offset)
 }
 
-/** The ways an editor styles a range of markdown text. The cousin of the web's `EditorStyle` classes. */
+/** The ways an editor styles a range of markdown text. */
 sealed interface MarkdownStyle {
     /** The syntax around the content, such as `**` or `#`. */
     data object Extra : MarkdownStyle

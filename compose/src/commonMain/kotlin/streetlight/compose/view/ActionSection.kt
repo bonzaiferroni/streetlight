@@ -20,7 +20,7 @@ import streetlight.compose.modifier.zenBg
 
 /**
  * A section of [content] under its [heading] of [label], with its [actions] at the end of the heading's row, over a
- * rule. The cousin of the web's `actionSection`.
+ * rule.
  */
 @Composable
 fun ActionSection(
@@ -53,8 +53,8 @@ fun ActionSection(
 }
 
 /**
- * An [ActionSection] on an outlined card, its heading as a [FormSection]'s, as a form shows a list the star adds to
- * and edits. The cousin of the web's `actionSectionCard`.
+ * An [ActionSection] on an outlined card, its heading as a [FormSection]'s, as a form shows a list the star adds to and
+ * edits.
  */
 @Composable
 fun ActionSectionCard(
@@ -75,7 +75,7 @@ fun ActionSectionCard(
     )
 }
 
-/** A row of [content], taking the room there is, beside its [actions]. The cousin of the web's `actionRow`. */
+/** A row of [content], taking the room there is, beside its [actions]. */
 @Composable
 fun ActionRow(
     modifier: Modifier = Modifier,

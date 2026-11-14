@@ -29,7 +29,7 @@ import streetlight.compose.utility.collectAsState
 
 /**
  * The links of [linksState] in an [ActionSectionCard], each edited or removed in its row, and new ones added, with
- * [instructions] while there are none. The cousin of the web's `linksFormSection`.
+ * [instructions] while there are none.
  */
 @Composable
 fun FlowRowScope.LinksSection(
@@ -104,7 +104,7 @@ private fun LinkAction(label: String, link: ExtraLink, onSave: (ExtraLink) -> Un
     }
 }
 
-/** The label and url of [link], saved by [onSave] once they make a valid link. The cousin of the web's `linkPopover`. */
+/** The label and url of [link], saved by [onSave] once they make a valid link. */
 @Composable
 private fun LinkForm(link: ExtraLink, onSave: (ExtraLink) -> Unit) {
     val theme = currentTheme

@@ -54,10 +54,9 @@ fun cameraPositionOf(center: GeoPoint?) = CameraPosition(
 const val MapPitch = 45.0
 
 /**
- * The map of [state] with the markers of [markerMap], if any, and the page's [overlay] above all else. The cousin of
- * the web's `geoMapMount`, darkened toward its edges, its focus cleared by a click on the map itself, with MapLibre's
- * scale bar and attribution and without its logo or compass. The map and its markers are the [LocalMapHaze] source, so
- * the overlay, drawn beside the map rather than within it, may blur what lies beneath.
+ * The map of [state] with the markers of [markerMap], if any, and the page's [overlay] above all else. The map and its
+ * markers are the [LocalMapHaze] source, so the overlay, drawn beside the map rather than within it, may blur what lies
+ * beneath.
  */
 @Composable
 fun MapWindow(state: MapState, markerMap: MarkerMap?, overlay: (@Composable () -> Unit)?, modifier: Modifier = Modifier) {

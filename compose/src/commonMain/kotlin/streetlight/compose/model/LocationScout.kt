@@ -19,8 +19,7 @@ import streetlight.model.io.ApiClient
 
 /**
  * Finds or starts a location with its [finder], to post it to [galaxy], when given. A new location is written in its
- * [editor]. The focus is what the star is working on, and its stage follows from it. The cousin of the web's
- * `LocationScout`.
+ * [editor]. The focus is what the star is working on, and its stage follows from it.
  */
 class LocationScout(
     val galaxy: Galaxy?,

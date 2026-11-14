@@ -14,8 +14,7 @@ import streetlight.model.data.locationDetailsOf
 import kotlin.time.Clock
 
 /**
- * A preview of the feed row [edit] will post as, laid out by [mode], posted by [username] just now. The cousin of the
- * web's `postRow`.
+ * A preview of the feed row [edit] will post as, laid out by [mode], posted by [username] just now.
  */
 @Composable
 fun PostRow(edit: LocationEdit, username: Username, mode: FeedMode) {
@@ -34,8 +33,7 @@ fun PostRow(edit: LocationEdit, username: Username, mode: FeedMode) {
 }
 
 /**
- * A preview of the feed row [event] will post as at [location], laid out by [mode], posted by [username] just now. The
- * cousin of the web's `postRow`.
+ * A preview of the feed row [event] will post as at [location], laid out by [mode], posted by [username] just now.
  */
 @Composable
 fun PostRow(event: EventEdit, location: Location, username: Username, mode: FeedMode) {

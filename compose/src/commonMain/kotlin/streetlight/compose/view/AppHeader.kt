@@ -13,7 +13,7 @@ import streetlight.compose.model.currentPortal
 
 /**
  * The header of a view: the [TextLogo] between the accent and primary rays, returning home when clicked. The rays line
- * up with the centers of the [HelmBar]'s icons and stop a unit short of them. The cousin of the web's `appHeader`.
+ * up with the centers of the [HelmBar]'s icons and stop a unit short of them.
  */
 @Composable
 fun AppHeader(modifier: Modifier = Modifier) {

@@ -31,7 +31,7 @@ import streetlight.compose.svg.readSvg
 
 /**
  * Draws [svg] in [color], filling its shape as the web's mask does, held to its own aspect and centered in the square
- * as an svg's `viewBox` is. The cousin of koala's `icon`.
+ * as an svg's `viewBox` is.
  *
  * [color] is read while drawing, so an animating color redraws the icon without recomposing it.
  */

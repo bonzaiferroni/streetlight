@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
  * A menu of [content] on a card that blurs the page behind it, beside the composable that holds it while [isOpen]:
  * below it when it fits there, above it when only that fits, and otherwise on the side with more room, kept inside the
  * window. It grows out of the edge nearest its opener and shrinks back into it as it closes. A click outside calls
- * [onDismiss]. The cousin of the web's `popoverMenu`.
+ * [onDismiss].
  */
 @Composable
 fun Popover(isOpen: Boolean, onDismiss: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit) {

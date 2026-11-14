@@ -27,7 +27,7 @@ fun EarthScreen() = context(koinViewModel<EarthModel>()) { EarthView() }
 
 /**
  * The view of [EarthRoute]: the map across the whole page, with the events of each view it settles on, under its top
- * bar of the title and the [EarthHeader], and the [MapFocus] below it. The cousin of the web's `viewEarth`.
+ * bar of the title and the [EarthHeader], and the [MapFocus] below it.
  */
 @Composable
 context(model: EarthModel)
@@ -49,8 +49,7 @@ private fun EarthOverlay() {
 }
 
 /**
- * The tag filter and the search, each over the blurred map, dimmed while the map moves. The cousin of the web's
- * `earthHeader` and `earthControls`.
+ * The tag filter and the search, each over the blurred map, dimmed while the map moves.
  */
 @Composable
 context(model: EarthModel)

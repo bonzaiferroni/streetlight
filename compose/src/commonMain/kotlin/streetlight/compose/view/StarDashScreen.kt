@@ -33,7 +33,7 @@ fun StarDashScreen(route: StarDashRoute) {
 
 /**
  * The view of [route], in a column scrolled by [scrollState] under the top bar that names it: a tab for each
- * [StarDashTab], opening on the route's tab, or the first. The cousin of the web's `viewStarDash`.
+ * [StarDashTab], opening on the route's tab, or the first.
  */
 @Composable
 context(star: Star)
@@ -54,7 +54,7 @@ fun StarDashView(route: StarDashRoute, scrollState: ScrollState) {
     }
 }
 
-/** A greeting to the star and the ways out, a place to try things. The cousin of the web's `sandboxContent`. */
+/** A greeting to the star and the ways out, a place to try things. */
 @Composable
 context(star: Star)
 private fun SandboxTab() {

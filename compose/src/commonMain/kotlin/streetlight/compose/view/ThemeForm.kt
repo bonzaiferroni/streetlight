@@ -27,8 +27,8 @@ import streetlight.compose.utility.collectAsState
 import kotlin.math.roundToInt
 
 /**
- * The form of a page's theme: its colors and background mode, its curve, how it works, the field that places its lights, and each
- * light's color, energy, size and focus. The page shows the theme as it is edited. The cousin of the web's `themeForm`.
+ * The form of a page's theme: its colors and background mode, its curve, how it works, the field that places its
+ * lights, and each light's color, energy, size and focus. The page shows the theme as it is edited.
  */
 @Composable
 context(editor: ThemeEditor)

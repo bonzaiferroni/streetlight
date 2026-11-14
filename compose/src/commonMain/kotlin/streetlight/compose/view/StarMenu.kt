@@ -21,8 +21,7 @@ import streetlight.compose.utility.collectAsState
 
 /**
  * The star's menu: their name beside their [badge], then the [SignInForm] while no star is signed in, or the star's
- * places and the way to sign out, which closes the menu with [onClose]. The cousin of the web's
- * star helm.
+ * places and the way to sign out, which closes the menu with [onClose].
  */
 @Composable
 fun StarMenu(onClose: () -> Unit, badge: @Composable () -> Unit) {

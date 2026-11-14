@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.io.ApiClient
 
-/** Reads the content each route shows, one branch per route. The cousin of the web's `AppContentFetcher`. */
+/** Reads the content each route shows, one branch per route. */
 class Inflator(private val api: ApiClient) {
     /** The content of [route], read from the server. */
     suspend fun inflate(route: AppRoute): Outcome<Any> = when (route) {

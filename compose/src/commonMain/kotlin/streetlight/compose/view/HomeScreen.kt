@@ -48,7 +48,7 @@ fun HomeScreen() {
 
 /**
  * The view of [HomeRoute], in a grid scrolled by [gridState] under the top bar: the map, the menus, the galaxies beside
- * the connect picker, the home feed's [feedSection] in masonry, and the footer. The cousin of the web's `homeShell`.
+ * the connect picker, the home feed's [feedSection] in masonry, and the footer.
  */
 @Composable
 context(model: HomeModel)
@@ -78,8 +78,7 @@ fun HomeView(gridState: LazyStaggeredGridState) {
 
 /**
  * Buttons to the galaxies and the earth at the start, and the button to create a galaxy and the menu to create a post
- * at the end; creating a galaxy does nothing until the app has its route. The cousin of the web's `galaxyMenu`, its
- * Create Galaxy button and `createPostMenu`.
+ * at the end; creating a galaxy does nothing until the app has its route.
  */
 @Composable
 private fun HomeMenus(modifier: Modifier) {
@@ -99,7 +98,7 @@ private fun HomeMenus(modifier: Modifier) {
 
 /**
  * The [model]'s top galaxies beside the connect picker, each under its noted heading, side by side from the web's 600px
- * container width and stacked below it. The cousin of the web's `leadingSection`.
+ * container width and stacked below it.
  */
 @Composable
 context(model: HomeModel)
@@ -136,7 +135,7 @@ private fun LeadingSection(modifier: Modifier) {
     }
 }
 
-/** A [heading] in a filigree with its [note] close below it. The cousin of the web's `notedHeading`. */
+/** A [heading] in a filigree with its [note] close below it. */
 @Composable
 private fun NotedHeading(heading: String, note: String, modifier: Modifier = Modifier) {
     val theme = currentTheme

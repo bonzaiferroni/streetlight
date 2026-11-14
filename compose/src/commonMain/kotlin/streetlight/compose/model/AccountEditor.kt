@@ -27,8 +27,7 @@ import streetlight.model.io.ApiClient
 
 /**
  * The signed-in star's [account] and its settings: completing a guest's registration, and adding, verifying, removing
- * or changing its email and password. A change to an account with a viable email asks for the current password. The
- * cousin of the web's `AccountEditor`, with its `EmailEditor` and `PasswordEditor` folded in.
+ * or changing its email and password. A change to an account with a viable email asks for the current password.
  */
 class AccountEditor(account: Account, private val api: ApiClient, private val session: StarSession) : ViewModel() {
     private val store = storeOf(AccountEditorState(account))

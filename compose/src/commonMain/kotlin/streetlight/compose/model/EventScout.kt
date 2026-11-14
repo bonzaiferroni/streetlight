@@ -21,7 +21,7 @@ import streetlight.model.io.ApiClient
 /**
  * Finds or starts an event's location with its [finder], writing a new one in its [locationEditor], then starts the
  * event in its [eventEditor], to post it to [galaxy], when given. The focus is what the star is working on, and its
- * stage follows from it. The cousin of the web's `EventScout`.
+ * stage follows from it.
  */
 class EventScout(
     val galaxy: Galaxy?,

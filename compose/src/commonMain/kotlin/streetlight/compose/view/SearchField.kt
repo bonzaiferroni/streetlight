@@ -36,7 +36,6 @@ import streetlight.compose.utility.collectAsState
  * unfocused, fading it out when focused, and a clear button while it holds text. It keeps the width of its placeholder
  * and the clear button until its text outgrows them. The field takes focus only when tapped, so the keyboard stays down
  * until wanted. A [backdrop] is drawn within the pill beneath its background, such as a blur of what lies behind it.
- * The cousin of the web's `searchField`.
  */
 @Composable
 fun SearchField(

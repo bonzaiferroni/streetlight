@@ -34,8 +34,7 @@ import streetlight.compose.utility.collectAsState
 import androidx.compose.ui.graphics.shadow.Shadow as DropShadow
 
 /**
- * A switch reading [label] on a pill that slides to the end and lights while [state] is `true`, toggling it on a
- * click. The cousin of koala's `switch`.
+ * A switch reading [label] on a pill that slides to the end and lights while [state] is `true`, toggling it on a click.
  */
 @Composable
 fun Switch(state: MutableTap<Boolean>, label: String, modifier: Modifier = Modifier) {
@@ -74,8 +73,7 @@ fun Switch(state: MutableTap<Boolean>, label: String, modifier: Modifier = Modif
 }
 
 /**
- * A row of [options] by [label], each as wide as the widest, the one [state] holds lit on a pill that grows in. The
- * cousin of koala's `switchMenu`.
+ * A row of [options] by [label], each as wide as the widest, the one [state] holds lit on a pill that grows in.
  */
 @Composable
 fun <T> SwitchMenu(

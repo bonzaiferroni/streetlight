@@ -11,8 +11,7 @@ import koala.SvgFile
 import streetlight.compose.model.LocationEditor
 
 /**
- * The form of a location's edit: its details, its image, and its links, each on its card. The cousin of the web's
- * `locationEditFormBody`.
+ * The form of a location's edit: its details, its image, and its links, each on its card.
  */
 @Composable
 context(editor: LocationEditor)
@@ -26,7 +25,7 @@ fun LocationEditForm() {
 
 /**
  * The location's name, its address and city, and its description. The keyboard of a touch screen starts each word of
- * the name, address and city in capitals. The cousin of the web's `locationDetailsForm`.
+ * the name, address and city in capitals.
  */
 @Composable
 context(editor: LocationEditor)
@@ -45,7 +44,7 @@ private fun LocationDetailsCard() = FormCard("Location Details") {
     }
 }
 
-/** The image at the top of the location's page. The cousin of the web's `locationImageForm`. */
+/** The image at the top of the location's page. */
 @Composable
 context(editor: LocationEditor)
 private fun LocationImageCard() = FormCard(null) {
@@ -58,8 +57,7 @@ private fun LocationImageCard() = FormCard(null) {
 }
 
 /**
- * The location's website and calendar, each on the keyboard a touch screen offers for a url. The cousin of the web's
- * `locationLinksForm`.
+ * The location's website and calendar, each on the keyboard a touch screen offers for a url.
  */
 @Composable
 context(editor: LocationEditor)

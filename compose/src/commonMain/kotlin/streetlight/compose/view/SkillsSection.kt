@@ -27,7 +27,7 @@ import streetlight.model.data.Skill
 
 /**
  * The [skills] of a star under their heading, a card each, wrapping to rows and centered, each in the next color of the
- * [Palette]. The cousin of the web's `skillsSection`, its cards unlinked until the app has a skill's page.
+ * [Palette].
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

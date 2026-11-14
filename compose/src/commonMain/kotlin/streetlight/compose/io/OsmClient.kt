@@ -20,8 +20,7 @@ import streetlight.model.external.OSMLocation
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
 /**
- * Calls OpenStreetMap's search directly, outside the Streetlight API, naming the app as its policy asks. The cousin of
- * the web's `OSMClient`.
+ * Calls OpenStreetMap's search directly, outside the Streetlight API, naming the app as its policy asks.
  */
 class OsmClient {
     private val client = HttpClient(CIO)

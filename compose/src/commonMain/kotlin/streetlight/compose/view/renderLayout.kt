@@ -45,7 +45,7 @@ import streetlight.model.data.toDetails
 
 /**
  * Adds the page of [content] to the grid by its design's layout, or the default layout of its kind, the [feed] as last
- * read, [page], in [mode], each block [side] units in from the edges. The cousin of the web's `renderLayout`.
+ * read, [page], in [mode], each block [side] units in from the edges.
  */
 context(feed: FeedModel)
 fun LazyStaggeredGridScope.renderLayout(content: DesignContent, page: EntityFeed, mode: FeedMode, side: Int) {
@@ -55,7 +55,7 @@ fun LazyStaggeredGridScope.renderLayout(content: DesignContent, page: EntityFeed
 
 /**
  * Adds [block] of the page of [content] to the grid, as [renderLayout] does: a feed as its own section, any other block
- * as a full item. The cousin of the web's `renderBlock`.
+ * as a full item.
  */
 context(feed: FeedModel)
 fun LazyStaggeredGridScope.renderBlock(

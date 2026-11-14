@@ -51,9 +51,8 @@ import streetlight.compose.markdown.MarkdownStyler
  * An editor of the markdown in [state] that styles it as it is typed: the syntax in the primary's foreground, strong,
  * emphasized, struck and linked text as they read, inline code in green, and headings at their size in the theme's
  * font, the rest in a monospace font at the size of regular text. Each line takes its own height, so a heading's
- * letters keep their tails. The text is the markdown itself, so the caret, selection and undo are the
- * platform's own. It shows [placeholder] while empty, and is at least [minHeight] tall. The cousin of the web's
- * `markdownEditor`.
+ * letters keep their tails. The text is the markdown itself, so the caret, selection and undo are the platform's own.
+ * It shows [placeholder] while empty, and is at least [minHeight] tall.
  */
 @Composable
 fun MarkdownEditor(

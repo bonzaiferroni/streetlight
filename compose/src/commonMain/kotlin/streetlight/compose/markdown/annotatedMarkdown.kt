@@ -33,8 +33,7 @@ import koala.markdown.markdownBlocksOf
 
 /**
  * [markdown] as one run of styled text, for a summary that reads as prose: each block on its own line, its headings at
- * the text's size a step heavier, its links in [linkColor]. Images and rules are left out. The cousin of the web's
- * `renderMarkdownBlocks`, as a feed row's summary styles it.
+ * the text's size a step heavier, its links in [linkColor]. Images and rules are left out.
  */
 fun annotatedMarkdownOf(markdown: Markdown, linkColor: Color): AnnotatedString = buildAnnotatedString {
     var isFirst = true

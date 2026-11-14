@@ -31,8 +31,7 @@ import streetlight.compose.modifier.pointerClick
 import streetlight.compose.utility.collectAsState
 
 /**
- * A section of a form under the heading [name], when given, a column of a [ColumnRow]. The cousin of the web's
- * `formSection`.
+ * A section of a form under the heading [name], when given, a column of a [ColumnRow].
  */
 @Composable
 fun FlowRowScope.FormSection(name: String?, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
@@ -44,7 +43,7 @@ fun FlowRowScope.FormSection(name: String?, modifier: Modifier = Modifier, conte
 
 /**
  * A card of a form's sections under the heading [name], when given, in a filigree, on the zen background, outlined, its
- * sections two units apart. The cousin of the web's `formCard`.
+ * sections two units apart.
  */
 @Composable
 fun FormCard(name: String?, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
@@ -63,8 +62,7 @@ fun FormCard(name: String?, modifier: Modifier = Modifier, content: @Composable 
 }
 
 /**
- * The heading of a form's section, [text] in capitals in the system's foreground, in a filigree. The cousin of the web's
- * `systemHeading`.
+ * The heading of a form's section, [text] in capitals in the system's foreground, in a filigree.
  */
 @Composable
 fun FormHeading(text: String) {
@@ -77,7 +75,7 @@ fun FormHeading(text: String) {
     )
 }
 
-/** The notes on a form's field, each a bulleted line, faint. The cousin of the web's `formBullets`. */
+/** The notes on a form's field, each a bulleted line, faint. */
 @Composable
 fun FormBullets(vararg bullets: String) {
     val theme = currentTheme
@@ -93,7 +91,7 @@ fun FormBullets(vararg bullets: String) {
 
 /**
  * The end of a form: the message of [messages], if any, beside the button reading [label] that calls [onClick] while
- * [isEnabled]. The cousin of the web's `formSubmit`.
+ * [isEnabled].
  */
 @Composable
 fun FormSubmit(label: String, onClick: () -> Unit, messages: Tap<UIMessage?>, isEnabled: Boolean = true) {
@@ -104,8 +102,7 @@ fun FormSubmit(label: String, onClick: () -> Unit, messages: Tap<UIMessage?>, is
 }
 
 /**
- * A box checked while [state] is `true`, before [label], toggling [state] when either is clicked. The cousin of koala's
- * `checkBox`.
+ * A box checked while [state] is `true`, before [label], toggling [state] when either is clicked.
  */
 @Composable
 fun CheckBox(state: MutableTap<Boolean>, label: String, modifier: Modifier = Modifier) {

@@ -17,7 +17,7 @@ import streetlight.compose.modifier.padding
 
 /**
  * The button to create a post and the menu it opens, of the kinds of post, each opening its screen to post to the
- * galaxy of [slug], when given. The cousin of the web's `createPostMenu` and its popover.
+ * galaxy of [slug], when given.
  */
 @Composable
 fun CreatePostMenu(slug: Slug?, modifier: Modifier = Modifier) {

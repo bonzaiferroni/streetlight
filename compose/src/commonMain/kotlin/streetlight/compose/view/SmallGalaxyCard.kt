@@ -25,7 +25,7 @@ import streetlight.compose.model.GalaxyRoute
 
 /**
  * A small card of [galaxy], in the galaxy's scheme color: its image beside its name over its description, fading where
- * it reaches the clip, and its details below. The cousin of the web's `smallGalaxyCard`.
+ * it reaches the clip, and its details below.
  */
 @Composable
 fun SmallGalaxyCard(galaxy: Galaxy, modifier: Modifier = Modifier) {

@@ -64,7 +64,7 @@ Every route function builds its view inside `routeBlock`, which scrolls a route 
 ```kotlin
 fun RouteScope.viewFrontDeskRoute() {
     routeBlock<FrontDeskRoute, NullContent> {
-        viewFrontDesk()
+        frontDeskScreen()
     }
 }
 ```
@@ -168,7 +168,7 @@ sealed interface SandboxRoute: StreetlightRoute, SubRoute<SandboxRoute> {
 | `Dash` | Sharing and configuring content | `viewDashPortal`, in its own chunk |
 | `Studio` | Making music: editing songs and recording them | `viewStudioPortal`, in its own chunk |
 
-To add a screen: declare the `Screen` entry and its route, write `viewFoo` and `viewFooRoute`, add the screen to its section in `toAppSection`, then add the branch in that section's portal.
+To add a screen: declare the `Screen` entry and its route, write the screen function `fooScreen` and the route function `viewFooRoute` that builds it, add the screen to its section in `toAppSection`, then add the branch in that section's portal.
 
 A route whose view reads content has a branch in `AppContentFetcher`. The content type implements `RouteContent`, which `AppContentFetcher` and `routeBlock` both require, whether it is a `FooContent` or a record such as `City`.
 
@@ -196,7 +196,7 @@ A chunk is worth splitting when its own code is large beside what it uses from t
 A screen that the server renders on the initial load has a shell in `streetlight.web.shell`. Its view is built from the shell.
 
 ```kotlin
-fun ViewScope.viewFoo(content: FooContent) {
+fun ViewScope.fooScreen(content: FooContent) {
     shellBox {
         fooShell(content)
     }
@@ -207,7 +207,7 @@ fun ViewScope.viewFoo(content: FooContent) {
 
 fun RouteScope.viewFooRoute() {
     routeBlock<FooRoute, FooContent>(FooShell.IslandId) { content ->
-        viewFoo(content)
+        fooScreen(content)
     }
 }
 ```
@@ -232,18 +232,18 @@ A shell view with a map uses `shellBoxWithMap` and sets the marker points from t
 A routed view without a shell builds its page with `mainBody`, passing its file name, the same way a shell does in `streetlight.web.shell.md`.
 
 ```kotlin
-fun ViewScope.viewFoo() {
-    mainBody("viewFoo.kt") {
+fun ViewScope.fooScreen() {
+    mainBody("fooScreen.kt") {
         pageHeader("Foo", "a subtitle", SiteImage.Foo)
         // body
     }
 }
 ```
 
-A view that configures or creates a record, named `viewFooConfig` or `viewFooScout`, builds its page with `mainBody` instead. Its two-tone `topBar` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
+A view that configures or creates a record, named `fooConfigScreen` or `fooScoutScreen`, builds its page with `mainBody` instead. Its two-tone `topBar` takes the place of the app header and links home, and the view shows no `topLogo` and no heading of its own that names the page.
 
 ```kotlin
-configBody("Foo", "Config", "viewFooConfig.kt") {
+configBody("Foo", "Config", "fooConfigScreen.kt") {
     configHeading(foo.name, foo.route)
     // body
 }
@@ -334,41 +334,41 @@ Primary marks a selection, such as a timeline's cursor. Accent marks a focus, su
 
 | View | Role |
 |---|---|
-| [`viewHome`](../../web/src/jsMain/kotlin/streetlight/web/view/viewHome.kt) | The Home screen |
-| [`viewGalaxy`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxy.kt) | The Galaxy screen |
-| [`viewGalaxyFeed`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxyFeed.kt) | The galaxy feed |
-| [`viewStar`](../../web/src/jsMain/kotlin/streetlight/web/view/viewStar.kt) | The Star screen |
+| [`homeScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/homeScreen.kt) | The Home screen |
+| [`galaxyScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/galaxyScreen.kt) | The Galaxy screen |
+| [`galaxyFeedScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/galaxyFeedScreen.kt) | The galaxy feed |
+| [`starScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/starScreen.kt) | The Star screen |
 | [`viewLocation`](../../web/src/jsMain/kotlin/streetlight/web/view/viewLocation.kt) | The Location screen |
-| [`viewEvent`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEvent.kt) | The Event screen |
-| [`viewMedia`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMedia.kt) | The Media screen |
-| [`viewSkill`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSkill.kt) | The SkillProfile screen |
-| [`viewCity`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCity.kt) | The City screen |
-| [`viewCityFeed`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCityFeed.kt) | The city feed |
-| [`viewSiteDoc`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteDoc.kt) | The SiteDoc screen |
+| [`eventScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/eventScreen.kt) | The Event screen |
+| [`mediaScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/mediaScreen.kt) | The Media screen |
+| [`skillScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/skillScreen.kt) | The SkillProfile screen |
+| [`cityScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/cityScreen.kt) | The City screen |
+| [`cityFeedScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/cityFeedScreen.kt) | The city feed |
+| [`siteDocScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/siteDocScreen.kt) | The SiteDoc screen |
 | [`viewAboutApp`](../../web/src/jsMain/kotlin/streetlight/web/view/viewAboutApp.kt) | The AboutApp screen |
-| [`viewConnect`](../../web/src/jsMain/kotlin/streetlight/web/view/viewConnect.kt) | The Connect screen |
-| [`viewContribute`](../../web/src/jsMain/kotlin/streetlight/web/view/viewContribute.kt) | The Contribute screen |
-| [`viewOnboard`](../../web/src/jsMain/kotlin/streetlight/web/view/viewOnboard.kt) | The onboarding of a star as an `OnboardType` |
+| [`connectScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/connectScreen.kt) | The Connect screen |
+| [`contributeScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/contributeScreen.kt) | The Contribute screen |
+| [`onboardScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/onboardScreen.kt) | The onboarding of a star as an `OnboardType` |
 | [`viewTalkLog`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTalkLog.kt) | The TalkLog screen |
-| [`viewInbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewInbox.kt) | The Inbox screen |
-| [`viewChatRoom`](../../web/src/jsMain/kotlin/streetlight/web/view/viewChatRoom.kt) | The ChatRoom screen |
-| [`viewEarth`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEarth.kt) | The Earth screen |
+| [`inboxScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/inboxScreen.kt) | The Inbox screen |
+| [`chatRoomScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/chatRoomScreen.kt) | The ChatRoom screen |
+| [`earthScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/earthScreen.kt) | The Earth screen |
 | [`viewTransitMap`](../../web/src/jsMain/kotlin/streetlight/web/view/viewTransitMap.kt) | The TransitMap screen |
 
 ### Configuration and Editing
 
 | View | Role |
 |---|---|
-| [`viewGalaxyConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxyConfig.kt) | Configures a galaxy |
+| [`galaxyConfigScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/galaxyConfigScreen.kt) | Configures a galaxy |
 | [`viewGalaxyFoundry`](../../web/src/jsMain/kotlin/streetlight/web/view/viewGalaxyFoundry.kt) | Creates a galaxy |
-| [`viewLocationConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewLocationConfig.kt) | Configures a location |
-| [`viewLocationUpdater`](../../web/src/jsMain/kotlin/streetlight/web/view/viewLocationUpdater.kt) | Updates a location |
-| [`viewEventUpdater`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEventUpdater.kt) | Updates an event |
-| [`viewCityConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewCityConfig.kt) | Configures a city |
-| [`viewMediaForge`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMediaForge.kt) | Creates media |
-| [`viewMediaConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMediaConfig.kt) | Configures a medium |
-| [`viewProfileConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewProfileConfig.kt) | Configures the star's profile |
-| [`viewStarConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewStarConfig.kt) | Configures the star's account |
+| [`locationConfigScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/locationConfigScreen.kt) | Configures a location |
+| [`locationUpdaterScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/locationUpdaterScreen.kt) | Updates a location |
+| [`eventUpdaterScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/eventUpdaterScreen.kt) | Updates an event |
+| [`cityConfigScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/cityConfigScreen.kt) | Configures a city |
+| [`mediaForgeScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/mediaForgeScreen.kt) | Creates media |
+| [`mediaConfigScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/mediaConfigScreen.kt) | Configures a medium |
+| [`profileConfigScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/profileConfigScreen.kt) | Configures the star's profile |
+| [`starConfigScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/starConfigScreen.kt) | Configures the star's account |
 | [`viewSiteConfig`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteConfig.kt) | Configures the viewer's site settings |
 | [`viewEditHistory`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEditHistory.kt) | The edits of a record |
 
@@ -376,23 +376,23 @@ Primary marks a selection, such as a timeline's cursor. Accent marks a focus, su
 
 | View | Role |
 |---|---|
-| [`viewEventScout`](../../web/src/jsMain/kotlin/streetlight/web/view/viewEventScout.kt) | Posts an event |
-| [`viewLocationScout`](../../web/src/jsMain/kotlin/streetlight/web/view/viewLocationScout.kt) | Posts a location |
+| [`eventScoutScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/eventScoutScreen.kt) | Posts an event |
+| [`locationScoutScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/locationScoutScreen.kt) | Posts a location |
 
 ### Stars and Tools
 
 | View | Role |
 |---|---|
-| [`viewStarDash`](../../web/src/jsMain/kotlin/streetlight/web/view/viewStarDash.kt) | The star's dashboard |
-| [`viewFrontDesk`](../../web/src/jsMain/kotlin/streetlight/web/view/viewFrontDesk.kt) | The front desk |
+| [`starDashScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/starDashScreen.kt) | The star's dashboard |
+| [`frontDeskScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/frontDeskScreen.kt) | The front desk |
 | [`viewFeedbackHub`](../../web/src/jsMain/kotlin/streetlight/web/view/viewFeedbackHub.kt) | Feedback |
 | [`viewBugReporter`](../../web/src/jsMain/kotlin/streetlight/web/view/viewBugReporter.kt) | Bug reports |
 | [`viewMusicianHub`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMusicianHub.kt) | A musician's songs |
-| [`viewSongProfile`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSongProfile.kt) | A song |
-| [`viewMusicStudio`](../../web/src/jsMain/kotlin/streetlight/web/view/viewMusicStudio.kt) | The stored songs, or the music editor of the one in focus |
-| [`viewStudio`](../../web/src/jsMain/kotlin/streetlight/web/view/viewStudio.kt) | The studio |
-| [`viewSiteMonitor`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSiteMonitor.kt) | The site's status |
-| [`viewSandbox`](../../web/src/jsMain/kotlin/streetlight/web/view/viewSandbox.kt) | The sandbox |
+| [`songProfileScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/songProfileScreen.kt) | A song |
+| [`musicStudioScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/musicStudioScreen.kt) | The stored songs, or the music editor of the one in focus |
+| [`studioScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/studioScreen.kt) | The studio |
+| [`siteMonitorScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/siteMonitorScreen.kt) | The site's status |
+| [`sandboxScreen`](../../web/src/jsMain/kotlin/streetlight/web/view/sandboxScreen.kt) | The sandbox |
 
 ### Parts of Views
 

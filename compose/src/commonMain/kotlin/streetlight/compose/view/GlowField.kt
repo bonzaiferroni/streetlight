@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 
 /**
  * A field of the page in small, holding a handle for each of [glows] at its position, sized by its radius and lit by
- * its color and energy. Dragging a handle moves its glow. The cousin of koala's `glowField`, its three fields in one.
+ * its color and energy. Dragging a handle moves its glow.
  */
 @Composable
 fun GlowField(glows: List<MutableTap<Glow>>, modifier: Modifier = Modifier) {

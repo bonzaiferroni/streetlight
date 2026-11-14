@@ -41,13 +41,12 @@ import streetlight.compose.modifier.pointerClick
 import streetlight.compose.utility.collectAsState
 import kotlin.time.Clock
 
-/** A field of the date of [state], picked in the platform's way. The cousin of the web's `dateInput`. */
+/** A field of the date of [state], picked in the platform's way. */
 @Composable
 expect fun DateField(state: MutableTap<LocalDate?>, modifier: Modifier = Modifier)
 
 /**
- * A field of the time of [state], picked in the platform's way, cleared when [isOptional]. The cousin of the web's
- * `timeInput`.
+ * A field of the time of [state], picked in the platform's way, cleared when [isOptional].
  */
 @Composable
 expect fun TimeField(state: MutableTap<LocalTime?>, modifier: Modifier = Modifier, isOptional: Boolean = false)

@@ -13,7 +13,7 @@ import streetlight.model.io.ApiClient
 
 /**
  * The star signed in on this device, `null` while signed out. A session stays signed in until the star signs out, and
- * its cookie outlives the app. The cousin of the web's `SessionClient`.
+ * its cookie outlives the app.
  */
 class StarSession(private val api: ApiClient) {
     private val store = storeOf<Star?>(null)

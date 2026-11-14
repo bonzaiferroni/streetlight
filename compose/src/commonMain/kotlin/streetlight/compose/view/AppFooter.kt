@@ -19,8 +19,7 @@ import streetlight.compose.modifier.padding
 
 /**
  * The footer of a view: a line picked from [prayers], the site's links, and a link to the source at [sourcePath] on
- * GitHub when given. The cousin of the web's `appFooter`, without its lottie, its site links unlinked until the app has
- * their routes.
+ * GitHub when given.
  */
 @Composable
 fun AppFooter(sourcePath: String? = null, modifier: Modifier = Modifier) {

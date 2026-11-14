@@ -22,8 +22,8 @@ fun MediaForgeScreen(route: MediaForgeRoute) {
 }
 
 /**
- * The view of [MediaForgeRoute], in a column scrolled by [scrollState] under the top bar: the name of the [galaxy] a media post is
- * posted to, if any, over the form that creates it. The cousin of the web's `viewMediaForge`.
+ * The view of [MediaForgeRoute], in a column scrolled by [scrollState] under the top bar: the name of the [galaxy] a
+ * media post is posted to, if any, over the form that creates it.
  */
 @Composable
 fun MediaForgeView(galaxy: Galaxy?, scrollState: ScrollState) {

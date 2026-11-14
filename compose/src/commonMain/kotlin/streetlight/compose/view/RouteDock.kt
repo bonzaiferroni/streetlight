@@ -41,7 +41,7 @@ import streetlight.compose.utility.mixSrgb
 /**
  * The dock over the bottom of the page: a pill of the routes of the [StableDock], or of the [FocusDock] of the route on
  * top, centered, with a tray at its left that switches between them while the route has a focus. Each new focus shows
- * its own dock first. The cousin of the web's `viewRouteDock`.
+ * its own dock first.
  */
 @Composable
 fun RouteDock(modifier: Modifier = Modifier) {

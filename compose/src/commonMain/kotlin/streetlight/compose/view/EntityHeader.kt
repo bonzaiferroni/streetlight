@@ -32,7 +32,7 @@ import streetlight.compose.model.toRoute
 /**
  * The header of [entity] on its page, in the entity's scheme color: its image beside its title, [descriptor] and
  * subtitle, side by side from the web's 600px container width and stacked below it, then its [details] and its
- * description. The cousin of the web's `pageHeader`, the header every page has by default.
+ * description.
  */
 @Composable
 fun EntityHeader(entity: Entity, descriptor: String, details: List<EntityDetail>, modifier: Modifier = Modifier) {
@@ -89,7 +89,7 @@ private fun HeaderTitle(entity: Entity, descriptor: String, modifier: Modifier) 
 
 /**
  * The header of a page that shows no one entity: [image], when given, at its own shape, beside [title] over
- * [descriptor] from the [SideBySideWidth], and above it below that. The cousin of the web's `pageHeader`.
+ * [descriptor] from the [SideBySideWidth], and above it below that.
  */
 @Composable
 fun PageHeader(title: String, descriptor: String, image: Image?, modifier: Modifier = Modifier) {

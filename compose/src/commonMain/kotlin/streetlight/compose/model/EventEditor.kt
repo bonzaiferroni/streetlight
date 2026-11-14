@@ -18,7 +18,7 @@ import streetlight.model.io.ApiClient
 
 /**
  * The edit of an event being created or updated, its fields, its [imageEditor], and its saving. A submodel, held by the
- * view model of any view that edits an event, as `EventScout` does. The cousin of the web's `EventEditor`.
+ * view model of any view that edits an event, as `EventScout` does.
  */
 class EventEditor(private val api: ApiClient, initialEdit: EventEdit = newEventEdit()) {
     private val store = storeOf(EventEditorState(initialEdit))

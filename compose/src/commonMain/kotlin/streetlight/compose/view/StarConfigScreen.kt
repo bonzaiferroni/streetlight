@@ -57,8 +57,7 @@ fun StarConfigScreen() {
 
 /**
  * The view of [StarConfigRoute], in a column scrolled by [scrollState] under the top bar that names it: the form to
- * register a guest's account, or the email and password of a registered one. The cousin of the web's
- * `viewStarConfig`.
+ * register a guest's account, or the email and password of a registered one.
  */
 @Composable
 context(model: AccountEditor, star: Star)
@@ -75,8 +74,7 @@ fun StarConfigView(scrollState: ScrollState) {
 }
 
 /**
- * The form to make a guest's account a registered one: what registering gives, a password, and an optional email. The
- * cousin of the web's `registerAccountForm`.
+ * The form to make a guest's account a registered one: what registering gives, a password, and an optional email.
  */
 @Composable
 context(model: AccountEditor)
@@ -119,8 +117,7 @@ private fun RegisterAccountForm() {
 
 /**
  * The account's email: the address and its status with the ways to change it, the field to add one, a check before
- * removing it, or, when mail to it could not be delivered, the field to give another. The cousin of the web's
- * `changeEmailForm`.
+ * removing it, or, when mail to it could not be delivered, the field to give another.
  */
 @Composable
 context(model: AccountEditor)
@@ -219,8 +216,7 @@ private fun UndeliveredEmailForm(email: EmailAddress?) {
 
 /**
  * The account's password: the button to change it, or the new password and its confirmation, checked by the current
- * password when the email is viable, which can also send a link to reset it. The cousin of the web's
- * `changePasswordForm`.
+ * password when the email is viable, which can also send a link to reset it.
  */
 @Composable
 context(model: AccountEditor)

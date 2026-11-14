@@ -13,7 +13,7 @@ import streetlight.compose.modifier.padding
 /**
  * The numbered [labels] of a staged form, small and in capitals, wrapping where they do not fit: the [current] stage in
  * the primary's foreground, a later one at the ink's high opacity, and an earlier one at half, readable still, since a
- * stage can be revisited. The cousin of the web's `onboardStage`, without its strikethrough.
+ * stage can be revisited.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

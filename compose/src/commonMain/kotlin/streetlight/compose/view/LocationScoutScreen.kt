@@ -43,8 +43,7 @@ fun LocationScoutScreen(route: LocationScoutRoute) {
 
 /**
  * The view of [LocationScoutRoute], in a column scrolled by [scrollState] under the top bar: the name of the galaxy the
- * location is posted to, if any, the stages of the scout with the one at hand lit, and that stage's form. The cousin
- * of the web's `viewLocationScout`.
+ * location is posted to, if any, the stages of the scout with the one at hand lit, and that stage's form.
  */
 @Composable
 context(model: LocationScout, star: Star)
@@ -86,7 +85,7 @@ private fun LocationEditStage() {
 
 /**
  * The location as it will be posted, then the post mode, the way back to the edit or the search, the last message, and
- * the way to post. The cousin of the web's review stage.
+ * the way to post.
  */
 @Composable
 context(model: LocationScout, star: Star)
