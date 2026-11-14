@@ -1,16 +1,16 @@
 # Agents
 
-Read this first, then `docs/package-documentation.md`.
+Read this first, then `docs/readme-documents.md`.
 
 ## Documentation
 
-Each package is documented in a `README.md` in its directory, so GitHub shows it beside the code. A package with a `commonMain` directory is documented there. A module is documented in a `README.md` at its root. A package document specifies where things go. The code says what they are.
+A `README.md` in a folder documents the folder's direct contents, and a module's `README.md` at its root documents the module. A README specifies where things go. The code says what they are.
 
-Each tool in `tools/` is documented in a `README.md` in its folder, titled `# Module tools.<folder>`, such as [`tools.svg`](../tools/svg/README.md). A record of work, such as `tools/svg/notes.md`, may live beside it.
+A tool in `tools/` is documented by the `README.md` in its folder, such as [`tools.svg`](../tools/svg/README.md). A record of work, such as `tools/svg/notes.md`, may live beside it.
 
-`docs/package-documentation.md` states what a package document contains, how it is written, and the style it follows. This document states when to read one and when to amend one.
+`docs/readme-documents.md` states what a README contains, how it is written, and the style it follows. This document states when to read one and when to amend one.
 
-A package document is specification only. It brings a reader up to speed on the package as it stands, not on the decisions that shaped it. It assumes the reader knows Kotlin, including source sets.
+A README is specification only. It brings a reader up to speed on the package as it stands, not on the decisions that shaped it. It assumes the reader knows Kotlin, including source sets.
 
 | Content | When it belongs |
 |---|---|
@@ -21,7 +21,7 @@ A package document is specification only. It brings a reader up to speed on the 
 
 A negative specification is valuable when it is not redundant and not more clearly stated as a positive specification.
 
-A package document says how to do a thing, not what each thing is. It does not catalog the package: no entry per component, view, column or endpoint, and no account of how a particular part of the UI looks or is built. A specific part is named only as an example, and only where the example makes a specification clearer than the rule alone. A new component, column or screen that follows the existing specifications needs no amendment.
+A README says how to do a thing, not what each thing is. It does not catalog the package: no entry per component, view, column or endpoint, and no account of how a particular part of the UI looks or is built. A specific part is named only as an example, and only where the example makes a specification clearer than the rule alone. A new component, column or screen that follows the existing specifications needs no amendment.
 
 A specific structure is described only when no general specification can carry it, such as a finely engineered layout whose intent must survive later changes. It is introduced with a line stating why it is included, so a later sweep keeps it.
 
@@ -29,7 +29,7 @@ A specific structure is described only when no general specification can carry i
 
 Dokka generates the API reference from the signatures of `kampfire`, `koala`, `model`, `web` and `server`, and `.github/workflows/kdoc.yml` publishes it to GitHub Pages on every push to `main`. `./gradlew :dokkaGenerate` writes it to `docs/kdoc` locally, which is ignored by git and served for preview with a static server. A module is added to the reference by applying the `dokka` plugin in its build and listing it under `dokka(...)` in the root build.
 
-A module's build includes its package documents in the reference with `includes.from(...)`, so each document is the description on its package page. A new package document for a documented module is picked up by the module's include pattern.
+A module's build includes its READMEs in the reference with `includes.from(...)`, so each is the description on its package or module page. A new README in a documented module is picked up by the include pattern.
 
 ## KDoc
 
@@ -52,7 +52,7 @@ A class member follows the same rule. A declaration whose name already says ever
 | Summary | The first sentence, naming the declaration's effect or subject. It is often the whole comment |
 | Opening | A type or value opens with a noun phrase whose head names what it is, as in "The outcome of a parse attempt". It never opens with a wh-clause such as "How…" or "What…", which leaves the subject unnamed. A Boolean opens with "Whether" |
 | Detail | Only what a caller needs and the signature does not give |
-| Excluded | Implementation detail, storage concerns, and the reason behind a choice. What a reader should know beyond the declaration's purpose belongs in the package document |
+| Excluded | Implementation detail, storage concerns, and the reason behind a choice. What a reader should know beyond the declaration's purpose belongs in the README |
 | Parameters | Linked in the prose, as `[attribute]`. `@param` and `@return` only for a description too long to fit the prose |
 | Links | `[Name]` for any declaration the comment mentions |
 
@@ -67,15 +67,15 @@ A class member follows the same rule. A declaration whose name already says ever
 
 ## Reading Documents
 
-Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.
+Read the README of a folder, and each one above it up to the module root, before adding a file to the folder, before changing a convention its files follow, and before reporting on code inside it. Follow the entries of each `## Dependencies` section that the work touches.
 
-Code outside `commonMain` checks its package's `commonMain` directory first, for documentation that covers the package in every source set. A document elsewhere is found by the package's path, as `find . -path '*/streetlight/web/view/README.md' -not -path '*/build/*'`.
+Code outside `commonMain` also reads its package's README in `commonMain`, which covers the package in every source set. It is found by the package's path, as `find . -path '*/streetlight/web/view/README.md' -not -path '*/build/*'`.
 
 A convention that looks arbitrary in a single file is usually specified there. Reading the document first is what separates a finding from a misreading.
 
 ## Amending Documents
 
-Documentation upkeep is part of the work, not a pass that follows it. A package document is written or amended on any of the following. Each is sufficient on its own.
+Documentation upkeep is part of the work, not a pass that follows it. A README is written or amended on any of the following. Each is sufficient on its own.
 
 | Trigger | Action |
 |---|---|
@@ -87,7 +87,7 @@ The third is the one most often missed. A convention described is a convention d
 
 An explanation often covers several packages at once. Each package named gets its own amendment, in its own document.
 
-Specification the code states plainly needs no amendment; `docs/package-documentation.md` states what a document records.
+Specification the code states plainly needs no amendment; `docs/readme-documents.md` states what a document records.
 
 Accuracy outranks completeness. A document describes the code as it stands, and an inaccurate one is worse than a missing one, because it will be believed.
 
@@ -95,7 +95,7 @@ These are live documents. Drift noticed is drift to correct, in the turn it is n
 
 ## Reporting Issues
 
-Report defects, inconsistencies, and unfinished edges in conversation. They do not belong in a package document.
+Report defects, inconsistencies, and unfinished edges in conversation. They do not belong in a README.
 
 An issue is written down only once it is decided that it should be, and then it goes under the `## Known Issues` heading of the document for the package that holds it. The entry is removed in the same pass as the fix.
 

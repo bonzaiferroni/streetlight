@@ -1,12 +1,16 @@
-# Package Documentation
+# README Documents
 
-Each package has one document, a `README.md` in its directory, such as [`streetlight.web.model`](../web/src/commonMain/kotlin/streetlight/web/model/README.md). A package with a `commonMain` directory keeps it there.
+A `README.md` in a folder documents the folder's direct contents, for agents and people alike. GitHub shows it beside the code. A folder has one when there is something to specify, and not as a formality: a folder without one has nothing recorded.
 
-Each package should have a document that describes the specifications and concepts used within the package.
+## Reading
+
+Before working in a folder, read its `README.md` and each one above it up to the module root. A rule that holds across a module lives high in that chain, and a rule for one folder lives in that folder.
+
+Then follow the entries of each `## Dependencies` section that the work touches, and read the documents they lead to.
 
 ## Documentation Content
 
-A package document provides an outline for working with code in a particular package. The code is the primary documentation, and a document carries only specification the code does not make plain.
+A document provides an outline for working with the code in its folder. The code is the primary documentation, and a document carries only specification the code does not make plain.
 
 Specification the code states plainly, such as which icon a part shows or the color of its background, is left to the code. A document records only the specification the code leaves unsaid: a rule other code must follow, a constraint behind a shape, or an intent a later change could lose.
 
@@ -48,26 +52,33 @@ A document that runs past a page or two has started describing types.
 
 ## Sections
 
-A package document is titled `# Package <name>`, or `# Module <name>` when it describes a whole Gradle module, so Dokka reads it as the description of that package or module. It then opens with these sections, in this order.
+A document opens with these sections, in this order.
 
 | Section | Holds |
 |---|---|
-| `## Introduction` | A brief description of the package domain |
-| `## Dependencies` | The packages it depends on, each with the part it provides |
-| `## Naming` | The naming patterns of its files and types, where the package has them |
+| `## Introduction` | A brief description of the folder's domain |
+| `## Dependencies` | The packages or modules it depends on, each with the part it provides |
+| `## Naming` | The naming patterns of its files and types, where it has them |
 
 The specification follows, under headings that name its topics. The document closes with these sections, where present, in this order.
 
 | Section | Holds |
 |---|---|
-| `## Workflows` | Step lists for recurring tasks in the package |
+| `## Antipatterns` | Shapes to avoid, each under its own heading with an example and a short summary of the better path |
+| `## Workflows` | Step lists for recurring tasks in the folder |
 | `## Tests Wanted` | Tests worth writing once the code they cover is stable, as described in `docs/testing.md` |
 | `## Known Issues` | Defects recorded as described below |
 
+## Package Documents
+
+A document in a package's folder is titled `# Package <name>`, and one at a module's root `# Module <name>`, so Dokka reads it as the description of that package or module. A tool's document is titled `# Module tools.<folder>`.
+
+A package spread over several source sets has one document, in its `commonMain` folder where it has one, since Dokka may let one document of a package shadow another rather than merge them. Code outside `commonMain` reads that document too.
+
 ## Known Issues
 
-A document may carry a `## Known Issues` heading at its end. An entry there names something wrong in the package and what a reader should do when they meet it.
+A document may carry a `## Known Issues` heading at its end. An entry there names something wrong in the folder and what a reader should do when they meet it.
 
 This heading is the one place a document describes something other than the current convention, and the one place it carries something expected to change.
 
-A document with no such heading has no known issues recorded. It does not follow that the package has none.
+A document with no such heading has no known issues recorded. It does not follow that the folder has none.

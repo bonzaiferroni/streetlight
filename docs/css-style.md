@@ -1,6 +1,6 @@
 # CSS Style
 
-How CSS is written here, beyond what the package documents specify for their own packages. Where each stylesheet lives and how it is served is specified in [`koala.modifier`](../koala/src/commonMain/kotlin/koala/modifier/README.md).
+How CSS is written here, beyond what the READMEs specify for their own folders. Where each stylesheet lives and how it is served is specified in [`koala.modifier`](../koala/src/commonMain/kotlin/koala/modifier/README.md).
 
 ## Properties
 
