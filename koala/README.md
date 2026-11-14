@@ -18,22 +18,22 @@ The base set of components and functionality for web apps. It declares `View`, a
 
 | Package | Holds |
 |---|---|
-| [`koala.component`](src/commonMain/kotlin/koala/component/README.md) | Components, such as `switch`, `column` and `icon` |
-| [`koala.layout`](src/commonMain/kotlin/koala/layout/README.md) | Layouts, such as `tabs` and `messageBox` |
+| [`koala.component`](src/commonMain/kotlin/koala/component/README.md) | Building blocks of markup declared on `FlowContent`, which the server renders, such as `switch`, `column` and `icon` |
+| [`koala.layout`](src/commonMain/kotlin/koala/layout/README.md) | Arrangements of components declared on `FlowContent`, such as `tabs` and `messageBox` |
 | [`koala.model`](src/commonMain/kotlin/koala/model/README.md) | Classes and interfaces not bound to their point of use, such as `WebRoute` |
-| [`koala.modifier`](src/commonMain/kotlin/koala/modifier/README.md) | Modifiers and the stylesheets they apply |
+| [`koala.modifier`](src/commonMain/kotlin/koala/modifier/README.md) | The classes and styles an element takes, and the stylesheets that declare them |
 | [`koala.page`](src/commonMain/kotlin/koala/page/README.md) | The frame a page is built on: its head, scripts, ids, mounts and data islands |
-| [`koala.markdown`](src/commonMain/kotlin/koala/markdown/README.md) | Markdown parsing and rendering |
+| [`koala.markdown`](src/commonMain/kotlin/koala/markdown/README.md) | The parser of markdown into blocks and spans, and their HTML for the server |
 | [`koala.interop`](src/commonMain/kotlin/koala/interop/README.md) | Calls between markup and the bundle, and the `wire` functions that bind a view to server markup |
-| [`koala.external`](src/jsMain/kotlin/koala/external/README.md) | Declarations of browser and library APIs |
+| [`koala.external`](src/jsMain/kotlin/koala/external/README.md) | `external` declarations for the browser and library APIs the Kotlin wrappers lack |
 | [`koala.utility`](src/commonMain/kotlin/koala/utility/README.md) | Utilities whose target is not a koala type |
 | `koala.core` | The start of the bundle: its exception handler and the setup of the map, lottie and switches |
 | [`koala.bench`](src/jsMain/kotlin/koala/bench/README.md) | Measures of the performance of code in the browser |
 | [`koala.dom`](src/jsMain/kotlin/koala/dom/README.md) | The view runtime: `View`, `ViewScope`, `AppendScope` and the view factories |
-| [`koala.dom.component`](src/jsMain/kotlin/koala/dom/component/README.md) | Components built in the browser |
-| [`koala.dom.layout`](src/jsMain/kotlin/koala/dom/layout/README.md) | Layouts built in the browser |
-| [`koala.dom.markdown`](src/jsMain/kotlin/koala/dom/markdown/README.md) | Markdown rendered in the browser, and its editors |
-| [`koala.dom.page`](src/jsMain/kotlin/koala/dom/page/README.md) | The browser side of the page frame |
+| [`koala.dom.component`](src/jsMain/kotlin/koala/dom/component/README.md) | Components that need the browser, bound to state where they take input |
+| [`koala.dom.layout`](src/jsMain/kotlin/koala/dom/layout/README.md) | Layouts that need the browser, including the blocks that rebuild their content from state |
+| [`koala.dom.markdown`](src/jsMain/kotlin/koala/dom/markdown/README.md) | Markdown rendered in the browser, and the editors that style it as it is typed |
+| [`koala.dom.page`](src/jsMain/kotlin/koala/dom/page/README.md) | Data islands read, server-rendered shells adopted and scripts loaded in the browser |
 
 UI that needs the browser lives under `koala.dom`, in a package that mirrors its dom-agnostic counterpart: `koala.dom.component`, `koala.dom.layout`, `koala.dom.page` and `koala.dom.markdown`. A browser view imports the `koala.dom` packages with a star import, so it sees the `AppendScope` and `ViewScope` variants and not the `FlowContent` ones. Markup rendered on the server imports the dom-agnostic packages.
 

@@ -9,7 +9,7 @@ Result and state types shared by every app: `Outcome` and `Problem`, and the `St
 | Package | Provides |
 |---|---|
 | `kampfire.api` | Wire value types |
-| `kotlinx.serialization` | Serialization of results |
+| `kotlinx.serialization` | The JSON form a result takes on the wire |
 | `kotlinx.coroutines` | `Flow`, behind `Store` and `Tap` |
 
 ## Problem

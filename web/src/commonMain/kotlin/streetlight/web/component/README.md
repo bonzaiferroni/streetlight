@@ -8,8 +8,8 @@ The app's components declared on `FlowContent`, which the server renders, and th
 
 | Package | Provides |
 |---|---|
-| `koala.component`, `koala.layout` | koala's components and layouts |
-| `koala.modifier` | Modifiers and classes |
+| `koala.component`, `koala.layout` | The building blocks and arrangements of markup the app's components extend |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
 | `streetlight.web.page` | `PopoverId` and `AppAttribute` |
 | `streetlight.model` | Entities and routes |
 

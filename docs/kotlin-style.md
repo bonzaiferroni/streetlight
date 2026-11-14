@@ -1,6 +1,6 @@
 # Kotlin Style
 
-The style of Kotlin here, beyond what the READMEs specify for their own folders.
+Guidelines for writing Kotlin that hold across the project, beyond what each README specifies for its folder.
 
 A rule here applies across the project. A rule about the types of one package belongs in that package's document, or is left unstated when the code makes it plain. A type from a package may appear here only as an example.
 

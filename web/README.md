@@ -29,11 +29,11 @@ The module follows the map in [`koala`](../koala/README.md) under Packages.
 | [`streetlight.web.idb`](src/jsMain/kotlin/streetlight/web/idb/README.md) | A relational layer over the browser's IndexedDB |
 | [`streetlight.web.subApp`](src/jsMain/kotlin/streetlight/web/subApp/README.md) | The views, services and fetchers of sub-apps |
 | [`streetlight.web.utility`](src/jsMain/kotlin/streetlight/web/utility/README.md) | Utilities whose target is not a web type |
-| [`streetlight.web.dom.component`](src/jsMain/kotlin/streetlight/web/dom/component/README.md) | The app's components built in the browser |
-| [`streetlight.web.dom.layout`](src/jsMain/kotlin/streetlight/web/dom/layout/README.md) | The app's layouts built in the browser |
-| [`streetlight.web.dom.page`](src/jsMain/kotlin/streetlight/web/dom/page/README.md) | The page frame in the browser |
+| [`streetlight.web.dom.component`](src/jsMain/kotlin/streetlight/web/dom/component/README.md) | The app's components that need the browser, such as `popoverMenu` and `slider` |
+| [`streetlight.web.dom.layout`](src/jsMain/kotlin/streetlight/web/dom/layout/README.md) | The app's layouts that need the browser, including the forms that take no model |
+| [`streetlight.web.dom.page`](src/jsMain/kotlin/streetlight/web/dom/page/README.md) | The page theme and a view's footer, set in the browser |
 | [`streetlight.web.integration`](src/jsTest/kotlin/streetlight/web/integration/README.md) | Browser tests of views and their view models |
-| [`streetlight.web.promo`](src/jsPromo/kotlin/streetlight/web/promo/README.md) | The content of promo videos |
+| [`streetlight.web.promo`](src/jsPromo/kotlin/streetlight/web/promo/README.md) | The shots of promo videos: real views mounted over the test fakes |
 
 The browser half of the UI lives under `streetlight.web.dom`, in `streetlight.web.dom.component`, `streetlight.web.dom.layout` and `streetlight.web.dom.page`, mirroring the server-rendered packages as `koala.dom` does.
 

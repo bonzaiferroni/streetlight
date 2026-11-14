@@ -9,7 +9,7 @@ Markdown parsed into blocks and spans, and rendered as HTML without the bundle.
 | Package | Provides |
 |---|---|
 | `kotlinx.html` | The HTML DSL |
-| `koala.modifier` | Modifiers and classes |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
 | `kampfire.api` | `Markdown` |
 
 ## Markdown

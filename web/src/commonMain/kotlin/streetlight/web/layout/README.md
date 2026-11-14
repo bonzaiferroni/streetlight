@@ -9,8 +9,8 @@ Layouts declared on `FlowContent`, which the server renders, and the `Style` obj
 | Package | Provides |
 |---|---|
 | `kotlinx.html` | The HTML DSL |
-| `koala.component`, `koala.layout` | Components and layouts |
-| `koala.modifier` | Modifiers and classes |
+| `koala.component`, `koala.layout` | The building blocks and arrangements of markup its parts are made of |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
 | `streetlight.model` | Entities and routes |
 | `streetlight.web.model` | The entity properties |
 | `streetlight.web.component` | The app's components |

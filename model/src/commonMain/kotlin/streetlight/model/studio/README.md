@@ -8,7 +8,7 @@ The interfaces of the studio's data on the device, shaped after Room. `StudioDb`
 
 | Package | Provides |
 |---|---|
-| `streetlight.model.music` | The records |
+| `streetlight.model.music` | The songs, musics, tracks and mixes its DAOs keep |
 | `kotlinx.coroutines` | `Flow` |
 
 ## Naming

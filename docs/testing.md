@@ -1,6 +1,6 @@
 # Testing
 
-The conventions of tests in this project. Fixtures belonging to one package are documented in that package's document.
+Guidelines for choosing the tests worth writing, and the voice, assertions, utilities and fakes they use. Fixtures belonging to one package are documented in that package's document.
 
 ## Voice
 

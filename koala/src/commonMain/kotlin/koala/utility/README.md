@@ -8,7 +8,7 @@ Utilities whose target is not a koala type, such as coroutines, flows and JSON. 
 
 | Package | Provides |
 |---|---|
-| `kotlinx.coroutines` | Coroutines and flows |
+| `kotlinx.coroutines` | `Flow` and `CoroutineScope`, the targets of most of its utilities |
 | `kotlinx.serialization` | JSON |
 
 ## Utilities

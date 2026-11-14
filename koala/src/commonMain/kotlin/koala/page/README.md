@@ -9,7 +9,7 @@ The frame a page is built on, without the bundle: its head, scripts, element ids
 | Package | Provides |
 |---|---|
 | `kotlinx.html` | The HTML DSL |
-| `koala.modifier` | Modifiers and classes |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
 | `koala.component` | The containers mounts are built from |
 | `kotlinx.serialization` | The JSON of data islands |
 

@@ -8,7 +8,7 @@ The text form of notation, the one a user edits: the parsers that translate betw
 
 | Package | Provides |
 |---|---|
-| `streetlight.model.music` | The domain model |
+| `streetlight.model.music` | The songs and tracks its parsers read and write |
 
 ## Section Names
 

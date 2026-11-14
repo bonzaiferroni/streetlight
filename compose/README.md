@@ -30,7 +30,7 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 | [`streetlight.compose.modifier`](src/commonMain/kotlin/streetlight/compose/modifier/README.md) | `Modifier` extensions for the theme's styling, the cousins of `koala.modifier` |
 | [`streetlight.compose.markdown`](src/commonMain/kotlin/streetlight/compose/markdown/README.md) | Markdown rendered for Compose from koala's parsed blocks |
 | [`streetlight.compose.svg`](src/commonMain/kotlin/streetlight/compose/svg/README.md) | The renderer of animated icons |
-| `streetlight.compose.charts` | Line and time charts |
+| `streetlight.compose.charts` | Line charts with their axes, labels and rules, over values or over time |
 | [`streetlight.compose.utility`](src/commonMain/kotlin/streetlight/compose/utility/README.md) | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
 
 ## Web Counterparts

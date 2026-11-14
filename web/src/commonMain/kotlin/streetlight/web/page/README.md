@@ -10,7 +10,7 @@ Whole HTML documents the server responds with: the head, the app body around a r
 |---|---|
 | `koala.page` | `appHead` |
 | `koala.component`, `koala.layout` | The components and layouts the body is built from |
-| `koala.modifier` | Modifiers and classes |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
 | `koala.interop` | `HeadScriptConfig` and `RootSwitch` |
 | `kotlinx.html` | The HTML DSL |
 | `streetlight.web.shell` | The shells placed in the body |

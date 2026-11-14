@@ -9,7 +9,7 @@ Components declared on `FlowContent`, which build markup without the bundle, and
 | Package | Provides |
 |---|---|
 | `kotlinx.html` | The HTML DSL |
-| `koala.modifier` | Modifiers and classes |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
 | `koala.page` | `Id` |
 | `koala.interop` | `KoalaFun` for markup that calls the browser |
 | `kampfire.model` | Shared model types |

@@ -8,7 +8,7 @@ The presentation model of notation: the domain model of `streetlight.model.music
 
 | Package | Provides |
 |---|---|
-| `streetlight.model.music` | The domain model |
+| `streetlight.model.music` | The songs and tracks it lays out as notation |
 
 ## Layout
 

@@ -10,8 +10,8 @@ Views: compositions tied to a model, which build the DOM through the `koala.dom`
 |---|---|
 | `koala.dom` | `ViewScope` and the view runtime |
 | `koala.dom.component`, `koala.dom.layout` | Components and layouts built in the browser |
-| `koala.modifier` | Modifiers and classes |
-| `streetlight.web.model` | View models |
+| `koala.modifier` | `modify`, and the classes and styles it applies to elements |
+| `streetlight.web.model` | The state each view binds to, and the calls that change it |
 | `streetlight.web.dom.component`, `streetlight.web.dom.layout` | The app's components and layouts built in the browser |
 | `streetlight.web.layout`, `streetlight.web.shell` | Server-renderable layouts and the shells views adopt |
 | `streetlight.model` | DTOs and routes |

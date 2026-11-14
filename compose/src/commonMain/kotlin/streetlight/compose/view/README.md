@@ -13,7 +13,7 @@ The app's theme, and the composables that take a model or the `Portal`: the view
 | `streetlight.compose.model` | Routes, `Portal`, view models and entity properties |
 | `streetlight.compose.modifier` | The theme's styling as modifiers |
 | `streetlight.compose.svg` | The renderer of animated icons |
-| `org.maplibre.compose` | The map |
+| `org.maplibre.compose` | The map's renderer, camera and layers |
 
 ## Naming
 
