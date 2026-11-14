@@ -1,6 +1,6 @@
 # Icon Work — Record
 
-The specification is `docs/packages/tools.svg.md`. This file records the work: what each script built, what each new icon replaced, and what was rejected and why.
+The specification is [`tools.svg`](README.md). This file records the work: what each script built, what each new icon replaced, and what was rejected and why.
 
 Task: an `label-animated.svg` for every pack in `koala/.../SvgFile.kt` (`svgPackOf` entries), now extended to new packs for values whose icon stood in for something else.
 

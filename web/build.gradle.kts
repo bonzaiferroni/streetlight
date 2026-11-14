@@ -152,9 +152,6 @@ listOf("Development", "Production").forEach { mode ->
 // the package documents appear on the package pages of the API reference
 dokka {
     dokkaSourceSets.configureEach {
-        includes.from(fileTree(rootDir.resolve("docs/packages")) {
-            include("web.md", "streetlight.web.*.md")
-            exclude("streetlight.web.integration.md", "streetlight.web.promo.md")
-        })
+        includes.from("README.md", fileTree("src") { include("*Main/**/README.md") })
     }
 }

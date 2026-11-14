@@ -1,6 +1,6 @@
 # Testing
 
-How tests are written in this project. Fixtures belonging to one package are documented in that package's document under `docs/packages/`.
+How tests are written in this project. Fixtures belonging to one package are documented in that package's document.
 
 ## Voice
 

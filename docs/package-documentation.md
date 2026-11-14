@@ -1,6 +1,6 @@
 # Package Documentation
 
-`docs/packages/` holds one document per package. The filename is the fully qualified package name, for example `streetlight.web.model.md`.
+Each package has one document, a `README.md` in its directory, such as [`streetlight.web.model`](../web/src/commonMain/kotlin/streetlight/web/model/README.md). A package with a `commonMain` directory keeps it there.
 
 Each package should have a document that describes the specifications and concepts used within the package.
 

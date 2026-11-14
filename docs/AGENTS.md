@@ -4,9 +4,9 @@ Read this first, then `docs/package-documentation.md`.
 
 ## Documentation
 
-`docs/packages/` holds one document per package, named for the fully qualified package. A package document specifies where things go. The code says what they are.
+Each package is documented in a `README.md` in its directory, so GitHub shows it beside the code. A package with a `commonMain` directory is documented there. A module is documented in a `README.md` at its root. A package document specifies where things go. The code says what they are.
 
-Each tool in `tools/` is documented there too, as `tools.<folder>.md`, such as `tools.promo.md` for `tools/promo` and `tools.svg.md` for `tools/svg`. A tool's folder holds no specification of its own; a record of work, such as `tools/svg/notes.md`, may live beside its scripts.
+Each tool in `tools/` is documented in a `README.md` in its folder, titled `# Module tools.<folder>`, such as [`tools.svg`](../tools/svg/README.md). A record of work, such as `tools/svg/notes.md`, may live beside it.
 
 `docs/package-documentation.md` states what a package document contains, how it is written, and the style it follows. This document states when to read one and when to amend one.
 
@@ -68,6 +68,8 @@ A class member follows the same rule. A declaration whose name already says ever
 ## Reading Documents
 
 Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.
+
+Code outside `commonMain` checks its package's `commonMain` directory first, for documentation that covers the package in every source set. A document elsewhere is found by the package's path, as `find . -path '*/streetlight/web/view/README.md' -not -path '*/build/*'`.
 
 A convention that looks arbitrary in a single file is usually specified there. Reading the document first is what separates a finding from a misreading.
 

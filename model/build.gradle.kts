@@ -48,8 +48,6 @@ kotlin {
 // the package documents appear on the package pages of the API reference
 dokka {
     dokkaSourceSets.configureEach {
-        includes.from(fileTree(rootDir.resolve("docs/packages")) {
-            include("streetlight.model.md")
-        })
+        includes.from("README.md")
     }
 }
