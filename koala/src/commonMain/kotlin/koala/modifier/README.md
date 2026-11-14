@@ -1,0 +1,141 @@
+# Package koala.modifier
+
+## Introduction
+
+A `Modifier` is one change to an HTML element. `Modifier` is a sealed interface, and `ModifierSet` holds an array of nullable modifiers while being a `Modifier` itself, so a set nests inside a set.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `kotlinx.css` | CSS value types |
+| `kotlinx.html` | The tags modifiers apply to |
+| `koala.page` | `Id` |
+| `web` (Kotlin wrappers) | DOM access in `jsMain` |
+
+## Modifier Kinds
+
+| Type | Holds | Lands as |
+|---|---|---|
+| `Class` | An identifier | A class name |
+| `InlineStyle<T>` | A `Property<T>` and a value | A declaration in the `style` attribute |
+| `AttributeValue<T>` | An `Attribute<T>` and a value | An attribute |
+| `ModifierSet` | Nullable modifiers | Each member, in order |
+
+A `when` over a `Modifier` names all four and needs no `else`. The `ModifierSet` branch recurses, because a member may itself be a set, and skips nulls.
+
+`Class` carries the identifier alone.
+
+`Attribute` and `Property` are descriptors; `AttributeValue` and `InlineStyle` are a descriptor bound to a value. `Attribute.to(value)` and `Property.of(value)` are the factories. A descriptor marked custom prefixes its own name — `data-` for an attribute, `--` for a property — so call sites read `identifier` and never `name`.
+
+Shared descriptors live as vals in the `Attribute` companion and in the `Css` object, so each identifier string is written once.
+
+## Common Source
+
+The common source applies modifiers while HTML is being built, on kotlinx.html receivers such as `TagConfig` and `CoreAttributeGroupFacade`, by writing into the `attributes` map.
+
+A component takes its modifier as `mod: Modifier? = null`, applied to its base element. A component that applies a modifier to more than one element takes each further one as `fooMod: Modifier? = null`, named for the element it applies to.
+
+`addModifiers` appends to the `class` and `style` values already on the tag rather than replacing them, so two callers modifying one tag do not erase each other.
+
+## JS Source
+
+The js source applies modifiers to a live element, on `web.*` receivers. `modify` and `unmodify` are the pair, `isModified` and `contains` are the queries, and `toggle` combines them. Each mutating function returns its receiver so calls chain.
+
+`Element.style` is an inline cast to `HTMLElement`, which lets these functions take the wider `Element` receiver while reaching inline styles.
+
+| Function | Accepts |
+|---|---|
+| `modify`, `unmodify`, `isModified`, `toggle`, `contains` | Any `Modifier` |
+| `trigger`, `modifyAfterFrame`, `unmodifyAfterFrame` | `Class` |
+
+The second group takes only a class because it schedules the change on a later animation frame, which exists to let a CSS transition observe the class arriving.
+
+`isModified` asks the element; `contains` asks a modifier. Both compare a leaf by identifier and string value rather than by `==`, because a `Property` holds a lambda that defeats data-class equality. `contains` is true when every leaf of the argument is found in the receiver, so a `ModifierSet` argument is satisfied only in full, and a null member is skipped.
+
+## Class Utilities
+
+A utility class is a `Class` val declared in `LayoutCss.kt`, `DisplayCss.kt` or `TextCss.kt`, with its rule in the stylesheet of the same file. Declarations and rules follow the same groups, under the same comments.
+
+## Signal Classes
+
+A signal class is a `Class` that a component reads from its `mod` with `contains` to choose a behavior, such as `Magic` and `Transitioner` in `MagicCss.kt`. It may have no rule of its own. `Transitioner` runs a component's change inside a view transition and takes precedence over `Magic`.
+
+## View Transitions
+
+An element animated by a view transition takes a name and, optionally, a `Presto` style from `PrestoCss.kt`. An element that survives the change is named with `PrestoSelf`, and a container whose surviving children move as their siblings resize takes `PrestoItems`, which names each direct child the same way; an element that is rebuilt, such as one inside a `Transitioner` `flowBlock`, is named with `transition(key)`, a key unique on the page. A `Presto` style is a view transition class, so many named elements share it.
+
+A named element is a backdrop root, so a `backdrop-filter` within it blurs nothing behind it. The element carrying the filter is named, never an ancestor of it.
+
+Every view transition starts through `Document.viewTransition` in `koala.dom`, never `startViewTransition` directly. A call made while a transition waits to capture the page joins it, so the changes of one state update animate together rather than the last cutting the others short. A class that styles only one change, such as the direction of a `transTabs` switch or `TransitioningRoot` on the root during a root change made with transition, as `rootSwitch` with `isTransition` and `toggleRootModifierWithTransition` make, is set before the call and removed when the returned transition is `finished`, so it does not style a later transition elsewhere.
+
+## Stylesheets
+
+A stylesheet declared in Kotlin is written as `docs/css-style.md` specifies.
+
+A stylesheet that serves a single component is declared in that component's file, with its classes in an object named for the component, as `CellGrid.Base` in `cellGrid.kt`.
+
+A stylesheet is served only once it is listed in `KtStyles` in `web/src/commonMain/kotlin/streetlight/web/page/siteStyles.kt`.
+
+`KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance. A base color in `ThemeCss`, such as `--green`, is written from an `Rgb` in `KoalaTheme`, never as literal channels, so Kotlin code can read the same color. Its `-fg` and `-bg` variants are mixed from it in CSS.
+
+## Shine Surface
+
+`ShineBg` is paper tinted with ink, lit by the page's glows as if they shone on the element from around it, the cousin of compose's `shineBg()` and kept in step with it. Each glow pools on the edge its direction from the page's center points to. That point is computed in Kotlin, as CSS cannot, and set by the theme beside the glow's other properties.
+
+## Inline Style Utilities
+
+`CssUtility.kt` holds `InlineStyle` vals, each one a `Property` from `Css` bound to a value. Each is named for the property followed by the value, in PascalCase.
+
+`--unit` is the spacing unit, `KoalaTheme.spacingUnit`: the shortest distance that shows two elements are separate. Spacing is a whole multiple of it, building the hierarchy of grouping: an item's elements are one unit apart and the item has one unit of padding, so two items' content is two units apart. Its value sets the density of the page.
+
+A `Property<LinearDimension>` invoked with an `Int` yields a multiple of `--unit`. Invoked with a `LinearDimension` it yields that dimension unchanged.
+
+`Css` lists the standard descriptors first and the custom ones after.
+
+A style that changes a single property value is an `InlineStyle` rather than a utility class. A utility class remains where the style must not override a class already held by the element.
+
+`Css` defines each property descriptor. `CssUtility.kt` exposes the most frequently used descriptors as package-level `get()` vals, so that `MinHeight(8)` resolves through the `invoke` operators in `InlineStyle.kt`.
+
+An invoker utility is a package-level `get()` val returning a `Css` descriptor, called with the value. A value utility is a `val` bound to a descriptor and a value, such as `AlignItemsCenter`. A value utility keeps its name when it replaces a utility class, so call sites are unchanged. An invoker utility replaces a name such as `MinHeight8` with the call `MinHeight(8)`.
+
+A utility class that becomes an `InlineStyle` has its declaration and rule removed.
+
+A descriptor for a value that is a plain number is typed `Number` or `Int`. Otherwise it takes the `kotlinx.css` type for the value. Where `kotlinx.css` has no type for the property, the descriptor takes the enum of a related property whose values are all valid for it, or `String` when none fits.
+
+A utility that sets more than one property remains a utility class.
+
+A descriptor called rarely has no package-level `get()` val and is invoked through `Css`, as in `Css.Top(1)`.
+
+A value utility for a zero length is written with `0.px`, because the `Int` invoker yields `calc(var(--unit) * 0)`.
+
+A value utility whose name equals a `kotlinx.css` type qualifies that type in its initializer, as in `kotlinx.css.FlexWrap.wrap`.
+
+Modifiers are imported with `koala.modifier.*`, not by name.
+
+A property with few variations in use is defined in `CssUtility.kt` as a fixed `InlineStyle`, such as `Flex1` and `BorderRadius1`. A property whose values are kept consistent across the app is also a fixed `InlineStyle`, such as `Gap2Px`.
+
+## App Layers
+
+`AppLayer` names the layers of the page and carries the `z-index` each one sets.
+
+| Layer | Sets | Holds |
+|---|---|---|
+| `Backdrop` | `-1` | The glow behind the page, painted by `body::before` |
+| `Body` | Nothing | Route content, at the default |
+| `Overlay` | `2` | The fixed overlay above the content |
+| `AboveOverlay` | `3` | Content that must cover the overlay |
+
+An element takes a layer through `AppLayer.Foo.mod`. A stylesheet rule with no element to modify interpolates `AppLayer.Foo.zIndex`, so the value is written once.
+
+`z-index` orders siblings within one stacking context, so a layer holds only where the element resolves against the root. An ancestor with a `filter`, such as `Blur`, forms its own context and traps every layer inside it.
+
+Ordering within a layer is document order, and a `z-index` set for that, such as one child of a component over another, is a local value and not an `AppLayer`.
+
+## Other Files
+
+| File | Holds |
+|---|---|
+| `KoalaBody.kt` | Ids and attributes of the body element, and the screen selector generator |
+| `ScriptBuilder.kt` | `jsScriptOf`, which assembles JS text from `JsFunction`s |
+| `Rgb.kt` | `Rgb` and its hex conversions |

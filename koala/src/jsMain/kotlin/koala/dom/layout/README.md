@@ -1,0 +1,60 @@
+# Package koala.dom.layout
+
+## Introduction
+
+Layouts built in the browser on `AppendScope` or `ViewScope`, including the blocks that rebuild their content from state.
+
+## Dependencies
+
+| Package | Provides |
+|---|---|
+| `koala.dom` | `ViewScope`, `AppendScope` and the view runtime |
+| `koala.layout` | The stylesheets and `configureFoo` functions of the layouts here |
+| `koala.dom.component` | The components layouts are built from |
+| `kampfire.model` | `Tap`, `MutableTap` and `Store` |
+| `web` (Kotlin wrappers) | DOM types |
+
+## Fixed Elements
+
+A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, because a `filter` on an ancestor makes the block, not the viewport, the containing block for a fixed element.
+
+## Selector Blocks
+
+`selectorBlock` draws no container and shows nothing when it has no items. The caller wraps it in `selectorContainer`, together with any content that follows the items, such as a prompt shown while the list is empty.
+
+## Building From State
+
+A layout that follows a flow builds its content from the state's value when it is called, then collects the flow and skips the emission that repeats it. Content built only in the collector arrives a frame late, after a view transition has captured the page without it. `flowBlock`, `itemsBlock` and `orderColumn` follow this.
+
+## Tabs
+
+`transTabs` is used where a tab change should run as a view transition, and `tabs` or `lazyTabs` elsewhere. Firefox and Safari drop every `backdrop-filter` during a view transition, so tabs inside a modal dialog stay `tabs` or `lazyTabs`, keeping the dialog's blurred backdrop.
+
+## Layouts
+
+### Feedback
+
+| Layout | Role |
+|---|---|
+| [`messageBox`](messageBox.kt) | A message in a card styled by its type, or nothing |
+
+### Blocks Built From State
+
+| Layout | Role |
+|---|---|
+| [`flowBlock`](flowBlock.kt) | Rebuilds a child view for each value of a flow |
+| [`itemsBlock`, `indexedItemsBlock`](itemsBlock.kt) | A child view per item, keeping the views of items that stay |
+| [`lazyColumn`](lazyColumn.kt) | A scrolling column that applies each change in place |
+| [`selectorBlock`, `selectorContainer`](selectorBlock.kt) | A column of items selected by click, and its scrolling container |
+| [`stageBlock`](stageBlock.kt) | Numbered stages of an enum over the content of the current one |
+
+### Panels
+
+| Layout | Role |
+|---|---|
+| [`tabs`](tabs.kt) | Tabs over panels, the selected tab bound to a field when given |
+| [`transTabs`](transTabs.kt) | `tabs` whose changes run as view transitions |
+| [`sideTabs`](sideTabs.kt) | A column of tabs bound to a field, beside the panel the selected tab shows |
+| [`subrouter`](subrouter.kt) | Breadcrumbs, a menu panel when wide, and the content of the current route of a screen's routes |
+| [`lazyTabs`](lazyTabs.kt) | Tabs whose panels are built when first shown |
+| [`LazyTabScope`](LazyTabScope.kt) | Collects the tabs of a `lazyTabs` block |
