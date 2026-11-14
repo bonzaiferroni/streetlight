@@ -44,6 +44,20 @@ data class FooState(
 )
 ```
 
+### View
+
+Role: Renders the state of its viewmodel and calls its functions.
+
+```kotlin
+context(model: FooModel)
+fun ViewScope.fooView() {
+    textField(model.nameState)
+    flowBlock(model.itemsState) { items ->
+        items.forEach { fooItem(it) }
+    }
+}
+```
+
 ### Submodel
 
 Role: Holds the state and functions for a section of UI that is reusable across different viewmodels.

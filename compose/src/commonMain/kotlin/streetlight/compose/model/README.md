@@ -59,7 +59,7 @@ The app's routes and back stack, its services and view models, and the propertie
 
 ## Submodels
 
-State and logic that several view models share is a submodel: a plain class, not a `ViewModel`, that a view model builds with its `viewModelScope` and the collaborators it needs, and holds as a property. `FeedModel` is one: a feed shown in a view, starting from the page its view's content holds, its type, the mode it is laid out in, and the tag and search that filter it, read again in the scope it was given. A view model holds one per feed, as `HomeModel.feed`, and a view passes it to the parts that show it as a context parameter.
+A submodel is a plain class, not a `ViewModel`, built with its view model's `viewModelScope`. `FeedModel` is one: a feed shown in a view, starting from the page its view's content holds, its type, the mode it is laid out in, and the tag and search that filter it, read again in the scope it was given. A view model holds one per feed, as `HomeModel.feed`, and a view passes it to the parts that show it as a context parameter.
 
 `LocationEditor` is another: a location's edit, its fields and its saving, with an `ImageEditor` that holds a picked image until the save uploads it, held by any view model that edits a location, as `LocationScout` holds one for a new location. `EventEditor` is its cousin for an event.
 
@@ -71,7 +71,7 @@ The web's earth routes change the address bar; the app has none, so a route is a
 
 A staged form's model holds the focus of the star's work, such as `LocationScoutFocus`, and its stage follows from the focus, an enum whose order is the stages' order. A stage may cover more than one focus, as `EventScout`'s location stage covers both the search and the edit of a new location. A stage is left by changing the focus, so going back to an earlier stage is a move like any other. Once its post is done, a form that goes on to another route swaps itself for it, so its model, whose state says it posted, is not shown again.
 
-A model reports to the user as the web's do: a `MessageStore` for each place in the view where a message shows, delivered through `toDataOr(messenger)`, and the injected `Toaster` where there is no such place, as for a post whose view is gone.
+Each place in a view where a message shows holds a `MessageStore`.
 
 A model of a part that belongs to no route, such as a dialog's form, is a plain class built where the part is shown, with that composition's scope, as the create-account dialog builds `UserCreator`.
 
