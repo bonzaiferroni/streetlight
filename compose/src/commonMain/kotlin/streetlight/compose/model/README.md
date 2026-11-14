@@ -4,6 +4,12 @@
 
 The app's routes and back stack, its services and view models, and the properties of entities that depend on their type.
 
+## Documentation
+
+| Document | Covers |
+|---|---|
+| [`mvvm-style.md`](../../../../../../../docs/mvvm-style.md) | A guide to defining viewmodels and their state. |
+
 ## Dependencies
 
 | Package | Provides |
@@ -98,12 +104,6 @@ A route with a focus gives its `FocusDock` with `toFocusDock()`, built from the 
 ## Sign In
 
 The app signs in as a browser does: the server's session cookie is kept in the app's cookie file, created readable by the user alone, and goes with every request. A session always stays signed in, as the device is taken to be one person's, and lasts until the star signs out. One star is signed in at a time. `StarSession` reads the star of the saved session at launch.
-
-## View Models
-
-A view model extends `ViewModel`, holds one `Store` of its `FooState`, and exposes lenses as `streetlight.web.model` specifies. Its coroutines run in `viewModelScope`. A view model that calls the API takes `ApiClient`.
-
-It is registered in `appModule` with `viewModelOf(::FooModel)`. The route's entry gets it with `koinViewModel()`, which scopes it to the entry, as [`streetlight.compose.view`](../view/README.md) shows.
 
 ## Entities
 

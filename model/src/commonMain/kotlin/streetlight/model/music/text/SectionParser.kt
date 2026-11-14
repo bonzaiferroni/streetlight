@@ -17,10 +17,9 @@ fun readSection(
     section: Section,
     text: String,
     music: Music,
-    style: NotationStyle,
     melody: MelodyTrack? = null,
 ): NotationRead<Section> = when (section) {
-    is Progression -> ChordParser(music.key, style).readSection(section.sectionId, text, music.time)
+    is Progression -> ChordParser(music.key).readSection(section.sectionId, text, music.time)
     is Phrase -> MelodyParser(music.key).readSection(section.sectionId, text, music.time).let { read ->
         NotationRead(read.value.copy(lyrics = section.lyrics), read.errors)
     }
@@ -32,8 +31,8 @@ fun readSection(
 }
 
 /** Writes [section] as the text [readSection] reads. */
-fun writeSection(section: Section, music: Music, style: NotationStyle): String = when (section) {
-    is Progression -> ChordParser(music.key, style).writeSection(section, music.time)
+fun writeSection(section: Section, music: Music): String = when (section) {
+    is Progression -> ChordParser(music.key).writeSection(section, music.time)
     is Phrase -> MelodyParser(music.key).writeSection(section, music.time)
     is Stanza -> LyricParser.writeSection(section, music.time)
     is Groove -> DrumParser.writeSection(section, music.time)

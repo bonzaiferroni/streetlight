@@ -12,6 +12,7 @@ import streetlight.model.music.MusicSheet
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
 import streetlight.model.music.TrackId
+import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.readSection
 import streetlight.model.music.text.writeSection
 import streetlight.model.music.ui.SectionNotation
@@ -19,12 +20,14 @@ import streetlight.model.music.ui.sectionNotationsOf
 
 /**
  * The state behind the editor of the section [sectionId] of the track [trackId] of [model], read from the notation of
- * its track type in the style and display settings of [studio]. A read replaces the section's notes and leaves the rest of it alone. A change of key, time or style,
- * or an edit to its notes from elsewhere, rewrites the text from the section.
+ * its track type in the style of [notationStyleState], with lyrics while [isLyricsShownState]. A read replaces the
+ * section's notes and leaves the rest of it alone. A change of key, time or style, or an edit to its notes from
+ * elsewhere, rewrites the text from the section.
  */
 class SectionEditor(
     scope: CoroutineScope,
-    private val studio: MusicStudio,
+    private val notationStyleState: Tap<NotationStyle>,
+    isLyricsShownState: Tap<Boolean>,
     private val model: MusicEditor,
     private val trackId: TrackId,
     private val sectionId: SectionId,
@@ -35,14 +38,14 @@ class SectionEditor(
     val errorsState = field.errorsState
 
     /** The notation of the section, with the lyrics sung to it while they are shown, or `null` once it is gone. */
-    val notationState: Tap<SectionNotation?> = model.sheetState.combine(studio.isLyricsShownState) { sheet, isLyricsShown ->
+    val notationState: Tap<SectionNotation?> = model.sheetState.combine(isLyricsShownState) { sheet, isLyricsShown ->
         val track = sheet.tracks.firstOrNull { it.trackId == trackId } ?: return@combine null
         sectionNotationsOf(track, sheet.music, sheet.tracks, isLyricsShown).firstOrNull { it.sectionId == sectionId }
     }
 
     init {
         // a change of key transposes the section, and a change of time or style respells it, so the text follows it
-        val changes = combine(model.musicState.flow, studio.notationStyleState.flow) { music, style ->
+        val changes = combine(model.musicState.flow, notationStyleState.flow) { music, style ->
             Triple(music.key, music.time, style)
         }
         field.launchRewrites(scope, changes.distinctUntilChanged()) { writeNow() }
@@ -53,7 +56,7 @@ class SectionEditor(
         field.launchReads(scope) { text ->
             val section = readNow() ?: return@launchReads emptyList()
             val melody = model.tracksState.now.firstNotNullOfOrNull { it as? MelodyTrack }
-            val read = readSection(section, text, model.musicState.now, studio.notationStyleState.now, melody)
+            val read = readSection(section, text, model.musicState.now, notationStyleState.now, melody)
             lastRead = read.value
             model.putSection(trackId, read.value)
             read.errors
@@ -62,7 +65,7 @@ class SectionEditor(
 
     private fun readNow() = model.readTrack(trackId)?.sections?.firstOrNull { it.sectionId == sectionId }
 
-    private fun write(section: Section) = writeSection(section, model.musicState.now, studio.notationStyleState.now)
+    private fun write(section: Section) = writeSection(section, model.musicState.now, notationStyleState.now)
 
     private fun writeNow() = readNow()?.let { write(it) }
 

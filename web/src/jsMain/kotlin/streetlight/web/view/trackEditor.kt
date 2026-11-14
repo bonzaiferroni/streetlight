@@ -41,7 +41,7 @@ import streetlight.model.music.Phrase
 import streetlight.model.music.UNNAMED_SECTION
 import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.MixEditor
-import streetlight.web.model.MusicStudio
+import streetlight.web.model.MusicConfig
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
@@ -50,7 +50,7 @@ import streetlight.model.music.SectionId
 import kotlin.uuid.Uuid
 
 /** Renders the tracks of the song under an action that adds one, each a row that brings its editor into focus. */
-context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
+context(config: MusicConfig, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 fun ViewScope.trackEditor() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
@@ -77,7 +77,7 @@ fun ViewScope.trackEditor() {
 /**
  * Renders the row of [track], which brings its editor into focus, with a grip that moves it among the tracks.
  */
-context(handle: OrderHandle, studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
+context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
@@ -114,7 +114,7 @@ private fun ViewScope.trackRow(track: Track) {
  * Renders [track] alone in a card under its name and its type's icon, with an up arrow that returns to the overview: its
  * sections and arrangements.
  */
-context(studio: MusicStudio, model: MusicEditor)
+context(config: MusicConfig, model: MusicEditor)
 fun ViewScope.trackFocus(track: Track) {
     actionCard(
         label = track.name,
@@ -156,7 +156,7 @@ private fun ViewScope.trackEditPopover(id: Id, track: Track) {
  * Renders the content of the track [trackId]: its properties, with an action that adds a section, a card for each of
  * its sections, and its arrangements.
  */
-context(studio: MusicStudio, model: MusicEditor)
+context(config: MusicConfig, model: MusicEditor)
 private fun ViewScope.trackContent(trackId: TrackId) {
     val track = model.readTrack(trackId) ?: return
     val newId = Id(Uuid.random().toString())
@@ -183,9 +183,9 @@ private fun ViewScope.trackContent(trackId: TrackId) {
  * Renders [section] of the track [trackId] in a card under its name, with actions to edit its properties and to remove
  * it: its text, labeled [label], and its notation.
  */
-context(studio: MusicStudio, model: MusicEditor)
+context(config: MusicConfig, model: MusicEditor)
 private fun ViewScope.sectionCard(trackId: TrackId, section: MusicSection, label: String) {
-    val editor = SectionEditor(contentScope, studio, model, trackId, section.sectionId)
+    val editor = SectionEditor(contentScope, config.notationStyleState, config.isLyricsShownState, model, trackId, section.sectionId)
     val editId = Id(Uuid.random().toString())
     sectionEditPopover(editId, trackId, section)
     actionCard(
@@ -195,7 +195,7 @@ private fun ViewScope.sectionCard(trackId: TrackId, section: MusicSection, label
             MenuAction("Remove") { model.removeSection(trackId, section.sectionId) },
         ),
     ) {
-        notationPanes(label, editor.textState, editor.errorsState, studio.notationViewState) {
+        notationPanes(label, editor.textState, editor.errorsState, config.notationViewState) {
             flowBlock(editor.notationState) { notation -> notation?.let { sectionStrips(it) } }
         }
     }

@@ -23,7 +23,6 @@ import streetlight.model.music.TrackId
  */
 class ChordParser(
     private val key: Key,
-    private val style: NotationStyle,
 ) {
     /**
      * Reads the chord track [trackId] of the music [musicId], named [name], from [text], with measures cut by [time] and
@@ -106,7 +105,7 @@ class ChordParser(
      * Letters name the root, as `F#` or `Bb`. Degrees count from the [Key.majorTonic] of [key], with an accidental
      * before the degree, as `b7`. Either style takes the letter or symbol notation of a quality.
      */
-    fun readChord(text: String): Chord? {
+    fun readChord(text: String, style: NotationStyle = NotationStyle.Letters): Chord? {
         var index = 0
         val root = when (style) {
             NotationStyle.Letters -> {
@@ -175,7 +174,7 @@ class ChordParser(
     private fun writeToken(note: ChordNote) = note.chord?.let { writeChord(it) } ?: REST
 
     /** Writes the root, quality and seventh of [chord] in [style] against [key]. */
-    fun writeChord(chord: Chord) = buildString {
+    fun writeChord(chord: Chord, style: NotationStyle = NotationStyle.Letters) = buildString {
         when (style) {
             NotationStyle.Letters -> append(Chromatic.ofPitch(key.tonic.value + chord.root.value).label)
             NotationStyle.Degrees -> append(writeDegree(key.tonic.value + chord.root.value - key.majorTonic.value))

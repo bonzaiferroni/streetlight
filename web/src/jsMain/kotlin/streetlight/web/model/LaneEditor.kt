@@ -52,13 +52,6 @@ class LaneEditor(
     private val cursorStore = storeOf(0.0)
     private var playJob: Job? = null
 
-    // laid out at the tempo playback runs at, so the cursor keeps with what sounds
-    private val layoutState = mix.playbackSecondsPerTickState.combine(studio.isLyricsShownState) { perTick, isLyricsShown ->
-        perTick to isLyricsShown
-    }
-    val lanesState = editor.sheetState.combine(layoutState) { sheet, (perTick, isLyricsShown) ->
-        lanesOf(sheet, perTick, isLyricsShown)
-    }
     override val endSecondsState: Tap<Double?> = editor.sheetState.combine(
         mix.playbackSecondsPerTickState,
     ) { sheet, perTick ->
@@ -122,7 +115,7 @@ class LaneEditor(
         val drag = state.now.drag ?: return
         val track = readNotedTrack(drag.laneIndex) ?: return
         val music = editor.sheetState.now.music
-        val window = laneWindowOf(track, editor.sheetState.now, studio.isLyricsShownState.now)
+        val window = laneWindowOf(track, editor.sheetState.now)
         val moved = drag.source
             .snapTick(tick, track, music, state.now.timeStep)
             .snapPitch(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
@@ -284,7 +277,7 @@ private fun lanesOf(sheet: MusicSheet, secondsPerTick: Double, isLyricsShown: Bo
 }
 
 /** The window of the lane of [track] in [sheet], with room for a line of lyrics when [isLyricsShown] and it has them. */
-private fun laneWindowOf(track: Track, sheet: MusicSheet, isLyricsShown: Boolean): StaffWindow {
+private fun laneWindowOf(track: Track, sheet: MusicSheet): StaffWindow {
     val lyricLines = if (isLyricsShown && sheet.tracks.lyricsOf(track) != null) 1 else 0
     return staffWindowOf(track, sheet.music.key, lyricLines = lyricLines)
 }

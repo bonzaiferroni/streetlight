@@ -43,6 +43,7 @@ import kotlin.uuid.Uuid
 import kampfire.model.toDataOr
 import koala.dom.layout.transTabs
 import kotlinx.coroutines.launch
+import streetlight.web.model.MusicConfig
 import streetlight.web.model.toaster
 import streetlight.web.utility.pickFile
 import web.blob.text
@@ -51,6 +52,7 @@ import web.blob.text
 context(route: MusicStudioRoute)
 fun ViewScope.musicStudioScreen() {
     val model = app.getMusicStudio(contentScope, route.musicId)
+    val config = MusicConfig(contentScope)
     val player = app.get<TrackPlayer>()
     // the studio's colors carry meaning, which the page's lights would tint
     dimLights()
@@ -62,7 +64,7 @@ fun ViewScope.musicStudioScreen() {
             document.setTitle(next)
         }
     }
-    context(model, player) {
+    context(model, player, config) {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
             flowBlock(model.sheetState, modify(Transitioner)) { sheet ->
                 if (sheet == null) musicList() else musicFocus(model.editorOf(contentScope, sheet))
@@ -84,9 +86,9 @@ fun RouteScope.viewMusicStudioRoute() {
  * Renders the music of [editor] in a section headed by its name, with a way back to the musics and a gear that opens
  * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
-context(model: MusicStudio, player: TrackPlayer)
+context(model: MusicStudio, player: TrackPlayer, config: MusicConfig)
 private fun ViewScope.musicFocus(editor: MusicEditor) {
-    val mix = model.mixEditorOf(contentScope, editor)
+    val mix = model.mixEditorOf(contentScope, editor, config.isLyricsShownState)
     val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
     // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
@@ -116,13 +118,13 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
  * A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show, above
  * the formats the music of [editor] exports to, with the takes of [mix].
  */
-context(model: MusicStudio, player: TrackPlayer)
+context(model: MusicStudio, player: TrackPlayer, config: MusicConfig)
 private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mix: MixEditor) {
     popover(id) { popover ->
         column(Padding(2)) {
-            dropMenu(model.notationStyleState)
-            dropMenu(model.notationViewState)
-            switch("Lyrics", model.isLyricsShownState)
+            dropMenu(config.notationStyleState)
+            dropMenu(config.notationViewState)
+            switch("Lyrics", config.isLyricsShownState)
             filigree { heading6("export") }
             actionMenu(listOf(
                 MenuAction("Markdown") {

@@ -4,6 +4,12 @@
 
 View models, each holding the state behind one view and the calls that change it, and the app's services, in `jsMain`. Models the server also renders from, such as the entity properties, `FlairIcon` and the CSS of `EntityType`, live in `commonMain`.
 
+## Documentation
+
+| Document | Covers |
+|---|---|
+| [`mvvm-style.md`](../../../../../../../docs/mvvm-style.md) | A guide to defining viewmodels and their state. |
+
 ## Dependencies
 
 | Package | Provides |
@@ -47,10 +53,6 @@ A property that depends on the entity type is an `Entity` extension function in 
 
 A property returns `null` for content the entity does not have, and a parameter that receives it is nullable.
 
-## Construction
-
-A view model takes its collaborators through its constructor. The view builds it, so the model never reaches into the container itself.
-
 ```kotlin
 val model = FeedbackHub(contentScope, api, toaster)
 ```
@@ -63,32 +65,12 @@ fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
 ```
 
 `RouteDock` is an app-wide model, registered in `webModule` and documented in [`streetlight.web.view`](../../../../../commonMain/kotlin/streetlight/web/view/README.md).
-## Scope
-
-A view model takes the view's `contentScope`. Its coroutines then end when the content is replaced, so a request outlives neither the view that wanted it nor the page it was drawn on.
-
-## State
-
-A model holds one `Store` of a single state class, and exposes lenses onto it.
-
-| Exposure | Built with | For |
-|---|---|---|
-| A read | `tapOf` | Content a view renders |
-| A write | `mutableTapOf` | A field a control edits |
-
-A control binds to the narrowest lens that covers it, so editing one field leaves the rest of the state untouched.
-
-A lens is named for its value with the suffix `State`, read or write alike, as `nameState` and `focusState`. A function returning one, such as the lens of one tag among many, follows the same rule, as `tagState(tag)`.
 
 ### Route Filters
 
 A filter a route carries, such as the tag of `EventsMapRoute`, is read from the route as a lens on `Portal.routeState`. A control that sets it calls a model method, which navigates with the new value. A filter change replaces the current route rather than appending to the backstack.
 
 A filter edited faster than the route, such as search text behind a debounce, keeps its own `Store`, seeded from the current route. The model navigates when the debounced value differs from the route's. It copies a route's value into the store only when the route is not the one it last issued, as on a back navigation, so a route that lands while the viewer types does not overwrite the field.
-
-## Messages
-
-A method that reports to the user takes a `Messenger` parameter. The view decides where the message appears, the model decides what it says. Without an obvious place in the view for the message, the model reports through its injected `Toaster` instead. `streetlight.web.view` states the conventions the messages follow.
 
 ## Editing
 
@@ -98,10 +80,6 @@ A model editing a record holds an edit DTO in its state. On a successful send it
 
 A field the record's DTO does not carry, such as `MediaEdit.skillIds`, is nullable on the edit DTO: `null` leaves the stored value alone. The editor loads it in its `init` with its own API call and writes it into the edit only while the field is still `null`, so a choice made during the load wins. `SkillLinkEditor` does this for `skillIds`, given the edit's field and the read of the record's links.
 
-## Submodels
-
-A submodel is a model a base model declares as a public property, built in its own constructor, holding its own state. It is named with the suffix `Editor`. It carries functionality two models share, such as `EmailEditor` and `LeadEditor`, or one concern of a large model, such as `MusicPropertyEditor` in `MusicEditor`. The view reaches it through the model. The submodel holds its own state, publishes it, and makes its own API call, so the base models stay clean and the work is written once. What differs between its users, such as a `LeadEditor`'s `LeadType`, is passed through its constructor.
-
 ## Images
 
 An `ImageEditor` takes the `ImageTarget` of the record it edits, and uploads at that target's sizes. An image a model uploads without one, such as a layout block's, names its target in the `uploadImage` call.
@@ -109,6 +87,8 @@ An `ImageEditor` takes the `ImageTarget` of the record it edits, and uploads at 
 ## Viewer Settings
 
 A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postModeState`, so its view binds to the model.
+
+The studio's settings are held by `MusicConfig`, which a screen builds and provides to its views as a context parameter. A model never takes `MusicConfig`; the view passes the state a model needs, such as `isLyricsShownState`, as an argument.
 
 ## Posting
 
@@ -142,6 +122,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`AppContentFetcher`](AppContentFetcher.kt) | The content of each route |
 | [`RouteDock`](RouteDock.kt) | The state of the route dock |
 | [`SiteConfig`](SiteConfig.kt) | The viewer's site settings |
+| [`MusicConfig`](MusicConfig.kt) | The viewer's studio settings: notation style, notation view and whether lyrics show |
 | [`DataCache`](DataCache.kt) | Data loaded once per session |
 | [`StarCache`](StarCache.kt) | The items a star has lit |
 | [`Fleet`](Fleet.kt) | A list loaded on first request |
@@ -232,39 +213,3 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`StarLocator`](StarLocator.kt) | The viewer's location |
 | [`SpiritMap`](SpiritMap.kt) | The map's position shared with other viewers |
 | [`TransitMap`](TransitMap.kt) | Transit routes and vehicle positions |
-
-## Antipatterns
-
-### Avoid publishing upstream state
-
-```kt
-    private val layoutState = mix.playbackSecondsPerTickState.combine(studio.isLyricsShownState) { perTick, isLyricsShown ->
-        perTick to isLyricsShown
-    }
-    val lanesState = editor.sheetState.combine(layoutState) { sheet, (perTick, isLyricsShown) ->
-        lanesOf(sheet, perTick, isLyricsShown)
-    }
-```
-
-Recommendations:
-- Pass a service or state holder as a context parameter to the same UI function and consume directly
-
-### Avoid overreliance on other ViewModels as dependencies
-
-Indicators:
-- Several ViewModels passed as arguments, each with a minor role
-
-```kt
-class LaneEditor(
-    private val scope: CoroutineScope,
-    private val studio: MusicStudio,
-    private val editor: MusicEditor,
-    private val mix: MixEditor,
-    private val player: TrackPlayer,
-    private val tones: TonePlayer,
-)
-```
-
-Considerations:
-- Is a shared service or state holder wanted?
-- Does the UI want to be simpler?

@@ -27,7 +27,7 @@ import streetlight.model.music.Music
 import streetlight.model.music.MusicSection
 import streetlight.model.music.SectionId
 import streetlight.web.model.MixEditor
-import streetlight.web.model.MusicStudio
+import streetlight.web.model.MusicConfig
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
 import kampfire.model.toDataOr
@@ -35,7 +35,7 @@ import streetlight.web.dom.layout.formRow
 import kotlin.uuid.Uuid
 
 /** Renders the song's arrangement beside its tracks, or the editor of the track in focus alone. */
-context(studio: MusicStudio, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
+context(config: MusicConfig, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
 fun ViewScope.musicEditor() = flowBlock(model.focusState, Transitioner) { focus ->
     when (val track = focus?.let { model.readTrack(it) }) {
         null -> formRow {

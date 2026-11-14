@@ -27,7 +27,7 @@ object SongMarkdown {
      * for the song's title. Each track is given a new id, and one named as an earlier one takes the name with the first
      * free number after it, as `Melody 2`.
      */
-    fun read(text: String, song: Song, music: Music, style: NotationStyle): Outcome<SongMarkdownRead> {
+    fun read(text: String, song: Song, music: Music): Outcome<SongMarkdownRead> {
         val lines = text.lines()
         val titleIndex = lines.indexOfFirst { it.startsWith(TITLE_PREFIX) }
         val trackIndexes = lines.indices.filter { lines[it].startsWith(TRACK_PREFIX) }
@@ -56,7 +56,7 @@ object SongMarkdown {
             val end = trackIndexes.getOrNull(index + 1) ?: lines.size
             val trackText = lines.subList(headingIndex + 1, end).joinToString("\n")
             when (type) {
-                TrackType.Chords -> ChordParser(readMusic.key, style).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
+                TrackType.Chords -> ChordParser(readMusic.key).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
                 TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
                 TrackType.Lyrics -> LyricParser.read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
                 TrackType.Drums -> DrumParser.read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
@@ -67,18 +67,18 @@ object SongMarkdown {
         return Ok(SongMarkdownRead(readSong, sheet))
     }
 
-    /** Writes [song] with its [music] and [tracks], chords spelled in [style]. */
-    fun write(song: Song, music: Music, tracks: List<Track>, style: NotationStyle): String {
+    /** Writes [song] with its [music] and [tracks]. */
+    fun write(song: Song, music: Music, tracks: List<Track>): String {
         val heading = listOfNotNull("$TITLE_PREFIX${song.title}", song.artist.takeIf { it.isNotBlank() }).joinToString("\n")
         val blocks = listOf(heading, MusicParser.write(music)) + tracks.flatMap { track ->
-            listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music, style))
+            listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music))
         }
         return blocks.joinToString("\n\n", postfix = "\n")
     }
 
-    private fun writeTrack(track: Track, music: Music, style: NotationStyle) = SectionNames(music.sections).let { names ->
+    private fun writeTrack(track: Track, music: Music) = SectionNames(music.sections).let { names ->
         when (track) {
-            is ChordTrack -> ChordParser(music.key, style).write(track, music.time, names)
+            is ChordTrack -> ChordParser(music.key).write(track, music.time, names)
             is MelodyTrack -> MelodyParser(music.key).write(track, music.time, names)
             is LyricTrack -> LyricParser.write(track, music.time, names)
             is DrumTrack -> DrumParser.write(track, music.time, names)

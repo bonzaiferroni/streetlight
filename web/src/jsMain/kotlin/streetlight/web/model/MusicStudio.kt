@@ -21,10 +21,8 @@ import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.SongMusic
 import streetlight.model.music.TimeSignature
-import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.SongMarkdown
 import streetlight.model.studio.StudioDb
-import streetlight.web.utility.localStoreOf
 
 /**
  * The musics kept in [db], each with its song, and the sheet of the one in focus, which opens the editors of it.
@@ -45,15 +43,6 @@ class MusicStudio(
 
     /** The sheet of the music in focus, read as the focus moves to it, or `null` for none or one not kept. */
     val sheetState: Tap<MusicSheet?> = sheetStore
-
-    /** The style every music is written in. */
-    val notationStyleState = localStoreOf(scope, NOTATION_STYLE_KEY, NotationStyle.Letters)
-
-    /** The parts of each track's notation its editor shows. */
-    val notationViewState = localStoreOf(scope, NOTATION_VIEW_KEY, NotationView.Both)
-
-    /** Whether a melody's notation shows the lyrics sung to it. */
-    val isLyricsShownState = localStoreOf(scope, LYRICS_SHOWN_KEY, true)
 
     init {
         scope.launch {
@@ -80,7 +69,7 @@ class MusicStudio(
      */
     suspend fun importSong(text: String, fileName: String): Outcome<MusicId> {
         val song = Song(SongId.random(), fileName.substringBeforeLast('.'), "")
-        val read = SongMarkdown.read(text, song, newMusicOf(song), notationStyleState.now).toDataOr { return it }
+        val read = SongMarkdown.read(text, song, newMusicOf(song)).toDataOr { return it }
 
         db.songDao().saveSong(read.song)
         db.musicDao().saveMusicSheet(read.sheet)
@@ -102,14 +91,14 @@ class MusicStudio(
     fun editorOf(scope: CoroutineScope, sheet: MusicSheet) =
         MusicEditor(scope, sheet, db.musicDao())
 
-    /** An editor of the mixes of the music [editor] has open, for as long as [scope] lasts. */
-    fun mixEditorOf(scope: CoroutineScope, editor: MusicEditor) =
-        MixEditor(scope, this, editor, db.mixDao(), db.sectionClipDao(), db.clipDao(), takeShelf, messenger)
+    /** An editor of the mixes of the music [editor] has open, with lyrics while [isLyricsShownState], for as long as [scope] lasts. */
+    fun mixEditorOf(scope: CoroutineScope, editor: MusicEditor, isLyricsShownState: Tap<Boolean>) =
+        MixEditor(scope, isLyricsShownState, editor, db.mixDao(), db.sectionClipDao(), db.clipDao(), takeShelf, messenger)
 
     /** Downloads [sheet] as markdown under its song's title and artist, written in the notation style. */
     suspend fun exportMarkdown(sheet: MusicSheet) {
         val song = db.songDao().flowSong(sheet.music.songId).first() ?: return
-        exportMarkdown(song, sheet, notationStyleState.now)
+        exportMarkdown(song, sheet)
     }
 }
 
@@ -121,7 +110,3 @@ private fun newMusicOf(song: Song) = Music(
     key = Key(Chroma.of(0), Mode.Major),
     time = TimeSignature(4, 4),
 )
-
-private const val NOTATION_STYLE_KEY = "streetlight.notation-style"
-private const val NOTATION_VIEW_KEY = "streetlight.notation-view"
-private const val LYRICS_SHOWN_KEY = "streetlight.lyrics-shown"

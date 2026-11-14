@@ -20,7 +20,7 @@ import streetlight.model.music.ui.NoteValue
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
 import streetlight.web.model.LaneEditor
-import streetlight.web.model.MusicStudio
+import streetlight.web.model.MusicConfig
 import streetlight.web.model.LaneSection
 import streetlight.web.model.TimeWindow
 import web.events.addEventListener
@@ -34,7 +34,7 @@ import web.pointer.PointerEvent
 import kotlin.uuid.Uuid
 
 /** Renders the song's lanes below their player controls and timeline. */
-context(studio: MusicStudio, model: LaneEditor)
+context(config: MusicConfig, model: LaneEditor)
 fun ViewScope.laneEditor() = column {
     laneControls()
     column(modify(Zen, BorderRadius1, OverflowClip)) {
@@ -48,13 +48,13 @@ fun ViewScope.laneEditor() = column {
     }
 }
 
-context(studio: MusicStudio, model: LaneEditor)
+context(config: MusicConfig, model: LaneEditor)
 private fun ViewScope.laneControls() = row(modify(AlignSelfCenter, AlignItemsCenter)) {
     button(SvgFile.PlayerPlay.filled, { model.play() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
     button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     timeStepControl()
     switch("scale", model.isScaleSnapState)
-    switch("lyrics", studio.isLyricsShownState)
+    switch("lyrics", config.isLyricsShownState)
 }
 
 /** Renders the button that shows the grid dragged notes snap to, drawn as its note, and opens a menu of the others. */

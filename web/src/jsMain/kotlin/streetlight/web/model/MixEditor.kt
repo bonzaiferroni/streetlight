@@ -37,11 +37,11 @@ import streetlight.model.studio.SectionClipDao
 
 /**
  * Edits the mixes in [mixDao] of the music in [musicEditor], and the clips of [clipDao] that [sectionClipDao] binds to
- * their sections, with takes read from [takeShelf], display settings from [studio] and problems going to [messenger].
+ * their sections, with takes read from [takeShelf], lyrics in its notation while [isLyricsShownState] and problems going to [messenger].
  */
 class MixEditor(
     private val scope: CoroutineScope,
-    private val studio: MusicStudio,
+    private val isLyricsShownState: Tap<Boolean>,
     val musicEditor: MusicEditor,
     private val mixDao: MixDao,
     private val sectionClipDao: SectionClipDao,
@@ -185,7 +185,7 @@ class MixEditor(
 
     /** The notation of [trackSectionId], or `null` once its track no longer holds it. */
     fun notationOf(trackSectionId: TrackSectionId): Tap<SectionNotation?> =
-        musicEditor.sheetState.combine(studio.isLyricsShownState) { sheet, isLyricsShown ->
+        musicEditor.sheetState.combine(isLyricsShownState) { sheet, isLyricsShown ->
             val track = sheet.tracks.firstOrNull { it.trackId == trackSectionId.trackId } ?: return@combine null
             sectionNotationsOf(track, sheet.music, sheet.tracks, isLyricsShown)
                 .firstOrNull { it.sectionId == trackSectionId.sectionId }
