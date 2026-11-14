@@ -39,7 +39,6 @@ import streetlight.web.interop.wireTagFilterMenu
 import streetlight.web.interop.wireToaster
 import kotlin.time.Duration.Companion.seconds
 
-@OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
     // val app = createStreetlight(scope)
 

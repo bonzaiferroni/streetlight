@@ -84,41 +84,7 @@ Work that rebuilds with the content belongs in `contentScope`. Work that must su
 
 A view model constructed inside a view is given `contentScope`, so its coroutines end when the content it serves is replaced.
 
-## Staged Edits
-
-A panel that lists records and edits one at a time holds a config model whose state carries a `focus`, the edit staged, `null` while none is. The panel shows its forms while the focus is `null`, and otherwise branches on the focus's type, building the editor of that edit and providing it as context to its form, in their place. The editor returns the saved record through `submitSuspend`, and the panel hands it to the config model, which ends the edit. `skillDash` is the example, with `SkillConfig` and `SkillEditor`; `sellerDash`, with `Merchant`, `OfferingEditor` and `PaymentEditor`, is the same shape with two kinds of edit.
-
-A form takes as context only the models whose state it declares UI from, such as its editor. The actions that end the edit, saving and going back, are built by the panel that staged it, around the form, so the form serves any consumer and holds no reference to the config model.
-
-```kotlin
-context(editor) {
-    actionSection(label, onBack = config::cancelFocus) {
-        skillEditForm()
-    }
-    formSubmit("Save", onClick = { /* editor.submitSuspend, then config.finishSkillEdit */ }, messenger = messages)
-}
-```
-
-```kotlin
-flowBlock(config.focusState) { focus ->
-    when (focus) {
-        null -> formRow { merchantDash() }
-        is OfferingEdit -> context(OfferingEditor(focus, api)) { offeringEditForm() }
-        is PaymentEdit -> context(PaymentEditor(focus, api)) { paymentEditForm() }
-        else -> error("unknown seller focus: $focus")
-    }
-}
-```
-
-## Properties and Edit Popovers
-
-A record whose properties change seldom shows them as one dim line of small text at the top of its section, as `90 bpm · G Major`. Its section carries an Edit action that opens a popover of fields bound to a `FooForm`, and a save button that applies them and closes it. A property is not edited in place. The mix, the music, and a track and section of the compose tab are the examples.
-
-## Form Lists
-
-A list the user builds in a form, such as a skill's tags, a record's links (`linksFormSection`) or the skills a record shows (`skillLinksSection`), is an `actionCard`. Its "add new" action opens a popover through `setPopoverTarget`, each item is a row with its own actions, such as Remove, and an empty list shows one short line of guidance in its place.
-
-## Action Headings
+## Action Layouts
 
 An `actionSection` and an `actionCard` head their content with an `actionHeading`, a row of an icon, a heading and actions. Each takes the heading's `HeadingLevel`, a section `H3` and a card `H5` unless stated. The level sets the height of the row, near the height of its text, and what leads the row before the heading, its icon or its `leadIcon`, fills that height rather than stating a size of its own. The `icons` at the row's end keep the default size of an icon at every level.
 
@@ -298,138 +264,26 @@ A view model receives the store as a `Messenger` parameter rather than holding o
 
 ## Route Dock
 
-The route dock is read from the route alone. It is rendered once by `viewRouteDock` into `AppOverlay.RouteDockId`, wired from `viewApp`, and persists between routes.
+The route dock is a menu that floats above content near the bottom of the viewport. It shows the `StableDock`, or the `FocusDock` of a route that has one, such as a galaxy's feed and map, on the primary glass. While a route has a focus, a tray at the left switches between the two; a new focus shows its own dock first. The stable route marked is the last one visited, as a tab bar marks its tab, and a focus route is marked while it is the route now.
 
-It shows the `StableDock`, or the `FocusDock` of a route that has one, such as a galaxy's feed and map, on the primary glass. While a route has a focus, a tray at the left switches between the two; a new focus shows its own dock first. The stable route marked is the last one visited, as a tab bar marks its tab, and a focus route is marked while it is the route now.
+## Entry Point and Structure
 
-The dock holds routes only. An action belongs in the view it acts on.
+`main()` is invoked by webpack bundle and calls viewApp.
 
-### Visibility
+```kotlin
+fun main() {
+    console.log("loading streetlight")
+    viewApp()
+}
+```
 
-A view hides the dock with `dock.setVisible(false)`, for content it would otherwise sit over. Every route that lands makes it visible again, so a view states only when to hide it and never when to restore it. The reaction that drives it belongs to the view's `contentScope`, so it ends with the view.
-
-The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`.
-
-Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.
-
-## View Transitions
-
-View transitions follow `koala.modifier`. Each glass of the route dock is named itself, never its row, so its `backdrop-filter` keeps the page behind it.
-
-## Theme Colors
-
-Primary marks a selection, such as a timeline's cursor. Accent marks a focus, such as the window a timeline shows.
-
-## Views
-
-### App
+`viewApp()` invokes `viewPortal()` and connects functionality to dom elements.
 
 | View | Role |
 |---|---|
 | [`viewApp`](../../../../../jsMain/kotlin/streetlight/web/view/viewApp.kt) | The root view: the portal, the overlay and the wired menus |
 | [`viewPortal`](../../../../../jsMain/kotlin/streetlight/web/view/viewPortal.kt) | The view of the current screen |
 | [`viewRouteDock, wireRouteDock`](../../../../../jsMain/kotlin/streetlight/web/view/viewRouteDock.kt) | The route dock |
-
-### Screens
-
-| View | Role |
-|---|---|
-| [`homeScreen`](../../../../../jsMain/kotlin/streetlight/web/view/homeScreen.kt) | The Home screen |
-| [`galaxyScreen`](../../../../../jsMain/kotlin/streetlight/web/view/galaxyScreen.kt) | The Galaxy screen |
-| [`galaxyFeedScreen`](../../../../../jsMain/kotlin/streetlight/web/view/galaxyFeedScreen.kt) | The galaxy feed |
-| [`starScreen`](../../../../../jsMain/kotlin/streetlight/web/view/starScreen.kt) | The Star screen |
-| [`viewLocation`](../../../../../jsMain/kotlin/streetlight/web/view/viewLocation.kt) | The Location screen |
-| [`eventScreen`](../../../../../jsMain/kotlin/streetlight/web/view/eventScreen.kt) | The Event screen |
-| [`mediaScreen`](../../../../../jsMain/kotlin/streetlight/web/view/mediaScreen.kt) | The Media screen |
-| [`skillScreen`](../../../../../jsMain/kotlin/streetlight/web/view/skillScreen.kt) | The SkillProfile screen |
-| [`cityScreen`](../../../../../jsMain/kotlin/streetlight/web/view/cityScreen.kt) | The City screen |
-| [`cityFeedScreen`](../../../../../jsMain/kotlin/streetlight/web/view/cityFeedScreen.kt) | The city feed |
-| [`siteDocScreen`](../../../../../jsMain/kotlin/streetlight/web/view/siteDocScreen.kt) | The SiteDoc screen |
-| [`viewAboutApp`](../../../../../jsMain/kotlin/streetlight/web/view/viewAboutApp.kt) | The AboutApp screen |
-| [`connectScreen`](../../../../../jsMain/kotlin/streetlight/web/view/connectScreen.kt) | The Connect screen |
-| [`contributeScreen`](../../../../../jsMain/kotlin/streetlight/web/view/contributeScreen.kt) | The Contribute screen |
-| [`onboardScreen`](../../../../../jsMain/kotlin/streetlight/web/view/onboardScreen.kt) | The onboarding of a star as an `OnboardType` |
-| [`viewTalkLog`](../../../../../jsMain/kotlin/streetlight/web/view/viewTalkLog.kt) | The TalkLog screen |
-| [`inboxScreen`](../../../../../jsMain/kotlin/streetlight/web/view/inboxScreen.kt) | The Inbox screen |
-| [`chatRoomScreen`](../../../../../jsMain/kotlin/streetlight/web/view/chatRoomScreen.kt) | The ChatRoom screen |
-| [`earthScreen`](../../../../../jsMain/kotlin/streetlight/web/view/earthScreen.kt) | The Earth screen |
-| [`viewTransitMap`](../../../../../jsMain/kotlin/streetlight/web/view/viewTransitMap.kt) | The TransitMap screen |
-
-### Configuration and Editing
-
-| View | Role |
-|---|---|
-| [`galaxyConfigScreen`](../../../../../jsMain/kotlin/streetlight/web/view/galaxyConfigScreen.kt) | Configures a galaxy |
-| [`viewGalaxyFoundry`](../../../../../jsMain/kotlin/streetlight/web/view/viewGalaxyFoundry.kt) | Creates a galaxy |
-| [`locationConfigScreen`](../../../../../jsMain/kotlin/streetlight/web/view/locationConfigScreen.kt) | Configures a location |
-| [`locationUpdaterScreen`](../../../../../jsMain/kotlin/streetlight/web/view/locationUpdaterScreen.kt) | Updates a location |
-| [`eventUpdaterScreen`](../../../../../jsMain/kotlin/streetlight/web/view/eventUpdaterScreen.kt) | Updates an event |
-| [`cityConfigScreen`](../../../../../jsMain/kotlin/streetlight/web/view/cityConfigScreen.kt) | Configures a city |
-| [`mediaForgeScreen`](../../../../../jsMain/kotlin/streetlight/web/view/mediaForgeScreen.kt) | Creates media |
-| [`mediaConfigScreen`](../../../../../jsMain/kotlin/streetlight/web/view/mediaConfigScreen.kt) | Configures a medium |
-| [`profileConfigScreen`](../../../../../jsMain/kotlin/streetlight/web/view/profileConfigScreen.kt) | Configures the star's profile |
-| [`starConfigScreen`](../../../../../jsMain/kotlin/streetlight/web/view/starConfigScreen.kt) | Configures the star's account |
-| [`viewSiteConfig`](../../../../../jsMain/kotlin/streetlight/web/view/viewSiteConfig.kt) | Configures the viewer's site settings |
-| [`viewEditHistory`](../../../../../jsMain/kotlin/streetlight/web/view/viewEditHistory.kt) | The edits of a record |
-
-### Scouts
-
-| View | Role |
-|---|---|
-| [`eventScoutScreen`](../../../../../jsMain/kotlin/streetlight/web/view/eventScoutScreen.kt) | Posts an event |
-| [`locationScoutScreen`](../../../../../jsMain/kotlin/streetlight/web/view/locationScoutScreen.kt) | Posts a location |
-
-### Stars and Tools
-
-| View | Role |
-|---|---|
-| [`starDashScreen`](../../../../../jsMain/kotlin/streetlight/web/view/starDashScreen.kt) | The star's dashboard |
-| [`frontDeskScreen`](../../../../../jsMain/kotlin/streetlight/web/view/frontDeskScreen.kt) | The front desk |
-| [`viewFeedbackHub`](../../../../../jsMain/kotlin/streetlight/web/view/viewFeedbackHub.kt) | Feedback |
-| [`viewBugReporter`](../../../../../jsMain/kotlin/streetlight/web/view/viewBugReporter.kt) | Bug reports |
-| [`viewMusicianHub`](../../../../../jsMain/kotlin/streetlight/web/view/viewMusicianHub.kt) | A musician's songs |
-| [`songProfileScreen`](../../../../../jsMain/kotlin/streetlight/web/view/songProfileScreen.kt) | A song |
-| [`musicStudioScreen`](../../../../../jsMain/kotlin/streetlight/web/view/musicStudioScreen.kt) | The stored songs, or the music editor of the one in focus |
-| [`studioScreen`](../../../../../jsMain/kotlin/streetlight/web/view/studioScreen.kt) | The studio |
-| [`siteMonitorScreen`](../../../../../jsMain/kotlin/streetlight/web/view/siteMonitorScreen.kt) | The site's status |
-| [`sandboxScreen`](../../../../../jsMain/kotlin/streetlight/web/view/sandboxScreen.kt) | The sandbox |
-
-### Parts of Views
-
-| Part | Role |
-|---|---|
-| [`signInForm…`](../../../../../jsMain/kotlin/streetlight/web/view/signInForm.kt) | Signing in |
-| [`guestRegistrationForm, fullRegistrationForm`](../../../../../jsMain/kotlin/streetlight/web/view/registrationForm.kt) | Registering an account |
-| [`starGate`](../../../../../jsMain/kotlin/streetlight/web/view/starGate.kt) | Content for the signed-in star, or a sign-in prompt |
-| [`starRouteBlock`](../../../../../jsMain/kotlin/streetlight/web/view/starRouteBlock.kt) | A `routeBlock` behind a `starGate` |
-| [`starConfigTabs`](../../../../../jsMain/kotlin/streetlight/web/view/starConfigTabs.kt) | The tabs of the star's account config |
-| [`emailFormSection`](../../../../../jsMain/kotlin/streetlight/web/view/emailFormSection.kt) | The email field of a form |
-| [`passwordFormSection`](../../../../../jsMain/kotlin/streetlight/web/view/passwordFormSection.kt) | The password field of a form |
-| [`starProfileForm`](../../../../../jsMain/kotlin/streetlight/web/view/StarForm.kt) | The star's profile |
-| [`galaxyNameFormRow…`](../../../../../jsMain/kotlin/streetlight/web/view/GalaxyForm.kt) | The fields of a galaxy |
-| [`cityDetailsForm, cityLinksForm`](../../../../../jsMain/kotlin/streetlight/web/view/CityForm.kt) | The fields of a city |
-| [`locationEditFormBody…`](../../../../../jsMain/kotlin/streetlight/web/view/LocationEditForm.kt) | The fields of a location |
-| [`locationSettingsForm`](../../../../../jsMain/kotlin/streetlight/web/view/locationSettingsForm.kt) | A location's settings |
-| [`locationAutomationForm`](../../../../../jsMain/kotlin/streetlight/web/view/locationAutomationForm.kt) | A location's event schema |
-| [`locationFinder`](../../../../../jsMain/kotlin/streetlight/web/view/LocationScoutForm.kt) | Finding a location to post |
-| [`eventEditFormBody…`](../../../../../jsMain/kotlin/streetlight/web/view/EventEditForm.kt) | The fields of an event |
-| [`eventLinksForm`](../../../../../jsMain/kotlin/streetlight/web/view/eventLinksForm.kt) | The links of an event |
-| [`eventSearchForm`](../../../../../jsMain/kotlin/streetlight/web/view/EventScoutForm.kt) | Searching for an event to post |
-| [`mediaForm`](../../../../../jsMain/kotlin/streetlight/web/view/MediaForm.kt) | The fields of media |
-| [`leadForm`](../../../../../jsMain/kotlin/streetlight/web/view/LeadForm.kt) | A url sent for the crawler to read |
-| [`imageFormSection`](../../../../../jsMain/kotlin/streetlight/web/view/FormSection.kt) | The image field of a form |
-| [`themeForm`](../../../../../jsMain/kotlin/streetlight/web/view/themeForm.kt) | A page theme |
-| [`layoutBuilder`](../../../../../jsMain/kotlin/streetlight/web/view/layoutBuilder.kt) | The editor of a page layout |
-| [`blockBuilder`](../../../../../jsMain/kotlin/streetlight/web/view/blockBuilder.kt) | The editor of a layout block |
-| [`blockMenu`](../../../../../jsMain/kotlin/streetlight/web/view/blockMenu.kt) | The menu of blocks to add |
-| [`CommentView`](../../../../../jsMain/kotlin/streetlight/web/view/CommentView.kt) | A comment with its replies and forms |
-| [`followFeedRoute`](../../../../../jsMain/kotlin/streetlight/web/view/followFeedRoute.kt) | Rebuilds the feed section below its type menu when the route changes its feed |
-| [`earthControls`](../../../../../jsMain/kotlin/streetlight/web/view/earthControls.kt) | The controls of the map |
-| [`earthFocus`](../../../../../jsMain/kotlin/streetlight/web/view/earthFocus.kt) | The panel of the focused marker |
-| [`earthMenu`](../../../../../jsMain/kotlin/streetlight/web/view/earthMenu.kt) | The menu of the map |
-| [`earthUnboundedOverlay`](../../../../../jsMain/kotlin/streetlight/web/view/earthUnboundedOverlay.kt) | Hints toward markers outside the view |
-| [`editorSandbox`](../../../../../jsMain/kotlin/streetlight/web/view/editorSandbox.kt) | The markdown editor's sandbox |
-| [`loadingMessages`](../../../../../jsMain/kotlin/streetlight/web/view/content.kt) | Messages shown while content loads |
 
 ### Stylesheets
 
