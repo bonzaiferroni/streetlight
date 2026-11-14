@@ -100,11 +100,11 @@ class MusicStudio(
 
     /** An editor of [sheet] for as long as [scope] lasts, saving its changes. */
     fun editorOf(scope: CoroutineScope, sheet: MusicSheet) =
-        MusicEditor(scope, sheet, db.musicDao(), notationStyleState, isLyricsShownState)
+        MusicEditor(scope, sheet, db.musicDao())
 
     /** An editor of the mixes of the music [editor] has open, for as long as [scope] lasts. */
     fun mixEditorOf(scope: CoroutineScope, editor: MusicEditor) =
-        MixEditor(scope, editor, db.mixDao(), db.sectionClipDao(), db.clipDao(), takeShelf, messenger)
+        MixEditor(scope, this, editor, db.mixDao(), db.sectionClipDao(), db.clipDao(), takeShelf, messenger)
 
     /** Downloads [sheet] as markdown under its song's title and artist, written in the notation style. */
     suspend fun exportMarkdown(sheet: MusicSheet) {

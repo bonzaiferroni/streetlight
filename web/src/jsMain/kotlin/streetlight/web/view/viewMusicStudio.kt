@@ -87,7 +87,7 @@ fun RouteScope.viewMusicStudioRoute() {
 context(model: MusicStudio, player: TrackPlayer)
 private fun ViewScope.musicFocus(editor: MusicEditor) {
     val mix = model.mixEditorOf(contentScope, editor)
-    val lanes = LaneEditor(contentScope, editor, mix, player, app.get())
+    val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
     // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())

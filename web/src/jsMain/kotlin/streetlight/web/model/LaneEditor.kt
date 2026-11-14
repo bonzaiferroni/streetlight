@@ -34,12 +34,13 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * The state behind the lanes of the song in [editor], at the tempo and with the takes of [mix]: a lane for each track on
- * a timeline played from a cursor. The
- * timeline opens with a lead-in before the first downbeat, which holds any pickup and the first note's head.
+ * The state behind the lanes of the music in [editor], at the tempo and with the takes of [mix], shown as [studio]
+ * sets: a lane for each track on a timeline played from a cursor. The timeline opens with a lead-in before the first
+ * downbeat, which holds any pickup and the first note's head.
  */
 class LaneEditor(
     private val scope: CoroutineScope,
+    private val studio: MusicStudio,
     private val editor: MusicEditor,
     private val mix: MixEditor,
     private val player: TrackPlayer,
@@ -52,7 +53,7 @@ class LaneEditor(
     private var playJob: Job? = null
 
     // laid out at the tempo playback runs at, so the cursor keeps with what sounds
-    private val layoutState = mix.playbackSecondsPerTickState.combine(editor.isLyricsShownState) { perTick, isLyricsShown ->
+    private val layoutState = mix.playbackSecondsPerTickState.combine(studio.isLyricsShownState) { perTick, isLyricsShown ->
         perTick to isLyricsShown
     }
     val lanesState = editor.sheetState.combine(layoutState) { sheet, (perTick, isLyricsShown) ->
@@ -74,9 +75,6 @@ class LaneEditor(
 
     /** Whether a dragged note's pitch keeps to the scale, moving by semitones otherwise. */
     val isScaleSnapState = state.mutableTapOf({ it.isScaleSnap }) { copy(isScaleSnap = it) }
-
-    /** Whether a melody's lane shows the lyrics sung to it. */
-    val isLyricsShownState = editor.isLyricsShownState
 
     /** Whether the lane at [laneIndex] is selected, which lets its notes be dragged. */
     fun isLaneSelectedState(laneIndex: Int) = state.tapOf { it.selectedLane == laneIndex }
@@ -124,7 +122,7 @@ class LaneEditor(
         val drag = state.now.drag ?: return
         val track = readNotedTrack(drag.laneIndex) ?: return
         val music = editor.sheetState.now.music
-        val window = laneWindowOf(track, editor.sheetState.now, editor.isLyricsShownState.now)
+        val window = laneWindowOf(track, editor.sheetState.now, studio.isLyricsShownState.now)
         val moved = drag.source
             .snapTick(tick, track, music, state.now.timeStep)
             .snapPitch(drag.source, stepsUp, music.key, window, state.now.isScaleSnap)
@@ -156,7 +154,7 @@ class LaneEditor(
     private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
         val sheet = editor.sheetState.now
         val seconds = section.startSeconds + source.tick * mix.playbackSecondsPerTickState.now
-        val window = laneWindowOf(track, sheet, editor.isLyricsShownState.now)
+        val window = laneWindowOf(track, sheet, studio.isLyricsShownState.now)
         return noteNotationOf(source, windowState.now.toRatio(seconds), window, sheet.music.key)
     }
 

@@ -35,19 +35,13 @@ import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionsOf
 import streetlight.model.music.withSection
 import streetlight.model.music.withoutSection
-import streetlight.model.music.text.NotationStyle
 import streetlight.model.studio.MusicDao
 
-/**
- * The state behind the editor of the music and tracks of [initialSheet], saved to [musicDao] once edits pause, written
- * in the style at [notationStyleState], a melody's notation showing its lyrics while [isLyricsShownState].
- */
+/** The state behind the editor of the music and tracks of [initialSheet], saved to [musicDao] once edits pause. */
 class MusicEditor(
     scope: CoroutineScope,
     initialSheet: MusicSheet,
     private val musicDao: MusicDao,
-    val notationStyleState: Tap<NotationStyle>,
-    val isLyricsShownState: MutableTap<Boolean>,
 ) {
     private val state = storeOf(MusicEditorState(initialSheet.music, initialSheet.tracks))
     val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }

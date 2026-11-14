@@ -185,7 +185,7 @@ private fun ViewScope.trackContent(trackId: TrackId) {
  */
 context(studio: MusicStudio, model: MusicEditor)
 private fun ViewScope.sectionCard(trackId: TrackId, section: MusicSection, label: String) {
-    val editor = SectionEditor(contentScope, model, trackId, section.sectionId)
+    val editor = SectionEditor(contentScope, studio, model, trackId, section.sectionId)
     val editId = Id(Uuid.random().toString())
     sectionEditPopover(editId, trackId, section)
     actionCard(
