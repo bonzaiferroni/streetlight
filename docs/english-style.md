@@ -1,6 +1,6 @@
 # English Style
 
-How English is written here, on the site and in the documentation, for readers who are people and agents alike.
+The style of English here, on the site and in the documentation, for readers who are people and agents alike.
 
 ## Voice
 
