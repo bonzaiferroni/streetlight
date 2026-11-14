@@ -23,13 +23,15 @@ The Streetlight native app, built with Compose Multiplatform. It runs on desktop
 
 | Package | Holds |
 |---|---|
-| `streetlight.compose.model` | Routes, `Portal`, `appModule`, services, view models, and the properties of entities |
-| `streetlight.compose.io` | `AppTransport`, its cookie storage, app files, and the image loader |
-| `streetlight.compose.view` | The theme, and composables that take a model or the `Portal`, including the view of each route |
-| `streetlight.compose.modifier` | `Modifier` extensions for the theme's styling, the cousins of `koala.modifier` |
-| `streetlight.compose.markdown` | Markdown rendered for Compose from koala's parsed blocks |
-| `streetlight.compose.svg` | The renderer of animated icons |
-| `streetlight.compose.utility` | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
+| `streetlight.compose` | The app's root, `App`, and the desktop window |
+| [`streetlight.compose.model`](src/commonMain/kotlin/streetlight/compose/model/README.md) | Routes, `Portal`, `appModule`, services, view models, and the properties of entities |
+| [`streetlight.compose.io`](src/commonMain/kotlin/streetlight/compose/io/README.md) | `AppTransport`, its cookie storage, app files, and the image loader |
+| [`streetlight.compose.view`](src/commonMain/kotlin/streetlight/compose/view/README.md) | The theme, and composables that take a model or the `Portal`, including the view of each route |
+| [`streetlight.compose.modifier`](src/commonMain/kotlin/streetlight/compose/modifier/README.md) | `Modifier` extensions for the theme's styling, the cousins of `koala.modifier` |
+| [`streetlight.compose.markdown`](src/commonMain/kotlin/streetlight/compose/markdown/README.md) | Markdown rendered for Compose from koala's parsed blocks |
+| [`streetlight.compose.svg`](src/commonMain/kotlin/streetlight/compose/svg/README.md) | The renderer of animated icons |
+| `streetlight.compose.charts` | Line and time charts |
+| [`streetlight.compose.utility`](src/commonMain/kotlin/streetlight/compose/utility/README.md) | Utilities whose target is not a compose type, such as `TapUtility.kt` and `ColorUtility.kt` |
 
 ## Web Counterparts
 

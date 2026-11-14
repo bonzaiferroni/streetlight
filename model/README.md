@@ -13,6 +13,22 @@ The domain types and API endpoints shared by the server and the web client. Both
 | `koala` | `Image`, and the route and content interfaces of `koala.model` |
 | `kotlinx.serialization` | Serialization of every type that crosses the wire |
 
+## Packages
+
+| Package | Holds |
+|---|---|
+| `streetlight.model` | The API endpoints in `Api`, and shared constants |
+| `streetlight.model.data` | The records and DTOs shared by the server and the clients |
+| `streetlight.model.ui` | Routes and screens, and the shared state of the earth map |
+| [`streetlight.model.io`](src/commonMain/kotlin/streetlight/model/io/README.md) | The clients of the Streetlight API |
+| `streetlight.model.external` | OpenStreetMap's API |
+| [`streetlight.model.music`](src/commonMain/kotlin/streetlight/model/music/README.md) | The domain model of music |
+| [`streetlight.model.music.text`](src/commonMain/kotlin/streetlight/model/music/text/README.md) | The text form of notation and its parsers |
+| [`streetlight.model.music.ui`](src/commonMain/kotlin/streetlight/model/music/ui/README.md) | The presentation model of notation |
+| [`streetlight.model.studio`](src/commonMain/kotlin/streetlight/model/studio/README.md) | The interfaces of the studio's data on the device |
+| [`streetlight.model.testing`](src/commonMain/kotlin/streetlight/model/testing/README.md) | Fixtures for tests of code that calls the API |
+| `streetlight.model.utils` | Utilities for addresses, dates, opening hours, text and validation |
+
 ## Naming
 
 | Type | Pattern |

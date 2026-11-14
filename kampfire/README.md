@@ -16,7 +16,7 @@ Utilities and types for apps that communicate with a server in a multiplatform c
 | Package | Holds |
 |---|---|
 | `kampfire.api` | Value types that cross the wire, such as `Markdown`, `Username`, `Slug`, endpoint definitions, and the transport calls go through |
-| `kampfire.model` | Requests, results, and the state and messaging types built on them, such as `Outcome`, `Messenger`, `Store`, and `Tap` |
+| [`kampfire.model`](src/commonMain/kotlin/kampfire/model/README.md) | Requests, results, and the state and messaging types built on them, such as `Outcome`, `Messenger`, `Store`, and `Tap` |
 | `kampfire.utils` | General extensions with no domain in them |
 
 ## Fuzzy Matching
