@@ -1,8 +1,6 @@
 # Module model
 
-## Introduction
-
-The domain types and API endpoints shared by the server and the web client. Both sides compile the same declarations from `commonMain`.
+You've found the core of Streetlight. All the ideas are expressed here as data structures, a common ground for the server and front ends. Here we are blissfully unconcerned with how data is presented or stored, we care only about its structure.
 
 ## Dependencies
 

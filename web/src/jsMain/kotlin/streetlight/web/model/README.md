@@ -1,10 +1,8 @@
 # Package streetlight.web.model
 
-## Introduction
-
 View models, each holding the state behind one view and the calls that change it, and the app's services, in `jsMain`. Models the server also renders from, such as the entity properties, `FlairIcon` and the CSS of `EntityType`, live in `commonMain`.
 
-## Documentation
+## Style
 
 | Document | Covers |
 |---|---|
