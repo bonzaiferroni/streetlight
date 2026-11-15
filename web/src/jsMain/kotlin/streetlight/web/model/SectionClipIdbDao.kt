@@ -20,4 +20,6 @@ class SectionClipIdbDao internal constructor(
 
     override suspend fun removeSectionClip(mixId: MixId, trackSectionId: TrackSectionId) =
         sectionClips.remove(keyOf(mixId, trackSectionId))
+
+    override suspend fun readSectionClips(mixId: MixId) = sectionClips.readRows().filter { it.mixId == mixId }
 }

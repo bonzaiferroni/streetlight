@@ -183,14 +183,14 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicEditor`](MusicEditor.kt) | Edits the music and tracks of the music in focus in `MusicStudio` |
 | [`SectionEditor`](SectionEditor.kt) | Edits one section of a track through the text of its notation |
 | [`MusicForm`](MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |
-| [`LaneEditor`](LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
+| [`LaneEditorLegacy`](LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
 | [`NoteDrag`](NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`StudioIdbDb`](StudioIdbDb.kt) | The `StudioDb` kept in the browser, and its DAOs |
 | [`SectionClipEditor`](SectionClipEditor.kt) | Chooses the clip a mix binds to a track's section among those that fit it |
 | [`SectionMic`](SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |
 | [`TakeShelf`](SongTakes.kt) | Reads the clips of a mix that still fit its song, decoded for playback |
-| [`TimelineModel`](TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditor` share |
+| [`TimelineModel`](TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditorLegacy` share |
 | [`StudioEditor`](StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](SiteMonitor.kt) | Charts the site's status |
 | [`Sandbox`](Sandbox.kt) | The state of the sandbox |

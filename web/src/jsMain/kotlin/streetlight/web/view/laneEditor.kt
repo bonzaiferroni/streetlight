@@ -7,12 +7,13 @@ import streetlight.model.music.TrackId
 import koala.component.IconStyle
 import koala.dom.ViewScope
 import koala.dom.component.*
-import koala.dom.launchEffect
 import koala.dom.requireClosest
 import koala.dom.layout.flowBlock
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.css.LinearDimension
 import kotlinx.css.pct
 import streetlight.model.music.ui.NoteNotation
@@ -20,6 +21,7 @@ import streetlight.model.music.ui.NoteValue
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
 import streetlight.web.model.LaneEditor
+import streetlight.web.model.LaneEditorLegacy
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.LaneSection
 import streetlight.web.model.TimeWindow
@@ -40,9 +42,9 @@ fun ViewScope.laneEditor() = column {
     column(modify(Zen, BorderRadius1, OverflowClip)) {
         studioTimeline(LaneStyle.Row)
         div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
-//            flowBlock(model.lanesState, FlexColumn) { lanes ->
-//                lanes.forEachIndexed { index, lane -> lane(index, lane) }
-//            }
+            flowBlock(model.lanesState, FlexColumn) { lanes ->
+                lanes.forEachIndexed { index, lane -> lane(index, lane) }
+            }
             cursorOverlay(LaneStyle.CursorOverlay)
         }
     }
@@ -53,7 +55,7 @@ private fun ViewScope.laneControls() = row(modify(AlignSelfCenter, AlignItemsCen
     button(SvgFile.PlayerPlay.filled, { model.play() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Play")))
     button(SvgFile.PlayerStop.filled, { model.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     timeStepControl()
-    switch("scale", model.isScaleSnapState)
+    // switch("scale", model.isScaleSnapState)
     switch("lyrics", config.isLyricsShownState)
 }
 
@@ -80,7 +82,7 @@ private fun ViewScope.timeStepControl() {
 }
 
 /** Renders the toggles of the track [trackId]'s lane: its tones in place of its takes, its mute and its solo. */
-context(model: LaneEditor)
+context(model: LaneEditorLegacy)
 private fun ViewScope.laneToggles(trackId: TrackId) = div(LaneStyle.Toggles) {
     val iconMod = modify(IconStyle.DefaultMod, Height(3))
     iconToggle("Tones", model.isTonedState(trackId), SvgFile.Music.small, SvgFile.Microphone.small,
@@ -103,7 +105,7 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
     val rowElement = div(LaneStyle.Row) {
         div(LaneStyle.Meta) {
             textBlock(lane.label)
-            laneToggles(lane.trackId)
+            // laneToggles(lane.trackId)
         }
         contentElement = div(modify(Css.Height.of(laneHeight(lane)), LaneStyle.Content, LaneStyle.Lane, CardBg)) {
             leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
@@ -111,22 +113,22 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
                 sections += section to div(modify(LaneStyle.Section, LaneStyle.RepeatSection.takeIf { section.isRepeat })) {
                     textBlock(section.notation.name, modify(LaneStyle.SectionLabel, TextSmall))
                     sectionMeasures(section.notation, VoidBg) { note, noteElement ->
-                        wireNoteDrag(laneIndex, section, note, noteElement)
+                        // wireNoteDrag(laneIndex, section, note, noteElement)
                     }
                 }
             }
-            flowBlock(model.noteCursorState(laneIndex), LaneStyle.NoteCursor) { cursor ->
-                cursor?.let { note(it) }
-            }
+//            flowBlock(model.noteCursorState(laneIndex), LaneStyle.NoteCursor) { cursor ->
+//                cursor?.let { note(it) }
+//            }
         }
     }
 
-    contentElement.addEventListener(PointerEvent.CLICK, { model.toggleLane(laneIndex) })
+    // contentElement.addEventListener(PointerEvent.CLICK, { model.toggleLane(laneIndex) })
 
     launchEffect("lane") {
-        model.isLaneSelectedState(laneIndex).flow.collect { isSelected ->
-            if (isSelected) rowElement.modify(LaneStyle.Selected) else rowElement.unmodify(LaneStyle.Selected)
-        }
+//        model.isLaneSelectedState(laneIndex).flow.collect { isSelected ->
+//            if (isSelected) rowElement.modify(LaneStyle.Selected) else rowElement.unmodify(LaneStyle.Selected)
+//        }
     }
 
     launchEffect("lane") {
@@ -137,11 +139,33 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
     }
 }
 
+/** Renders the cursor as one line across every lane, in line with the cursor's place in the window, over [overlayMod]. */
+context(model: LaneEditor)
+fun ViewScope.cursorOverlay(overlayMod: Modifier = StudioStyle.CursorOverlay) {
+    lateinit var lineElement: HTMLElement
+    div(overlayMod) {
+        lineElement = div(StudioStyle.CursorLine)
+    }
+    placeAt(lineElement, readCursorRatioFlow())
+}
+
+/** Keeps [element] at each ratio of [ratioFlow] along its container. */
+private fun ViewScope.placeAt(element: HTMLElement, ratioFlow: Flow<Double>) {
+    launchEffect("placeAt") {
+        ratioFlow.collect { element.setStyle(Css.Left.of((it * 100).pct)) }
+    }
+}
+
+/** The cursor's position across the window, as it moves. */
+context(model: LaneEditor)
+private fun readCursorRatioFlow() =
+    combine(model.cursorSecondsState.flow, model.windowState.flow) { cursor, window -> window.toRatio(cursor) }
+
 /**
  * Lets [noteElement] be dragged across its strip to edit [note] of [section], while its lane is selected. A release
  * back over the note cancels the drag.
  */
-context(model: LaneEditor)
+context(model: LaneEditorLegacy)
 private fun wireNoteDrag(
     laneIndex: Int,
     section: LaneSection,

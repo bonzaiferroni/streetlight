@@ -25,7 +25,7 @@ import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.layout.topSection
-import streetlight.web.model.LaneEditor
+import streetlight.web.model.LaneEditorLegacy
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
@@ -41,11 +41,12 @@ import kotlin.uuid.Uuid
 import kampfire.model.toDataOr
 import koala.dom.layout.transTabs
 import kotlinx.coroutines.launch
-import streetlight.model.music.Mix
 import streetlight.model.music.mixOf
 import streetlight.model.studio.StudioDb
+import streetlight.web.model.LaneEditor
 import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicConfig
+import streetlight.web.model.TakeShelf
 import streetlight.web.model.toaster
 import streetlight.web.utility.pickFile
 import web.blob.text
@@ -57,6 +58,7 @@ fun ViewScope.musicStudioScreen() {
     val config = MusicConfig(contentScope)
     val player = app.get<TrackPlayer>()
     val db = app.get<StudioDb>()
+    val takeShelf = app.get<TakeShelf>()
     // the studio's colors carry meaning, which the page's lights would tint
     dimLights()
     onDispose { applyTheme(null) }
@@ -67,7 +69,7 @@ fun ViewScope.musicStudioScreen() {
             document.setTitle(next)
         }
     }
-    context(model, player, config, db) {
+    context(model, player, config, db, takeShelf) {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
             flowBlock(model.sheetState, modify(Transitioner)) { sheet ->
                 when (sheet) {
@@ -95,11 +97,12 @@ fun RouteScope.viewMusicStudioRoute() {
  * Renders the music of [editor] in a section headed by its name, with a way back to the musics and a gear that opens
  * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
-context(player: TrackPlayer, config: MusicConfig, db: StudioDb)
+context(player: TrackPlayer, config: MusicConfig, db: StudioDb, takeShelf: TakeShelf)
 private fun ViewScope.musicFocus(editor: MusicEditor) {
-//    val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
-    // playback left running when the music closes would keep sounding
+    //    val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
     val mixEditor = MixEditor(contentScope, mixOf(editor.musicState.now, "Mix 1"), editor.musicState, db)
+    val lanes = LaneEditor(contentScope, editor.sheetState, mixEditor.mixState, takeShelf, db, player)
+    // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
 //    songSettingsPopover(settingsId, editor, mix)
@@ -118,7 +121,9 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
                             mixEditor()
                         }
                         MusicStudioTab.Timeline -> {
-                            // context(lanes) { laneEditor() }
+                            context(lanes) {
+                                laneEditor()
+                            }
                         }
                     }
                 }

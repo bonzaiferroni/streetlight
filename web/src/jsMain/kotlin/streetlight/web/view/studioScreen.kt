@@ -51,6 +51,7 @@ import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.Flow
 import koala.dom.launchEffect
 import streetlight.web.model.BLOCK_FRAMES
+import streetlight.web.model.LaneEditor
 import streetlight.web.model.TimeWindow
 import streetlight.web.model.TimelineModel
 import web.animations.awaitAnimationFrame
@@ -63,11 +64,11 @@ fun ViewScope.studioScreen() {
             column {
                 studioControls()
                 column(modify(Gap2Px, Zen, BorderRadius1, OverflowClip)) {
-                    studioTimeline()
+                    // studioTimeline()
                     div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
                         sampleStage()
                         liveStage()
-                        cursorOverlay()
+                        // cursorOverlay()
                     }
                 }
                 calibrationSection()
@@ -125,7 +126,7 @@ private fun ViewScope.calibrationSection() = column {
  * the cursor. The timeline is laid out by [rowMod], the
  * layout of the lanes below it.
  */
-context(model: TimelineModel)
+context(model: LaneEditor)
 fun ViewScope.studioTimeline(rowMod: Modifier = StudioStyle.Track) {
     lateinit var timelineElement: HTMLElement
     lateinit var regionElement: HTMLElement
@@ -208,10 +209,10 @@ fun ViewScope.studioTimeline(rowMod: Modifier = StudioStyle.Track) {
 
     // place the handle in line with the lanes, hidden while the cursor is outside the window
     launchEffect("studioTimeline") {
-        readCursorRatioFlow().collect { ratio ->
-            handleElement.setStyle(Css.Left.of((ratio * 100).pct))
-            handleElement.setStyle(Css.Visibility.of(if (ratio in 0.0..1.0) Visibility.visible else Visibility.hidden))
-        }
+//        readCursorRatioFlow().collect { ratio ->
+//            handleElement.setStyle(Css.Left.of((ratio * 100).pct))
+//            handleElement.setStyle(Css.Visibility.of(if (ratio in 0.0..1.0) Visibility.visible else Visibility.hidden))
+//        }
     }
 }
 
@@ -220,16 +221,6 @@ private fun ViewScope.sampleStage() = flowBlock(model.sampleIdsState, modify(Fle
     ids.forEach { id ->
         model.readSample(id)?.let { audioSample(it) }
     }
-}
-
-/** Renders the cursor as one line across every lane, in line with the cursor's place in the window, over [overlayMod]. */
-context(model: TimelineModel)
-fun ViewScope.cursorOverlay(overlayMod: Modifier = StudioStyle.CursorOverlay) {
-    lateinit var lineElement: HTMLElement
-    div(overlayMod) {
-        lineElement = div(StudioStyle.CursorLine)
-    }
-    placeAt(lineElement, readCursorRatioFlow())
 }
 
 /** Renders the lane of the capture in progress while one records, apart from a calibration's. */
@@ -381,18 +372,6 @@ private fun ViewScope.liveLane() {
         }
     }
 }
-
-/** Keeps [element] at each ratio of [ratioFlow] along its container. */
-private fun ViewScope.placeAt(element: HTMLElement, ratioFlow: Flow<Double>) {
-    launchEffect("placeAt") {
-        ratioFlow.collect { element.setStyle(Css.Left.of((it * 100).pct)) }
-    }
-}
-
-/** The cursor's position across the window, as it moves. */
-context(model: TimelineModel)
-private fun readCursorRatioFlow() =
-    combine(model.cursorSecondsState.flow, model.windowState.flow) { cursor, window -> window.toRatio(cursor) }
 
 /** Places this element over the part of [window] that a sample [durationSeconds] long from [startSeconds] covers. */
 private fun HTMLElement.placeExtent(window: TimeWindow, startSeconds: Double, durationSeconds: Double) {

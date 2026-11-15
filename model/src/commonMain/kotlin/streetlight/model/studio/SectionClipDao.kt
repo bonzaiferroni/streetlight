@@ -12,4 +12,5 @@ interface SectionClipDao {
     /** Binds the clip of [sectionClip] to its section of its mix, in place of any clip bound there. */
     suspend fun saveSectionClip(sectionClip: SectionClip)
     suspend fun removeSectionClip(mixId: MixId, trackSectionId: TrackSectionId)
+    suspend fun readSectionClips(mixId: MixId): List<SectionClip>
 }
