@@ -93,11 +93,11 @@ fun viewApp() {
                     document.getElementById(AppOverlay.WorkSignal).modify(DisplayNone)
                 }
 
-                toaster.toast("ey")
-                delay(1.seconds)
-                toaster.toast("toast!")
-                delay(3.seconds)
-                toaster.toast("retoast!")
+//                toaster.toast("ey")
+//                delay(1.seconds)
+//                toaster.toast("toast!")
+//                delay(3.seconds)
+//                toaster.toast("retoast!")
 
                 // td: reimplement as sidebar option
                 // omni.connect()

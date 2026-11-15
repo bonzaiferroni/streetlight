@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Tap
+import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
@@ -9,6 +10,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.music.Mix
 import streetlight.model.music.Music
 import streetlight.model.music.MusicId
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Section
 import streetlight.model.music.Track
 import streetlight.model.music.TrackSectionId
@@ -18,26 +20,17 @@ import streetlight.model.studio.StudioDb
 class MixEditor(
     private val scope: CoroutineScope,
     initialMix: Mix,
-    private val musicState: Tap<Music>,
+    private val sheetState: Tap<MusicSheet>,
     private val db: StudioDb,
 ) {
     private val state = storeOf(MixEditorState(initialMix))
-    private val musicId = musicState.now.musicId
 
     val focusState = state.tapOf { it.focus }
     val mixState = state.tapOf { it.mix }
-    val sectionsState = state.tapOf { it.sections }
-
-    init {
-        scope.launch {
-            db.track.flowTracks(musicId).combine(musicState.flow) { tracks, music ->
-                tracks.flatMap { track ->
-                    track.sections.map { section ->
-                        trackSectionOf(track, section, music)
-                    }
-                }
-            }.collect {
-                state.set { copy(sections = it) }
+    val sectionsState = sheetState.tapOf { sheet ->
+        sheet.tracks.flatMap { track ->
+            track.sections.map { section ->
+                trackSectionOf(track, section, sheet.music)
             }
         }
     }
