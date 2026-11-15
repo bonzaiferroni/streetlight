@@ -11,7 +11,7 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.flow.first
 import streetlight.model.music.Clip
 import streetlight.model.music.ClipId
-import streetlight.model.studio.ClipDao
+import streetlight.model.studio.StudioDb
 import web.blob.arrayBuffer
 import web.fs.FileSystemDirectoryHandle
 import web.fs.FileSystemGetDirectoryOptions
@@ -28,13 +28,13 @@ import web.storage.persist
 import web.streams.close
 
 /**
- * The clips a user plays, kept on the device whether or not they have an account: each [Clip] in [clipDao], and its
+ * The clips a user plays, kept on the device whether or not they have an account: each [Clip] in [db], and its
  * audio as a mono Ogg Opus file in the browser's private file system, decoded at the sample rate of [audio]. A shared
  * clip's [Clip.url] is its public home.
  */
 class ClipLibrary(
     private val audio: StudioAudio,
-    private val clipDao: ClipDao,
+    private val db: StudioDb,
 ) {
     private var directory: FileSystemDirectoryHandle? = null
 
@@ -43,8 +43,8 @@ class ClipLibrary(
     /** Whether the browser keeps the clips when space runs low, or `null` before the first clip is stored. */
     val isPersistedState: Tap<Boolean?> = persistedStore
 
-    suspend fun readClip(clipId: ClipId) = clipDao.flowClip(clipId).first()
-    suspend fun readClips() = clipDao.flowClips().first()
+    suspend fun readClip(clipId: ClipId) = db.clip.flowClip(clipId).first()
+    suspend fun readClips() = db.clip.flowClips().first()
 
     /** Encodes [pcm] and stores it as the audio of [clip], in place of any clip of its id, or gives the problem. */
     suspend fun saveClip(clip: Clip, pcm: PcmSample): Outcome<Unit> {
@@ -54,7 +54,7 @@ class ClipLibrary(
         val stream = handle.createWritable()
         stream.write(bytes.toUint8Array())
         stream.close()
-        clipDao.saveClip(clip)
+        db.clip.saveClip(clip)
         return Ok(Unit)
     }
 
@@ -67,7 +67,7 @@ class ClipLibrary(
 
     /** Removes the clip [clipId], its bindings to sections, and its audio, if stored. */
     suspend fun removeClip(clipId: ClipId) {
-        clipDao.removeClip(clipId)
+        db.clip.removeClip(clipId)
         if (readFileHandle(clipId.fileName) == null) return
         readDirectory().removeEntry(clipId.fileName)
     }

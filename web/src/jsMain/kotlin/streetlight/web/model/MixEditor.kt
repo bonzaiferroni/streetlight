@@ -31,21 +31,16 @@ import streetlight.model.music.TrackSectionId
 import streetlight.model.music.mixOf
 import streetlight.model.music.ui.SectionNotation
 import streetlight.model.music.ui.sectionNotationsOf
-import streetlight.model.studio.ClipDao
-import streetlight.model.studio.MixDao
-import streetlight.model.studio.SectionClipDao
+import streetlight.model.studio.StudioDb
 
 /**
- * Edits the mixes in [mixDao] of the music in [musicEditor], and the clips of [clipDao] that [sectionClipDao] binds to
- * their sections, with takes read from [takeShelf], lyrics in its notation while [isLyricsShownState] and problems going to [messenger].
+ * Edits the mixes in [db] of the music in [musicEditor], and the clips bound to their sections, with takes read from [takeShelf], lyrics in its notation while [isLyricsShownState] and problems going to [messenger].
  */
 class MixEditor(
     private val scope: CoroutineScope,
     private val isLyricsShownState: Tap<Boolean>,
     val musicEditor: MusicEditor,
-    private val mixDao: MixDao,
-    private val sectionClipDao: SectionClipDao,
-    clipDao: ClipDao,
+    private val db: StudioDb,
     private val takeShelf: TakeShelf,
     private val messenger: Messenger,
 ) {
@@ -74,13 +69,13 @@ class MixEditor(
     val propertiesState: Tap<Mix?> = mixState.tapOf { it?.copy(hidden = emptyList()) }
 
     /** The clips of the user's library. */
-    val clipsState: Tap<List<Clip>> = clipDao.flowClips().tapIn(scope, emptyList())
+    val clipsState: Tap<List<Clip>> = db.clip.flowClips().tapIn(scope, emptyList())
 
     /** The clips bound to sections of the mix being edited. */
     val sectionClipsState: Tap<List<SectionClip>> = mixState.flow
         .map { it?.mixId }
         .distinctUntilChanged()
-        .flatMapLatest { mixId -> mixId?.let { sectionClipDao.flowSectionClips(it) } ?: flowOf(emptyList()) }
+        .flatMapLatest { mixId -> mixId?.let { db.sectionClip.flowSectionClips(it) } ?: flowOf(emptyList()) }
         .tapIn(scope, emptyList())
 
     /** Each section of each track the open mix shows, in the order of the tracks. */
@@ -99,10 +94,10 @@ class MixEditor(
     }
 
     init {
-        scope.launch { mixDao.flowMixes(musicId).collect { mixes -> state.update { it.copy(mixes = mixes) } } }
+        scope.launch { db.mix.flowMixes(musicId).collect { mixes -> state.update { it.copy(mixes = mixes) } } }
         scope.launch {
-            if (mixDao.flowMixes(musicId).first().isNotEmpty()) return@launch
-            mixDao.saveMix(mixOf(musicEditor.musicState.now, "$MIX_NAME_BASE 1"))
+            if (db.mix.flowMixes(musicId).first().isNotEmpty()) return@launch
+            db.mix.saveMix(mixOf(musicEditor.musicState.now, "$MIX_NAME_BASE 1"))
         }
     }
 
@@ -120,7 +115,7 @@ class MixEditor(
     fun applyMixForm(form: MixForm): Boolean {
         val mix = form.readMix().toDataOr(messenger) { return false }
         if (mixesState.now.none { it.mixId == mix.mixId }) {
-            scope.launch { mixDao.saveMix(mix) }
+            scope.launch { db.mix.saveMix(mix) }
             state.update { it.copy(mixId = mix.mixId) }
             return true
         }
@@ -158,13 +153,13 @@ class MixEditor(
     /** Binds the clip [clipId] to [trackSectionId] in the mix being edited, in place of the clip it held. */
     fun putClip(trackSectionId: TrackSectionId, clipId: ClipId) {
         val mixId = mixState.now?.mixId ?: return
-        scope.launch { sectionClipDao.saveSectionClip(SectionClip(mixId, trackSectionId, clipId)) }
+        scope.launch { db.sectionClip.saveSectionClip(SectionClip(mixId, trackSectionId, clipId)) }
     }
 
     /** Unbinds the clip of [trackSectionId] in the mix being edited. */
     fun removeClip(trackSectionId: TrackSectionId) {
         val mixId = mixState.now?.mixId ?: return
-        scope.launch { sectionClipDao.removeSectionClip(mixId, trackSectionId) }
+        scope.launch { db.sectionClip.removeSectionClip(mixId, trackSectionId) }
     }
 
     /** The id of the clip bound to [trackSectionId] in the mix being edited, or `null` while tones play it. */
@@ -200,8 +195,8 @@ class MixEditor(
     private fun updateMix(mixId: MixId, transform: (Mix) -> Mix) {
         scope.launch {
             mixMutex.withLock {
-                val mix = mixDao.flowMix(mixId).first() ?: return@withLock
-                mixDao.saveMix(transform(mix))
+                val mix = db.mix.flowMix(mixId).first() ?: return@withLock
+                db.mix.saveMix(transform(mix))
             }
         }
     }

@@ -39,7 +39,7 @@ class MusicStudio(
     private val sheetStore = storeOf<MusicSheet?>(null)
 
     /** Each music kept, with its song. */
-    val songMusicsState: Tap<List<SongMusic>> = db.musicDao().flowSongMusics().tapIn(scope, emptyList())
+    val songMusicsState: Tap<List<SongMusic>> = db.music.flowSongMusics().tapIn(scope, emptyList())
 
     /** The sheet of the music in focus, read as the focus moves to it, or `null` for none or one not kept. */
     val sheetState: Tap<MusicSheet?> = sheetStore
@@ -47,7 +47,7 @@ class MusicStudio(
     init {
         scope.launch {
             musicIdStore.flow.collectLatest { musicId ->
-                sheetStore.set(musicId?.let { db.musicDao().readMusicSheet(it) })
+                sheetStore.set(musicId?.let { db.music.readMusicSheet(it) })
             }
         }
     }
@@ -58,8 +58,8 @@ class MusicStudio(
     suspend fun create(title: String): MusicId {
         val song = Song(SongId.random(), title, "")
         val music = newMusicOf(song)
-        db.songDao().saveSong(song)
-        db.musicDao().saveMusic(music)
+        db.song.saveSong(song)
+        db.music.saveMusic(music)
         return music.musicId
     }
 
@@ -71,8 +71,8 @@ class MusicStudio(
         val song = Song(SongId.random(), fileName.substringBeforeLast('.'), "")
         val read = SongMarkdown.read(text, song, newMusicOf(song)).toDataOr { return it }
 
-        db.songDao().saveSong(read.song)
-        db.musicDao().saveMusicSheet(read.sheet)
+        db.song.saveSong(read.song)
+        db.music.saveMusicSheet(read.sheet)
         return Ok(read.sheet.music.musicId)
     }
 
@@ -81,23 +81,15 @@ class MusicStudio(
         val songId = songMusic.song.songId
         val musicId = songMusic.music.musicId
         scope.launch {
-            val musics = db.musicDao().flowMusics(songId).first()
-            if (musics.all { it.musicId == musicId }) db.songDao().removeSong(songId)
-            else db.musicDao().removeMusic(musicId)
+            val musics = db.music.flowMusics(songId).first()
+            if (musics.all { it.musicId == musicId }) db.song.removeSong(songId)
+            else db.music.removeMusic(musicId)
         }
     }
 
-    /** An editor of [sheet] for as long as [scope] lasts, saving its changes. */
-    fun editorOf(scope: CoroutineScope, sheet: MusicSheet) =
-        MusicEditor(scope, sheet, db.musicDao())
-
-    /** An editor of the mixes of the music [editor] has open, with lyrics while [isLyricsShownState], for as long as [scope] lasts. */
-    fun mixEditorOf(scope: CoroutineScope, editor: MusicEditor, isLyricsShownState: Tap<Boolean>) =
-        MixEditor(scope, isLyricsShownState, editor, db.mixDao(), db.sectionClipDao(), db.clipDao(), takeShelf, messenger)
-
     /** Downloads [sheet] as markdown under its song's title and artist, written in the notation style. */
     suspend fun exportMarkdown(sheet: MusicSheet) {
-        val song = db.songDao().flowSong(sheet.music.songId).first() ?: return
+        val song = db.song.flowSong(sheet.music.songId).first() ?: return
         exportMarkdown(song, sheet)
     }
 }

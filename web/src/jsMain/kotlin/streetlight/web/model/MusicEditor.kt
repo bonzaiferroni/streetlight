@@ -35,13 +35,13 @@ import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionsOf
 import streetlight.model.music.withSection
 import streetlight.model.music.withoutSection
-import streetlight.model.studio.MusicDao
+import streetlight.model.studio.StudioDb
 
-/** The state behind the editor of the music and tracks of [initialSheet], saved to [musicDao] once edits pause. */
+/** The state behind the editor of the music and tracks of [initialSheet], saved to [db] once edits pause. */
 class MusicEditor(
     scope: CoroutineScope,
     initialSheet: MusicSheet,
-    private val musicDao: MusicDao,
+    private val db: StudioDb,
 ) {
     private val state = storeOf(MusicEditorState(initialSheet.music, initialSheet.tracks))
     val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }
@@ -251,12 +251,12 @@ class MusicEditor(
         try {
             sheetState.flow.debounce(SAVE_DELAY_MILLIS).collect { sheet ->
                 if (sheet == saved) return@collect
-                musicDao.saveMusicSheet(sheet)
+                db.music.saveMusicSheet(sheet)
                 saved = sheet
             }
         } finally {
             val sheet = sheetState.now
-            if (sheet != saved) withContext(NonCancellable) { musicDao.saveMusicSheet(sheet) }
+            if (sheet != saved) withContext(NonCancellable) { db.music.saveMusicSheet(sheet) }
         }
     }
 }

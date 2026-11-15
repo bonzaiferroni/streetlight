@@ -44,14 +44,14 @@ class StudioIdbDbTest {
         val db = StudioIdbDb(testDbName())
         val records = db.saveRecords()
 
-        db.songDao().removeSong(records.song.songId)
+        db.song.removeSong(records.song.songId)
 
-        assertEquals(emptyList(), db.musicDao().flowMusics(records.song.songId).first())
-        assertNull(db.trackDao().flowTrack(records.track.trackId).first())
-        assertEquals(emptyList(), db.mixDao().flowMixes(records.music.musicId).first())
-        assertEquals(emptyList(), db.sectionClipDao().flowSectionClips(records.sectionClip.mixId).first())
-        assertEquals(emptyList(), db.studyDao().flowStudies().first())
-        assertNotNull(db.clipDao().flowClip(records.clip.clipId).first(), "a clip outlives the songs it is bound in")
+        assertEquals(emptyList(), db.music.flowMusics(records.song.songId).first())
+        assertNull(db.track.flowTrack(records.track.trackId).first())
+        assertEquals(emptyList(), db.mix.flowMixes(records.music.musicId).first())
+        assertEquals(emptyList(), db.sectionClip.flowSectionClips(records.sectionClip.mixId).first())
+        assertEquals(emptyList(), db.study.flowStudies().first())
+        assertNotNull(db.clip.flowClip(records.clip.clipId).first(), "a clip outlives the songs it is bound in")
     }
 
     @Test
@@ -59,10 +59,10 @@ class StudioIdbDbTest {
         val db = StudioIdbDb(testDbName())
         val records = db.saveRecords()
 
-        db.clipDao().removeClip(records.clip.clipId)
+        db.clip.removeClip(records.clip.clipId)
 
-        assertEquals(emptyList(), db.sectionClipDao().flowSectionClips(records.sectionClip.mixId).first())
-        assertNotNull(db.mixDao().flowMix(records.sectionClip.mixId).first())
+        assertEquals(emptyList(), db.sectionClip.flowSectionClips(records.sectionClip.mixId).first())
+        assertNotNull(db.mix.flowMix(records.sectionClip.mixId).first())
     }
 
     @Test
@@ -73,11 +73,11 @@ class StudioIdbDbTest {
         val secondTrack = trackOf(records.music.musicId)
         val emissions = mutableListOf<List<Track>>()
 
-        val collection = launch { db.trackDao().flowTracks(records.music.musicId).collect { emissions += it } }
+        val collection = launch { db.track.flowTracks(records.music.musicId).collect { emissions += it } }
         awaitCount(emissions, 1)
-        db.trackDao().saveTrack(trackOf(otherMusic.musicId))
+        db.track.saveTrack(trackOf(otherMusic.musicId))
         delay(EMISSION_WAIT)
-        db.trackDao().saveTrack(secondTrack)
+        db.track.saveTrack(secondTrack)
         awaitCount(emissions, 2)
         collection.cancel()
 
@@ -92,9 +92,9 @@ class StudioIdbDbTest {
         val music = musicOf(SongId.random())
         val sheet = MusicSheet(music, listOf(trackOf(music.musicId)))
 
-        StudioIdbDb(name).musicDao().saveMusicSheet(sheet)
+        StudioIdbDb(name).music.saveMusicSheet(sheet)
 
-        assertEquals(sheet, StudioIdbDb(name).musicDao().readMusicSheet(music.musicId))
+        assertEquals(sheet, StudioIdbDb(name).music.readMusicSheet(music.musicId))
     }
 }
 
@@ -115,13 +115,13 @@ private suspend fun StudioDb.saveRecords(): StudioRecords {
     val clip = Clip(ClipId.random(), "Take", music.bpm, music.time, music.key, bars = 4, leadSeconds = 0.0)
     val sectionClip = SectionClip(mix.mixId, TrackSectionId(track.trackId, SectionId.random()), clip.clipId)
 
-    songDao().saveSong(song)
-    musicDao().saveMusic(music)
-    trackDao().saveTrack(track)
-    mixDao().saveMix(mix)
-    clipDao().saveClip(clip)
-    sectionClipDao().saveSectionClip(sectionClip)
-    studyDao().saveStudy(Study(StudyId(Uuid.random()), track.trackId, null))
+    this.song.saveSong(song)
+    this.music.saveMusic(music)
+    this.track.saveTrack(track)
+    this.mix.saveMix(mix)
+    this.clip.saveClip(clip)
+    this.sectionClip.saveSectionClip(sectionClip)
+    this.study.saveStudy(Study(StudyId(Uuid.random()), track.trackId, null))
     return StudioRecords(song, music, track, clip, sectionClip)
 }
 

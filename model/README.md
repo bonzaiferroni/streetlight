@@ -37,7 +37,6 @@ You've found the core of Streetlight. All the ideas are expressed here as data s
 | `FooContent` | The content of a route, implementing `RouteContent` |
 | `FooParser` | A class that does parsing work |
 | `FooRoute` | A route, in `streetlight.model.ui`, paired with a `Screen` entry, or with an entry of a sub-app's screens |
-| `FooAppScreen` | The screens of a sub-app, an `AppScreen` enum in `streetlight.model.ui`. Its `portalScreens` lists its entries with the `Screen` entries the sub-app also renders |
 
 ## Endpoints
 

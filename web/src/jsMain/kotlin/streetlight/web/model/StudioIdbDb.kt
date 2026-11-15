@@ -31,21 +31,13 @@ class StudioIdbDb(name: String = STUDIO_DB_NAME) : StudioDb {
     private val studies = db.table("studies", Study.serializer()) { it.studyId.toString() }
         .references(tracks) { it.trackId.toString() }
 
-    private val songDao = SongIdbDao(songs)
-    private val musicDao = MusicIdbDao(db, songs, musics, tracks)
-    private val trackDao = TrackIdbDao(tracks)
-    private val mixDao = MixIdbDao(mixes)
-    private val sectionClipDao = SectionClipIdbDao(sectionClips)
-    private val clipDao = ClipIdbDao(clips)
-    private val studyDao = StudyIdbDao(studies, tracks)
-
-    override fun songDao() = songDao
-    override fun musicDao() = musicDao
-    override fun trackDao() = trackDao
-    override fun mixDao() = mixDao
-    override fun sectionClipDao() = sectionClipDao
-    override fun clipDao() = clipDao
-    override fun studyDao() = studyDao
+    override val song = SongIdbDao(songs)
+    override val music = MusicIdbDao(db, songs, musics, tracks)
+    override val track = TrackIdbDao(tracks)
+    override val mix = MixIdbDao(mixes)
+    override val sectionClip = SectionClipIdbDao(sectionClips)
+    override val clip = ClipIdbDao(clips)
+    override val study = StudyIdbDao(studies, tracks)
 }
 
 /** The key of the clip bound to the track's section [trackSectionId] in the mix [mixId]. */

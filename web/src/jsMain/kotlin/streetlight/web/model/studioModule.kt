@@ -14,7 +14,7 @@ val studioModule = module {
     single { TrackPlayer(get(), get()) }
     single { TonePlayer(get(), get()) }
     single<StudioDb> { StudioIdbDb() }
-    single { ClipLibrary(get(), get<StudioDb>().clipDao()) }
+    single { ClipLibrary(get(), get()) }
     single { TakeShelf(get()) }
 }
 
