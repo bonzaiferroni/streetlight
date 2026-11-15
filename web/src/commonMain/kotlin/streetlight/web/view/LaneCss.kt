@@ -33,7 +33,12 @@ $Toggles {
     gap: var(--unit-1);
 }
 
-$Content { position: relative; overflow: clip; }
+$Content {
+    position: relative;
+    overflow: clip;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+}
 
 /* the outline is painted with the background, so the staff draws over it and it takes no room from the timeline's scale */
 $Lane {
@@ -51,10 +56,12 @@ $Selected ${MeasureStyle.Grabbable} {
     touch-action: none;
 }
 
-/* a unit of room above the label, which with the label's height makes the three units a lane keeps above its staff */
+/* every section shares the one cell, offset along it to its place in the window, so the tallest gives the lane its
+   height; a unit of room above the label, which with the label's height makes the three units above its staff */
 $Section {
-    position: absolute;
-    inset-block: var(--unit-1) 0;
+    grid-area: 1 / 1;
+    position: relative;
+    padding-block-start: var(--unit-1);
 }
 
 /* below the height of the labels, level with the measures of the sections */

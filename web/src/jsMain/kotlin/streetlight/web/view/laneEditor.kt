@@ -5,7 +5,9 @@ package streetlight.web.view
 import koala.SvgFile
 import streetlight.model.music.TrackId
 import koala.component.IconStyle
+import kampfire.model.tapOf
 import koala.dom.ViewScope
+import koala.dom.flowModifier
 import koala.dom.component.*
 import koala.dom.requireClosest
 import koala.dom.layout.flowBlock
@@ -14,7 +16,6 @@ import koala.modifier.*
 import koala.page.Id
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.css.LinearDimension
 import kotlinx.css.pct
 import streetlight.model.music.ui.NoteNotation
 import streetlight.model.music.ui.NoteValue
@@ -97,8 +98,9 @@ private fun ViewScope.laneToggles(trackId: TrackId) = div(LaneStyle.Toggles) {
  * Renders [lane], the one at [laneIndex], as its meta panel and each of its sections, placed within the window, under
  * the note cursor of a drag.
  */
-context(model: LaneEditor)
+context(config: MusicConfig, model: LaneEditor)
 private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
+    val isLyricsHiddenState = config.isLyricsShownState.tapOf { !it }
     lateinit var leadElement: HTMLElement
     lateinit var contentElement: HTMLElement
     val sections = mutableListOf<Pair<LaneSection, HTMLElement>>()
@@ -107,7 +109,7 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
             textBlock(lane.label)
             // laneToggles(lane.trackId)
         }
-        contentElement = div(modify(Css.Height.of(laneHeight(lane)), LaneStyle.Content, LaneStyle.Lane, CardBg)) {
+        contentElement = div(modify(LaneStyle.Content, LaneStyle.Lane, CardBg)) {
             leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
             lane.sections.forEach { section ->
                 sections += section to div(modify(LaneStyle.Section, LaneStyle.RepeatSection.takeIf { section.isRepeat })) {
@@ -115,6 +117,8 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
                     sectionMeasures(section.notation, VoidBg) { note, noteElement ->
                         // wireNoteDrag(laneIndex, section, note, noteElement)
                     }
+                    div(null) { section.notation.lyrics.forEach { sectionMeasures(it, VoidBg) } }
+                        .flowModifier(isLyricsHiddenState, DisplayNone, contentScope)
                 }
             }
 //            flowBlock(model.noteCursorState(laneIndex), LaneStyle.NoteCursor) { cursor ->
@@ -206,8 +210,6 @@ private fun wireNoteDrag(
 }
 
 /** The height of [lane]: its label's sublane and the staff steps of its notes. */
-private fun laneHeight(lane: Lane) = LinearDimension("calc(var(--unit-3) + var(--unit) * ${STAFF_STEP_UNITS * lane.steps})")
-
 /** Places this element across [window], [durationSeconds] from [startSeconds], running past its edges to keep its scale. */
 private fun HTMLElement.placeSpan(startSeconds: Double, durationSeconds: Double, window: TimeWindow) {
     setStyle(Css.Left.of((window.toRatio(startSeconds) * 100).pct))
