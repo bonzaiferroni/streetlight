@@ -43,7 +43,9 @@ class LaneEditor(
 
     val windowState = state.tapOf { it.window }
 
-    private val rateState = mixState.tapOf { 60.0 / it.bpm }
+    private val rateState = sheetState.combine(mixState) { sheet, mix ->
+        60.0 / mix.bpm / sheet.music.time.pulse.ticks
+    }
 
     val lanesState = sheetState.combine(rateState) { sheet, rate ->
         lanesOf(sheet, rate)

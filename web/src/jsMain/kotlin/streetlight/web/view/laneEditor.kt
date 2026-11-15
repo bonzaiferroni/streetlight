@@ -40,7 +40,7 @@ context(config: MusicConfig, model: LaneEditor)
 fun ViewScope.laneEditor() = column {
     laneControls()
     column(modify(Zen, BorderRadius1, OverflowClip)) {
-        studioTimeline(LaneStyle.Row)
+        laneTimeline(LaneStyle.Row)
         div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
             flowBlock(model.lanesState, FlexColumn) { lanes ->
                 lanes.forEachIndexed { index, lane -> lane(index, lane) }
@@ -158,7 +158,7 @@ private fun ViewScope.placeAt(element: HTMLElement, ratioFlow: Flow<Double>) {
 
 /** The cursor's position across the window, as it moves. */
 context(model: LaneEditor)
-private fun readCursorRatioFlow() =
+fun readCursorRatioFlow() =
     combine(model.cursorSecondsState.flow, model.windowState.flow) { cursor, window -> window.toRatio(cursor) }
 
 /**
