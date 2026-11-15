@@ -31,7 +31,7 @@ import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
 import streetlight.web.model.exportOgg
-import streetlight.web.model.MixEditor
+import streetlight.web.model.MixEditorLegacy
 import koala.component.heading6
 import streetlight.web.model.getMusicStudio
 import streetlight.web.model.portal
@@ -41,9 +41,11 @@ import kotlin.uuid.Uuid
 import kampfire.model.toDataOr
 import koala.dom.layout.transTabs
 import kotlinx.coroutines.launch
+import streetlight.model.music.Mix
+import streetlight.model.music.mixOf
 import streetlight.model.studio.StudioDb
+import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicConfig
-import streetlight.web.model.TakeShelf
 import streetlight.web.model.toaster
 import streetlight.web.utility.pickFile
 import web.blob.text
@@ -65,7 +67,7 @@ fun ViewScope.musicStudioScreen() {
             document.setTitle(next)
         }
     }
-    context(model, player, config) {
+    context(model, player, config, db) {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
             flowBlock(model.sheetState, modify(Transitioner)) { sheet ->
                 when (sheet) {
@@ -93,14 +95,14 @@ fun RouteScope.viewMusicStudioRoute() {
  * Renders the music of [editor] in a section headed by its name, with a way back to the musics and a gear that opens
  * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
-context(model: MusicStudio, player: TrackPlayer, config: MusicConfig, db: StudioDb)
+context(player: TrackPlayer, config: MusicConfig, db: StudioDb)
 private fun ViewScope.musicFocus(editor: MusicEditor) {
-    val mix = MixEditor(scope, isLyricsShownState, editor, db, takeShelf, messenger)
-    val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
+//    val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
     // playback left running when the music closes would keep sounding
+    val mixEditor = MixEditor(contentScope, mixOf(editor.musicState.now, "Mix 1"), editor.musicState, db)
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
-    songSettingsPopover(settingsId, editor, mix)
+//    songSettingsPopover(settingsId, editor, mix)
     topSection(
         label = editor.musicState.now.name,
         onBack = { portal.go(MusicStudioRoute()) },
@@ -111,9 +113,13 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {
                     when (studioTab) {
-                        MusicStudioTab.Compose -> context(editor, mix) { musicEditor() }
-                        MusicStudioTab.Mix -> context(mix) { mixEditor() }
-                        MusicStudioTab.Timeline -> context(lanes) { laneEditor() }
+                        MusicStudioTab.Compose -> context(editor) { musicEditor() }
+                        MusicStudioTab.Mix -> context(mixEditor) {
+                            mixEditor()
+                        }
+                        MusicStudioTab.Timeline -> {
+                            // context(lanes) { laneEditor() }
+                        }
                     }
                 }
             }
@@ -126,7 +132,7 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
  * the formats the music of [editor] exports to, with the takes of [mixEditor].
  */
 context(model: MusicStudio, player: TrackPlayer, config: MusicConfig)
-private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mixEditor: MixEditor) {
+private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mixEditor: MixEditorLegacy) {
     popover(id) { popover ->
         column(Padding(2)) {
             dropMenu(config.notationStyleState)

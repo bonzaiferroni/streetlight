@@ -29,7 +29,7 @@ import kotlin.math.abs
  */
 class SectionMic(
     private val scope: CoroutineScope,
-    private val editor: MixEditor,
+    private val editor: MixEditorLegacy,
     private val trackSectionId: TrackSectionId,
     private val audio: StudioAudio,
     private val tones: TonePlayer,

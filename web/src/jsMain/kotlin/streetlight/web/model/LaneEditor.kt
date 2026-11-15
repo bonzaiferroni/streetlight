@@ -16,7 +16,6 @@ import streetlight.model.music.SectionId
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
-import streetlight.model.music.lyricsOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionOrderOf
 import streetlight.model.music.toMidi
@@ -42,7 +41,7 @@ class LaneEditor(
     private val scope: CoroutineScope,
     private val studio: MusicStudio,
     private val editor: MusicEditor,
-    private val mix: MixEditor,
+    private val mix: MixEditorLegacy,
     private val player: TrackPlayer,
     private val tones: TonePlayer,
 ) : TimelineModel {
@@ -147,7 +146,7 @@ class LaneEditor(
     private fun cursorOf(source: NoteSource, section: LaneSection, track: Track): NoteNotation {
         val sheet = editor.sheetState.now
         val seconds = section.startSeconds + source.tick * mix.playbackSecondsPerTickState.now
-        val window = laneWindowOf(track, sheet, studio.isLyricsShownState.now)
+        val window = laneWindowOf(track, sheet)
         return noteNotationOf(source, windowState.now.toRatio(seconds), window, sheet.music.key)
     }
 
@@ -245,12 +244,12 @@ data class LaneSection(
  * The lanes of [sheet], with each track's sections laid along its arrangement as playback lays them. With
  * [isLyricsShown], each time a track plays a section carries the line of lyrics sung to it then.
  */
-private fun lanesOf(sheet: MusicSheet, secondsPerTick: Double, isLyricsShown: Boolean): List<Lane> {
+private fun lanesOf(sheet: MusicSheet, secondsPerTick: Double): List<Lane> {
     val tracks = sheet.tracks
     val order = tracks.sectionOrderOf(sheet.music)
     val leadSeconds = leadSecondsOf(sheet, secondsPerTick)
     return tracks.map { track ->
-        val window = laneWindowOf(track, sheet, isLyricsShown)
+        val window = laneWindowOf(track, sheet)
         val plays = mutableMapOf<SectionId, Int>()
         var onset = 0
         val sections = order.flatMap { sectionId ->
@@ -258,8 +257,7 @@ private fun lanesOf(sheet: MusicSheet, secondsPerTick: Double, isLyricsShown: Bo
             val ticks = track.lengthOf(sectionId)?.ticks ?: 0
             val laneSections = List(track.repeatsOf(sectionId, span)) { repeat ->
                 val play = plays[sectionId] ?: 0
-                val lyrics = if (window.lyricLines == 0) emptyList()
-                else drawnLyricLinesOf(tracks, track, sectionId, sheet.music, play)
+                val lyrics = drawnLyricLinesOf(tracks, track, sectionId, sheet.music, play)
                 val notation = sectionNotationOf(track, sectionId, sheet.music, window, lyrics) ?: return@List null
                 plays[sectionId] = play + 1
                 LaneSection(
@@ -278,8 +276,7 @@ private fun lanesOf(sheet: MusicSheet, secondsPerTick: Double, isLyricsShown: Bo
 
 /** The window of the lane of [track] in [sheet], with room for a line of lyrics when [isLyricsShown] and it has them. */
 private fun laneWindowOf(track: Track, sheet: MusicSheet): StaffWindow {
-    val lyricLines = if (isLyricsShown && sheet.tracks.lyricsOf(track) != null) 1 else 0
-    return staffWindowOf(track, sheet.music.key, lyricLines = lyricLines)
+    return staffWindowOf(track, sheet.music.key)
 }
 
 private fun endSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {

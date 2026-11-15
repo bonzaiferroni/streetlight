@@ -36,7 +36,7 @@ A form model, named `FooForm`, holds the properties of a record apart from it, s
 
 A section's text is its notation alone. Its name, its properties and the arrangements that play it are set through the UI, and a section is created by an action that names it: a name the music holds joins that section, and any other gives the music a new one.
 
-A music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditor` reads it. A track removed takes its section clips and studies with it when the removal is saved, and what still names it, such as a mix's hidden sections or a focus, skips a track the music no longer holds. A rename needs no following, since a track keeps its id.
+A music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditorLegacy` reads it. A track removed takes its section clips and studies with it when the removal is saved, and what still names it, such as a mix's hidden sections or a focus, skips a track the music no longer holds. A rename needs no following, since a track keeps its id.
 
 `MusicEditor` holds its `MusicSheet` as an edit buffer, saved whole once edits pause for a second and once more as its scope ends. Every other studio edit, such as a mix's, saves at once and is seen back through the DAO's flows. A change made from what is shown reads the record again first, so changes in quick succession all land.
 
@@ -86,7 +86,7 @@ An `ImageEditor` takes the `ImageTarget` of the record it edits, and uploads at 
 
 A setting the viewer keeps across sessions is a field of `SiteConfigState`, exposed as a lens on `SiteConfig`. A model that follows the setting takes `SiteConfig` from the container and declares the lens as its own property, such as `postModeState`, so its view binds to the model.
 
-The studio's settings are held by `MusicConfig`, which a screen builds and provides to its views as a context parameter. A model never takes `MusicConfig`; the view passes the state a model needs, such as `isLyricsShownState`, as an argument.
+The studio's settings are held by `MusicConfig`, which a screen builds and provides to its views as a context parameter. A model never takes `MusicConfig`; the view passes the state a model needs, such as `notationStyleState`, as an argument.
 
 ## Posting
 
@@ -177,9 +177,9 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](SongProfile.kt) | Shows and edits a song |
-| [`MusicStudio`](MusicStudio.kt) | Lists, creates and removes the musics in `StudioDb`, and reads the sheet of the one in focus for its `MusicEditor` and `MixEditor` |
-| [`MixEditor`](MixEditor.kt) | Edits the mixes of a song's music, whose tempo and takes playback follows |
-| [`MixForm`](MixForm.kt) | Holds a mix's name, tempo and sounding key apart from the mix until `MixEditor` applies them |
+| [`MusicStudio`](MusicStudio.kt) | Lists, creates and removes the musics in `StudioDb`, and reads the sheet of the one in focus for its `MusicEditor` and `MixEditorLegacy` |
+| [`MixEditorLegacy`](MixEditor.kt) | Edits the mixes of a song's music, whose tempo and takes playback follows |
+| [`MixForm`](MixForm.kt) | Holds a mix's name, tempo and sounding key apart from the mix until `MixEditorLegacy` applies them |
 | [`MusicEditor`](MusicEditor.kt) | Edits the music and tracks of the music in focus in `MusicStudio` |
 | [`SectionEditor`](SectionEditor.kt) | Edits one section of a track through the text of its notation |
 | [`MusicForm`](MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |

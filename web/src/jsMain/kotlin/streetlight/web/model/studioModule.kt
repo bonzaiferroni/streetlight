@@ -28,7 +28,7 @@ fun AppContainer.loadStudioModule() {
 fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get())
 
 /** The capture of takes of the track's section [trackSectionId] in [editor]'s open mix. */
-fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MixEditor, trackSectionId: TrackSectionId) =
+fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MixEditorLegacy, trackSectionId: TrackSectionId) =
     SectionMic(
         scope, editor, trackSectionId,
         koin.get(), koin.get(), koin.get(), koin.get(),

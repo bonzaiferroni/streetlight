@@ -7,8 +7,6 @@ import koala.dom.component.*
 import koala.dom.layout.flowBlock
 import koala.dom.layout.selectorBlock
 import koala.dom.layout.selectorContainer
-import koala.model.HeadingLevel
-import koala.model.IconAction
 import koala.model.MenuAction
 import koala.modifier.*
 import koala.page.Id
@@ -18,20 +16,20 @@ import streetlight.model.music.TrackSectionId
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.actionCard
-import streetlight.web.dom.layout.formRow
-import streetlight.web.model.MixEditor
+import streetlight.web.model.MixEditorLegacy
+import streetlight.web.model.MusicConfig
 import streetlight.web.model.MODE_NAMES
+import streetlight.web.model.MixEditor
 import streetlight.web.model.MixForm
-import streetlight.web.model.MixSection
+import streetlight.web.model.TrackSection
 import streetlight.web.model.TONIC_NAMES
 import streetlight.web.model.SectionClipEditor
 import streetlight.web.model.SectionMic
 import streetlight.web.model.SectionMicPhase
-import streetlight.web.model.getSectionMic
 import kotlin.uuid.Uuid
 
 /** Renders the open mix and the sections it shows, or the section in focus alone. */
-context(model: MixEditor)
+context(config: MusicConfig, model: MixEditor)
 fun ViewScope.mixEditor() = flowBlock(model.focusState, Transitioner) { focus ->
     when (focus) {
         null -> mixOverview()
@@ -44,14 +42,13 @@ fun ViewScope.mixEditor() = flowBlock(model.focusState, Transitioner) { focus ->
  * and sounding key beside the way to its hidden sections, then a card for each section it shows.
  */
 context(model: MixEditor)
-private fun ViewScope.mixOverview() = flowBlock(model.propertiesState) { mix ->
-    if (mix == null) return@flowBlock
+private fun ViewScope.mixOverview() = flowBlock(model.mixState) { mix ->
     val editId = Id(Uuid.random().toString())
     val selectId = Id(Uuid.random().toString())
     val hiddenId = Id(Uuid.random().toString())
-    mixEditPopover(editId, mix)
-    mixSelectPopover(selectId)
-    hiddenSectionsPopover(hiddenId)
+//    mixEditPopover(editId, mix)
+//    mixSelectPopover(selectId)
+//    hiddenSectionsPopover(hiddenId)
     actionSection(
         label = mix.name,
         actions = listOf(
@@ -66,14 +63,14 @@ private fun ViewScope.mixOverview() = flowBlock(model.propertiesState) { mix ->
                 textBlock("hidden")
             }
         }
-        flowBlock(model.shownSectionsState, MixStyle.Cards) { sections ->
+        flowBlock(model.sectionsState, MixStyle.Cards) { sections ->
             sections.forEach { sectionCard(it) }
         }
     }
 }
 
 /** A popover with [id] holding the sections the open mix hides, each beside the button that shows it again. */
-context(model: MixEditor)
+context(model: MixEditorLegacy)
 private fun ViewScope.hiddenSectionsPopover(id: Id) {
     popover(id) {
         flowBlock(model.hiddenSectionsState, modify(FlexColumn, Padding(2))) { sections ->
@@ -89,32 +86,33 @@ private fun ViewScope.hiddenSectionsPopover(id: Id) {
 }
 
 /**
- * Renders [mixSection] in a card under its label and its track's icon, with an action that hides it: the slot of its
+ * Renders [section] in a card under its label and its track's icon, with an action that hides it: the slot of its
  * clip, which opens the clips that fit it, beside the button that brings it into focus to record.
  */
 context(model: MixEditor)
-private fun ViewScope.sectionCard(mixSection: MixSection) {
-    val trackSectionId = mixSection.trackSectionId
-    val clipEditor = SectionClipEditor(model, trackSectionId)
+private fun ViewScope.sectionCard(section: TrackSection) {
+    val trackSectionId = section.trackSectionId
+    // val clipEditor = SectionClipEditor(model, trackSectionId)
     val clipsId = Id(Uuid.random().toString())
-    val trackType = model.musicEditor.readTrack(trackSectionId.trackId)?.trackType
-    clipsPopover(clipsId, clipEditor)
+    // clipsPopover(clipsId, clipEditor)
     actionCard(
-        label = mixSection.label,
-        actions = listOf(MenuAction("Hide") { model.hideSection(trackSectionId) }),
+        label = section.label,
+        actions = listOf(MenuAction("Hide") {
+            // model.hideSection(trackSectionId)
+        }),
         // named apart from the tab, so the card pops in with it, and pairs with the focus card
-        mod = modify(trackType?.color?.bg, OutlineLow, Presto.Pop),
-        svg = trackType?.svg?.small,
+        mod = modify(section.trackType.color.bg, OutlineLow, Presto.Pop),
+        svg = section.trackType.svg.small,
         key = trackSectionId.toKey(),
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
             row(AlignItemsCenter) {
-                flowBlock(model.clipLabelOf(trackSectionId), Flex1) { label ->
-                    button(mod = modify(MixStyle.Slot, VoidBg.takeIf { label == null })) {
-                        setPopoverTarget(clipsId, true)
-                        +label.orEmpty()
-                    }
-                }
+//                flowBlock(model.clipLabelOf(trackSectionId), Flex1) { label ->
+//                    button(mod = modify(MixStyle.Slot, VoidBg.takeIf { label == null })) {
+//                        setPopoverTarget(clipsId, true)
+//                        +label.orEmpty()
+//                    }
+//                }
                 val recordMod = modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Record"))
                 button(SvgFile.PlayerRecord.filled, { model.focusSection(trackSectionId) }, recordMod)
             }
@@ -140,30 +138,30 @@ private fun ViewScope.clipsPopover(id: Id, clipEditor: SectionClipEditor) {
  * Renders [trackSectionId] alone in a card under its label, with an up arrow that returns to the overview: its
  * notation beside the recorder of its takes.
  */
-context(model: MixEditor)
+context(config: MusicConfig, model: MixEditor)
 private fun ViewScope.sectionFocus(trackSectionId: TrackSectionId) {
-    val mic = app.getSectionMic(contentScope, model, trackSectionId)
-    val key = trackSectionId.toKey()
-    val trackType = model.musicEditor.readTrack(trackSectionId.trackId)?.trackType
-    actionCard(
-        label = model.labelOf(trackSectionId),
-        level = HeadingLevel.H3,
-        mod = modify(trackType?.color?.bg, OutlineLow),
-        svg = trackType?.svg?.large,
-        key = key,
-        onBack = model::clearFocus,
-    ) {
-        card(modify(PaperBg, Outline, BorderRadius1)) {
-            formRow {
-                flowBlock(model.notationOf(trackSectionId)) { notation -> notation?.let { sectionStrips(it) } }
-                sectionRecorder(mic)
-            }
-        }
-    }
+//    val mic = app.getSectionMic(contentScope, model, trackSectionId)
+//    val key = trackSectionId.toKey()
+//    val trackType = model.musicEditor.readTrack(trackSectionId.trackId)?.trackType
+//    actionCard(
+//        label = model.labelOf(trackSectionId),
+//        level = HeadingLevel.H3,
+//        mod = modify(trackType?.color?.bg, OutlineLow),
+//        svg = trackType?.svg?.large,
+//        key = key,
+//        onBack = model::clearFocus,
+//    ) {
+//        card(modify(PaperBg, Outline, BorderRadius1)) {
+//            formRow {
+//                flowBlock(model.notationOf(trackSectionId)) { notation -> notation?.let { sectionStrips(it) } }
+//                sectionRecorder(mic)
+//            }
+//        }
+//    }
 }
 
 /** A popover with [id] holding the properties of [mix], which its save button applies. */
-context(model: MixEditor)
+context(model: MixEditorLegacy)
 private fun ViewScope.mixEditPopover(id: Id, mix: Mix) {
     popover(id) { popover ->
         val form = MixForm(mix)
@@ -175,13 +173,13 @@ private fun ViewScope.mixEditPopover(id: Id, mix: Mix) {
 }
 
 /** A popover with [id] holding the mixes of the music, where a click opens one, above the form of a new mix. */
-context(model: MixEditor)
+context(model: MixEditorLegacy)
 private fun ViewScope.mixSelectPopover(id: Id) {
     popover(id) { popover ->
         val form = model.newMixForm()
         column(Padding(2)) {
             selectorContainer {
-                selectorBlock(model.mixesState, model.openMixState) { mix ->
+                selectorBlock(model.mixesState, model::selectMix) { mix ->
                     row(modify(AlignItemsCenter, Padding(1))) {
                         textBlock(mix.name, Flex1)
                         textBlock(mix.summary, modify(TextSmall, InkDimFg))

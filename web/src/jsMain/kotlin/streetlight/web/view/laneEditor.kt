@@ -40,9 +40,9 @@ fun ViewScope.laneEditor() = column {
     column(modify(Zen, BorderRadius1, OverflowClip)) {
         studioTimeline(LaneStyle.Row)
         div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
-            flowBlock(model.lanesState, FlexColumn) { lanes ->
-                lanes.forEachIndexed { index, lane -> lane(index, lane) }
-            }
+//            flowBlock(model.lanesState, FlexColumn) { lanes ->
+//                lanes.forEachIndexed { index, lane -> lane(index, lane) }
+//            }
             cursorOverlay(LaneStyle.CursorOverlay)
         }
     }

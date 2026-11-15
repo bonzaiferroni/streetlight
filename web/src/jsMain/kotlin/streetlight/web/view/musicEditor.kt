@@ -1,6 +1,8 @@
 package streetlight.web.view
 
 import kampfire.model.storeOf
+import kampfire.model.tapOf
+import koala.dom.flowModifier
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
@@ -26,7 +28,7 @@ import streetlight.web.model.TONIC_NAMES
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSection
 import streetlight.model.music.SectionId
-import streetlight.web.model.MixEditor
+import streetlight.web.model.MixEditorLegacy
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
@@ -35,7 +37,7 @@ import streetlight.web.dom.layout.formRow
 import kotlin.uuid.Uuid
 
 /** Renders the song's arrangement beside its tracks, or the editor of the track in focus alone. */
-context(config: MusicConfig, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
+context(config: MusicConfig, model: MusicEditor, player: TrackPlayer)
 fun ViewScope.musicEditor() = flowBlock(model.focusState, Transitioner) { focus ->
     when (val track = focus?.let { model.readTrack(it) }) {
         null -> formRow {
@@ -158,7 +160,8 @@ fun ViewScope.namePopover(id: Id, label: String, onSubmit: (String) -> Boolean) 
     }
 }
 
-/** The strips of [section], a line of its text to each. */
+/** The strips of [section], a line of its text to each, with its lyrics under each while [config] shows them. */
+context(config: MusicConfig)
 fun ViewScope.sectionStrips(section: SectionNotation) {
     val lines = section.lines()
     // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
@@ -168,6 +171,7 @@ fun ViewScope.sectionStrips(section: SectionNotation) {
     val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
     // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
     val headRoom = LinearDimension("calc(var(--unit) * $HEAD_ROOM_UNITS)")
+    val isLyricsHiddenState = config.isLyricsShownState.tapOf { !it }
     column(modify(Css.MaxWidth.of(maxWidth), Css.Gap.of(2.px))) {
         lines.forEach { line ->
             val place = modify(
@@ -175,7 +179,11 @@ fun ViewScope.sectionStrips(section: SectionNotation) {
                 Css.Width.of((line.ticks / paneTicks * 100).pct),
             )
             // each line on a band of its own, the band reaching the whole width however short the line
-            div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) { sectionMeasures(line, place) }
+            div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) {
+                sectionMeasures(line, place)
+                div(null) { line.lyrics.forEach { sectionMeasures(it, place) } }
+                    .flowModifier(isLyricsHiddenState, DisplayNone, contentScope)
+            }
         }
     }
 }

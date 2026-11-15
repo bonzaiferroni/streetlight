@@ -40,17 +40,16 @@ import streetlight.model.music.MusicSection
 import streetlight.model.music.Phrase
 import streetlight.model.music.UNNAMED_SECTION
 import streetlight.web.dom.layout.actionCard
-import streetlight.web.model.MixEditor
+import streetlight.web.model.MixEditorLegacy
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
-import kampfire.model.toDataOr
 import streetlight.model.music.SectionId
 import kotlin.uuid.Uuid
 
 /** Renders the tracks of the song under an action that adds one, each a row that brings its editor into focus. */
-context(config: MusicConfig, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
+context(config: MusicConfig, model: MusicEditor, player: TrackPlayer)
 fun ViewScope.trackEditor() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
@@ -77,7 +76,7 @@ fun ViewScope.trackEditor() {
 /**
  * Renders the row of [track], which brings its editor into focus, with a grip that moves it among the tracks.
  */
-context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, mix: MixEditor, player: TrackPlayer)
+context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, player: TrackPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
@@ -98,7 +97,7 @@ private fun ViewScope.trackRow(track: Track) {
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
             else model.readTrack(trackId)?.let { track ->
-                contentScope.launch { player.play(model.sheetState.now, listOf(track), takes = mix.readTakes()) }
+//                contentScope.launch { player.play(model.sheetState.now, listOf(track), takes = mix.readTakes()) }
             }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(
@@ -185,7 +184,7 @@ private fun ViewScope.trackContent(trackId: TrackId) {
  */
 context(config: MusicConfig, model: MusicEditor)
 private fun ViewScope.sectionCard(trackId: TrackId, section: MusicSection, label: String) {
-    val editor = SectionEditor(contentScope, config.notationStyleState, config.isLyricsShownState, model, trackId, section.sectionId)
+    val editor = SectionEditor(contentScope, config.notationStyleState, model, trackId, section.sectionId)
     val editId = Id(Uuid.random().toString())
     sectionEditPopover(editId, trackId, section)
     actionCard(
