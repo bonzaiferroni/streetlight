@@ -16,7 +16,7 @@ import kotlinx.css.pct
 import kotlinx.css.px
 import streetlight.model.music.Beats
 import kotlinx.css.LinearDimension
-import streetlight.model.music.ui.SectionNotation
+import streetlight.model.music.ui.StaffNotation
 import streetlight.model.music.ui.lines
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
@@ -29,6 +29,8 @@ import streetlight.web.model.TONIC_NAMES
 import streetlight.model.music.Music
 import streetlight.model.music.Section
 import streetlight.web.model.WaveShelf
+import streetlight.web.model.NotationFocus
+import streetlight.web.model.TrackFocus
 import streetlight.model.studio.StudioDb
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.TrackPlayer
@@ -37,15 +39,16 @@ import kampfire.model.toDataOr
 import streetlight.web.dom.layout.formRow
 import kotlin.uuid.Uuid
 
-/** Renders the song's arrangement beside its tracks, or the editor of the track in focus alone. */
+/** Renders the song's arrangement beside its tracks, or the editor of the track or notation in focus alone. */
 context(config: MusicConfig, model: MusicEditor, db: StudioDb, waveShelf: WaveShelf, player: TrackPlayer)
 fun ViewScope.musicEditor() = flowBlock(model.focusState, Transitioner) { focus ->
-    when (val track = focus?.let { model.readTrack(it) }) {
+    when (focus) {
         null -> formRow {
             musicSection()
-            trackEditor()
+            trackList()
         }
-        else -> trackFocus(track)
+        is TrackFocus -> trackEditor(focus.track, model::setFocus)
+        is NotationFocus -> notationEditor(focus, model::setFocus)
     }
 }
 
@@ -204,7 +207,7 @@ fun ViewScope.namePopover(id: Id, label: String, onSubmit: (String) -> Boolean) 
 
 /** The strips of [section], a line of its text to each, with its lyrics under each while [config] shows them. */
 context(config: MusicConfig)
-fun ViewScope.sectionStrips(section: SectionNotation) {
+fun ViewScope.sectionStrips(section: StaffNotation) {
     val lines = section.lines()
     // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
     val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0

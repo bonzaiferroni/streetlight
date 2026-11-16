@@ -14,7 +14,7 @@ Notation is the written representation of music. Its forms live in the subpackag
 
 ## Records
 
-A `Song` has many `Music`, each one way of playing and understanding it, under a name of its own that starts as the song's title. A `Track` belongs to one music by its `musicId`. Songs, musics, tracks, track clips, clips and studies are each kept as separate records, so a reference between them is an id. `MusicSheet` joins a music to its tracks where the whole is edited, played or exported, and `SongMusic` joins it to its song where musics are listed.
+A `Song` has many `Music`, each one way of playing and understanding it, under a name of its own that starts as the song's title. A `Track` belongs to one music by its `musicId`, and `Music.trackOrder` only orders them: a track it does not name goes after those it does, and an id no track holds is skipped. A song's markdown orders them by its track headings. Songs, musics, tracks, track clips, clips and studies are each kept as separate records, so a reference between them is an id. `MusicSheet` joins a music to its tracks where the whole is edited, played or exported, and `SongMusic` joins it to its song where musics are listed.
 
 A `SectionId` or `NotationId` is not a record. A reference to a section or a notation outlives what it names unless the edit that removes it clears the reference, so a reader of one skips what the music or track no longer holds.
 

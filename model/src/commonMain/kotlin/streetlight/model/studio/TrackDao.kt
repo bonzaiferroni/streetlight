@@ -11,6 +11,6 @@ interface TrackDao {
     fun flowTrack(trackId: TrackId): Flow<Track?>
     suspend fun saveTrack(track: Track)
 
-    /** Removes the track [trackId] with its section clips and studies. */
+    /** Removes the track [trackId] with its track clips and studies. */
     suspend fun removeTrack(trackId: TrackId)
 }

@@ -16,7 +16,7 @@ interface MusicDao {
     fun flowSongMusics(): Flow<List<SongMusic>>
     suspend fun saveMusic(music: Music)
 
-    /** Removes the music [musicId] with its tracks and mixes. */
+    /** Removes the music [musicId] with its tracks. */
     suspend fun removeMusic(musicId: MusicId)
 
     /** The music [musicId] with its tracks, or `null` when there is no such music. */

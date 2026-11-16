@@ -6,8 +6,9 @@ import kotlin.uuid.Uuid
 import streetlight.model.data.RecordId
 
 /**
- * A musical understanding of the song [songId], shown under its [name]: its key, time and tempo, its [sections], and
- * the [arrangement] that plays them in order. A song has many, each one way of playing it.
+ * A musical understanding of the song [songId], shown under its [name]: its key, time and tempo, its [sections], the
+ * [arrangement] that plays them in order, and the [trackOrder] its tracks are shown in. A song has many, each one way
+ * of playing it.
  *
  * The key and every track are written as played, and sound [capo] semitones higher, as chord shapes played behind a
  * guitar capo. A track's own [Track.capo] adds to it. The [bpm] counts the [TimeSignature.pulse].
@@ -23,12 +24,18 @@ data class Music(
     val capo: Int? = null,
     val sections: List<Section> = emptyList(),
     val arrangement: List<SectionId> = emptyList(),
+    val trackOrder: List<TrackId> = emptyList(),
 ) {
     /** The name of the section [sectionId], or a placeholder when the music holds no such section. */
     fun nameOf(sectionId: SectionId) = sections.firstOrNull { it.sectionId == sectionId }?.name ?: UNNAMED_SECTION
 
     /** The section named [name], or `null` for none. */
     fun sectionOf(name: String) = sections.firstOrNull { it.name == name }
+
+    /** [tracks] in the [trackOrder], each track it does not name after them in the order given. */
+    fun orderTracks(tracks: List<Track>) = tracks.sortedBy { track ->
+        trackOrder.indexOf(track.trackId).takeIf { it >= 0 } ?: trackOrder.size
+    }
 
     /** The length of the section [sectionId], or `null` when the music holds no such section. */
     fun lengthOf(sectionId: SectionId) =

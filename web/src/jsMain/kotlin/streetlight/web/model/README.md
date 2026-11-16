@@ -38,7 +38,7 @@ A notation's text is its measures alone. Its name, the sections it plays and the
 
 A music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no clips; `ClipEditor` and `ClipMic` read its sheet. A track removed takes its track clips and studies with it when the removal is saved, and what still names it, such as a focus, skips a track the music no longer holds. A rename needs no following, since a track keeps its id.
 
-`MusicEditor` holds its `MusicSheet` as an edit buffer, saved whole once edits pause for a second and once more as its scope ends. Every other studio edit, such as a clip binding, saves at once and is seen back through the DAO's flows. A change made from what is shown reads the record again first, so changes in quick succession all land.
+Each record of a music has one writer at a time. `MusicEditor` holds the music as an edit buffer, saved once edits pause for a second and once more as its scope ends, and its tracks follow the DAO's flows. The editor of a focus owns its track the same way: a `TrackEditor` or `NotationEditor` is seeded with the track its `MusicEditorFocus` holds, saves it as `MusicEditor` saves the music, and hands the track as it stands to the focus that follows, so the next editor never seeds from a save still landing. With no focus, `MusicEditor` writes a track directly, one save per edit. Every other studio edit, such as a clip binding, saves at once and is seen back through the DAO's flows.
 
 ## Entity Properties
 
@@ -178,8 +178,9 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicianHub`](MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](SongProfile.kt) | Shows and edits a song |
 | [`MusicStudio`](MusicStudio.kt) | Lists, creates and removes the musics in `StudioDb`, and reads the sheet of the one in focus for its `MusicEditor` |
-| [`MusicEditor`](MusicEditor.kt) | Edits the music and tracks of the music in focus in `MusicStudio` |
-| [`NotationEditor`](NotationEditor.kt) | Edits one notation of a track through its text |
+| [`MusicEditor`](MusicEditor.kt) | Edits the music in focus in `MusicStudio`, its track list and what it focuses |
+| [`TrackEditor`](TrackEditor.kt) | Edits the track in focus: its notations, arrangements and the sections each plays |
+| [`NotationEditor`](NotationEditor.kt) | Edits one notation of the track in focus through its text |
 | [`MusicForm`](MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |
 | [`LaneEditor`](LaneEditor.kt) | Lays a song's tracks out as lanes of notations on a timeline, and plays them from its cursor |
 | [`NoteDrag`](NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |

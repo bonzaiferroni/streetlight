@@ -37,7 +37,7 @@ class MusicIdbDao internal constructor(
 
     override suspend fun readMusicSheet(musicId: MusicId): MusicSheet? {
         val music = musics.read(musicId.toString()) ?: return null
-        return MusicSheet(music, tracks.readRows().filter { it.musicId == musicId })
+        return MusicSheet(music, music.orderTracks(tracks.readRows().filter { it.musicId == musicId }))
     }
 
     override suspend fun saveMusicSheet(sheet: MusicSheet) {

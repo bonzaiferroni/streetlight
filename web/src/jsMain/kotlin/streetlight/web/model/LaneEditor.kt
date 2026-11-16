@@ -16,10 +16,10 @@ import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.ui.NoteValue
-import streetlight.model.music.ui.SectionNotation
+import streetlight.model.music.ui.StaffNotation
 import streetlight.model.music.ui.StaffWindow
 import streetlight.model.music.ui.drawnLyricLinesOf
-import streetlight.model.music.ui.sectionNotationOf
+import streetlight.model.music.ui.staffNotationOf
 import streetlight.model.music.ui.staffWindowOf
 import web.animations.awaitAnimationFrame
 import kotlin.math.max
@@ -135,7 +135,7 @@ data class Lane(
  * when the lane has already played the notation.
  */
 data class LaneSection(
-    val notation: SectionNotation,
+    val notation: StaffNotation,
     val startSeconds: Double,
     val durationSeconds: Double,
     val isRepeat: Boolean,
@@ -169,7 +169,7 @@ private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
             val laneSections = if (notationId == null) emptyList() else List(track.repeatsOf(notationId, span)) { repeat ->
                 val play = plays[notationId] ?: 0
                 val lyrics = drawnLyricLinesOf(tracks, track, notationId, music, play)
-                val notation = sectionNotationOf(track, notationId, music, window, lyrics) ?: return@List null
+                val notation = staffNotationOf(track, notationId, music, window, lyrics) ?: return@List null
                 plays[notationId] = play + 1
                 LaneSection(
                     notation = notation,

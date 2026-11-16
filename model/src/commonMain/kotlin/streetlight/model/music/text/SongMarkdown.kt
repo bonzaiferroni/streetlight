@@ -68,7 +68,7 @@ object SongMarkdown {
             }.value
         }
 
-        val sheet = MusicSheet(readMusic.copy(name = readSong.title), tracks)
+        val sheet = MusicSheet(readMusic.copy(name = readSong.title, trackOrder = tracks.map { it.trackId }), tracks)
         return Ok(SongMarkdownRead(readSong, sheet))
     }
 
@@ -76,7 +76,7 @@ object SongMarkdown {
     fun write(song: Song, music: Music, tracks: List<Track>): String {
         val heading = listOfNotNull("$TITLE_PREFIX${song.title}", song.artist.takeIf { it.isNotBlank() }).joinToString("\n")
         val trackNames = tracks.associate { it.trackId to it.name }
-        val blocks = listOf(heading, MusicParser.write(music)) + tracks.flatMap { track ->
+        val blocks = listOf(heading, MusicParser.write(music)) + music.orderTracks(tracks).flatMap { track ->
             listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music, trackNames))
         }
         return blocks.joinToString("\n\n", postfix = "\n")

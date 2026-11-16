@@ -9,7 +9,7 @@ import kotlinx.css.pct
 import streetlight.model.music.ui.HeadShape
 import streetlight.model.music.ui.NoteNotation
 import streetlight.model.music.ui.NoteValue
-import streetlight.model.music.ui.SectionNotation
+import streetlight.model.music.ui.StaffNotation
 import streetlight.model.music.ui.SyllableNotation
 import web.html.HTMLElement
 
@@ -19,7 +19,7 @@ import web.html.HTMLElement
  * over with its element.
  */
 fun ViewScope.sectionMeasures(
-    notation: SectionNotation,
+    notation: StaffNotation,
     mod: Modifier? = null,
     onNote: ((NoteNotation, HTMLElement) -> Unit)? = null,
 ) {
@@ -44,7 +44,7 @@ fun ViewScope.sectionMeasures(
  * Renders the staff of [notation] a sixteenth ahead of its section, so each downbeat's note falls within its measure,
  * with a bar at each end. A bar between measures comes closer to its downbeat to stay halfway from a nearer last note.
  */
-private fun ViewScope.staff(notation: SectionNotation) {
+private fun ViewScope.staff(notation: StaffNotation) {
     val bottom = LinearDimension("calc(var(--unit) * ${STAFF_STEP_UNITS * notation.staffStep} - 1px)")
     val leadShare = notation.staffLeadShare
     val place = modify(Css.Left.of((-leadShare * 100).pct), Css.Right.of((leadShare * 100).pct), Css.Bottom.of(bottom))
