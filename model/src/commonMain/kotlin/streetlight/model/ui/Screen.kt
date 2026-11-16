@@ -253,7 +253,6 @@ data class MusicStudioRoute(
 
 enum class MusicStudioTab(val svg: SvgPack): Labeled {
     Compose(SvgFile.Music),
-    Mix(SvgFile.Microphone),
     Timeline(SvgFile.Columns);
 
     override val label = name

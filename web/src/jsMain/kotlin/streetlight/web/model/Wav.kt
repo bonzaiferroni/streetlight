@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
  * Writes this sample as a 16-bit PCM WAV file. Channels that all hold the same samples, as a mono mic delivered in
  * stereo, are written as one.
  */
-fun PcmSample.toWav(): ByteArray {
+fun Wave.toWav(): ByteArray {
     val written = if (channels.all { it.contentEquals(channels.first()) }) channels.take(1) else channels
     val channelCount = written.size
     val dataSize = frameCount * channelCount * BYTES_PER_SAMPLE
@@ -39,7 +39,7 @@ fun PcmSample.toWav(): ByteArray {
 }
 
 /** Reads [bytes] as a 16-bit PCM WAV file, or `null` when they hold another format. */
-fun readWav(bytes: ByteArray): PcmSample? {
+fun readWav(bytes: ByteArray): Wave? {
     if (bytes.size < 12 || bytes.readAscii(0) != "RIFF" || bytes.readAscii(8) != "WAVE") return null
 
     // find the format and data chunks
@@ -68,7 +68,7 @@ fun readWav(bytes: ByteArray): PcmSample? {
                         sampleOffset += BYTES_PER_SAMPLE
                     }
                 }
-                return PcmSample(sampleRate, channels)
+                return Wave(sampleRate, channels)
             }
         }
         // chunks are padded to an even size

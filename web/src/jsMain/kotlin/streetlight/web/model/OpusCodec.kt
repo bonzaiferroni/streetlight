@@ -32,7 +32,7 @@ import kotlin.math.ceil
  * This is a clip's one encode: channels are averaged to one and the audio resampled to 48 kHz first, and every later
  * change to a clip stays in its metadata.
  */
-suspend fun encodeOggOpus(pcm: PcmSample): Outcome<ByteArray> {
+suspend fun encodeOggOpus(pcm: Wave): Outcome<ByteArray> {
     val config = opusConfig()
     if (AudioEncoder.isConfigSupported(config).supported != true) return OpusProblem.unsupported
     val samples = pcm.toMono().resampled(pcm.sampleRate)
@@ -75,10 +75,10 @@ suspend fun encodeOggOpus(pcm: PcmSample): Outcome<ByteArray> {
 }
 
 /** The PCM of the Ogg Opus file [bytes], at the sample rate of [context], or `null` when it cannot be decoded. */
-suspend fun decodeOggOpus(context: AudioContext, bytes: ByteArray): PcmSample? = try {
+suspend fun decodeOggOpus(context: AudioContext, bytes: ByteArray): Wave? = try {
     val buffer = context.decodeAudioData(bytes.toUint8Array().buffer.unsafeCast<ArrayBuffer>())
     val channels = List(buffer.numberOfChannels) { buffer.getChannelData(it).unsafeCast<FloatArray>() }
-    PcmSample(buffer.sampleRate.toInt(), channels)
+    Wave(buffer.sampleRate.toInt(), channels)
 } catch (error: Throwable) {
     null
 }
@@ -114,7 +114,7 @@ private fun bytesOf(source: Any): ByteArray {
 }
 
 /** The channels averaged to one, or the first channel when they all hold the same samples. */
-private fun PcmSample.toMono(): FloatArray {
+private fun Wave.toMono(): FloatArray {
     if (channels.size == 1 || channels.all { it.contentEquals(channels.first()) }) return channels.first()
     return FloatArray(frameCount) { frame -> channels.sumOf { it[frame].toDouble() }.toFloat() / channels.size }
 }

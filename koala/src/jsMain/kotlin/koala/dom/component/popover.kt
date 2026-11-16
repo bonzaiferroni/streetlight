@@ -21,6 +21,12 @@ import koala.model.MenuAction
 import koala.model.MenuRoute
 import koala.component.Popover
 import koala.component.configurePopover
+import kampfire.model.MutableTap
+import koala.dom.ViewScope
+import koala.dom.launchEffect
+import web.events.addEventListener
+import web.popover.TOGGLE
+import web.popover.ToggleEvent
 
 /** A [popover] with no card, holding what [config] builds. */
 fun AppendScope.popoverRaw(
@@ -49,6 +55,32 @@ fun AppendScope.popover(
     popoverCard(mod) {
         content(close)
     }
+}
+
+/**
+ * A [popover] whose openness is bound to [isOpenState]: opening or closing it sets the state, and setting the state
+ * opens or closes it.
+ */
+fun ViewScope.popover(
+    id: Id,
+    isOpenState: MutableTap<Boolean>,
+    mod: Modifier? = null,
+    anchor: PositionAnchor? = null,
+    isManual: Boolean = false,
+    content: DIV.(PopoverHandle) -> Unit = {}
+): HTMLDivElement {
+    val element = popover(id, mod, anchor, isManual, content)
+    element.addEventListener(ToggleEvent.TOGGLE, { event ->
+        val isOpen = event.asDynamic().newState == "open"
+        if (isOpenState.now != isOpen) isOpenState.set(isOpen)
+    })
+    launchEffect("popover") {
+        isOpenState.flow.collect { isOpen ->
+            if (isOpen == element.isPopoverOpen()) return@collect
+            if (isOpen) element.revealPopover() else element.closePopover()
+        }
+    }
+    return element
 }
 
 /** A card styled for a popover. */

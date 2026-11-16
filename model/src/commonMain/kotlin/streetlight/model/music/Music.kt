@@ -35,6 +35,12 @@ data class Music(
         sections.firstOrNull { it.sectionId == sectionId }?.let { time.measure * it.measures }
 }
 
+/** The key the music sounds in, its [Music.capo] applied. */
+val Music.soundingKey get() = Key(Chroma.of(key.tonic.value + (capo ?: 0)), key.mode)
+
+/** The key [track] sounds in within this music, both capos applied. */
+fun Music.soundingKeyOf(track: Track) = Key(Chroma.of(soundingKey.tonic.value + (track.capo ?: 0)), soundingKey.mode)
+
 /** A section of a music, [measures] long and known by a [name] no other section of the music holds. */
 @Serializable
 data class Section(

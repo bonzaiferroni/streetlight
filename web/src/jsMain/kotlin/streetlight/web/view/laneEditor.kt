@@ -22,7 +22,6 @@ import streetlight.model.music.ui.NoteValue
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
 import streetlight.web.model.LaneEditor
-import streetlight.web.model.LaneEditorLegacy
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.LaneSection
 import streetlight.web.model.TimeWindow
@@ -80,18 +79,6 @@ private fun ViewScope.timeStepControl() {
             }
         }
     }
-}
-
-/** Renders the toggles of the track [trackId]'s lane: its tones in place of its takes, its mute and its solo. */
-context(model: LaneEditorLegacy)
-private fun ViewScope.laneToggles(trackId: TrackId) = div(LaneStyle.Toggles) {
-    val iconMod = modify(IconStyle.DefaultMod, Height(3))
-    iconToggle("Tones", model.isTonedState(trackId), SvgFile.Music.small, SvgFile.Microphone.small,
-        { model.toggleTones(trackId) }, iconMod = iconMod)
-    iconToggle("Mute", model.isMutedState(trackId), SvgFile.VolumeOff.small, SvgFile.Volume.small,
-        { model.toggleMute(trackId) }, iconMod = iconMod)
-    iconToggle("Solo", model.isSoloedState(trackId), SvgFile.Headphones.filled, SvgFile.Headphones.small,
-        { model.toggleSolo(trackId) }, iconMod = iconMod)
 }
 
 /**
@@ -165,51 +152,6 @@ context(model: LaneEditor)
 fun readCursorRatioFlow() =
     combine(model.cursorSecondsState.flow, model.windowState.flow) { cursor, window -> window.toRatio(cursor) }
 
-/**
- * Lets [noteElement] be dragged across its strip to edit [note] of [section], while its lane is selected. A release
- * back over the note cancels the drag.
- */
-context(model: LaneEditorLegacy)
-private fun wireNoteDrag(
-    laneIndex: Int,
-    section: LaneSection,
-    note: NoteNotation,
-    noteElement: HTMLElement,
-) {
-    var grabY = 0
-    var isGrabbed = false
-
-    noteElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
-        if (!model.startNoteDrag(laneIndex, section, note)) return@addEventListener
-        event.stopPropagation()
-        noteElement.setPointerCapture(event.pointerId)
-        grabY = event.clientY
-        isGrabbed = true
-    })
-    noteElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
-        if (!noteElement.hasPointerCapture(event.pointerId)) return@addEventListener
-        val strip = noteElement.requireClosest(MeasureStyle.Strip).getBoundingClientRect()
-        if (strip.width == 0.0 || strip.height == 0.0) return@addEventListener
-        val tick = (event.clientX - strip.left) / strip.width * section.notation.ticks
-        val stepsUp = (grabY - event.clientY) / (strip.height / section.notation.steps)
-        model.dragNote(tick, stepsUp)
-    })
-    noteElement.addEventListener(PointerEvent.POINTER_UP, { event ->
-        val head = noteElement.getBoundingClientRect()
-        val isOverNote = event.clientX >= head.left && event.clientX <= head.right &&
-            event.clientY >= head.top && event.clientY <= head.bottom
-        model.endNoteDrag(isCommitted = !isOverNote)
-    })
-    noteElement.addEventListener(PointerEvent.POINTER_CANCEL, { model.endNoteDrag(isCommitted = false) })
-
-    // the click that ends a drag is not a tap on the lane, which would clear its selection
-    noteElement.addEventListener(PointerEvent.CLICK, { event ->
-        if (isGrabbed) event.stopPropagation()
-        isGrabbed = false
-    })
-}
-
-/** The height of [lane]: its label's sublane and the staff steps of its notes. */
 /** Places this element across [window], [durationSeconds] from [startSeconds], running past its edges to keep its scale. */
 private fun HTMLElement.placeSpan(startSeconds: Double, durationSeconds: Double, window: TimeWindow) {
     setStyle(Css.Left.of((window.toRatio(startSeconds) * 100).pct))

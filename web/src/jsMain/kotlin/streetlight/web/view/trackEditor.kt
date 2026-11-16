@@ -34,22 +34,21 @@ import kampfire.model.MutableTap
 import kampfire.model.Tap
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicFormProblem
-import streetlight.web.model.SectionEditor
+import streetlight.web.model.NamedNotation
+import streetlight.web.model.NotationEditor
+import streetlight.web.model.WaveShelf
+import streetlight.model.studio.StudioDb
 import streetlight.web.model.readCapoText
-import streetlight.model.music.MusicSection
-import streetlight.model.music.Phrase
-import streetlight.model.music.UNNAMED_SECTION
+import kotlinx.coroutines.launch
 import streetlight.web.dom.layout.actionCard
-import streetlight.web.model.MixEditorLegacy
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.NotationView
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
-import streetlight.model.music.SectionId
 import kotlin.uuid.Uuid
 
 /** Renders the tracks of the song under an action that adds one, each a row that brings its editor into focus. */
-context(config: MusicConfig, model: MusicEditor, player: TrackPlayer)
+context(config: MusicConfig, model: MusicEditor, db: StudioDb, waveShelf: WaveShelf, player: TrackPlayer)
 fun ViewScope.trackEditor() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
@@ -76,7 +75,7 @@ fun ViewScope.trackEditor() {
 /**
  * Renders the row of [track], which brings its editor into focus, with a grip that moves it among the tracks.
  */
-context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, player: TrackPlayer)
+context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: TrackPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
@@ -97,7 +96,7 @@ private fun ViewScope.trackRow(track: Track) {
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
             else model.readTrack(trackId)?.let { track ->
-//                contentScope.launch { player.play(model.sheetState.now, listOf(track), takes = mix.readTakes()) }
+                contentScope.launch { player.play(model.sheetState.now, listOf(track), musicWaves = waveShelf.musicWavesOf(model.sheetState.now)) }
             }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(
@@ -111,12 +110,13 @@ private fun ViewScope.trackRow(track: Track) {
 
 /**
  * Renders [track] alone in a card under its name and its type's icon, with an up arrow that returns to the overview: its
- * sections and arrangements.
+ * notations and arrangements, with actions to record a take of the whole track and bind a clip to it.
  */
-context(config: MusicConfig, model: MusicEditor)
+context(config: MusicConfig, model: MusicEditor, db: StudioDb)
 fun ViewScope.trackFocus(track: Track) {
     actionCard(
         label = track.name,
+        actions = clipActions(track.trackId, null),
         level = HeadingLevel.H3,
         mod = modify(track.trackType.color.bg, OutlineLow),
         svg = track.trackType.svg.large,
@@ -129,16 +129,23 @@ fun ViewScope.trackFocus(track: Track) {
     }
 }
 
-/** A popover with [id] holding the name and capo of [track], which its save button applies. */
+/**
+ * A popover with [id] holding the name and capo of [track], and the lyric track a melody is sung with, which its save
+ * button applies.
+ */
 context(model: MusicEditor)
 private fun ViewScope.trackEditPopover(id: Id, track: Track) {
     popover(id) { popover ->
         val nameState = storeOf(track.name)
         val capoTextState = storeOf(track.capo?.toString().orEmpty())
+        val lyricTracks = model.lyricTracksState.now
+        val lyricNames = listOf(FIRST_LYRICS) + lyricTracks.map { it.name }
+        val lyricsState = storeOf((track as? MelodyTrack)?.lyrics?.let { id -> lyricTracks.firstOrNull { it.trackId == id }?.name } ?: FIRST_LYRICS)
         val save = save@{
             val capo = readCapoText(capoTextState.now) ?: return@save toaster.deliver(MusicFormProblem.capo)
             model.setTrackCapo(track.trackId, capo.value)
             model.renameTrack(track.trackId, nameState.now)
+            if (track is MelodyTrack) model.setTrackLyrics(track.trackId, lyricTracks.firstOrNull { it.name == lyricsState.now }?.trackId)
             popover.close()
         }
         column(Padding(2)) {
@@ -146,30 +153,31 @@ private fun ViewScope.trackEditPopover(id: Id, track: Track) {
                 textField(nameState, "name", Flex1, onEnterSubmit = save)
                 textField(capoTextState, "capo", size = 4)
             }
+            if (track is MelodyTrack) dropMenu(lyricNames, lyricsState)
             button("Save", save)
         }
     }
 }
 
 /**
- * Renders the content of the track [trackId]: its properties, with an action that adds a section, a card for each of
- * its sections, and its arrangements.
+ * Renders the content of the track [trackId]: its properties, with an action that adds a notation, a card for each of
+ * its notations, and its arrangements.
  */
-context(config: MusicConfig, model: MusicEditor)
+context(config: MusicConfig, model: MusicEditor, db: StudioDb)
 private fun ViewScope.trackContent(trackId: TrackId) {
     val track = model.readTrack(trackId) ?: return
     val newId = Id(Uuid.random().toString())
-    namePopover(newId, "Add") { model.addSection(trackId, it) }
+    namePopover(newId, "Add") { model.addNotation(trackId, it) }
     column(PaddingY(1)) {
         row(AlignItemsCenter) {
             flowBlock(model.trackState(trackId).tapOf { it?.capo }) { capo ->
                 textBlock(capo?.let { "capo $it" } ?: "no capo", modify(TextSmall, InkDimFg))
             }
-            menuActionsRow(listOf(MenuAction("New section", config = { setPopoverTarget(newId, true) }) { }))
+            menuActionsRow(listOf(MenuAction("New notation", config = { setPopoverTarget(newId, true) }) { }))
         }
-        // keyed by the sections and their names, so typing in one leaves every card in place
-        flowBlock(model.trackSectionsState(trackId), FlexColumn) { sections ->
-            sections.forEach { sectionCard(trackId, it, track.notationLabel) }
+        // keyed by the notations, their names and sections, so typing in one leaves every card in place
+        flowBlock(model.trackNotationsState(trackId), FlexColumn) { notations ->
+            notations.forEach { notationCard(trackId, it, track.notationLabel) }
         }
         arrangementsCard(trackId)
         flowBlock(model.sectionWarningsState(trackId)) { warnings ->
@@ -179,68 +187,45 @@ private fun ViewScope.trackContent(trackId: TrackId) {
 }
 
 /**
- * Renders [section] of the track [trackId] in a card under its name, with actions to edit its properties and to remove
- * it: its text, labeled [label], and its notation.
+ * Renders [notation] of the track [trackId] in a card under its name, with actions to edit it, to record a take of it,
+ * to bind a clip to it and to remove it: the sections it plays, then its text, labeled [label], and its notes.
  */
-context(config: MusicConfig, model: MusicEditor)
-private fun ViewScope.sectionCard(trackId: TrackId, section: MusicSection, label: String) {
-    val editor = SectionEditor(contentScope, config.notationStyleState, model, trackId, section.sectionId)
+context(config: MusicConfig, model: MusicEditor, db: StudioDb)
+private fun ViewScope.notationCard(trackId: TrackId, notation: NamedNotation, label: String) {
+    val notationState = model.notationState(trackId, notation.notationId)
+    val editor = NotationEditor(contentScope, config.notationStyleState, model.sheetState, notationState, trackId, notation.notationId)
     val editId = Id(Uuid.random().toString())
-    sectionEditPopover(editId, trackId, section)
+    namePopover(editId, "Save") { name ->
+        model.renameNotation(trackId, notation.notationId, name)
+        true
+    }
     actionCard(
-        label = section.name,
-        actions = listOf(
-            MenuAction("Edit", config = { setPopoverTarget(editId, true) }) { },
-            MenuAction("Remove") { model.removeSection(trackId, section.sectionId) },
-        ),
+        label = notation.name,
+        actions = listOf(MenuAction("Rename", config = { setPopoverTarget(editId, true) }) { }) +
+            clipActions(trackId, notation.notationId) +
+            MenuAction("Remove") { model.removeNotation(trackId, notation.notationId) },
     ) {
+        notationSectionPicks(trackId, notation)
         notationPanes(label, editor.textState, editor.errorsState, config.notationViewState) {
-            flowBlock(editor.notationState) { notation -> notation?.let { sectionStrips(it) } }
+            flowBlock(editor.sectionNotationState) { sectionNotation -> sectionNotation?.let { sectionStrips(it) } }
+        }
+    }
+}
+
+/** Renders the sections [notation] of the track [trackId] plays, with a menu of the music's sections to add one. */
+context(model: MusicEditor)
+private fun ViewScope.notationSectionPicks(trackId: TrackId, notation: NamedNotation) {
+    row(AlignItemsCenter) {
+        textBlock("plays", modify(TextSmall, InkDimFg))
+        namedPicks(notation.sections, model.sectionsState.now.filter { it !in notation.sections }, { it.name }) { sections ->
+            model.setNotationSections(trackId, notation.notationId, sections.map { it.sectionId })
         }
     }
 }
 
 /**
- * A popover with [id] holding the name of [section], and the stanzas sung to it when the track [trackId] holds it as a
- * phrase, which its save button applies. The name changes in every track.
- */
-context(model: MusicEditor)
-private fun ViewScope.sectionEditPopover(id: Id, trackId: TrackId, section: MusicSection) {
-    val phrase = model.readTrack(trackId)?.sections?.firstOrNull { it.sectionId == section.sectionId } as? Phrase
-    popover(id) { popover ->
-        val nameState = storeOf(section.name)
-        val lyricsState = storeOf(phrase?.lyrics)
-        column(Padding(2)) {
-            textField(nameState, "name")
-            if (phrase != null) lyricPicks(lyricsState)
-            button("Save", {
-                if (phrase != null) model.setSectionLyrics(trackId, section.sectionId, lyricsState.now)
-                model.renameSection(section.sectionId, nameState.now)
-                popover.close()
-            })
-        }
-    }
-}
-
-/**
- * Renders the choice between any stanza and named ones, and the stanzas named, bound to [lyricsState], which is `null`
- * for any. Naming them starts from none.
- */
-context(model: MusicEditor)
-private fun ViewScope.lyricPicks(lyricsState: MutableTap<List<SectionId>?>) {
-    val choices = model.readLyricChoices()
-    val isNamedState = lyricsState.mutableTapOf({ it != null }) { isNamed -> if (isNamed) this ?: emptyList() else null }
-    switch("Name stanzas", isNamedState)
-    flowBlock(lyricsState) { lyrics ->
-        if (lyrics == null) return@flowBlock
-        val picks = lyrics.map { sectionId -> choices.firstOrNull { it.sectionId == sectionId } ?: MusicSection(sectionId, UNNAMED_SECTION) }
-        sectionPicks(picks, choices) { lyricsState.set(it) }
-    }
-}
-
-/**
- * Renders the arrangements of the track [trackId] in a card, with an action that adds one: each under the name of the
- * section it stands for, with the sections it plays.
+ * Renders the arrangements of the track [trackId] in a card, with an action that adds one: each under its name, with
+ * the notations it plays and the sections it plays them for.
  */
 context(model: MusicEditor)
 private fun ViewScope.arrangementsCard(trackId: TrackId) {
@@ -248,13 +233,17 @@ private fun ViewScope.arrangementsCard(trackId: TrackId) {
     namePopover(newId, "Add") { model.addArrangement(trackId, it) }
     actionCard("Arrangements", listOf(MenuAction("New", config = { setPopoverTarget(newId, true) }) { })) {
         flowBlock(model.trackArrangementsState(trackId), FlexColumn) { board ->
-            board.arrangements.forEach { arrangement ->
-                row(AlignItemsCenter) {
-                    textBlock(arrangement.section.name)
-                    sectionPicks(arrangement.sections, board.choices.filter { it != arrangement.section }) {
-                        model.setArrangement(trackId, arrangement.section.sectionId, it)
+            board.arrangements.forEach { (arrangement, notations) ->
+                column {
+                    row(AlignItemsCenter) {
+                        textBlock(arrangement.name)
+                        val choices = board.choices.filter { it.notationId != arrangement.notationId }
+                        namedPicks(notations, choices, { it.name }) { picks ->
+                            model.setArrangement(trackId, arrangement.notationId, picks.map { it.notationId })
+                        }
+                        button("Remove", { model.removeNotation(trackId, arrangement.notationId) }, TextSmall)
                     }
-                    button("Remove", { model.removeSection(trackId, arrangement.section.sectionId) }, TextSmall)
+                    notationSectionPicks(trackId, arrangement)
                 }
             }
             if (board.arrangements.isEmpty()) textBlock("No arrangements.", modify(TextSmall, InkDimFg))
@@ -290,7 +279,10 @@ private fun ViewScope.notationPanes(
     }
 }
 
-/** The name of the notation the track's sections are written in. */
+/** The name of the lyric choice that sings a melody with the music's first lyric track. */
+private const val FIRST_LYRICS = "First lyrics"
+
+/** The name of the text the track's notations are written in. */
 private val Track.notationLabel get() = when (this) {
     is ChordTrack -> "chords"
     is MelodyTrack -> "jianpu"

@@ -5,7 +5,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /** This sample with the frequencies below [hz] cut by a fourth-order Butterworth high-pass filter. */
-fun PcmSample.cutLow(hz: Double) = PcmSample(sampleRate, channels.map { samples ->
+fun Wave.cutLow(hz: Double) = Wave(sampleRate, channels.map { samples ->
     BUTTERWORTH_Q.fold(samples) { input, q -> input.filterHighPass(hz, q, sampleRate) }
 })
 

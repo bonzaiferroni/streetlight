@@ -3,7 +3,10 @@ package streetlight.web.model
 import koala.dom.AppContainer
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.module
-import streetlight.model.music.TrackSectionId
+import kampfire.model.Tap
+import streetlight.model.music.MusicSheet
+import streetlight.model.music.NotationId
+import streetlight.model.music.TrackId
 import streetlight.model.music.MusicId
 import streetlight.model.studio.StudioDb
 
@@ -15,7 +18,7 @@ val studioModule = module {
     single { TonePlayer(get(), get()) }
     single<StudioDb> { StudioIdbDb() }
     single { ClipLibrary(get(), get()) }
-    single { TakeShelf(get()) }
+    single { WaveShelf(get(), get()) }
 }
 
 /** Loads [studioModule] into the app's Koin, unless it is loaded. */
@@ -27,14 +30,14 @@ fun AppContainer.loadStudioModule() {
 
 fun AppContainer.getStudioEditor(scope: CoroutineScope) = StudioEditor(scope, koin.get())
 
-/** The capture of takes of the track's section [trackSectionId] in [editor]'s open mix. */
-fun AppContainer.getSectionMic(scope: CoroutineScope, editor: MixEditorLegacy, trackSectionId: TrackSectionId) =
-    SectionMic(
-        scope, editor, trackSectionId,
-        koin.get(), koin.get(), koin.get(), koin.get(),
+/** The capture of clips of the notation [notationId] of the track [trackId] in [sheetState], or the whole track when `null`. */
+fun AppContainer.getClipMic(scope: CoroutineScope, sheetState: Tap<MusicSheet>, trackId: TrackId, notationId: NotationId?) =
+    ClipMic(
+        scope, sheetState, trackId, notationId,
+        koin.get(), koin.get(), koin.get(), koin.get(), koin.get(),
     )
 
 fun AppContainer.getMusicStudio(scope: CoroutineScope, initialId: MusicId?) =
-    MusicStudio(scope, initialId, koin.get(), koin.get(), koin.get())
+    MusicStudio(scope, initialId, koin.get(), koin.get())
 
 private var isStudioModuleLoaded = false

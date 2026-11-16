@@ -17,8 +17,6 @@ import streetlight.model.music.Mode
 import streetlight.model.music.Music
 import streetlight.model.music.MusicId
 import streetlight.model.music.MusicSheet
-import streetlight.model.music.SectionClip
-import streetlight.model.music.SectionId
 import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.Study
@@ -26,8 +24,7 @@ import streetlight.model.music.StudyId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
-import streetlight.model.music.TrackSectionId
-import streetlight.model.music.mixOf
+import streetlight.model.music.TrackClip
 import streetlight.model.studio.StudioDb
 import kotlin.js.Promise
 import kotlin.test.Test
@@ -40,7 +37,7 @@ import kotlin.uuid.Uuid
 class StudioIdbDbTest {
 
     @Test
-    fun `removing a song removes its musics, tracks, mixes, section clips and studies`() = runStudioTest {
+    fun `removing a song removes its musics, tracks, track clips and studies`() = runStudioTest {
         val db = StudioIdbDb(testDbName())
         val records = db.saveRecords()
 
@@ -48,21 +45,20 @@ class StudioIdbDbTest {
 
         assertEquals(emptyList(), db.music.flowMusics(records.song.songId).first())
         assertNull(db.track.flowTrack(records.track.trackId).first())
-        assertEquals(emptyList(), db.mix.flowMixes(records.music.musicId).first())
-        assertEquals(emptyList(), db.sectionClip.flowSectionClips(records.sectionClip.mixId).first())
+        assertEquals(emptyList(), db.trackClip.flowTrackClips(records.music.musicId).first())
         assertEquals(emptyList(), db.study.flowStudies().first())
         assertNotNull(db.clip.flowClip(records.clip.clipId).first(), "a clip outlives the songs it is bound in")
     }
 
     @Test
-    fun `removing a clip removes its section clips and leaves its mix`() = runStudioTest {
+    fun `removing a clip removes its track clips and leaves its track`() = runStudioTest {
         val db = StudioIdbDb(testDbName())
         val records = db.saveRecords()
 
         db.clip.removeClip(records.clip.clipId)
 
-        assertEquals(emptyList(), db.sectionClip.flowSectionClips(records.sectionClip.mixId).first())
-        assertNotNull(db.mix.flowMix(records.sectionClip.mixId).first())
+        assertEquals(emptyList(), db.trackClip.flowTrackClips(records.music.musicId).first())
+        assertNotNull(db.track.flowTrack(records.track.trackId).first())
     }
 
     @Test
@@ -104,31 +100,29 @@ private data class StudioRecords(
     val music: Music,
     val track: Track,
     val clip: Clip,
-    val sectionClip: SectionClip,
+    val trackClip: TrackClip,
 )
 
 private suspend fun StudioDb.saveRecords(): StudioRecords {
     val song = Song(SongId.random(), "Title", "Artist")
     val music = musicOf(song.songId)
     val track = trackOf(music.musicId)
-    val mix = mixOf(music, "Mix")
     val clip = Clip(ClipId.random(), "Take", music.bpm, music.time, music.key, bars = 4, leadSeconds = 0.0)
-    val sectionClip = SectionClip(mix.mixId, TrackSectionId(track.trackId, SectionId.random()), clip.clipId)
+    val trackClip = TrackClip(music.musicId, track.trackId, null, clip.clipId)
 
     this.song.saveSong(song)
     this.music.saveMusic(music)
     this.track.saveTrack(track)
-    this.mix.saveMix(mix)
     this.clip.saveClip(clip)
-    this.sectionClip.saveSectionClip(sectionClip)
+    this.trackClip.saveTrackClip(trackClip)
     this.study.saveStudy(Study(StudyId(Uuid.random()), track.trackId, null))
-    return StudioRecords(song, music, track, clip, sectionClip)
+    return StudioRecords(song, music, track, clip, trackClip)
 }
 
 private fun musicOf(songId: SongId) =
     Music(MusicId.random(), songId, "Name", Key(Chroma.of(0), Mode.Major), TimeSignature(4, 4))
 
-private fun trackOf(musicId: MusicId) = ChordTrack(TrackId.random(), musicId, "Chords", emptyList(), emptyList())
+private fun trackOf(musicId: MusicId) = ChordTrack(TrackId.random(), musicId, "Chords", emptyList(), emptyList(), emptyMap())
 
 private fun testDbName() = "studio-test-${Uuid.random()}"
 

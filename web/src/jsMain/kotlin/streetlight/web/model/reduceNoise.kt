@@ -8,7 +8,7 @@ import kotlin.math.max
  * This sample with its steady noise lowered by spectral gating. The noise of each frequency is learned from the
  * sample's quietest moments, and each moment keeps that frequency in proportion to how far it rises above the noise.
  */
-fun PcmSample.reduceNoise() = PcmSample(sampleRate, channels.map { it.reduceNoise() })
+fun Wave.reduceNoise() = Wave(sampleRate, channels.map { it.reduceNoise() })
 
 private fun FloatArray.reduceNoise(): FloatArray {
     val binCount = FRAME_SIZE / 2 + 1

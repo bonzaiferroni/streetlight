@@ -41,7 +41,7 @@ data class AcousticProfile(
  * Measures the [AcousticProfile] of [response], a capture during which [stimulus] began playing at [stimulusClock].
  * The capture's lead-in before the stimulus gives the noise.
  */
-fun measureAcousticProfile(stimulus: PcmSample, stimulusClock: Double, response: CapturedPcm): AcousticProfile {
+fun measureAcousticProfile(stimulus: Wave, stimulusClock: Double, response: CapturedPcm): AcousticProfile {
     val sampleRate = response.pcm.sampleRate
     val signal = response.pcm.channels.first()
     val playFrame = ((stimulusClock - response.startClock) * sampleRate).roundToInt().coerceIn(0, signal.size)

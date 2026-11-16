@@ -121,3 +121,16 @@ class LaneEditor(
 Considerations:
 - Is a shared service or state holder wanted?
 - Does the UI want to be simpler?
+
+### Avoid handling presentation concerns within a ViewModel
+
+```kotlin
+fun clipLabelOf(trackId: TrackId, notationId: NotationId?): Tap<String?> = state.tapOf { editor ->
+    val clip = editor.clipOf(trackId, notationId) ?: return@tapOf null
+    val track = editor.sheet.trackOf(trackId) ?: return@tapOf null
+    if (clip.fits(editor.sheet.music, track, notationId)) clip.name else "${clip.name} (stale)"
+}
+```
+
+Recommendations:
+- Hold the fact as state, as `isClipStale`, and let the view decide how it shows, such as a red label

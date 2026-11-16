@@ -4,7 +4,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /** Uncompressed audio at [sampleRate], one array of samples between -1 and 1 per channel in [channels]. */
-class PcmSample(
+class Wave(
     val sampleRate: Int,
     val channels: List<FloatArray>,
 ) {

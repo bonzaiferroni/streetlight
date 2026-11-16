@@ -12,34 +12,44 @@ import kotlinx.coroutines.launch
 import streetlight.model.music.Clip
 import streetlight.model.music.ClipId
 import streetlight.model.music.Key
+import streetlight.model.music.Beats
 import streetlight.model.music.Music
-import streetlight.model.music.TrackSectionId
+import kampfire.model.Tap
+import streetlight.model.music.MusicSheet
+import streetlight.model.music.NotationId
+import streetlight.model.music.TrackClip
+import streetlight.model.studio.StudioDb
+import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
-import streetlight.model.music.soundingKey
+import streetlight.model.music.nameOf
+import streetlight.model.music.soundingKeyOf
 import web.animations.awaitAnimationFrame
 import kotlin.math.abs
 
 /**
- * Records a take of the track's section [trackSectionId] in the mix [editor] has open: a lead-in of the
- * section's first note held a measure, when it sounds one, and two measures counted on sticks, then the section, with a click through it while [isClickOnState] is on.
+ * Records a clip of the notation [notationId] of the track [trackId] in [sheetState], or of the whole track when
+ * `null`: a lead-in of its first note held a measure, when it sounds one, and two measures counted on
+ * sticks, then the notation, with a click through it while [isClickOnState] is on.
  *
- * A take that reaches the end of the section is kept in [clipLibrary] under the name in
- * [nameState], and bound to the section. One stopped early is discarded. Its downbeat is placed by the round trip
+ * A recording that reaches the end is kept in [clipLibrary] under the name in [nameState], and bound in [db] to the
+ * notation or track. One stopped early is discarded. Its downbeat is placed by the round trip
  * the last calibration measured, or none before one, so it lands late by the setup's latency.
  */
-class SectionMic(
+class ClipMic(
     private val scope: CoroutineScope,
-    private val editor: MixEditorLegacy,
-    private val trackSectionId: TrackSectionId,
+    private val sheetState: Tap<MusicSheet>,
+    private val trackId: TrackId,
+    private val notationId: NotationId?,
     private val audio: StudioAudio,
     private val tones: TonePlayer,
     private val clipLibrary: ClipLibrary,
+    private val db: StudioDb,
     private val messenger: Messenger,
 ) {
-    private val state = storeOf(SectionMicState())
+    private val state = storeOf(ClipMicState())
     val phaseState = state.tapOf { it.phase }
     val leadProgressState = state.tapOf { it.leadProgress }
-    val takeProgressState = state.tapOf { it.takeProgress }
+    val clipProgressState = state.tapOf { it.clipProgress }
 
     val nameState: MutableTap<String> = storeOf("")
     val isClickOnState: MutableTap<Boolean> = storeOf(true)
@@ -54,7 +64,7 @@ class SectionMic(
         scope.launch { nameState.set(nextName()) }
     }
 
-    /** Measures the setup's latency, so later takes land on the beat. */
+    /** Measures the setup's latency, so later clips land on the beat. */
     fun calibrate() {
         if (job?.isActive == true) return
         scope.launch {
@@ -64,9 +74,9 @@ class SectionMic(
         }
     }
 
-    /** Starts a take, or stops the one under way and discards it. A take being saved runs on. */
+    /** Starts a recording, or stops the one under way and discards it. One being saved runs on. */
     fun toggle() {
-        if (state.now.phase == SectionMicPhase.Saving || audio.isCalibratingState.now) return
+        if (state.now.phase == ClipMicPhase.Saving || audio.isCalibratingState.now) return
         if (job?.isActive == true) {
             job?.cancel()
             return
@@ -77,41 +87,41 @@ class SectionMic(
             } finally {
                 audio.recorder.cancel()
                 tones.stop()
-                state.set(SectionMicState())
+                state.set(ClipMicState())
             }
         }
     }
 
     private suspend fun record() {
-        val plan = planOf() ?: return messenger.deliver(SectionMicProblem.noSection)
+        val plan = planOf() ?: return messenger.deliver(ClipMicProblem.nothing)
         try {
             audio.recorder.start()
         } catch (error: Throwable) {
-            return messenger.deliver(SectionMicProblem.micFailed(error.message))
+            return messenger.deliver(ClipMicProblem.micFailed(error.message))
         }
 
         // schedule against the clock once the mic is open, so the lead-in starts in full
         val context = audio.context
         val leadStart = context.currentTime + START_DELAY_SECONDS
         val downbeat = leadStart + plan.leadSeconds
-        val end = downbeat + plan.takeSeconds
+        val end = downbeat + plan.clipSeconds
         plan.guideMidis?.let { tones.playNotes(it, leadStart, plan.measureSeconds) }
         scheduleClicks(plan, leadStart + plan.guideSeconds)
 
-        state.set(SectionMicState(SectionMicPhase.LeadIn))
+        state.set(ClipMicState(ClipMicPhase.LeadIn))
         val latency = audio.latencySecondsState.now ?: 0.0
-        // the last notes arrive a round trip after the section ends
+        // the last notes arrive a round trip after the recording ends
         while (audio.clockSeconds < end + latency + TAIL_SECONDS) {
             val clock = audio.clockSeconds
-            state.set(SectionMicState(
-                phase = if (clock < downbeat) SectionMicPhase.LeadIn else SectionMicPhase.Recording,
+            state.set(ClipMicState(
+                phase = if (clock < downbeat) ClipMicPhase.LeadIn else ClipMicPhase.Recording,
                 leadProgress = ((clock - leadStart) / plan.leadSeconds).toFloat().coerceIn(0f, 1f),
-                takeProgress = ((clock - downbeat) / plan.takeSeconds).toFloat().coerceIn(0f, 1f),
+                clipProgress = ((clock - downbeat) / plan.clipSeconds).toFloat().coerceIn(0f, 1f),
             ))
             awaitAnimationFrame()
         }
 
-        state.update { it.copy(phase = SectionMicPhase.Saving) }
+        state.update { it.copy(phase = ClipMicPhase.Saving) }
         val captured = audio.recorder.stop() ?: return
         val clip = Clip(
             clipId = ClipId.random(),
@@ -123,30 +133,33 @@ class SectionMic(
             leadSeconds = downbeat - captured.startClock + latency,
         )
         clipLibrary.saveClip(clip, captured.pcm).toDataOr(messenger) { return }
-        editor.putClip(trackSectionId, clip.clipId)
+        db.trackClip.saveTrackClip(TrackClip(plan.music.musicId, trackId, notationId, clip.clipId))
         messenger.deliverSuccess("Saved ${clip.name}")
         nameState.set(nextName())
     }
 
-    /** The timing of a take in the open mix, or `null` while there is no mix or the track lacks the section. */
+    /** The timing of a recording, or `null` while the track lacks the notation or it has no length. */
     private fun planOf(): CapturePlan? {
-        val mix = editor.mixState.now ?: return null
-        val track = editor.musicEditor.readTrack(trackSectionId.trackId) ?: return null
-        val length = track.lengthOf(trackSectionId.sectionId)?.takeIf { it.ticks > 0 } ?: return null
-        val music = editor.musicEditor.musicState.now
-        val secondsPerTick = 60.0 / mix.bpm / music.time.pulse.ticks
+        val sheet = sheetState.now
+        val track = sheet.tracks.firstOrNull { it.trackId == trackId } ?: return null
+        val music = sheet.music
+        val length = when (notationId) {
+            null -> Beats(music.arrangement.sumOf { music.lengthOf(it)?.ticks ?: 0 })
+            else -> track.lengthOf(notationId)
+        }?.takeIf { it.ticks > 0 } ?: return null
+        val secondsPerTick = music.secondsPerTick
         val measureTicks = music.time.measure.ticks
-        // the mix may sound in another key than the music, so the guide moves the nearest way to it
-        val shift = (mix.soundingKey.tonic.value - music.soundingKey.tonic.value + 6).mod(12) - 6
-        val guideMidis = firstToneOf(music, track, trackSectionId.sectionId)?.midi?.map { it + shift }
+        // the whole track is led in by the first notation it plays
+        val guideId = notationId ?: notationPlaysOf(music, track).firstOrNull()?.first
+        val guideMidis = guideId?.let { firstToneOf(music, track, it) }?.midi
         return CapturePlan(
             music = music,
-            bpm = mix.bpm,
-            soundingKey = mix.soundingKeyOf(track),
-            bars = barsOf(music, track, trackSectionId.sectionId) ?: return null,
+            bpm = music.bpm,
+            soundingKey = music.soundingKeyOf(track),
+            bars = barsOf(music, track, notationId) ?: return null,
             pulseSeconds = music.time.pulse.ticks * secondsPerTick,
             pulsesPerMeasure = measureTicks / music.time.pulse.ticks,
-            takeSeconds = length.ticks * secondsPerTick,
+            clipSeconds = length.ticks * secondsPerTick,
             guideMidis = guideMidis,
         )
     }
@@ -154,46 +167,48 @@ class SectionMic(
     /**
      * Counts the lead-in from [countStart] at half the pace of the pulse, then on it: the first measure on each half
      * when its pulses split in two, as "1… 2…" in 4/4, or on its downbeat alone, as in 3/4 or 6/8; the second on
-     * every pulse. The click, when on, keeps every pulse through the take.
+     * every pulse. The click, when on, keeps every pulse through the recording.
      */
     private fun scheduleClicks(plan: CapturePlan, countStart: Double) {
         val pulses = plan.pulsesPerMeasure
         val firstMeasure = if (pulses > 2 && pulses % 2 == 0) listOf(0.0, plan.measureSeconds / 2) else listOf(0.0)
         val secondMeasure = List(pulses) { plan.measureSeconds + it * plan.pulseSeconds }
-        val takePulses = if (!isClickOnState.now) emptyList()
+        val clipPulses = if (!isClickOnState.now) emptyList()
             else List(plan.bars * plan.pulsesPerMeasure) { plan.measureSeconds * 2 + it * plan.pulseSeconds }
         val measureStarts = (0..plan.bars + 1).map { it * plan.measureSeconds }
-        (firstMeasure + secondMeasure + takePulses).forEach { offset ->
+        (firstMeasure + secondMeasure + clipPulses).forEach { offset ->
             val isDownbeat = measureStarts.any { abs(it - offset) < 1e-6 }
             tones.click(countStart + offset, accent = isDownbeat)
         }
     }
 
-    /** The track and section's name with the first number from 1 that no kept clip holds. */
+    /** The names of the track and notation with the first number from 1 that no kept clip holds. */
     private suspend fun nextName(): String {
-        val trackName = editor.musicEditor.readTrack(trackSectionId.trackId)?.name.orEmpty()
-        val base = "$trackName ${editor.musicEditor.musicState.now.nameOf(trackSectionId.sectionId)}"
+        val sheet = sheetState.now
+        val track = sheet.tracks.firstOrNull { it.trackId == trackId }
+        val notationName = notationId?.let { track?.nameOf(it, sheet.music) }
+        val base = listOfNotNull(track?.name, notationName).joinToString(" ")
         val names = clipLibrary.readClips().mapTo(mutableSetOf()) { it.name }
         return generateSequence(1) { it + 1 }.map { "$base $it" }.first { it !in names }
     }
 }
 
-data class SectionMicState(
-    val phase: SectionMicPhase = SectionMicPhase.Idle,
+data class ClipMicState(
+    val phase: ClipMicPhase = ClipMicPhase.Idle,
     val leadProgress: Float = 0f,
-    val takeProgress: Float = 0f,
+    val clipProgress: Float = 0f,
 )
 
-enum class SectionMicPhase { Idle, LeadIn, Recording, Saving }
+enum class ClipMicPhase { Idle, LeadIn, Recording, Saving }
 
-object SectionMicProblem {
-    val noSection = Problem("This section has nothing to record yet")
+object ClipMicProblem {
+    val nothing = Problem("This has nothing to record yet")
     fun micFailed(reason: String?) = Problem("The microphone could not start${reason?.let { ": $it" } ?: ""}")
 }
 
 /**
- * The timing of a take: [bars] measures of [pulseSeconds] pulses, [takeSeconds] long, after a lead-in of the
- * [guideMidis] held a measure, when the section sounds a pitch, and two measures counted.
+ * The timing of a recording: [bars] measures of [pulseSeconds] pulses, [clipSeconds] long, after a lead-in of the
+ * [guideMidis] held a measure, when it sounds a pitch, and two measures counted.
  */
 private class CapturePlan(
     val music: Music,
@@ -202,7 +217,7 @@ private class CapturePlan(
     val bars: Int,
     val pulseSeconds: Double,
     val pulsesPerMeasure: Int,
-    val takeSeconds: Double,
+    val clipSeconds: Double,
     val guideMidis: List<Int>?,
 ) {
     val measureSeconds get() = pulsesPerMeasure * pulseSeconds

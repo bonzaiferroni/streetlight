@@ -21,6 +21,18 @@ data class Clip(
     val url: Url? = null,
 )
 
+/**
+ * Binds the clip [clipId] to the track [trackId] of the music [musicId]: to its notation [notationId], or to the whole
+ * track when `null`. A track or notation holds one clip at most.
+ */
+@Serializable
+data class TrackClip(
+    val musicId: MusicId,
+    val trackId: TrackId,
+    val notationId: NotationId?,
+    val clipId: ClipId,
+)
+
 @JvmInline @Serializable
 value class ClipId(val value: Uuid) {
     override fun toString() = value.toString()

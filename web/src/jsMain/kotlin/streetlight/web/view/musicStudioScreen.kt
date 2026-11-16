@@ -25,13 +25,11 @@ import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.layout.topSection
-import streetlight.web.model.LaneEditorLegacy
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
 import streetlight.web.model.exportOgg
-import streetlight.web.model.MixEditorLegacy
 import koala.component.heading6
 import streetlight.web.model.getMusicStudio
 import streetlight.web.model.portal
@@ -41,12 +39,10 @@ import kotlin.uuid.Uuid
 import kampfire.model.toDataOr
 import koala.dom.layout.transTabs
 import kotlinx.coroutines.launch
-import streetlight.model.music.mixOf
 import streetlight.model.studio.StudioDb
 import streetlight.web.model.LaneEditor
-import streetlight.web.model.MixEditor
 import streetlight.web.model.MusicConfig
-import streetlight.web.model.TakeShelf
+import streetlight.web.model.WaveShelf
 import streetlight.web.model.toaster
 import streetlight.web.utility.pickFile
 import web.blob.text
@@ -58,7 +54,7 @@ fun ViewScope.musicStudioScreen() {
     val config = MusicConfig(contentScope)
     val player = app.get<TrackPlayer>()
     val db = app.get<StudioDb>()
-    val takeShelf = app.get<TakeShelf>()
+    val waveShelf = app.get<WaveShelf>()
     // the studio's colors carry meaning, which the page's lights would tint
     dimLights()
     onDispose { applyTheme(null) }
@@ -69,7 +65,7 @@ fun ViewScope.musicStudioScreen() {
             document.setTitle(next)
         }
     }
-    context(model, player, config, db, takeShelf) {
+    context(model, player, config, db, waveShelf) {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
             flowBlock(model.sheetState, modify(Transitioner)) { sheet ->
                 when (sheet) {
@@ -97,15 +93,13 @@ fun RouteScope.viewMusicStudioRoute() {
  * Renders the music of [editor] in a section headed by its name, with a way back to the musics and a gear that opens
  * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
-context(player: TrackPlayer, config: MusicConfig, db: StudioDb, takeShelf: TakeShelf)
+context(player: TrackPlayer, config: MusicConfig, db: StudioDb, waveShelf: WaveShelf)
 private fun ViewScope.musicFocus(editor: MusicEditor) {
-    //    val lanes = LaneEditor(contentScope, model, editor, mix, player, app.get())
-    val mixEditor = MixEditor(contentScope, mixOf(editor.musicState.now, "Mix 1"), editor.sheetState, db)
-    val lanes = LaneEditor(contentScope, editor.sheetState, mixEditor.mixState, takeShelf, db, player)
+    val lanes = LaneEditor(contentScope, editor.sheetState, waveShelf, player)
     // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
-//    songSettingsPopover(settingsId, editor, mix)
+//    songSettingsPopover(settingsId, editor)
     topSection(
         label = editor.musicState.now.name,
         onBack = { portal.go(MusicStudioRoute()) },
@@ -117,9 +111,6 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
                 tab(studioTab.label, studioTab.svg) {
                     when (studioTab) {
                         MusicStudioTab.Compose -> context(editor) { musicEditor() }
-                        MusicStudioTab.Mix -> context(mixEditor) {
-                            mixEditor()
-                        }
                         MusicStudioTab.Timeline -> {
                             context(lanes) {
                                 laneEditor()
@@ -134,10 +125,10 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
 
 /**
  * A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show, above
- * the formats the music of [editor] exports to, with the takes of [mixEditor].
+ * the formats the music of [editor] exports to, with its bound clips.
  */
-context(model: MusicStudio, player: TrackPlayer, config: MusicConfig)
-private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mixEditor: MixEditorLegacy) {
+context(model: MusicStudio, player: TrackPlayer, config: MusicConfig, waveShelf: WaveShelf)
+private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor) {
     popover(id) { popover ->
         column(Padding(2)) {
             dropMenu(config.notationStyleState)
@@ -156,8 +147,8 @@ private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor, mixEditor
                 MenuAction("Ogg") {
                     popover.close()
                     contentScope.launch {
-                        val takes = mixEditor.readTakes()
-                        exportOgg(player, editor.sheetState.now, takes).toDataOr(toaster) { return@launch }
+                        val musicWaves = waveShelf.musicWavesOf(editor.sheetState.now)
+                        exportOgg(player, editor.sheetState.now, musicWaves).toDataOr(toaster) { return@launch }
                     }
                 },
             ))

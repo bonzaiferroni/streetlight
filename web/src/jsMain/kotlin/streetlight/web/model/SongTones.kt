@@ -10,15 +10,14 @@ import streetlight.model.music.MelodyNote
 import streetlight.model.music.Music
 import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
-import streetlight.model.music.Section
-import streetlight.model.music.SectionId
-import streetlight.model.music.TrackSectionId
+import streetlight.model.music.Notation
+import streetlight.model.music.NotationId
+import streetlight.model.music.TrackClip
 import streetlight.model.music.Stanza
 import streetlight.model.music.Track
 import streetlight.model.music.lengthOf
+import streetlight.model.music.notationsOf
 import streetlight.model.music.repeatsOf
-import streetlight.model.music.sectionOrderOf
-import streetlight.model.music.sectionsOf
 import streetlight.model.music.toMidi
 
 
@@ -53,84 +52,81 @@ data class TrackTones(
 }
 
 /**
- * The tones of [playing], tracks of a song of [tracks], laid along the arrangement of [music] with both capos applied.
+ * The tones of [playing], tracks of a song of [music], laid along its arrangement with both capos applied.
  *
- * Each section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole
- * times as fit, and rests through a section it lacks or what is left after its repeats. A pickup starts before its
- * section, so the first tones may start before tick 0. A section of a track in [taken] sounds no tones, as a take
- * plays in its place.
+ * Each section lasts its measures. A track repeats a shorter notation as many whole times as fit, and rests through a
+ * section it does not play or what is left after its repeats. A pickup starts before its notation, so the first tones
+ * may start before tick 0. A track or notation bound in [taken] sounds no tones, as its clip plays in its place.
  */
 fun songTonesOf(
     music: Music,
-    tracks: List<Track>,
     playing: List<Track>,
-    taken: Set<TrackSectionId> = emptySet(),
-): List<TrackTones> {
-    val order = tracks.sectionOrderOf(music)
-    val onsets = order.runningFold(0) { onset, sectionId -> onset + (tracks.lengthOf(sectionId)?.ticks ?: 0) }
-    return playing.map { track ->
-        val capo = (music.capo ?: 0) + (track.capo ?: 0)
-        val tones = mutableListOf<SongTone>()
-        val drums = mutableListOf<DrumTone>()
-        order.zip(onsets).forEach { (sectionId, onset) ->
-            var tick = onset
-            val sections = track.sectionsOf(sectionId).orEmpty()
-            val span = tracks.lengthOf(sectionId) ?: Beats(0)
-            List(track.repeatsOf(sectionId, span)) { sections }.flatten().forEach { section ->
-                // an arrangement expands into its sections, and a take may stand for either
-                val isTaken = TrackSectionId(track.trackId, sectionId) in taken ||
-                    TrackSectionId(track.trackId, section.sectionId) in taken
-                if (!isTaken) {
-                    tones.addAll(tonesOf(section, tick, music.key, capo))
-                    if (section is Groove) drums.addAll(drumTonesOf(section, tick))
-                }
-                tick += section.length.ticks
-            }
+    taken: Collection<TrackClip> = emptyList(),
+): List<TrackTones> = playing.map { track ->
+    val capo = (music.capo ?: 0) + (track.capo ?: 0)
+    val tones = mutableListOf<SongTone>()
+    val drums = mutableListOf<DrumTone>()
+    val trackTaken = taken.filter { it.trackId == track.trackId }
+    if (trackTaken.none { it.notationId == null }) {
+        val plays = notationPlaysOf(music, track)
+        // a clip of a notation or an arrangement silences every tone of the plays it spans
+        val takenSpans = plays.filter { (notationId) -> trackTaken.any { it.notationId == notationId } }
+            .mapNotNull { (notationId, tick) -> track.lengthOf(notationId)?.let { tick until tick + it.ticks } }
+        plays.forEach { (notationId, tick) ->
+            if (takenSpans.any { tick in it }) return@forEach
+            val notation = track.notations.firstOrNull { it.notationId == notationId } ?: return@forEach
+            tones.addAll(tonesOf(notation, tick, music.key, capo))
+            if (notation is Groove) drums.addAll(drumTonesOf(notation, tick))
         }
-        TrackTones(track, tones, drums.sortedBy { it.startTick })
     }
+    TrackTones(track, tones, drums.sortedBy { it.startTick })
 }
 
 /**
- * The tick at which [track], one of [tracks], starts [sectionId] each time it plays it along the arrangement of
- * [music], each of its repeats included, whether it is played by name or within an arrangement.
+ * Each time [track] starts a notation or an arrangement along the arrangement of [music], each of its repeats
+ * included, paired with the tick it starts at. An arrangement is followed by the notations it holds.
  */
-fun sectionStartsOf(music: Music, tracks: List<Track>, track: Track, sectionId: SectionId): List<Int> {
-    val order = tracks.sectionOrderOf(music)
-    val onsets = order.runningFold(0) { onset, id -> onset + (tracks.lengthOf(id)?.ticks ?: 0) }
-    return order.zip(onsets).flatMap { (orderId, onset) ->
-        val sections = track.sectionsOf(orderId).orEmpty()
-        val span = tracks.lengthOf(orderId) ?: Beats(0)
-        var tick = onset
-        buildList {
-            repeat(track.repeatsOf(orderId, span)) {
-                if (orderId == sectionId) add(tick)
-                sections.forEach { section ->
-                    if (orderId != sectionId && section.sectionId == sectionId) add(tick)
-                    tick += section.length.ticks
-                }
-            }
-        }
+fun notationPlaysOf(music: Music, track: Track): List<Pair<NotationId, Int>> {
+    val plays = mutableListOf<Pair<NotationId, Int>>()
+    // returns the length of what it placed
+    fun place(notationId: NotationId, tick: Int): Int {
+        plays.add(notationId to tick)
+        track.notations.firstOrNull { it.notationId == notationId }?.let { return it.length.ticks }
+        val arrangement = track.arrangements.firstOrNull { it.notationId == notationId } ?: return 0
+        return arrangement.notations.fold(0) { length, heldId -> length + place(heldId, tick + length) }
     }
+
+    var onset = 0
+    music.arrangement.forEach { sectionId ->
+        val span = music.lengthOf(sectionId) ?: Beats(0)
+        val notationId = track.sections[sectionId]
+        // a length means the notation resolves, so its arrangements hold no cycle
+        notationId?.let { track.lengthOf(it) }?.let { length ->
+            repeat(track.repeatsOf(notationId, span)) { place(notationId, onset + it * length.ticks) }
+        }
+        onset += span.ticks
+    }
+    return plays
 }
 
-/** A section of a track. */
-
+/** The tick at which [track] starts [notationId] each time it plays it along the arrangement of [music]. */
+fun notationStartsOf(music: Music, track: Track, notationId: NotationId) =
+    notationPlaysOf(music, track).filter { it.first == notationId }.map { it.second }
 
 /**
- * The first pitched tone of [sectionId] in [track], its pickup's first when it has one, with both capos of [music]
- * applied, or `null` when the section sounds no pitch.
+ * The first pitched tone of [notationId] in [track], its pickup's first when it has one, with both capos of [music]
+ * applied, or `null` when it sounds no pitch.
  */
-fun firstToneOf(music: Music, track: Track, sectionId: SectionId): SongTone? {
+fun firstToneOf(music: Music, track: Track, notationId: NotationId): SongTone? {
     val capo = (music.capo ?: 0) + (track.capo ?: 0)
     var onset = 0
-    return track.sectionsOf(sectionId).orEmpty().flatMap { section ->
-        tonesOf(section, onset, music.key, capo).also { onset += section.length.ticks }
+    return track.notationsOf(notationId).orEmpty().flatMap { notation ->
+        tonesOf(notation, onset, music.key, capo).also { onset += notation.length.ticks }
     }.minByOrNull { it.startTick }
 }
 
 /** The tones of [section] in [key] placed at [onset] and raised [capo] semitones, its pickup sounding before it. */
-private fun tonesOf(section: Section, onset: Int, key: Key, capo: Int): List<SongTone> = when (section) {
+private fun tonesOf(section: Notation, onset: Int, key: Key, capo: Int): List<SongTone> = when (section) {
     is Phrase -> {
         val midiOf = { note: MelodyNote -> note.interval?.let { listOf(it.toMidi(key) + capo) } }
         section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, { it.beats }, midiOf) +

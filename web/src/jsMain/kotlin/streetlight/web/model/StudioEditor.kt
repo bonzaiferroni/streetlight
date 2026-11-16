@@ -35,8 +35,8 @@ class StudioEditor(
     private val cursorStore = storeOf(0.0)
     override val cursorSecondsState: Tap<Double> = cursorStore
 
-    private val sampleMap = mutableMapOf<Int, PcmSample>()
-    private val filteredMap = mutableMapOf<Int, PcmSample>()
+    private val sampleMap = mutableMapOf<Int, Wave>()
+    private val filteredMap = mutableMapOf<Int, Wave>()
     private var nextSampleId = 0
     private var captureStartSeconds = 0.0
     private var playJob: Job? = null
@@ -57,7 +57,7 @@ class StudioEditor(
     fun filtersState(id: Int) = state.tapOf { state -> state.readSample(id)?.filters.orEmpty() }
 
     /** The PCM the sample of [id] plays, with its filters applied. */
-    fun readPcm(id: Int) = filteredMap[id]
+    fun readWave(id: Int) = filteredMap[id]
 
     /** The peaks of the capture in progress, or `null` when none is recording. */
     fun readLivePeaks() = audio.recorder.livePeaks

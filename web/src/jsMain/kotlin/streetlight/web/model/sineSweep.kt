@@ -17,7 +17,7 @@ fun sineSweepOf(
     endHz: Double = 20_000.0,
     level: Float = 0.25f,
     fadeSeconds: Double = 0.05,
-): PcmSample {
+): Wave {
     val frameCount = (seconds * sampleRate).toInt()
     val fadeFrames = (fadeSeconds * sampleRate).toInt()
     val octaveRate = ln(endHz / startHz)
@@ -29,5 +29,5 @@ fun sineSweepOf(
         val fade = min(1.0, min(frame, frameCount - 1 - frame).toDouble() / fadeFrames)
         (sin(phase) * fade).toFloat() * level
     }
-    return PcmSample(sampleRate, listOf(samples))
+    return Wave(sampleRate, listOf(samples))
 }

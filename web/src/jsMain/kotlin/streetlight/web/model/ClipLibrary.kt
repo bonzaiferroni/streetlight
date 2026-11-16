@@ -47,7 +47,7 @@ class ClipLibrary(
     suspend fun readClips() = db.clip.flowClips().first()
 
     /** Encodes [pcm] and stores it as the audio of [clip], in place of any clip of its id, or gives the problem. */
-    suspend fun saveClip(clip: Clip, pcm: PcmSample): Outcome<Unit> {
+    suspend fun saveClip(clip: Clip, pcm: Wave): Outcome<Unit> {
         val bytes = encodeOggOpus(pcm).toDataOr { return it }
         if (persistedStore.now == null) persistedStore.set(navigator.storage.persist())
         val handle = readDirectory().getFileHandle(clip.clipId.fileName, FileSystemGetFileOptions(create = true))
@@ -59,7 +59,7 @@ class ClipLibrary(
     }
 
     /** The audio of the clip [clipId], or `null` when none is stored or its file cannot be read. */
-    suspend fun readPcm(clipId: ClipId): PcmSample? {
+    suspend fun readWave(clipId: ClipId): Wave? {
         val handle = readFileHandle(clipId.fileName) ?: return null
         val buffer = handle.getFile().arrayBuffer()
         return decodeOggOpus(audio.context, Int8Array(buffer).toByteArray())

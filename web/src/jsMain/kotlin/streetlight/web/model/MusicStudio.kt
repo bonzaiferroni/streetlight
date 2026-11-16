@@ -33,7 +33,6 @@ class MusicStudio(
     initialMusicId: MusicId?,
     private val db: StudioDb,
     private val messenger: Messenger,
-    private val takeShelf: TakeShelf,
 ) {
     private val musicIdStore = storeOf(initialMusicId)
     private val sheetStore = storeOf<MusicSheet?>(null)

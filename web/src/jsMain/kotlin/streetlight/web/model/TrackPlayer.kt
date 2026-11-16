@@ -9,6 +9,7 @@ import kampfire.model.storeOf
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.MusicSheet
 import streetlight.model.music.Track
+import streetlight.model.music.TrackClip
 import web.audio.AudioNode
 import web.audio.BaseAudioContext
 import web.audio.OfflineAudioContext
@@ -34,15 +35,19 @@ class TrackPlayer(
 
     /**
      * Plays [tracks] of [sheet], or every track when it is `null`, through the song's arrangement. Each section
-     * lasts as long as the longest track that defines it, and a track rests through a section it lacks or runs short
-     * of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
+     * lasts its measures, and a track rests through a section it does not play or runs short of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
      * sound when it is `null`. Any playback already running is stopped first.
      *
-     * Each of [takes] plays in place of the tones of its section, and the song then runs at the takes' tempo.
+     * Each of [musicWaves] plays in place of the tones of the track or notation its binding names.
      */
-    fun play(sheet: MusicSheet, tracks: List<Track>? = null, fromSeconds: Double? = null, takes: SongTakes? = null) {
+    fun play(
+        sheet: MusicSheet,
+        tracks: List<Track>? = null,
+        fromSeconds: Double? = null,
+        musicWaves: Map<TrackClip, MusicWave> = emptyMap(),
+    ) {
         stop()
-        val plan = songPlanOf(sheet, tracks ?: sheet.tracks, takes) ?: return
+        val plan = songPlanOf(sheet, tracks ?: sheet.tracks, musicWaves) ?: return
         val context = audio.startContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
@@ -53,32 +58,32 @@ class TrackPlayer(
     }
 
     /**
-     * Renders every track of [sheet] from its first sound to the end of its last, with [takes] in place of their
-     * sections' tones as [play] would sound them, into mono PCM at [RENDER_RATE], or `null` when it sounds nothing.
+     * Renders every track of [sheet] from its first sound to the end of its last, with [musicWaves] in place of
+     * tones as [play] would sound them, into mono PCM at [RENDER_RATE], or `null` when it sounds nothing.
      */
-    suspend fun render(sheet: MusicSheet, takes: SongTakes? = null): PcmSample? {
-        val plan = songPlanOf(sheet, sheet.tracks, takes) ?: return null
+    suspend fun render(sheet: MusicSheet, musicWaves: Map<TrackClip, MusicWave> = emptyMap()): Wave? {
+        val plan = songPlanOf(sheet, sheet.tracks, musicWaves) ?: return null
         val startClock = -plan.firstTick * plan.secondsPerTick
         val seconds = plan.endClockOf(startClock) + RENDER_TAIL_SECONDS
         val context = OfflineAudioContext(1, ceil(seconds * RENDER_RATE).toInt(), RENDER_RATE.toFloat())
         schedule(context, context.destination, plan, plan.firstTick, startClock) { }
         val buffer = context.startRendering()
-        return PcmSample(RENDER_RATE, listOf(buffer.getChannelData(0).unsafeCast<FloatArray>()))
+        return Wave(RENDER_RATE, listOf(buffer.getChannelData(0).unsafeCast<FloatArray>()))
     }
 
-    /** What [playing], tracks of [sheet], sound with [takes] in place of their sections' tones, or `null` for nothing. */
-    private fun songPlanOf(sheet: MusicSheet, playing: List<Track>, takes: SongTakes?): SongPlan? {
+    /** What [playing], tracks of [sheet], sound with [musicWaves] in place of tones, or `null` for nothing. */
+    private fun songPlanOf(sheet: MusicSheet, playing: List<Track>, musicWaves: Map<TrackClip, MusicWave>): SongPlan? {
         val music = sheet.music
-        val playingTakes = takes?.takes.orEmpty().filterKeys { key -> playing.any { it.trackId == key.trackId } }
-        val trackTones = songTonesOf(music, sheet.tracks, playing, playingTakes.keys).filter { it.isSounding }
-        // each time a take's track plays its section, placed by the section's tick
-        val takeStarts = playingTakes.flatMap { (key, take) ->
-            val takeTrack = playing.first { it.trackId == key.trackId }
-            sectionStartsOf(music, sheet.tracks, takeTrack, key.sectionId).map { it to take }
+        val playingWaves = musicWaves.filterKeys { trackClip -> playing.any { it.trackId == trackClip.trackId } }
+        val trackTones = songTonesOf(music, playing, playingWaves.keys).filter { it.isSounding }
+        // each time a wave's track plays its notation, placed by the notation's tick, and a whole track's at the start
+        val waveStarts = playingWaves.flatMap { (trackClip, musicWave) ->
+            val waveTrack = playing.first { it.trackId == trackClip.trackId }
+            val starts = trackClip.notationId?.let { notationStartsOf(music, waveTrack, it) } ?: listOf(0)
+            starts.map { it to musicWave }
         }
-        if (trackTones.isEmpty() && takeStarts.isEmpty()) return null
-        val secondsPerTick = takes?.let { 60.0 / it.bpm / music.time.pulse.ticks } ?: music.secondsPerTick
-        return SongPlan(trackTones, takeStarts, secondsPerTick)
+        if (trackTones.isEmpty() && waveStarts.isEmpty()) return null
+        return SongPlan(trackTones, waveStarts, music.secondsPerTick)
     }
 
     /**
@@ -95,11 +100,11 @@ class TrackPlayer(
     ) {
         val secondsPerTick = plan.secondsPerTick
         val playClock = startClock + startTick * secondsPerTick
-        plan.takeStarts.forEach { (tick, take) ->
-            val at = startClock + tick * secondsPerTick - take.leadSeconds
-            // a take already under way where playback begins plays what is left of it
+        plan.waveStarts.forEach { (tick, musicWave) ->
+            val at = startClock + tick * secondsPerTick - musicWave.leadSeconds
+            // a wave already under way where playback begins plays what is left of it
             val offset = max(playClock - at, 0.0)
-            if (offset < take.pcm.durationSeconds) keep(pcmSource(context, bus, take.pcm, at + offset, offset))
+            if (offset < musicWave.wave.durationSeconds) keep(waveSource(context, bus, musicWave.wave, at + offset, offset))
         }
         plan.trackTones.forEach { (track, tones, drums) ->
             drums.filter { it.startTick >= startTick }.forEach { drum ->
@@ -134,16 +139,16 @@ class TrackPlayer(
         playingStore.set(false)
     }
 
-    /** Plays [pcm] into [bus] from [start] on the audio clock, [offset] seconds into it. */
-    private fun pcmSource(
+    /** Plays [wave] into [bus] from [start] on the audio clock, [offset] seconds into it. */
+    private fun waveSource(
         context: BaseAudioContext,
         bus: AudioNode,
-        pcm: PcmSample,
+        wave: Wave,
         start: Double,
         offset: Double,
     ): AudioScheduledSourceNode {
-        val buffer = context.createBuffer(pcm.channels.size, pcm.frameCount, pcm.sampleRate.toFloat())
-        pcm.channels.forEachIndexed { index, samples ->
+        val buffer = context.createBuffer(wave.channels.size, wave.frameCount, wave.sampleRate.toFloat())
+        wave.channels.forEachIndexed { index, samples ->
             buffer.copyToChannel(samples.unsafeCast<Float32Array<ArrayBuffer>>(), index)
         }
         val source = context.createBufferSource()
@@ -169,24 +174,24 @@ private const val START_DELAY_SECONDS = 0.1
 private const val RENDER_RATE = 48_000
 private const val RENDER_TAIL_SECONDS = 1.0
 
-/** The [trackTones] and [takeStarts] a song sounds, each take by the tick of its section, at [secondsPerTick]. */
+/** The [trackTones] and [waveStarts] a song sounds, each wave by the tick it starts at, at [secondsPerTick]. */
 private class SongPlan(
     val trackTones: List<TrackTones>,
-    val takeStarts: List<Pair<Int, Take>>,
+    val waveStarts: List<Pair<Int, MusicWave>>,
     val secondsPerTick: Double,
 ) {
-    /** The tick of the first sound: a pickup's or a take's lead may sound before the first downbeat. */
+    /** The tick of the first sound: a pickup's or a wave's lead may sound before the first downbeat. */
     val firstTick = (trackTones.mapNotNull { it.firstTick } +
-        takeStarts.map { (tick, take) -> tick - (take.leadSeconds / secondsPerTick).toInt() }).min()
+        waveStarts.map { (tick, musicWave) -> tick - (musicWave.leadSeconds / secondsPerTick).toInt() }).min()
 
     /** Where the last sound ends on the clock, with tick 0 at [startClock]. */
     fun endClockOf(startClock: Double): Double {
         val toneEnd = trackTones
             .flatMap { tones -> tones.tones.map { it.startTick + it.ticks } + tones.drums.map { it.startTick } }
             .maxOrNull()?.let { startClock + it * secondsPerTick } ?: startClock
-        val takeEnd = takeStarts.maxOfOrNull { (tick, take) ->
-            startClock + tick * secondsPerTick - take.leadSeconds + take.pcm.durationSeconds
+        val waveEnd = waveStarts.maxOfOrNull { (tick, musicWave) ->
+            startClock + tick * secondsPerTick - musicWave.leadSeconds + musicWave.wave.durationSeconds
         } ?: startClock
-        return max(toneEnd, takeEnd)
+        return max(toneEnd, waveEnd)
     }
 }

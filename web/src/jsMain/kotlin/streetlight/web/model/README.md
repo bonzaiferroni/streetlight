@@ -34,11 +34,11 @@ A clip's audio is encoded once, as mono Opus at 48 kHz and 96 kbps, beyond which
 
 A form model, named `FooForm`, holds the properties of a record apart from it, seeded from the record, until a save reads them back. It is what an edit popover binds its fields to, so the record changes once, on save. A form that would carry no functions is not a model: its popover declares the stores itself with `storeOf`.
 
-A section's text is its notation alone. Its name, its properties and the arrangements that play it are set through the UI, and a section is created by an action that names it: a name the music holds joins that section, and any other gives the music a new one.
+A notation's text is its measures alone. Its name, the sections it plays and the arrangements that hold it are set through the UI. A section belongs to the music and is created there with its measures. A notation is created by an action that names it, and plays the section of its name when the track plays nothing there.
 
-A music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no mix; `MixEditorLegacy` reads it. A track removed takes its section clips and studies with it when the removal is saved, and what still names it, such as a mix's hidden sections or a focus, skips a track the music no longer holds. A rename needs no following, since a track keeps its id.
+A music sits upstream of what is built on it and knows nothing of it. `MusicEditor` holds no clips; `ClipEditor` and `ClipMic` read its sheet. A track removed takes its track clips and studies with it when the removal is saved, and what still names it, such as a focus, skips a track the music no longer holds. A rename needs no following, since a track keeps its id.
 
-`MusicEditor` holds its `MusicSheet` as an edit buffer, saved whole once edits pause for a second and once more as its scope ends. Every other studio edit, such as a mix's, saves at once and is seen back through the DAO's flows. A change made from what is shown reads the record again first, so changes in quick succession all land.
+`MusicEditor` holds its `MusicSheet` as an edit buffer, saved whole once edits pause for a second and once more as its scope ends. Every other studio edit, such as a clip binding, saves at once and is seen back through the DAO's flows. A change made from what is shown reads the record again first, so changes in quick succession all land.
 
 ## Entity Properties
 
@@ -177,20 +177,18 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`ChatRoom`](ChatRoom.kt) | A live chat over a socket |
 | [`MusicianHub`](MusicianHub.kt) | Lists and adds songs |
 | [`SongProfile`](SongProfile.kt) | Shows and edits a song |
-| [`MusicStudio`](MusicStudio.kt) | Lists, creates and removes the musics in `StudioDb`, and reads the sheet of the one in focus for its `MusicEditor` and `MixEditorLegacy` |
-| [`MixEditorLegacy`](MixEditor.kt) | Edits the mixes of a song's music, whose tempo and takes playback follows |
-| [`MixForm`](MixForm.kt) | Holds a mix's name, tempo and sounding key apart from the mix until `MixEditorLegacy` applies them |
+| [`MusicStudio`](MusicStudio.kt) | Lists, creates and removes the musics in `StudioDb`, and reads the sheet of the one in focus for its `MusicEditor` |
 | [`MusicEditor`](MusicEditor.kt) | Edits the music and tracks of the music in focus in `MusicStudio` |
-| [`SectionEditor`](SectionEditor.kt) | Edits one section of a track through the text of its notation |
+| [`NotationEditor`](NotationEditor.kt) | Edits one notation of a track through its text |
 | [`MusicForm`](MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |
-| [`LaneEditorLegacy`](LaneEditor.kt) | Lays a song's tracks out as lanes of sections on a timeline, and plays them from its cursor |
+| [`LaneEditor`](LaneEditor.kt) | Lays a song's tracks out as lanes of notations on a timeline, and plays them from its cursor |
 | [`NoteDrag`](NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
 | [`NotationField`](NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`StudioIdbDb`](StudioIdbDb.kt) | The `StudioDb` kept in the browser, and its DAOs |
-| [`SectionClipEditor`](SectionClipEditor.kt) | Chooses the clip a mix binds to a track's section among those that fit it |
-| [`SectionMic`](SectionMic.kt) | Records a take of a track's section after a counted lead-in, keeping it only when it reaches the end |
-| [`TakeShelf`](SongTakes.kt) | Reads the clips of a mix that still fit its song, decoded for playback |
-| [`TimelineModel`](TimelineModel.kt) | The state a timeline shows, which `StudioEditor` and `LaneEditorLegacy` share |
+| [`ClipEditor`](ClipEditor.kt) | Binds the clip of a track or notation, chosen among those that fit it |
+| [`ClipMic`](ClipMic.kt) | Records a clip of a track or notation after a counted lead-in, keeping it only when it reaches the end |
+| [`WaveShelf`](MusicWave.kt) | Reads the clips bound to a music that still fit it, decoded for playback |
+| [`TimelineModel`](TimelineModel.kt) | The state a timeline shows in `StudioEditor` |
 | [`StudioEditor`](StudioEditor.kt) | Records and plays samples on a timeline |
 | [`SiteMonitor`](SiteMonitor.kt) | Charts the site's status |
 | [`Sandbox`](Sandbox.kt) | The state of the sandbox |

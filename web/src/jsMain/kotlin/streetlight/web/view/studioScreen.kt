@@ -24,7 +24,7 @@ import koala.dom.component.popover
 import koala.page.Id
 import kotlinx.coroutines.flow.combine
 import koala.dom.component.column
-import streetlight.web.model.PcmSample
+import streetlight.web.model.Wave
 import streetlight.web.model.StudioEditor
 import streetlight.web.model.getStudioEditor
 import streetlight.web.utility.setTitle
@@ -167,7 +167,7 @@ fun ViewScope.audioSample(sample: AudioSample) {
             model.startSecondsState(sample.id).flow,
         ) { _, window, _, startSeconds -> window to startSeconds }.collect { (window, startSeconds) ->
             extentElement.placeExtent(window, startSeconds, sample.durationSeconds)
-            model.readPcm(sample.id)?.let { canvasElement.drawWaveform(it, startSeconds, window) }
+            model.readWave(sample.id)?.let { canvasElement.drawWaveform(it, startSeconds, window) }
         }
     }
 }
@@ -282,7 +282,7 @@ private fun HTMLElement.placeExtent(window: TimeWindow, startSeconds: Double, du
 }
 
 /** Draws the part of [sample], beginning at [startSeconds], within [window] across this canvas in its text color. */
-private fun HTMLCanvasElement.drawWaveform(sample: PcmSample, startSeconds: Double, window: TimeWindow) {
+private fun HTMLCanvasElement.drawWaveform(sample: Wave, startSeconds: Double, window: TimeWindow) {
     sizeToPixels()
     val context = getContext(CanvasRenderingContext2D.ID) ?: return
 

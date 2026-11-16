@@ -56,10 +56,10 @@ fun NoteSource.snapTick(tick: Double, track: Track, music: Music, step: NoteValu
     return copy(tick = onset, ticks = ticks - (onset - this.tick))
 }
 
-/** The length of the note before this one in [track], or `null` for the first of its section. */
+/** The length of the note before this one in [track], or `null` for the first of its notation. */
 private fun NoteSource.previousTicks(track: Track) = when (track) {
-    is MelodyTrack -> track.sections.firstOrNull { it.sectionId == sectionId }?.notes?.getOrNull(index - 1)?.beats?.ticks
-    is ChordTrack -> track.sections.firstOrNull { it.sectionId == sectionId }?.notes?.getOrNull(index - 1)?.beats?.ticks
+    is MelodyTrack -> track.notations.firstOrNull { it.notationId == notationId }?.notes?.getOrNull(index - 1)?.beats?.ticks
+    is ChordTrack -> track.notations.firstOrNull { it.notationId == notationId }?.notes?.getOrNull(index - 1)?.beats?.ticks
     else -> null
 }
 
@@ -98,11 +98,11 @@ private fun Chord.withRoot(midi: Int, key: Key, isScaleSnap: Boolean): Chord {
 
 /** This track with the note of [source] moved to where [moved] places it, the note before it taking up the difference. */
 fun Track.withMovedNote(source: NoteSource, moved: NoteSource, key: Key): Track = when (this) {
-    is MelodyTrack -> copy(sections = sections.map { phrase ->
-        if (phrase.sectionId == source.sectionId) phrase.withMovedNote(source, moved, key) else phrase
+    is MelodyTrack -> copy(notations = notations.map { phrase ->
+        if (phrase.notationId == source.notationId) phrase.withMovedNote(source, moved, key) else phrase
     })
-    is ChordTrack -> copy(sections = sections.map { progression ->
-        if (progression.sectionId == source.sectionId) progression.withMovedNote(source, moved) else progression
+    is ChordTrack -> copy(notations = notations.map { progression ->
+        if (progression.notationId == source.notationId) progression.withMovedNote(source, moved) else progression
     })
     else -> this
 }

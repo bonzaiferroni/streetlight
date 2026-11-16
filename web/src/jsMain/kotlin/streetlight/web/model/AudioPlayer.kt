@@ -61,7 +61,7 @@ class AudioPlayer(
         if (sources.isEmpty()) playingStore.set(false)
     }
 
-    private fun toAudioBuffer(context: AudioContext, sample: PcmSample): AudioBuffer {
+    private fun toAudioBuffer(context: AudioContext, sample: Wave): AudioBuffer {
         val buffer = context.createBuffer(sample.channels.size, sample.frameCount, sample.sampleRate.toFloat())
         sample.channels.forEachIndexed { index, samples ->
             buffer.copyToChannel(samples.unsafeCast<Float32Array<ArrayBuffer>>(), index)
@@ -72,6 +72,6 @@ class AudioPlayer(
 
 /** PCM placed on the timeline at [startSeconds]. */
 class PlacedPcm(
-    val pcm: PcmSample,
+    val pcm: Wave,
     val startSeconds: Double,
 )

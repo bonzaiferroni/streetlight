@@ -121,7 +121,7 @@ private class AudioCapture(
             release()
         }
         val track = stream.getAudioTracks().first()
-        return CapturedPcm(PcmSample(sampleRate, joinBlocks()), startClock, track.label, readProcessing(track))
+        return CapturedPcm(Wave(sampleRate, joinBlocks()), startClock, track.label, readProcessing(track))
     }
 
     /** Ends the capture without waiting for its last blocks, releasing the microphone. */
@@ -152,7 +152,7 @@ private class AudioCapture(
  * the browser's [processing] applied.
  */
 class CapturedPcm(
-    val pcm: PcmSample,
+    val pcm: Wave,
     val startClock: Double,
     val micLabel: String,
     val processing: List<BrowserProcessing>,

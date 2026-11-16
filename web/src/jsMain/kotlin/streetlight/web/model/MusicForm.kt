@@ -45,11 +45,12 @@ class MusicForm(seed: Music) {
     }
 }
 
-/** Problems of reading a music or a track from its form. */
+/** Problems of reading a music, a section or a track from its form. */
 object MusicFormProblem {
     val time = Problem("A time is a count of beats over a beat unit, as 3/4")
     val tempo = Problem("A tempo is a whole number from ${BPM_RANGE.first} to ${BPM_RANGE.last}")
     val capo = Problem("A capo is a whole number from -$MAX_CAPO to $MAX_CAPO, or blank for none")
+    val measures = Problem("Measures are a whole number from 1, as 16")
 }
 
 /** A capo read from a form, where a blank field reads as none. */

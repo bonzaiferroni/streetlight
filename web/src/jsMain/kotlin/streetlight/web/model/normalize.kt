@@ -9,7 +9,7 @@ import kotlin.math.sqrt
  * This sample brought to the target loudness, measured over the blocks that hold sound rather than silence, unless
  * that would raise its peak above the ceiling.
  */
-fun PcmSample.normalize(): PcmSample {
+fun Wave.normalize(): Wave {
     val blockSize = (BLOCK_SECONDS * sampleRate).toInt()
     if (frameCount < blockSize) return this
 
@@ -28,7 +28,7 @@ fun PcmSample.normalize(): PcmSample {
 
     val peak = channels.maxOf { samples -> samples.maxOf { abs(it) } }
     val gain = min(TARGET_LEVEL / loudness, CEILING_LEVEL / peak).toFloat()
-    return PcmSample(sampleRate, channels.map { samples -> FloatArray(samples.size) { samples[it] * gain } })
+    return Wave(sampleRate, channels.map { samples -> FloatArray(samples.size) { samples[it] * gain } })
 }
 
 private const val BLOCK_SECONDS = 0.1
