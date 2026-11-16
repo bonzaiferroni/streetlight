@@ -6,7 +6,7 @@ import streetlight.model.music.Key
 import streetlight.model.music.MelodyNote
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Phrase
-import streetlight.model.music.SectionId
+import streetlight.model.music.NotationId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.MusicId
 import streetlight.model.music.TrackId
@@ -19,14 +19,14 @@ import streetlight.model.music.TrackId
  * `.` adds half its length, as `#4,\.`. `-` holds the note before for a quarter note, and `~` ties the next note to it.
  * The notes before the first bar line of a phrase are its pickup. A token that cannot be read is reported and skipped.
  *
- * A phrase's `-lyrics:` property names the stanzas sung to it, as `-lyrics: VerseB VerseC`.
+ * The track's `-lyrics:` property names the lyric track sung to it, as `-lyrics: Lyrics`.
  */
 class MelodyParser(
     private val key: Key,
 ) {
     /**
      * Reads the melody track [trackId] of the music [musicId], named [name], from [text], with measures checked against
-     * [time] and sections found in [names].
+     * [time], the music's sections found in [names] and its lyric tracks by name in [lyricTrackIds].
      */
     fun read(
         trackId: TrackId,
@@ -35,27 +35,30 @@ class MelodyParser(
         text: String,
         time: TimeSignature,
         names: SectionNames,
+        lyricTrackIds: Map<String, TrackId> = emptyMap(),
     ): NotationRead<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names, setOf(LYRICS))
-        val phrases = trackText.sections.map { section ->
-            val lyrics = section.propertyOf(LYRICS)?.let { stanzas -> tokensOf(stanzas).map { names.idOf(it) } }
-            readSection(section, time, errors).copy(lyrics = lyrics)
+        val phrases = trackText.notations.map { readNotation(it, time, errors) }
+        val lyrics = trackText.propertyOf(LYRICS)?.let { property ->
+            lyricTrackIds[property.value]
+                ?: null.also { errors.add(NotationError(property.line, "No lyric track named ${property.value}")) }
         }
-        return NotationRead(MelodyTrack(trackId, musicId, name, phrases, trackText.arrangements, trackText.capo), errors)
+        val track = MelodyTrack(trackId, musicId, name, phrases, trackText.arrangements, trackText.sections, trackText.capo, lyrics)
+        return NotationRead(track, errors)
     }
 
-    /** Reads the section [sectionId] from [text], the lines of its measures alone, checked against [time]. */
-    fun readSection(sectionId: SectionId, text: String, time: TimeSignature): NotationRead<Phrase> {
+    /** Reads the notation [notationId] named [name] from [text], the lines of its measures alone, checked against [time]. */
+    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationRead<Phrase> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readSection(sectionTextOf(sectionId, text, errors), time, errors), errors)
+        return NotationRead(readNotation(notationTextOf(notationId, name, text, errors), time, errors), errors)
     }
 
-    private fun readSection(section: SectionText, time: TimeSignature, errors: MutableList<NotationError>): Phrase {
+    private fun readNotation(notation: NotationText, time: TimeSignature, errors: MutableList<NotationError>): Phrase {
         val notes = mutableListOf<MelodyNote>()
         val pickup = mutableListOf<MelodyNote>()
         var isTied = false
-        val segments = section.toSegments()
+        val segments = notation.toSegments()
         segments.pickup?.let { segment ->
             fun error(message: String) = errors.add(NotationError(segment.line, message))
             val read = readSegment(segment.text, QUARTER, pickup, isTied, ::error)
@@ -68,7 +71,7 @@ class MelodyParser(
             isTied = read.isTied
             measureProblemOf(read.ticks, index == segments.measures.lastIndex, time)?.let(::error)
         }
-        return Phrase(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
+        return Phrase(notation.notationId, notation.name, notes, pickup, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
     }
 
     /** The ticks a segment of jianpu filled, and whether it ends on a tie to the next note. */
@@ -130,20 +133,21 @@ class MelodyParser(
         return MelodyNote(Interval.ofMidi(MIDDLE_C + semitones + octave * 12, key), beats)
     }
 
-    /** Writes [track] as the jianpu [read] reads, with measures cut by [time] and sections named by [names]. */
-    fun write(track: MelodyTrack, time: TimeSignature, names: SectionNames): String {
-        val sections = track.sections.map { phrase ->
-            val lyrics = phrase.lyrics?.let { lyrics -> mapOf(LYRICS to lyrics.joinToString(" ") { names.nameOf(it) }) }
-            linesOf(phrase, time).copy(properties = lyrics.orEmpty())
-        }
-        return writeTrackText(sections, track.arrangements, track.capo, names)
+    /**
+     * Writes [track] as the jianpu [read] reads, with measures cut by [time], sections named by [names] and its lyric
+     * track named by [trackNames].
+     */
+    fun write(track: MelodyTrack, time: TimeSignature, names: SectionNames, trackNames: Map<TrackId, String> = emptyMap()): String {
+        val lyrics = track.lyrics?.let { trackNames[it] }?.let { mapOf(LYRICS to it) }.orEmpty()
+        return writeTrackText(track, track.notations.map { linesOf(it, time) }, names, lyrics)
     }
 
-    /** Writes [phrase] as the jianpu [readSection] reads, with measures cut by [time]. */
-    fun writeSection(phrase: Phrase, time: TimeSignature) = linesOf(phrase, time).toLines().joinToString("\n")
+    /** Writes [phrase] as the jianpu [readNotation] reads, with measures cut by [time]. */
+    fun writeNotation(phrase: Phrase, time: TimeSignature) = linesOf(phrase, time).toLines().joinToString("\n")
 
-    private fun linesOf(phrase: Phrase, time: TimeSignature) = SectionLines(
-        sectionId = phrase.sectionId,
+    private fun linesOf(phrase: Phrase, time: TimeSignature) = NotationLines(
+        notationId = phrase.notationId,
+        name = phrase.name,
         pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
             pickup.flatMap { writeNote(it.interval, it.beats.ticks, QUARTER.ticks, false) }.joinToString(" ")
         },

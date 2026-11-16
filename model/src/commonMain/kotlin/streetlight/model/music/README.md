@@ -16,31 +16,37 @@ Notation is the written representation of music. Its forms live in the subpackag
 
 A `Song` has many `Music`, each one way of playing and understanding it, under a name of its own that starts as the song's title. A `Track` belongs to one music by its `musicId`. Songs, musics, tracks, mixes, section clips, clips and studies are each kept as separate records, so a reference between them is an id. `MusicSheet` joins a music to its tracks where the whole is edited, played or exported, and `SongMusic` joins it to its song where musics are listed.
 
-A `SectionId` is not a record. A reference to a section, held in a track, a mix or a study, outlives the section it names unless the edit that removes the section clears it, so a reader of one skips a section the music no longer holds.
+A `SectionId` or `NotationId` is not a record. A reference to a section or a notation outlives what it names unless the edit that removes it clears the reference, so a reader of one skips what the music or track no longer holds.
+
+## Sections
+
+`Music.sections` holds the sections of a music, each a `Section` of a whole number of measures under a name no other section of the music holds. A section is identified by its `SectionId` everywhere in the model, so a rename changes one name and every reference follows. `Music.arrangement` plays the sections in order, and a section may play more than once.
+
+A section's length is its measures, stated by the music and never taken from a track.
 
 ## Tracks
 
-`Music.sections` holds the sections of a music, each a `SectionId` and a name no other section of the music holds. A section is identified by its id everywhere in the model, so a rename changes one name and every reference follows. Each track holds what it plays for a section, and two tracks play the same section by holding the same id.
-
-A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its music holds, so a rename changes one name and every reference follows. What a track plays for a section is identified by the two ids together, as a `TrackSectionId`.
+A `Track` is identified by its `TrackId` everywhere in the model and shown under its `name`, which no other track of its music holds, so a rename changes one name and every reference follows.
 
 `TrackType` mirrors the sealed types of `Track`, one entry each, and holds what stands for the type wherever it is shown: its icon and its `Palette` color. A track gives its entry as `trackType`, and a song's markdown names a track's type by the entry's name.
 
-`Music.arrangement` lists the sections every track follows, in order. A `Track` holds its `sections` and its `arrangements`, each an `Arrangement` naming a section built of other sections or arrangements, so content repeated within a section is written once. `sectionsOf` resolves an id into the sections it stands for.
+A track holds its `notations`, the notes it plays, and its `arrangements`, each an `Arrangement` playing other notations or arrangements in order, so content repeated is written once. Each is identified by a `NotationId` of its own, unique across every track. `notationsOf` resolves an id into the notations it stands for.
 
-A section lasts as long as the longest track that defines it. A track repeats a shorter section as many whole times as fit, and rests through a section it lacks or what is left after its repeats.
+`Track.sections` maps each section of the music the track plays to the notation or arrangement it plays there, so one notation may fill many sections and a section holds at most one notation of a track. A section the track does not map is a rest. A track repeats a notation shorter than its section as many whole times as fit, and rests through what is left.
 
-Sections play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
+A notation's `name` is shown with it, and need not be unique beyond its track. A track has at most one unnamed notation, which `nameOf` shows by the names of its music and track, as `Amazing Grace Chords`.
 
-A section may open with a `pickup`, notes that sound at the end of the measure before it. A pickup is shorter than a measure and does not count toward the section's length, and an arrangement takes the pickup of its first section. A section's `measuresPerLine` is the layout of its text, read from the measures on its first line.
+Notations play end to end, so an onset is the running sum of the lengths before it and is never stored. The same holds within a `Progression`: each `ChordNote` carries its `beats`, a `null` chord is a rest, and the progression's length is the sum of its notes.
 
-A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `-capo: 2`, before its first heading.
+A notation may open with a `pickup`, notes that sound at the end of the measure before it. A pickup is shorter than a measure and does not count toward the notation's length, and an arrangement takes the pickup of its first notation. A notation's `measuresPerLine` is the layout of its text, read from the measures on its first line.
+
+A melody note's `Interval` and a chord's root count from the tonic of the key, so a change of key transposes every track. The key and every track are written as played, and sound `Music.capo` semitones higher, as chord shapes behind a guitar capo. A track's own `capo` adds to it, and a `null` capo counts as none. A track's text opens with its properties, such as `-capo: 2`, before its first notation.
 
 A scale degree counts from the `Key.majorTonic`, the tonic of the major scale the key's mode is drawn from, so a tune in A minor writes A as `6`.
 
 ## Lyrics
 
-Lyrics are tied to a melody by timing alone, with no reference between the tracks. The first lyric track is sung to every melody track, and a stanza belongs to the section the melody plays as the stanza starts, so the verses of a melody played three times are its three lines. A phrase that names its `lyrics` is sung only the stanzas it names, still placed by timing. `lyricLinesOf` gives those lines, one for each time a track plays a section.
+A melody track is sung with the lyric track its `lyrics` names, or the first lyric track of its music when it names none. A stanza is sung with the phrase its track plays for the same section, and within a section the two are tied by timing alone. `lyricLinesOf` gives the lines sung to a notation, one for each time the track plays it.
 
 ## Performance
 
@@ -48,4 +54,4 @@ The domain model holds the composition alone. A performance of it, such as a `Cl
 
 A `Clip` is a recording with its own identity, carrying only what decides where it fits: tempo, time, bars and the key it sounds in, capo already applied. A `SectionClip` binds one to a track's section of a mix by its `TrackSectionId`, one clip to each section of the mix, so a clip whose properties line up can be placed elsewhere.
 
-A `Mix` is one way of playing a music, holding the sections it hides from its overview, each a `TrackSectionId`, since tracks share a section's id. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.
+A `Mix` is one way of playing a music, holding the sections it hides from its overview, each a `TrackSectionId`. It is seeded with the music's tempo and sounding key and keeps its own after, so a change to the music leaves its clips fitting the mix they were recorded for. A music has many mixes; one that needs a different composition is a copy of the music.

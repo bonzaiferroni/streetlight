@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 data class Study(
     val studyId: StudyId,
     val trackId: TrackId,
-    val sectionId: SectionId?,
+    val notationId: NotationId?,
 )
 
 @JvmInline @Serializable

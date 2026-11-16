@@ -7,7 +7,7 @@ import streetlight.model.music.DrumHit
 import streetlight.model.music.DrumLane
 import streetlight.model.music.DrumTrack
 import streetlight.model.music.Groove
-import streetlight.model.music.SectionId
+import streetlight.model.music.NotationId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.MusicId
 import streetlight.model.music.TrackId
@@ -15,7 +15,7 @@ import streetlight.model.music.TrackId
 /**
  * The parser of a drum track's tab.
  *
- * Each line of a section is a row: the label of a drum, as `HH`, `SD` or `BD`, then its measures between bar lines.
+ * Each line of a groove is a row: the label of a drum, as `HH`, `SD` or `BD`, then its measures between bar lines.
  * Each character of a measure is an even slot of it: `x` or `o` a hit, `X` or `O` an accent, `g` a ghost, and `-` the
  * hit before ringing on, or a rest before the first. Rows that follow one another are a system and sound together. A
  * row naming a drum the system already holds starts the next, so a long groove wraps.
@@ -23,7 +23,7 @@ import streetlight.model.music.TrackId
 object DrumParser {
     /**
      * Reads the drum track [trackId] of the music [musicId], named [name], from [text], with measures cut by [time] and
-     * sections found in [names].
+     * the music's sections found in [names].
      */
     fun read(
         trackId: TrackId,
@@ -35,26 +35,27 @@ object DrumParser {
     ): NotationRead<DrumTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
-        val grooves = trackText.sections.map { section -> readGroove(section, time, errors) }
-        return NotationRead(DrumTrack(trackId, musicId, name, grooves, trackText.arrangements, trackText.capo), errors)
+        val grooves = trackText.notations.map { notation -> readGroove(notation, time, errors) }
+        val track = DrumTrack(trackId, musicId, name, grooves, trackText.arrangements, trackText.sections, trackText.capo)
+        return NotationRead(track, errors)
     }
 
-    /** Reads the section [sectionId] from [text], the rows of its tab alone, cut by [time]. */
-    fun readSection(sectionId: SectionId, text: String, time: TimeSignature): NotationRead<Groove> {
+    /** Reads the notation [notationId] named [name] from [text], the rows of its tab alone, cut by [time]. */
+    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationRead<Groove> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readGroove(sectionTextOf(sectionId, text, errors), time, errors), errors)
+        return NotationRead(readGroove(notationTextOf(notationId, name, text, errors), time, errors), errors)
     }
 
     /** Writes [track] as the tab [read] reads, with measures cut by [time] and sections named by [names]. */
     fun write(track: DrumTrack, time: TimeSignature, names: SectionNames): String {
-        val bodies = track.sections.map { SectionBody(it.sectionId, writeGroove(it, time.measure)) }
-        return writeTrackBodies(bodies, track.arrangements, track.capo, names)
+        val bodies = track.notations.map { NotationBody(it.notationId, it.name, writeGroove(it, time.measure)) }
+        return writeTrackBodies(track, bodies, names)
     }
 
-    /** Writes [groove] as the tab [readSection] reads, with measures cut by [time]. */
-    fun writeSection(groove: Groove, time: TimeSignature) = writeGroove(groove, time.measure).joinToString("\n")
+    /** Writes [groove] as the tab [readNotation] reads, with measures cut by [time]. */
+    fun writeNotation(groove: Groove, time: TimeSignature) = writeGroove(groove, time.measure).joinToString("\n")
 
-    private fun readGroove(section: SectionText, time: TimeSignature, errors: MutableList<NotationError>): Groove {
+    private fun readGroove(notation: NotationText, time: TimeSignature, errors: MutableList<NotationError>): Groove {
         val lanes = linkedMapOf<Drum, MutableList<DrumBeat>>()
         val system = mutableSetOf<Drum>()
         var systemStart = 0
@@ -69,7 +70,7 @@ object DrumParser {
             systemStart = end
         }
 
-        for (line in section.lines) {
+        for (line in notation.lines) {
             fun error(message: String) = errors.add(NotationError(line.number, message))
             val barLine = line.toBarLine()
             val label = barLine.lead
@@ -110,7 +111,8 @@ object DrumParser {
         closeSystem()
 
         return Groove(
-            sectionId = section.sectionId,
+            notationId = notation.notationId,
+            name = notation.name,
             lanes = lanes.map { (drum, laneBeats) -> DrumLane(drum, laneBeats) },
             slotsPerMeasure = firstMeasure?.count { !it.isWhitespace() }?.takeIf { it > 0 } ?: SLOTS_PER_MEASURE,
             measuresPerLine = firstLineMeasures?.takeIf { it > 0 } ?: MEASURES_PER_LINE,

@@ -5,7 +5,8 @@ Key: D Major
 Time: 6/8
 Tempo: 100
 Capo: -6
-Arrangement: Song
+Arrangement: 
+    Song: 18
 
 ## Melody (Melody)
 
@@ -16,7 +17,7 @@ Verse:
 Rest:
 | 0 0 0 | 0 0 0 |
 
-Song: Verse Verse Rest
+Song: Verse, Verse, Rest
 
 ## Round (Melody)
 
@@ -27,4 +28,4 @@ Verse:
 Rest:
 | 0 0 0 | 0 0 0 |
 
-Song: Rest Verse Verse
+Song: Rest, Verse, Verse

@@ -9,27 +9,28 @@ import streetlight.model.music.LyricTrack
 import streetlight.model.music.Music
 import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
-import streetlight.model.music.Section
-import streetlight.model.music.SectionId
+import streetlight.model.music.Notation
+import streetlight.model.music.NotationId
 import streetlight.model.music.Stanza
 import streetlight.model.music.LineSyllable
 import streetlight.model.music.Track
 import streetlight.model.music.lengthOf
 import streetlight.model.music.lyricLinesOf
-import streetlight.model.music.sectionsOf
+import streetlight.model.music.nameOf
+import streetlight.model.music.notationsOf
 import streetlight.model.music.toMidi
 import kotlin.math.roundToInt
 
 
 /**
- * The notation of [sectionId] in a track, shown as [name], [ticks] long and [steps] of the staff tall, with a step the distance from a
+ * The notation of [notationId] in a track, shown as [name], [ticks] long and [steps] of the staff tall, with a step the distance from a
  * line to the space beside it. The bottom line of the staff sits [staffStep] steps up. The [pickup] notes sound before
  * and [pickupSyllables] the section starts. A section with no [hasStaff] is drawn as its syllables alone. Its text
  * holds [measuresPerLine] measures of [measureTicks] to a line. Each of its [lyrics] is a line of lyrics sung to it,
  * drawn as syllables alone.
  */
 data class SectionNotation(
-    val sectionId: SectionId,
+    val notationId: NotationId,
     val name: String,
     val ticks: Int,
     val steps: Int,
@@ -115,11 +116,11 @@ enum class HeadShape {
 }
 
 /**
- * The place of a note in its track: [index] of the notes of [sectionId], or of its pickup when [isPickup], drawn at
- * [midi] for [ticks] from [tick] of its section. A chord's [midi] is its root, and [chord] is what it plays.
+ * The place of a note in its track: [index] of the notes of [notationId], or of its pickup when [isPickup], drawn at
+ * [midi] for [ticks] from [tick] of its notation. A chord's [midi] is its root, and [chord] is what it plays.
  */
 data class NoteSource(
-    val sectionId: SectionId,
+    val notationId: NotationId,
     val index: Int,
     val isPickup: Boolean,
     val tick: Int,
@@ -155,30 +156,30 @@ data class StaffWindow(
  */
 fun staffWindowOf(track: Track, key: Key, dragRoom: Int = DRAG_ROOM_STEPS): StaffWindow {
     if (track is LyricTrack) return LYRIC_WINDOW
-    val steps = track.sections.flatMap { drawnMidisOf(it, key) }.map { staffStepOf(it, key) }
+    val steps = track.notations.flatMap { drawnMidisOf(it, key) }.map { staffStepOf(it, key) }
     val low = minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW)
     val high = maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH)
     return StaffWindow(low - dragRoom, high + dragRoom)
 }
 
 /**
- * The notation of [sectionId] in [track] against [music] within [window], or `null` when it has no length there. Each
- * of [lyrics] is a line of syllables sung to the section.
+ * The notation of [notationId] in [track] against [music] within [window], or `null` when it has no length there.
+ * Each of [lyrics] is a line of syllables sung to it.
  */
 fun sectionNotationOf(
     track: Track,
-    sectionId: SectionId,
+    notationId: NotationId,
     music: Music,
     window: StaffWindow,
     lyrics: List<List<LineSyllable>> = emptyList(),
 ): SectionNotation? {
-    val ticks = track.lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return null
-    val sections = track.sectionsOf(sectionId).orEmpty()
+    val ticks = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
+    val sections = track.notationsOf(notationId).orEmpty()
     val notes = noteSourcesOf(sections, music.key).map { it.tick to noteNotationOf(it, 0.0, window, music.key) } +
         drumNotesOf(sections, window)
     val measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE
     fun notationOf(window: StaffWindow, notes: List<Pair<Int, NoteNotation>>, syllables: List<Triple<Int, String, Int>>) =
-        sectionNotationOf(sectionId, music, ticks, window, notes, syllables, measuresPerLine)
+        sectionNotationOf(notationId, track.nameOf(notationId, music), music, ticks, window, notes, syllables, measuresPerLine)
     val lyricNotations = lyrics.map { line ->
         notationOf(LYRIC_WINDOW, emptyList(), line.map { Triple(it.tick, it.text, LYRIC_LINE_STEPS / 2) })
             .copy(hasStaff = false)
@@ -188,11 +189,13 @@ fun sectionNotationOf(
 }
 
 /**
- * The notation of [sectionId] of [music], [ticks] long within [window], laying each of [notes] and [syllables] by its
- * tick into its measure, or before the section for a pickup. Its text holds [measuresPerLine] measures to a line.
+ * The notation of [notationId] shown as [name] against [music], [ticks] long within [window], laying each of [notes]
+ * and [syllables] by its tick into its measure, or before it for a pickup. Its text holds [measuresPerLine] measures to
+ * a line.
  */
 private fun sectionNotationOf(
-    sectionId: SectionId,
+    notationId: NotationId,
+    name: String,
     music: Music,
     ticks: Int,
     window: StaffWindow,
@@ -218,8 +221,8 @@ private fun sectionNotationOf(
         SyllableNotation(tick.toDouble() / ticks, text, step)
     }
     return SectionNotation(
-        sectionId = sectionId,
-        name = music.nameOf(sectionId),
+        notationId = notationId,
+        name = name,
         ticks = ticks,
         steps = window.steps,
         staffStep = window.stepOf(STAFF_LOW),
@@ -233,32 +236,32 @@ private fun sectionNotationOf(
 }
 
 /**
- * The notation of each section [track] defines, against [music], leaving out its arrangements of them. Its notes are
- * not dragged, so its window keeps no room for it. A section carries each different line of lyrics sung to it in the
- * song of [tracks].
+ * The notation of each of the [Track.notations] of [track], against [music], leaving out its arrangements of them. Its
+ * notes are not dragged, so its window keeps no room for it. A notation carries each different line of lyrics sung to
+ * it in the song of [tracks].
  */
 fun sectionNotationsOf(
     track: Track,
     music: Music,
     tracks: List<Track> = listOf(track),
-): List<SectionNotation> = track.sections.mapNotNull { section ->
-    val lyrics = drawnLyricLinesOf(tracks, track, section.sectionId, music)
+): List<SectionNotation> = track.notations.mapNotNull { notation ->
+    val lyrics = drawnLyricLinesOf(tracks, track, notation.notationId, music)
     val window = staffWindowOf(track, music.key, dragRoom = 0)
-    sectionNotationOf(track, section.sectionId, music, window, lyrics)
+    sectionNotationOf(track, notation.notationId, music, window, lyrics)
 }
 
 /**
- * The lines of lyrics drawn under [sectionId] of [track] in the song of [tracks] and [music]: the line sung the
- * [play]th time the track plays the section, or each different line when [play] is `null`.
+ * The lines of lyrics drawn under [notationId] of [track] in the song of [tracks] and [music]: the line sung the
+ * [play]th time the track plays it, or each different line when [play] is `null`.
  */
 fun drawnLyricLinesOf(
     tracks: List<Track>,
     track: Track,
-    sectionId: SectionId,
+    notationId: NotationId,
     music: Music,
     play: Int? = null,
 ): List<List<LineSyllable>> {
-    val lines = tracks.lyricLinesOf(track, sectionId, music)
+    val lines = tracks.lyricLinesOf(track, notationId, music)
     return if (play == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(play))
 }
 
@@ -284,14 +287,14 @@ fun noteNotationOf(source: NoteSource, onset: Double, window: StaffWindow, key: 
 fun drawnMidisOf(chord: Chord, key: Key) = chord.toMidi(key).map { it + CHORD_DRAWN_SEMITONES }
 
 /** The MIDI numbers of every note [section] draws in [key]. */
-private fun drawnMidisOf(section: Section, key: Key): List<Int> = when (section) {
+private fun drawnMidisOf(section: Notation, key: Key): List<Int> = when (section) {
     is Phrase -> (section.pickup + section.notes).mapNotNull { it.interval?.toMidi(key) }
     is Progression -> (section.pickup + section.notes).flatMap { note -> note.chord?.let { drawnMidisOf(it, key) }.orEmpty() }
     else -> emptyList()
 }
 
 /** The place of each note and chord of [sections], laid end to end, each pickup before its section. */
-private fun noteSourcesOf(sections: List<Section>, key: Key): List<NoteSource> {
+private fun noteSourcesOf(sections: List<Notation>, key: Key): List<NoteSource> {
     val sources = mutableListOf<NoteSource>()
     var onset = 0
     for (section in sections) {
@@ -300,7 +303,7 @@ private fun noteSourcesOf(sections: List<Section>, key: Key): List<NoteSource> {
                 fun place(notes: List<Pair<Int?, Int>>, start: Int, isPickup: Boolean) {
                     var tick = start
                     notes.forEachIndexed { index, (midi, ticks) ->
-                        if (midi != null) sources.add(NoteSource(section.sectionId, index, isPickup, tick, ticks, midi))
+                        if (midi != null) sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi))
                         tick += ticks
                     }
                 }
@@ -314,7 +317,7 @@ private fun noteSourcesOf(sections: List<Section>, key: Key): List<NoteSource> {
                     notes.forEachIndexed { index, (chord, ticks) ->
                         if (chord != null) {
                             val midi = drawnMidisOf(chord, key).first()
-                            sources.add(NoteSource(section.sectionId, index, isPickup, tick, ticks, midi, chord))
+                            sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi, chord))
                         }
                         tick += ticks
                     }
@@ -334,7 +337,7 @@ private fun noteSourcesOf(sections: List<Section>, key: Key): List<NoteSource> {
  * The tick, text and step of each syllable of the [Stanza]s of [sections], laid end to end, each pickup before its
  * section.
  */
-private fun syllablesOf(sections: List<Section>): List<Triple<Int, String, Int>> {
+private fun syllablesOf(sections: List<Notation>): List<Triple<Int, String, Int>> {
     val syllables = mutableListOf<Triple<Int, String, Int>>()
     var onset = 0
     for (section in sections) {
@@ -351,7 +354,7 @@ private fun syllablesOf(sections: List<Section>): List<Triple<Int, String, Int>>
 }
 
 /** The tick of each note of the [Groove]s of [sections], laid end to end, paired with its notation within [window]. */
-private fun drumNotesOf(sections: List<Section>, window: StaffWindow): List<Pair<Int, NoteNotation>> {
+private fun drumNotesOf(sections: List<Notation>, window: StaffWindow): List<Pair<Int, NoteNotation>> {
     val notes = mutableListOf<Pair<Int, NoteNotation>>()
     var onset = 0
     for (section in sections) {

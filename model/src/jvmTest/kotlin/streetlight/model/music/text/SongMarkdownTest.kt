@@ -23,15 +23,14 @@ class SongMarkdownTest {
     fun `row your boat is written back as it was read`() = assertWrittenAsRead("row-your-boat.md")
 
     @Test
-    fun `tracks that share a section name share its id and keep their own ids`() {
+    fun `each track plays a notation for every section of the arrangement`() {
         val read = readSong("amazing-grace.md")
-        val song = read.sheet.music.sectionOf("Song")?.sectionId
+        val arrangement = read.sheet.music.arrangement
 
-        assertEquals(5, read.sheet.tracks.map { it.trackId }.toSet().size, "each track should have its own id")
+        assertEquals(listOf("Verse A", "Verse B", "Verse C"), arrangement.map { read.sheet.music.nameOf(it) })
         assertEquals(listOf("Chords", "Melody", "Harmony", "Drums", "Lyrics"), read.sheet.tracks.map { it.name })
         read.sheet.tracks.forEach { track ->
-            val ids = track.sections.map { it.sectionId } + track.arrangements.map { it.sectionId }
-            assertEquals(true, song in ids, "${track.name} should define Song")
+            assertEquals(arrangement.toSet(), track.sections.keys, "${track.name} should play every section")
         }
     }
 
@@ -39,7 +38,7 @@ class SongMarkdownTest {
         val text = File(SONGS_PATH, fileName).readText()
         val read = readSong(fileName)
 
-        val written = SongMarkdown.write(read.song, read.sheet.music, read.sheet.tracks, NotationStyle.Letters)
+        val written = SongMarkdown.write(read.song, read.sheet.music, read.sheet.tracks)
 
         assertEquals(text.trimEnd(), written.trimEnd())
     }
@@ -48,7 +47,7 @@ class SongMarkdownTest {
         val songId = SongId.random()
         val song = Song(songId, "", "")
         val music = Music(MusicId.random(), songId, "", Key(Chroma.of(0), Mode.Major), TimeSignature(4, 4))
-        val outcome = SongMarkdown.read(File(SONGS_PATH, fileName).readText(), song, music, NotationStyle.Letters)
+        val outcome = SongMarkdown.read(File(SONGS_PATH, fileName).readText(), song, music)
         return assertIs<Ok<SongMarkdownRead>>(outcome).data
     }
 }

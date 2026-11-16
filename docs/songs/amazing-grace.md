@@ -5,51 +5,53 @@ Key: G Major
 Time: 3/4
 Tempo: 90
 Capo: -5
-Arrangement: Song
+Arrangement:
+    Verse A: 16
+    Verse B: 16
+    Verse C: 16
 
 ## Chords (Chords)
 
-Song:
 | G | G7 | C | G |
 | G | Am | D | D |
 | G | G7 | C | G |
 | Em | D | G | G |
+-sections: Verse A, Verse B, Verse C
 
 ## Melody (Melody)
 
-Song:
 5, | 1 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 5 - - | - - 3 |
 | 5 - 3\ 1\ | 3 - 2 | 1 - 6, | 5, - 5, |
 | 1 - 3\ 1\ | 3 - 2 | 1 - - | - - - |
--lyrics: VerseA VerseB VerseC
+-sections: Verse A, Verse B, Verse C
 
 ## Harmony (Melody)
 
-Song:
 5, | 5, - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 7, - - | - - 1 |
 | 3 - 1\ 5,\ | 1 - 7, | 6, - 4, | 3, - 3, |
 | 5, - 1\ 5,\ | 1 - 7, | 3, - - | - - - |
--lyrics: VerseA VerseB VerseC
+-sections: Verse A, Verse B, Verse C
 
 ## Drums (Drums)
 
-FillA:
+Fill A:
 HH|x-x-x-x-x-x-|x-x-x-x-x-x-|
 SD|----o---o---|----o---o---|
 BD|o-----------|o-o---------|
 
-FillB:
+Fill B:
 HH|x-x-x-x-x-x-|x-x-x-x-x-x-|
 SD|----o---o---|----o---o---|
 BD|o-----------|----o-o-o-o-|
 
-Song: FillA FillB
+Song: Fill A, Fill B
+-sections: Verse A, Verse B, Verse C
 
 ## Lyrics (Lyrics)
 
-VerseA:
+Verse A:
 A- | ma- _ zing | grace _ how |
 | sweet _ the | sound _ that |
 | saved _ a | wretch _ like |
@@ -59,7 +61,7 @@ A- | ma- _ zing | grace _ how |
 | blind _ but | now _ I |
 | see _ _ | _ _ _ |
 
-VerseB:
+Verse B:
 Twas | grace _ that | taught _ my |
 | heart _ to | fear _ and |
 | grace _ my | fears _ re- |
@@ -69,7 +71,7 @@ Twas | grace _ that | taught _ my |
 | hour _ I | first _ be- |
 | lieved _ _ | _ _ _ |
 
-VerseC:
+Verse C:
 Through | ma- _ ny | dan- _ gers, |
 | toils _ and | snares _ I |
 | have _ al- | rea- _ dy |
@@ -78,5 +80,3 @@ Through | ma- _ ny | dan- _ gers, |
 | safe _ thus | far _ and |
 | grace _ will | lead _ me |
 | home _ _ | _ _ _ |
-
-Song: VerseA VerseB VerseC

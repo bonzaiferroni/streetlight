@@ -25,7 +25,7 @@ object SongMarkdown {
      *
      * The notation of the music and each track is read as far as it can be, without its problems. The music is named
      * for the song's title. Each track is given a new id, and one named as an earlier one takes the name with the first
-     * free number after it, as `Melody 2`.
+     * free number after it, as `Melody 2`. A melody names its lyric track by that name.
      */
     fun read(text: String, song: Song, music: Music): Outcome<SongMarkdownRead> {
         val lines = text.lines()
@@ -43,48 +43,63 @@ object SongMarkdown {
             artist = artist ?: song.artist,
         )
 
-        // read each track
-        val names = SectionNames(readMusic.sections)
+        // name each track and its type
         val trackNames = mutableSetOf<String>()
-        val tracks = trackIndexes.mapIndexed { index, headingIndex ->
+        val headings = trackIndexes.mapIndexed { index, headingIndex ->
             val heading = lines[headingIndex]
             val match = TRACK_HEADING.matchEntire(heading.trim())
             val type = match?.let { TrackType.entries.firstOrNull { it.name.equals(match.groupValues[2], ignoreCase = true) } }
                 ?: return SongMarkdownProblem.trackHeadingOf(headingIndex + 1, heading)
-            val trackId = TrackId.random()
             val trackName = freeTrackNameOf(match.groupValues[1].trim(), trackNames).also { trackNames.add(it) }
             val end = trackIndexes.getOrNull(index + 1) ?: lines.size
-            val trackText = lines.subList(headingIndex + 1, end).joinToString("\n")
+            TrackHeading(TrackId.random(), trackName, type, lines.subList(headingIndex + 1, end).joinToString("\n"))
+        }
+
+        // read each track
+        val names = SectionNames(readMusic.sections)
+        val lyricTrackIds = headings.filter { it.type == TrackType.Lyrics }.associate { it.name to it.trackId }
+        val tracks = headings.map { (trackId, trackName, type, trackText) ->
             when (type) {
                 TrackType.Chords -> ChordParser(readMusic.key).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
-                TrackType.Melody -> MelodyParser(readMusic.key).read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
+                TrackType.Melody -> MelodyParser(readMusic.key)
+                    .read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names, lyricTrackIds)
                 TrackType.Lyrics -> LyricParser.read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
                 TrackType.Drums -> DrumParser.read(trackId, readMusic.musicId, trackName, trackText, readMusic.time, names)
             }.value
         }
 
-        val sheet = MusicSheet(readMusic.copy(name = readSong.title, sections = names.sections), tracks)
+        val sheet = MusicSheet(readMusic.copy(name = readSong.title), tracks)
         return Ok(SongMarkdownRead(readSong, sheet))
     }
 
     /** Writes [song] with its [music] and [tracks]. */
     fun write(song: Song, music: Music, tracks: List<Track>): String {
         val heading = listOfNotNull("$TITLE_PREFIX${song.title}", song.artist.takeIf { it.isNotBlank() }).joinToString("\n")
+        val trackNames = tracks.associate { it.trackId to it.name }
         val blocks = listOf(heading, MusicParser.write(music)) + tracks.flatMap { track ->
-            listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music))
+            listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music, trackNames))
         }
         return blocks.joinToString("\n\n", postfix = "\n")
     }
 
-    private fun writeTrack(track: Track, music: Music) = SectionNames(music.sections).let { names ->
-        when (track) {
+    private fun writeTrack(track: Track, music: Music, trackNames: Map<TrackId, String>): String {
+        val names = SectionNames(music.sections)
+        return when (track) {
             is ChordTrack -> ChordParser(music.key).write(track, music.time, names)
-            is MelodyTrack -> MelodyParser(music.key).write(track, music.time, names)
+            is MelodyTrack -> MelodyParser(music.key).write(track, music.time, names, trackNames)
             is LyricTrack -> LyricParser.write(track, music.time, names)
             is DrumTrack -> DrumParser.write(track, music.time, names)
         }
     }
 }
+
+/** The heading of a track in a song's markdown, naming the track [trackId] [name] and its [type], over its [text]. */
+private data class TrackHeading(
+    val trackId: TrackId,
+    val name: String,
+    val type: TrackType,
+    val text: String,
+)
 
 /** A song read from markdown: its [song], and the [sheet] of its music. */
 data class SongMarkdownRead(

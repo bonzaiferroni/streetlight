@@ -4,7 +4,7 @@ import streetlight.model.music.LyricNote
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Phrase
-import streetlight.model.music.SectionId
+import streetlight.model.music.NotationId
 import streetlight.model.music.Stanza
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.MusicId
@@ -21,10 +21,10 @@ import streetlight.model.music.TrackId
 object LyricParser {
     /**
      * Reads the lyric track [trackId] of the music [musicId], named [name], from [text], with measures checked against
-     * [time] and sections found in [names].
+     * [time] and the music's sections found in [names].
      *
-     * Each stanza that shares a section with [melody] is checked against its phrase: every syllable starts on a note
-     * of the melody, and the stanza ends with it or before.
+     * Each stanza is checked against the phrase [melody] plays for the first section the stanza plays: every syllable
+     * starts on a note of the melody, and the stanza ends with it or before.
      */
     fun read(
         trackId: TrackId,
@@ -37,23 +37,33 @@ object LyricParser {
     ): NotationRead<LyricTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
-        val stanzas = trackText.sections.map { section ->
-            readSection(section, time, melody?.sections?.firstOrNull { it.sectionId == section.sectionId }, errors)
+        val stanzas = trackText.notations.map { notation ->
+            val sectionId = trackText.sections.entries.firstOrNull { it.value == notation.notationId }?.key
+            val phraseId = sectionId?.let { melody?.sections?.get(it) }
+            val phrase = melody?.notations?.firstOrNull { it.notationId == phraseId }
+            readNotation(notation, time, phrase, errors)
         }
-        return NotationRead(LyricTrack(trackId, musicId, name, stanzas, trackText.arrangements, trackText.capo), errors)
+        val track = LyricTrack(trackId, musicId, name, stanzas, trackText.arrangements, trackText.sections, trackText.capo)
+        return NotationRead(track, errors)
     }
 
     /**
-     * Reads the section [sectionId] from [text], the lines of its measures alone, checked against [time] and against
-     * [phrase], the melody of the section, when there is one.
+     * Reads the notation [notationId] named [name] from [text], the lines of its measures alone, checked against [time]
+     * and against [phrase], the melody sung with it, when there is one.
      */
-    fun readSection(sectionId: SectionId, text: String, time: TimeSignature, phrase: Phrase? = null): NotationRead<Stanza> {
+    fun readNotation(
+        notationId: NotationId,
+        name: String?,
+        text: String,
+        time: TimeSignature,
+        phrase: Phrase? = null,
+    ): NotationRead<Stanza> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readSection(sectionTextOf(sectionId, text, errors), time, phrase, errors), errors)
+        return NotationRead(readNotation(notationTextOf(notationId, name, text, errors), time, phrase, errors), errors)
     }
 
-    private fun readSection(
-        section: SectionText,
+    private fun readNotation(
+        notation: NotationText,
         time: TimeSignature,
         phrase: Phrase?,
         errors: MutableList<NotationError>,
@@ -61,7 +71,7 @@ object LyricParser {
         val notes = mutableListOf<LyricNote>()
         val pickup = mutableListOf<LyricNote>()
         val noteLines = mutableListOf<Int>()
-        val segments = section.toSegments()
+        val segments = notation.toSegments()
         segments.pickup?.let { segment ->
             fun error(message: String) = errors.add(NotationError(segment.line, message))
             val ticks = readSegment(segment.text, pickup, ::error)
@@ -74,20 +84,21 @@ object LyricParser {
             measureProblemOf(ticks, index == segments.measures.lastIndex, time)?.let(::error)
             repeat(pickup.size + notes.size - noteLines.size) { noteLines.add(segment.line) }
         }
-        val stanza = Stanza(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
+        val stanza = Stanza(notation.notationId, notation.name, notes, pickup, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
         if (phrase != null && noteLines.isNotEmpty()) errors.addAll(alignmentErrorsOf(stanza, noteLines, phrase))
         return stanza
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time] and sections named by [names]. */
     fun write(track: LyricTrack, time: TimeSignature, names: SectionNames) =
-        writeTrackText(track.sections.map { linesOf(it, time) }, track.arrangements, track.capo, names)
+        writeTrackText(track, track.notations.map { linesOf(it, time) }, names)
 
-    /** Writes [stanza] as the text [readSection] reads, with measures cut by [time]. */
-    fun writeSection(stanza: Stanza, time: TimeSignature) = linesOf(stanza, time).toLines().joinToString("\n")
+    /** Writes [stanza] as the text [readNotation] reads, with measures cut by [time]. */
+    fun writeNotation(stanza: Stanza, time: TimeSignature) = linesOf(stanza, time).toLines().joinToString("\n")
 
-    private fun linesOf(stanza: Stanza, time: TimeSignature) = SectionLines(
-        sectionId = stanza.sectionId,
+    private fun linesOf(stanza: Stanza, time: TimeSignature) = NotationLines(
+        notationId = stanza.notationId,
+        name = stanza.name,
         pickup = stanza.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
             pickup.flatMap { writeNote(it, it.beats.ticks, false) }.joinToString(" ")
         },

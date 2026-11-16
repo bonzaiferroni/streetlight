@@ -1,80 +1,72 @@
 package streetlight.model.music
 
-/** A syllable or word of [text] that starts at [tick] of the section it is sung to, or before the section for a pickup. */
+/** A syllable or word of [text] that starts at [tick] of the notation it is sung to, or before it for a pickup. */
 data class LineSyllable(
     val tick: Int,
     val text: String,
 )
 
-/** The lyric track sung to [track] in a song of these tracks: the first, when [track] is a melody track. */
+/** The lyric track sung to [track] in a song of these tracks: the one it names, or the first when it names none. */
 fun List<Track>.lyricsOf(track: Track): LyricTrack? {
     if (track !is MelodyTrack) return null
-    return firstNotNullOfOrNull { it as? LyricTrack }
+    val lyricTracks = filterIsInstance<LyricTrack>()
+    return if (track.lyrics == null) lyricTracks.firstOrNull() else lyricTracks.firstOrNull { it.trackId == track.lyrics }
 }
 
 /**
- * The lines of lyrics sung to [sectionId] of [track] in a song of these tracks and [music]: one for each time the track
- * plays the section, in order, holding the syllables that start during it. A stanza's pickup goes with the play its
- * stanza starts in, and a phrase that names its [Phrase.lyrics] leaves out the syllables of any other stanza. There are
- * no lines when [lyricsOf] gives the track no lyrics.
+ * The lines of lyrics sung to [notationId] of [track] in a song of these tracks and [music]: one for each time the
+ * track plays it, in order, holding the syllables of the same section that start during it. A stanza's pickup goes
+ * with the play its stanza starts in. There are no lines when [lyricsOf] gives the track no lyrics.
  */
-fun List<Track>.lyricLinesOf(track: Track, sectionId: SectionId, music: Music): List<List<LineSyllable>> {
+fun List<Track>.lyricLinesOf(track: Track, notationId: NotationId, music: Music): List<List<LineSyllable>> {
     val lyrics = lyricsOf(track) ?: return emptyList()
-    val ticks = track.lengthOf(sectionId)?.ticks ?: return emptyList()
-    val plays = playsOf(track, music)
+    val ticks = track.lengthOf(notationId)?.ticks ?: return emptyList()
 
-    // find the stanzas each play of a phrase admits, `null` for any
-    val admissions = plays.mapNotNull { (playedId, start) ->
-        val phrase = track.sections.firstOrNull { it.sectionId == playedId } as? Phrase ?: return@mapNotNull null
-        val stanzaIds = phrase.lyrics?.flatMap { lyrics.sectionsOf(it).orEmpty() }?.map { it.sectionId }?.toSet()
-        Admission(start until start + phrase.length.ticks, stanzaIds)
-    }
-
-    // place each syllable in the song, anchored to the tick that decides its line
-    val anchored = mutableListOf<Pair<Int, LineSyllable>>()
-    playsOf(lyrics, music).forEach { (stanzaId, start) ->
-        val stanza = lyrics.sections.firstOrNull { it.sectionId == stanzaId } ?: return@forEach
-        var tick = start - stanza.pickup.sumOf { it.beats.ticks }
+    // place each syllable in the song, anchored to the tick and section that decide its line
+    val anchored = mutableListOf<Pair<Play, LineSyllable>>()
+    playsOf(lyrics, music).forEach { play ->
+        val stanza = lyrics.notations.firstOrNull { it.notationId == play.notationId } as? Stanza ?: return@forEach
+        var tick = play.tick - stanza.pickup.sumOf { it.beats.ticks }
         (stanza.pickup + stanza.notes).forEach { note ->
-            val anchor = maxOf(tick, start)
-            val isAdmitted = admissions.firstOrNull { anchor in it.ticks }?.stanzaIds?.let { stanzaId in it } ?: true
-            if (isAdmitted) note.text?.let { anchored.add(anchor to LineSyllable(tick, it)) }
+            note.text?.let { anchored.add(play.copy(tick = maxOf(tick, play.tick)) to LineSyllable(tick, it)) }
             tick += note.beats.ticks
         }
     }
 
-    return plays.filter { (playedId) -> playedId == sectionId }.map { (_, start) ->
-        anchored.filter { (anchor) -> anchor in start until start + ticks }
-            .map { (_, syllable) -> syllable.copy(tick = syllable.tick - start) }
+    return playsOf(track, music).filter { it.notationId == notationId }.map { play ->
+        anchored.filter { (anchor) -> anchor.slot == play.slot && anchor.tick in play.tick until play.tick + ticks }
+            .map { (_, syllable) -> syllable.copy(tick = syllable.tick - play.tick) }
     }
 }
 
-/** The [stanzaIds] a play of a phrase lets be sung through its [ticks] of the song, `null` for any. */
-private class Admission(
-    val ticks: IntRange,
-    val stanzaIds: Set<SectionId>?,
+/** A time a track starts [notationId], at [tick] of the song, within the [slot]th section of the arrangement. */
+private data class Play(
+    val notationId: NotationId,
+    val tick: Int,
+    val slot: Int,
 )
 
 /**
- * Each time [track] starts a section or an arrangement in a song of these tracks and [music], in order, paired with the
- * tick of the song it starts at. An arrangement is followed by the sections it holds.
+ * Each time [track] starts a notation or an arrangement in a song of [music], in order. An arrangement is followed by
+ * the notations it holds.
  */
-private fun List<Track>.playsOf(track: Track, music: Music): List<Pair<SectionId, Int>> {
-    val plays = mutableListOf<Pair<SectionId, Int>>()
+private fun playsOf(track: Track, music: Music): List<Play> {
+    val plays = mutableListOf<Play>()
     // returns the length of what it placed
-    fun place(sectionId: SectionId, tick: Int): Int {
-        plays.add(sectionId to tick)
-        track.sections.firstOrNull { it.sectionId == sectionId }?.let { return it.length.ticks }
-        val arrangement = track.arrangements.firstOrNull { it.sectionId == sectionId } ?: return 0
-        return arrangement.sections.fold(0) { length, heldId -> length + place(heldId, tick + length) }
+    fun place(notationId: NotationId, tick: Int, slot: Int): Int {
+        plays.add(Play(notationId, tick, slot))
+        track.notations.firstOrNull { it.notationId == notationId }?.let { return it.length.ticks }
+        val arrangement = track.arrangements.firstOrNull { it.notationId == notationId } ?: return 0
+        return arrangement.notations.fold(0) { length, heldId -> length + place(heldId, tick + length, slot) }
     }
 
     var onset = 0
-    sectionOrderOf(music).forEach { sectionId ->
-        val span = lengthOf(sectionId) ?: Beats(0)
-        // a length means the section resolves, so its arrangements hold no cycle
-        track.lengthOf(sectionId)?.let { length ->
-            repeat(track.repeatsOf(sectionId, span)) { place(sectionId, onset + it * length.ticks) }
+    music.arrangement.forEachIndexed { slot, sectionId ->
+        val span = music.lengthOf(sectionId) ?: Beats(0)
+        val notationId = track.sections[sectionId]
+        // a length means the notation resolves, so its arrangements hold no cycle
+        notationId?.let { track.lengthOf(it) }?.let { length ->
+            repeat(track.repeatsOf(notationId, span)) { place(notationId, onset + it * length.ticks, slot) }
         }
         onset += span.ticks
     }

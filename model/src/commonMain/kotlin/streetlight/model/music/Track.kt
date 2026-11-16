@@ -9,7 +9,8 @@ import kotlin.uuid.Uuid
 
 /**
  * A part of the music [musicId] played by a voice or instrument, known by its [trackId] and shown under its [name],
- * unique within its music: its [sections], and its [arrangements] of sections into larger ones.
+ * unique within its music: its [notations], its [arrangements] of notations into larger ones, and the notation or
+ * arrangement it plays for each of the music's [sections].
  *
  * The track sounds [capo] semitones higher than written, or lower for a negative one, on top of the [Music.capo] of
  * its song.
@@ -20,8 +21,9 @@ sealed interface Track {
     val musicId: MusicId
     val name: String
     val trackType: TrackType
-    val sections: List<Section>
+    val notations: List<Notation>
     val arrangements: List<Arrangement>
+    val sections: Map<SectionId, NotationId>
     val capo: Int?
 }
 
@@ -45,26 +47,28 @@ fun freeTrackNameOf(base: String, held: Set<String>) = generateSequence(1) { it 
     .map { if (it == 1) base else "$base $it" }
     .first { it !in held }
 
-/** A section of a track, [length] long, written [measuresPerLine] measures to a line of its text. */
+/** The notes of a part of a track, [length] long, shown as [name] and written [measuresPerLine] measures to a line. */
 @Serializable
-sealed interface Section {
-    val sectionId: SectionId
+sealed interface Notation {
+    val notationId: NotationId
+    val name: String?
     val length: Beats
     val measuresPerLine: Int
 }
 
-/** The identity of a section of a music, which every track shares. Its name is kept by [Music.sections]. */
+/** The identity of a notation or an arrangement of a track. */
 @JvmInline @Serializable
-value class SectionId(val value: Uuid) {
+value class NotationId(val value: Uuid) {
     override fun toString() = value.toString()
-    companion object { fun random() = SectionId(Uuid.random()) }
+    companion object { fun random() = NotationId(Uuid.random()) }
 }
 
-/** A section made of other [sections] played in order, each a section or another arrangement. */
+/** The [notations] played in order as [notationId], shown as [name], each a notation or another arrangement. */
 @Serializable
 data class Arrangement(
-    val sectionId: SectionId,
-    val sections: List<SectionId>,
+    val notationId: NotationId,
+    val name: String,
+    val notations: List<NotationId>,
 )
 
 // Chords
@@ -74,21 +78,23 @@ data class ChordTrack(
     override val trackId: TrackId,
     override val musicId: MusicId,
     override val name: String,
-    override val sections: List<Progression>,
+    override val notations: List<Progression>,
     override val arrangements: List<Arrangement>,
+    override val sections: Map<SectionId, NotationId>,
     override val capo: Int? = null,
 ) : Track {
     override val trackType get() = TrackType.Chords
 }
 
-/** The [notes] of a chord section, led by a [pickup] that sounds at the end of the measure before it. */
+/** The [notes] of a chord notation, led by a [pickup] that sounds at the end of the measure before it. */
 @Serializable
 data class Progression(
-    override val sectionId: SectionId,
+    override val notationId: NotationId,
+    override val name: String?,
     val notes: List<ChordNote>,
     val pickup: List<ChordNote> = emptyList(),
     override val measuresPerLine: Int = 4,
-) : Section {
+) : Notation {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
 
@@ -101,30 +107,30 @@ data class ChordNote(
 
 // Melody
 
+/** A melody track, sung with the lyric track [lyrics], or the first of its music when `null`. */
 @Serializable
 data class MelodyTrack(
     override val trackId: TrackId,
     override val musicId: MusicId,
     override val name: String,
-    override val sections: List<Phrase>,
+    override val notations: List<Phrase>,
     override val arrangements: List<Arrangement>,
+    override val sections: Map<SectionId, NotationId>,
     override val capo: Int? = null,
+    val lyrics: TrackId? = null,
 ) : Track {
     override val trackType get() = TrackType.Melody
 }
 
-/**
- * The [notes] of a melody section, led by a [pickup] that sounds at the end of the measure before it. Its [lyrics] name
- * the stanzas and arrangements of stanzas that may be sung to it, `null` for any.
- */
+/** The [notes] of a melody notation, led by a [pickup] that sounds at the end of the measure before it. */
 @Serializable
 data class Phrase(
-    override val sectionId: SectionId,
+    override val notationId: NotationId,
+    override val name: String?,
     val notes: List<MelodyNote>,
     val pickup: List<MelodyNote> = emptyList(),
     override val measuresPerLine: Int = 4,
-    val lyrics: List<SectionId>? = null,
-) : Section {
+) : Notation {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
 
@@ -156,21 +162,23 @@ data class LyricTrack(
     override val trackId: TrackId,
     override val musicId: MusicId,
     override val name: String,
-    override val sections: List<Stanza>,
+    override val notations: List<Stanza>,
     override val arrangements: List<Arrangement>,
+    override val sections: Map<SectionId, NotationId>,
     override val capo: Int? = null,
 ) : Track {
     override val trackType get() = TrackType.Lyrics
 }
 
-/** The [notes] of a lyric section, led by a [pickup] that sounds at the end of the measure before it. */
+/** The [notes] of a lyric notation, led by a [pickup] that sounds at the end of the measure before it. */
 @Serializable
 data class Stanza(
-    override val sectionId: SectionId,
+    override val notationId: NotationId,
+    override val name: String?,
     val notes: List<LyricNote>,
     val pickup: List<LyricNote> = emptyList(),
     override val measuresPerLine: Int = 2,
-) : Section {
+) : Notation {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
 }
 
@@ -188,24 +196,26 @@ data class DrumTrack(
     override val trackId: TrackId,
     override val musicId: MusicId,
     override val name: String,
-    override val sections: List<Groove>,
+    override val notations: List<Groove>,
     override val arrangements: List<Arrangement>,
+    override val sections: Map<SectionId, NotationId>,
     override val capo: Int? = null,
 ) : Track {
     override val trackType get() = TrackType.Drums
 }
 
 /**
- * The [lanes] of a drum section, one per drum, sounding together. [slotsPerMeasure] and [measuresPerLine] are the
+ * The [lanes] of a drum notation, one per drum, sounding together. [slotsPerMeasure] and [measuresPerLine] are the
  * layout of its tab.
  */
 @Serializable
 data class Groove(
-    override val sectionId: SectionId,
+    override val notationId: NotationId,
+    override val name: String?,
     val lanes: List<DrumLane>,
     val slotsPerMeasure: Int = 16,
     override val measuresPerLine: Int = 2,
-) : Section {
+) : Notation {
     override val length get() = Beats(lanes.maxOfOrNull { lane -> lane.beats.sumOf { it.beats.ticks } } ?: 0)
 }
 
@@ -239,92 +249,98 @@ enum class Drum {
     Tom,
 }
 
-/** This track named [name], with [arrangements] and [capo], and the sections it has. */
+/** This track named [name], with [arrangements], [sections] and [capo], and the notations it has. */
 fun Track.copyTrack(
     name: String = this.name,
     arrangements: List<Arrangement> = this.arrangements,
+    sections: Map<SectionId, NotationId> = this.sections,
     capo: Int? = this.capo,
 ): Track = when (this) {
-    is ChordTrack -> copy(name = name, arrangements = arrangements, capo = capo)
-    is MelodyTrack -> copy(name = name, arrangements = arrangements, capo = capo)
-    is LyricTrack -> copy(name = name, arrangements = arrangements, capo = capo)
-    is DrumTrack -> copy(name = name, arrangements = arrangements, capo = capo)
+    is ChordTrack -> copy(name = name, arrangements = arrangements, sections = sections, capo = capo)
+    is MelodyTrack -> copy(name = name, arrangements = arrangements, sections = sections, capo = capo)
+    is LyricTrack -> copy(name = name, arrangements = arrangements, sections = sections, capo = capo)
+    is DrumTrack -> copy(name = name, arrangements = arrangements, sections = sections, capo = capo)
 }
 
 /**
- * This track with [section] in place of its section of the same id, or after its sections when it has none. A section
- * of another track's type leaves the track as it is.
+ * This track with [notation] in place of its notation of the same id, or after its notations when it has none. A
+ * notation of another track's type leaves the track as it is.
  */
-fun Track.withSection(section: Section): Track = when (this) {
-    is ChordTrack -> (section as? Progression)?.let { copy(sections = sections.withSection(it)) }
-    is MelodyTrack -> (section as? Phrase)?.let { copy(sections = sections.withSection(it)) }
-    is LyricTrack -> (section as? Stanza)?.let { copy(sections = sections.withSection(it)) }
-    is DrumTrack -> (section as? Groove)?.let { copy(sections = sections.withSection(it)) }
+fun Track.withNotation(notation: Notation): Track = when (this) {
+    is ChordTrack -> (notation as? Progression)?.let { copy(notations = notations.withNotation(it)) }
+    is MelodyTrack -> (notation as? Phrase)?.let { copy(notations = notations.withNotation(it)) }
+    is LyricTrack -> (notation as? Stanza)?.let { copy(notations = notations.withNotation(it)) }
+    is DrumTrack -> (notation as? Groove)?.let { copy(notations = notations.withNotation(it)) }
 } ?: this
 
-private fun <T : Section> List<T>.withSection(section: T) =
-    if (any { it.sectionId == section.sectionId }) map { if (it.sectionId == section.sectionId) section else it }
-    else this + section
+private fun <T : Notation> List<T>.withNotation(notation: T) =
+    if (any { it.notationId == notation.notationId }) map { if (it.notationId == notation.notationId) notation else it }
+    else this + notation
 
-/** This track without its section or arrangement [sectionId]. */
-fun Track.withoutSection(sectionId: SectionId): Track = when (this) {
-    is ChordTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
-    is MelodyTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
-    is LyricTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
-    is DrumTrack -> copy(sections = sections.filter { it.sectionId != sectionId })
-}.copyTrack(arrangements = arrangements.filter { it.sectionId != sectionId })
+/** This track without its notation or arrangement [notationId], and without the sections it played. */
+fun Track.withoutNotation(notationId: NotationId): Track = when (this) {
+    is ChordTrack -> copy(notations = notations.filter { it.notationId != notationId })
+    is MelodyTrack -> copy(notations = notations.filter { it.notationId != notationId })
+    is LyricTrack -> copy(notations = notations.filter { it.notationId != notationId })
+    is DrumTrack -> copy(notations = notations.filter { it.notationId != notationId })
+}.copyTrack(
+    arrangements = arrangements.filter { it.notationId != notationId },
+    sections = sections.filterValues { it != notationId },
+)
 
 /** An empty track of [trackType] in the music [musicId], named [name]. */
 fun emptyTrackOf(trackType: TrackType, musicId: MusicId, name: String): Track {
     val trackId = TrackId.random()
     return when (trackType) {
-        TrackType.Chords -> ChordTrack(trackId, musicId, name, emptyList(), emptyList())
-        TrackType.Melody -> MelodyTrack(trackId, musicId, name, emptyList(), emptyList())
-        TrackType.Lyrics -> LyricTrack(trackId, musicId, name, emptyList(), emptyList())
-        TrackType.Drums -> DrumTrack(trackId, musicId, name, emptyList(), emptyList())
+        TrackType.Chords -> ChordTrack(trackId, musicId, name, emptyList(), emptyList(), emptyMap())
+        TrackType.Melody -> MelodyTrack(trackId, musicId, name, emptyList(), emptyList(), emptyMap())
+        TrackType.Lyrics -> LyricTrack(trackId, musicId, name, emptyList(), emptyList(), emptyMap())
+        TrackType.Drums -> DrumTrack(trackId, musicId, name, emptyList(), emptyList(), emptyMap())
     }
 }
 
-/** A section [sectionId] of this track's type, holding nothing. */
-fun Track.emptySectionOf(sectionId: SectionId): Section = when (this) {
-    is ChordTrack -> Progression(sectionId, emptyList())
-    is MelodyTrack -> Phrase(sectionId, emptyList())
-    is LyricTrack -> Stanza(sectionId, emptyList())
-    is DrumTrack -> Groove(sectionId, emptyList())
+/** A notation [notationId] of this track's type named [name], holding nothing. */
+fun Track.emptyNotationOf(notationId: NotationId, name: String?): Notation = when (this) {
+    is ChordTrack -> Progression(notationId, name, emptyList())
+    is MelodyTrack -> Phrase(notationId, name, emptyList())
+    is LyricTrack -> Stanza(notationId, name, emptyList())
+    is DrumTrack -> Groove(notationId, name, emptyList())
 }
 
 /**
- * The sections [sectionId] stands for in this track, an arrangement resolved into the sections it holds in order, or
- * `null` when the track does not define it or its arrangement holds a cycle.
+ * The name of the notation or arrangement [notationId], or the name of [music] and the track when it has none, as
+ * `Amazing Grace Chords`.
  */
-fun Track.sectionsOf(sectionId: SectionId): List<Section>? = sectionsOf(sectionId, emptySet())
+fun Track.nameOf(notationId: NotationId, music: Music) =
+    notations.firstOrNull { it.notationId == notationId }?.let { it.name ?: "${music.name} $name" }
+        ?: arrangements.firstOrNull { it.notationId == notationId }?.name
+        ?: UNNAMED_SECTION
 
-private fun Track.sectionsOf(sectionId: SectionId, visited: Set<SectionId>): List<Section>? {
-    if (sectionId in visited) return null
-    sections.firstOrNull { it.sectionId == sectionId }?.let { return listOf(it) }
-    val arrangement = arrangements.firstOrNull { it.sectionId == sectionId } ?: return null
-    return arrangement.sections.flatMap { sectionsOf(it, visited + sectionId) ?: return null }
-}
-
-/** The length of [sectionId] in this track, or `null` when the track does not define it. */
-fun Track.lengthOf(sectionId: SectionId) =
-    sectionsOf(sectionId)?.let { sections -> Beats(sections.sumOf { it.length.ticks }) }
+/** The sections of the music this track plays [notationId] for, in the order it states them. */
+fun Track.sectionIdsOf(notationId: NotationId) = sections.filterValues { it == notationId }.keys.toList()
 
 /**
- * The times this track plays [sectionId] to fill [span], the length the section has in the song: as many whole times
- * as fit, and at least once.
+ * The notations [notationId] stands for in this track, an arrangement resolved into the notations it holds in order,
+ * or `null` when the track does not define it or its arrangement holds a cycle.
  */
-fun Track.repeatsOf(sectionId: SectionId, span: Beats): Int {
-    val length = lengthOf(sectionId)?.ticks?.takeIf { it > 0 } ?: return 1
+fun Track.notationsOf(notationId: NotationId): List<Notation>? = notationsOf(notationId, emptySet())
+
+private fun Track.notationsOf(notationId: NotationId, visited: Set<NotationId>): List<Notation>? {
+    if (notationId in visited) return null
+    notations.firstOrNull { it.notationId == notationId }?.let { return listOf(it) }
+    val arrangement = arrangements.firstOrNull { it.notationId == notationId } ?: return null
+    return arrangement.notations.flatMap { notationsOf(it, visited + notationId) ?: return null }
+}
+
+/** The length of [notationId] in this track, or `null` when the track does not define it. */
+fun Track.lengthOf(notationId: NotationId) =
+    notationsOf(notationId)?.let { notations -> Beats(notations.sumOf { it.length.ticks }) }
+
+/**
+ * The times this track plays [notationId] to fill [span], the length of the section it plays it for: as many whole
+ * times as fit, and at least once.
+ */
+fun Track.repeatsOf(notationId: NotationId, span: Beats): Int {
+    val length = lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return 1
     return (span.ticks / length).coerceAtLeast(1)
 }
-
-/** The length of [sectionId] in a song of these tracks: the longest track that defines it, or `null` for none. */
-fun List<Track>.lengthOf(sectionId: SectionId) = mapNotNull { it.lengthOf(sectionId) }.maxByOrNull { it.ticks }
-
-/**
- * The sections a song of these tracks plays in order: the [Music.arrangement] of [music], or each section of the
- * tracks once, in the order they first appear, when the arrangement is empty.
- */
-fun List<Track>.sectionOrderOf(music: Music) =
-    music.arrangement.ifEmpty { flatMap { track -> track.sections.map { it.sectionId } }.distinct() }

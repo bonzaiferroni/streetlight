@@ -9,7 +9,7 @@ import streetlight.model.music.Chroma
 import streetlight.model.music.Key
 import streetlight.model.music.Progression
 import streetlight.model.music.Seventh
-import streetlight.model.music.SectionId
+import streetlight.model.music.NotationId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.MusicId
 import streetlight.model.music.TrackId
@@ -26,7 +26,7 @@ class ChordParser(
 ) {
     /**
      * Reads the chord track [trackId] of the music [musicId], named [name], from [text], with measures cut by [time] and
-     * sections found in [names].
+     * the music's sections found in [names].
      */
     fun read(
         trackId: TrackId,
@@ -38,20 +38,21 @@ class ChordParser(
     ): NotationRead<ChordTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
-        val progressions = trackText.sections.map { readSection(it, time, errors) }
-        return NotationRead(ChordTrack(trackId, musicId, name, progressions, trackText.arrangements, trackText.capo), errors)
+        val progressions = trackText.notations.map { readNotation(it, time, errors) }
+        val track = ChordTrack(trackId, musicId, name, progressions, trackText.arrangements, trackText.sections, trackText.capo)
+        return NotationRead(track, errors)
     }
 
-    /** Reads the section [sectionId] from [text], the lines of its measures alone, cut by [time]. */
-    fun readSection(sectionId: SectionId, text: String, time: TimeSignature): NotationRead<Progression> {
+    /** Reads the notation [notationId] named [name] from [text], the lines of its measures alone, cut by [time]. */
+    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationRead<Progression> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readSection(sectionTextOf(sectionId, text, errors), time, errors), errors)
+        return NotationRead(readNotation(notationTextOf(notationId, name, text, errors), time, errors), errors)
     }
 
-    private fun readSection(section: SectionText, time: TimeSignature, errors: MutableList<NotationError>): Progression {
+    private fun readNotation(notation: NotationText, time: TimeSignature, errors: MutableList<NotationError>): Progression {
         val notes = mutableListOf<ChordNote>()
         val pickup = mutableListOf<ChordNote>()
-        section.lines.forEachIndexed { lineIndex, line ->
+        notation.lines.forEachIndexed { lineIndex, line ->
             fun error(message: String) = errors.add(NotationError(line.number, message))
             val barLine = line.toBarLine()
             barLine.lead?.let { lead ->
@@ -60,18 +61,19 @@ class ChordParser(
             }
             barLine.measures.forEach { readMeasure(it, time.measure, notes, ::error) }
         }
-        return Progression(section.sectionId, notes, pickup, measuresPerLineOf(section.lines, MEASURES_PER_LINE))
+        return Progression(notation.notationId, notation.name, notes, pickup, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time] and sections named by [names]. */
     fun write(track: ChordTrack, time: TimeSignature, names: SectionNames) =
-        writeTrackText(track.sections.map { linesOf(it, time) }, track.arrangements, track.capo, names)
+        writeTrackText(track, track.notations.map { linesOf(it, time) }, names)
 
-    /** Writes [progression] as the text [readSection] reads, with measures cut by [time]. */
-    fun writeSection(progression: Progression, time: TimeSignature) = linesOf(progression, time).toLines().joinToString("\n")
+    /** Writes [progression] as the text [readNotation] reads, with measures cut by [time]. */
+    fun writeNotation(progression: Progression, time: TimeSignature) = linesOf(progression, time).toLines().joinToString("\n")
 
-    private fun linesOf(progression: Progression, time: TimeSignature) = SectionLines(
-        sectionId = progression.sectionId,
+    private fun linesOf(progression: Progression, time: TimeSignature) = NotationLines(
+        notationId = progression.notationId,
+        name = progression.name,
         pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.pulse) },
         measures = writeMeasures(progression.notes, time.measure),
         measuresPerLine = progression.measuresPerLine,

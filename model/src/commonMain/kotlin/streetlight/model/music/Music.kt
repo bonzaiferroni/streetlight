@@ -6,9 +6,8 @@ import kotlin.uuid.Uuid
 import streetlight.model.data.RecordId
 
 /**
- * A musical understanding of the song [songId], shown under its [name]: its key, time and tempo, the [sections] its
- * tracks hold content for, and the [arrangement] of them every track follows. A song has many, each one way of playing
- * it.
+ * A musical understanding of the song [songId], shown under its [name]: its key, time and tempo, its [sections], and
+ * the [arrangement] that plays them in order. A song has many, each one way of playing it.
  *
  * The key and every track are written as played, and sound [capo] semitones higher, as chord shapes played behind a
  * guitar capo. A track's own [Track.capo] adds to it. The [bpm] counts the [TimeSignature.pulse].
@@ -22,7 +21,7 @@ data class Music(
     val time: TimeSignature,
     val bpm: Int = 90,
     val capo: Int? = null,
-    val sections: List<MusicSection> = emptyList(),
+    val sections: List<Section> = emptyList(),
     val arrangement: List<SectionId> = emptyList(),
 ) {
     /** The name of the section [sectionId], or a placeholder when the music holds no such section. */
@@ -30,14 +29,26 @@ data class Music(
 
     /** The section named [name], or `null` for none. */
     fun sectionOf(name: String) = sections.firstOrNull { it.name == name }
+
+    /** The length of the section [sectionId], or `null` when the music holds no such section. */
+    fun lengthOf(sectionId: SectionId) =
+        sections.firstOrNull { it.sectionId == sectionId }?.let { time.measure * it.measures }
 }
 
-/** A section of a music, known by a [name] no other section of the music holds. */
+/** A section of a music, [measures] long and known by a [name] no other section of the music holds. */
 @Serializable
-data class MusicSection(
+data class Section(
     val sectionId: SectionId,
     val name: String,
+    val measures: Int,
 )
+
+/** The identity of a section of a music. */
+@JvmInline @Serializable
+value class SectionId(val value: Uuid) {
+    override fun toString() = value.toString()
+    companion object { fun random() = SectionId(Uuid.random()) }
+}
 
 /** The name shown for a section its music does not hold. */
 const val UNNAMED_SECTION = "?"
