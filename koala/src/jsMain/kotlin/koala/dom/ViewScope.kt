@@ -38,7 +38,7 @@ sealed interface ViewScope: AppendScope, AppFacade {
         messenger: Messenger? = null,
         message: String? = GENERAL_ERROR_MESSAGE,
         block: suspend EffectScope.() -> Unit
-    ) = contentScope.launch(name, messenger, message) {
+    ) = contentScope.launch(name, messenger = messenger, message = message) {
         EffectScope(this@ViewScope).block()
     }
 
@@ -48,7 +48,7 @@ sealed interface ViewScope: AppendScope, AppFacade {
         messenger: Messenger? = null,
         message: String? = GENERAL_ERROR_MESSAGE,
         block: suspend EffectScope.() -> Unit
-    ) = scope.launch(name, messenger, message) {
+    ) = scope.launch(name, messenger = messenger, message = message) {
         EffectScope(this@ViewScope).block()
     }
 }

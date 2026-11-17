@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * A [MutableTap] holding its own state in a [StateFlow].
+ * A [MutableTap] holding its own state in a StateFlow.
  *
  * A view model holds one store of its state and exposes lenses onto it with [tapOf] and [mutableTapOf].
  */

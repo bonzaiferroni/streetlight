@@ -18,5 +18,5 @@ class EffectScope(
         receiver: Messenger? = null,
         message: String? = "Something went wrong.",
         block: suspend CoroutineScope.() -> Unit
-    ) = parentScope.launch(name, receiver, message) { block() }
+    ) = parentScope.launch(name, messenger = receiver, message = message) { block() }
 }

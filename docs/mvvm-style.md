@@ -1,62 +1,88 @@
 # MVVM Style
 
-## Patterns
+At the core of every Streetlight user interface is an interaction model. It reads data from various sources and binds user actions and events, at every moment holding a snapshot of UI state. It handles interactions and publishes the state, and after that its job is done.
 
-### ViewModel
+## Store
 
-Role: Holds state and defines functions for a section of UI.
+For a very simple UI, the interaction model may just be a store.
 
 ```kotlin
-class FooModel(
+fun ViewScope.helloView() {
+    val nameState = storeOf("Someone")
+    textField(nameState)
+    flowBlock(nameState) { name ->
+        textBlock("Hello $name!")
+    }
+}
+```
+
+* [`storeOf`]() is a factory that creates a `Store<T>`, a humble wrapper for `StateFlow<T>` that implements `MutableTap<T>`. It is the grandaddy of all our UI state.
+* [`textField`]() is a wrapper for an `<input>` element. It takes a `MutableTap<String>` and operates as a two-way binder for its value.
+* [`flowBlock`]() is our heavy lifter for rendering UI state. It is a wrapper for `<div>` that renders its content with the state value.
+
+## ViewModel
+
+For any section of UI complex enough to justify it, the interaction model is a class.
+
+```kotlin
+// fooView.kt
+context(model: Foo)
+fun ViewScope.fooView() {
+    column {
+        row {
+            textField(model.nameState)
+            button("add", model::addItem)
+        }
+        flowBlock(model.itemsState) { items ->
+            items.forEach { fooItem(it) }
+        }
+    }
+}
+
+// Foo.kt
+class Foo(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
 ) {
     private val state = storeOf(FooState())
-    
+
     val nameState = state.mutableTapOf({ it.name }) { copy(name = it) }
     val itemsState = state.tapOf { it.items }
-    
+
     init {
         scope.launch {
             val items = api.foo.readItems().toDataOr(toaster) { return@launch }
             state.set { copy(items = items) }
         }
     }
-    
-    fun addItem(item: FooItem) {
+
+    fun addItem() {
+        val name = state.now.name.takeIf { it.isNotBlank() } ?: run {
+            toaster.deliver(Problem("A name is required."))
+            return
+        }
         scope.launch {
-            val item = api.foo.addItem(item).toDataOr(toaster) { return@launch }
+            val item = api.foo.addItem(state.name.now).toDataOr(toaster) { return@launch }
             state.set { copy(items = items + item) }
         }
     }
 }
-```
 
-### ViewModel State
-
-Role: Represents the state for a section of UI.
-
-```kotlin
 data class FooState(
     val name: String = "",
-    val items: List<FooItem> = emptyList()
+    val items: List<FooItem> = emptyList(),
+    val isSending: Boolean = false,
 )
 ```
 
-### View
+The above example demonstrates the basic anatomy of our ViewModel. The state is declared first as a store, followed by the state properties. A `Tap` operates as a lens over a single property or aspect of UI state. We use `mutableTapOf` to enable a two-way binding of distinct values. Public functions are invoked directly by the UI.
 
-Role: Renders the state of its viewmodel and calls its functions.
+Our finest ViewModels do not try to be clever, they take a regular shape whenever possible.
 
-```kotlin
-context(model: FooModel)
-fun ViewScope.fooView() {
-    textField(model.nameState)
-    flowBlock(model.itemsState) { items ->
-        items.forEach { fooItem(it) }
-    }
-}
-```
+## UI Messages
+
+Although everyone is doing their best, sometimes problems are raised and the user needs to know. The Foo model above demonstrates
 
 ### Submodel
 

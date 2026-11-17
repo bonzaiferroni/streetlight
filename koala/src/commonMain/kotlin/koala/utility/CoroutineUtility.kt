@@ -1,6 +1,7 @@
 package koala.utility
 
 import kampfire.model.Messenger
+import kampfire.model.MutableTap
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import kotlinx.coroutines.CancellationException
@@ -16,6 +17,7 @@ import kotlin.reflect.KFunction
  */
 fun CoroutineScope.launch(
     name: String,
+    state: MutableTap<Boolean>? = null,
     messenger: Messenger? = null,
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
@@ -25,6 +27,7 @@ fun CoroutineScope.launch(
 
     return launch(LaunchTelemetry(name)) {
         try {
+            state?.set { true }
             block()
         } catch (e: CancellationException) {
             throw e // sacred cargo
@@ -32,6 +35,8 @@ fun CoroutineScope.launch(
             if (message != null) messenger?.deliver(UIMessage(message, UIMessageType.Error))
             // e.asDynamic().launchStack = launchSite.stack
             throw e
+        } finally {
+            state?.set { false }
         }
     }
 }
@@ -39,15 +44,17 @@ fun CoroutineScope.launch(
 /** [launch], named for [function]. */
 fun CoroutineScope.launch(
     function: KFunction<*>,
+    state: MutableTap<Boolean>? = null,
     receiver: Messenger? = null,
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
-) = launch(function.name, receiver, message, block)
+) = launch(function.name, state, receiver, message, block)
 
 /** [launch], named for [context]. */
 fun CoroutineScope.launch(
     context: KClass<*>,
+    state: MutableTap<Boolean>? = null,
     receiver: Messenger? = null,
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
-) = launch(context.simpleName ?: "[Unnamed class]", receiver, message, block)
+) = launch(context.simpleName ?: "[Unnamed class]", state, receiver, message, block)

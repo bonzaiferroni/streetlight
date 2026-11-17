@@ -149,3 +149,7 @@ fun HTMLElement.flowIsWorking(isWorkingFlow: Flow<Boolean>, scope: CoroutineScop
     }
     return this
 }
+
+/** Shimmers the element while [isWorkingState] is `true`. */
+fun HTMLElement.flowIsWorking(isWorkingState: Tap<Boolean>, scope: CoroutineScope) =
+    flowIsWorking(isWorkingState.flow, scope)
