@@ -6,7 +6,6 @@ import kampfire.model.tapOf
 import kotlinx.css.rem
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import web.dom.document
 import web.html.HTMLDivElement
 import web.html.HTMLElement
 import koala.dom.View
@@ -71,7 +70,7 @@ fun <Item> ViewScope.itemsBlock(
             if (items == requestedItems) return@collect
             requestedItems = items
             when {
-                isTransitioner -> document.viewTransition { display(items) }
+                isTransitioner -> this@itemsBlock.viewTransition { display(items) }
                 else -> display(items)
             }
         }

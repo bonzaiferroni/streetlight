@@ -76,7 +76,7 @@ fun ViewScope.switchMenu(
         state.flow.collect { value ->
             if (value == requestedValue) return@collect
             requestedValue = value
-            document.viewTransition { display(value) }
+            this@switchMenu.viewTransition { display(value) }
         }
     }
 

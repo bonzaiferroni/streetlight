@@ -26,7 +26,6 @@ import koala.dom.ViewScope
 import koala.dom.asWeb
 import koala.dom.mountChildView
 import koala.dom.viewTransition
-import web.dom.document
 import koala.layout.FlowBlockStyle
 
 /**
@@ -84,7 +83,7 @@ fun <Value> ViewScope.flowBlock(
             if (isReplay) return@collect
 
             if (isTransitioner) {
-                document.viewTransition {
+                this@flowBlock.viewTransition {
                     view?.dispose()
                     tryMountView(value)
                 }

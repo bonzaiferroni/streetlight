@@ -16,9 +16,9 @@ fun ViewScope.helloView() {
 }
 ```
 
-* [`storeOf`]() is a factory that creates a `Store<T>`, a humble wrapper for `StateFlow<T>` that implements `MutableTap<T>`. It is the grandaddy of all our UI state.
-* [`textField`]() is a wrapper for an `<input>` element. It takes a `MutableTap<String>` and operates as a two-way binder for its value.
-* [`flowBlock`]() is our heavy lifter for rendering UI state. It is a wrapper for `<div>` that renders its content with the state value.
+* [`storeOf`](../kampfire/src/commonMain/kotlin/kampfire/model/Store.kt) is a factory that creates a `Store<T>`, a humble wrapper for `StateFlow<T>` that implements `MutableTap<T>`. It is the grandaddy of all our UI state.
+* [`textField`](../koala/src/jsMain/kotlin/koala/dom/component/textField.kt) is a wrapper for an `<input>` element. It takes a `MutableTap<String>` and operates as a two-way binder for its value.
+* [`flowBlock`](../koala/src/jsMain/kotlin/koala/dom/layout/flowBlock.kt) is our heavy lifter for rendering UI state. It is a wrapper for `<div>` that renders its content with the state value.
 
 ## ViewModel
 
@@ -89,14 +89,14 @@ The UI wants to communicate about important state and events. A button press tha
 button("add", model::addItem).flowisBusy(model.isBusyState)
 ```
 
-For text content, we use a Messenger. The globally available `Toaster` can be used in a pinch, which presents messages temporarily in a single location. A `MessageStore` and `messageBox` is preferable when there is a specific place in the UI that is ideal for a message, like next to a submit button. The `formSubmit` utility bundles the messageBox and button.
+For richer communication involving text content, we use a Messenger. The globally available `Toaster` can be used in a pinch, which presents messages temporarily in a single location. A `MessageStore` and `messageBox` is preferable when there is a specific place in the UI that is ideal for a message, like next to a submit button. The `formSubmit` utility bundles the messageBox and button.
 
 ```kotlin
 val messenger = MessageStore()
 formSubmit("Send", { model.sendFeedback(messenger) }, messenger)
 ```
 
-Although everyone is doing their best, sometimes problems arise and the user needs to know.
+Although everyone is doing their best, sometimes problems arise and the user needs to know. The comments below explain more.
 
 ```kotlin
 fun addItem() {
@@ -116,7 +116,9 @@ fun addItem() {
 
 ## Different front ends, same approach
 
-Streetlight targets both the browser and Compose Multiplatform, and their ViewModels are strikingly similar. One might wish to use the same model, but there are subtle differences in the declarative context of the platforms that make separate models easier to work with. However, a model built for the web is a great starting point for writing its cousin in the compose module, and vise versa.
+Streetlight targets both the browser and Compose Multiplatform, and their ViewModels are strikingly similar. One might even wish to use the same model, but each platform wants the freedom to be different to make the most of its features. However, a model built for the web is a great starting point for writing its cousin in the compose module, and vise versa.
+
+Likewise, views also often take direct inspiration across platforms and use familiar language. 
 
 ## Patterns
 

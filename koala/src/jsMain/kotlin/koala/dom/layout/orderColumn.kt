@@ -198,7 +198,7 @@ fun <T, K> ViewScope.orderColumn(
             // only an item added or removed has anything to pop; a reorder from a drop is already in place
             val isMembershipChange = list.map(keyOf).toSet() != items.keys
             when {
-                isTransitioner && isMembershipChange -> document.viewTransition { show(list) }
+                isTransitioner && isMembershipChange -> this@orderColumn.viewTransition { show(list) }
                 else -> show(list)
             }
         }

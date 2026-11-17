@@ -3,7 +3,9 @@ package koala.dom
 import js.array.asList
 import js.promise.Promise
 import koala.page.Id
+import kotlinx.coroutines.isActive
 import web.dom.Document
+import web.dom.document
 import web.dom.ElementId
 import web.viewtransition.ViewTransition
 import koala.dom.component.closePopover
@@ -29,8 +31,10 @@ private class PendingTransition(val updates: MutableList<() -> Unit>) {
  *
  * A call made while a transition waits to capture the page joins it and returns it, so changes from one state update
  * animate together. The updates run in the order they were called.
+ *
+ * An update held here outlives the view that queued it, so a view calls [ViewScope.viewTransition] instead.
  */
-fun Document.viewTransition(updateCallback: () -> Unit): ViewTransition {
+internal fun Document.viewTransition(updateCallback: () -> Unit): ViewTransition {
     pending?.let {
         it.updates += updateCallback
         return it.transition
@@ -45,6 +49,12 @@ fun Document.viewTransition(updateCallback: () -> Unit): ViewTransition {
         null
     }
     return next.transition
+}
+
+/** [Document.viewTransition] for an update of this view, skipped once the view's content is cleared or disposed. */
+fun ViewScope.viewTransition(updateCallback: () -> Unit): ViewTransition {
+    val content = contentScope
+    return document.viewTransition { if (content.isActive) updateCallback() }
 }
 
 /** Closes every open popover. */

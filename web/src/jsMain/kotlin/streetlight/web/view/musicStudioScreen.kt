@@ -56,8 +56,8 @@ fun ViewScope.musicStudioScreen() {
     val db = app.get<StudioDb>()
     val waveShelf = app.get<WaveShelf>()
     // the studio's colors carry meaning, which the page's lights would tint
-    dimLights()
-    onDispose { applyTheme(null) }
+    // dimLights()
+    // onDispose { applyTheme(null) }
     // a change of music keeps the view, so the routes that follow reach it here
     launchEffect("musicStudioScreen > route") {
         portal.routeFlowOf<MusicStudioRoute>().collect { next ->
@@ -71,7 +71,7 @@ fun ViewScope.musicStudioScreen() {
                 when (sheet) {
                     null -> musicList()
                     else -> {
-                        val editor = MusicEditor(scope, sheet, db)
+                        val editor = MusicEditor(contentScope, sheet, db)
                         musicFocus(editor)
                     }
                 }
