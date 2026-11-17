@@ -7,7 +7,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
 import koala.utility.DropWhileBusy
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.CapabilityStatus
 import streetlight.model.data.SellerStatus

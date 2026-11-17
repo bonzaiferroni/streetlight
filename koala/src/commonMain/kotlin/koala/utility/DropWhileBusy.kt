@@ -1,5 +1,6 @@
 package koala.utility
 
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 

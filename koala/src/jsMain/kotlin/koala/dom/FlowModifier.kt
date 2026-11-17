@@ -6,7 +6,7 @@ import koala.modifier.Modifier
 import koala.modifier.Required
 import koala.modifier.Valid
 import koala.modifier.VisibilityHidden
-import koala.modifier.Shimmer
+import koala.modifier.IsBusy
 import kampfire.model.Tap
 import kampfire.model.tapOf
 import koala.modifier.isModified
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import web.dom.document
 import web.html.HTMLElement
-import koala.utility.launch
+import kampfire.utils.launch
 
 /**
  * Applies [modifier] while [isModifiedFlow] is `true`, starting from [initialValue], optionally in a view
@@ -137,19 +137,19 @@ fun HTMLElement.flowValid(
     scope: CoroutineScope
 ) = flowValid(key, checkTap.now, checkTap.flow, scope)
 
-/** Shimmers the element while [isWorkingFlow] is `true`. */
-fun HTMLElement.flowIsWorking(isWorkingFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
+/** Shimmers the element while [isBusyFlow] is `true`. */
+fun HTMLElement.flowIsBusy(isBusyFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
     scope.launch {
-        isWorkingFlow.collect { isWorking ->
+        isBusyFlow.collect { isWorking ->
             when (isWorking) {
-                true -> modify(Shimmer)
-                else -> unmodify(Shimmer)
+                true -> modify(IsBusy)
+                else -> unmodify(IsBusy)
             }
         }
     }
     return this
 }
 
-/** Shimmers the element while [isWorkingState] is `true`. */
-fun HTMLElement.flowIsWorking(isWorkingState: Tap<Boolean>, scope: CoroutineScope) =
-    flowIsWorking(isWorkingState.flow, scope)
+/** Shimmers the element while [isBusy] is `true`. */
+fun HTMLElement.flowIsBusy(isBusy: Tap<Boolean>, scope: CoroutineScope) =
+    flowIsBusy(isBusy.flow, scope)

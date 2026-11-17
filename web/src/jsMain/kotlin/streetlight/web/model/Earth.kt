@@ -8,7 +8,7 @@ import koala.model.Toaster
 import kampfire.model.reactIn
 import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
-import koala.utility.launch
+import kampfire.utils.launch
 import koala.model.StaticMarker
 import koala.model.Portal
 import kampfire.model.tapOf

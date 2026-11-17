@@ -9,7 +9,7 @@ import kampfire.model.toDataOrNull
 import koala.model.readCurrentLocation
 import koala.model.streamCompassHeading
 import koala.model.streamCurrentLocation
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import web.events.EventHandler

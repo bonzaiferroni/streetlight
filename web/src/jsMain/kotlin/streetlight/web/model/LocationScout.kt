@@ -6,7 +6,7 @@ import koala.model.Toaster
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import koala.model.MessageStore
-import koala.utility.launch
+import kampfire.utils.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.reactIn

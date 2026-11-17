@@ -14,7 +14,7 @@ import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniClient
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionClient
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.delay
 import streetlight.web.interop.appGlobalFunctions
 import streetlight.web.page.AppOverlay

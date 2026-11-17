@@ -1,19 +1,16 @@
 package streetlight.web.model
 
 import kampfire.api.toUsername
-import kampfire.model.Problem
 import kampfire.model.ViewModel
 import kampfire.model.toDataOr
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import kampfire.model.tapOf
 import koala.utility.dedup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import streetlight.model.io.ApiClient
 import koala.model.Toaster
-import koala.utility.launch
-import kotlin.random.Random
+import streetlight.web.view.SandboxException
 import kotlin.time.Duration.Companion.seconds
 
 class Sandbox(
@@ -27,14 +24,15 @@ class Sandbox(
     val stateFlow = state.flow
 
     val isNameTaken = stateFlow.dedup { it.isNameTaken }
-    val nameField = state.mutableTapOf({ it.name }) { copy(name = it) }
+    val nameState = state.mutableTapOf({ it.name }) { copy(name = it) }
     val isBusyState = state.mutableTapOf({ it.isBusy }) { copy(isBusy = it) }
 
     fun checkAvailability() {
-        scope.launch(::checkAvailability.name, isBusyState, toaster, "arrr ${Random.nextInt()}") {
+        launch(isBusyState, toaster) {
             delay(5.seconds)
-            println(null.asDynamic().anything)
-            val isNameTaken = api.user.checkUsernameExists(stateNow.name.toUsername()).toDataOr(toaster) {
+            val username = stateNow.name.toUsername()
+            if (username.value == "Snake") throw SandboxException()
+            val isNameTaken = api.user.checkUsernameExists(username).toDataOr(toaster) {
                 return@launch
             }
             val name = if (isNameTaken) "" else stateNow.name
@@ -44,7 +42,7 @@ class Sandbox(
 }
 
 data class SandboxState(
-    val name: String = "",
+    val name: String = "Snake",
     val isNameTaken: Boolean? = null,
     val isBusy: Boolean = false
 )

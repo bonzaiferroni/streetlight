@@ -31,7 +31,7 @@ fun ViewScope.fooView() {
     column {
         row {
             textField(model.nameState)
-            button("add", model::addItem)
+            button("add", model::addItem).flowisBusy(model.isBusyState, contentScope)
         }
         flowBlock(model.itemsState) { items ->
             items.forEach { fooItem(it) }
@@ -44,11 +44,12 @@ class Foo(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
-) {
+): ViewModel(scope) {
     private val state = storeOf(FooState())
 
     val nameState = state.mutableTapOf({ it.name }) { copy(name = it) }
     val itemsState = state.tapOf { it.items }
+    val isBusyState = state.mutableTapOf({ it.isBusy }) { copy(isBusy = it) }
 
     init {
         scope.launch {
@@ -62,7 +63,7 @@ class Foo(
             toaster.deliver(Problem("A name is required."))
             return
         }
-        scope.launch {
+        launch(isBusyState, toaster) {
             val item = api.foo.addItem(state.name.now).toDataOr(toaster) { return@launch }
             state.set { copy(items = items + item) }
         }
@@ -72,7 +73,7 @@ class Foo(
 data class FooState(
     val name: String = "",
     val items: List<FooItem> = emptyList(),
-    val isSending: Boolean = false,
+    val isBusy: Boolean = false,
 )
 ```
 
@@ -82,7 +83,36 @@ Our finest ViewModels do not try to be clever, they take a regular shape wheneve
 
 ## UI Messages
 
-Although everyone is doing their best, sometimes problems are raised and the user needs to know. The Foo model above demonstrates
+The UI wants to communicate about important state and events. A button press that invokes a background process can change its presentation and become temporarily disabled:
+
+```kotlin
+button("add", model::addItem).flowisBusy(model.isBusyState)
+```
+
+For text content, we use a Messenger. The globally available `Toaster` can be used in a pinch, which presents messages temporarily in a single location. A `MessageStore` and `messageBox` is preferable when there is a specific place in the UI that is ideal for a message, like next to a submit button. The `formSubmit` utility bundles the messageBox and button.
+
+```kotlin
+val messenger = MessageStore()
+formSubmit("Send", { model.sendFeedback(messenger) }, messenger)
+```
+
+Although everyone is doing their best, sometimes problems arise and the user needs to know.
+
+```kotlin
+fun addItem() {
+    val name = state.now.name.takeIf { it.isNotBlank() } ?: run {
+        // invalid input is caught and communicated
+        toaster.deliver(Problem("A name is required."))
+        return
+    }
+    // isBusyState is true during launch and exceptions raise a message
+    launch(isBusyState, toaster) {
+        // http errors or problems delivered by the server raise a message
+        val item = api.foo.addItem(state.name.now).toDataOr(toaster) { return@launch }
+        state.set { copy(items = items + item) }
+    }
+}
+```
 
 ### Submodel
 

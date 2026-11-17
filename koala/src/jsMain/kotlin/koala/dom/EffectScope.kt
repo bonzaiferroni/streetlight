@@ -1,7 +1,7 @@
 package koala.dom
 
 import kampfire.model.Messenger
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 
 /** The receiver of a view effect, launching coroutines in the view's content scope. */

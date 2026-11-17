@@ -7,7 +7,7 @@ import koala.model.Toaster
 import kampfire.model.GeoRect
 import kampfire.model.storeOf
 import kampfire.model.toDataOr
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce

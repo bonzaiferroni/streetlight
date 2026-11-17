@@ -7,7 +7,7 @@ import kampfire.model.toDataOr
 import koala.model.MessageStore
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.StarEdit

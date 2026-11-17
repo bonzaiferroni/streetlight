@@ -1,4 +1,4 @@
-package koala.utility
+package kampfire.utils
 
 import kampfire.model.Messenger
 import kampfire.model.MutableTap

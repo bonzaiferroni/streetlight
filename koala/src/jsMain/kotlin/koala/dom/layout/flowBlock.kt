@@ -12,7 +12,7 @@ import koala.modifier.Modifier
 import koala.modifier.contains
 import koala.modifier.unmodify
 import koala.modifier.unmodifyAfterFrame
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

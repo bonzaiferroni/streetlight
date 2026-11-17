@@ -4,7 +4,7 @@ import kampfire.model.Messenger
 import kampfire.model.Outcome
 import kampfire.model.storeOf
 import kampfire.model.toDataOr
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async

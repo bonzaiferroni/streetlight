@@ -6,7 +6,7 @@ import koala.interop.KtFunction
 import koala.interop.addGlobalFunctions
 import koala.model.Portal
 import koala.modifier.KoalaBody
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import org.koin.dsl.koinApplication

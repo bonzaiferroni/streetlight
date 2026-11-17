@@ -18,7 +18,7 @@ import koala.model.MessageStore
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.utility.launch
+import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Account

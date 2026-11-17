@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import koala.model.Toaster
 import kampfire.model.Messenger
-import koala.utility.LaunchTelemetry
+import kampfire.utils.LaunchTelemetry
 import koala.core.appExceptionHandler
 import koala.dom.AppContainer
 import koala.model.ContentFetcher

@@ -57,13 +57,9 @@ A component is imported with `koala.component.*`, and in the browser with `koala
 
 ## Launching Coroutines
 
-Start a coroutine with `koala.utility.launch`, not the raw builder.
+Start a coroutine with `kampfire.utils.launch`, as [`kampfire`](../kampfire/README.md) specifies.
 
-The browser does not give a coherent call stack for an exception thrown inside a coroutine. `launch` names the coroutine and carries the name in its context as `LaunchTelemetry`. `appExceptionHandler` appends that name to the exception message, along with the path of the view and element the coroutine belongs to, and rethrows the same throwable.
-
-A coroutine launched with the raw builder fails without a name, and its message says nothing about where it came from.
-
-Code that wraps launching builds on `koala.utility.launch` so that the telemetry is kept.
+The browser does not give a coherent call stack for an exception thrown inside a coroutine. `appExceptionHandler` appends the coroutine's `LaunchTelemetry` name to the exception message, along with the path of the view and element the coroutine belongs to, and rethrows the same throwable.
 
 ## DropWhileBusy
 

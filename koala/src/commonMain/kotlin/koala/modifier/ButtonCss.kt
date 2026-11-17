@@ -104,7 +104,7 @@ $DayTheme {
     }
 }
 
-$Shimmer {
+$IsBusy {
     &${ButtonStyle.Class}, ${ButtonStyle.Class} {
         pointer-events: none;
         opacity: .9;

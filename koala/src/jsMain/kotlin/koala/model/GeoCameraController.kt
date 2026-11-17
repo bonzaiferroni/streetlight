@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.utility.launch
+import kampfire.utils.launch
 import koala.external.onView
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl

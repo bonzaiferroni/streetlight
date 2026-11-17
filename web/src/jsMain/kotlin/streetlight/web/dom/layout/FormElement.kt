@@ -10,7 +10,6 @@ import kotlinx.html.DIV
 import koala.dom.layout.*
 import koala.dom.component.*
 import koala.model.*
-import streetlight.web.utility.element
 
 fun ViewScope.formBodyProto(
     mod: Modifier? = null,
@@ -97,7 +96,7 @@ fun ViewScope.formSubmitLegacy(
             }
             val element = button(label, onSubmit, Accent)
             messages?.let {
-                element.flowIsWorking(it.isWorkingFlow, contentScope)
+                element.flowIsBusy(it.isWorkingFlow, contentScope)
             }
         }
     }

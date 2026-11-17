@@ -26,7 +26,7 @@ val FadeOut = Class("fade-out")
 val ScaleOut = Class("scale-out")
 val ScaleIn = Class("scale-in")
 val ParticleRay = Class("particle-ray")
-val Shimmer = Class("working")
+val IsBusy = Class("is-busy")
 
 // language="CSS"
 val MagicCss get() = with (MagicStyle) { """
@@ -203,13 +203,13 @@ $AutoMagic$Scale {
 
 /* shimmer */
 
-$Shimmer {
+$IsBusy {
     position: relative;
     overflow: hidden;
 }
 
-$Shimmer::before,
-$Shimmer::after {
+$IsBusy::before,
+$IsBusy::after {
     content: "";
     position: absolute;
     inset: 0;

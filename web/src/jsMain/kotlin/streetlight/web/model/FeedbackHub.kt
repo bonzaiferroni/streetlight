@@ -5,7 +5,7 @@ import kampfire.api.Markdown
 import kampfire.model.Messenger
 import kampfire.model.toDataOr
 import koala.utility.DropWhileBusy
-import koala.utility.launch
+import kampfire.utils.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf

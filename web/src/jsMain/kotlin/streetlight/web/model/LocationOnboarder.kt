@@ -5,7 +5,7 @@ import kampfire.model.tapOf
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import koala.model.MessageStore
-import koala.utility.launch
+import kampfire.utils.launch
 import kampfire.api.Username
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

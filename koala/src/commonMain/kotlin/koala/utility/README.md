@@ -15,8 +15,6 @@ Utilities whose target is not a koala type, such as coroutines, flows and JSON. 
 
 | Utility | Role |
 |---|---|
-| [`launch`](CoroutineUtility.kt) | Launches a named coroutine, as [`koala`](../../../../../README.md) specifies |
-| [`LaunchTelemetry`](LaunchTelemetry.kt) | The name of a launched coroutine, carried in its context |
 | [`DropWhileBusy`](DropWhileBusy.kt) | Launches a block only when its previous launch has finished |
 | [`FlowUtility`](FlowUtility.kt) | Flows mapped and emitting only on change |
 | [`jsonConfig`, `sanitizeJson`](Json.kt) | The app's JSON format, and JSON made safe for a page |

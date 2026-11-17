@@ -7,7 +7,7 @@ import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.Portal
 import koala.model.RouteInflator
-import koala.utility.LaunchTelemetry
+import kampfire.utils.LaunchTelemetry
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.plus
 import org.koin.dsl.bind

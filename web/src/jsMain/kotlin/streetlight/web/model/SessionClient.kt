@@ -5,7 +5,7 @@ import kampfire.model.LoginRequest
 import kampfire.model.Messenger
 import kampfire.model.PrintLnMessenger
 import kampfire.model.toDataOr
-import koala.utility.launch
+import kampfire.utils.launch
 import koala.utility.dedup
 import kampfire.model.tapOf
 import kampfire.model.storeOf

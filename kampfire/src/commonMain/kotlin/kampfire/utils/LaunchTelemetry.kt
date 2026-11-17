@@ -1,4 +1,4 @@
-package koala.utility
+package kampfire.utils
 
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext

@@ -31,6 +31,14 @@ A type that both sides send, receive, or store belongs here.
 
 A call that can fail returns `Outcome`. It is either `Ok` with data and an optional message, or `Problem` with a message. The caller unwraps it with `toDataOr`, which delivers the message to a `Messenger` and lets the caller decide how to stop.
 
+## Launching Coroutines
+
+Start a coroutine with `kampfire.utils.launch`, not the raw builder. It names the coroutine and carries the name in its context as `LaunchTelemetry`, so an exception handler can say where a failure came from. A coroutine launched with the raw builder fails without a name.
+
+A `state` passed to `launch` holds `true` while the block runs and `false` once it ends, by any path. It is how a model shows that an action is under way.
+
+Code that wraps launching builds on `launch` so that the telemetry is kept.
+
 ## Interface Here, Implementation Elsewhere
 
 A type that describes a behavior the UI performs is declared here as an interface, and the implementation that binds to the DOM lives in `koala`. `Messenger` is declared here, and `MessageStore` implements it in `koala.model`.
