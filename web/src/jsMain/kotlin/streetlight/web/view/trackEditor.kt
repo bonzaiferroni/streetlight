@@ -149,7 +149,25 @@ fun ViewScope.trackEditor(initialTrack: Track, setFocus: (MusicEditorFocus?) -> 
         onBack = { setFocus(null) },
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
-            context(editor) { trackContent(setFocus) }
+            context(editor) {
+                trackTimeline(setFocus)
+                trackContent(setFocus)
+            }
+        }
+    }
+}
+
+/**
+ * Renders the track of [editor] as its row of the overview, under the row of the song's sections, where a pass hands
+ * its notation to [setFocus].
+ */
+context(editor: TrackEditor)
+private fun ViewScope.trackTimeline(setFocus: (MusicEditorFocus?) -> Unit) {
+    flowBlock(editor.cellsState, OverviewStyle.Grid) { cells ->
+        val track = editor.trackNow
+        sectionRow(editor.sectionCellsState.now, null) { }
+        sectionRow(cells, track.trackType, { pass -> setFocus(NotationFocus(editor.trackNow, pass.notationId)) }) {
+            trackLabel(track)
         }
     }
 }

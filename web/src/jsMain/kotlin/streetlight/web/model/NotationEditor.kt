@@ -39,7 +39,8 @@ class NotationEditor(
     private val sheetState: Tap<MusicSheet>,
     db: StudioDb,
 ) {
-    private val state = storeOf(NotationEditorState(initialTrack))
+    // drawn from the start, so the view transition that opens the editor captures its notes
+    private val state = storeOf(NotationEditorState(initialTrack, staffNotationOf(initialTrack, sheetState.now)))
     private val field = NotationField(writeNow())
 
     val trackState = state.tapOf { it.track }

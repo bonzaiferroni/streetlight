@@ -25,6 +25,8 @@ import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionIdsOf
 import streetlight.model.music.withNotation
 import streetlight.model.music.withoutNotation
+import streetlight.model.music.ui.SectionCell
+import streetlight.model.music.ui.cellsOf
 import streetlight.model.studio.StudioDb
 
 /**
@@ -43,6 +45,8 @@ class TrackEditor(
     val notationsState = state.tapOf { it.notations }
     val arrangementsState = state.tapOf { it.arrangements }
     val warningsState = state.tapOf { it.warnings }
+    val sectionCellsState = state.tapOf { it.sectionCells }
+    val cellsState = state.tapOf { it.cells }
 
     /** The track as it stands, with every edit made so far. */
     val trackNow get() = state.now.track
@@ -114,7 +118,7 @@ class TrackEditor(
 
     private fun updateTrack(transform: (Track) -> Track) = state.update { stateOf(transform(it.track)) }
 
-    // the notations, arrangements and warnings follow the track, as the music holds still
+    // the notations, arrangements, warnings and cells follow the track, as the music holds still
     private fun stateOf(track: Track): TrackEditorState {
         fun namedOf(notationId: NotationId) = namedNotationOf(track, notationId, music)
         return TrackEditorState(
@@ -127,6 +131,8 @@ class TrackEditor(
                 choices = (track.notations.map { it.notationId } + track.arrangements.map { it.notationId }).map { namedOf(it) },
             ),
             warnings = sectionWarningsOf(track, music),
+            sectionCells = cellsOf(music),
+            cells = cellsOf(music, track),
         )
     }
 }
@@ -136,6 +142,8 @@ data class TrackEditorState(
     val notations: List<NamedNotation> = emptyList(),
     val arrangements: TrackArrangements = TrackArrangements(),
     val warnings: List<String> = emptyList(),
+    val sectionCells: List<SectionCell> = emptyList(),
+    val cells: List<SectionCell> = emptyList(),
 )
 
 /** The problems of [track] in [music]: each section it plays that its notation falls short of after its repeats, or runs past. */

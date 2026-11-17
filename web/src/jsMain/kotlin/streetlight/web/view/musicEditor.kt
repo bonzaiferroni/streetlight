@@ -43,9 +43,12 @@ import kotlin.uuid.Uuid
 context(config: MusicConfig, model: MusicEditor, db: StudioDb, waveShelf: WaveShelf, player: TrackPlayer)
 fun ViewScope.musicEditor() = flowBlock(model.focusState, Transitioner) { focus ->
     when (focus) {
-        null -> formRow {
-            musicSection()
-            trackList()
+        null -> {
+            formRow {
+                musicSection()
+                trackList()
+            }
+            musicOverview(model::setFocus)
         }
         is TrackFocus -> trackEditor(focus.track, model::setFocus)
         is NotationFocus -> notationEditor(focus, model::setFocus)
