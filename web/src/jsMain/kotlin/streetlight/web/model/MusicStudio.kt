@@ -3,12 +3,11 @@ package streetlight.web.model
 import kampfire.model.Messenger
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import kampfire.model.Tap
+import kampfire.model.ViewModel
 import kampfire.model.storeOf
-import kampfire.model.tapIn
+import kampfire.model.tapOf
 import kampfire.model.toDataOr
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import streetlight.model.music.Chroma
@@ -29,29 +28,31 @@ import streetlight.model.studio.StudioDb
  * Problems go to [messenger].
  */
 class MusicStudio(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     initialMusicId: MusicId?,
     private val db: StudioDb,
     private val messenger: Messenger,
-) {
-    private val musicIdStore = storeOf(initialMusicId)
-    private val sheetStore = storeOf<MusicSheet?>(null)
+): ViewModel(scope) {
+    private val state = storeOf(MusicStudioState())
 
-    /** Each music kept, with its song. */
-    val songMusicsState: Tap<List<SongMusic>> = db.music.flowSongMusics().tapIn(scope, emptyList())
-
-    /** The sheet of the music in focus, read as the focus moves to it, or `null` for none or one not kept. */
-    val sheetState: Tap<MusicSheet?> = sheetStore
+    val songsState = state.tapOf { it.songs }
+    val focusState = state.tapOf { it.focus }
 
     init {
-        scope.launch {
-            musicIdStore.flow.collectLatest { musicId ->
-                sheetStore.set(musicId?.let { db.music.readMusicSheet(it) })
+        setFocus(initialMusicId)
+        launch {
+            db.music.flowSongMusics().collect { songs ->
+                state.set { copy(songs = songs) }
             }
         }
     }
 
-    fun setMusicId(musicId: MusicId?) = musicIdStore.set(musicId)
+    fun setFocus(musicId: MusicId?) {
+        cancelAndLaunch("setFocus") {
+            val sheet = musicId?.let { db.music.readMusicSheet(musicId) }
+            state.set { copy(focus = sheet) }
+        }
+    }
 
     /** Stores a new song titled [title] with a music of the same name, returning the music's id. */
     suspend fun create(title: String): MusicId {
@@ -92,6 +93,11 @@ class MusicStudio(
         exportMarkdown(song, sheet)
     }
 }
+
+data class MusicStudioState(
+    val focus: MusicSheet? = null,
+    val songs: List<SongMusic> = emptyList()
+)
 
 /** A music of [song] named for its title, in C major and 4/4. */
 private fun newMusicOf(song: Song) = Music(

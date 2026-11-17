@@ -19,8 +19,6 @@ import streetlight.model.music.MusicId
 import streetlight.model.ui.MusicStudioRoute
 import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.actionMenu
-import streetlight.web.dom.page.applyTheme
-import streetlight.web.dom.page.dimLights
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.mainBody
@@ -61,13 +59,13 @@ fun ViewScope.musicStudioScreen() {
     // a change of music keeps the view, so the routes that follow reach it here
     launchEffect("musicStudioScreen > route") {
         portal.routeFlowOf<MusicStudioRoute>().collect { next ->
-            model.setMusicId(next.musicId)
+            model.setFocus(next.musicId)
             document.setTitle(next)
         }
     }
     context(model, player, config, db, waveShelf) {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
-            flowBlock(model.sheetState, modify(Transitioner)) { sheet ->
+            flowBlock(model.focusState, modify(Transitioner)) { sheet ->
                 when (sheet) {
                     null -> musicList()
                     else -> {
@@ -167,7 +165,7 @@ private fun ViewScope.musicList() {
             MenuAction("New", config = { setPopoverTarget(newId, true) }) { },
         ),
     ) {
-        itemsBlock(model.songMusicsState, Transitioner, gapRems = null) { songMusic ->
+        itemsBlock(model.songsState, Transitioner, gapRems = null) { songMusic ->
             val musicId = songMusic.music.musicId
             actionRow(
                 label = songMusic.music.name,
@@ -179,7 +177,7 @@ private fun ViewScope.musicList() {
             )
         }
         textBlock("No songs yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
-            .flowModifier(model.songMusicsState.tapOf { it.isNotEmpty() }, DisplayNone, contentScope)
+            .flowModifier(model.songsState.tapOf { it.isNotEmpty() }, DisplayNone, contentScope)
     }
 }
 
