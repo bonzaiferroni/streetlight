@@ -114,6 +114,12 @@ fun addItem() {
 }
 ```
 
+## Different front ends, same approach
+
+Streetlight targets both the browser and Compose Multiplatform, and their ViewModels are strikingly similar. One might wish to use the same model, but there are subtle differences in the declarative context of the platforms that make separate models easier to work with. However, a model built for the web is a great starting point for writing its cousin in the compose module, and vise versa.
+
+## Patterns
+
 ### Submodel
 
 Role: Holds the state and functions for a section of UI that is reusable across different viewmodels.
