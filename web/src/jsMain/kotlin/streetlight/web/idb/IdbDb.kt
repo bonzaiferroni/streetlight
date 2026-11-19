@@ -58,6 +58,9 @@ class IdbDb(
         }
     }
 
+    /** Waits for each write already under way or waiting to begin to commit, so a read made after it sees them. */
+    internal suspend fun awaitWrites() = writeMutex.withLock { }
+
     /** The open database, opened with its rows loaded on the first call. */
     internal suspend fun open(): IDBDatabase {
         opened?.let { return it.await() }

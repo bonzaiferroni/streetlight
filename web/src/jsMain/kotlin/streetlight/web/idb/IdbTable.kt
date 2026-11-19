@@ -23,27 +23,34 @@ class IdbTable<T : Any> internal constructor(
     internal val state = MutableStateFlow<Map<String, T>?>(null)
     internal val foreignKeys = mutableListOf<IdbForeignKey<T>>()
 
-    /** Each row, emitted once [db] opens and again after each write that changes them. */
+    /** Each row, emitted once [db] opens and its pending writes commit, and again after each write that changes them. */
     val rowsFlow: Flow<List<T>> = flow {
         db.open()
+        db.awaitWrites()
         emitAll(state.filterNotNull().map { it.values.toList() })
     }
 
-    /** The row under [key], or `null` when there is none, emitted once [db] opens and again each time it changes. */
+    /**
+     * The row under [key], or `null` when there is none, emitted once [db] opens and its pending writes commit, and again
+     * each time it changes.
+     */
     fun flowRow(key: String): Flow<T?> = flow {
         db.open()
+        db.awaitWrites()
         emitAll(state.filterNotNull().map { it[key] }.distinctUntilChanged())
     }
 
-    /** Each row as it stands. */
+    /** Each row as it stands once pending writes commit. */
     suspend fun readRows(): List<T> {
         db.open()
+        db.awaitWrites()
         return loadedRows.values.toList()
     }
 
-    /** The row under [key], or `null` when there is none. */
+    /** The row under [key] once pending writes commit, or `null` when there is none. */
     suspend fun read(key: String): T? {
         db.open()
+        db.awaitWrites()
         return loadedRows[key]
     }
 

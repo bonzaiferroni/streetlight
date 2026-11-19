@@ -41,4 +41,6 @@ Row order carries no meaning.
 
 A write is a batch built in `IdbDb.write`, committed in one transaction across every table it touches, cascades included. The tables emit only after the transaction commits. Writes run one at a time, and a write that has begun finishes despite cancellation.
 
+A read, and the first emission of a flow, waits for the writes queued before it to commit, so a read made after a write sees it. A write counts as queued once its `write` call is made, so a save that must be seen by a read launched after it calls the database before it suspends on anything else.
+
 `IdbTable.save` and `IdbTable.remove` are single writes. Changes that must land together share one `write` block.
