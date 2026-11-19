@@ -106,7 +106,7 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
         headingMod = musicNameTransition(editor.musicState.now.musicId),
         icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
     ) {
-        lazyTabs(paramKey = MusicStudioRoute.tabParam.key) {
+        lazyTransTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {
                     when (studioTab) {

@@ -10,7 +10,6 @@ A relational layer over the browser's IndexedDB, shaped after Room. An `IdbDb` i
 |---|---|
 | `web.idb` (Kotlin wrappers) | IndexedDB |
 | `kotlinx.serialization` | JSON rows |
-| `streetlight.web.utility` | `IDBRequest.await` |
 
 ## Naming
 

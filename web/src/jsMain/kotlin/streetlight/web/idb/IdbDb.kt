@@ -8,11 +8,13 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.KSerializer
-import streetlight.web.utility.await
 import web.events.EventHandler
 import web.idb.IDBDatabase
+import web.idb.IDBRequest
+import web.idb.IDBRequestReadyState
 import web.idb.IDBTransaction
 import web.idb.IDBTransactionMode
+import web.idb.done
 import web.idb.indexedDB
 import web.idb.readonly
 import web.idb.readwrite
@@ -61,8 +63,8 @@ class IdbDb(
         opened?.let { return it.await() }
         val deferred = CompletableDeferred<IDBDatabase>().also { opened = it }
         try {
-            val database = openDatabase()
-            loadTables(database)
+            // the first caller's cancellation would fail every caller waiting on the open, so the open runs to its end
+            val database = withContext(NonCancellable) { openDatabase().also { loadTables(it) } }
             deferred.complete(database)
         } catch (error: Throwable) {
             opened = null
@@ -109,5 +111,14 @@ private suspend fun IDBTransaction.awaitComplete() = suspendCancellableCoroutine
     oncomplete = EventHandler { continuation.resume(Unit) }
     onabort = EventHandler {
         if (continuation.isActive) continuation.resumeWithException(Error(error?.message ?: "IndexedDB transaction aborted"))
+    }
+}
+
+/** The result of the request once it succeeds, read at once when it is already done. */
+internal suspend fun IDBRequest<*>.await(): JsAny? {
+    if (readyState == IDBRequestReadyState.done) return error?.let { throw Error(it.message) } ?: result
+    return suspendCancellableCoroutine { continuation ->
+        onsuccess = EventHandler { continuation.resume(result) }
+        onerror = EventHandler { continuation.resumeWithException(Error(error?.message ?: "IndexedDB request failed")) }
     }
 }
