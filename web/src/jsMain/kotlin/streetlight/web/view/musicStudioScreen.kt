@@ -35,6 +35,8 @@ import streetlight.web.utility.setTitle
 import web.dom.document
 import kotlin.uuid.Uuid
 import kampfire.model.toDataOr
+import koala.dom.layout.lazyTabs
+import koala.dom.layout.lazyTransTabs
 import koala.dom.layout.transTabs
 import kotlinx.coroutines.launch
 import streetlight.model.studio.StudioDb
@@ -104,7 +106,7 @@ private fun ViewScope.musicFocus(editor: MusicEditor) {
         headingMod = musicNameTransition(editor.musicState.now.musicId),
         icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
     ) {
-        transTabs(paramKey = MusicStudioRoute.tabParam.key) {
+        lazyTabs(paramKey = MusicStudioRoute.tabParam.key) {
             MusicStudioTab.entries.forEach { studioTab ->
                 tab(studioTab.label, studioTab.svg) {
                     when (studioTab) {

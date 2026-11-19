@@ -24,9 +24,10 @@ import web.mutation.MutationObserverInit
  * Wires a trans tabs [container]: its buttons select a panel inside a view transition, the light sliding to the button
  * chosen, and the selection is restored from `localStorage` or the url when the container has a key for either.
  *
- * Does nothing for a container already initialized.
+ * [onShow] runs with each index shown, inside the transition that shows it. Does nothing for a container already
+ * initialized.
  */
-fun initTransTabs(container: HTMLElement) {
+fun initTransTabs(container: HTMLElement, onShow: ((Int) -> Unit)? = null) {
     if (!container.isModified(TransTabsStyle.Initial)) return
     container.unmodify(TransTabsStyle.Initial)
 
@@ -49,6 +50,7 @@ fun initTransTabs(container: HTMLElement) {
         panels[index].modify(TabsStyle.IsActive)
         buttons[index].modify(TabsStyle.IsActive)
         light?.let { buttons[index].prepend(it) }
+        onShow?.invoke(index)
     }
 
     fun select(index: Int) {

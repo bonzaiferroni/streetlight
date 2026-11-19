@@ -46,12 +46,7 @@ fun DIV.configureTransTabs(
     scope.content()
     val initialIndex = (initialTab ?: 0).coerceIn(0, scope.tabs.size - 1)
 
-    addModifiers(modify(mod, TransTabsStyle.Container, TransTabsStyle.Initial))
-    id?.let { setId(it) }
-    setAttribute(TabsStyle.Index.to(initialIndex))
-    paramKey?.let { setAttribute(TabsStyle.ParamKey.to(it)) }
-    storageKey?.let { setAttribute(TabsStyle.StorageKey.to(it)) }
-
+    configureTransTabsContainer(storageKey, mod, initialIndex, paramKey, id)
     configureTransTabsHeader(scope.tabs, initialIndex)
 
     box(modify(viewportMod, TransTabsStyle.Viewport)) {
@@ -63,6 +58,21 @@ fun DIV.configureTransTabs(
             }
         }
     }
+}
+
+/** Marks this element as a [transTabs] container with [initialIndex] selected, keyed by [storageKey] and [paramKey]. */
+fun DIV.configureTransTabsContainer(
+    storageKey: String?,
+    mod: Modifier?,
+    initialIndex: Int,
+    paramKey: String?,
+    id: Id?,
+) {
+    addModifiers(modify(mod, TransTabsStyle.Container, TransTabsStyle.Initial))
+    id?.let { setId(it) }
+    setAttribute(TabsStyle.Index.to(initialIndex))
+    paramKey?.let { setAttribute(TabsStyle.ParamKey.to(it)) }
+    storageKey?.let { setAttribute(TabsStyle.StorageKey.to(it)) }
 }
 
 /** Adds the row of tab buttons, with [initialIndex] active and holding the light. */

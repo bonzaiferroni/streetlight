@@ -28,7 +28,7 @@ A layout that follows a flow builds its content from the state's value when it i
 
 ## Tabs
 
-`transTabs` is used where a tab change should run as a view transition, and `tabs` or `lazyTabs` elsewhere. Firefox and Safari drop every `backdrop-filter` during a view transition, so tabs inside a modal dialog stay `tabs` or `lazyTabs`, keeping the dialog's blurred backdrop.
+`transTabs` or `lazyTransTabs` is used where a tab change should run as a view transition, and `tabs` or `lazyTabs` elsewhere. Firefox and Safari drop every `backdrop-filter` during a view transition, so tabs inside a modal dialog stay `tabs` or `lazyTabs`, keeping the dialog's blurred backdrop.
 
 ## Layouts
 
@@ -57,4 +57,5 @@ A layout that follows a flow builds its content from the state's value when it i
 | [`sideTabs`](sideTabs.kt) | A column of tabs bound to a field, beside the panel the selected tab shows |
 | [`subrouter`](subrouter.kt) | Breadcrumbs, a menu panel when wide, and the content of the current route of a screen's routes |
 | [`lazyTabs`](lazyTabs.kt) | Tabs whose panels are built when first shown |
-| [`LazyTabScope`](LazyTabScope.kt) | Collects the tabs of a `lazyTabs` block |
+| [`lazyTransTabs`](lazyTransTabs.kt) | `transTabs` whose panels are built when first shown, or each time with `isCached` off |
+| [`LazyTabScope`](LazyTabScope.kt) | Collects the tabs of a `lazyTabs` or `lazyTransTabs` block |
