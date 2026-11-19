@@ -2,7 +2,6 @@ package koala.model
 
 import kampfire.model.Messenger
 import kampfire.model.Outcome
-import kampfire.model.storeOf
 import kampfire.model.toDataOr
 import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
@@ -11,7 +10,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 /** Fetches the content of each new route as it arrives, skipping the initial route of a screen with a shell. */

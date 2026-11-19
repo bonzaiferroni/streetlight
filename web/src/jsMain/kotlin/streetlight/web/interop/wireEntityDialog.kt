@@ -18,7 +18,6 @@ import web.dom.Element
 import web.events.Event
 import web.html.HTMLElement
 import streetlight.web.model.api
-import streetlight.web.utility.element
 import streetlight.web.model.toaster
 
 /** The record shown in the entity dialog; the dialog is open while it is set. */

@@ -9,7 +9,6 @@ import kampfire.utils.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.dom.markdown.MarkdownEditor
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit

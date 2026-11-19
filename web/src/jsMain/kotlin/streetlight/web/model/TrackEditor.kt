@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.model.Tap
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope

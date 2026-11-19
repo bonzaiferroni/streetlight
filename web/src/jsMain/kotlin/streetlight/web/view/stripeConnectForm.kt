@@ -9,7 +9,6 @@ import koala.dom.component.column
 import koala.dom.component.dialog
 import koala.dom.component.dialogContent
 import koala.dom.component.row
-import koala.dom.component.section
 import koala.dom.component.textBlock
 import koala.dom.layout.flowBlock
 import koala.model.MessageStore

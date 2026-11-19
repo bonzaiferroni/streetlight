@@ -10,7 +10,6 @@ import web.html.HTMLDivElement
 import web.html.HTMLElement
 import koala.dom.AppendScope
 import koala.dom.ViewScope
-import koala.dom.clear
 import koala.dom.onClick
 import koala.dom.component.column
 

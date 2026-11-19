@@ -6,7 +6,6 @@ import koala.model.GeoMap
 import koala.model.MarkerMap
 import koala.model.Toaster
 import kampfire.model.reactIn
-import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
 import kampfire.utils.launch
 import koala.model.StaticMarker

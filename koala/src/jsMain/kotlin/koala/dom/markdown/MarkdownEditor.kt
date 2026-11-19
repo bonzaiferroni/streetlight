@@ -5,7 +5,6 @@ import koala.markdown.MarkdownParser
 import koala.markdown.ParsedBlock
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
-import koala.markdown.s
 
 /** The parsed blocks of a markdown editor, cached so an unchanged chunk is not parsed again. */
 class MarkdownEditor() {

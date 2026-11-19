@@ -5,7 +5,6 @@ import kampfire.api.toEmailAddress
 import kampfire.api.toValidOutcome
 import kampfire.model.LoginRequest
 import kampfire.model.toDataOr
-import koala.LottieFile
 import koala.SvgFile
 import koala.modifier.*
 import koala.dom.ViewScope
@@ -14,7 +13,6 @@ import koala.dom.component.button
 import koala.dom.component.checkBox
 import koala.dom.component.column
 import koala.dom.layout.flowBlock
-import koala.dom.component.lottie
 import koala.dom.component.row
 import koala.dom.component.textBlock
 import koala.dom.component.textField

@@ -18,7 +18,6 @@ import streetlight.model.data.PostOrder
 import streetlight.web.io.TalkLog
 import web.html.HTMLElement
 import koala.dom.component.*
-import streetlight.web.model.api
 import streetlight.web.model.session
 import streetlight.web.model.toaster
 

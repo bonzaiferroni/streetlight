@@ -6,7 +6,6 @@ import koala.merge
 import kampfire.model.tapOf
 import kampfire.model.storeOf
 import streetlight.model.data.ColumnsBlock
-import streetlight.model.data.DefaultLayout
 import streetlight.model.data.GalleryBlock
 import streetlight.model.data.ImageBlock
 import streetlight.model.data.PageLayout

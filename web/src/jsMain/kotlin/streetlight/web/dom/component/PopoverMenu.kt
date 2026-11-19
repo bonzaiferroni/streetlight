@@ -13,7 +13,6 @@ import web.html.HTMLElement
 import web.popover.TOGGLE
 import web.popover.ToggleEvent
 import kotlin.js.json
-import streetlight.web.utility.element
 
 object PopoverMenuMod {
     val Column = modify(Gap2Px)

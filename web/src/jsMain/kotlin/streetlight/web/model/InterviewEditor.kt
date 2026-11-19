@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.Tap
 import kampfire.model.mutableTapOf

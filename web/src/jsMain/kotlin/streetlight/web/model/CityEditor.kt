@@ -10,7 +10,6 @@ import kampfire.model.tapOf
 import kampfire.model.toDataOr
 import koala.model.Portal
 import koala.utility.DropWhileBusy
-import kampfire.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.CityEdit
 import streetlight.model.ui.CityRoute

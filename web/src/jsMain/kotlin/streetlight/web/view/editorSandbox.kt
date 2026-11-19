@@ -17,7 +17,6 @@ import koala.markdown.EditorStyle
 import kampfire.model.storeOf
 import kampfire.model.toggle
 import streetlight.web.utility.localStoreOf
-import streetlight.web.model.Sandbox
 import streetlight.web.dom.page.appFooter
 import streetlight.web.layout.sourcePathView
 

@@ -26,7 +26,6 @@ import koala.model.*
 import streetlight.web.model.api
 import streetlight.web.dom.layout.formSubmit
 import streetlight.web.model.toaster
-import streetlight.web.component.workSignal
 import streetlight.web.dom.component.workSignal
 
 context(star: Star)
