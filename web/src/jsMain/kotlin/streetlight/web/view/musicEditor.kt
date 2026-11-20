@@ -1,8 +1,6 @@
 package streetlight.web.view
 
 import kampfire.model.storeOf
-import kampfire.model.tapOf
-import koala.dom.flowModifier
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
@@ -219,7 +217,6 @@ fun ViewScope.sectionStrips(section: StaffNotation) {
     val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
     // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
     val headRoom = LinearDimension("calc(var(--unit) * $HEAD_ROOM_UNITS)")
-    val isLyricsHiddenState = config.isLyricsShownState.tapOf { !it }
     column(modify(Css.MaxWidth.of(maxWidth), Css.Gap.of(2.px))) {
         lines.forEach { line ->
             val place = modify(
@@ -229,8 +226,6 @@ fun ViewScope.sectionStrips(section: StaffNotation) {
             // each line on a band of its own, the band reaching the whole width however short the line
             div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) {
                 sectionMeasures(line, place)
-                div(null) { line.lyrics.forEach { sectionMeasures(it, place) } }
-                    .flowModifier(isLyricsHiddenState, DisplayNone, contentScope)
             }
         }
     }

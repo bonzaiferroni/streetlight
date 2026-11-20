@@ -5,9 +5,7 @@ package streetlight.web.view
 import koala.SvgFile
 import streetlight.model.music.TrackId
 import koala.component.IconStyle
-import kampfire.model.tapOf
 import koala.dom.ViewScope
-import koala.dom.flowModifier
 import koala.dom.component.*
 import koala.dom.requireClosest
 import koala.dom.layout.flowBlock
@@ -87,7 +85,6 @@ private fun ViewScope.timeStepControl() {
  */
 context(config: MusicConfig, model: LaneEditor)
 private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
-    val isLyricsHiddenState = config.isLyricsShownState.tapOf { !it }
     lateinit var leadElement: HTMLElement
     lateinit var contentElement: HTMLElement
     val sections = mutableListOf<Pair<LaneSection, HTMLElement>>()
@@ -104,8 +101,6 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
                     sectionMeasures(section.notation, VoidBg) { note, noteElement ->
                         // wireNoteDrag(laneIndex, section, note, noteElement)
                     }
-                    div(null) { section.notation.lyrics.forEach { sectionMeasures(it, VoidBg) } }
-                        .flowModifier(isLyricsHiddenState, DisplayNone, contentScope)
                 }
             }
 //            flowBlock(model.noteCursorState(laneIndex), LaneStyle.NoteCursor) { cursor ->

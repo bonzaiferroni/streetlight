@@ -10,7 +10,7 @@ data class LineSyllable(
 fun List<Track>.lyricsOf(track: Track): LyricTrack? {
     if (track !is MelodyTrack) return null
     val lyricTracks = filterIsInstance<LyricTrack>()
-    return if (track.lyrics == null) lyricTracks.firstOrNull() else lyricTracks.firstOrNull { it.trackId == track.lyrics }
+    return if (track.lyricsId == null) lyricTracks.firstOrNull() else lyricTracks.firstOrNull { it.trackId == track.lyricsId }
 }
 
 /**
@@ -25,7 +25,7 @@ fun List<Track>.lyricLinesOf(track: Track, notationId: NotationId, music: Music)
     // place each syllable in the song, anchored to the tick and section that decide its line
     val anchored = mutableListOf<Pair<Play, LineSyllable>>()
     playsOf(lyrics, music).forEach { play ->
-        val stanza = lyrics.notations.firstOrNull { it.notationId == play.notationId } as? Stanza ?: return@forEach
+        val stanza = lyrics.notations.firstOrNull { it.notationId == play.notationId } ?: return@forEach
         var tick = play.tick - stanza.pickup.sumOf { it.beats.ticks }
         (stanza.pickup + stanza.notes).forEach { note ->
             note.text?.let { anchored.add(play.copy(tick = maxOf(tick, play.tick)) to LineSyllable(tick, it)) }

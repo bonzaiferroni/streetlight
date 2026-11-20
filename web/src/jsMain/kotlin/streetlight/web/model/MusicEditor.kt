@@ -81,7 +81,7 @@ class MusicEditor(
         val track = tracks.firstOrNull { it.trackId == trackId } ?: return
         val base = name.trim().takeIf { it.isNotEmpty() && it != track.name }
         val freeName = base?.let { tracks.filter { it.trackId != trackId }.newTrackName(it) } ?: track.name
-        val edited = track.copyTrack(name = freeName, capo = capo).let { (it as? MelodyTrack)?.copy(lyrics = lyrics) ?: it }
+        val edited = track.copyTrack(name = freeName, capo = capo).let { (it as? MelodyTrack)?.copy(lyricsId = lyrics) ?: it }
         scope.launch { db.track.saveTrack(edited) }
     }
 

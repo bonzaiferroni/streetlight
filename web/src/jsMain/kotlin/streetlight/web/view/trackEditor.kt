@@ -112,7 +112,7 @@ private fun ViewScope.trackEditPopover(id: Id, track: Track) {
         val capoTextState = storeOf(track.capo?.toString().orEmpty())
         val lyricTracks = model.lyricTracksState.now
         val lyricNames = listOf(FIRST_LYRICS) + lyricTracks.map { it.name }
-        val lyricsState = storeOf((track as? MelodyTrack)?.lyrics?.let { id -> lyricTracks.firstOrNull { it.trackId == id }?.name } ?: FIRST_LYRICS)
+        val lyricsState = storeOf((track as? MelodyTrack)?.lyricsId?.let { id -> lyricTracks.firstOrNull { it.trackId == id }?.name } ?: FIRST_LYRICS)
         val save = save@{
             val capo = readCapoText(capoTextState.now) ?: return@save toaster.deliver(MusicFormProblem.capo)
             val lyrics = lyricTracks.firstOrNull { it.name == lyricsState.now }?.trackId

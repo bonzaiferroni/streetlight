@@ -138,7 +138,7 @@ class MelodyParser(
      * track named by [trackNames].
      */
     fun write(track: MelodyTrack, time: TimeSignature, names: SectionNames, trackNames: Map<TrackId, String> = emptyMap()): String {
-        val lyrics = track.lyrics?.let { trackNames[it] }?.let { mapOf(LYRICS to it) }.orEmpty()
+        val lyrics = track.lyricsId?.let { trackNames[it] }?.let { mapOf(LYRICS to it) }.orEmpty()
         return writeTrackText(track, track.notations.map { linesOf(it, time) }, names, lyrics)
     }
 

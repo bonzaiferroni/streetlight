@@ -1,6 +1,8 @@
 package streetlight.web.view
 
+import kampfire.model.tapOf
 import koala.dom.ViewScope
+import koala.dom.flowModifier
 import koala.dom.component.div
 import koala.dom.component.textBlock
 import koala.modifier.*
@@ -10,33 +12,62 @@ import streetlight.model.music.ui.HeadShape
 import streetlight.model.music.ui.NoteNotation
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.StaffNotation
-import streetlight.model.music.ui.SyllableNotation
+import streetlight.model.music.ui.VocalNotation
+import streetlight.web.model.MusicConfig
 import web.html.HTMLElement
 
 /**
- * Renders the measures of [notation] as a strip with [mod]: a staff crossed by each measure's bar when it has one, then
- * its notes and syllables. With [onNote], the notes with a place in their track can be grabbed, and each note is handed
- * over with its element.
+ * Renders the measures of [notation] as strips with [mod]: a staff when it has one, then a strip for each line of its
+ * vocals, which [config] hides with the lyrics unless the notation is vocals alone. With [onNote], the notes with a
+ * place in their track can be grabbed, and each note is handed over with its element.
  */
+context(config: MusicConfig)
 fun ViewScope.sectionMeasures(
     notation: StaffNotation,
     mod: Modifier? = null,
     onNote: ((NoteNotation, HTMLElement) -> Unit)? = null,
+) {
+    if (!notation.hasStaff) return vocalStrips(notation, mod)
+    staffStrip(notation, mod, onNote)
+    div(null) { vocalStrips(notation, mod) }
+        .flowModifier(config.isLyricsShownState.tapOf { !it }, DisplayNone, contentScope)
+}
+
+/**
+ * Renders the staff of [notation] as a strip with [mod], crossed by each measure's bar, then its notes, each handed to
+ * [onNote] as [sectionMeasures] does.
+ */
+private fun ViewScope.staffStrip(
+    notation: StaffNotation,
+    mod: Modifier?,
+    onNote: ((NoteNotation, HTMLElement) -> Unit)?,
 ) {
     fun ViewScope.placeNote(note: NoteNotation) {
         val element = note(note, MeasureStyle.Grabbable.takeIf { onNote != null && note.source != null })
         onNote?.invoke(note, element)
     }
     div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
-        if (notation.hasStaff) staff(notation)
+        staff(notation)
         notation.measures.forEach { measure ->
             div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
                 measure.notes.forEach { placeNote(it) }
-                measure.syllables.forEach { syllable(it) }
             }
         }
         notation.pickup.forEach { placeNote(it) }
-        notation.pickupSyllables.forEach { syllable(it) }
+    }
+}
+
+/** Renders each line of the vocals of [notation] as a strip with [mod]. */
+private fun ViewScope.vocalStrips(notation: StaffNotation, mod: Modifier?) {
+    repeat(notation.vocalLines) { line ->
+        div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(VOCAL_LINE_STEPS)))) {
+            notation.measures.forEach { measure ->
+                div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
+                    measure.vocals[line].forEach { syllable(it) }
+                }
+            }
+            notation.pickupVocals[line].forEach { syllable(it) }
+        }
     }
 }
 
@@ -63,9 +94,9 @@ private fun ViewScope.staff(notation: StaffNotation) {
 /** Renders a bar [share] of the way across its staff. */
 private fun ViewScope.bar(share: Double) = div(modify(MeasureStyle.Bar, Css.Left.of((share * 100).pct)))
 
-/** Renders [syllable] at its onset and step, lined up with the left edge of a note's head there. */
-private fun ViewScope.syllable(syllable: SyllableNotation) {
-    val place = modify(Css.Left.of((syllable.onset * 100).pct), Css.Bottom.of(stepsHeight(syllable.step)))
+/** Renders [syllable] at its onset, mid-strip, lined up with the left edge of a note's head there. */
+private fun ViewScope.syllable(syllable: VocalNotation) {
+    val place = modify(Css.Left.of((syllable.onset * 100).pct), Css.Bottom.of(stepsHeight(VOCAL_LINE_STEPS / 2)))
     textBlock(syllable.text, modify(MeasureStyle.Syllable, place))
 }
 
@@ -105,3 +136,6 @@ val NoteValue.shape get() = when (this) {
 
 /** The height of [steps] staff steps, two to a staff space. */
 fun stepsHeight(steps: Int) = LinearDimension("calc(var(--unit) * ${STAFF_STEP_UNITS * steps})")
+
+/** The staff steps a line of vocals takes. */
+private const val VOCAL_LINE_STEPS = 4

@@ -3,7 +3,7 @@ package streetlight.model.music
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
-/** A melody track, sung with the lyric track [lyrics], or the first of its music when `null`. */
+/** A melody track, sung with the lyric track [lyricsId], or the first of its music when `null`. */
 @Serializable
 data class MelodyTrack(
     override val trackId: TrackId,
@@ -13,7 +13,7 @@ data class MelodyTrack(
     override val arrangements: List<Arrangement>,
     override val sections: Map<SectionId, NotationId>,
     override val capo: Int? = null,
-    val lyrics: TrackId? = null,
+    val lyricsId: TrackId? = null,
 ) : Track {
     override val trackType get() = TrackType.Melody
 }
