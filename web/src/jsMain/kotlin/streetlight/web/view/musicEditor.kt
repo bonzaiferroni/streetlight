@@ -14,7 +14,7 @@ import kotlinx.css.pct
 import kotlinx.css.px
 import streetlight.model.music.Beats
 import kotlinx.css.LinearDimension
-import streetlight.model.music.ui.StaffNotation
+import streetlight.model.music.ui.NotationLayout
 import streetlight.model.music.ui.lines
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
@@ -206,13 +206,13 @@ fun ViewScope.namePopover(id: Id, label: String, onSubmit: (String) -> Boolean) 
     }
 }
 
-/** The strips of [section], a line of its text to each, with its lyrics under each while [config] shows them. */
+/** The strips of [layout], a line of its text to each, with its lyrics under each while [config] shows them. */
 context(config: MusicConfig)
-fun ViewScope.sectionStrips(section: StaffNotation) {
-    val lines = section.lines()
+fun ViewScope.notationStrips(layout: NotationLayout) {
+    val lines = layout.lines()
     // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
     val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
-    val paneTicks = section.measuresPerLine * section.measureTicks + leadTicks
+    val paneTicks = layout.measuresPerLine * layout.measureTicks + leadTicks
     // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
     val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
     // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
@@ -225,7 +225,7 @@ fun ViewScope.sectionStrips(section: StaffNotation) {
             )
             // each line on a band of its own, the band reaching the whole width however short the line
             div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) {
-                sectionMeasures(line, place)
+                notationMeasures(line, place)
             }
         }
     }

@@ -20,8 +20,8 @@ import streetlight.model.music.sectionIdsOf
 import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.readNotation
 import streetlight.model.music.text.writeNotation
-import streetlight.model.music.ui.StaffNotation
-import streetlight.model.music.ui.staffNotationsOf
+import streetlight.model.music.ui.NotationLayout
+import streetlight.model.music.ui.notationLayoutsOf
 import streetlight.model.music.withNotation
 import streetlight.model.studio.StudioDb
 
@@ -40,21 +40,21 @@ class NotationEditor(
     db: StudioDb,
 ) {
     // drawn from the start, so the view transition that opens the editor captures its notes
-    private val state = storeOf(NotationEditorState(initialTrack, staffNotationOf(initialTrack, sheetState.now)))
+    private val state = storeOf(NotationEditorState(initialTrack, notationLayoutOf(initialTrack, sheetState.now)))
     private val field = NotationField(writeNow())
 
     val trackState = state.tapOf { it.track }
     val nameState = state.tapOf { it.track.nameOf(notationId, sheetState.now.music) }
     val textState = field.textState
     val errorsState = field.errorsState
-    val staffNotationState = state.tapOf { it.staffNotation }
+    val notationLayoutState = state.tapOf { it.notationLayout }
 
     /** The track as it stands, with every edit made so far. */
     val trackNow get() = state.now.track
 
     init {
         scope.launch { trackState.saveChanges { db.track.saveTrack(it) } }
-        sheetState.reactIn(scope) { sheet -> state.update { it.copy(staffNotation = staffNotationOf(it.track, sheet)) } }
+        sheetState.reactIn(scope) { sheet -> state.update { it.copy(notationLayout = notationLayoutOf(it.track, sheet)) } }
         // a change of key transposes the notation, and a change of time or style respells it, so the text follows it
         val changes = combine(sheetState.flow, notationStyleState.flow) { sheet, style ->
             Triple(sheet.music.key, sheet.music.time, style)
@@ -65,7 +65,7 @@ class NotationEditor(
             val read = readNotation(notation, text, sheetState.now.music, readPhraseNow())
             state.update { editor ->
                 val track = editor.track.withNotation(read.value)
-                editor.copy(track = track, staffNotation = staffNotationOf(track, sheetState.now))
+                editor.copy(track = track, notationLayout = notationLayoutOf(track, sheetState.now))
             }
             read.errors
         }
@@ -74,8 +74,8 @@ class NotationEditor(
     private fun readNow(): Notation? = state.now.track.notations.firstOrNull { it.notationId == notationId }
 
     // drawn against the song for the lyrics sung to it, with this editor's own track
-    private fun staffNotationOf(track: Track, sheet: MusicSheet): StaffNotation? =
-        staffNotationsOf(track, sheet.music, sheet.tracks).firstOrNull { it.notationId == notationId }
+    private fun notationLayoutOf(track: Track, sheet: MusicSheet): NotationLayout? =
+        notationLayoutsOf(track, sheet.music, sheet.tracks).firstOrNull { it.notationId == notationId }
 
     // the phrase a stanza is sung with: the one a melody singing this track plays for the stanza's first section
     private fun readPhraseNow(): Phrase? {
@@ -93,5 +93,5 @@ class NotationEditor(
 
 data class NotationEditorState(
     val track: Track,
-    val staffNotation: StaffNotation? = null,
+    val notationLayout: NotationLayout? = null,
 )

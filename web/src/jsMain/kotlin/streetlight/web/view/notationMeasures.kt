@@ -9,10 +9,10 @@ import koala.modifier.*
 import kotlinx.css.LinearDimension
 import kotlinx.css.pct
 import streetlight.model.music.ui.HeadShape
-import streetlight.model.music.ui.NoteNotation
+import streetlight.model.music.ui.NoteLayout
 import streetlight.model.music.ui.NoteValue
-import streetlight.model.music.ui.StaffNotation
-import streetlight.model.music.ui.VocalNotation
+import streetlight.model.music.ui.NotationLayout
+import streetlight.model.music.ui.VocalLayout
 import streetlight.web.model.MusicConfig
 import web.html.HTMLElement
 
@@ -22,10 +22,10 @@ import web.html.HTMLElement
  * place in their track can be grabbed, and each note is handed over with its element.
  */
 context(config: MusicConfig)
-fun ViewScope.sectionMeasures(
-    notation: StaffNotation,
+fun ViewScope.notationMeasures(
+    notation: NotationLayout,
     mod: Modifier? = null,
-    onNote: ((NoteNotation, HTMLElement) -> Unit)? = null,
+    onNote: ((NoteLayout, HTMLElement) -> Unit)? = null,
 ) {
     if (!notation.hasStaff) return vocalStrips(notation, mod)
     staffStrip(notation, mod, onNote)
@@ -35,14 +35,14 @@ fun ViewScope.sectionMeasures(
 
 /**
  * Renders the staff of [notation] as a strip with [mod], crossed by each measure's bar, then its notes, each handed to
- * [onNote] as [sectionMeasures] does.
+ * [onNote] as [notationMeasures] does.
  */
 private fun ViewScope.staffStrip(
-    notation: StaffNotation,
+    notation: NotationLayout,
     mod: Modifier?,
-    onNote: ((NoteNotation, HTMLElement) -> Unit)?,
+    onNote: ((NoteLayout, HTMLElement) -> Unit)?,
 ) {
-    fun ViewScope.placeNote(note: NoteNotation) {
+    fun ViewScope.placeNote(note: NoteLayout) {
         val element = note(note, MeasureStyle.Grabbable.takeIf { onNote != null && note.source != null })
         onNote?.invoke(note, element)
     }
@@ -58,7 +58,7 @@ private fun ViewScope.staffStrip(
 }
 
 /** Renders each line of the vocals of [notation] as a strip with [mod]. */
-private fun ViewScope.vocalStrips(notation: StaffNotation, mod: Modifier?) {
+private fun ViewScope.vocalStrips(notation: NotationLayout, mod: Modifier?) {
     repeat(notation.vocalLines) { line ->
         div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(VOCAL_LINE_STEPS)))) {
             notation.measures.forEach { measure ->
@@ -75,7 +75,7 @@ private fun ViewScope.vocalStrips(notation: StaffNotation, mod: Modifier?) {
  * Renders the staff of [notation] a sixteenth ahead of its section, so each downbeat's note falls within its measure,
  * with a bar at each end. A bar between measures comes closer to its downbeat to stay halfway from a nearer last note.
  */
-private fun ViewScope.staff(notation: StaffNotation) {
+private fun ViewScope.staff(notation: NotationLayout) {
     val bottom = LinearDimension("calc(var(--unit) * ${STAFF_STEP_UNITS * notation.staffStep} - 1px)")
     val leadShare = notation.staffLeadShare
     val place = modify(Css.Left.of((-leadShare * 100).pct), Css.Right.of((leadShare * 100).pct), Css.Bottom.of(bottom))
@@ -95,7 +95,7 @@ private fun ViewScope.staff(notation: StaffNotation) {
 private fun ViewScope.bar(share: Double) = div(modify(MeasureStyle.Bar, Css.Left.of((share * 100).pct)))
 
 /** Renders [syllable] at its onset, mid-strip, lined up with the left edge of a note's head there. */
-private fun ViewScope.syllable(syllable: VocalNotation) {
+private fun ViewScope.syllable(syllable: VocalLayout) {
     val place = modify(Css.Left.of((syllable.onset * 100).pct), Css.Bottom.of(stepsHeight(VOCAL_LINE_STEPS / 2)))
     textBlock(syllable.text, modify(MeasureStyle.Syllable, place))
 }
@@ -104,7 +104,7 @@ private fun ViewScope.syllable(syllable: VocalNotation) {
  * Renders [note] with [mod] at its onset and step: its heads, with any bars of its value above and below them, its dot,
  * its ledger lines, and a sharp when it sits between degrees of the scale.
  */
-fun ViewScope.note(note: NoteNotation, mod: Modifier? = null): HTMLElement {
+fun ViewScope.note(note: NoteLayout, mod: Modifier? = null): HTMLElement {
     val span = note.heads.maxOf { it.step }
     val place = modify(
         Css.Left.of((note.onset * 100).pct),

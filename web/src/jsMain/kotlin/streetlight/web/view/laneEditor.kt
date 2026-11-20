@@ -15,7 +15,7 @@ import koala.page.Id
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.css.pct
-import streetlight.model.music.ui.NoteNotation
+import streetlight.model.music.ui.NoteLayout
 import streetlight.model.music.ui.NoteValue
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
@@ -98,7 +98,7 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
             lane.sections.forEach { section ->
                 sections += section to div(modify(LaneStyle.Section, LaneStyle.RepeatSection.takeIf { section.isRepeat })) {
                     textBlock(section.notation.name, modify(LaneStyle.SectionLabel, TextSmall))
-                    sectionMeasures(section.notation, VoidBg) { note, noteElement ->
+                    notationMeasures(section.notation, VoidBg) { note, noteElement ->
                         // wireNoteDrag(laneIndex, section, note, noteElement)
                     }
                 }

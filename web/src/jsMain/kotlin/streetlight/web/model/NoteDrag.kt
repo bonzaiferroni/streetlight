@@ -20,7 +20,7 @@ import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Seventh
 import streetlight.model.music.Track
-import streetlight.model.music.ui.NoteNotation
+import streetlight.model.music.ui.NoteLayout
 import streetlight.model.music.ui.NoteSource
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.StaffWindow
@@ -33,7 +33,7 @@ data class NoteDrag(
     val section: LaneSection,
     val source: NoteSource,
     val moved: NoteSource,
-    val cursor: NoteNotation,
+    val cursor: NoteLayout,
 )
 
 /**

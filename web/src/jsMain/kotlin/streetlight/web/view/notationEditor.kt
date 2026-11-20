@@ -43,7 +43,7 @@ fun ViewScope.notationEditor(focus: NotationFocus, setFocus: (MusicEditorFocus?)
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
             notationPanes(track.notationLabel, editor.textState, editor.errorsState, config.notationViewState) {
-                flowBlock(editor.staffNotationState) { staffNotation -> staffNotation?.let { sectionStrips(it) } }
+                flowBlock(editor.notationLayoutState) { notationLayout -> notationLayout?.let { notationStrips(it) } }
             }
         }
     }

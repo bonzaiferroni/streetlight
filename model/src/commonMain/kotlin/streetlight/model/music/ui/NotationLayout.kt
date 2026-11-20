@@ -23,20 +23,20 @@ import kotlin.math.roundToInt
 
 
 /**
- * The notation of [notationId] in a track, shown as [name], [ticks] long and [steps] of the staff tall, with a step the distance from a
+ * The layout of [notationId] in a track, shown as [name], [ticks] long and [steps] of the staff tall, with a step the distance from a
  * line to the space beside it. The bottom line of the staff sits [staffStep] steps up. The [pickup] notes sound before
  * the section starts, as do the [pickupVocals], one list to each of its [vocalLines]. A section with no [hasStaff] is
  * drawn as its vocals alone. Its text holds [measuresPerLine] measures of [measureTicks] to a line.
  */
-data class StaffNotation(
+data class NotationLayout(
     val notationId: NotationId,
     val name: String,
     val ticks: Int,
     val steps: Int,
     val staffStep: Int,
-    val measures: List<MeasureNotation>,
-    val pickup: List<NoteNotation>,
-    val pickupVocals: List<List<VocalNotation>>,
+    val measures: List<MeasureLayout>,
+    val pickup: List<NoteLayout>,
+    val pickupVocals: List<List<VocalLayout>>,
     val hasStaff: Boolean,
     val measuresPerLine: Int,
     val measureTicks: Int,
@@ -52,10 +52,10 @@ data class StaffNotation(
 }
 
 /**
- * The notation of each line of this section as its text breaks it, each line's measures sharing the line alone and
+ * The layout of each line of this section as its text breaks it, each line's measures sharing the line alone and
  * the pickup leading the first.
  */
-fun StaffNotation.lines(): List<StaffNotation> =
+fun NotationLayout.lines(): List<NotationLayout> =
     measures.chunked(measuresPerLine.coerceAtLeast(1)).mapIndexed { index, lineMeasures ->
         val share = lineMeasures.sumOf { it.share }
         copy(
@@ -72,16 +72,16 @@ fun StaffNotation.lines(): List<StaffNotation> =
  * A measure filling [share] of its section, with the [notes] that start in it and the [vocals] of each line of its
  * section that start in it.
  */
-data class MeasureNotation(
+data class MeasureLayout(
     val share: Double,
-    val notes: List<NoteNotation>,
-    val vocals: List<List<VocalNotation>>,
+    val notes: List<NoteLayout>,
+    val vocals: List<List<VocalLayout>>,
 )
 
 /**
  * A syllable of [text] starting [onset] of the way through its measure, or for a pickup that far before its section.
  */
-data class VocalNotation(
+data class VocalLayout(
     val onset: Double,
     val text: String,
 )
@@ -93,7 +93,7 @@ data class VocalNotation(
  * of the lower. Its [value] is `null` for heads alone, and its [source] is its place in its track, or `null` for the
  * hits of a drum track, which draw as one note.
  */
-data class NoteNotation(
+data class NoteLayout(
     val onset: Double,
     val step: Int,
     val value: NoteValue?,
@@ -152,43 +152,43 @@ data class StaffWindow(
 }
 
 /**
- * The notation of [notationId] in [track] against [music] within [window], or `null` when it has no length there.
+ * The layout of [notationId] in [track] against [music] within [window], or `null` when it has no length there.
  * Each of [lyrics] is a line of syllables sung to it, after the track's own stanza when it is a [LyricTrack].
  */
-fun staffNotationOf(
+fun notationLayoutOf(
     track: Track,
     notationId: NotationId,
     music: Music,
     window: StaffWindow,
     lyrics: List<List<LineSyllable>> = emptyList(),
-): StaffNotation? {
+): NotationLayout? {
     val ticks = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
     val sections = track.notationsOf(notationId).orEmpty()
-    val notes = noteSourcesOf(sections, music.key).map { it.tick to noteNotationOf(it, 0.0, window, music.key) } +
+    val notes = noteSourcesOf(sections, music.key).map { it.tick to noteLayoutOf(it, 0.0, window, music.key) } +
             drumNotesOf(sections, window)
     val measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE
     val isLyricTrack = track is LyricTrack
     val vocalLines = (if (isLyricTrack) listOf(syllablesOf(sections)) else emptyList()) + lyrics
     val name = track.nameOf(notationId, music)
-    return staffNotationOf(notationId, name, music, ticks, window, notes, vocalLines, measuresPerLine, !isLyricTrack)
+    return notationLayoutOf(notationId, name, music, ticks, window, notes, vocalLines, measuresPerLine, !isLyricTrack)
 }
 
 /**
- * The notation of [notationId] shown as [name] against [music], [ticks] long within [window], laying each of [notes]
+ * The layout of [notationId] shown as [name] against [music], [ticks] long within [window], laying each of [notes]
  * and the syllables of each of [vocalLines] by its tick into its measure, or before it for a pickup. Its text holds
  * [measuresPerLine] measures to a line, drawn on a staff when it [hasStaff].
  */
-private fun staffNotationOf(
+private fun notationLayoutOf(
     notationId: NotationId,
     name: String,
     music: Music,
     ticks: Int,
     window: StaffWindow,
-    notes: List<Pair<Int, NoteNotation>>,
+    notes: List<Pair<Int, NoteLayout>>,
     vocalLines: List<List<LineSyllable>>,
     measuresPerLine: Int,
     hasStaff: Boolean,
-): StaffNotation {
+): NotationLayout {
     val measure = music.time.measure.ticks
     val count = (ticks + measure - 1) / measure
     val measures = List(count) { index ->
@@ -199,15 +199,15 @@ private fun staffNotationOf(
         }
         val measureVocals = vocalLines.map { line ->
             line.filter { it.tick in start until start + length }
-                .map { VocalNotation((it.tick - start).toDouble() / length, it.text) }
+                .map { VocalLayout((it.tick - start).toDouble() / length, it.text) }
         }
-        MeasureNotation(length.toDouble() / ticks, measureNotes, measureVocals)
+        MeasureLayout(length.toDouble() / ticks, measureNotes, measureVocals)
     }
     val pickup = notes.filter { (tick) -> tick < 0 }.map { (tick, note) -> note.copy(onset = tick.toDouble() / ticks) }
     val pickupVocals = vocalLines.map { line ->
-        line.filter { it.tick < 0 }.map { VocalNotation(it.tick.toDouble() / ticks, it.text) }
+        line.filter { it.tick < 0 }.map { VocalLayout(it.tick.toDouble() / ticks, it.text) }
     }
-    return StaffNotation(
+    return NotationLayout(
         notationId = notationId,
         name = name,
         ticks = ticks,
@@ -223,18 +223,18 @@ private fun staffNotationOf(
 }
 
 /**
- * The notation of each of the [Track.notations] of [track], against [music], leaving out its arrangements of them. Its
+ * The layout of each of the [Track.notations] of [track], against [music], leaving out its arrangements of them. Its
  * notes are not dragged, so its window keeps no room for it. A notation carries each different line of lyrics sung to
  * it in the song of [tracks].
  */
-fun staffNotationsOf(
+fun notationLayoutsOf(
     track: Track,
     music: Music,
     tracks: List<Track> = listOf(track),
-): List<StaffNotation> = track.notations.mapNotNull { notation ->
+): List<NotationLayout> = track.notations.mapNotNull { notation ->
     val lyrics = drawnLyricLinesOf(tracks, track, notation.notationId, music)
     val window = staffWindowOf(track, music.key, dragRoom = 0)
-    staffNotationOf(track, notation.notationId, music, window, lyrics)
+    notationLayoutOf(track, notation.notationId, music, window, lyrics)
 }
 
 /**
@@ -264,13 +264,13 @@ fun drawnLyricLinesOf(
     return if (play == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(play))
 }
 
-/** The notation of the note at [source], [onset] across what holds it, within [window]. */
-fun noteNotationOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteNotation {
+/** The layout of the note at [source], [onset] across what holds it, within [window]. */
+fun noteLayoutOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteLayout {
     val (value, isDotted) = noteValueOf(source.ticks)
     val staffSteps = (source.chord?.let { drawnMidisOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
     val lowest = staffSteps.min()
     val isRaised = (source.midi - key.majorTonic.value).mod(12) in RAISED_SEMITONES
-    return NoteNotation(
+    return NoteLayout(
         onset = onset,
         step = window.stepOf(lowest),
         value = value,
@@ -350,8 +350,8 @@ private fun syllablesOf(sections: List<Notation>): List<LineSyllable> {
 }
 
 /** The tick of each note of the [Groove]s of [sections], laid end to end, paired with its notation within [window]. */
-private fun drumNotesOf(sections: List<Notation>, window: StaffWindow): List<Pair<Int, NoteNotation>> {
-    val notes = mutableListOf<Pair<Int, NoteNotation>>()
+private fun drumNotesOf(sections: List<Notation>, window: StaffWindow): List<Pair<Int, NoteLayout>> {
+    val notes = mutableListOf<Pair<Int, NoteLayout>>()
     var onset = 0
     for (section in sections) {
         if (section is Groove) notes += grooveNotesOf(section, window).map { (tick, note) -> onset + tick to note }
@@ -361,20 +361,20 @@ private fun drumNotesOf(sections: List<Notation>, window: StaffWindow): List<Pai
 }
 
 /** The tick of each note of [groove], paired with its notation within [window]: the hits of a tick as one note. */
-private fun grooveNotesOf(groove: Groove, window: StaffWindow): List<Pair<Int, NoteNotation>> {
+private fun grooveNotesOf(groove: Groove, window: StaffWindow): List<Pair<Int, NoteLayout>> {
     return groove.lanes.flatMap { lane ->
         lane.beats.runningFold(0) { tick, beat -> tick + beat.beats.ticks }
             .zip(lane.beats)
             .filter { (_, beat) -> beat.hit != null }
             .map { (tick, _) -> tick to lane.drum }
-    }.groupBy({ (tick) -> tick }, { (_, drum) -> drum }).map { (tick, drums) -> tick to drumNotationOf(drums, window) }
+    }.groupBy({ (tick) -> tick }, { (_, drum) -> drum }).map { (tick, drums) -> tick to drumLayoutOf(drums, window) }
 }
 
-/** The notation of [drums] struck together within [window], as heads alone. */
-private fun drumNotationOf(drums: List<Drum>, window: StaffWindow): NoteNotation {
+/** The layout of [drums] struck together within [window], as heads alone. */
+private fun drumLayoutOf(drums: List<Drum>, window: StaffWindow): NoteLayout {
     val staffSteps = drums.map { staffStepOf(it) }
     val lowest = staffSteps.min()
-    return NoteNotation(
+    return NoteLayout(
         onset = 0.0,
         step = window.stepOf(lowest),
         value = null,
