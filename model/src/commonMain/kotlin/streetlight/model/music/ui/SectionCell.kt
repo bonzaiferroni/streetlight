@@ -1,12 +1,30 @@
 package streetlight.model.music.ui
 
-import streetlight.model.music.Music
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
 import streetlight.model.music.SectionId
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationsOf
 import streetlight.model.music.repeatsOf
+import streetlight.model.music.trackOf
+import streetlight.model.music.trackOrNullOf
+
+/** The cells of a song in an overview: its [sectionCells], then the [trackCells] of each track. */
+data class MusicTable(
+    val sectionCells: List<SectionCell> = emptyList(),
+    val trackCells: List<TrackCells> = emptyList(),
+)
+
+/** The [cells] of [track] in an overview of its song. */
+data class TrackCells(
+    val track: Track,
+    val cells: List<SectionCell>,
+)
+
+fun MusicSheet.getMusicTable() =
+    MusicTable(getSectionCells(), tracks.map { TrackCells(it, notationCellsOf(it.trackId)) })
 
 /**
  * A section of the song as an overview draws it, [sectionId] [measures] long in the song, named [name]. A track's row
@@ -16,34 +34,30 @@ data class SectionCell(
     val sectionId: SectionId,
     val name: String,
     val measures: Int,
-    val passes: List<CellPass> = emptyList(),
+    val passes: List<NotationCell> = emptyList(),
     val notationId: NotationId? = null,
 )
 
 /** A notation [notationId] played through once in a cell, [measures] long, shown as [name]. */
-data class CellPass(
+data class NotationCell(
     val notationId: NotationId,
     val name: String,
     val measures: Double,
 )
 
-/** The cells of the sections [music] plays, in order, each under its name. */
-fun cellsOf(music: Music): List<SectionCell> = music.arrangement.map { sectionId ->
+fun MusicSheet.getSectionCells() = music.arrangement.map { sectionId ->
     val measures = music.sections.firstOrNull { it.sectionId == sectionId }?.measures ?: 0
     SectionCell(sectionId, music.nameOf(sectionId), measures)
 }
 
-/**
- * The cells of the sections [music] plays, in order, as [track] plays each: the notation or arrangement it plays
- * there, an arrangement resolved into the notations it holds, repeated as many whole times as fit.
- */
-fun cellsOf(music: Music, track: Track): List<SectionCell> {
+fun MusicSheet.notationCellsOf(trackId: TrackId): List<SectionCell> {
     val measureTicks = music.time.measure.ticks.toDouble()
-    return cellsOf(music).map { cell ->
+    val track = trackOrNullOf(trackId) ?: return emptyList()
+    return getSectionCells().map { cell ->
         val notationId = track.sections[cell.sectionId] ?: return@map cell
         val notations = track.notationsOf(notationId) ?: return@map cell
         val span = music.time.measure * cell.measures
-        val passes = notations.map { CellPass(it.notationId, track.nameOf(it.notationId, music), it.length.ticks / measureTicks) }
+        val passes = notations.map { NotationCell(it.notationId, track.nameOf(it.notationId), it.length.ticks / measureTicks) }
         cell.copy(
             passes = List(track.repeatsOf(notationId, span)) { passes }.flatten(),
             notationId = notationId,

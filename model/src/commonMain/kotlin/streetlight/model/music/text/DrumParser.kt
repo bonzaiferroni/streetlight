@@ -32,18 +32,18 @@ object DrumParser {
         text: String,
         time: TimeSignature,
         names: SectionNames,
-    ): NotationRead<DrumTrack> {
+    ): NotationParse<DrumTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
         val grooves = trackText.notations.map { notation -> readGroove(notation, time, errors) }
         val track = DrumTrack(trackId, musicId, name, grooves, trackText.arrangements, trackText.sections, trackText.capo)
-        return NotationRead(track, errors)
+        return NotationParse(track, errors)
     }
 
     /** Reads the notation [notationId] named [name] from [text], the rows of its tab alone, cut by [time]. */
-    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationRead<Groove> {
+    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationParse<Groove> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readGroove(notationTextOf(notationId, name, text, errors), time, errors), errors)
+        return NotationParse(readGroove(notationTextOf(notationId, name, text, errors), time, errors), errors)
     }
 
     /** Writes [track] as the tab [read] reads, with measures cut by [time] and sections named by [names]. */

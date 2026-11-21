@@ -4,65 +4,80 @@ import streetlight.model.music.Chord
 import streetlight.model.music.Drum
 import streetlight.model.music.Groove
 import streetlight.model.music.Key
+import streetlight.model.music.LineVocal
 import streetlight.model.music.LyricTrack
-import streetlight.model.music.Music
-import streetlight.model.music.Phrase
-import streetlight.model.music.Progression
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.Notation
 import streetlight.model.music.NotationId
+import streetlight.model.music.Phrase
+import streetlight.model.music.Progression
 import streetlight.model.music.Stanza
-import streetlight.model.music.LineSyllable
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.lyricLinesOf
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationsOf
 import streetlight.model.music.toMidi
 
-
-/**
- * The layout of [notationId] in [track] against [music] within [window], or `null` when it has no length there.
- * Each of [lyrics] is a line of syllables sung to it, after the track's own stanza when it is a [LyricTrack].
- */
-fun notationLayoutOf(
-    track: Track,
-    notationId: NotationId,
-    music: Music,
-    window: StaffWindow,
-    lyrics: List<List<LineSyllable>> = emptyList(),
-): NotationLayout? {
+fun MusicSheet.notationLayoutOf(notationId: NotationId, play: Int? = null): NotationLayout? {
+    val track = trackHolding(notationId) ?: return null
     val ticks = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
     val sections = track.notationsOf(notationId).orEmpty()
+    val window = staffWindowOf(track.trackId)
     val notes = noteSourcesOf(sections, music.key).map { it.tick to noteLayoutOf(it, 0.0, window, music.key) } +
             drumNotesOf(sections, window)
     val measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE
     val isLyricTrack = track is LyricTrack
-    val vocalLines = (if (isLyricTrack) listOf(syllablesOf(sections)) else emptyList()) + lyrics
-    val name = track.nameOf(notationId, music)
-    return notationLayoutOf(notationId, name, music, ticks, window, notes, vocalLines, measuresPerLine, !isLyricTrack)
+    val vocalLines = (if (isLyricTrack) listOf(syllablesOf(sections)) else emptyList()) + vocalLinesOf(notationId, play)
+    val name = track.nameOf(notationId)
+    val measureTicks = music.time.measure.ticks
+    return notationLayoutOf(notationId, name, measureTicks, ticks, window, notes, vocalLines, measuresPerLine, !isLyricTrack)
+}
+
+fun MusicSheet.notationLayoutsOf(trackId: TrackId): List<NotationLayout> {
+    val track = tracks.firstOrNull { it.trackId == trackId } ?: return emptyList()
+    return track.notations.mapNotNull { notationLayoutOf(it.notationId) }
+}
+
+fun MusicSheet.staffWindowOf(trackId: TrackId, dragRoom: Int = DRAG_ROOM_STEPS): StaffWindow {
+    val track = tracks.first { it.trackId == trackId }
+    if (track is LyricTrack) return LYRIC_WINDOW
+    val steps = track.notations.flatMap { drawnMidisOf(it, music.key) }.map { staffStepOf(it, music.key) }
+    val low = minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW)
+    val high = maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH)
+    return StaffWindow(low - dragRoom, high + dragRoom)
+}
+
+fun MusicSheet.vocalLinesOf(notationId: NotationId, play: Int? = null): List<List<LineVocal>> {
+    val lines = lyricLinesOf(notationId, this)
+    return if (play == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(play))
+}
+
+private fun MusicSheet.trackHolding(notationId: NotationId): Track? = tracks.firstOrNull { track ->
+    track.notations.any { it.notationId == notationId } || track.arrangements.any { it.notationId == notationId }
 }
 
 /**
- * The layout of [notationId] shown as [name] against [music], [ticks] long within [window], laying each of [notes]
+ * The layout of [notationId] shown as [name] in measures of [measureTicks], [ticks] long within [window], laying each of [notes]
  * and the syllables of each of [vocalLines] by its tick into its measure, or before it for a pickup. Its text holds
  * [measuresPerLine] measures to a line, drawn on a staff when it [hasStaff].
  */
 private fun notationLayoutOf(
     notationId: NotationId,
     name: String,
-    music: Music,
+    measureTicks: Int,
     ticks: Int,
     window: StaffWindow,
     notes: List<Pair<Int, NoteLayout>>,
-    vocalLines: List<List<LineSyllable>>,
+    vocalLines: List<List<LineVocal>>,
     measuresPerLine: Int,
     hasStaff: Boolean,
 ): NotationLayout {
-    val measure = music.time.measure.ticks
-    val count = (ticks + measure - 1) / measure
+    val count = (ticks + measureTicks - 1) / measureTicks
     val measures = List(count) { index ->
-        val start = index * measure
-        val length = minOf(measure, ticks - start)
+        val start = index * measureTicks
+        val length = minOf(measureTicks, ticks - start)
         val measureNotes = notes.filter { (tick) -> tick in start until start + length }.map { (tick, note) ->
             note.copy(onset = (tick - start).toDouble() / length)
         }
@@ -87,72 +102,9 @@ private fun notationLayoutOf(
         pickupVocals = pickupVocals,
         hasStaff = hasStaff,
         measuresPerLine = measuresPerLine,
-        measureTicks = measure,
+        measureTicks = measureTicks,
     )
 }
-
-/**
- * The layout of each of the [Track.notations] of [track], against [music], leaving out its arrangements of them. Its
- * notes are not dragged, so its window keeps no room for it. A notation carries each different line of lyrics sung to
- * it in the song of [tracks].
- */
-fun notationLayoutsOf(
-    track: Track,
-    music: Music,
-    tracks: List<Track> = listOf(track),
-): List<NotationLayout> = track.notations.mapNotNull { notation ->
-    val lyrics = drawnLyricLinesOf(tracks, track, notation.notationId, music)
-    val window = staffWindowOf(track, music.key, dragRoom = 0)
-    notationLayoutOf(track, notation.notationId, music, window, lyrics)
-}
-
-/**
- * The window of [track] in [key]: the treble staff, stretched to reach every note of the track, with [dragRoom] steps
- * beyond at each end to drag a note past.
- */
-fun staffWindowOf(track: Track, key: Key, dragRoom: Int = DRAG_ROOM_STEPS): StaffWindow {
-    if (track is LyricTrack) return LYRIC_WINDOW
-    val steps = track.notations.flatMap { drawnMidisOf(it, key) }.map { staffStepOf(it, key) }
-    val low = minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW)
-    val high = maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH)
-    return StaffWindow(low - dragRoom, high + dragRoom)
-}
-
-/**
- * The lines of lyrics drawn under [notationId] of [track] in the song of [tracks] and [music]: the line sung the
- * [play]th time the track plays it, or each different line when [play] is `null`.
- */
-fun drawnLyricLinesOf(
-    tracks: List<Track>,
-    track: Track,
-    notationId: NotationId,
-    music: Music,
-    play: Int? = null,
-): List<List<LineSyllable>> {
-    val lines = tracks.lyricLinesOf(track, notationId, music)
-    return if (play == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(play))
-}
-
-/** The layout of the note at [source], [onset] across what holds it, within [window]. */
-fun noteLayoutOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteLayout {
-    val (value, isDotted) = noteValueOf(source.ticks)
-    val staffSteps = (source.chord?.let { drawnMidisOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
-    val lowest = staffSteps.min()
-    val isRaised = (source.midi - key.majorTonic.value).mod(12) in RAISED_SEMITONES
-    return NoteLayout(
-        onset = onset,
-        step = window.stepOf(lowest),
-        value = value,
-        isDotted = isDotted,
-        heads = staffSteps.map { NoteHead(it - lowest, HeadShape.Round) },
-        ledgers = ledgersOf(lowest, staffSteps.max()).map { it - lowest },
-        isRaised = isRaised,
-        source = source,
-    )
-}
-
-/** The MIDI numbers [chord] is drawn at in [key], an octave above where it sounds, so it sits on the treble staff. */
-fun drawnMidisOf(chord: Chord, key: Key) = chord.toMidi(key).map { it + CHORD_DRAWN_SEMITONES }
 
 /** The MIDI numbers of every note [section] draws in [key]. */
 private fun drawnMidisOf(section: Notation, key: Key): List<Int> = when (section) {
@@ -202,14 +154,14 @@ private fun noteSourcesOf(sections: List<Notation>, key: Key): List<NoteSource> 
 }
 
 /** The syllables of the [Stanza]s of [sections], laid end to end, each pickup before its section. */
-private fun syllablesOf(sections: List<Notation>): List<LineSyllable> {
-    val syllables = mutableListOf<LineSyllable>()
+private fun syllablesOf(sections: List<Notation>): List<LineVocal> {
+    val syllables = mutableListOf<LineVocal>()
     var onset = 0
     for (section in sections) {
         if (section is Stanza) {
             var tick = onset - section.pickup.sumOf { it.beats.ticks }
             for (note in section.pickup + section.notes) {
-                note.text?.let { syllables.add(LineSyllable(tick, it)) }
+                note.text?.let { syllables.add(LineVocal(tick, it)) }
                 tick += note.beats.ticks
             }
         }
@@ -275,46 +227,8 @@ private fun headShapeOf(drum: Drum) = when (drum) {
 private fun ledgersOf(lowest: Int, highest: Int) =
     (STAFF_HIGH + 2..highest step 2).toList() + (STAFF_LOW - 2 downTo lowest step 2).toList()
 
-/** The value written for [ticks], the longest that fits, and whether it wants a dot for the half more. */
-private fun noteValueOf(ticks: Int): Pair<NoteValue, Boolean> {
-    val value = NoteValue.entries.firstOrNull { it.ticks <= ticks } ?: NoteValue.Sixteenth
-    return value to (ticks * 2 >= value.ticks * 3)
-}
-
-/**
- * The staff step of [midi] in [key], counted from C of octave 0. A note takes the line or space of its scale degree
- * from the major tonic, and a note between degrees shares the line of the degree below it.
- */
-fun staffStepOf(midi: Int, key: Key): Int {
-    val tonic = key.majorTonic.value
-    val semitones = midi - tonic
-    return semitones.floorDiv(12) * 7 + TONIC_STEPS[tonic] + DEGREE_STEPS[semitones.mod(12)]
-}
-
-/** The MIDI number of the degree of the scale of [key] on [staffStep], the inverse of [staffStepOf] for notes of the scale. */
-fun midiOfStaffStep(staffStep: Int, key: Key): Int {
-    val tonic = key.majorTonic.value
-    val steps = staffStep - TONIC_STEPS[tonic]
-    return tonic + steps.floorDiv(7) * 12 + SCALE_SEMITONES[steps.mod(7)]
-}
-
-/** The letter each major tonic is spelled on, counted from C, as flats name them in all but F#. */
-private val TONIC_STEPS = listOf(0, 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6)
-
-/** The steps above the tonic of each semitone above it, the sharp of a degree sharing its line. */
-private val DEGREE_STEPS = listOf(0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6)
-
-/** The semitones above the tonic of each degree of the scale. */
-private val SCALE_SEMITONES = listOf(0, 2, 4, 5, 7, 9, 11)
-
-/** The semitones above the tonic that fall between degrees of the scale. */
-private val RAISED_SEMITONES = setOf(1, 3, 6, 8, 10)
-
 /** The steps of room to drag a note past the highest and lowest of a track. */
 private const val DRAG_ROOM_STEPS = 2
-
-/** The semitones a chord is drawn above where it sounds. */
-const val CHORD_DRAWN_SEMITONES = 12
 
 /** The bottom line of the treble staff, E4, and its top line, F5. */
 private const val STAFF_LOW = 37

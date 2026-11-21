@@ -1,15 +1,12 @@
 package streetlight.web.model
 
-import kampfire.model.Tap
-import kampfire.model.mutableTapOf
+import co.touchlab.stately.concurrency.synchronize
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
-import streetlight.model.music.MusicSheet
 import streetlight.model.music.Section
 import streetlight.model.music.SectionId
 import streetlight.model.music.Track
@@ -18,140 +15,93 @@ import streetlight.model.music.TrackType
 import streetlight.model.music.copyTrack
 import streetlight.model.music.emptyTrackOf
 import streetlight.model.music.freeTrackNameOf
-import streetlight.model.music.ui.SectionCell
-import streetlight.model.music.ui.cellsOf
-import streetlight.model.studio.StudioDb
+import streetlight.model.music.ui.getMusicTable
 
-/**
- * The state behind the editor of the music and tracks of [initialSheet]. The music is saved to [db] once edits pause,
- * and the tracks follow [db], where the editor of a track in focus saves it.
- */
 class MusicEditor(
     private val scope: CoroutineScope,
-    initialSheet: MusicSheet,
-    private val db: StudioDb,
+    private val host: MusicHost,
 ) {
-    private val state = storeOf(MusicEditorState(initialSheet.music, initialSheet.tracks))
+    private val state = storeOf(MusicEditorState())
 
-    val musicState = state.mutableTapOf({ it.music }) { copy(music = it) }
-    val focusState: Tap<MusicEditorFocus?> = state.tapOf { it.focus }
-    val sheetState: Tap<MusicSheet> = state.tapOf { MusicSheet(it.music, it.tracks) }
-    val overviewState = state.tapOf { musicOverviewOf(it.music, it.tracks) }
-    val lyricTracksState: Tap<List<LyricTrack>> = state.tapOf { editor -> editor.tracks.filterIsInstance<LyricTrack>() }
-    val sectionsState: Tap<List<Section>> = state.tapOf { it.music.sections }
-    val arrangementState: Tap<List<Section>> = state.tapOf { editor ->
-        editor.music.arrangement.mapNotNull { sectionId -> editor.music.sections.firstOrNull { it.sectionId == sectionId } }
+    val focusState = state.tapOf { it.focus }
+
+    val sheetState = host.sheetState
+    val musicState = sheetState.tapOf { it.music }
+    val overviewState = sheetState.tapOf { it.getMusicTable() }
+    val sectionsState = musicState.tapOf { it.sections }
+    val arrangementState = musicState.tapOf { music ->
+        music.arrangement.mapNotNull { sectionId -> music.sections.firstOrNull { it.sectionId == sectionId} }
     }
+    val tracksState = sheetState.tapOf { it.tracks }
+    val lyricTracksState = tracksState.tapOf { it.filterIsInstance<LyricTrack>() }
 
-    /** The tracks in their order; setting them reorders the music's tracks. */
-    val tracksState = state.mutableTapOf({ it.tracks }) { tracks ->
-        copy(tracks = tracks, music = music.copy(trackOrder = tracks.map { it.trackId }))
-    }
+    fun readTrack(trackId: TrackId) = tracksState.now.firstOrNull { it.trackId == trackId }
 
-    init {
-        scope.launch { musicState.saveChanges { db.music.saveMusic(it) } }
-        scope.launch {
-            db.track.flowTracks(initialSheet.music.musicId).collect { tracks ->
-                state.update { it.copy(tracks = it.music.orderTracks(tracks)) }
-            }
-        }
-    }
-
-    fun readTrack(trackId: TrackId) = state.now.tracks.firstOrNull { it.trackId == trackId }
-
-    fun trackState(trackId: TrackId): Tap<Track?> = state.tapOf { editor -> editor.tracks.firstOrNull { it.trackId == trackId } }
-
-    /** Shows [focus] in place of the overview, or the overview for `null`. */
     fun setFocus(focus: MusicEditorFocus?) = state.update { it.copy(focus = focus) }
 
-    /** Adds an empty track of [trackType], named for its type under a name no track holds, and brings it into focus. */
     fun addTrack(trackType: TrackType) {
-        val editor = state.now
-        val track = emptyTrackOf(trackType, editor.music.musicId, editor.tracks.newTrackName(trackType.name))
-        state.update { it.copy(music = it.music.copy(trackOrder = it.music.trackOrder + track.trackId), focus = TrackFocus(track)) }
-        scope.launch { db.track.saveTrack(track) }
+        val sheet = sheetState.now
+        val track = emptyTrackOf(trackType, sheet.music.musicId, sheet.tracks.newTrackName(trackType.name))
+        host.add(track)
+        state.update { it.copy(focus = TrackFocus(track.trackId)) }
     }
 
-    /**
-     * Names the track [trackId] [name], numbered when another track holds it, sets its [capo], and sings a melody with
-     * the lyric track [lyrics], or the first of the music when `null`. A blank name keeps the one it has.
-     */
     fun editTrack(trackId: TrackId, name: String, capo: Int?, lyrics: TrackId?) {
-        val tracks = state.now.tracks
-        val track = tracks.firstOrNull { it.trackId == trackId } ?: return
-        val base = name.trim().takeIf { it.isNotEmpty() && it != track.name }
-        val freeName = base?.let { tracks.filter { it.trackId != trackId }.newTrackName(it) } ?: track.name
-        val edited = track.copyTrack(name = freeName, capo = capo).let { (it as? MelodyTrack)?.copy(lyricsId = lyrics) ?: it }
-        scope.launch { db.track.saveTrack(edited) }
+        val tracks = tracksState.now
+        val trackNow = tracks.firstOrNull { it.trackId == trackId } ?: return
+        val base = name.trim().takeIf { it.isNotEmpty() && it != trackNow.name }
+        val freeName = base?.let { tracks.filter { it.trackId != trackId }.newTrackName(it) } ?: trackNow.name
+        val track = trackNow.copyTrack(name = freeName, capo = capo).let { (it as? MelodyTrack)?.copy(lyricsId = lyrics) ?: it }
+        host.update(track)
     }
 
-    /** Removes the track [trackId] with its bound clips and its studies. */
     fun removeTrack(trackId: TrackId) {
-        state.update { editor ->
-            editor.copy(
-                music = editor.music.copy(trackOrder = editor.music.trackOrder - trackId),
-                focus = editor.focus?.takeIf { it.track.trackId != trackId },
-            )
-        }
-        scope.launch { db.track.removeTrack(trackId) }
+        state.update { if (it.focus?.trackId == trackId) it.copy(focus = null) else it }
+        host.remove(trackId)
     }
 
-    /**
-     * Adds the section [name], [measures] long, to the end of the music's arrangement, joining the music's sections
-     * when none holds the name. Returns whether it was added: not for a blank name, a name with a comma, or a
-     * measure count below one.
-     */
+    fun setTrackOrder(tracks: List<Track>) {
+        val trackOrder = tracks.map { it.trackId }
+        val music = musicState.now.copy(trackOrder = trackOrder)
+        host.update(music)
+    }
+
     fun addSection(name: String, measures: Int): Boolean {
         val sectionName = name.trim().takeIf { it.isNotEmpty() && ',' !in it } ?: return false
         if (measures < 1) return false
-        state.update { editor ->
-            val music = editor.music
-            val section = music.sectionOf(sectionName) ?: Section(SectionId.random(), sectionName, measures)
-            val sections = if (section in music.sections) music.sections else music.sections + section
-            editor.copy(music = music.copy(sections = sections, arrangement = music.arrangement + section.sectionId))
-        }
+        val musicNow = musicState.now
+        val section = musicNow.sectionOf(sectionName) ?: Section(SectionId.random(), sectionName, measures)
+        val sections = if (section in musicNow.sections) musicNow.sections else musicNow.sections + section
+        val music = musicNow.copy(sections = sections, arrangement = musicNow.arrangement + section.sectionId)
+        host.update(music)
         return true
     }
 
-    /**
-     * Names the section [sectionId] [name], numbered when another section holds the name, and makes it [measures]
-     * long. A blank name keeps the one it has, and a count below one keeps its measures.
-     */
-    fun editSection(sectionId: SectionId, name: String, measures: Int) = state.update { editor ->
-        val held = editor.music.sections.filter { it.sectionId != sectionId }.mapTo(mutableSetOf()) { it.name }
+    fun editSection(sectionId: SectionId, name: String, measures: Int) {
+        val musicNow = musicState.now
+        val sectionsNow = musicNow.sections.filter { it.sectionId != sectionId }.mapTo(mutableSetOf()) { it.name }
         val base = name.trim().takeIf { it.isNotEmpty() && ',' !in it }
-        val sections = editor.music.sections.map { section ->
+        val sections = musicNow.sections.map { section ->
             if (section.sectionId != sectionId) return@map section
-            val freeName = base?.let { generateSequence(1) { it + 1 }.map { n -> if (n == 1) base else "$base $n" }.first { it !in held } }
+            val freeName = base?.let { generateSequence(1) { it + 1 }.map { n -> if (n == 1) base else "$base $n" }.first { it !in sectionsNow } }
             section.copy(name = freeName ?: section.name, measures = measures.takeIf { it >= 1 } ?: section.measures)
         }
-        editor.copy(music = editor.music.copy(sections = sections))
+        host.update(musicNow.copy(sections = sections))
     }
 
     /** Sets the sections every track follows, in order. */
-    fun setMusicArrangement(sections: List<SectionId>) = state.update { it.copy(music = it.music.copy(arrangement = sections)) }
+    fun setMusicArrangement(arrangement: List<SectionId>) {
+        host.update(musicState.now.copy(arrangement = arrangement))
+    }
+
+    fun setMusic(music: Music) {
+        host.update(music)
+    }
 }
 
 data class MusicEditorState(
-    val music: Music,
-    val tracks: List<Track> = emptyList(),
     val focus: MusicEditorFocus? = null,
 )
-
-/** The cells of a song in an overview: its [sectionCells], then the [trackCells] of each track. */
-data class MusicOverview(
-    val sectionCells: List<SectionCell> = emptyList(),
-    val trackCells: List<TrackCells> = emptyList(),
-)
-
-/** The [cells] of [track] in an overview of its song. */
-data class TrackCells(
-    val track: Track,
-    val cells: List<SectionCell>,
-)
-
-fun musicOverviewOf(music: Music, tracks: List<Track>) =
-    MusicOverview(cellsOf(music), tracks.map { TrackCells(it, cellsOf(music, it)) })
 
 /** [base], or [base] with the first number from 2 that no track of these holds. */
 private fun List<Track>.newTrackName(base: String) = freeTrackNameOf(base, mapTo(mutableSetOf()) { it.name })

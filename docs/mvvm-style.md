@@ -198,3 +198,27 @@ fun clipLabelOf(trackId: TrackId, notationId: NotationId?): Tap<String?> = state
 
 Recommendations:
 - Hold the fact as state, as `isClipStale`, and let the view decide how it shows, such as a red label
+
+### Avoid complicated state resolution
+
+Indicators:
+- Reliance on an elaborate factory to resolve state.
+
+```kotlin
+private fun stateOf(track: Track): TrackEditorState {
+    fun namedOf(notationId: NotationId) = namedNotationOf(track, notationId, music)
+    return TrackEditorState(
+        track = track,
+        notations = track.notations.map { namedOf(it.notationId) },
+        arrangements = TrackArrangements(
+            arrangements = track.arrangements.map { arrangement ->
+                NamedArrangement(namedOf(arrangement.notationId), arrangement.notations.map { namedOf(it) })
+            },
+            choices = (track.notations.map { it.notationId } + track.arrangements.map { it.notationId }).map { namedOf(it) },
+        ),
+        warnings = sectionWarningsOf(track, music),
+        sectionCells = cellsOf(music),
+        cells = cellsOf(music, track),
+    )
+}
+```

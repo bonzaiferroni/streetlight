@@ -28,6 +28,7 @@ data class Phrase(
     override val measuresPerLine: Int = 4,
 ) : Notation {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
+    override val trackType get() = TrackType.Melody
 }
 
 /** A note at [interval] held for [beats], or a rest when [interval] is `null`. */

@@ -34,7 +34,7 @@ object LyricParser {
         time: TimeSignature,
         names: SectionNames,
         melody: MelodyTrack? = null,
-    ): NotationRead<LyricTrack> {
+    ): NotationParse<LyricTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
         val stanzas = trackText.notations.map { notation ->
@@ -44,7 +44,7 @@ object LyricParser {
             readNotation(notation, time, phrase, errors)
         }
         val track = LyricTrack(trackId, musicId, name, stanzas, trackText.arrangements, trackText.sections, trackText.capo)
-        return NotationRead(track, errors)
+        return NotationParse(track, errors)
     }
 
     /**
@@ -57,9 +57,9 @@ object LyricParser {
         text: String,
         time: TimeSignature,
         phrase: Phrase? = null,
-    ): NotationRead<Stanza> {
+    ): NotationParse<Stanza> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readNotation(notationTextOf(notationId, name, text, errors), time, phrase, errors), errors)
+        return NotationParse(readNotation(notationTextOf(notationId, name, text, errors), time, phrase, errors), errors)
     }
 
     private fun readNotation(

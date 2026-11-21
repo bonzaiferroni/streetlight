@@ -3,11 +3,9 @@
 package streetlight.web.view
 
 import koala.SvgFile
-import streetlight.model.music.TrackId
 import koala.component.IconStyle
 import koala.dom.ViewScope
 import koala.dom.component.*
-import koala.dom.requireClosest
 import koala.dom.layout.flowBlock
 import koala.model.MenuAction
 import koala.modifier.*
@@ -15,35 +13,35 @@ import koala.page.Id
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.css.pct
-import streetlight.model.music.ui.NoteLayout
 import streetlight.model.music.ui.NoteValue
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.model.Lane
 import streetlight.web.model.LaneEditor
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.LaneSection
+import streetlight.web.model.MusicHost
 import streetlight.web.model.TimeWindow
-import web.events.addEventListener
+import streetlight.web.model.TrackPlayer
+import streetlight.web.model.WaveShelf
 import web.html.HTMLElement
-import web.pointer.CLICK
-import web.pointer.POINTER_CANCEL
-import web.pointer.POINTER_DOWN
-import web.pointer.POINTER_MOVE
-import web.pointer.POINTER_UP
-import web.pointer.PointerEvent
 import kotlin.uuid.Uuid
 
 /** Renders the song's lanes below their player controls and timeline. */
-context(config: MusicConfig, model: LaneEditor)
-fun ViewScope.laneEditor() = column {
-    laneControls()
-    column(modify(Zen, BorderRadius1, OverflowClip)) {
-        laneTimeline(LaneStyle.Row)
-        div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
-            flowBlock(model.lanesState, FlexColumn) { lanes ->
-                lanes.forEachIndexed { index, lane -> lane(index, lane) }
+context(config: MusicConfig, host: MusicHost, waveShelf: WaveShelf, player: TrackPlayer)
+fun ViewScope.laneEditor() {
+    val model = LaneEditor(contentScope, host, waveShelf, player)
+    context(model) {
+        column {
+            laneControls()
+            column(modify(Zen, BorderRadius1, OverflowClip)) {
+                laneTimeline(LaneStyle.Row)
+                div(modify(FlexColumn, Gap2Px, StudioStyle.Stage)) {
+                    flowBlock(model.lanesState, FlexColumn) { lanes ->
+                        lanes.forEachIndexed { index, lane -> lane(index, lane) }
+                    }
+                    cursorOverlay(LaneStyle.CursorOverlay)
+                }
             }
-            cursorOverlay(LaneStyle.CursorOverlay)
         }
     }
 }

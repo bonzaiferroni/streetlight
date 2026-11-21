@@ -36,7 +36,7 @@ class MelodyParser(
         time: TimeSignature,
         names: SectionNames,
         lyricTrackIds: Map<String, TrackId> = emptyMap(),
-    ): NotationRead<MelodyTrack> {
+    ): NotationParse<MelodyTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names, setOf(LYRICS))
         val phrases = trackText.notations.map { readNotation(it, time, errors) }
@@ -45,13 +45,13 @@ class MelodyParser(
                 ?: null.also { errors.add(NotationError(property.line, "No lyric track named ${property.value}")) }
         }
         val track = MelodyTrack(trackId, musicId, name, phrases, trackText.arrangements, trackText.sections, trackText.capo, lyrics)
-        return NotationRead(track, errors)
+        return NotationParse(track, errors)
     }
 
     /** Reads the notation [notationId] named [name] from [text], the lines of its measures alone, checked against [time]. */
-    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationRead<Phrase> {
+    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationParse<Phrase> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readNotation(notationTextOf(notationId, name, text, errors), time, errors), errors)
+        return NotationParse(readNotation(notationTextOf(notationId, name, text, errors), time, errors), errors)
     }
 
     private fun readNotation(notation: NotationText, time: TimeSignature, errors: MutableList<NotationError>): Phrase {

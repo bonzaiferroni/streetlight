@@ -184,7 +184,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`MusicForm`](MusicForm.kt) | Holds a music's key, time, tempo and capo apart from the music until they are applied |
 | [`LaneEditor`](LaneEditor.kt) | Lays a song's tracks out as lanes of notations on a timeline, and plays them from its cursor |
 | [`NoteDrag`](NoteDrag.kt) | A note dragged in a lane, and the snapping and edit it makes |
-| [`NotationField`](NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
+| [`NotationTextEditor`](NotationField.kt) | The text of a notation and the problems found reading it, which the notation editors share |
 | [`StudioIdbDb`](StudioIdbDb.kt) | The `StudioDb` kept in the browser, and its DAOs |
 | [`ClipEditor`](ClipEditor.kt) | Binds the clip of a track or notation, chosen among those that fit it |
 | [`ClipMic`](ClipMic.kt) | Records a clip of a track or notation after a counted lead-in, keeping it only when it reaches the end |

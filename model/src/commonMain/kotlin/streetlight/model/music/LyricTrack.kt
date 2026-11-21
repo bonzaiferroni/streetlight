@@ -25,6 +25,7 @@ data class Stanza(
     override val measuresPerLine: Int = 2,
 ) : Notation {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
+    override val trackType get() = TrackType.Lyrics
 }
 
 /** A syllable or word of [text] sung for [beats], or a rest when [text] is `null`. */

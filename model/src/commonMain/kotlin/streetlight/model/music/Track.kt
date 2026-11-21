@@ -1,5 +1,6 @@
 package streetlight.model.music
 
+import kampfire.model.Labeled
 import koala.SvgFile
 import koala.SvgPack
 import koala.modifier.Palette
@@ -16,7 +17,7 @@ import kotlin.uuid.Uuid
  * its song.
  */
 @Serializable
-sealed interface Track {
+sealed interface Track: Labeled {
     val trackId: TrackId
     val musicId: MusicId
     val name: String
@@ -25,14 +26,18 @@ sealed interface Track {
     val arrangements: List<Arrangement>
     val sections: Map<SectionId, NotationId>
     val capo: Int?
+
+    override val label get() = name
 }
 
 /** The types of [Track], each with the [svg] and [color] that stand for it. */
-enum class TrackType(val svg: SvgPack, val color: Palette) {
+enum class TrackType(val svg: SvgPack, val color: Palette): Labeled {
     Chords(SvgFile.AcousticGuitar, Palette.Gold),
     Melody(SvgFile.Music, Palette.Cyan),
     Lyrics(SvgFile.Microphone, Palette.Magenta),
-    Drums(SvgFile.Drum, Palette.SeaGreen),
+    Drums(SvgFile.Drum, Palette.SeaGreen);
+
+    override val label get() = name
 }
 
 /** The identity of a track, which it keeps through a change of its name. */
@@ -46,30 +51,6 @@ value class TrackId(val value: Uuid) {
 fun freeTrackNameOf(base: String, held: Set<String>) = generateSequence(1) { it + 1 }
     .map { if (it == 1) base else "$base $it" }
     .first { it !in held }
-
-/** The notes of a part of a track, [length] long, shown as [name] and written [measuresPerLine] measures to a line. */
-@Serializable
-sealed interface Notation {
-    val notationId: NotationId
-    val name: String?
-    val length: Beats
-    val measuresPerLine: Int
-}
-
-/** The identity of a notation or an arrangement of a track. */
-@JvmInline @Serializable
-value class NotationId(val value: Uuid) {
-    override fun toString() = value.toString()
-    companion object { fun random() = NotationId(Uuid.random()) }
-}
-
-/** The [notations] played in order as [notationId], shown as [name], each a notation or another arrangement. */
-@Serializable
-data class Arrangement(
-    val notationId: NotationId,
-    val name: String,
-    val notations: List<NotationId>,
-)
 
 /** This track named [name], with [arrangements], [sections] and [capo], and the notations it has. */
 fun Track.copyTrack(
@@ -130,11 +111,10 @@ fun Track.emptyNotationOf(notationId: NotationId, name: String?): Notation = whe
 }
 
 /**
- * The name of the notation or arrangement [notationId], or the name of [music] and the track when it has none, as
- * `Amazing Grace Chords`.
+ * The name of the notation or arrangement [notationId] or track name
  */
-fun Track.nameOf(notationId: NotationId, music: Music) =
-    notations.firstOrNull { it.notationId == notationId }?.let { it.name ?: "${music.name} $name" }
+fun Track.nameOf(notationId: NotationId) =
+    notations.firstOrNull { it.notationId == notationId }?.let { it.name ?: name }
         ?: arrangements.firstOrNull { it.notationId == notationId }?.name
         ?: UNNAMED_SECTION
 

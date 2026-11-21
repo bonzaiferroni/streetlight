@@ -38,7 +38,7 @@ Each track type has a text notation, read and written by its `FooParser`, as `Ch
 
 A notation or arrangement plays the sections its `-sections:` names. Without one, a notation no arrangement holds plays the section of its own name, and an empty `-sections:` plays none. A section played by two of a track's notations is reported and kept by the first.
 
-Each parser also reads and writes one notation alone, as the lines of its measures with no heading, property or arrangement. `readNotation` and `writeNotation` choose the parser by the notation's type, and a notation read keeps its id and name. The track's whole text is for a song's markdown.
+Each parser also reads and writes one notation alone, as the lines of its measures with no heading, property or arrangement. `notationParseOf` and `notationTextOf` choose the parser by the notation's type, and a notation read keeps its id and name. The track's whole text is for a song's markdown.
 
 A lyric track read against a melody is checked by section: each syllable starts on a note of the phrase the melody plays there, and the stanza ends with the phrase or before.
 

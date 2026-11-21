@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import js.array.ReadonlyArray
 import js.objects.unsafeJso
+import kampfire.model.Tap
 import web.animations.Keyframe
 import web.animations.awaitAnimationFrame
 import web.cssom.getComputedStyle
@@ -58,8 +59,9 @@ class OrderHandle internal constructor(
  * With [Transitioner] in [mod], an item added or removed pops in or out inside a view transition.
  */
 fun <T, K> ViewScope.orderColumn(
-    state: MutableTap<List<T>>,
+    state: Tap<List<T>>,
     keyOf: (T) -> K,
+    setOrder: (List<T>) -> Unit,
     mod: Modifier? = null,
     content: context(OrderHandle) ViewScope.(T) -> Unit,
 ): HTMLDivElement {
@@ -109,11 +111,9 @@ fun <T, K> ViewScope.orderColumn(
             order = ending.startOrder.filter { it in items }
             place(isAnimated = true)
         } else if (order != ending.startOrder) {
-            val moved = order
-            state.update { list ->
-                val byKey = list.associateBy(keyOf)
-                moved.mapNotNull { byKey[it] } + list.filter { keyOf(it) !in moved }
-            }
+            val list = state.now
+            val byKey = list.associateBy(keyOf)
+            setOrder(order.mapNotNull { byKey[it] } + list.filter { keyOf(it) !in order })
         }
     }
 

@@ -39,9 +39,11 @@ import koala.dom.layout.lazyTabs
 import koala.dom.layout.lazyTransTabs
 import koala.dom.layout.transTabs
 import kotlinx.coroutines.launch
+import streetlight.model.music.MusicSheet
 import streetlight.model.studio.StudioDb
 import streetlight.web.model.LaneEditor
 import streetlight.web.model.MusicConfig
+import streetlight.web.model.MusicHost
 import streetlight.web.model.WaveShelf
 import streetlight.web.model.toaster
 import streetlight.web.utility.pickFile
@@ -71,8 +73,7 @@ fun ViewScope.musicStudioScreen() {
                 when (sheet) {
                     null -> musicList()
                     else -> {
-                        val editor = MusicEditor(contentScope, sheet, db)
-                        musicFocus(editor)
+                        musicFocus(sheet)
                     }
                 }
             }
@@ -94,27 +95,25 @@ fun RouteScope.viewMusicStudioRoute() {
  * how its notation is written and shown and the formats it exports to, as a tab for each layout.
  */
 context(player: TrackPlayer, config: MusicConfig, db: StudioDb, waveShelf: WaveShelf)
-private fun ViewScope.musicFocus(editor: MusicEditor) {
-    val lanes = LaneEditor(contentScope, editor.sheetState, waveShelf, player)
+private fun ViewScope.musicFocus(initialSheet: MusicSheet) {
+    val host = MusicHost(contentScope, initialSheet, db)
     // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
 //    songSettingsPopover(settingsId, editor)
-    topSection(
-        label = editor.musicState.now.name,
-        onBack = { portal.go(MusicStudioRoute()) },
-        headingMod = musicNameTransition(editor.musicState.now.musicId),
-        icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
-    ) {
-        lazyTransTabs(paramKey = MusicStudioRoute.tabParam.key) {
-            MusicStudioTab.entries.forEach { studioTab ->
-                tab(studioTab.label, studioTab.svg) {
-                    when (studioTab) {
-                        MusicStudioTab.Compose -> context(editor) { musicEditor() }
-                        MusicStudioTab.Timeline -> {
-                            context(lanes) {
-                                laneEditor()
-                            }
+    context(host) {
+        topSection(
+            label = host.musicState.now.name,
+            onBack = { portal.go(MusicStudioRoute()) },
+            headingMod = musicNameTransition(host.musicState.now.musicId),
+            icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
+        ) {
+            lazyTransTabs(paramKey = MusicStudioRoute.tabParam.key) {
+                MusicStudioTab.entries.forEach { studioTab ->
+                    tab(studioTab.label, studioTab.svg) {
+                        when (studioTab) {
+                            MusicStudioTab.Compose -> musicEditor()
+                            MusicStudioTab.Timeline -> laneEditor()
                         }
                     }
                 }

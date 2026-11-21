@@ -9,7 +9,7 @@ import kotlinx.css.Flex
 import web.html.HTMLElement
 import streetlight.model.music.Track
 import streetlight.model.music.TrackType
-import streetlight.model.music.ui.CellPass
+import streetlight.model.music.ui.NotationCell
 import streetlight.model.music.ui.SectionCell
 import streetlight.web.dom.layout.actionSection
 import streetlight.web.model.MusicEditor
@@ -27,7 +27,7 @@ fun ViewScope.musicOverview(setFocus: (MusicEditorFocus?) -> Unit) {
             // the grid's rows are its children, so the block that rebuilds them holds the grid
             sectionRow(overview.sectionCells, null) { }
             overview.trackCells.forEach { (track, cells) ->
-                sectionRow(cells, track.trackType, { pass -> setFocus(NotationFocus(track, pass.notationId)) }) { trackLabel(track) }
+                sectionRow(cells, track.trackType, { pass -> setFocus(NotationFocus(track.trackId, pass.notationId)) }) { trackLabel(track) }
             }
         }
     }
@@ -41,7 +41,7 @@ fun ViewScope.musicOverview(setFocus: (MusicEditorFocus?) -> Unit) {
 fun ViewScope.sectionRow(
     cells: List<SectionCell>,
     trackType: TrackType?,
-    onPass: ((CellPass) -> Unit)? = null,
+    onPass: ((NotationCell) -> Unit)? = null,
     label: ViewScope.() -> Unit,
 ) {
     div(null) { label() }
@@ -62,7 +62,7 @@ fun ViewScope.trackLabel(track: Track) = row(AlignItemsCenter) {
  * Renders the cells of [cell]: the section whole in the song's own row, or a cell for each pass of a track, in the
  * color of [trackType] and handed to [onPass] when clicked, then one for its rest.
  */
-private fun ViewScope.sectionCells(cell: SectionCell, trackType: TrackType?, onPass: ((CellPass) -> Unit)?) {
+private fun ViewScope.sectionCells(cell: SectionCell, trackType: TrackType?, onPass: ((NotationCell) -> Unit)?) {
     if (trackType == null) return overviewCell(cell.name, cell.measures.toDouble(), ZenBg)
 
     // a notation that runs past its section is drawn to the section's end

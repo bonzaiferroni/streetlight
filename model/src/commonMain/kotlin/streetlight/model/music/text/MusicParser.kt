@@ -18,7 +18,7 @@ import streetlight.model.music.TimeSignature
  */
 object MusicParser {
     /** Reads [text] onto [music]. */
-    fun read(text: String, music: Music): NotationRead<Music> {
+    fun read(text: String, music: Music): NotationParse<Music> {
         val errors = mutableListOf<NotationError>()
         var result = music
         var arrangementRead: ArrangementRead? = null
@@ -49,7 +49,7 @@ object MusicParser {
             }
         }
         arrangements.lastOrNull()?.let { result = result.copy(sections = it.sections, arrangement = it.arrangement) }
-        return NotationRead(result, errors)
+        return NotationParse(result, errors)
     }
 
     /** Writes [music] as the text [read] reads. */

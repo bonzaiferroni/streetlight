@@ -20,6 +20,7 @@ import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicEditorFocus
+import streetlight.web.model.MusicHost
 import streetlight.web.model.NotationEditor
 import streetlight.web.model.NotationFocus
 import streetlight.web.model.NotationView
@@ -29,20 +30,20 @@ import streetlight.web.model.TrackFocus
  * Renders the notation of [focus] alone in a card under its name and its track's icon, with an up arrow that hands
  * [setFocus] its track as it now stands: its text and its notes.
  */
-context(config: MusicConfig, model: MusicEditor, db: StudioDb)
+context(config: MusicConfig, host: MusicHost)
 fun ViewScope.notationEditor(focus: NotationFocus, setFocus: (MusicEditorFocus?) -> Unit) {
-    val track = focus.track
-    val editor = NotationEditor(contentScope, config.notationStyleState, track, focus.notationId, model.sheetState, db)
+    val track = host.readTrack(focus.notationId)
+    val editor = NotationEditor(contentScope, config.notationStyleState, focus.notationId, host)
     actionCard(
         label = editor.nameState.now,
         level = HeadingLevel.H3,
         mod = modify(track.trackType.color.bg, OutlineLow),
         svg = track.trackType.svg.large,
         key = focus.notationId.toString(),
-        onBack = { setFocus(TrackFocus(editor.trackNow)) },
+        onBack = { setFocus(TrackFocus(track.trackId)) },
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
-            notationPanes(track.notationLabel, editor.textState, editor.errorsState, config.notationViewState) {
+            notationPanes(track.notationLabel, editor.notationTextEditor.textState, editor.errorsState, config.notationViewState) {
                 flowBlock(editor.notationLayoutState) { notationLayout -> notationLayout?.let { notationStrips(it) } }
             }
         }

@@ -47,6 +47,7 @@ internal class IdbChanges<T : Any>(
 
     fun save(value: T) {
         val key = table.keyOf(value)
+        if (rows[key] == value) return
         rows[key] = value
         touchedKeys += key
     }

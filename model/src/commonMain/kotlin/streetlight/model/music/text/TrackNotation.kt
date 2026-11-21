@@ -30,7 +30,7 @@ data class NotationError(
 )
 
 /** The value read from a text, with the problems found where the text could not be read. */
-data class NotationRead<out T>(
+data class NotationParse<out T>(
     val value: T,
     val errors: List<NotationError>,
 )

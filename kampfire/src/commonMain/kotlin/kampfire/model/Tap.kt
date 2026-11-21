@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -44,10 +45,10 @@ fun <T> Tap<T>.refine(applyFlow: (Flow<T>) -> Flow<T>): Tap<T> = tapOf(applyFlow
 inline fun <Base, reified T : Base> MutableTap<Base>.narrow(): MutableTap<T> =
     mutableTapOf(readValue = { it as T }, writeValue = { it })
 
-/** Runs [block] with each value in [scope], starting with the current one. */
-fun <T> Tap<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Tap<T> {
+/** Runs [block] in [scope] with each value after the first [drop]. */
+fun <T> Tap<T>.reactIn(scope: CoroutineScope, drop: Int = 0, block: suspend (T) -> Unit): Tap<T> {
     scope.launch {
-        flow.collect { value ->
+        flow.drop(drop).collect { value ->
             block(value)
         }
     }

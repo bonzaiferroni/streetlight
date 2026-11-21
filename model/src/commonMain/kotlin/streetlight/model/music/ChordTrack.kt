@@ -25,6 +25,7 @@ data class Progression(
     override val measuresPerLine: Int = 4,
 ) : Notation {
     override val length get() = Beats(notes.sumOf { it.beats.ticks })
+    override val trackType get() = TrackType.Chords
 }
 
 /** A [chord] held for [beats], or a rest when [chord] is `null`. */

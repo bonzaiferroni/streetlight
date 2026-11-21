@@ -2,17 +2,18 @@ package streetlight.web.model
 
 import streetlight.model.music.NotationId
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 
 /** What the music editor shows in place of its overview, seeded with the track as it stood when focused. */
 sealed interface MusicEditorFocus {
-    val track: Track
+    val trackId: TrackId
 }
 
 data class TrackFocus(
-    override val track: Track,
+    override val trackId: TrackId,
 ) : MusicEditorFocus
 
 data class NotationFocus(
-    override val track: Track,
+    override val trackId: TrackId,
     val notationId: NotationId,
 ) : MusicEditorFocus

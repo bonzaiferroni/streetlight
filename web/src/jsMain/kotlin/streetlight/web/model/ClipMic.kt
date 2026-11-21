@@ -186,7 +186,7 @@ class ClipMic(
     private suspend fun nextName(): String {
         val sheet = sheetState.now
         val track = sheet.tracks.firstOrNull { it.trackId == trackId }
-        val notationName = notationId?.let { track?.nameOf(it, sheet.music) }
+        val notationName = notationId?.let { track?.nameOf(it) }
         val base = listOfNotNull(track?.name, notationName).joinToString(" ")
         val names = clipLibrary.readClips().mapTo(mutableSetOf()) { it.name }
         return generateSequence(1) { it + 1 }.map { "$base $it" }.first { it !in names }

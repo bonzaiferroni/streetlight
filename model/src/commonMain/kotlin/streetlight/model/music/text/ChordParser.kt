@@ -35,18 +35,18 @@ class ChordParser(
         text: String,
         time: TimeSignature,
         names: SectionNames,
-    ): NotationRead<ChordTrack> {
+    ): NotationParse<ChordTrack> {
         val errors = mutableListOf<NotationError>()
         val trackText = readTrackText(text, errors, names)
         val progressions = trackText.notations.map { readNotation(it, time, errors) }
         val track = ChordTrack(trackId, musicId, name, progressions, trackText.arrangements, trackText.sections, trackText.capo)
-        return NotationRead(track, errors)
+        return NotationParse(track, errors)
     }
 
     /** Reads the notation [notationId] named [name] from [text], the lines of its measures alone, cut by [time]. */
-    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationRead<Progression> {
+    fun readNotation(notationId: NotationId, name: String?, text: String, time: TimeSignature): NotationParse<Progression> {
         val errors = mutableListOf<NotationError>()
-        return NotationRead(readNotation(notationTextOf(notationId, name, text, errors), time, errors), errors)
+        return NotationParse(readNotation(notationTextOf(notationId, name, text, errors), time, errors), errors)
     }
 
     private fun readNotation(notation: NotationText, time: TimeSignature, errors: MutableList<NotationError>): Progression {

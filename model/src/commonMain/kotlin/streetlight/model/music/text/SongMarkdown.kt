@@ -14,6 +14,7 @@ import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.TrackType
 import streetlight.model.music.freeTrackNameOf
+import streetlight.model.music.orderTracks
 
 /**
  * The reader and writer of a whole song as markdown: its title as a heading with its artist on the next line, the text
@@ -76,7 +77,8 @@ object SongMarkdown {
     fun write(song: Song, music: Music, tracks: List<Track>): String {
         val heading = listOfNotNull("$TITLE_PREFIX${song.title}", song.artist.takeIf { it.isNotBlank() }).joinToString("\n")
         val trackNames = tracks.associate { it.trackId to it.name }
-        val blocks = listOf(heading, MusicParser.write(music)) + music.orderTracks(tracks).flatMap { track ->
+        val orderedTracks = tracks.orderTracks(music.trackOrder)
+        val blocks = listOf(heading, MusicParser.write(music)) + orderedTracks.flatMap { track ->
             listOf("$TRACK_PREFIX${track.name} (${track.trackType.name})", writeTrack(track, music, trackNames))
         }
         return blocks.joinToString("\n\n", postfix = "\n")

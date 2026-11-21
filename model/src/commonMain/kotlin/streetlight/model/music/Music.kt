@@ -32,14 +32,13 @@ data class Music(
     /** The section named [name], or `null` for none. */
     fun sectionOf(name: String) = sections.firstOrNull { it.name == name }
 
-    /** [tracks] in the [trackOrder], each track it does not name after them in the order given. */
-    fun orderTracks(tracks: List<Track>) = tracks.sortedBy { track ->
-        trackOrder.indexOf(track.trackId).takeIf { it >= 0 } ?: trackOrder.size
-    }
-
     /** The length of the section [sectionId], or `null` when the music holds no such section. */
     fun lengthOf(sectionId: SectionId) =
         sections.firstOrNull { it.sectionId == sectionId }?.let { time.measure * it.measures }
+}
+
+fun List<Track>.orderTracks(trackOrder: List<TrackId>) = sortedBy { track ->
+    trackOrder.indexOf(track.trackId).takeIf { it >= 0 } ?: trackOrder.size
 }
 
 /** The key the music sounds in, its [Music.capo] applied. */

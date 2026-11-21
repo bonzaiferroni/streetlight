@@ -10,6 +10,7 @@ import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.SongMusic
 import streetlight.model.music.Track
+import streetlight.model.music.orderTracks
 import streetlight.model.studio.MusicDao
 import streetlight.web.idb.IdbDb
 import streetlight.web.idb.IdbTable
@@ -37,14 +38,17 @@ class MusicIdbDao internal constructor(
 
     override suspend fun readMusicSheet(musicId: MusicId): MusicSheet? {
         val music = musics.read(musicId.toString()) ?: return null
-        return MusicSheet(music, music.orderTracks(tracks.readRows().filter { it.musicId == musicId }))
+        val tracks = tracks.readRows().filter { it.musicId == musicId }
+        return MusicSheet(music, tracks.orderTracks(music.trackOrder))
     }
 
     override suspend fun saveMusicSheet(sheet: MusicSheet) {
         val musicId = sheet.music.musicId
         val trackIds = sheet.tracks.mapTo(mutableSetOf()) { it.trackId }
-        val removedIds = tracks.readRows().filter { it.musicId == musicId && it.trackId !in trackIds }.map { it.trackId }
         db.write {
+            val removedIds = tracks.loadedRows.values
+                .filter { it.musicId == musicId && it.trackId !in trackIds }
+                .map { it.trackId }
             save(musics, sheet.music)
             sheet.tracks.forEach { save(tracks, it) }
             removedIds.forEach { remove(tracks, it.toString()) }

@@ -1,6 +1,7 @@
 package streetlight.web.view
 
 import kampfire.model.storeOf
+import kampfire.model.tapOf
 import koala.dom.ViewScope
 import koala.dom.component.*
 import koala.dom.layout.flowBlock
@@ -34,22 +35,131 @@ import streetlight.web.model.MusicConfig
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.toaster
 import kampfire.model.toDataOr
+import koala.component.IconStyle
+import koala.component.heading5
+import koala.dom.layout.OrderHandle
+import koala.dom.layout.orderColumn
+import kotlinx.coroutines.launch
+import streetlight.model.music.LyricTrack
+import streetlight.model.music.MelodyTrack
+import streetlight.model.music.Track
+import streetlight.model.music.TrackType
 import streetlight.web.dom.layout.formRow
+import streetlight.web.dom.layout.iconActionsRow
+import streetlight.web.dom.layout.menuActionsRow
+import streetlight.web.model.MusicHost
+import streetlight.web.model.readCapoText
 import kotlin.uuid.Uuid
 
 /** Renders the song's arrangement beside its tracks, or the editor of the track or notation in focus alone. */
-context(config: MusicConfig, model: MusicEditor, db: StudioDb, waveShelf: WaveShelf, player: TrackPlayer)
-fun ViewScope.musicEditor() = flowBlock(model.focusState, Transitioner) { focus ->
-    when (focus) {
-        null -> column {
-            musicOverview(model::setFocus)
-            formRow {
-                musicSection()
-                trackList()
+context(config: MusicConfig, host: MusicHost, db: StudioDb, waveShelf: WaveShelf, player: TrackPlayer)
+fun ViewScope.musicEditor() {
+    val model = MusicEditor(contentScope, host)
+    context(model) {
+        flowBlock(model.focusState, Transitioner) { focus ->
+            when (focus) {
+                null -> column {
+                    musicOverview(model::setFocus)
+                    formRow {
+                        musicSection()
+                        trackList()
+                    }
+                }
+                is TrackFocus -> {
+
+                    trackEditor(focus, model::setFocus)
+                }
+                is NotationFocus -> notationEditor(focus, model::setFocus)
             }
         }
-        is TrackFocus -> trackEditor(focus.track, model::setFocus)
-        is NotationFocus -> notationEditor(focus, model::setFocus)
+    }
+}
+
+/** Renders the tracks of the song under an action that adds one, each a row that brings its editor into focus. */
+context(config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: TrackPlayer)
+fun ViewScope.trackList() {
+    val newId = Id(Uuid.random().toString())
+    popover(newId) { popover ->
+        actionMenu(TrackType.entries.map { trackType ->
+            MenuAction(trackType.name) {
+                model.addTrack(trackType)
+                popover.close()
+            }
+        })
+    }
+    actionSection(
+        label = "Tracks",
+        level = HeadingLevel.H4,
+        icons = listOf(IconAction(SvgFile.Plus.small, "New", config = { setPopoverTarget(newId, true) }) { }),
+    ) {
+        // keyed by id, so an edit to a track's content or name or a move leaves its row in place
+        orderColumn(model.tracksState, { it.trackId }, model::setTrackOrder, Transitioner) { track -> trackRow(track) }
+        flowBlock(model.tracksState.tapOf { it.isEmpty() }) { isEmpty ->
+            if (isEmpty) textBlock("No tracks yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
+        }
+    }
+}
+
+/**
+ * Renders the row of [track], which brings its editor into focus, with a grip that moves it among the tracks.
+ */
+context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: TrackPlayer)
+private fun ViewScope.trackRow(track: Track) {
+    val trackId = track.trackId
+    val nameId = Id(Uuid.random().toString())
+    val key = trackId.toString()
+    trackEditPopover(nameId, track)
+    // named apart from its item, so it pops in with the tab as its item would, and pairs with its focus card
+    row(modify(AlignItemsCenter, track.trackType.color.bg, Padding(1), transition("card-$key"), Presto.Pop)) {
+        handle.grip(icon(SvgFile.GripVertical.small, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Move"))))
+        button({ model.readTrack(trackId)?.let { model.setFocus(TrackFocus(trackId)) } }, Flex1) {
+            row(AlignItemsCenter) {
+                icon(track.trackType.svg.large, Height(5))
+                heading5(track.name)
+            }
+        }
+        // a lyric track makes no sound, so it has nothing to play
+        val play = MenuAction("Play") {
+            if (player.isPlayingState.now) player.stop()
+            else model.readTrack(trackId)?.let { track ->
+                contentScope.launch { player.play(model.sheetState.now, listOf(track), musicWaves = waveShelf.musicWavesOf(model.sheetState.now)) }
+            }
+        }.takeIf { track !is LyricTrack }
+        menuActionsRow(listOfNotNull(
+            play,
+            MenuAction("Remove") { model.removeTrack(trackId) },
+        ))
+        val edit = IconAction(SvgFile.Gear.small, "Edit", config = { setPopoverTarget(nameId, true) }) { }
+        iconActionsRow(listOf(edit), SmallIconHeight)
+    }
+}
+
+/**
+ * A popover with [id] holding the name and capo of [track], and the lyric track a melody is sung with, which its save
+ * button applies.
+ */
+context(model: MusicEditor)
+private fun ViewScope.trackEditPopover(id: Id, track: Track) {
+    popover(id) { popover ->
+        val nameState = storeOf(track.name)
+        val capoTextState = storeOf(track.capo?.toString().orEmpty())
+        val lyricTracks = model.lyricTracksState.now
+        val lyricNames = listOf(FIRST_LYRICS) + lyricTracks.map { it.name }
+        val lyricsState = storeOf((track as? MelodyTrack)?.lyricsId?.let { id -> lyricTracks.firstOrNull { it.trackId == id }?.name } ?: FIRST_LYRICS)
+        val save = save@{
+            val capo = readCapoText(capoTextState.now) ?: return@save toaster.deliver(MusicFormProblem.capo)
+            val lyrics = lyricTracks.firstOrNull { it.name == lyricsState.now }?.trackId
+            model.editTrack(track.trackId, nameState.now, capo.value, lyrics)
+            popover.close()
+        }
+        column(Padding(2)) {
+            row(AlignItemsCenter) {
+                textField(nameState, "name", Flex1, onEnterSubmit = save)
+                textField(capoTextState, "capo", size = 4)
+            }
+            if (track is MelodyTrack) dropMenu(lyricNames, lyricsState)
+            button("Save", save)
+        }
     }
 }
 
@@ -155,7 +265,7 @@ private fun ViewScope.musicEditPopover(id: Id) {
             }
             button("Save", {
                 val music = form.readOnto(model.musicState.now).toDataOr(toaster) { return@button }
-                model.musicState.set(music)
+                model.setMusic(music)
                 popover.close()
             })
         }
@@ -244,3 +354,6 @@ private const val MAX_BEAT_UNITS = 6
 
 /** The room left of a section's notation for half a note's head and a sharp before it, in units. */
 private const val HEAD_ROOM_UNITS = 2.4
+
+/** The name of the lyric choice that sings a melody with the music's first lyric track. */
+private const val FIRST_LYRICS = "First lyrics"

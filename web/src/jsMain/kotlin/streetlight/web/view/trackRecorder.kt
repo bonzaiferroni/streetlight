@@ -1,5 +1,6 @@
 package streetlight.web.view
 
+import kampfire.model.tapOf
 import koala.dom.ViewScope
 import koala.dom.flowModifier
 import koala.dom.component.*
@@ -18,6 +19,7 @@ import streetlight.web.model.ClipMicPhase
 import streetlight.web.model.MusicEditor
 import streetlight.model.studio.StudioDb
 import streetlight.model.music.nameOf
+import streetlight.web.model.MusicHost
 import streetlight.web.model.getClipMic
 import kotlin.uuid.Uuid
 
@@ -25,11 +27,11 @@ import kotlin.uuid.Uuid
  * The actions that open the recorder of clips of the notation [notationId] of the track [trackId], or of the whole
  * track when `null`, and the clips that fit it.
  */
-context(model: MusicEditor, db: StudioDb)
+context(host: MusicHost, db: StudioDb)
 fun ViewScope.clipActions(trackId: TrackId, notationId: NotationId?): List<MenuAction> {
     val recordId = Id(Uuid.random().toString())
     val clipsId = Id(Uuid.random().toString())
-    val clipEditor = ClipEditor(contentScope, model.sheetState, db, trackId, notationId)
+    val clipEditor = ClipEditor(contentScope, host.sheetState, db, trackId, notationId)
     recordPopover(recordId, trackId, notationId, clipEditor)
     clipsPopover(clipsId, clipEditor)
     return listOf(
@@ -43,14 +45,15 @@ fun ViewScope.clipActions(trackId: TrackId, notationId: NotationId?): List<MenuA
  * whole track when `null`, under the names of the track and notation and the clip [clipEditor] holds, red when it
  * no longer fits.
  */
-context(model: MusicEditor)
+context(host: MusicHost)
 private fun ViewScope.recordPopover(id: Id, trackId: TrackId, notationId: NotationId?, clipEditor: ClipEditor) {
     popover(id) {
-        val mic = app.getClipMic(contentScope, model.sheetState, trackId, notationId)
+        val mic = app.getClipMic(contentScope, host.sheetState, trackId, notationId)
         column(Padding(2)) {
-            flowBlock(model.trackState(trackId)) { track ->
-                val notationName = notationId?.let { track?.nameOf(it, model.musicState.now) }
-                textBlock(listOfNotNull(track?.name, notationName).joinToString(" · "))
+            flowBlock(host.trackStateOf(trackId)) { track ->
+                if (track == null) return@flowBlock
+                val notationName = notationId?.let { track.nameOf(it) }
+                textBlock(listOfNotNull(track.name, notationName).joinToString(" · "))
             }
             flowBlock(clipEditor.clipState) { clip ->
                 textBlock(clip?.name ?: "Tones play this.", modify(TextSmall, InkDimFg))

@@ -46,7 +46,7 @@ A scale degree counts from the `Key.majorTonic`, the tonic of the major scale th
 
 ## Lyrics
 
-A melody track is sung with the lyric track its `lyrics` names, or the first lyric track of its music when it names none. A stanza is sung with the phrase its track plays for the same section, and within a section the two are tied by timing alone. `lyricLinesOf` gives the lines sung to a notation, one for each time the track plays it.
+A melody track is sung with the lyric track its `lyrics` names, or the first lyric track of its music when it names none. A stanza is sung with the phrase its track plays for the same section, and within a section the two are tied by timing alone. `lyricLinesOfLegacy` gives the lines sung to a notation, one for each time the track plays it.
 
 ## Performance
 

@@ -18,7 +18,7 @@ import streetlight.model.music.repeatsOf
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.NotationLayout
 import streetlight.model.music.ui.StaffWindow
-import streetlight.model.music.ui.drawnLyricLinesOf
+import streetlight.model.music.ui.vocalLinesOfLegacy
 import streetlight.model.music.ui.notationLayoutOf
 import streetlight.model.music.ui.staffWindowOf
 import web.animations.awaitAnimationFrame
@@ -27,7 +27,7 @@ import kotlin.math.min
 
 class LaneEditor(
     private val scope: CoroutineScope,
-    private val sheetState: Tap<MusicSheet>,
+    private val host: MusicHost,
     private val waveShelf: WaveShelf,
     private val player: TrackPlayer,
 ) {
@@ -38,6 +38,7 @@ class LaneEditor(
     private var playJob: Job? = null
 
     val windowState = state.tapOf { it.window }
+    val sheetState = host.sheetState
 
     private val rateState = sheetState.tapOf { it.music.secondsPerTick }
 
@@ -168,7 +169,7 @@ private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
             val ticks = notationId?.let { track.lengthOf(it) }?.ticks ?: 0
             val laneSections = if (notationId == null) emptyList() else List(track.repeatsOf(notationId, span)) { repeat ->
                 val play = plays[notationId] ?: 0
-                val lyrics = drawnLyricLinesOf(tracks, track, notationId, music, play)
+                val lyrics = vocalLinesOfLegacy(tracks, track, notationId, music, play)
                 val notation = notationLayoutOf(track, notationId, music, window, lyrics) ?: return@List null
                 plays[notationId] = play + 1
                 LaneSection(
