@@ -42,10 +42,10 @@ data class NotationLayout(
  */
 fun NotationLayout.lines(): List<NotationLayout> =
     measures.chunked(measuresPerLine.coerceAtLeast(1)).mapIndexed { index, lineMeasures ->
-        val share = lineMeasures.sumOf { it.share }
+        val share = lineMeasures.sumOf { it.width }
         copy(
             ticks = (ticks * share).roundToInt(),
-            measures = lineMeasures.map { it.copy(share = it.share / share) },
+            measures = lineMeasures.map { it.copy(width = it.width / share) },
             pickup = if (index == 0) pickup.map { it.copy(onset = it.onset / share) } else emptyList(),
             pickupVocals = pickupVocals.map { line ->
                 if (index == 0) line.map { it.copy(onset = it.onset / share) } else emptyList()
@@ -54,11 +54,11 @@ fun NotationLayout.lines(): List<NotationLayout> =
     }
 
 /**
- * A measure filling [share] of its section, with the [notes] that start in it and the [vocals] of each line of its
+ * A measure filling [width] of its section, with the [notes] that start in it and the [vocals] of each line of its
  * section that start in it.
  */
 data class MeasureLayout(
-    val share: Double,
+    val width: Double,
     val notes: List<NoteLayout>,
     val vocals: List<List<VocalLayout>>,
 )

@@ -49,7 +49,7 @@ private fun ViewScope.staffStrip(
     div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
         staff(notation)
         notation.measures.forEach { measure ->
-            div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
+            div(modify(MeasureStyle.Measure, Css.Width.of((measure.width * 100).pct))) {
                 measure.notes.forEach { placeNote(it) }
             }
         }
@@ -62,7 +62,7 @@ private fun ViewScope.vocalStrips(notation: NotationLayout, mod: Modifier?) {
     repeat(notation.vocalLines) { line ->
         div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(VOCAL_LINE_STEPS)))) {
             notation.measures.forEach { measure ->
-                div(modify(MeasureStyle.Measure, Css.Width.of((measure.share * 100).pct))) {
+                div(modify(MeasureStyle.Measure, Css.Width.of((measure.width * 100).pct))) {
                     measure.vocals[line].forEach { syllable(it) }
                 }
             }
@@ -83,9 +83,9 @@ private fun ViewScope.staff(notation: NotationLayout) {
         bar(0.0)
         var end = 0.0
         notation.measures.dropLast(1).forEach { measure ->
-            end += measure.share
+            end += measure.width
             val lastOnset = measure.notes.maxOfOrNull { it.onset } ?: 0.0
-            bar(end + leadShare - minOf(leadShare, (1 - lastOnset) * measure.share / 2))
+            bar(end + leadShare - minOf(leadShare, (1 - lastOnset) * measure.width / 2))
         }
         bar(1.0)
     }

@@ -20,6 +20,10 @@ import streetlight.model.music.nameOf
 import streetlight.model.music.notationsOf
 import streetlight.model.music.toMidi
 
+/**
+ * The layout of [notationId], or `null` when it has no length, with each line sung to it, or only the line of [play]
+ * when one is given.
+ */
 fun MusicSheet.notationLayoutOf(notationId: NotationId, play: Int? = null): NotationLayout? {
     val track = trackHolding(notationId) ?: return null
     val ticks = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
@@ -27,17 +31,52 @@ fun MusicSheet.notationLayoutOf(notationId: NotationId, play: Int? = null): Nota
     val window = staffWindowOf(track.trackId)
     val notes = noteSourcesOf(sections, music.key).map { it.tick to noteLayoutOf(it, 0.0, window, music.key) } +
             drumNotesOf(sections, window)
-    val measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE
     val isLyricTrack = track is LyricTrack
     val vocalLines = (if (isLyricTrack) listOf(syllablesOf(sections)) else emptyList()) + vocalLinesOf(notationId, play)
-    val name = track.nameOf(notationId)
     val measureTicks = music.time.measure.ticks
-    return notationLayoutOf(notationId, name, measureTicks, ticks, window, notes, vocalLines, measuresPerLine, !isLyricTrack)
+    val measures = measureLayoutsOf(ticks, measureTicks, notes, vocalLines)
+    val pickup = notes.filter { (tick) -> tick < 0 }.map { (tick, note) -> note.copy(onset = tick.toDouble() / ticks) }
+    val pickupVocals = vocalLines.map { line ->
+        line.filter { it.tick < 0 }.map { VocalLayout(it.tick.toDouble() / ticks, it.text) }
+    }
+    return NotationLayout(
+        notationId = notationId,
+        name = track.nameOf(notationId),
+        ticks = ticks,
+        steps = window.steps,
+        staffStep = window.stepOf(STAFF_LOW),
+        measures = measures,
+        pickup = pickup,
+        pickupVocals = pickupVocals,
+        hasStaff = !isLyricTrack,
+        measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE,
+        measureTicks = measureTicks,
+    )
 }
 
-fun MusicSheet.notationLayoutsOf(trackId: TrackId): List<NotationLayout> {
-    val track = tracks.firstOrNull { it.trackId == trackId } ?: return emptyList()
-    return track.notations.mapNotNull { notationLayoutOf(it.notationId) }
+/**
+ * The measures of a notation [ticks] long, in measures of [measureTicks], laying each of [notes] and the syllables of
+ * each of [vocalLines] by its tick into its measure.
+ */
+private fun measureLayoutsOf(
+    ticks: Int,
+    measureTicks: Int,
+    notes: List<Pair<Int, NoteLayout>>,
+    vocalLines: List<List<LineVocal>>,
+): List<MeasureLayout> {
+    val count = (ticks + measureTicks - 1) / measureTicks
+    return List(count) { index ->
+        val start = index * measureTicks
+        val length = minOf(measureTicks, ticks - start)
+        val measureNotes = notes.filter { (tick) -> tick in start until start + length }.map { (tick, note) ->
+            note.copy(onset = (tick - start).toDouble() / length)
+        }
+        val measureVocals = vocalLines.map { line ->
+            line.filter { it.tick in start until start + length }
+                .map { VocalLayout((it.tick - start).toDouble() / length, it.text) }
+        }
+        MeasureLayout(length.toDouble() / ticks, measureNotes, measureVocals)
+    }
 }
 
 fun MusicSheet.staffWindowOf(trackId: TrackId, dragRoom: Int = DRAG_ROOM_STEPS): StaffWindow {
@@ -56,54 +95,6 @@ fun MusicSheet.vocalLinesOf(notationId: NotationId, play: Int? = null): List<Lis
 
 private fun MusicSheet.trackHolding(notationId: NotationId): Track? = tracks.firstOrNull { track ->
     track.notations.any { it.notationId == notationId } || track.arrangements.any { it.notationId == notationId }
-}
-
-/**
- * The layout of [notationId] shown as [name] in measures of [measureTicks], [ticks] long within [window], laying each of [notes]
- * and the syllables of each of [vocalLines] by its tick into its measure, or before it for a pickup. Its text holds
- * [measuresPerLine] measures to a line, drawn on a staff when it [hasStaff].
- */
-private fun notationLayoutOf(
-    notationId: NotationId,
-    name: String,
-    measureTicks: Int,
-    ticks: Int,
-    window: StaffWindow,
-    notes: List<Pair<Int, NoteLayout>>,
-    vocalLines: List<List<LineVocal>>,
-    measuresPerLine: Int,
-    hasStaff: Boolean,
-): NotationLayout {
-    val count = (ticks + measureTicks - 1) / measureTicks
-    val measures = List(count) { index ->
-        val start = index * measureTicks
-        val length = minOf(measureTicks, ticks - start)
-        val measureNotes = notes.filter { (tick) -> tick in start until start + length }.map { (tick, note) ->
-            note.copy(onset = (tick - start).toDouble() / length)
-        }
-        val measureVocals = vocalLines.map { line ->
-            line.filter { it.tick in start until start + length }
-                .map { VocalLayout((it.tick - start).toDouble() / length, it.text) }
-        }
-        MeasureLayout(length.toDouble() / ticks, measureNotes, measureVocals)
-    }
-    val pickup = notes.filter { (tick) -> tick < 0 }.map { (tick, note) -> note.copy(onset = tick.toDouble() / ticks) }
-    val pickupVocals = vocalLines.map { line ->
-        line.filter { it.tick < 0 }.map { VocalLayout(it.tick.toDouble() / ticks, it.text) }
-    }
-    return NotationLayout(
-        notationId = notationId,
-        name = name,
-        ticks = ticks,
-        steps = window.steps,
-        staffStep = window.stepOf(STAFF_LOW),
-        measures = measures,
-        pickup = pickup,
-        pickupVocals = pickupVocals,
-        hasStaff = hasStaff,
-        measuresPerLine = measuresPerLine,
-        measureTicks = measureTicks,
-    )
 }
 
 /** The layout of the note at [source], [onset] across what holds it, within [window]. */
