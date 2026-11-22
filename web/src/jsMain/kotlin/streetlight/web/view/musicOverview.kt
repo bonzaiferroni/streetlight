@@ -21,9 +21,9 @@ import streetlight.web.model.NotationFocus
  * where a pass hands [setFocus] the notation it plays.
  */
 context(model: MusicEditor)
-fun ViewScope.musicOverview(setFocus: (MusicEditorFocus?) -> Unit) {
+fun ViewScope.musicTable(setFocus: (MusicEditorFocus?) -> Unit) {
     actionSection("Overview", level = HeadingLevel.H4) {
-        flowBlock(model.overviewState, OverviewStyle.Grid) { overview ->
+        flowBlock(model.tableState, OverviewStyle.Grid) { overview ->
             // the grid's rows are its children, so the block that rebuilds them holds the grid
             sectionRow(overview.sectionCells, null) { }
             overview.trackCells.forEach { (track, cells) ->

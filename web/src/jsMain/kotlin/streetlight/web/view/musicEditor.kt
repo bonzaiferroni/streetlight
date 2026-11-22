@@ -59,7 +59,7 @@ fun ViewScope.musicEditor() {
         flowBlock(model.focusState, Transitioner) { focus ->
             when (focus) {
                 null -> column {
-                    musicOverview(model::setFocus)
+                    musicTable(model::setFocus)
                     formRow {
                         musicSection()
                         trackList()

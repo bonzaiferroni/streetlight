@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
@@ -24,10 +25,6 @@ import streetlight.model.music.ui.SectionCell
 import streetlight.model.music.ui.getSectionCells
 import streetlight.model.music.ui.notationCellsOf
 
-/**
- * The state behind the editor of [initialTrack], a track of [music], saved to [db] once edits pause and once more as
- * its scope ends. The music holds still while a track is in focus.
- */
 class TrackEditor(
     scope: CoroutineScope,
     private val trackId: TrackId,
@@ -37,19 +34,12 @@ class TrackEditor(
     val trackState = host.trackStateOf(trackId)
     val notationsState = trackState.tapOf { it.notations }
     val arrangementsState = trackState.tapOf { it.arrangements }
-    val warningsState = sheetState.tapOf { it.sectionWarningsOf(trackId) }
+    val warningsState = sheetState.tapOf { it.warningsOf(trackId) }
     val sectionCellsState = sheetState.tapOf { it.getSectionCells() }
     val cellsState = sheetState.tapOf { it.notationCellsOf(trackId) }
 }
 
-data class TrackEditorState(
-    val warnings: List<String> = emptyList(),
-    val sectionCells: List<SectionCell> = emptyList(),
-    val cells: List<SectionCell> = emptyList(),
-)
-
-/** The problems of [track] in [music]: each section it plays that its notation falls short of after its repeats, or runs past. */
-fun MusicSheet.sectionWarningsOf(trackId: TrackId): List<String> {
+fun MusicSheet.warningsOf(trackId: TrackId): List<String> {
     val track = trackOrNullOf(trackId) ?: return emptyList()
     return track.sections.mapNotNull { (sectionId, notationId) ->
         val length = track.lengthOf(notationId) ?: return@mapNotNull null

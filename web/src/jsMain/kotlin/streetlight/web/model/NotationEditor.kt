@@ -6,6 +6,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.music.MelodyTrack
+import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
 import streetlight.model.music.Phrase
 import streetlight.model.music.lyricsOf
@@ -18,6 +19,7 @@ import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.notationParseOf
 import streetlight.model.music.trackOf
 import streetlight.model.music.trackOrNullOf
+import streetlight.model.music.ui.NotationLayout
 import streetlight.model.music.ui.notationLayoutOf
 import streetlight.model.music.withNotation
 
@@ -32,9 +34,9 @@ class NotationEditor(
     private val state = storeOf(NotationEditorState())
     val sheetState = host.sheetState
     val notationState = sheetState.tapOf { it.notationOf(notationId) }
+    val notationLayoutState = sheetState.tapOf { it.notationLayoutOf(notationId) }
     val trackState = sheetState.tapOf { it.trackOf(notationId) }
     val nameState = trackState.tapOf { it.nameOf(notationId) }
-    val notationLayoutState = sheetState.tapOf { it.notationLayoutOf(notationId) }
     val errorsState = state.tapOf { it.errors }
 
     val notationTextEditor = NotationTextEditor(scope, notationId, host, notationStyleState)
@@ -65,5 +67,5 @@ class NotationEditor(
 }
 
 data class NotationEditorState(
-    val errors: List<NotationError> = emptyList(),
+    val errors: List<NotationError> = emptyList()
 )

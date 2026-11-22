@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import co.touchlab.stately.concurrency.synchronize
+import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +27,7 @@ class MusicEditor(
 
     val sheetState = host.sheetState
     val musicState = sheetState.tapOf { it.music }
-    val overviewState = sheetState.tapOf { it.getMusicTable() }
+    val tableState = sheetState.tapOf { it.getMusicTable() }
     val sectionsState = musicState.tapOf { it.sections }
     val arrangementState = musicState.tapOf { music ->
         music.arrangement.mapNotNull { sectionId -> music.sections.firstOrNull { it.sectionId == sectionId} }
