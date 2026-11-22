@@ -13,8 +13,8 @@ class IdbWrite internal constructor(
     internal val touchedChanges get() = changes.values.filter { it.touchedKeys.isNotEmpty() }
 
     /** Stores [value] in [table] in place of the row under its key. */
-    fun <T : Any> save(table: IdbTable<T>, value: T) {
-        changesOf(table).save(value)
+    fun <T : Any> upsert(table: IdbTable<T>, value: T) {
+        changesOf(table).upsert(value)
     }
 
     /** Removes the row under [key] from [table], and each row that references it through a foreign key. */
@@ -45,7 +45,7 @@ internal class IdbChanges<T : Any>(
     val rows = LinkedHashMap(table.loadedRows)
     val touchedKeys = mutableSetOf<String>()
 
-    fun save(value: T) {
+    fun upsert(value: T) {
         val key = table.keyOf(value)
         if (rows[key] == value) return
         rows[key] = value

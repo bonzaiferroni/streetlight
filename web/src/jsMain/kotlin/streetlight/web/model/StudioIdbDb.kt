@@ -24,7 +24,7 @@ class StudioIdbDb(name: String = STUDIO_DB_NAME) : StudioDb {
     private val trackClips = db.table("trackClips", TrackClip.serializer()) { keyOf(it.trackId, it.notationId) }
         .references(tracks) { it.trackId.toString() }
         .references(clips) { it.clipId.toString() }
-    private val studies = db.table("studies", Study.serializer()) { it.studyId.toString() }
+    private val studies = db.table("studies", Study.serializer()) { keyOf(it.trackId, it.notationId) }
         .references(tracks) { it.trackId.toString() }
 
     override val song = SongIdbDao(songs)

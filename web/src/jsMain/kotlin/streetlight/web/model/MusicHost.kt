@@ -7,9 +7,9 @@ import kotlinx.coroutines.launch
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
+import streetlight.model.music.Study
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
-import streetlight.model.music.emptyTrackOf
 import streetlight.model.music.notationOrNullOf
 import streetlight.model.music.orderTracks
 import streetlight.model.music.trackOrNullOf
@@ -22,10 +22,16 @@ class MusicHost(
 ) {
     val sheetState = storeOf(initialSheet)
     val musicState = sheetState.tapOf { it.music }
+    val studiesState = storeOf<List<Study>>(emptyList())
 
     init {
         scope.launch {
             sheetState.saveChanges { sheet -> db.music.saveMusicSheet(sheet) }
+        }
+        scope.launch {
+            db.study.flowStudies(initialSheet.music.musicId).collect { studies ->
+                studiesState.set { studies }
+            }
         }
     }
 
@@ -50,6 +56,18 @@ class MusicHost(
         val musicNow = sheetState.now.music
         val music = musicNow.copy(trackOrder = musicNow.trackOrder - trackId)
         sheetState.set { copy(tracks = tracks.filter { it.trackId != trackId }, music = music) }
+    }
+
+    fun upsert(study: Study) {
+        scope.launch {
+            db.study.upsert(study)
+        }
+    }
+
+    fun removeStudy(trackId: TrackId, notationId: NotationId?) {
+        scope.launch {
+            db.study.remove(trackId, notationId)
+        }
     }
 
     fun readNotation(notationId: NotationId) = sheetState.now.notationOrNullOf(notationId) ?: error("notation not found")

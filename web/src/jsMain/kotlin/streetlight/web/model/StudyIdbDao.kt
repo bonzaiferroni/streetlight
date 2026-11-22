@@ -3,9 +3,10 @@ package streetlight.web.model
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import streetlight.model.music.MusicId
+import streetlight.model.music.NotationId
 import streetlight.model.music.Study
-import streetlight.model.music.StudyId
 import streetlight.model.music.Track
+import streetlight.model.music.TrackId
 import streetlight.model.studio.StudyDao
 import streetlight.web.idb.IdbTable
 
@@ -21,7 +22,7 @@ class StudyIdbDao internal constructor(
         studyRows.filter { it.trackId in trackIds }
     }.distinctUntilChanged()
 
-    override fun flowStudy(studyId: StudyId) = studies.flowRow(studyId.toString())
-    override suspend fun saveStudy(study: Study) = studies.save(study)
-    override suspend fun removeStudy(studyId: StudyId) = studies.remove(studyId.toString())
+    override fun flowStudy(trackId: TrackId, notationId: NotationId?) = studies.flowRow(keyOf(trackId, notationId))
+    override suspend fun upsert(study: Study) = studies.save(study)
+    override suspend fun remove(trackId: TrackId, notationId: NotationId?) = studies.remove(keyOf(trackId, notationId))
 }

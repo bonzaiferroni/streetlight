@@ -49,8 +49,8 @@ class MusicIdbDao internal constructor(
             val removedIds = tracks.loadedRows.values
                 .filter { it.musicId == musicId && it.trackId !in trackIds }
                 .map { it.trackId }
-            save(musics, sheet.music)
-            sheet.tracks.forEach { save(tracks, it) }
+            upsert(musics, sheet.music)
+            sheet.tracks.forEach { upsert(tracks, it) }
             removedIds.forEach { remove(tracks, it.toString()) }
         }
     }

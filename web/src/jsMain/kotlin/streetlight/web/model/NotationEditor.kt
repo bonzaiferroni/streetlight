@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Tap
+import kampfire.model.handledTapOf
 import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
@@ -9,17 +10,15 @@ import streetlight.model.music.MelodyTrack
 import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
 import streetlight.model.music.Phrase
+import streetlight.model.music.Study
 import streetlight.model.music.lyricsOf
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationOf
-import streetlight.model.music.notationOrNullOf
 import streetlight.model.music.sectionIdsOf
 import streetlight.model.music.text.NotationError
 import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.notationParseOf
 import streetlight.model.music.trackOf
-import streetlight.model.music.trackOrNullOf
-import streetlight.model.music.ui.NotationLayout
 import streetlight.model.music.ui.notationLayoutOf
 import streetlight.model.music.withNotation
 
@@ -38,16 +37,15 @@ class NotationEditor(
     val trackState = sheetState.tapOf { it.trackOf(notationId) }
     val nameState = trackState.tapOf { it.nameOf(notationId) }
     val errorsState = state.tapOf { it.errors }
+    val studyState = host.studiesState.tapOf { studies -> studies.firstOrNull { it.notationId == notationId } }
+    val isActiveStudy = studyState.handledTapOf({ it?.isActive ?: false }) { setIsActiveStudy(it) }
 
     val notationTextEditor = NotationTextEditor(scope, notationId, host, notationStyleState)
 
     init {
         notationTextEditor.textState.reactIn(scope, 1) { text ->
             val notation = notationState.now
-            val music = sheetState.now.music
-            val parse = notationParseOf(
-                notationId, initialTrack.trackType, notation.name, text, music.key, music.time, readPhraseNow()
-            )
+            val parse = sheetState.now.notationParseOf(notationId, initialTrack.trackType, notation.name, text)
 
             state.set { copy(errors = parse.errors) }
             val track = host.readTrack(trackId).withNotation(parse.value)
@@ -55,14 +53,9 @@ class NotationEditor(
         }
     }
 
-    private fun readPhraseNow(): Phrase? {
-        val tracks = sheetState.now.tracks
-        val track = host.readTrack(trackId)
-        val sectionId = track.sectionIdsOf(notationId).firstOrNull() ?: return null
-        val melody = tracks.filterIsInstance<MelodyTrack>().firstOrNull { tracks.lyricsOf(it)?.trackId == track.trackId }
-            ?: return null
-        val phraseId = melody.sections[sectionId] ?: return null
-        return melody.notations.firstOrNull { it.notationId == phraseId }
+    private fun setIsActiveStudy(isActive: Boolean) {
+        val study = studyState.now ?: Study(trackId, notationId, isActive)
+        host.upsert(study.copy(isActive = isActive))
     }
 }
 

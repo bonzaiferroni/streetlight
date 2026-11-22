@@ -55,7 +55,7 @@ class IdbTable<T : Any> internal constructor(
     }
 
     /** Stores [value] in place of the row under its key. */
-    suspend fun save(value: T) = db.write { save(this@IdbTable, value) }
+    suspend fun save(value: T) = db.write { upsert(this@IdbTable, value) }
 
     /** Removes the row under [key], and each row that references it through a foreign key. */
     suspend fun remove(key: String) = db.write { remove(this@IdbTable, key) }

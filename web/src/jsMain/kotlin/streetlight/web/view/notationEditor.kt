@@ -15,16 +15,13 @@ import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Track
 import streetlight.model.music.text.NotationError
-import streetlight.model.studio.StudioDb
 import streetlight.web.dom.layout.actionCard
 import streetlight.web.model.MusicConfig
-import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicEditorFocus
 import streetlight.web.model.MusicHost
 import streetlight.web.model.NotationEditor
 import streetlight.web.model.NotationFocus
 import streetlight.web.model.NotationView
-import streetlight.web.model.TrackFocus
 
 /**
  * Renders the notation of [focus] alone in a card under its name and its track's icon, with an up arrow that hands
@@ -33,18 +30,21 @@ import streetlight.web.model.TrackFocus
 context(config: MusicConfig, host: MusicHost)
 fun ViewScope.notationEditor(focus: NotationFocus, setFocus: (MusicEditorFocus?) -> Unit) {
     val track = host.readTrack(focus.notationId)
-    val editor = NotationEditor(contentScope, config.notationStyleState, focus.notationId, host)
+    val model = NotationEditor(contentScope, config.notationStyleState, focus.notationId, host)
     actionCard(
-        label = editor.nameState.now,
+        label = model.nameState.now,
         level = HeadingLevel.H3,
         mod = modify(track.trackType.color.bg, OutlineLow),
         svg = track.trackType.svg.large,
         key = focus.notationId.toString(),
-        onBack = { setFocus(TrackFocus(track.trackId)) },
+        onBack = { setFocus(null) },
     ) {
         card(modify(PaperBg, Outline, BorderRadius1)) {
-            notationPanes(track.notationLabel, editor.notationTextEditor.textState, editor.errorsState, config.notationViewState) {
-                flowBlock(editor.notationLayoutState) { notationLayout -> notationLayout?.let { notationStrips(it) } }
+            row(modify(AlignItemsCenter)) {
+                switch("study", model.isActiveStudy)
+            }
+            notationPanes(track.notationLabel, model.notationTextEditor.textState, model.errorsState, config.notationViewState) {
+                flowBlock(model.notationLayoutState) { notationLayout -> notationLayout?.let { notationStrips(it) } }
             }
         }
     }

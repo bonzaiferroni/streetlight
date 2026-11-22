@@ -20,7 +20,6 @@ import streetlight.model.music.MusicSheet
 import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.Study
-import streetlight.model.music.StudyId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
@@ -115,7 +114,7 @@ private suspend fun StudioDb.saveRecords(): StudioRecords {
     this.track.saveTrack(track)
     this.clip.saveClip(clip)
     this.trackClip.saveTrackClip(trackClip)
-    this.study.saveStudy(Study(StudyId(Uuid.random()), track.trackId, null))
+    this.study.upsert(Study(track.trackId, null, true))
     return StudioRecords(song, music, track, clip, trackClip)
 }
 

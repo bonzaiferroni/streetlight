@@ -32,6 +32,12 @@ fun <State, Value> MutableTap<State>.mutableTapOf(
     writeValue: State.(Value) -> State
 ): MutableTap<Value> = MutableLens(this, applyFlow, readValue, writeValue)
 
+fun <State, Value> Tap<State>.handledTapOf(
+    readValue: (State) -> Value,
+    applyFlow: (Flow<State>) -> Flow<Value> = { it.map(readValue).distinctUntilChanged() },
+    onSet: (Value) -> Unit
+): MutableTap<Value> = HandledTap(this, applyFlow, readValue, onSet)
+
 /** A read-only lens onto part of this state, emitting only when its part changes. */
 fun <State, Value> Tap<State>.tapOf(
     applyFlow: ((Flow<State>) -> Flow<Value>)? = null,
@@ -110,3 +116,18 @@ fun <A, B, Value> Tap<A>.combine(
     applyFlow: ((Flow<Value>) -> Flow<Value>)? = null,
     readValue: (A, B) -> Value,
 ): Tap<Value> = CombinedTap(this, b, applyFlow ?: { it.distinctUntilChanged() }, readValue)
+
+/** The [MutableTap] made by [handledTapOf]. */
+class HandledTap<State, Value>(
+    private val source: Tap<State>,
+    applyFlow: (Flow<State>) -> Flow<Value>,
+    val readValue: (State) -> Value,
+    val onSet: (Value) -> Unit,
+): MutableTap<Value> {
+    override val now: Value get() = readValue(source.now)
+    override val flow = applyFlow(source.flow)
+
+    override fun update(transform: (Value) -> Value) = onSet(transform(now))
+    override fun set(value: Value) = onSet(value)
+    override fun set(setter: Value.() -> Value) = onSet(now.setter())
+}
