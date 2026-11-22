@@ -322,7 +322,7 @@ fun ViewScope.notationStrips(layout: NotationLayout) {
     val lines = layout.lines()
     // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
     val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
-    val paneTicks = layout.measuresPerLine * layout.measureTicks + leadTicks
+    val paneTicks = layout.lineTicks + leadTicks
     // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
     val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
     // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers

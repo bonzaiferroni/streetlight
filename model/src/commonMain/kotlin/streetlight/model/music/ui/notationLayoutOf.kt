@@ -12,6 +12,7 @@ import streetlight.model.music.NotationId
 import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Stanza
+import streetlight.model.music.TimeSignature
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
@@ -21,61 +22,97 @@ import streetlight.model.music.notationsOf
 import streetlight.model.music.toMidi
 
 /**
- * The layout of [notationId], or `null` when it has no length, with each line sung to it, or only the line of [play]
- * when one is given.
+ * The layout of [notationId], or `null` when it has no length, with each line sung to it, or only the line of the pass
+ * at [passIndex] when one is given.
  */
-fun MusicSheet.notationLayoutOf(notationId: NotationId, play: Int? = null): NotationLayout? {
+fun MusicSheet.notationLayoutOf(notationId: NotationId, passIndex: Int? = null): NotationLayout? {
     val track = trackHolding(notationId) ?: return null
     val ticks = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
     val sections = track.notationsOf(notationId).orEmpty()
     val window = staffWindowOf(track.trackId)
-    val notes = noteSourcesOf(sections, music.key).map { it.tick to noteLayoutOf(it, 0.0, window, music.key) } +
-            drumNotesOf(sections, window)
     val isLyricTrack = track is LyricTrack
-    val vocalLines = (if (isLyricTrack) listOf(syllablesOf(sections)) else emptyList()) + vocalLinesOf(notationId, play)
-    val measureTicks = music.time.measure.ticks
-    val measures = measureLayoutsOf(ticks, measureTicks, notes, vocalLines)
-    val pickup = notes.filter { (tick) -> tick < 0 }.map { (tick, note) -> note.copy(onset = tick.toDouble() / ticks) }
-    val pickupVocals = vocalLines.map { line ->
-        line.filter { it.tick < 0 }.map { VocalLayout(it.tick.toDouble() / ticks, it.text) }
-    }
+    val vocalLines = if (isLyricTrack) listOf(syllablesOf(sections)) else vocalLinesOf(notationId, passIndex)
+
     return NotationLayout(
         notationId = notationId,
         name = track.nameOf(notationId),
         ticks = ticks,
         steps = window.steps,
         staffStep = window.stepOf(STAFF_LOW),
-        measures = measures,
-        pickup = pickup,
-        pickupVocals = pickupVocals,
+        measures = measureLayoutsOf(sections, window, music.key, music.time, vocalLines),
         hasStaff = !isLyricTrack,
-        measuresPerLine = sections.firstOrNull()?.measuresPerLine ?: DEFAULT_MEASURES_PER_LINE,
-        measureTicks = measureTicks,
+        lineTicks = sections.maxOf { it.measuresPerLine } * music.time.measure.ticks,
     )
 }
 
 /**
- * The measures of a notation [ticks] long, in measures of [measureTicks], laying each of [notes] and the syllables of
- * each of [vocalLines] by its tick into its measure.
+ * The measures of [sections] laid end to end in measures of [time], within [window] in [key], with the syllables of
+ * each of [vocalLines]. Each section's measures start at its own start and break into lines of its measures per line,
+ * and what sounds before the first section makes up a pickup.
  */
 private fun measureLayoutsOf(
-    ticks: Int,
-    measureTicks: Int,
-    notes: List<Pair<Int, NoteLayout>>,
+    sections: List<Notation>,
+    window: StaffWindow,
+    key: Key,
+    time: TimeSignature,
     vocalLines: List<List<LineVocal>>,
 ): List<MeasureLayout> {
-    val count = (ticks + measureTicks - 1) / measureTicks
-    return List(count) { index ->
-        val start = index * measureTicks
-        val length = minOf(measureTicks, ticks - start)
-        val measureNotes = notes.filter { (tick) -> tick in start until start + length }.map { (tick, note) ->
-            note.copy(onset = (tick - start).toDouble() / length)
+    val measureTicks = time.measure.ticks
+    val starts = sections.runningFold(0) { tick, section -> tick + section.length.ticks }
+    val ticks = starts.last()
+
+    // lays the measure [length] ticks from [start], with the notes of the sections at [reach]
+    fun measureLayoutOf(number: Int, line: Int, start: Int, length: Int, reach: List<Int>): MeasureLayout {
+        val notes = reach.flatMap { index ->
+            sections.getOrNull(index)?.let { notesLayoutOf(it, starts[index], start, length, window, key) }.orEmpty()
         }
-        val measureVocals = vocalLines.map { line ->
-            line.filter { it.tick in start until start + length }
+        val vocals = vocalLines.map { vocalLine ->
+            vocalLine.filter { it.tick in start until start + length }
                 .map { VocalLayout((it.tick - start).toDouble() / length, it.text) }
         }
-        MeasureLayout(length.toDouble() / ticks, measureNotes, measureVocals)
+        return MeasureLayout(number, line, length.toDouble() / ticks, notes, vocals)
+    }
+
+    val measures = mutableListOf<MeasureLayout>()
+    val sungPickupTicks = -(vocalLines.flatten().minOfOrNull { it.tick } ?: 0)
+    val pickupTicks = maxOf(sections.firstOrNull()?.let { pickupTicksOf(it) } ?: 0, sungPickupTicks)
+    if (pickupTicks > 0) measures += measureLayoutOf(0, 0, -pickupTicks, pickupTicks, listOf(0))
+
+    var number = 0
+    var line = 0
+    sections.forEachIndexed { index, section ->
+        val count = (section.length.ticks + measureTicks - 1) / measureTicks
+        val perLine = section.measuresPerLine.coerceAtLeast(1)
+        repeat(count) { measureIndex ->
+            val start = starts[index] + measureIndex * measureTicks
+            val length = minOf(measureTicks, starts[index + 1] - start)
+            measures += measureLayoutOf(++number, line + measureIndex / perLine, start, length, listOf(index, index + 1))
+        }
+        line += (count + perLine - 1) / perLine
+    }
+    return measures
+}
+
+/**
+ * The layouts of the notes of [section], placed from [sectionStart] within [window] in [key], that start in the measure
+ * [length] ticks from [start], each at its onset across it.
+ */
+private fun notesLayoutOf(
+    section: Notation,
+    sectionStart: Int,
+    start: Int,
+    length: Int,
+    window: StaffWindow,
+    key: Key,
+): List<NoteLayout> {
+    fun isWithin(tick: Int) = tick in start until start + length
+    fun onsetOf(tick: Int) = (tick - start).toDouble() / length
+    return when (section) {
+        is Phrase, is Progression -> noteSourcesOf(section, sectionStart, key).filter { isWithin(it.tick) }
+            .map { noteLayoutOf(it, onsetOf(it.tick), window, key) }
+        is Groove -> drumHitsOf(section, sectionStart).filterKeys { isWithin(it) }
+            .map { (tick, drums) -> drumLayoutOf(drums, onsetOf(tick), window) }
+        is Stanza -> emptyList()
     }
 }
 
@@ -88,16 +125,25 @@ fun MusicSheet.staffWindowOf(trackId: TrackId, dragRoom: Int = DRAG_ROOM_STEPS):
     return StaffWindow(low - dragRoom, high + dragRoom)
 }
 
-fun MusicSheet.vocalLinesOf(notationId: NotationId, play: Int? = null): List<List<LineVocal>> {
+/** The lines sung to [notationId]: each different one, or only the line of the pass at [passIndex] when one is given. */
+private fun MusicSheet.vocalLinesOf(notationId: NotationId, passIndex: Int?): List<List<LineVocal>> {
     val lines = lyricLinesOf(notationId, this)
-    return if (play == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(play))
+    return if (passIndex == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(passIndex))
 }
 
 private fun MusicSheet.trackHolding(notationId: NotationId): Track? = tracks.firstOrNull { track ->
     track.notations.any { it.notationId == notationId } || track.arrangements.any { it.notationId == notationId }
 }
 
-/** The layout of the note at [source], [onset] across what holds it, within [window]. */
+/** The ticks of the pickup of [section]. */
+private fun pickupTicksOf(section: Notation) = when (section) {
+    is Phrase -> section.pickup.sumOf { it.beats.ticks }
+    is Progression -> section.pickup.sumOf { it.beats.ticks }
+    is Stanza -> section.pickup.sumOf { it.beats.ticks }
+    is Groove -> 0
+}
+
+/** The layout of the note at [source], [onset] across its measure, within [window]. */
 private fun noteLayoutOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteLayout {
     val (value, isDotted) = noteValueOf(source.ticks)
     val staffSteps = (source.chord?.let { drawnMidisOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
@@ -125,42 +171,38 @@ private fun drawnMidisOf(section: Notation, key: Key): List<Int> = when (section
     else -> emptyList()
 }
 
-/** The place of each note and chord of [sections], laid end to end, each pickup before its section. */
-private fun noteSourcesOf(sections: List<Notation>, key: Key): List<NoteSource> {
+/** The place of each note and chord of [section] in [key], from [sectionStart], its pickup before it. */
+private fun noteSourcesOf(section: Notation, sectionStart: Int, key: Key): List<NoteSource> {
     val sources = mutableListOf<NoteSource>()
-    var onset = 0
-    for (section in sections) {
-        when (section) {
-            is Phrase -> {
-                fun place(notes: List<Pair<Int?, Int>>, start: Int, isPickup: Boolean) {
-                    var tick = start
-                    notes.forEachIndexed { index, (midi, ticks) ->
-                        if (midi != null) sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi))
-                        tick += ticks
-                    }
+    when (section) {
+        is Phrase -> {
+            fun place(notes: List<Pair<Int?, Int>>, start: Int, isPickup: Boolean) {
+                var tick = start
+                notes.forEachIndexed { index, (midi, ticks) ->
+                    if (midi != null) sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi))
+                    tick += ticks
                 }
-                val pickup = section.pickup.map { it.interval?.toMidi(key) to it.beats.ticks }
-                place(pickup, onset - pickup.sumOf { it.second }, true)
-                place(section.notes.map { it.interval?.toMidi(key) to it.beats.ticks }, onset, false)
             }
-            is Progression -> {
-                fun place(notes: List<Pair<Chord?, Int>>, start: Int, isPickup: Boolean) {
-                    var tick = start
-                    notes.forEachIndexed { index, (chord, ticks) ->
-                        if (chord != null) {
-                            val midi = drawnMidisOf(chord, key).first()
-                            sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi, chord))
-                        }
-                        tick += ticks
-                    }
-                }
-                val pickup = section.pickup.map { it.chord to it.beats.ticks }
-                place(pickup, onset - pickup.sumOf { it.second }, true)
-                place(section.notes.map { it.chord to it.beats.ticks }, onset, false)
-            }
-            else -> Unit
+            val pickup = section.pickup.map { it.interval?.toMidi(key) to it.beats.ticks }
+            place(pickup, sectionStart - pickup.sumOf { it.second }, true)
+            place(section.notes.map { it.interval?.toMidi(key) to it.beats.ticks }, sectionStart, false)
         }
-        onset += section.length.ticks
+        is Progression -> {
+            fun place(notes: List<Pair<Chord?, Int>>, start: Int, isPickup: Boolean) {
+                var tick = start
+                notes.forEachIndexed { index, (chord, ticks) ->
+                    if (chord != null) {
+                        val midi = drawnMidisOf(chord, key).first()
+                        sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi, chord))
+                    }
+                    tick += ticks
+                }
+            }
+            val pickup = section.pickup.map { it.chord to it.beats.ticks }
+            place(pickup, sectionStart - pickup.sumOf { it.second }, true)
+            place(section.notes.map { it.chord to it.beats.ticks }, sectionStart, false)
+        }
+        else -> Unit
     }
     return sources
 }
@@ -182,33 +224,22 @@ private fun syllablesOf(sections: List<Notation>): List<LineVocal> {
     return syllables
 }
 
-/** The tick of each note of the [Groove]s of [sections], laid end to end, paired with its notation within [window]. */
-private fun drumNotesOf(sections: List<Notation>, window: StaffWindow): List<Pair<Int, NoteLayout>> {
-    val notes = mutableListOf<Pair<Int, NoteLayout>>()
-    var onset = 0
-    for (section in sections) {
-        if (section is Groove) notes += grooveNotesOf(section, window).map { (tick, note) -> onset + tick to note }
-        onset += section.length.ticks
-    }
-    return notes
-}
-
-/** The tick of each note of [groove], paired with its notation within [window]: the hits of a tick as one note. */
-private fun grooveNotesOf(groove: Groove, window: StaffWindow): List<Pair<Int, NoteLayout>> {
+/** The drums [groove] strikes at each tick it strikes any, from [sectionStart]. */
+private fun drumHitsOf(groove: Groove, sectionStart: Int): Map<Int, List<Drum>> {
     return groove.lanes.flatMap { lane ->
-        lane.beats.runningFold(0) { tick, beat -> tick + beat.beats.ticks }
+        lane.beats.runningFold(sectionStart) { tick, beat -> tick + beat.beats.ticks }
             .zip(lane.beats)
             .filter { (_, beat) -> beat.hit != null }
             .map { (tick, _) -> tick to lane.drum }
-    }.groupBy({ (tick) -> tick }, { (_, drum) -> drum }).map { (tick, drums) -> tick to drumLayoutOf(drums, window) }
+    }.groupBy({ (tick) -> tick }, { (_, drum) -> drum })
 }
 
-/** The layout of [drums] struck together within [window], as heads alone. */
-private fun drumLayoutOf(drums: List<Drum>, window: StaffWindow): NoteLayout {
+/** The layout of [drums] struck together [onset] across their measure, within [window], as heads alone. */
+private fun drumLayoutOf(drums: List<Drum>, onset: Double, window: StaffWindow): NoteLayout {
     val staffSteps = drums.map { staffStepOf(it) }
     val lowest = staffSteps.min()
     return NoteLayout(
-        onset = 0.0,
+        onset = onset,
         step = window.stepOf(lowest),
         value = null,
         isDotted = false,
@@ -254,9 +285,6 @@ private const val STAFF_HIGH = 45
 
 /** The window of a lyric track, which has no staff: tall enough for a line of text. */
 private val LYRIC_WINDOW = StaffWindow(0, 0)
-
-/** The measures to a line of a section that gives none. */
-private const val DEFAULT_MEASURES_PER_LINE = 4
 
 /** The semitones above the tonic that fall between degrees of the scale. */
 private val RAISED_SEMITONES = setOf(1, 3, 6, 8, 10)

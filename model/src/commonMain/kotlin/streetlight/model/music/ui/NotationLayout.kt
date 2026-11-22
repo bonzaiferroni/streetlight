@@ -9,9 +9,8 @@ import kotlin.math.roundToInt
 
 /**
  * The layout of [notationId] in a track, shown as [name], [ticks] long and [steps] of the staff tall, with a step the distance from a
- * line to the space beside it. The bottom line of the staff sits [staffStep] steps up. The [pickup] notes sound before
- * the section starts, as do the [pickupVocals], one list to each of its [vocalLines]. A section with no [hasStaff] is
- * drawn as its vocals alone. Its text holds [measuresPerLine] measures of [measureTicks] to a line.
+ * line to the space beside it. The bottom line of the staff sits [staffStep] steps up. A section with no [hasStaff] is
+ * drawn as its vocals alone. A full line of its text is [lineTicks] long.
  */
 data class NotationLayout(
     val notationId: NotationId,
@@ -20,17 +19,14 @@ data class NotationLayout(
     val steps: Int,
     val staffStep: Int,
     val measures: List<MeasureLayout>,
-    val pickup: List<NoteLayout>,
-    val pickupVocals: List<List<VocalLayout>>,
     val hasStaff: Boolean,
-    val measuresPerLine: Int,
-    val measureTicks: Int,
+    val lineTicks: Int,
 ) {
     /** The number of lines of vocals sung to the section. */
-    val vocalLines get() = pickupVocals.size
+    val vocalLines get() = measures.first().vocals.size
 
     /** The length of the pickup, as a share of the section. */
-    val pickupShare get() = -((pickup.map { it.onset } + pickupVocals.flatten().map { it.onset }).minOrNull() ?: 0.0)
+    val pickupShare get() = measures.firstOrNull { it.isPickup }?.width ?: 0.0
 
     /** The distance the staff sits ahead of the section, a sixteenth, as a share of the section. */
     val staffLeadShare get() = NoteValue.Sixteenth.ticks.toDouble() / ticks
@@ -41,30 +37,31 @@ data class NotationLayout(
  * the pickup leading the first.
  */
 fun NotationLayout.lines(): List<NotationLayout> =
-    measures.chunked(measuresPerLine.coerceAtLeast(1)).mapIndexed { index, lineMeasures ->
-        val share = lineMeasures.sumOf { it.width }
+    measures.groupBy { it.line }.values.map { lineMeasures ->
+        val share = lineMeasures.filterNot { it.isPickup }.sumOf { it.width }
         copy(
             ticks = (ticks * share).roundToInt(),
             measures = lineMeasures.map { it.copy(width = it.width / share) },
-            pickup = if (index == 0) pickup.map { it.copy(onset = it.onset / share) } else emptyList(),
-            pickupVocals = pickupVocals.map { line ->
-                if (index == 0) line.map { it.copy(onset = it.onset / share) } else emptyList()
-            },
         )
     }
 
 /**
- * A measure filling [width] of its section, with the [notes] that start in it and the [vocals] of each line of its
- * section that start in it.
+ * The measure numbered [number] of its section, on [line] of its text, filling [width] of it, with the [notes] that
+ * start in it and the [vocals] of each line of its section that start in it. A pickup is numbered 0 and sounds before
+ * the section starts.
  */
 data class MeasureLayout(
+    val number: Int,
+    val line: Int,
     val width: Double,
     val notes: List<NoteLayout>,
     val vocals: List<List<VocalLayout>>,
-)
+) {
+    val isPickup get() = number == 0
+}
 
 /**
- * A syllable of [text] starting [onset] of the way through its measure, or for a pickup that far before its section.
+ * A syllable of [text] starting [onset] of the way through its measure.
  */
 data class VocalLayout(
     val onset: Double,
@@ -72,8 +69,8 @@ data class VocalLayout(
 )
 
 /**
- * A note or chord starting [onset] of the way through its measure, or for a pickup that far before its section, its
- * lowest head centered [step] steps above the bottom of its section. Each of its [ledgers] is a ledger line, in steps
+ * A note or chord starting [onset] of the way through its measure, its lowest head centered [step] steps above the
+ * bottom of its section. Each of its [ledgers] is a ledger line, in steps
  * from that lowest head, as its [heads] are placed. A note [isRaised] sits between two degrees of the scale, on the line
  * of the lower. Its [value] is `null` for heads alone, and its [source] is its place in its track, or `null` for the
  * hits of a drum track, which draw as one note.

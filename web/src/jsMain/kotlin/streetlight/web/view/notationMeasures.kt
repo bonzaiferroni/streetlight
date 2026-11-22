@@ -9,6 +9,7 @@ import koala.modifier.*
 import kotlinx.css.LinearDimension
 import kotlinx.css.pct
 import streetlight.model.music.ui.HeadShape
+import streetlight.model.music.ui.MeasureLayout
 import streetlight.model.music.ui.NoteLayout
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.NotationLayout
@@ -49,11 +50,8 @@ private fun ViewScope.staffStrip(
     div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(notation.steps)))) {
         staff(notation)
         notation.measures.forEach { measure ->
-            div(modify(MeasureStyle.Measure, Css.Width.of((measure.width * 100).pct))) {
-                measure.notes.forEach { placeNote(it) }
-            }
+            div(measure.mod) { measure.notes.forEach { placeNote(it) } }
         }
-        notation.pickup.forEach { placeNote(it) }
     }
 }
 
@@ -62,11 +60,8 @@ private fun ViewScope.vocalStrips(notation: NotationLayout, mod: Modifier?) {
     repeat(notation.vocalLines) { line ->
         div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(VOCAL_LINE_STEPS)))) {
             notation.measures.forEach { measure ->
-                div(modify(MeasureStyle.Measure, Css.Width.of((measure.width * 100).pct))) {
-                    measure.vocals[line].forEach { syllable(it) }
-                }
+                div(measure.mod) { measure.vocals[line].forEach { syllable(it) } }
             }
-            notation.pickupVocals[line].forEach { syllable(it) }
         }
     }
 }
@@ -82,7 +77,7 @@ private fun ViewScope.staff(notation: NotationLayout) {
     div(modify(MeasureStyle.Staff, place)) {
         bar(0.0)
         var end = 0.0
-        notation.measures.dropLast(1).forEach { measure ->
+        notation.measures.filterNot { it.isPickup }.dropLast(1).forEach { measure ->
             end += measure.width
             val lastOnset = measure.notes.maxOfOrNull { it.onset } ?: 0.0
             bar(end + leadShare - minOf(leadShare, (1 - lastOnset) * measure.width / 2))
@@ -90,6 +85,10 @@ private fun ViewScope.staff(notation: NotationLayout) {
         bar(1.0)
     }
 }
+
+/** The modifiers that place this measure across its strip, a pickup hanging off its left. */
+private val MeasureLayout.mod
+    get() = modify(MeasureStyle.Measure, MeasureStyle.PickupMeasure.takeIf { isPickup }, Css.Width.of((width * 100).pct))
 
 /** Renders a bar [share] of the way across its staff. */
 private fun ViewScope.bar(share: Double) = div(modify(MeasureStyle.Bar, Css.Left.of((share * 100).pct)))

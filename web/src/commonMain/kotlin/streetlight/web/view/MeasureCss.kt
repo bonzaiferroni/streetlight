@@ -13,6 +13,7 @@ object MeasureStyle {
     val Staff = Strip.withBemElement("staff")
     val Bar = Strip.withBemElement("bar")
     val Measure = Strip.withBemElement("measure")
+    val PickupMeasure = Measure.withBemModifier("pickup")
     val Note = Strip.withBemElement("note")
     val Head = Strip.withBemElement("head")
     val CrossHead = Head.withBemModifier("cross")
@@ -55,6 +56,13 @@ $Bar {
 }
 
 $Measure { position: relative; }
+
+/* hanging off the left of its strip, in the margin its pane keeps for it */
+$PickupMeasure {
+    position: absolute;
+    inset-block: 0;
+    right: 100%;
+}
 
 /* reaching from a chord's lowest head to its highest, centered on its onset so it sounds as the cursor meets its middle */
 $Note {
