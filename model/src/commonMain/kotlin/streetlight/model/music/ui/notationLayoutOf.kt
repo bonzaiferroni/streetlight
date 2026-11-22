@@ -106,6 +106,27 @@ private fun notationLayoutOf(
     )
 }
 
+/** The layout of the note at [source], [onset] across what holds it, within [window]. */
+private fun noteLayoutOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteLayout {
+    val (value, isDotted) = noteValueOf(source.ticks)
+    val staffSteps = (source.chord?.let { drawnMidisOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
+    val lowest = staffSteps.min()
+    val isRaised = (source.midi - key.majorTonic.value).mod(12) in RAISED_SEMITONES
+    return NoteLayout(
+        onset = onset,
+        step = window.stepOf(lowest),
+        value = value,
+        isDotted = isDotted,
+        heads = staffSteps.map { NoteHead(it - lowest, HeadShape.Round) },
+        ledgers = ledgersOf(lowest, staffSteps.max()).map { it - lowest },
+        isRaised = isRaised,
+        source = source,
+    )
+}
+
+/** The MIDI numbers [chord] is drawn at in [key], an octave above where it sounds, so it sits on the treble staff. */
+private fun drawnMidisOf(chord: Chord, key: Key) = chord.toMidi(key).map { it + CHORD_DRAWN_SEMITONES }
+
 /** The MIDI numbers of every note [section] draws in [key]. */
 private fun drawnMidisOf(section: Notation, key: Key): List<Int> = when (section) {
     is Phrase -> (section.pickup + section.notes).mapNotNull { it.interval?.toMidi(key) }
@@ -227,6 +248,12 @@ private fun headShapeOf(drum: Drum) = when (drum) {
 private fun ledgersOf(lowest: Int, highest: Int) =
     (STAFF_HIGH + 2..highest step 2).toList() + (STAFF_LOW - 2 downTo lowest step 2).toList()
 
+/** The value written for [ticks], the longest that fits, and whether it wants a dot for the half more. */
+private fun noteValueOf(ticks: Int): Pair<NoteValue, Boolean> {
+    val value = NoteValue.entries.firstOrNull { it.ticks <= ticks } ?: NoteValue.Sixteenth
+    return value to (ticks * 2 >= value.ticks * 3)
+}
+
 /** The steps of room to drag a note past the highest and lowest of a track. */
 private const val DRAG_ROOM_STEPS = 2
 
@@ -239,3 +266,9 @@ private val LYRIC_WINDOW = StaffWindow(0, 0)
 
 /** The measures to a line of a section that gives none. */
 private const val DEFAULT_MEASURES_PER_LINE = 4
+
+/** The semitones above the tonic that fall between degrees of the scale. */
+private val RAISED_SEMITONES = setOf(1, 3, 6, 8, 10)
+
+/** The semitones a chord is drawn above where it sounds. */
+private const val CHORD_DRAWN_SEMITONES = 12

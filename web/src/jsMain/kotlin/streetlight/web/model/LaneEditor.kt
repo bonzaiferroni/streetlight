@@ -11,14 +11,11 @@ import kotlinx.coroutines.launch
 import streetlight.model.music.Beats
 import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
-import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.repeatsOf
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.NotationLayout
-import streetlight.model.music.ui.StaffWindow
-import streetlight.model.music.ui.vocalLinesOfLegacy
 import streetlight.model.music.ui.notationLayoutOf
 import streetlight.model.music.ui.staffWindowOf
 import web.animations.awaitAnimationFrame
@@ -160,7 +157,7 @@ private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
     val music = sheet.music
     val leadSeconds = leadSecondsOf(sheet, rate)
     return tracks.map { track ->
-        val window = laneWindowOf(track, sheet)
+        val window = sheet.staffWindowOf(track.trackId)
         val plays = mutableMapOf<NotationId, Int>()
         var onset = 0
         val sections = music.arrangement.flatMap { sectionId ->
@@ -169,8 +166,7 @@ private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
             val ticks = notationId?.let { track.lengthOf(it) }?.ticks ?: 0
             val laneSections = if (notationId == null) emptyList() else List(track.repeatsOf(notationId, span)) { repeat ->
                 val play = plays[notationId] ?: 0
-                val lyrics = vocalLinesOfLegacy(tracks, track, notationId, music, play)
-                val notation = notationLayoutOf(track, notationId, music, window, lyrics) ?: return@List null
+                val notation = sheet.notationLayoutOf(notationId, play) ?: return@List null
                 plays[notationId] = play + 1
                 LaneSection(
                     notation = notation,
@@ -184,8 +180,4 @@ private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
         }
         Lane(track.trackId, track.name, window.steps, leadSeconds, sections)
     }
-}
-
-fun laneWindowOf(track: Track, sheet: MusicSheet): StaffWindow {
-    return staffWindowOf(track, sheet.music.key)
 }

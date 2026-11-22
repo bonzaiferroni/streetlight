@@ -14,31 +14,10 @@ fun List<Track>.lyricsOf(track: Track): LyricTrack? {
 }
 
 /**
- * The lines of lyrics sung to [notationId] of [track] in a song of these tracks and [music]: one for each time the
- * track plays it, in order, holding the syllables of the same section that start during it. A stanza's pickup goes
- * with the play its stanza starts in. There are no lines when [lyricsOf] gives the track no lyrics.
+ * The lines of lyrics sung to [notationId] in [sheet]: one for each time its track plays it, in order, holding the
+ * syllables of the same section that start during it. A stanza's pickup goes with the play its stanza starts in.
+ * There are no lines when [lyricsOf] gives the track no lyrics.
  */
-fun List<Track>.lyricLinesOfLegacy(track: Track, notationId: NotationId, music: Music): List<List<LineVocal>> {
-    val lyrics = lyricsOf(track) ?: return emptyList()
-    val ticks = track.lengthOf(notationId)?.ticks ?: return emptyList()
-
-    // place each syllable in the song, anchored to the tick and section that decide its line
-    val anchored = mutableListOf<Pair<NotationPlay, LineVocal>>()
-    playsOf(lyrics, music).forEach { play ->
-        val stanza = lyrics.notations.firstOrNull { it.notationId == play.notationId } ?: return@forEach
-        var tick = play.tick - stanza.pickup.sumOf { it.beats.ticks }
-        (stanza.pickup + stanza.notes).forEach { note ->
-            note.text?.let { anchored.add(play.copy(tick = maxOf(tick, play.tick)) to LineVocal(tick, it)) }
-            tick += note.beats.ticks
-        }
-    }
-
-    return playsOf(track, music).filter { it.notationId == notationId }.map { play ->
-        anchored.filter { (anchor) -> anchor.slot == play.slot && anchor.tick in play.tick until play.tick + ticks }
-            .map { (_, syllable) -> syllable.copy(tick = syllable.tick - play.tick) }
-    }
-}
-
 fun lyricLinesOf(notationId: NotationId, sheet: MusicSheet): List<List<LineVocal>> {
     val track = sheet.trackOf(notationId)
     val lyrics = sheet.tracks.lyricsOf(track) ?: return emptyList()

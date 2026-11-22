@@ -2,6 +2,7 @@ package streetlight.model.music.ui
 
 import streetlight.model.music.Beats
 import streetlight.model.music.Chord
+import streetlight.model.music.Key
 import streetlight.model.music.NotationId
 import kotlin.math.roundToInt
 
@@ -135,3 +136,28 @@ data class StaffWindow(
     fun stepOf(staffStep: Int) = staffStep - low + 2
 }
 
+/**
+ * The staff step of [midi] in [key], counted from C of octave 0. A note takes the line or space of its scale degree
+ * from the major tonic, and a note between degrees shares the line of the degree below it.
+ */
+fun staffStepOf(midi: Int, key: Key): Int {
+    val tonic = key.majorTonic.value
+    val semitones = midi - tonic
+    return semitones.floorDiv(12) * 7 + TONIC_STEPS[tonic] + DEGREE_STEPS[semitones.mod(12)]
+}
+
+/** The MIDI number of the degree of the scale of [key] on [staffStep], the inverse of [staffStepOf] for notes of the scale. */
+fun midiOfStaffStep(staffStep: Int, key: Key): Int {
+    val tonic = key.majorTonic.value
+    val steps = staffStep - TONIC_STEPS[tonic]
+    return tonic + steps.floorDiv(7) * 12 + SCALE_SEMITONES[steps.mod(7)]
+}
+
+/** The letter each major tonic is spelled on, counted from C, as flats name them in all but F#. */
+private val TONIC_STEPS = listOf(0, 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 6)
+
+/** The steps above the tonic of each semitone above it, the sharp of a degree sharing its line. */
+private val DEGREE_STEPS = listOf(0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6)
+
+/** The semitones above the tonic of each degree of the scale. */
+private val SCALE_SEMITONES = listOf(0, 2, 4, 5, 7, 9, 11)
