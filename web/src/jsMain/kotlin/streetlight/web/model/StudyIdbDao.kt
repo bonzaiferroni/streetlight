@@ -26,10 +26,14 @@ class StudyIdbDao internal constructor(
         combine(studies.rowsFlow, musics.rowsFlow, tracks.rowsFlow) { studyRows, musicRows, trackRows ->
             val musicsById = musicRows.associateBy { it.musicId }
             val tracksByMusicId = trackRows.groupBy { it.musicId }
-            val musicIdsByTrackId = trackRows.associate { it.trackId to it.musicId }
+            val tracksById = trackRows.associateBy { it.trackId }
             val sheetsByMusicId = mutableMapOf<MusicId, MusicSheet>()
             studyRows.filter { it.isActive }.mapNotNull { study ->
-                val musicId = musicIdsByTrackId[study.trackId] ?: return@mapNotNull null
+                val track = tracksById[study.trackId] ?: return@mapNotNull null
+                val notationId = study.notationId
+                if (notationId != null && track.notations.none { it.notationId == notationId }
+                    && track.arrangements.none { it.notationId == notationId }) return@mapNotNull null
+                val musicId = track.musicId
                 val music = musicsById[musicId] ?: return@mapNotNull null
                 val sheet = sheetsByMusicId.getOrPut(musicId) {
                     MusicSheet(music, tracksByMusicId[musicId].orEmpty().orderTracks(music.trackOrder))

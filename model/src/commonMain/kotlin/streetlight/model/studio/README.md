@@ -28,7 +28,7 @@ The interfaces of the studio's data on the device, shaped after Room. `StudioDb`
 
 A DAO speaks in records of the domain model, never in the rows of its storage. A query emits again whenever a table it reads changes, and only when its result differs.
 
-Removing a record removes each record that references it by id, as its KDoc states. A save does not check that the records it references exist.
+Removing a record removes each record that references it by id, as its KDoc states. A notation lives inside its track, so a save that drops a notation from a track removes each record keyed to it. A save does not check that the records it references exist.
 
 A read or write that spans records, such as `readMusicSheet`, belongs to the DAO of the record it is centered on, and runs as one transaction.
 

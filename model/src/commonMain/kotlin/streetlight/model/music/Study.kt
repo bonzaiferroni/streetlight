@@ -16,6 +16,6 @@ data class MusicStudy(
 ): Labeled {
     override val label get() = "${sheet.music.name}: $targetLabel"
 
-    private val targetLabel get() = study.notationId?.let { sheet.notationOf(it).label }
+    private val targetLabel get() = study.notationId?.let { sheet.notationOrNullOf(it)?.label }
         ?: sheet.trackOf(study.trackId).label
 }

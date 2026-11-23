@@ -28,7 +28,7 @@ class StudioIdbDb(name: String = STUDIO_DB_NAME) : StudioDb {
         .references(tracks) { it.trackId.toString() }
 
     override val song = SongIdbDao(songs)
-    override val music = MusicIdbDao(db, songs, musics, tracks)
+    override val music = MusicIdbDao(db, songs, musics, tracks, trackClips, studies)
     override val track = TrackIdbDao(tracks)
     override val trackClip = TrackClipIdbDao(trackClips)
     override val clip = ClipIdbDao(clips)
