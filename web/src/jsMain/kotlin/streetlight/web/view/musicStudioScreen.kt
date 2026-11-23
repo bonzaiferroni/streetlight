@@ -25,6 +25,7 @@ import streetlight.web.dom.layout.mainBody
 import streetlight.web.dom.layout.topSection
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
+import streetlight.web.model.MusicStudioFocus
 import streetlight.web.model.TrackPlayer
 import streetlight.web.model.exportMidi
 import streetlight.web.model.exportOgg
@@ -69,12 +70,12 @@ fun ViewScope.musicStudioScreen() {
     }
     context(model, player, config, db, waveShelf) {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
-            flowBlock(model.focusState, modify(Transitioner)) { sheet ->
-                when (sheet) {
+            flowBlock(model.focusState, modify(Transitioner)) { focus ->
+                when (focus) {
                     null -> {
                         musicList()
                     }
-                    else -> musicFocus(sheet)
+                    is MusicStudioFocus.Music -> musicFocus(focus.sheet)
                 }
             }
         }

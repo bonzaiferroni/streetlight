@@ -16,6 +16,7 @@ import streetlight.model.music.Mode
 import streetlight.model.music.Music
 import streetlight.model.music.MusicId
 import streetlight.model.music.MusicSheet
+import streetlight.model.music.MusicStudy
 import streetlight.model.music.Song
 import streetlight.model.music.SongId
 import streetlight.model.music.SongMusic
@@ -38,6 +39,7 @@ class MusicStudio(
 
     val songsState = state.tapOf { it.songs }
     val focusState = state.tapOf { it.focus }
+    val studiesState = state.tapOf { it.studies }
 
     init {
         setFocus(initialMusicId)
@@ -46,12 +48,17 @@ class MusicStudio(
                 state.set { copy(songs = songs) }
             }
         }
+        scope.launch {
+            db.study.flowMusicStudies().collect { studies ->
+                state.set { copy(studies = studies) }
+            }
+        }
     }
 
     fun setFocus(musicId: MusicId?) {
         scope.cancelAndLaunch("setFocus") {
             val sheet = musicId?.let { db.music.readMusicSheet(musicId) }
-            state.set { copy(focus = sheet) }
+            state.set { copy(focus = sheet?.let { MusicStudioFocus.Music(it) }) }
         }
     }
 
@@ -96,9 +103,15 @@ class MusicStudio(
 }
 
 data class MusicStudioState(
-    val focus: MusicSheet? = null,
-    val songs: List<SongMusic> = emptyList()
+    val focus: MusicStudioFocus? = null,
+    val songs: List<SongMusic> = emptyList(),
+    val studies: List<MusicStudy> = emptyList(),
 )
+
+sealed interface MusicStudioFocus {
+    data class Music(val sheet: MusicSheet) : MusicStudioFocus
+    data class Study(val musicStudy: MusicStudy) : MusicStudioFocus
+}
 
 /** A music of [song] named for its title, in C major and 4/4. */
 private fun newMusicOf(song: Song) = Music(
