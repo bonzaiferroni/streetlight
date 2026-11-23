@@ -17,12 +17,28 @@ import streetlight.model.music.ui.notationLayoutOf
 class StudySession(
     scope: CoroutineScope,
     initialStudy: MusicStudy,
+    private val player: MusicPlayer,
+    private val waveShelf: WaveShelf,
 ) {
     private val scope = ModelScope(scope, this::class)
     private val sheet = initialStudy.sheet
-    private val state = storeOf(StudySessionState(sheet.notationLayoutsOf(initialStudy.study)))
+    private val study = initialStudy.study
+    private val state = storeOf(StudySessionState(sheet.notationLayoutsOf(study)))
 
     val layoutsState = state.tapOf { it.layouts }
+
+    fun play() {
+        scope.cancelAndLaunch("playback") {
+            val musicWaves = waveShelf.musicWavesOf(sheet)
+            val plan = study.notationId?.let { sheet.musicPlanOf(it, musicWaves) }
+                ?: sheet.musicPlanOf(listOf(study.trackId), musicWaves)
+            plan?.let { player.play(it) }
+        }
+    }
+
+    fun stop() {
+        scope.cancelAndLaunch("playback") { player.stop() }
+    }
 }
 
 data class StudySessionState(
