@@ -124,7 +124,7 @@ fun ViewScope.musicExportMenu(popover: PopoverHandle, readSheet: () -> MusicShee
             contentScope.launch { model.exportMarkdown(readSheet()) }
         },
         MenuAction("MIDI") {
-            exportMidi(readSheet())
+            readSheet().exportMidi()
             popover.close()
         },
         MenuAction("Ogg") {

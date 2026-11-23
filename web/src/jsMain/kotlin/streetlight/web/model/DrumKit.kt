@@ -5,7 +5,6 @@ package streetlight.web.model
 import js.buffer.ArrayBuffer
 import js.typedarrays.Float32Array
 import streetlight.model.music.Drum
-import streetlight.model.music.DrumHit
 import web.audio.AudioBuffer
 import web.audio.BaseAudioContext
 import web.audio.AudioNode
@@ -26,14 +25,10 @@ class DrumKit {
         context: BaseAudioContext,
         bus: AudioNode,
         drum: Drum,
-        hit: DrumHit,
+        volume: Double,
         start: Double,
     ): List<AudioScheduledSourceNode> {
-        val scale = when (hit) {
-            DrumHit.Normal -> 1.0
-            DrumHit.Accent -> ACCENT_SCALE
-            DrumHit.Ghost -> GHOST_SCALE
-        }
+        val scale = volume * FULL_SCALE
         return when (drum) {
             Drum.Kick -> listOf(fallingTone(context, bus, start, 150f, 50f, 0.1, 0.4, 0.5 * scale))
             Drum.Tom -> listOf(fallingTone(context, bus, start, 120f, 80f, 0.15, 0.3, 0.35 * scale))
@@ -44,19 +39,12 @@ class DrumKit {
             Drum.HiHat -> listOf(noise(context, bus, start, BiquadFilterType.highpass, 7000f, 0.05, 0.12 * scale))
             Drum.Crash -> listOf(noise(context, bus, start, BiquadFilterType.highpass, 5000f, 1.5, 0.15 * scale))
             Drum.Ride -> listOf(noise(context, bus, start, BiquadFilterType.bandpass, 8000f, 0.8, 0.1 * scale))
+            // a pair of sticks clicked together, a drummer's count-off
+            Drum.Sticks -> listOf(
+                noise(context, bus, start, BiquadFilterType.bandpass, 3000f, 0.04, 0.3 * scale),
+                bodyTone(context, bus, start, 2200f, 0.025, 0.12 * scale),
+            )
         }
-    }
-
-    /**
-     * Clicks a pair of sticks together into [bus] at [start], a drummer's count-off, louder for an [accent], and
-     * returns the sources it started.
-     */
-    fun sticks(context: BaseAudioContext, bus: AudioNode, start: Double, accent: Boolean): List<AudioScheduledSourceNode> {
-        val scale = if (accent) ACCENT_SCALE else 1.0
-        return listOf(
-            noise(context, bus, start, BiquadFilterType.bandpass, 3000f, 0.04, 0.3 * scale),
-            bodyTone(context, bus, start, 2200f, 0.025, 0.12 * scale),
-        )
     }
 
     /** A sine falling from [from] to [to] hertz over [drop] seconds, fading out over [decay] seconds from [level]. */
@@ -144,8 +132,7 @@ class DrumKit {
     }
 }
 
-private const val ACCENT_SCALE = 1.3
-private const val GHOST_SCALE = 0.4
+private const val FULL_SCALE = 1.3
 
 /** The level an exponential fade ends on, since it cannot reach zero. */
 private const val SILENCE = 0.001f

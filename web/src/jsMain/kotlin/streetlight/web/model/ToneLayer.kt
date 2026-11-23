@@ -16,6 +16,7 @@ import streetlight.model.music.NotationId
 import streetlight.model.music.TrackClip
 import streetlight.model.music.TrackId
 import streetlight.model.music.Stanza
+import streetlight.model.music.TimeSignature
 import streetlight.model.music.Track
 import streetlight.model.music.lengthOf
 import streetlight.model.music.notationsOf
@@ -23,35 +24,78 @@ import streetlight.model.music.repeatsOf
 import streetlight.model.music.toMidi
 import streetlight.model.music.trackOf
 
+/** The [tones] of a layer of sound, in the order they start. */
+data class ToneLayer(
+    val tones: List<Tone>,
+) {
+    /** Whether the layer sounds at all. */
+    val isNotEmpty get() = tones.isNotEmpty()
+
+    /** The tick of the first sound, or `null` when there is none. */
+    val firstTick get() = tones.minOfOrNull { it.startTick }
+}
 
 /** The seconds a tick of this music lasts at its tempo. */
 val Music.secondsPerTick get() = 60.0 / bpm / time.pulse.ticks
 
+/** A sound of a [ToneLayer], from [startTick] to [endTick] at [volume], an amplitude from 0 to 1. */
+sealed interface Tone {
+    val startTick: Int
+    val endTick: Int
+    val volume: Double
+}
+
 /** The MIDI numbers of [midi] sounding together from [startTick] for [ticks]. */
 class NoteTone(
-    val startTick: Int,
+    override val startTick: Int,
     val ticks: Int,
     val midi: List<Int>,
-)
+    override val volume: Double,
+) : Tone {
+    override val endTick get() = startTick + ticks
+}
 
-/** A [hit] of [drum] struck at [startTick]. */
+/** [drum] struck at [startTick], a sound with no length. */
 class DrumTone(
-    val startTick: Int,
+    override val startTick: Int,
     val drum: Drum,
-    val hit: DrumHit,
-)
+    override val volume: Double,
+) : Tone {
+    override val endTick get() = startTick
+}
 
-/** The pitched [tones] and the [drums] of [track] in its song, each in the order they start. */
-data class TrackTones(
-    val track: Track,
-    val tones: List<NoteTone>,
-    val drums: List<DrumTone>,
-) {
-    /** Whether the track sounds at all. */
-    val isSounding get() = tones.isNotEmpty() || drums.isNotEmpty()
+/** The volume a hit of a drum sounds at. */
+val DrumHit.volume get() = when (this) {
+    DrumHit.Accent -> 1.0
+    DrumHit.Normal -> 1.0 / 1.3
+    DrumHit.Ghost -> 0.4 / 1.3
+}
 
-    /** The tick of the first sound, or `null` when there is none. */
-    val firstTick get() = (tones.map { it.startTick } + drums.map { it.startTick }).minOrNull()
+/** [midis] held a measure of [time], three measures before the downbeat, to give the pitch to start on. */
+fun guideLayerOf(time: TimeSignature, midis: List<Int>): ToneLayer {
+    val measure = time.measure.ticks
+    return ToneLayer(listOf(NoteTone(-3 * measure, measure, midis, MELODY_VOLUME)))
+}
+
+/**
+ * Sticks counting two measures of [time] before the downbeat, then clicking every pulse through the first [ticks]
+ * while [isClickOn].
+ *
+ * The count runs at half the pace of the pulse, then on it: the first measure on each half when its pulses split in
+ * two, as "1… 2…" in 4/4, or on its downbeat alone, as in 3/4 or 6/8; the second on every pulse.
+ */
+fun drummerLayerOf(time: TimeSignature, ticks: Int, isClickOn: Boolean): ToneLayer {
+    val measure = time.measure.ticks
+    val pulse = time.pulse.ticks
+    val pulses = measure / pulse
+    val firstMeasure = if (pulses > 2 && pulses % 2 == 0) listOf(0, measure / 2) else listOf(0)
+    val secondMeasure = List(pulses) { measure + it * pulse }
+    val count = (firstMeasure + secondMeasure).map { it - 2 * measure }
+    val click = if (isClickOn) (0 until ticks step pulse).toList() else emptyList()
+    val drums = (count + click).map { tick ->
+        DrumTone(tick, Drum.Sticks, if (tick % measure == 0) DrumHit.Accent.volume else DrumHit.Normal.volume)
+    }
+    return ToneLayer(drums)
 }
 
 /**
@@ -64,10 +108,9 @@ data class TrackTones(
 fun MusicSheet.musicTonesOf(
     trackIds: Collection<TrackId>,
     clips: Collection<TrackClip> = emptyList(),
-): List<TrackTones> = tracks.filter { it.trackId in trackIds }.map { track ->
+): List<ToneLayer> = tracks.filter { it.trackId in trackIds }.map { track ->
     val capo = (music.capo ?: 0) + (track.capo ?: 0)
-    val tones = mutableListOf<NoteTone>()
-    val drums = mutableListOf<DrumTone>()
+    val tones = mutableListOf<Tone>()
     val trackClips = clips.filter { it.trackId == track.trackId }
     if (trackClips.none { it.notationId == null }) {
         val passes = notationPassesOf(music, track)
@@ -78,10 +121,10 @@ fun MusicSheet.musicTonesOf(
             if (clipSpans.any { tick in it }) return@forEach
             val notation = track.notations.firstOrNull { it.notationId == notationId } ?: return@forEach
             tones.addAll(tonesOf(notation, tick, music.key, capo))
-            if (notation is Groove) drums.addAll(drumTonesOf(notation, tick))
+            if (notation is Groove) tones.addAll(drumTonesOf(notation, tick))
         }
     }
-    TrackTones(track, tones, drums.sortedBy { it.startTick })
+    ToneLayer(tones.sortedBy { it.startTick })
 }
 
 /**
@@ -91,21 +134,20 @@ fun MusicSheet.musicTonesOf(
 fun MusicSheet.notationTonesOf(
     notationId: NotationId,
     clips: Collection<TrackClip> = emptyList(),
-): TrackTones {
+): ToneLayer {
     val track = trackOf(notationId)
     val capo = (music.capo ?: 0) + (track.capo ?: 0)
     val clipIds = clips.filter { it.trackId == track.trackId }.mapNotNull { it.notationId }
-    val tones = mutableListOf<NoteTone>()
-    val drums = mutableListOf<DrumTone>()
+    val tones = mutableListOf<Tone>()
     var onset = 0
     if (notationId !in clipIds) track.notationsOf(notationId).orEmpty().forEach { notation ->
         if (notation.notationId !in clipIds) {
             tones.addAll(tonesOf(notation, onset, music.key, capo))
-            if (notation is Groove) drums.addAll(drumTonesOf(notation, onset))
+            if (notation is Groove) tones.addAll(drumTonesOf(notation, onset))
         }
         onset += notation.length.ticks
     }
-    return TrackTones(track, tones, drums.sortedBy { it.startTick })
+    return ToneLayer(tones.sortedBy { it.startTick })
 }
 
 /**
@@ -155,13 +197,13 @@ fun firstToneOf(music: Music, track: Track, notationId: NotationId): NoteTone? {
 private fun tonesOf(section: Notation, onset: Int, key: Key, capo: Int): List<NoteTone> = when (section) {
     is Phrase -> {
         val midiOf = { note: MelodyNote -> note.interval?.let { listOf(it.toMidi(key) + capo) } }
-        section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, { it.beats }, midiOf) +
-            section.notes.toTones(onset, { it.beats }, midiOf)
+        section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, MELODY_VOLUME, { it.beats }, midiOf) +
+            section.notes.toTones(onset, MELODY_VOLUME, { it.beats }, midiOf)
     }
     is Progression -> {
         val midiOf = { note: ChordNote -> note.chord?.toMidi(key)?.map { it + capo } }
-        section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, { it.beats }, midiOf) +
-            section.notes.toTones(onset, { it.beats }, midiOf)
+        section.pickup.toTones(onset - section.pickup.sumOf { it.beats.ticks }, CHORD_VOLUME, { it.beats }, midiOf) +
+            section.notes.toTones(onset, CHORD_VOLUME, { it.beats }, midiOf)
     }
     is Stanza, is Groove -> emptyList()
 }
@@ -170,19 +212,31 @@ private fun tonesOf(section: Notation, onset: Int, key: Key, capo: Int): List<No
 private fun drumTonesOf(groove: Groove, onset: Int) = groove.lanes.flatMap { lane ->
     var tick = onset
     lane.beats.mapNotNull { beat ->
-        val tone = beat.hit?.let { DrumTone(tick, lane.drum, it) }
+        val tone = beat.hit?.let { DrumTone(tick, lane.drum, it.volume) }
         tick += beat.beats.ticks
         tone
     }
 }
 
-/** The notes laid end to end from [onset], each a tone of the MIDI numbers [midiOf] gives, or a rest for `null`. */
-private fun <N> List<N>.toTones(onset: Int, beatsOf: (N) -> Beats, midiOf: (N) -> List<Int>?): List<NoteTone> {
+/**
+ * The notes laid end to end from [onset], each a tone at [volume] of the MIDI numbers [midiOf] gives, or a rest for
+ * `null`.
+ */
+private fun <N> List<N>.toTones(
+    onset: Int,
+    volume: Double,
+    beatsOf: (N) -> Beats,
+    midiOf: (N) -> List<Int>?,
+): List<NoteTone> {
     var tick = onset
     return mapNotNull { note ->
         val ticks = beatsOf(note).ticks
-        val tone = midiOf(note)?.let { NoteTone(tick, ticks, it) }
+        val tone = midiOf(note)?.let { NoteTone(tick, ticks, it, volume) }
         tick += ticks
         tone
     }
 }
+
+// a melody sounds over the chords beneath it
+private const val MELODY_VOLUME = 1.0
+private const val CHORD_VOLUME = 2.0 / 3

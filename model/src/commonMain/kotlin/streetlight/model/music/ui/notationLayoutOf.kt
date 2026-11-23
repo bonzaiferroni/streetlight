@@ -258,12 +258,13 @@ private fun staffStepOf(drum: Drum) = when (drum) {
     Drum.Ride -> 45
     Drum.HiHat -> 46
     Drum.Crash -> 47
+    Drum.Sticks -> 48
 }
 
 /** The head [drum] is written with. */
 private fun headShapeOf(drum: Drum) = when (drum) {
     Drum.Kick, Drum.Snare, Drum.Tom -> HeadShape.Round
-    Drum.HiHat, Drum.Crash, Drum.Ride -> HeadShape.Cross
+    Drum.HiHat, Drum.Crash, Drum.Ride, Drum.Sticks -> HeadShape.Cross
 }
 
 /** The ledger lines a note reaching from [lowest] to [highest] wants, one on each line between it and the staff. */

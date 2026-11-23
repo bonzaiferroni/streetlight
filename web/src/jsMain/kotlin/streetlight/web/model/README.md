@@ -124,7 +124,7 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`DataCache`](DataCache.kt) | Data loaded once per session |
 | [`StarCache`](StarCache.kt) | The items a star has lit |
 | [`Fleet`](Fleet.kt) | A list loaded on first request |
-| [`musicTonesOf`](SongTones.kt) | The tones of a song's tracks laid along its arrangement, which playback and export share |
+| [`ToneLayer`](ToneLayer.kt) | A layer of tones a playback sounds: a track's, from `musicTonesOf` or `notationTonesOf`, or a study's guide and drummer |
 | [`writeMidi`](writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
 | [`StudioAudio`](StudioAudio.kt) | The audio context the studio shares, resumed as recording or playback starts, with the recorder and PCM player on it, its calibration and latency |
 | [`DrumKit`](DrumKit.kt) | The synthesized drums `ToneSynth` strikes |

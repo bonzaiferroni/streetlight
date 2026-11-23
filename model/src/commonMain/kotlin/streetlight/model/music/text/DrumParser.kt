@@ -197,6 +197,7 @@ private val LABELS = linkedMapOf(
     Drum.Snare to listOf("SD", "S"),
     Drum.Tom to listOf("T", "HT", "MT", "FT", "LT"),
     Drum.Kick to listOf("BD", "B", "K"),
+    Drum.Sticks to listOf("ST", "SS"),
 )
 
 private val CYMBALS = setOf(Drum.HiHat, Drum.Crash, Drum.Ride)

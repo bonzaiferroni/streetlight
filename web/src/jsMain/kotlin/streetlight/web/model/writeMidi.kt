@@ -2,32 +2,32 @@ package streetlight.web.model
 
 import streetlight.model.music.Beats
 import streetlight.model.music.Drum
-import streetlight.model.music.DrumHit
-import streetlight.model.music.DrumTrack
-import streetlight.model.music.MelodyTrack
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSheet
 import streetlight.web.utility.downloadFile
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
-/** Hands the viewer the tracks of [sheet] as a MIDI file, laid along its arrangement. */
-fun exportMidi(sheet: MusicSheet) {
-    val trackTones = sheet.musicTonesOf(sheet.tracks.map { it.trackId }).filter { it.isSounding }
-    downloadFile(writeMidi(sheet.music, trackTones), "${sheet.music.name}.mid", MIDI_TYPE)
+/** Hands the viewer the tracks of this sheet as a MIDI file, laid along its arrangement. */
+fun MusicSheet.exportMidi() {
+    downloadFile(writeMidi(), "${music.name}.mid", MIDI_TYPE)
 }
 
 /**
- * Writes [trackTones] as a Standard MIDI File of format 1: a conductor track holding the tempo and time signature of
- * [music], then a track of notes for each, each on its own channel. Drum tracks share channel 10, as General MIDI
- * keeps it.
+ * Writes the tracks of this sheet as a Standard MIDI File of format 1: a conductor track holding the tempo and time
+ * signature of its music, then a track of notes for each track that sounds, each on its own channel. Drums share
+ * channel 10, as General MIDI keeps it.
  */
-fun writeMidi(music: Music, trackTones: List<TrackTones>): ByteArray {
+fun MusicSheet.writeMidi(): ByteArray {
+    val named = tracks.map { it.name }.zip(musicTonesOf(tracks.map { it.trackId }))
+        .filter { (_, layer) -> layer.isNotEmpty }
     // a pickup starts before tick 0, and a MIDI file cannot, so every event shifts by the earliest
-    val firstTick = trackTones.mapNotNull { it.firstTick }.minOrNull() ?: 0
+    val firstTick = named.mapNotNull { (_, layer) -> layer.firstTick }.minOrNull() ?: 0
     val shift = -minOf(firstTick, 0)
     var pitchedIndex = 0
-    val chunks = listOf(conductorChunk(music)) + trackTones.map { tones ->
-        val channel = if (tones.track is DrumTrack) DRUM_CHANNEL else channelOf(pitchedIndex++)
-        noteChunk(tones, channel, shift)
+    val chunks = listOf(conductorChunk(music)) + named.map { (name, layer) ->
+        val channel = if (layer.tones.none { it is NoteTone }) DRUM_CHANNEL else channelOf(pitchedIndex++)
+        noteChunk(name, layer, channel, shift)
     }
     val file = buildBytes {
         chunk("MThd") {
@@ -54,30 +54,30 @@ private fun conductorChunk(music: Music) = buildBytes {
     }
 }
 
-/** The notes of [tones] on [channel], each event moved [shift] ticks later. */
-private fun noteChunk(tones: TrackTones, channel: Int, shift: Int) = buildBytes {
+/** The track [name] holding the notes of [layer] on [channel] and its drums on channel 10, each moved [shift] ticks. */
+private fun noteChunk(name: String, layer: ToneLayer, channel: Int, shift: Int) = buildBytes {
     chunk("MTrk") {
-        val name = tones.track.name.encodeToByteArray()
-        event(0, 0xFF, 0x03, name.size)
-        addAll(name.toList())
-        val velocity = if (tones.track is MelodyTrack) MELODY_VELOCITY else ACCOMPANIMENT_VELOCITY
-        val pitched = tones.tones.flatMap { tone ->
-            tone.midi.flatMap { midi ->
-                listOf(
-                    NoteEvent(tone.startTick + shift, 0x90 or channel, midi, velocity),
-                    NoteEvent(tone.startTick + tone.ticks + shift, 0x80 or channel, midi, 0),
-                )
+        val nameBytes = name.encodeToByteArray()
+        event(0, 0xFF, 0x03, nameBytes.size)
+        addAll(nameBytes.toList())
+        val events = layer.tones.flatMap { tone ->
+            when (tone) {
+                is NoteTone -> tone.midi.flatMap { midi ->
+                    listOf(
+                        NoteEvent(tone.startTick + shift, 0x90 or channel, midi, velocityOf(tone.volume)),
+                        NoteEvent(tone.endTick + shift, 0x80 or channel, midi, 0),
+                    )
+                }
+                // a drum has no length, so each hit sounds for a short fixed time
+                is DrumTone -> {
+                    val note = tone.drum.toMidi()
+                    listOf(
+                        NoteEvent(tone.startTick + shift, 0x90 or DRUM_CHANNEL, note, velocityOf(tone.volume)),
+                        NoteEvent(tone.startTick + DRUM_NOTE_TICKS + shift, 0x80 or DRUM_CHANNEL, note, 0),
+                    )
+                }
             }
         }
-        // a drum has no length, so each hit sounds for a short fixed time
-        val drums = tones.drums.flatMap { drum ->
-            val note = drum.drum.toMidi()
-            listOf(
-                NoteEvent(drum.startTick + shift, 0x90 or channel, note, drum.hit.toVelocity()),
-                NoteEvent(drum.startTick + DRUM_NOTE_TICKS + shift, 0x80 or channel, note, 0),
-            )
-        }
-        val events = (pitched + drums)
             // a note that ends where the next of its pitch starts must end first, or the start is cut short
             .sortedWith(compareBy({ it.tick }, { if (it.status and 0xF0 == 0x80) 0 else 1 }))
         var tick = 0
@@ -99,13 +99,11 @@ private fun Drum.toMidi() = when (this) {
     Drum.Crash -> 49
     Drum.Ride -> 51
     Drum.Tom -> 45
+    Drum.Sticks -> 31
 }
 
-private fun DrumHit.toVelocity() = when (this) {
-    DrumHit.Normal -> 90
-    DrumHit.Accent -> 120
-    DrumHit.Ghost -> 40
-}
+/** The velocity of [volume], an amplitude, which loudness follows roughly as its square. */
+private fun velocityOf(volume: Double) = (sqrt(volume) * FULL_VELOCITY).roundToInt()
 
 /** The channel of the pitched track at [index], passing over channel 10, which General MIDI keeps for drums. */
 private fun channelOf(index: Int) = (if (index >= DRUM_CHANNEL) index + 1 else index) % 16
@@ -151,7 +149,6 @@ private fun MutableList<Byte>.variableLength(value: Int) {
 
 private const val DRUM_CHANNEL = 9
 private const val DRUM_NOTE_TICKS = 120
-private const val MELODY_VELOCITY = 100
-private const val ACCOMPANIMENT_VELOCITY = 80
+private const val FULL_VELOCITY = 120
 
 private const val MIDI_TYPE = "audio/midi"

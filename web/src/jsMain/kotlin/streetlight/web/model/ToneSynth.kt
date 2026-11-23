@@ -1,7 +1,6 @@
 package streetlight.web.model
 
 import streetlight.model.music.Drum
-import streetlight.model.music.DrumHit
 import web.audio.AudioNode
 import web.audio.AudioScheduledSourceNode
 import web.audio.BaseAudioContext
@@ -44,17 +43,14 @@ class ToneSynth {
             oscillator
         }
     }
-    /** Strikes [drum] with [hit] into [bus] at [start]. Returns the sources. */
-    fun strike(context: BaseAudioContext, bus: AudioNode, drum: Drum, hit: DrumHit, start: Double) =
-        kit.strike(context, bus, drum, hit, start)
+    /** Strikes [drum] at [volume], from 0 to 1, into [bus] at [start]. Returns the sources. */
+    fun strike(context: BaseAudioContext, bus: AudioNode, drum: Drum, volume: Double, start: Double) =
+        kit.strike(context, bus, drum, volume, start)
 
-    /** Clicks sticks into [bus] at [start], louder for an [accent]. Returns the sources. */
-    fun sticks(context: BaseAudioContext, bus: AudioNode, start: Double, accent: Boolean) =
-        kit.sticks(context, bus, start, accent)
 
     companion object {
-        const val MELODY_LEVEL = 0.18
-        const val ACCOMPANIMENT_LEVEL = 0.12
+        /** The gain of a voice at full volume. */
+        const val VOICE_LEVEL = 0.18
     }
 }
 

@@ -6,7 +6,6 @@ import js.buffer.ArrayBuffer
 import js.typedarrays.Float32Array
 import kampfire.model.Tap
 import kampfire.model.storeOf
-import streetlight.model.music.MelodyTrack
 import web.audio.AudioNode
 import web.audio.BaseAudioContext
 import web.audio.OfflineAudioContext
@@ -75,22 +74,20 @@ class MusicPlayer(
             val offset = max(playClock - at, 0.0)
             if (offset < musicWave.wave.durationSeconds) keep(waveSource(context, bus, musicWave.wave, at + offset, offset))
         }
-        plan.clicks.filter { it.tick >= startTick }.forEach { click ->
-            synth.sticks(context, bus, startClock + click.tick * secondsPerTick, click.accent).forEach(keep)
-        }
-        plan.trackTones.forEach { (track, tones, drums) ->
-            drums.filter { it.startTick >= startTick }.forEach { drum ->
-                val start = startClock + drum.startTick * secondsPerTick
-                synth.strike(context, bus, drum.drum, drum.hit, start).forEach(keep)
-            }
-            val level = if (track is MelodyTrack) ToneSynth.MELODY_LEVEL else ToneSynth.ACCOMPANIMENT_LEVEL
-            // a tone already sounding where playback begins sounds what is left of it
-            tones.filter { it.startTick + it.ticks > startTick }.forEach { tone ->
-                val toneStart = max(tone.startTick, startTick)
-                val start = startClock + toneStart * secondsPerTick
-                val duration = (tone.startTick + tone.ticks - toneStart) * secondsPerTick
-                val voiceLevel = level / sqrt(tone.midi.size.toDouble())
-                tone.midi.forEach { midi -> synth.voice(context, bus, midi, start, duration, voiceLevel).forEach(keep) }
+        plan.layers.flatMap { it.tones }.forEach { tone ->
+            when (tone) {
+                is DrumTone -> if (tone.startTick >= startTick) {
+                    val start = startClock + tone.startTick * secondsPerTick
+                    synth.strike(context, bus, tone.drum, tone.volume, start).forEach(keep)
+                }
+                // a note already sounding where playback begins sounds what is left of it
+                is NoteTone -> if (tone.endTick > startTick) {
+                    val toneStart = max(tone.startTick, startTick)
+                    val start = startClock + toneStart * secondsPerTick
+                    val duration = (tone.endTick - toneStart) * secondsPerTick
+                    val voiceLevel = ToneSynth.VOICE_LEVEL * tone.volume / sqrt(tone.midi.size.toDouble())
+                    tone.midi.forEach { midi -> synth.voice(context, bus, midi, start, duration, voiceLevel).forEach(keep) }
+                }
             }
         }
     }

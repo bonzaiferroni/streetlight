@@ -1,5 +1,7 @@
 package streetlight.web.model
 
+import streetlight.model.music.Drum
+import streetlight.model.music.DrumHit
 import web.audio.AudioScheduledSourceNode
 import web.audio.GainNode
 import kotlin.math.sqrt
@@ -21,14 +23,14 @@ class TonePlayer(
         noteBus?.disconnect()
         val bus = context.createGain().also { it.connect(context.destination) }
         noteBus = bus
-        val level = ToneSynth.MELODY_LEVEL / sqrt(midis.size.toDouble())
+        val level = ToneSynth.VOICE_LEVEL / sqrt(midis.size.toDouble())
         midis.forEach { synth.voice(context, bus, it, startClock ?: context.currentTime, seconds, level) }
     }
 
     /** Clicks sticks at [startClock] on the audio clock, louder for an [accent]. */
     fun click(startClock: Double, accent: Boolean) {
         val context = audio.startContext()
-        clicks.addAll(synth.sticks(context, context.destination, startClock, accent))
+        clicks.addAll(synth.strike(context, context.destination, Drum.Sticks, (if (accent) DrumHit.Accent else DrumHit.Normal).volume, startClock))
     }
 
     /** Silences every note and click this sounded or has yet to sound. */

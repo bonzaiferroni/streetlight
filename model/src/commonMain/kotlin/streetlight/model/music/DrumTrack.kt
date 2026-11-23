@@ -59,4 +59,5 @@ enum class Drum {
     Crash,
     Ride,
     Tom,
+    Sticks,
 }
