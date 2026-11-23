@@ -71,54 +71,19 @@ fun ViewScope.musicStudioScreen() {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
             flowBlock(model.focusState, modify(Transitioner)) { sheet ->
                 when (sheet) {
-                    null -> musicList()
-                    else -> {
-                        musicFocus(sheet)
+                    null -> {
+                        musicList()
                     }
+                    else -> musicFocus(sheet)
                 }
             }
         }
     }
 }
-
-/** The view transition name of the name of the music [musicId], shared by its row and its heading. */
-private fun musicNameTransition(musicId: MusicId) = transition("music-$musicId")
 
 fun RouteScope.viewMusicStudioRoute() {
     routeBlock<MusicStudioRoute, NullContent> {
         musicStudioScreen()
-    }
-}
-
-/**
- * Renders the music of [editor] in a section headed by its name, with a way back to the musics and a gear that opens
- * how its notation is written and shown and the formats it exports to, as a tab for each layout.
- */
-context(player: TrackPlayer, config: MusicConfig, db: StudioDb, waveShelf: WaveShelf)
-private fun ViewScope.musicFocus(initialSheet: MusicSheet) {
-    val host = MusicHost(contentScope, initialSheet, db)
-    // playback left running when the music closes would keep sounding
-    onDispose { player.stop() }
-    val settingsId = Id(Uuid.random().toString())
-//    songSettingsPopover(settingsId, editor)
-    context(host) {
-        topSection(
-            label = host.musicState.now.name,
-            onBack = { portal.go(MusicStudioRoute()) },
-            headingMod = musicNameTransition(host.musicState.now.musicId),
-            icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
-        ) {
-            lazyTransTabs(paramKey = MusicStudioRoute.tabParam.key) {
-                MusicStudioTab.entries.forEach { studioTab ->
-                    tab(studioTab.label, studioTab.svg) {
-                        when (studioTab) {
-                            MusicStudioTab.Compose -> musicEditor()
-                            MusicStudioTab.Timeline -> laneEditor()
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -154,6 +119,9 @@ private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor) {
         }
     }
 }
+
+/** The view transition name of the name of the music [musicId], shared by its row and its heading. */
+fun musicNameTransition(musicId: MusicId) = transition("music-$musicId")
 
 context(model: MusicStudio)
 private fun ViewScope.musicList() {
