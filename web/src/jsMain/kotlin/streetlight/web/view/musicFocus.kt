@@ -28,8 +28,8 @@ fun ViewScope.musicFocus(initialSheet: MusicSheet) {
     // playback left running when the music closes would keep sounding
     onDispose { player.stop() }
     val settingsId = Id(Uuid.random().toString())
-//    songSettingsPopover(settingsId, editor)
     context(host) {
+        songSettingsPopover(settingsId)
         topSection(
             label = host.musicState.now.name,
             onBack = { portal.go(MusicStudioIndexRoute) },

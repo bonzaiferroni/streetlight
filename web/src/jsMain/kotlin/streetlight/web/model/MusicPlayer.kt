@@ -75,6 +75,9 @@ class MusicPlayer(
             val offset = max(playClock - at, 0.0)
             if (offset < musicWave.wave.durationSeconds) keep(waveSource(context, bus, musicWave.wave, at + offset, offset))
         }
+        plan.clicks.filter { it.tick >= startTick }.forEach { click ->
+            synth.sticks(context, bus, startClock + click.tick * secondsPerTick, click.accent).forEach(keep)
+        }
         plan.trackTones.forEach { (track, tones, drums) ->
             drums.filter { it.startTick >= startTick }.forEach { drum ->
                 val start = startClock + drum.startTick * secondsPerTick

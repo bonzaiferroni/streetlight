@@ -2,32 +2,65 @@ package streetlight.web.model
 
 import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
+import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackClip
 import streetlight.model.music.TrackId
 import streetlight.model.music.notationsOf
 import streetlight.model.music.trackOf
 import kotlin.math.max
 
-/** The [trackTones] and [waveStarts] a playback sounds, each wave by the tick it starts at, at [secondsPerTick]. */
+/**
+ * The [trackTones], [waveStarts] and [clicks] a playback sounds, each wave by the tick it starts at, at
+ * [secondsPerTick].
+ */
 class MusicPlan(
     val trackTones: List<TrackTones>,
     val waveStarts: List<Pair<Int, MusicWave>>,
     val secondsPerTick: Double,
+    val clicks: List<ClickTone> = emptyList(),
 ) {
-    /** The tick of the first sound: a pickup's or a wave's lead may sound before the first downbeat. */
-    val firstTick = (trackTones.mapNotNull { it.firstTick } +
+    /** The tick of the first sound: a pickup's, a lead-in's or a wave's lead may sound before the first downbeat. */
+    val firstTick = (trackTones.mapNotNull { it.firstTick } + clicks.map { it.tick } +
         waveStarts.map { (tick, musicWave) -> tick - (musicWave.leadSeconds / secondsPerTick).toInt() }).min()
 
     /** Where the last sound ends on the clock, with tick 0 at [startClock]. */
     fun endClockOf(startClock: Double): Double {
-        val toneEnd = trackTones
-            .flatMap { tones -> tones.tones.map { it.startTick + it.ticks } + tones.drums.map { it.startTick } }
+        val toneEnd = (trackTones
+            .flatMap { tones -> tones.tones.map { it.startTick + it.ticks } + tones.drums.map { it.startTick } } +
+            clicks.map { it.tick })
             .maxOrNull()?.let { startClock + it * secondsPerTick } ?: startClock
         val waveEnd = waveStarts.maxOfOrNull { (tick, musicWave) ->
             startClock + tick * secondsPerTick - musicWave.leadSeconds + musicWave.wave.durationSeconds
         } ?: startClock
         return max(toneEnd, waveEnd)
     }
+}
+
+/** A click of the sticks at [tick], [accent]ed on a downbeat. */
+data class ClickTone(
+    val tick: Int,
+    val accent: Boolean,
+)
+
+/**
+ * This plan led in before its downbeat: [guideMidis] held a measure on the voice of its first track when given, then
+ * two measures counted on sticks in [time], with a click on every pulse through its first [ticks] while [isClickOn].
+ *
+ * The count runs at half the pace of the pulse, then on it: the first measure on each half when its pulses split in
+ * two, as "1… 2…" in 4/4, or on its downbeat alone, as in 3/4 or 6/8; the second on every pulse.
+ */
+fun MusicPlan.withLeadIn(time: TimeSignature, ticks: Int, isClickOn: Boolean, guideMidis: List<Int>?): MusicPlan {
+    val measure = time.measure.ticks
+    val pulse = time.pulse.ticks
+    val pulses = measure / pulse
+    val firstMeasure = if (pulses > 2 && pulses % 2 == 0) listOf(0, measure / 2) else listOf(0)
+    val secondMeasure = List(pulses) { measure + it * pulse }
+    val count = (firstMeasure + secondMeasure).map { offset -> ClickTone(offset - 2 * measure, offset % measure == 0) }
+    val through = if (!isClickOn) emptyList() else (0 until ticks step pulse).map { ClickTone(it, it % measure == 0) }
+    val guide = guideMidis?.let { NoteTone(-3 * measure, measure, it) }
+    val guided = if (guide == null || trackTones.isEmpty()) trackTones
+        else listOf(trackTones.first().let { it.copy(tones = listOf(guide) + it.tones) }) + trackTones.drop(1)
+    return MusicPlan(guided, waveStarts, secondsPerTick, clicks + count + through)
 }
 
 /**

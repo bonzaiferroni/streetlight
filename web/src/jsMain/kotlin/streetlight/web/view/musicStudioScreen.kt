@@ -95,35 +95,46 @@ fun RouteScope.viewMusicStudioRoute() {
 
 /**
  * A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show, above
- * the formats the music of [editor] exports to, with its bound clips.
+ * the formats the music of [host] exports to, with its bound clips.
  */
-context(model: MusicStudio, player: MusicPlayer, config: MusicConfig, waveShelf: WaveShelf)
-private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor) {
+context(config: MusicConfig)
+fun ViewScope.songSettingsPopover(id: Id) {
     popover(id) { popover ->
         column(Padding(2)) {
-            dropMenu(config.notationStyleState)
-            dropMenu(config.notationViewState)
-            switch("Lyrics", config.isLyricsShownState)
-            filigree { heading6("export") }
-            actionMenu(listOf(
-                MenuAction("Markdown") {
-                    popover.close()
-                    contentScope.launch { model.exportMarkdown(editor.sheetState.now) }
-                },
-                MenuAction("MIDI") {
-                    exportMidi(editor.sheetState.now)
-                    popover.close()
-                },
-                MenuAction("Ogg") {
-                    popover.close()
-                    contentScope.launch {
-                        val musicWaves = waveShelf.musicWavesOf(editor.sheetState.now)
-                        exportOgg(player, editor.sheetState.now, musicWaves).toDataOr(toaster) { return@launch }
-                    }
-                },
-            ))
+            musicConfigMenu()
+            // musicExportMenu(popover) { host.sheetState.now }
         }
     }
+}
+
+context(config: MusicConfig)
+fun ViewScope.musicConfigMenu() {
+    dropMenu(config.notationStyleState)
+    dropMenu(config.notationViewState)
+    switch("Lyrics", config.isLyricsShownState)
+    switch("Click", config.isClickOnState)
+}
+
+context(model: MusicStudio, player: MusicPlayer, waveShelf: WaveShelf)
+fun ViewScope.musicExportMenu(popover: PopoverHandle, readSheet: () -> MusicSheet) {
+    filigree { heading6("export") }
+    actionMenu(listOf(
+        MenuAction("Markdown") {
+            popover.close()
+            contentScope.launch { model.exportMarkdown(readSheet()) }
+        },
+        MenuAction("MIDI") {
+            exportMidi(readSheet())
+            popover.close()
+        },
+        MenuAction("Ogg") {
+            popover.close()
+            contentScope.launch {
+                val sheet = readSheet()
+                exportOgg(player, sheet, waveShelf.musicWavesOf(sheet)).toDataOr(toaster) { return@launch }
+            }
+        },
+    ))
 }
 
 /** The view transition name of the name of the music [musicId], shared by its row and its heading. */
