@@ -23,6 +23,10 @@ import streetlight.model.music.SongMusic
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.text.SongMarkdown
 import streetlight.model.studio.StudioDb
+import streetlight.model.ui.MusicEditorRoute
+import streetlight.model.ui.MusicStudioIndexRoute
+import streetlight.model.ui.MusicStudioRoute
+import streetlight.model.ui.MusicStudyRoute
 
 /**
  * The musics kept in [db], each with its song, and the sheet of the one in focus, which opens the editors of it.
@@ -30,7 +34,7 @@ import streetlight.model.studio.StudioDb
  */
 class MusicStudio(
     scope: CoroutineScope,
-    initialMusicId: MusicId?,
+    initialRoute: MusicStudioRoute,
     private val db: StudioDb,
     private val messenger: Messenger,
 ) {
@@ -42,7 +46,7 @@ class MusicStudio(
     val studiesState = state.tapOf { it.studies }
 
     init {
-        setFocus(initialMusicId)
+        setFocus(initialRoute)
         scope.launch {
             db.music.flowSongMusics().collect { songs ->
                 state.set { copy(songs = songs) }
@@ -55,10 +59,16 @@ class MusicStudio(
         }
     }
 
-    fun setFocus(musicId: MusicId?) {
+    fun setFocus(route: MusicStudioRoute) {
         scope.cancelAndLaunch("setFocus") {
-            val sheet = musicId?.let { db.music.readMusicSheet(musicId) }
-            state.set { copy(focus = sheet?.let { MusicStudioFocus.Music(it) }) }
+            val focus = when (route) {
+                MusicStudioIndexRoute -> null
+                is MusicEditorRoute -> db.music.readMusicSheet(route.musicId)?.let { MusicStudioFocus.Music(it) }
+                is MusicStudyRoute -> db.study.flowMusicStudies().first()
+                    .firstOrNull { it.study.trackId == route.trackId && it.study.notationId == route.notationId }
+                    ?.let { MusicStudioFocus.Study(it) }
+            }
+            state.set { copy(focus = focus) }
         }
     }
 

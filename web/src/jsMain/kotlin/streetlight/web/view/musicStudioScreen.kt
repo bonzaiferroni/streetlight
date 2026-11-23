@@ -16,7 +16,10 @@ import koala.model.NullContent
 import koala.modifier.*
 import koala.page.Id
 import streetlight.model.music.MusicId
+import streetlight.model.ui.MusicEditorRoute
+import streetlight.model.ui.MusicStudioIndexRoute
 import streetlight.model.ui.MusicStudioRoute
+import streetlight.model.ui.MusicStudyRoute
 import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
@@ -53,7 +56,7 @@ import web.blob.text
 /** Renders the music studio: the music the route names, or the kept musics when it names none that is kept. */
 context(route: MusicStudioRoute)
 fun ViewScope.musicStudioScreen() {
-    val model = app.getMusicStudio(contentScope, route.musicId)
+    val model = app.getMusicStudio(contentScope, route)
     val config = MusicConfig(contentScope)
     val player = app.get<TrackPlayer>()
     val db = app.get<StudioDb>()
@@ -64,12 +67,12 @@ fun ViewScope.musicStudioScreen() {
     // a change of music keeps the view, so the routes that follow reach it here
     launchEffect("musicStudioScreen > route") {
         portal.routeFlowOf<MusicStudioRoute>().collect { next ->
-            model.setFocus(next.musicId)
+            model.setFocus(next)
             document.setTitle(next)
         }
     }
     context(model, player, config, db, waveShelf) {
-        mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
+        mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioIndexRoute) {
             flowBlock(model.focusState, modify(Transitioner)) { focus ->
                 when (focus) {
                     null -> column {
@@ -141,8 +144,8 @@ private fun ViewScope.musicList() {
             val musicId = songMusic.music.musicId
             actionRow(
                 label = songMusic.music.name,
+                route = MusicEditorRoute(musicId),
                 actions = listOf(
-                    MenuAction("Edit") { portal.go(MusicStudioRoute(musicId)) },
                     MenuAction("Remove") { model.remove(songMusic) },
                 ),
                 labelMod = musicNameTransition(musicId),
@@ -157,7 +160,7 @@ context(model: MusicStudio)
 private fun ViewScope.studyList() {
     actionSection(label = "Studies") {
         itemsBlock(model.studiesState, Transitioner, gapRems = null) { study ->
-            actionRow(label = study.label)
+            actionRow(label = study.label, route = MusicStudyRoute(study.study.trackId, study.study.notationId))
         }
     }
 }
@@ -167,7 +170,7 @@ context(model: MusicStudio)
 private fun ViewScope.importSong() = pickFile(MARKDOWN_ACCEPT) { file ->
     contentScope.launch {
         val musicId = model.importSong(file.text(), file.name).toDataOr(toaster) { return@launch }
-        portal.go(MusicStudioRoute(musicId))
+        portal.go(MusicEditorRoute(musicId))
     }
 }
 
@@ -180,7 +183,7 @@ private fun ViewScope.newSongPopover(id: Id) {
             val title = titleState.now.takeIf { it.isNotBlank() }?.trim() ?: return@save
             titleState.set("")
             popover.close()
-            contentScope.launch { portal.go(MusicStudioRoute(model.create(title))) }
+            contentScope.launch { portal.go(MusicEditorRoute(model.create(title))) }
         }
         row(modify(AlignItemsCenter, Padding(2))) {
             textField(titleState, "title", Flex1, onEnterSubmit = save)

@@ -10,7 +10,8 @@ import koala.page.Id
 import streetlight.model.music.MusicId
 import streetlight.model.music.MusicSheet
 import streetlight.model.studio.StudioDb
-import streetlight.model.ui.MusicStudioRoute
+import streetlight.model.ui.MusicEditorRoute
+import streetlight.model.ui.MusicStudioIndexRoute
 import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.topSection
 import streetlight.web.model.MusicConfig
@@ -31,11 +32,11 @@ fun ViewScope.musicFocus(initialSheet: MusicSheet) {
     context(host) {
         topSection(
             label = host.musicState.now.name,
-            onBack = { portal.go(MusicStudioRoute()) },
+            onBack = { portal.go(MusicStudioIndexRoute) },
             headingMod = musicNameTransition(host.musicState.now.musicId),
             icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
         ) {
-            lazyTransTabs(paramKey = MusicStudioRoute.tabParam.key) {
+            lazyTransTabs(paramKey = MusicEditorRoute.tabParam.key) {
                 MusicStudioTab.entries.forEach { studioTab ->
                     tab(studioTab.label, studioTab.svg) {
                         when (studioTab) {

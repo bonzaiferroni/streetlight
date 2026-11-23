@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import koala.dom.AppContainer
 import kotlinx.coroutines.CoroutineScope
+import streetlight.model.ui.MusicStudioRoute
 import org.koin.dsl.module
 import kampfire.model.Tap
 import streetlight.model.music.MusicSheet
@@ -37,7 +38,7 @@ fun AppContainer.getClipMic(scope: CoroutineScope, sheetState: Tap<MusicSheet>, 
         koin.get(), koin.get(), koin.get(), koin.get(), koin.get(),
     )
 
-fun AppContainer.getMusicStudio(scope: CoroutineScope, initialId: MusicId?) =
-    MusicStudio(scope, initialId, koin.get(), koin.get())
+fun AppContainer.getMusicStudio(scope: CoroutineScope, initialRoute: MusicStudioRoute) =
+    MusicStudio(scope, initialRoute, koin.get(), koin.get())
 
 private var isStudioModuleLoaded = false

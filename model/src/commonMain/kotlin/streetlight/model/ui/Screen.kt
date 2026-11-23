@@ -58,7 +58,7 @@ enum class Screen(
     Connect(StaticParse { ConnectRoute(readConnectType() ?: OnboardType.BusinessOwner) }, null, true),
     Onboard(StaticParse { readConnectType()?.let { OnboardRoute(it) } ?: ErrorRoute }),
     Studio(StaticParse { StudioRoute }),
-    MusicStudio(SlugOrNullParse { MusicStudioRoute.of(this, it) }),
+    MusicStudio(parseMusicStudioRoute),
 
     // star
     SkillProfile(UuidParse { SkillRoute(SkillId(it)) }),
@@ -225,30 +225,6 @@ object ContributeRoute: StreetlightRoute {
 object StudioRoute: StreetlightRoute {
     override val screen get() = Screen.Studio
     override val title get() = "Studio"
-}
-
-/** The music studio, showing the music [musicId] in its [tab], or the list of musics when `null`. */
-data class MusicStudioRoute(
-    val musicId: MusicId? = null,
-    val tab: MusicStudioTab? = null,
-): StreetlightRoute {
-    companion object {
-        val tabParam = ordinalParamOf<MusicStudioTab>("tab")
-
-        fun of(parameters: Parameters, slug: Slug?) = MusicStudioRoute(
-            musicId = slug?.let { Uuid.parseOrNull(it.value) }?.let { MusicId(it) },
-            tab = parameters.read(tabParam),
-        )
-    }
-
-    override val screen get() = Screen.MusicStudio
-    override val title get() = "Songs"
-
-    // a change of music or tab is a change within the view
-    override val screenKey: Any get() = Screen.MusicStudio
-    override fun toRelativePath() = buildRelativePath(listOfNotNull(musicId?.toString())) {
-        writeParam(tabParam, tab)
-    }
 }
 
 enum class MusicStudioTab(val svg: SvgPack): Labeled {
