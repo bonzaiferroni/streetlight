@@ -72,10 +72,12 @@ fun ViewScope.musicStudioScreen() {
         mainBody("Music", "Studio", "musicStudioScreen.kt", MusicStudioRoute()) {
             flowBlock(model.focusState, modify(Transitioner)) { focus ->
                 when (focus) {
-                    null -> {
+                    null -> column {
+                        studyList()
                         musicList()
                     }
                     is MusicStudioFocus.Music -> musicFocus(focus.sheet)
+                    is MusicStudioFocus.Study -> studyFocus(focus.musicStudy)
                 }
             }
         }
@@ -148,6 +150,15 @@ private fun ViewScope.musicList() {
         }
         textBlock("No songs yet.", modify(TextAlignCenter, Italic, TextSmall, OpacityHigh))
             .flowModifier(model.songsState.tapOf { it.isNotEmpty() }, DisplayNone, contentScope)
+    }
+}
+
+context(model: MusicStudio)
+private fun ViewScope.studyList() {
+    actionSection(label = "Studies") {
+        itemsBlock(model.studiesState, Transitioner, gapRems = null) { study ->
+            actionRow(label = study.label)
+        }
     }
 }
 
