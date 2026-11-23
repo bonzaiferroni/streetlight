@@ -1,6 +1,8 @@
 package streetlight.web.model
 
 import kampfire.model.ModelScope
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.music.Beats
 import streetlight.model.music.MusicSheet
@@ -18,11 +20,13 @@ class StudySession(
 ) {
     private val scope = ModelScope(scope, this::class)
     private val sheet = initialStudy.sheet
-    private val state = StudySessionState(sheet.notationLayoutsOf(initialStudy.study))
+    private val state = storeOf(StudySessionState(sheet.notationLayoutsOf(initialStudy.study)))
+
+    val layoutsState = state.tapOf { it.layouts }
 }
 
 data class StudySessionState(
-    val layout: List<NotationLayout>
+    val layouts: List<NotationLayout>
 )
 
 private fun MusicSheet.notationLayoutsOf(study: Study): List<NotationLayout> {
