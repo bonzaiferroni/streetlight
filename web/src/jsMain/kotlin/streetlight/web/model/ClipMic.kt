@@ -150,7 +150,7 @@ class ClipMic(
         val secondsPerTick = music.secondsPerTick
         val measureTicks = music.time.measure.ticks
         // the whole track is led in by the first notation it plays
-        val guideId = notationId ?: notationPlaysOf(music, track).firstOrNull()?.first
+        val guideId = notationId ?: notationPassesOf(music, track).firstOrNull()?.first
         val guideMidis = guideId?.let { firstToneOf(music, track, it) }?.midi
         return CapturePlan(
             music = music,

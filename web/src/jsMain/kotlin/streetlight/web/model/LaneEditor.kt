@@ -158,21 +158,21 @@ private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
     val leadSeconds = leadSecondsOf(sheet, rate)
     return tracks.map { track ->
         val window = sheet.staffWindowOf(track.trackId)
-        val plays = mutableMapOf<NotationId, Int>()
+        val passes = mutableMapOf<NotationId, Int>()
         var onset = 0
         val sections = music.arrangement.flatMap { sectionId ->
             val span = music.lengthOf(sectionId) ?: Beats(0)
             val notationId = track.sections[sectionId]
             val ticks = notationId?.let { track.lengthOf(it) }?.ticks ?: 0
             val laneSections = if (notationId == null) emptyList() else List(track.repeatsOf(notationId, span)) { repeat ->
-                val play = plays[notationId] ?: 0
-                val notation = sheet.notationLayoutOf(notationId, play) ?: return@List null
-                plays[notationId] = play + 1
+                val pass = passes[notationId] ?: 0
+                val notation = sheet.notationLayoutOf(notationId, pass) ?: return@List null
+                passes[notationId] = pass + 1
                 LaneSection(
                     notation = notation,
                     startSeconds = leadSeconds + (onset + repeat * ticks) * rate,
                     durationSeconds = ticks * rate,
-                    isRepeat = play > 0,
+                    isRepeat = pass > 0,
                 )
             }.filterNotNull()
             onset += span.ticks

@@ -68,11 +68,11 @@ fun songTonesOf(
     val drums = mutableListOf<DrumTone>()
     val trackTaken = taken.filter { it.trackId == track.trackId }
     if (trackTaken.none { it.notationId == null }) {
-        val plays = notationPlaysOf(music, track)
-        // a clip of a notation or an arrangement silences every tone of the plays it spans
-        val takenSpans = plays.filter { (notationId) -> trackTaken.any { it.notationId == notationId } }
+        val passes = notationPassesOf(music, track)
+        // a clip of a notation or an arrangement silences every tone of the passes it spans
+        val takenSpans = passes.filter { (notationId) -> trackTaken.any { it.notationId == notationId } }
             .mapNotNull { (notationId, tick) -> track.lengthOf(notationId)?.let { tick until tick + it.ticks } }
-        plays.forEach { (notationId, tick) ->
+        passes.forEach { (notationId, tick) ->
             if (takenSpans.any { tick in it }) return@forEach
             val notation = track.notations.firstOrNull { it.notationId == notationId } ?: return@forEach
             tones.addAll(tonesOf(notation, tick, music.key, capo))
@@ -86,11 +86,11 @@ fun songTonesOf(
  * Each time [track] starts a notation or an arrangement along the arrangement of [music], each of its repeats
  * included, paired with the tick it starts at. An arrangement is followed by the notations it holds.
  */
-fun notationPlaysOf(music: Music, track: Track): List<Pair<NotationId, Int>> {
-    val plays = mutableListOf<Pair<NotationId, Int>>()
+fun notationPassesOf(music: Music, track: Track): List<Pair<NotationId, Int>> {
+    val passes = mutableListOf<Pair<NotationId, Int>>()
     // returns the length of what it placed
     fun place(notationId: NotationId, tick: Int): Int {
-        plays.add(notationId to tick)
+        passes.add(notationId to tick)
         track.notations.firstOrNull { it.notationId == notationId }?.let { return it.length.ticks }
         val arrangement = track.arrangements.firstOrNull { it.notationId == notationId } ?: return 0
         return arrangement.notations.fold(0) { length, heldId -> length + place(heldId, tick + length) }
@@ -106,12 +106,12 @@ fun notationPlaysOf(music: Music, track: Track): List<Pair<NotationId, Int>> {
         }
         onset += span.ticks
     }
-    return plays
+    return passes
 }
 
 /** The tick at which [track] starts [notationId] each time it plays it along the arrangement of [music]. */
 fun notationStartsOf(music: Music, track: Track, notationId: NotationId) =
-    notationPlaysOf(music, track).filter { it.first == notationId }.map { it.second }
+    notationPassesOf(music, track).filter { it.first == notationId }.map { it.second }
 
 /**
  * The first pitched tone of [notationId] in [track], its pickup's first when it has one, with both capos of [music]

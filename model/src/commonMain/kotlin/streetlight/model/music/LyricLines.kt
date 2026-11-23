@@ -15,7 +15,7 @@ fun List<Track>.lyricsOf(track: Track): LyricTrack? {
 
 /**
  * The lines of lyrics sung to [notationId] in [sheet]: one for each time its track plays it, in order, holding the
- * syllables of the same section that start during it. A stanza's pickup goes with the play its stanza starts in.
+ * syllables of the same section that start during it. A stanza's pickup goes with the pass its stanza starts in.
  * There are no lines when [lyricsOf] gives the track no lyrics.
  */
 fun lyricLinesOf(notationId: NotationId, sheet: MusicSheet): List<List<LineVocal>> {
@@ -24,24 +24,24 @@ fun lyricLinesOf(notationId: NotationId, sheet: MusicSheet): List<List<LineVocal
     val ticks = track.lengthOf(notationId)?.ticks ?: return emptyList()
 
     // place each syllable in the song, anchored to the tick and section that decide its line
-    val anchored = mutableListOf<Pair<NotationPlay, LineVocal>>()
-    playsOf(lyrics, sheet.music).forEach { play ->
-        val stanza = lyrics.notations.firstOrNull { it.notationId == play.notationId } ?: return@forEach
-        var tick = play.tick - stanza.pickup.sumOf { it.beats.ticks }
+    val anchored = mutableListOf<Pair<NotationPass, LineVocal>>()
+    passesOf(lyrics, sheet.music).forEach { pass ->
+        val stanza = lyrics.notations.firstOrNull { it.notationId == pass.notationId } ?: return@forEach
+        var tick = pass.tick - stanza.pickup.sumOf { it.beats.ticks }
         (stanza.pickup + stanza.notes).forEach { note ->
-            note.text?.let { anchored.add(play.copy(tick = maxOf(tick, play.tick)) to LineVocal(tick, it)) }
+            note.text?.let { anchored.add(pass.copy(tick = maxOf(tick, pass.tick)) to LineVocal(tick, it)) }
             tick += note.beats.ticks
         }
     }
 
-    return playsOf(track, sheet.music).filter { it.notationId == notationId }.map { play ->
-        anchored.filter { (anchor) -> anchor.slot == play.slot && anchor.tick in play.tick until play.tick + ticks }
-            .map { (_, syllable) -> syllable.copy(tick = syllable.tick - play.tick) }
+    return passesOf(track, sheet.music).filter { it.notationId == notationId }.map { pass ->
+        anchored.filter { (anchor) -> anchor.slot == pass.slot && anchor.tick in pass.tick until pass.tick + ticks }
+            .map { (_, syllable) -> syllable.copy(tick = syllable.tick - pass.tick) }
     }
 }
 
 /** A time a track starts [notationId], at [tick] of the song, within the [slot]th section of the arrangement. */
-private data class NotationPlay(
+private data class NotationPass(
     val notationId: NotationId,
     val tick: Int,
     val slot: Int,
@@ -51,11 +51,11 @@ private data class NotationPlay(
  * Each time [track] starts a notation or an arrangement in a song of [music], in order. An arrangement is followed by
  * the notations it holds.
  */
-private fun playsOf(track: Track, music: Music): List<NotationPlay> {
-    val plays = mutableListOf<NotationPlay>()
+private fun passesOf(track: Track, music: Music): List<NotationPass> {
+    val passes = mutableListOf<NotationPass>()
     // returns the length of what it placed
     fun place(notationId: NotationId, tick: Int, slot: Int): Int {
-        plays.add(NotationPlay(notationId, tick, slot))
+        passes.add(NotationPass(notationId, tick, slot))
         track.notations.firstOrNull { it.notationId == notationId }?.let { return it.length.ticks }
         val arrangement = track.arrangements.firstOrNull { it.notationId == notationId } ?: return 0
         return arrangement.notations.fold(0) { length, heldId -> length + place(heldId, tick + length, slot) }
@@ -71,5 +71,5 @@ private fun playsOf(track: Track, music: Music): List<NotationPlay> {
         }
         onset += span.ticks
     }
-    return plays
+    return passes
 }

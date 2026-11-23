@@ -160,7 +160,11 @@ context(model: MusicStudio)
 private fun ViewScope.studyList() {
     actionSection(label = "Studies") {
         itemsBlock(model.studiesState, Transitioner, gapRems = null) { study ->
-            actionRow(label = study.label, route = MusicStudyRoute(study.study.trackId, study.study.notationId))
+            actionRow(
+                label = study.label,
+                route = MusicStudyRoute(study.study.trackId, study.study.notationId),
+                labelMod = studyLabelTransition(study.study),
+            )
         }
     }
 }
