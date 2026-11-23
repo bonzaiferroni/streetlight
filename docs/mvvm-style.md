@@ -41,10 +41,11 @@ fun ViewScope.fooView() {
 
 // Foo.kt
 class Foo(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
-): ViewModel(scope) {
+) {
+    private val scope = ModelScope(scope, this::class)
     private val state = storeOf(FooState())
 
     val nameState = state.mutableTapOf({ it.name }) { copy(name = it) }
@@ -63,7 +64,7 @@ class Foo(
             toaster.deliver(Problem("A name is required."))
             return
         }
-        launch(isBusyState, toaster) {
+        scope.launch(isBusyState, toaster) {
             val item = api.foo.addItem(state.name.now).toDataOr(toaster) { return@launch }
             state.set { copy(items = items + item) }
         }

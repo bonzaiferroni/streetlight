@@ -3,7 +3,7 @@ package streetlight.web.model
 import kampfire.model.Messenger
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import kampfire.model.ViewModel
+import kampfire.model.ModelScope
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kampfire.model.toDataOr
@@ -32,7 +32,8 @@ class MusicStudio(
     initialMusicId: MusicId?,
     private val db: StudioDb,
     private val messenger: Messenger,
-): ViewModel(scope) {
+) {
+    private val scope = ModelScope(scope, this::class)
     private val state = storeOf(MusicStudioState())
 
     val songsState = state.tapOf { it.songs }
@@ -40,7 +41,7 @@ class MusicStudio(
 
     init {
         setFocus(initialMusicId)
-        launch {
+        scope.launch {
             db.music.flowSongMusics().collect { songs ->
                 state.set { copy(songs = songs) }
             }
@@ -48,7 +49,7 @@ class MusicStudio(
     }
 
     fun setFocus(musicId: MusicId?) {
-        cancelAndLaunch("setFocus") {
+        scope.cancelAndLaunch("setFocus") {
             val sheet = musicId?.let { db.music.readMusicSheet(musicId) }
             state.set { copy(focus = sheet) }
         }

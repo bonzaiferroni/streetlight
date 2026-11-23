@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.api.toUsername
-import kampfire.model.ViewModel
+import kampfire.model.ModelScope
 import kampfire.model.toDataOr
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
@@ -17,8 +17,9 @@ class Sandbox(
     scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
-): ViewModel(scope) {
+) {
     // wrapper for StateFlow
+    private val scope = ModelScope(scope, this::class)
     private val state = storeOf(SandboxState())
     val stateNow get() = state.now
     val stateFlow = state.flow
@@ -28,7 +29,7 @@ class Sandbox(
     val isBusyState = state.mutableTapOf({ it.isBusy }) { copy(isBusy = it) }
 
     fun checkAvailability() {
-        launch(isBusyState, toaster) {
+        scope.launch(isBusyState, toaster) {
             delay(5.seconds)
             val username = stateNow.name.toUsername()
             if (username.value == "Snake") throw SandboxException()
