@@ -32,7 +32,7 @@ class StudioIdbDb(name: String = STUDIO_DB_NAME) : StudioDb {
     override val track = TrackIdbDao(tracks)
     override val trackClip = TrackClipIdbDao(trackClips)
     override val clip = ClipIdbDao(clips)
-    override val study = StudyIdbDao(studies, tracks)
+    override val study = StudyIdbDao(studies, musics, tracks)
 }
 
 /** The key of the clip bound to the notation [notationId] of the track [trackId], or the whole track when `null`. */

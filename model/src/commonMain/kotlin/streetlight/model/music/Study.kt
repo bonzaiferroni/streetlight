@@ -8,3 +8,8 @@ data class Study(
     val notationId: NotationId?,
     val isActive: Boolean,
 )
+
+data class MusicStudy(
+    val study: Study,
+    val sheet: MusicSheet,
+)
