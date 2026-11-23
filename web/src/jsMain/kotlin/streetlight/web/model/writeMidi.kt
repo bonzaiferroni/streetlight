@@ -11,7 +11,7 @@ import streetlight.web.utility.downloadFile
 
 /** Hands the viewer the tracks of [sheet] as a MIDI file, laid along its arrangement. */
 fun exportMidi(sheet: MusicSheet) {
-    val trackTones = songTonesOf(sheet.music, sheet.tracks).filter { it.isSounding }
+    val trackTones = sheet.musicTonesOf(sheet.tracks.map { it.trackId }).filter { it.isSounding }
     downloadFile(writeMidi(sheet.music, trackTones), "${sheet.music.name}.mid", MIDI_TYPE)
 }
 

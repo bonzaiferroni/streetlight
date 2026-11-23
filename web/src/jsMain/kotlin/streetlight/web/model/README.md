@@ -124,13 +124,14 @@ A scout reports a successful post to the `Toaster`, since the view it posted fro
 | [`DataCache`](DataCache.kt) | Data loaded once per session |
 | [`StarCache`](StarCache.kt) | The items a star has lit |
 | [`Fleet`](Fleet.kt) | A list loaded on first request |
-| [`songTonesOf`](SongTones.kt) | The tones of a song's tracks laid along its arrangement, which playback and export share |
+| [`musicTonesOf`](SongTones.kt) | The tones of a song's tracks laid along its arrangement, which playback and export share |
 | [`writeMidi`](writeMidi.kt) | A song's tones as a Standard MIDI File, and its export as a download |
 | [`StudioAudio`](StudioAudio.kt) | The audio context the studio shares, resumed as recording or playback starts, with the recorder and PCM player on it, its calibration and latency |
 | [`DrumKit`](DrumKit.kt) | The synthesized drums `ToneSynth` strikes |
 | [`ToneSynth`](ToneSynth.kt) | The synthesized tones and drums, sounded into a live or offline context |
 | [`TonePlayer`](TonePlayer.kt) | Plays notes and clicks live, apart from any song |
-| [`TrackPlayer`](TrackPlayer.kt) | Plays the tracks of a song through its arrangement with synthesized tones, or renders them offline for an export |
+| [`MusicPlan`](MusicPlan.kt) | What a playback sounds: the tones and waves of a song's tracks through its arrangement, or of one notation |
+| [`MusicPlayer`](MusicPlayer.kt) | Plays a `MusicPlan` with synthesized tones, or renders it offline for an export |
 | [`ClipLibrary`](ClipLibrary.kt) | The clips a user plays, kept on the device with or without an account: each record in the local database, its audio as an Ogg Opus file in the browser's private file system |
 | [`OpusCodec`](OpusCodec.kt), [`OggOpus`](OggOpus.kt) | A clip's one encode to Ogg Opus through WebCodecs, and its decode |
 | [`readDeviceAgent`](DeviceAgent.kt) | The browser described for a bug report |

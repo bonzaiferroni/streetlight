@@ -15,7 +15,7 @@ import streetlight.model.studio.StudioDb
 val studioModule = module {
     single { StudioAudio(get()) }
     single { ToneSynth() }
-    single { TrackPlayer(get(), get()) }
+    single { MusicPlayer(get(), get()) }
     single { TonePlayer(get(), get()) }
     single<StudioDb> { StudioIdbDb() }
     single { ClipLibrary(get(), get()) }

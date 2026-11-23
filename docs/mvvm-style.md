@@ -178,7 +178,7 @@ class LaneEditor(
     private val studio: MusicStudio,
     private val editor: MusicEditor,
     private val mix: MixEditor,
-    private val player: TrackPlayer,
+    private val player: MusicPlayer,
     private val tones: TonePlayer,
 )
 ```

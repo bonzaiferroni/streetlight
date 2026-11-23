@@ -7,9 +7,6 @@ import js.typedarrays.Float32Array
 import kampfire.model.Tap
 import kampfire.model.storeOf
 import streetlight.model.music.MelodyTrack
-import streetlight.model.music.MusicSheet
-import streetlight.model.music.Track
-import streetlight.model.music.TrackClip
 import web.audio.AudioNode
 import web.audio.BaseAudioContext
 import web.audio.OfflineAudioContext
@@ -21,8 +18,8 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.sqrt
 
-/** Plays the tracks of a song through the speakers on [audio], its tones sounded by [synth]. */
-class TrackPlayer(
+/** Plays a [MusicPlan] through the speakers on [audio], its tones sounded by [synth]. */
+class MusicPlayer(
     private val audio: StudioAudio,
     private val synth: ToneSynth,
 ) {
@@ -34,20 +31,11 @@ class TrackPlayer(
     val isPlayingState: Tap<Boolean> = playingStore
 
     /**
-     * Plays [tracks] of [sheet], or every track when it is `null`, through the song's arrangement. Each section
-     * lasts its measures, and a track rests through a section it does not play or runs short of. Playback begins at [fromSeconds] from the first downbeat, before it for a pickup to sound, or at the first
-     * sound when it is `null`. Any playback already running is stopped first.
-     *
-     * Each of [musicWaves] plays in place of the tones of the track or notation its binding names.
+     * Plays [plan] from [fromSeconds] after its first downbeat, before it for a pickup to sound, or from its first sound
+     * when it is `null`. Any playback already running is stopped first.
      */
-    fun play(
-        sheet: MusicSheet,
-        tracks: List<Track>? = null,
-        fromSeconds: Double? = null,
-        musicWaves: Map<TrackClip, MusicWave> = emptyMap(),
-    ) {
+    fun play(plan: MusicPlan, fromSeconds: Double? = null) {
         stop()
-        val plan = songPlanOf(sheet, tracks ?: sheet.tracks, musicWaves) ?: return
         val context = audio.startContext()
         val runBus = context.createGain().also { it.connect(context.destination) }
         bus = runBus
@@ -57,33 +45,14 @@ class TrackPlayer(
         playingStore.set(sources.isNotEmpty())
     }
 
-    /**
-     * Renders every track of [sheet] from its first sound to the end of its last, with [musicWaves] in place of
-     * tones as [play] would sound them, into mono PCM at [RENDER_RATE], or `null` when it sounds nothing.
-     */
-    suspend fun render(sheet: MusicSheet, musicWaves: Map<TrackClip, MusicWave> = emptyMap()): Wave? {
-        val plan = songPlanOf(sheet, sheet.tracks, musicWaves) ?: return null
+    /** Renders [plan] from its first sound to the end of its last into mono PCM at [RENDER_RATE]. */
+    suspend fun render(plan: MusicPlan): Wave {
         val startClock = -plan.firstTick * plan.secondsPerTick
         val seconds = plan.endClockOf(startClock) + RENDER_TAIL_SECONDS
         val context = OfflineAudioContext(1, ceil(seconds * RENDER_RATE).toInt(), RENDER_RATE.toFloat())
         schedule(context, context.destination, plan, plan.firstTick, startClock) { }
         val buffer = context.startRendering()
         return Wave(RENDER_RATE, listOf(buffer.getChannelData(0).unsafeCast<FloatArray>()))
-    }
-
-    /** What [playing], tracks of [sheet], sound with [musicWaves] in place of tones, or `null` for nothing. */
-    private fun songPlanOf(sheet: MusicSheet, playing: List<Track>, musicWaves: Map<TrackClip, MusicWave>): SongPlan? {
-        val music = sheet.music
-        val playingWaves = musicWaves.filterKeys { trackClip -> playing.any { it.trackId == trackClip.trackId } }
-        val trackTones = songTonesOf(music, playing, playingWaves.keys).filter { it.isSounding }
-        // each time a wave's track plays its notation, placed by the notation's tick, and a whole track's at the start
-        val waveStarts = playingWaves.flatMap { (trackClip, musicWave) ->
-            val waveTrack = playing.first { it.trackId == trackClip.trackId }
-            val starts = trackClip.notationId?.let { notationStartsOf(music, waveTrack, it) } ?: listOf(0)
-            starts.map { it to musicWave }
-        }
-        if (trackTones.isEmpty() && waveStarts.isEmpty()) return null
-        return SongPlan(trackTones, waveStarts, music.secondsPerTick)
     }
 
     /**
@@ -93,7 +62,7 @@ class TrackPlayer(
     private fun schedule(
         context: BaseAudioContext,
         bus: AudioNode,
-        plan: SongPlan,
+        plan: MusicPlan,
         startTick: Int,
         startClock: Double,
         keep: (AudioScheduledSourceNode) -> Unit,
@@ -173,25 +142,3 @@ class TrackPlayer(
 private const val START_DELAY_SECONDS = 0.1
 private const val RENDER_RATE = 48_000
 private const val RENDER_TAIL_SECONDS = 1.0
-
-/** The [trackTones] and [waveStarts] a song sounds, each wave by the tick it starts at, at [secondsPerTick]. */
-private class SongPlan(
-    val trackTones: List<TrackTones>,
-    val waveStarts: List<Pair<Int, MusicWave>>,
-    val secondsPerTick: Double,
-) {
-    /** The tick of the first sound: a pickup's or a wave's lead may sound before the first downbeat. */
-    val firstTick = (trackTones.mapNotNull { it.firstTick } +
-        waveStarts.map { (tick, musicWave) -> tick - (musicWave.leadSeconds / secondsPerTick).toInt() }).min()
-
-    /** Where the last sound ends on the clock, with tick 0 at [startClock]. */
-    fun endClockOf(startClock: Double): Double {
-        val toneEnd = trackTones
-            .flatMap { tones -> tones.tones.map { it.startTick + it.ticks } + tones.drums.map { it.startTick } }
-            .maxOrNull()?.let { startClock + it * secondsPerTick } ?: startClock
-        val waveEnd = waveStarts.maxOfOrNull { (tick, musicWave) ->
-            startClock + tick * secondsPerTick - musicWave.leadSeconds + musicWave.wave.durationSeconds
-        } ?: startClock
-        return max(toneEnd, waveEnd)
-    }
-}

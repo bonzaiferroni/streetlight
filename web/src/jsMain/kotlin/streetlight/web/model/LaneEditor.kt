@@ -26,7 +26,7 @@ class LaneEditor(
     private val scope: CoroutineScope,
     private val host: MusicHost,
     private val waveShelf: WaveShelf,
-    private val player: TrackPlayer,
+    private val player: MusicPlayer,
 ) {
     private val state = storeOf(LaneEditorState())
 
@@ -68,7 +68,8 @@ class LaneEditor(
                 lanes.soloId?.let { it == track.trackId } ?: (track.trackId !in lanes.mutedTracks)
             }
             val musicWaves = waveShelf.musicWavesOf(sheet).filterKeys { it.trackId !in lanes.tonedTracks }
-            player.play(sheet, playing, fromSeconds = cursorStore.now - leadSeconds, musicWaves = musicWaves)
+            val plan = sheet.musicPlanOf(playing.map { it.trackId }, musicWaves) ?: return@launch
+            player.play(plan, fromSeconds = cursorStore.now - leadSeconds)
 
             while (true) {
                 awaitAnimationFrame()
@@ -148,7 +149,7 @@ private fun endSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {
 }
 
 private fun leadSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {
-    val firstTick = songTonesOf(sheet.music, sheet.tracks).mapNotNull { it.firstTick }.minOrNull() ?: 0
+    val firstTick = sheet.musicTonesOf(sheet.tracks.map { it.trackId }).mapNotNull { it.firstTick }.minOrNull() ?: 0
     return -minOf(firstTick, 0) * secondsPerTick + LEAD_ROOM_SECONDS
 }
 

@@ -12,8 +12,10 @@ import streetlight.model.music.TrackClip
  * Hands the viewer [sheet] as an Ogg Opus file, rendered by [player] with [musicWaves] in place of tones,
  * or gives the problem. This is the deliberate second encode of any take it holds.
  */
-suspend fun exportOgg(player: TrackPlayer, sheet: MusicSheet, musicWaves: Map<TrackClip, MusicWave>): Outcome<Unit> {
-    val wave = player.render(sheet, musicWaves) ?: return Problem("The song has nothing to play yet")
+suspend fun exportOgg(player: MusicPlayer, sheet: MusicSheet, musicWaves: Map<TrackClip, MusicWave>): Outcome<Unit> {
+    val plan = sheet.musicPlanOf(sheet.tracks.map { it.trackId }, musicWaves)
+        ?: return Problem("The song has nothing to play yet")
+    val wave = player.render(plan)
     val bytes = encodeOggOpus(wave).toDataOr { return it }
     downloadFile(bytes, "${sheet.music.name}.opus", OGG_TYPE)
     return Ok(Unit)

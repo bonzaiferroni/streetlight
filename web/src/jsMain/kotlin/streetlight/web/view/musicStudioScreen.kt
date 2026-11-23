@@ -29,7 +29,7 @@ import streetlight.web.dom.layout.topSection
 import streetlight.web.model.MusicEditor
 import streetlight.web.model.MusicStudio
 import streetlight.web.model.MusicStudioFocus
-import streetlight.web.model.TrackPlayer
+import streetlight.web.model.MusicPlayer
 import streetlight.web.model.exportMidi
 import streetlight.web.model.exportOgg
 import koala.component.heading6
@@ -58,7 +58,7 @@ context(route: MusicStudioRoute)
 fun ViewScope.musicStudioScreen() {
     val model = app.getMusicStudio(contentScope, route)
     val config = MusicConfig(contentScope)
-    val player = app.get<TrackPlayer>()
+    val player = app.get<MusicPlayer>()
     val db = app.get<StudioDb>()
     val waveShelf = app.get<WaveShelf>()
     // the studio's colors carry meaning, which the page's lights would tint
@@ -97,7 +97,7 @@ fun RouteScope.viewMusicStudioRoute() {
  * A popover with [id] holding the style notation is written in, the view it is shown in and whether lyrics show, above
  * the formats the music of [editor] exports to, with its bound clips.
  */
-context(model: MusicStudio, player: TrackPlayer, config: MusicConfig, waveShelf: WaveShelf)
+context(model: MusicStudio, player: MusicPlayer, config: MusicConfig, waveShelf: WaveShelf)
 private fun ViewScope.songSettingsPopover(id: Id, editor: MusicEditor) {
     popover(id) { popover ->
         column(Padding(2)) {

@@ -32,7 +32,8 @@ import streetlight.web.model.NotationFocus
 import streetlight.web.model.TrackFocus
 import streetlight.model.studio.StudioDb
 import streetlight.web.model.MusicConfig
-import streetlight.web.model.TrackPlayer
+import streetlight.web.model.MusicPlayer
+import streetlight.web.model.musicPlanOf
 import streetlight.web.model.toaster
 import kampfire.model.toDataOr
 import koala.component.IconStyle
@@ -52,7 +53,7 @@ import streetlight.web.model.readCapoText
 import kotlin.uuid.Uuid
 
 /** Renders the song's arrangement beside its tracks, or the editor of the track or notation in focus alone. */
-context(config: MusicConfig, host: MusicHost, db: StudioDb, waveShelf: WaveShelf, player: TrackPlayer)
+context(config: MusicConfig, host: MusicHost, db: StudioDb, waveShelf: WaveShelf, player: MusicPlayer)
 fun ViewScope.musicEditor() {
     val model = MusicEditor(contentScope, host)
     context(model) {
@@ -76,7 +77,7 @@ fun ViewScope.musicEditor() {
 }
 
 /** Renders the tracks of the song under an action that adds one, each a row that brings its editor into focus. */
-context(config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: TrackPlayer)
+context(config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: MusicPlayer)
 fun ViewScope.trackList() {
     val newId = Id(Uuid.random().toString())
     popover(newId) { popover ->
@@ -103,7 +104,7 @@ fun ViewScope.trackList() {
 /**
  * Renders the row of [track], which brings its editor into focus, with a grip that moves it among the tracks.
  */
-context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: TrackPlayer)
+context(handle: OrderHandle, config: MusicConfig, model: MusicEditor, waveShelf: WaveShelf, player: MusicPlayer)
 private fun ViewScope.trackRow(track: Track) {
     val trackId = track.trackId
     val nameId = Id(Uuid.random().toString())
@@ -122,7 +123,12 @@ private fun ViewScope.trackRow(track: Track) {
         val play = MenuAction("Play") {
             if (player.isPlayingState.now) player.stop()
             else model.readTrack(trackId)?.let { track ->
-                contentScope.launch { player.play(model.sheetState.now, listOf(track), musicWaves = waveShelf.musicWavesOf(model.sheetState.now)) }
+                contentScope.launch {
+                    val sheet = model.sheetState.now
+                    sheet.musicPlanOf(listOf(track.trackId), waveShelf.musicWavesOf(sheet))?.let {
+                        player.play(it)
+                    }
+                }
             }
         }.takeIf { track !is LyricTrack }
         menuActionsRow(listOfNotNull(

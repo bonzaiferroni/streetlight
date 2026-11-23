@@ -16,13 +16,13 @@ import streetlight.model.ui.MusicStudioTab
 import streetlight.web.dom.layout.topSection
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.MusicHost
-import streetlight.web.model.TrackPlayer
+import streetlight.web.model.MusicPlayer
 import streetlight.web.model.WaveShelf
 import streetlight.web.model.portal
 import kotlin.uuid.Uuid
 
 
-context(player: TrackPlayer, config: MusicConfig, db: StudioDb, waveShelf: WaveShelf)
+context(player: MusicPlayer, config: MusicConfig, db: StudioDb, waveShelf: WaveShelf)
 fun ViewScope.musicFocus(initialSheet: MusicSheet) {
     val host = MusicHost(contentScope, initialSheet, db)
     // playback left running when the music closes would keep sounding

@@ -21,13 +21,13 @@ import streetlight.web.model.MusicConfig
 import streetlight.web.model.LaneSection
 import streetlight.web.model.MusicHost
 import streetlight.web.model.TimeWindow
-import streetlight.web.model.TrackPlayer
+import streetlight.web.model.MusicPlayer
 import streetlight.web.model.WaveShelf
 import web.html.HTMLElement
 import kotlin.uuid.Uuid
 
 /** Renders the song's lanes below their player controls and timeline. */
-context(config: MusicConfig, host: MusicHost, waveShelf: WaveShelf, player: TrackPlayer)
+context(config: MusicConfig, host: MusicHost, waveShelf: WaveShelf, player: MusicPlayer)
 fun ViewScope.laneEditor() {
     val model = LaneEditor(contentScope, host, waveShelf, player)
     context(model) {

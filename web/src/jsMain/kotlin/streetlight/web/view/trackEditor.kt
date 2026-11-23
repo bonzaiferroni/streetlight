@@ -37,7 +37,7 @@ import streetlight.web.model.NamedNotation
 import streetlight.web.model.NotationFocus
 import streetlight.web.model.TrackEditor
 import streetlight.web.model.TrackFocus
-import streetlight.web.model.TrackPlayer
+import streetlight.web.model.MusicPlayer
 import streetlight.web.model.WaveShelf
 import streetlight.web.model.readCapoText
 import streetlight.web.model.toaster
