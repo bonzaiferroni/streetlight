@@ -4,6 +4,7 @@ import kampfire.model.Messenger
 import kampfire.model.ModelScope
 import kampfire.model.storeOf
 import kampfire.model.tapOf
+import kampfire.model.toDataOr
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.music.Beats
 import streetlight.model.music.Clip
@@ -32,13 +33,20 @@ class StudySession(
     private val scope = ModelScope(scope, this::class)
     private val sheet = initialStudy.sheet
     private val study = initialStudy.study
-    private val state = storeOf(StudySessionState(sheet.notationLayoutsOf(study)))
+    private val passes = sheet.studyPassesOf(study)
+    private val state = storeOf(StudySessionState(passes.map { it.first }))
     val layoutsState = state.tapOf { it.layouts }
     val clipIdsState = state.tapOf { it.clipIds }
     val clips: Map<ClipId, Clip>
         field = mutableMapOf<ClipId, Clip>()
     val waves: Map<ClipId, Wave>
         field = mutableMapOf<ClipId, Wave>()
+    val feedbacks: Map<ClipId, List<NotationFeedback>>
+        field = mutableMapOf<ClipId, List<NotationFeedback>>()
+
+    val secondsPerTick get() = sheet.music.secondsPerTick
+    val isCalibratedState = audio.isCalibratedState
+    val isCalibratingState = audio.isCalibratingState
 
     fun play() {
         scope.cancelAndLaunch("playback") {
@@ -77,6 +85,7 @@ class StudySession(
     fun removeClip(clipId: ClipId) {
         clips.remove(clipId)
         waves.remove(clipId)
+        feedbacks.remove(clipId)
         state.update { it.copy(clipIds = it.clipIds - clipId) }
     }
 
@@ -84,13 +93,28 @@ class StudySession(
         scope.cancelAndLaunch("playback") { player.stop() }
     }
 
+    /** Measures the setup's latency, so the timing of a take is read against the beat it was sung to. */
+    fun calibrate() {
+        scope.cancelAndLaunch("playback") {
+            player.stop()
+            val outcome = audio.calibrate() ?: return@cancelAndLaunch
+            outcome.toDataOr(messenger) { return@cancelAndLaunch }
+            messenger.deliverSuccess("Calibrated")
+        }
+    }
+
     private suspend fun capture() {
         val music = sheet.music
         val track = sheet.trackOf(study.trackId)
         val bars = barsOf(music, track, study.notationId) ?: return
-        audio.recorder.start()
+        val analyzer = MusicAnalyzer(audio.startContext().sampleRate.toInt())
+        audio.recorder.start(analyzer)
         // play once the mic is open, so the lead-in is captured in full
-        player.play(MusicPlan(leadLayers(), emptyList(), music.secondsPerTick))
+        // td: remove once the analyzer is trusted; the study's own tones give a take that matches the notation
+        val notationId = study.notationId
+        val studyPlan = if (notationId != null) sheet.musicPlanOf(notationId, emptyMap())
+            else sheet.musicPlanOf(listOf(study.trackId), emptyMap())
+        player.play(MusicPlan(leadLayers() + studyPlan?.layers.orEmpty(), emptyList(), music.secondsPerTick))
         val downbeat = audio.clockSeconds - player.readSeconds()
         val latency = audio.latencySecondsState.now ?: 0.0
         // the last notes arrive a round trip after the study ends
@@ -109,6 +133,14 @@ class StudySession(
         )
         clips[clip.clipId] = clip
         waves[clip.clipId] = captured.pcm
+        feedbacks[clip.clipId] = notationFeedbackOf(
+            layouts = passes.map { it.first },
+            startTicks = passes.map { it.second },
+            capo = (music.capo ?: 0) + (track.capo ?: 0),
+            analyzer = analyzer,
+            offsetSeconds = captured.startClock - latency - downbeat,
+            secondsPerTick = music.secondsPerTick,
+        )
         state.update { it.copy(clipIds = it.clipIds + clip.clipId) }
     }
 
@@ -140,17 +172,22 @@ private fun MusicSheet.guideMidisOf(study: Study): List<Int>? {
     return guideId?.let { firstToneOf(music, track, it) }?.midi
 }
 
-private fun MusicSheet.notationLayoutsOf(study: Study): List<NotationLayout> {
-    study.notationId?.let { return listOfNotNull(notationLayoutOf(it)) }
+/** The layout of each pass of [study] in song order, with the tick it starts at. */
+private fun MusicSheet.studyPassesOf(study: Study): List<Pair<NotationLayout, Int>> {
+    study.notationId?.let { notationId -> return listOfNotNull(notationLayoutOf(notationId)?.let { it to 0 }) }
     val track = trackOf(study.trackId)
     val passes = mutableMapOf<NotationId, Int>()
+    var onset = 0
     return music.arrangement.flatMap { sectionId ->
-        val notationId = track.sections[sectionId] ?: return@flatMap emptyList()
         val span = music.lengthOf(sectionId) ?: Beats(0)
-        List(track.repeatsOf(notationId, span)) {
+        val sectionStart = onset
+        onset += span.ticks
+        val notationId = track.sections[sectionId] ?: return@flatMap emptyList()
+        val ticks = track.lengthOf(notationId)?.ticks ?: 0
+        List(track.repeatsOf(notationId, span)) { repeat ->
             val passIndex = passes[notationId] ?: 0
             passes[notationId] = passIndex + 1
-            notationLayoutOf(notationId, passIndex)
+            notationLayoutOf(notationId, passIndex)?.let { it to sectionStart + repeat * ticks }
         }.filterNotNull()
     }
 }

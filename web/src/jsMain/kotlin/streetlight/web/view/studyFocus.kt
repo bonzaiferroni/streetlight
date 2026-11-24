@@ -18,10 +18,13 @@ import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.topSection
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.MusicPlayer
+import streetlight.web.model.NotationFeedback
 import streetlight.web.model.StudioAudio
 import streetlight.web.model.StudySession
 import streetlight.web.model.WaveShelf
 import streetlight.web.model.portal
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
 
 context(config: MusicConfig, player: MusicPlayer, waveShelf: WaveShelf)
@@ -43,6 +46,7 @@ fun ViewScope.studyFocus(study: MusicStudy) {
         flowBlock(session.layoutsState) { layouts ->
             layouts.forEach { notationStrips(it) }
         }
+        studyFeedback(session)
         studyClips(session)
     }
 }
@@ -53,7 +57,36 @@ private fun ViewScope.studyControls(session: StudySession) = row(modify(AlignSel
     button(SvgFile.PlayerStop.filled, { session.stop() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Stop")))
     button(SvgFile.PlayerRecord.filled, { session.record() }, modify(IconStyle.DefaultMod, Attribute.AriaLabel.to("Record")))
     switch("lyrics", config.isLyricsShownState)
+    flowBlock(session.isCalibratedState) { isCalibrated ->
+        if (!isCalibrated) flowBlock(session.isCalibratingState) { isCalibrating ->
+            button(if (isCalibrating) "Calibrating" else "Calibrate", { session.calibrate() })
+        }
+    }
 }
+
+/** Renders a summary of the feedback on the latest take. */
+private fun ViewScope.studyFeedback(session: StudySession) {
+    flowBlock(session.clipIdsState) { clipIds ->
+        val feedback = clipIds.lastOrNull()?.let { session.feedbacks[it] } ?: return@flowBlock
+        textBlock(feedbackSummaryOf(feedback, session.secondsPerTick), modify(TextAlignCenter, TextSmall))
+    }
+}
+
+/** How many notes of [feedback] were sung, how far their pitch strayed and where they sat against the beat. */
+private fun feedbackSummaryOf(feedback: List<NotationFeedback>, secondsPerTick: Double): String {
+    val notes = feedback.flatMap { it.measures }.flatMap { it.notes }
+    val sung = notes.filterNotNull()
+    if (sung.isEmpty()) return "No notes heard in the last take."
+    val pitch = sung.map { abs(it.pitch) }.median()
+    val offsets = sung.map { it.time * secondsPerTick * 1000 }
+    val offset = offsets.median()
+    val spread = offsets.map { abs(it - offset) }.median()
+    val side = if (offset < 0) "ahead of" else "behind"
+    return "Sung ${sung.size} of ${notes.size} notes · pitch off by ${pitch.roundToInt()} cents · " +
+        "${abs(offset).roundToInt()} ms $side the beat, ± ${spread.roundToInt()} ms"
+}
+
+private fun List<Double>.median() = sorted()[size / 2]
 
 private fun ViewScope.studyClips(session: StudySession) {
     actionSection(label = "Clips") {

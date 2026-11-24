@@ -36,8 +36,8 @@ class AudioRecorder(
     /** The peaks of the capture in progress, or `null` when none is recording. */
     val livePeaks get() = capture?.peaks
 
-    /** Starts a capture from the microphone, unless one is already recording. */
-    suspend fun start() {
+    /** Starts a capture from the microphone, handing each block to [sink] too, unless one is already recording. */
+    suspend fun start(sink: BlockSink? = null) {
         if (capture != null || isStarting) return
         isStarting = true
         try {
@@ -51,7 +51,7 @@ class AudioRecorder(
             val source = context.createMediaStreamSource(stream)
             val node = AudioWorkletNode(context, AudioWorkletProcessorName(TAP_PROCESSOR), AudioWorkletNodeOptions(numberOfOutputs = 0))
             source.connect(node)
-            capture = AudioCapture(context.sampleRate.toInt(), stream, node)
+            capture = AudioCapture(context.sampleRate.toInt(), stream, node, sink)
             recordingStore.set(true)
         } finally {
             isStarting = false
@@ -91,6 +91,7 @@ private class AudioCapture(
     private val sampleRate: Int,
     private val stream: MediaStream,
     private val node: AudioWorkletNode,
+    private val sink: BlockSink?,
 ) {
     private val blocks = mutableListOf<Array<FloatArray>>()
     val peaks = BlockPeaks(sampleRate)
@@ -107,6 +108,7 @@ private class AudioCapture(
                     val block = data.unsafeCast<Array<FloatArray>>()
                     blocks.add(block)
                     peaks.add(block)
+                    sink?.add(block)
                 }
             }
         }
@@ -145,6 +147,11 @@ private class AudioCapture(
             samples
         }
     }
+}
+
+/** A receiver of the blocks of a capture as they arrive, one array of samples per channel. */
+fun interface BlockSink {
+    fun add(block: Array<FloatArray>)
 }
 
 /**
