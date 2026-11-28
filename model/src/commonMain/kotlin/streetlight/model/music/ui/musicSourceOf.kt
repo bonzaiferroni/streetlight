@@ -3,6 +3,8 @@ package streetlight.model.music.ui
 import streetlight.model.music.Beats
 import streetlight.model.music.Groove
 import streetlight.model.music.Key
+import streetlight.model.music.LyricTrack
+import streetlight.model.music.MelodyTrack
 import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
 import streetlight.model.music.Phrase
@@ -10,8 +12,6 @@ import streetlight.model.music.Progression
 import streetlight.model.music.Stanza
 import streetlight.model.music.Track
 import streetlight.model.music.TrackId
-import streetlight.model.music.lengthOf
-import streetlight.model.music.lyricsOf
 import streetlight.model.music.trackOf
 import streetlight.model.music.trackOrNullOf
 
@@ -21,27 +21,28 @@ fun MusicSheet.musicSourceOf(
 ): MusicSource {
     val measureTicks = music.time.measure.ticks
     // tick 0 is the first downbeat of the target: the notation, or the song
-    val targetTicks = targetNotationId?.let { trackOf(it).spansOf(it, measureTicks)?.firstOrNull()?.ticks }
+    val targetTicks = targetNotationId?.let { trackOf(it).notationSpansOf(it, measureTicks)?.firstOrNull()?.ticks }
         ?: music.arrangement.sumOf { music.lengthOf(it)?.ticks ?: 0 }
     val measureCount = (targetTicks + measureTicks - 1) / measureTicks
     val trackSources = tracks.mapNotNull { track ->
         if (targetTrackId != null && track.trackId != targetTrackId) return@mapNotNull null
         val lyrics = tracks.lyricsOf(track)
-        val spans: List<NotationSpan>
+
+        val notationSpans: List<NotationSpan>
         val lyricSpans: List<NotationSpan>
         if (targetNotationId == null) {
-            spans = songSpansOf(track)
+            notationSpans = songSpansOf(track)
             lyricSpans = lyrics?.let { songSpansOf(it) }.orEmpty()
         } else {
-            spans = track.spansOf(targetNotationId, measureTicks) ?: return@mapNotNull null
+            notationSpans = track.notationSpansOf(targetNotationId, measureTicks) ?: return@mapNotNull null
             // the lyrics of each section the notation plays, each from its first downbeat
             val sectionIds = music.arrangement.filter { track.sections[it] == targetNotationId }.distinct()
             lyricSpans = lyrics?.let { lyricTrack ->
-                sectionIds.flatMap { sectionId -> lyricTrack.sections[sectionId]?.let { lyricTrack.spansOf(it, measureTicks) }.orEmpty() }
+                sectionIds.flatMap { sectionId -> lyricTrack.sections[sectionId]?.let { lyricTrack.notationSpansOf(it, measureTicks) }.orEmpty() }
             }.orEmpty()
         }
         val lyricEvents = lyrics?.let { lyricTrack -> lyricSpans.flatMap { lyricTrack.eventsOf(it, music.key) } }.orEmpty()
-        val events = (spans.flatMap { track.eventsOf(it, music.key) } + lyricEvents).sortedBy { it.tick }
+        val events = (notationSpans.flatMap { track.eventsOf(it, music.key) } + lyricEvents).sortedBy { it.tick }
 
         // measure 0 is the pickup, ending at the first downbeat, and each after it ends a measure later
         var eventIndex = 0
@@ -50,8 +51,8 @@ fun MusicSheet.musicSourceOf(
             while (eventIndex < events.size && events[eventIndex].tick < measureIndex * measureTicks) eventIndex++
             MeasureSpan(eventStart, eventIndex)
         }
-        val layout = NotationLayout(spans.flatMap { track.linesOf(it, measureTicks) }, staffWindowOf(track.trackId))
-        TrackSource(track.trackId, track.name, events, measures, spans, layout, track.trackType, track.capo)
+        val layout = NotationLayout(notationSpans.flatMap { track.linesOf(it, measureTicks) }, staffWindowOf(track.trackId))
+        TrackSource(track.trackId, track.name, events, measures, notationSpans, layout, track.trackType, track.capo)
     }
     val pickupTicks = trackSources.maxOfOrNull { -(it.events.firstOrNull()?.tick ?: 0) }?.coerceAtLeast(0) ?: 0
 
@@ -80,7 +81,7 @@ private fun MusicSheet.songSpansOf(track: Track): List<NotationSpan> {
         val start = sectionStart
         sectionStart += music.lengthOf(sectionId)?.ticks ?: 0
         val notationId = track.sections[sectionId] ?: return@flatMap emptyList()
-        track.spansOf(notationId, music.time.measure.ticks).orEmpty().map { it.copy(start = start + it.start) }
+        track.notationSpansOf(notationId, music.time.measure.ticks).orEmpty().map { it.copy(start = start + it.start) }
     }
 }
 
@@ -133,16 +134,16 @@ private fun Track.linesOf(span: NotationSpan, measureTicks: Int): List<MeasureLi
  * [measureTicks] long, or `null` when the track does not define it or an arrangement holds itself. [notationId] comes
  * first, spanning the whole.
  */
-fun Track.spansOf(notationId: NotationId, measureTicks: Int): List<NotationSpan>? =
-    spansOf(notationId, measureTicks, emptySet())
+fun Track.notationSpansOf(notationId: NotationId, measureTicks: Int): List<NotationSpan>? =
+    notationSpansOf(notationId, measureTicks, emptySet())
 
-private fun Track.spansOf(notationId: NotationId, measureTicks: Int, visited: Set<NotationId>): List<NotationSpan>? {
+private fun Track.notationSpansOf(notationId: NotationId, measureTicks: Int, visited: Set<NotationId>): List<NotationSpan>? {
     if (notationId in visited) return null
     notations.firstOrNull { it.notationId == notationId }?.let { notation ->
         return listOf(NotationSpan(notationId, notation.label, 0, notation.length.ticks, notation.downbeat, false))
     }
     val arrangement = arrangements.firstOrNull { it.notationId == notationId } ?: return null
-    val held = arrangement.notations.map { spansOf(it, measureTicks, visited + notationId) ?: return null }
+    val held = arrangement.notations.map { notationSpansOf(it, measureTicks, visited + notationId) ?: return null }
     val wait = (arrangement.wait ?: 0) * measureTicks
     var start = wait
     val played = List(arrangement.repeats ?: 1) { held }.flatten().flatMap { heldSpans ->
@@ -151,4 +152,11 @@ private fun Track.spansOf(notationId: NotationId, measureTicks: Int, visited: Se
     // the first pickup reaches back through the wait, and before the arrangement only past it
     val pickup = Beats(((played.firstOrNull()?.pickup?.ticks ?: 0) - wait).coerceAtLeast(0))
     return listOf(NotationSpan(notationId, arrangement.name, 0, start, pickup, true)) + played
+}
+
+/** The lyric track sung to [track] in a song of these tracks: the one it names, or the first when it names none. */
+private fun List<Track>.lyricsOf(track: Track): LyricTrack? {
+    if (track !is MelodyTrack) return null
+    val lyricTracks = filterIsInstance<LyricTrack>()
+    return if (track.lyricsId == null) lyricTracks.firstOrNull() else lyricTracks.firstOrNull { it.trackId == track.lyricsId }
 }
