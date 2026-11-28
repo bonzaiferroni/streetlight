@@ -1,6 +1,7 @@
 package streetlight.model.music.text
 
 import streetlight.model.music.Beats
+import streetlight.model.music.pickupCountOf
 import streetlight.model.music.Chord
 import streetlight.model.music.ChordNote
 import streetlight.model.music.ChordQuality
@@ -61,7 +62,8 @@ class ChordParser(
             }
             barLine.measures.forEach { readMeasure(it, time.measure, notes, ::error) }
         }
-        return Progression(notation.notationId, notation.name, notes, pickup, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
+        val downbeat = Beats(pickup.sumOf { it.beats.ticks })
+        return Progression(notation.notationId, notation.name, pickup + notes, downbeat, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
     }
 
     /** Writes [track] as the text [read] reads, with measures cut by [time] and sections named by [names]. */
@@ -71,13 +73,16 @@ class ChordParser(
     /** Writes [progression] as the text [readNotation] reads, with measures cut by [time]. */
     fun writeNotation(progression: Progression, time: TimeSignature) = linesOf(progression, time).toLines().joinToString("\n")
 
-    private fun linesOf(progression: Progression, time: TimeSignature) = NotationLines(
-        notationId = progression.notationId,
-        name = progression.name,
-        pickup = progression.pickup.takeIf { it.isNotEmpty() }?.let { writePickup(it, time.pulse) },
-        measures = writeMeasures(progression.notes, time.measure),
-        measuresPerLine = progression.measuresPerLine,
-    )
+    private fun linesOf(progression: Progression, time: TimeSignature): NotationLines {
+        val pickupCount = pickupCountOf(progression.notes.map { it.beats.ticks }, progression.downbeat)
+        return NotationLines(
+            notationId = progression.notationId,
+            name = progression.name,
+            pickup = progression.notes.take(pickupCount).takeIf { it.isNotEmpty() }?.let { writePickup(it, time.pulse) },
+            measures = writeMeasures(progression.notes.drop(pickupCount), time.measure),
+            measuresPerLine = progression.measuresPerLine,
+        )
+    }
 
     private fun readMeasure(measure: String, length: Beats, notes: MutableList<ChordNote>, error: (String) -> Unit) {
         val tokens = tokensOf(measure)

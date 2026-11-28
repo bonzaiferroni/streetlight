@@ -9,6 +9,7 @@ import kampfire.model.toDataOr
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import streetlight.model.music.ui.musicSourceOf
 import streetlight.model.music.Clip
 import streetlight.model.music.ClipId
 import streetlight.model.music.Key
@@ -145,13 +146,12 @@ class ClipMic(
         val music = sheet.music
         val length = when (notationId) {
             null -> Beats(music.arrangement.sumOf { music.lengthOf(it)?.ticks ?: 0 })
-            else -> track.lengthOf(notationId)
+            else -> track.lengthOf(notationId, music.time)
         }?.takeIf { it.ticks > 0 } ?: return null
         val secondsPerTick = music.secondsPerTick
         val measureTicks = music.time.measure.ticks
-        // the whole track is led in by the first notation it plays
-        val guideId = notationId ?: notationPassesOf(music, track).firstOrNull()?.first
-        val guideMidis = guideId?.let { firstToneOf(music, track, it) }?.midi
+        // the whole track is led in by the first tone it plays
+        val guideMidis = sheet.musicSourceOf(notationId, trackId).firstToneOf(trackId)?.midi
         return CapturePlan(
             music = music,
             bpm = music.bpm,

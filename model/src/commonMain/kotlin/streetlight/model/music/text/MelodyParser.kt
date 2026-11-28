@@ -1,6 +1,7 @@
 package streetlight.model.music.text
 
 import streetlight.model.music.Beats
+import streetlight.model.music.pickupCountOf
 import streetlight.model.music.Interval
 import streetlight.model.music.Key
 import streetlight.model.music.MelodyNote
@@ -71,7 +72,8 @@ class MelodyParser(
             isTied = read.isTied
             measureProblemOf(read.ticks, index == segments.measures.lastIndex, time)?.let(::error)
         }
-        return Phrase(notation.notationId, notation.name, notes, pickup, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
+        val downbeat = Beats(pickup.sumOf { it.beats.ticks })
+        return Phrase(notation.notationId, notation.name, pickup + notes, downbeat, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
     }
 
     /** The ticks a segment of jianpu filled, and whether it ends on a tie to the next note. */
@@ -145,17 +147,20 @@ class MelodyParser(
     /** Writes [phrase] as the jianpu [readNotation] reads, with measures cut by [time]. */
     fun writeNotation(phrase: Phrase, time: TimeSignature) = linesOf(phrase, time).toLines().joinToString("\n")
 
-    private fun linesOf(phrase: Phrase, time: TimeSignature) = NotationLines(
-        notationId = phrase.notationId,
-        name = phrase.name,
-        pickup = phrase.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
-            pickup.flatMap { writeNote(it.interval, it.beats.ticks, QUARTER.ticks, false) }.joinToString(" ")
-        },
-        measures = writeMeasures(phrase.notes, time.measure, { it.beats.ticks }) { note, ticks, isContinuation ->
-            writeNote(note.interval, ticks, QUARTER.ticks, isContinuation)
-        },
-        measuresPerLine = phrase.measuresPerLine,
-    )
+    private fun linesOf(phrase: Phrase, time: TimeSignature): NotationLines {
+        val pickupCount = pickupCountOf(phrase.notes.map { it.beats.ticks }, phrase.downbeat)
+        return NotationLines(
+            notationId = phrase.notationId,
+            name = phrase.name,
+            pickup = phrase.notes.take(pickupCount).takeIf { it.isNotEmpty() }?.let { pickup ->
+                pickup.flatMap { writeNote(it.interval, it.beats.ticks, QUARTER.ticks, false) }.joinToString(" ")
+            },
+            measures = writeMeasures(phrase.notes.drop(pickupCount), time.measure, { it.beats.ticks }) { note, ticks, isContinuation ->
+                writeNote(note.interval, ticks, QUARTER.ticks, isContinuation)
+            },
+            measuresPerLine = phrase.measuresPerLine,
+        )
+    }
 
     /**
      * Writes [ticks] of [interval] as jianpu tokens: the note, `-` for each further beat, and a tied note for what is left

@@ -18,7 +18,8 @@ import streetlight.web.dom.layout.actionSection
 import streetlight.web.dom.layout.topSection
 import streetlight.web.model.MusicConfig
 import streetlight.web.model.MusicPlayer
-import streetlight.web.model.NotationFeedback
+import streetlight.web.model.NoteFeedback
+import streetlight.web.model.isScored
 import streetlight.web.model.StudioAudio
 import streetlight.web.model.StudySession
 import streetlight.web.model.WaveShelf
@@ -43,9 +44,7 @@ fun ViewScope.studyFocus(study: MusicStudy) {
         icon = IconAction(SvgFile.Gear.large, "Settings", config = { setPopoverTarget(settingsId, true) }) { },
     ) {
         studyControls(session)
-        flowBlock(session.layoutsState) { layouts ->
-            layouts.forEach { notationStrips(it) }
-        }
+        session.source.tracks.firstOrNull()?.let { notationStrips(session.source, it) }
         studyFeedback(session)
         studyClips(session)
     }
@@ -68,21 +67,21 @@ private fun ViewScope.studyControls(session: StudySession) = row(modify(AlignSel
 private fun ViewScope.studyFeedback(session: StudySession) {
     flowBlock(session.clipIdsState) { clipIds ->
         val feedback = clipIds.lastOrNull()?.let { session.feedbacks[it] } ?: return@flowBlock
-        textBlock(feedbackSummaryOf(feedback, session.secondsPerTick), modify(TextAlignCenter, TextSmall))
+        val scoredCount = session.source.tracks.firstOrNull()?.events?.count { it.isScored } ?: 0
+        textBlock(feedbackSummaryOf(feedback, scoredCount, session.secondsPerTick), modify(TextAlignCenter, TextSmall))
     }
 }
 
 /** How many notes of [feedback] were sung, how far their pitch strayed and where they sat against the beat. */
-private fun feedbackSummaryOf(feedback: List<NotationFeedback>, secondsPerTick: Double): String {
-    val notes = feedback.flatMap { it.measures }.flatMap { it.notes }
-    val sung = notes.filterNotNull()
+private fun feedbackSummaryOf(feedback: List<NoteFeedback?>, scoredCount: Int, secondsPerTick: Double): String {
+    val sung = feedback.filterNotNull()
     if (sung.isEmpty()) return "No notes heard in the last take."
     val pitch = sung.map { abs(it.pitch) }.median()
     val offsets = sung.map { it.time * secondsPerTick * 1000 }
     val offset = offsets.median()
     val spread = offsets.map { abs(it - offset) }.median()
     val side = if (offset < 0) "ahead of" else "behind"
-    return "Sung ${sung.size} of ${notes.size} notes · pitch off by ${pitch.roundToInt()} cents · " +
+    return "Sung ${sung.size} of $scoredCount notes · pitch off by ${pitch.roundToInt()} cents · " +
         "${abs(offset).roundToInt()} ms $side the beat, ± ${spread.roundToInt()} ms"
 }
 

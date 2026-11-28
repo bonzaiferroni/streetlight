@@ -1,7 +1,8 @@
 package streetlight.web.model
 
-import streetlight.model.music.ui.NotationLayout
-import streetlight.model.music.ui.NoteSource
+import streetlight.model.music.ui.NotationEvent
+import streetlight.model.music.ui.NoteEvent
+import streetlight.model.music.ui.TrackSource
 import kotlin.math.abs
 import kotlin.math.log2
 import kotlin.math.roundToInt
@@ -16,67 +17,45 @@ data class NoteFeedback(
     val ticks: Int,
 )
 
-/** The [notes] of a measure as sung, one for each note of its layout with a source, `null` where it was missed. */
-data class MeasureFeedback(
-    val notes: List<NoteFeedback?>,
-)
-
-/** The [measures] of a [NotationLayout] as sung. */
-data class NotationFeedback(
-    val measures: List<MeasureFeedback>,
-)
+/** Whether this event is a note a take is scored against: a pitch, not a rest, a chord or a syllable. */
+val NotationEvent.isScored get() = this is NoteEvent && midi != null
 
 /**
- * The feedback on each of [layouts], the passes of a study starting [startTicks] into a take, from what [analyzer] read
- * of the take. A frame of the take falls [offsetSeconds] after the music's time, its notes raised [capo] semitones to
- * sound, at [secondsPerTick].
+ * The feedback on each event of [track], the track of a study a take was sung to, from what [analyzer] read of the
+ * take: one for each event, `null` where it was missed or is not [isScored]. A frame of the take falls
+ * [offsetSeconds] after the music's time, the notes raised [capo] semitones to sound, at [secondsPerTick].
  *
  * The sung pitch is aligned to the notes by dynamic time warping, so a phrase sung early or late still meets its
  * notes. A note's onset is moved to the nearest attack when one is close.
  */
 fun notationFeedbackOf(
-    layouts: List<NotationLayout>,
-    startTicks: List<Int>,
+    track: TrackSource,
     capo: Int,
     analyzer: MusicAnalyzer,
     offsetSeconds: Double,
     secondsPerTick: Double,
-): List<NotationFeedback> {
-    val expected = layouts.flatMapIndexed { passIndex, layout ->
-        layout.measures.flatMap { it.notes }.mapNotNull { it.source }.filter { it.chord == null }.distinct().map {
-            ExpectedNote(passIndex, it, startTicks[passIndex] + it.tick, it.ticks, it.midi + capo)
-        }
-    }.sortedBy { it.startTick }
-    val sung = noteFeedbackOf(expected, analyzer, offsetSeconds, secondsPerTick)
-    return layouts.mapIndexed { passIndex, layout ->
-        NotationFeedback(layout.measures.map { measure ->
-            MeasureFeedback(measure.notes.mapNotNull { it.source }.map { sung[passIndex to it] })
-        })
-    }
+): List<NoteFeedback?> {
+    val scored = track.events.filter { it.isScored }.filterIsInstance<NoteEvent>()
+    val sung = noteFeedbackOf(scored, capo, analyzer, offsetSeconds, secondsPerTick)
+    var next = 0
+    return track.events.map { if (it.isScored) sung[next++] else null }
 }
 
-/** A note a take is scored against: [source] in the pass at [passIndex], sounding [midi] from [startTick] for [ticks]. */
-private data class ExpectedNote(
-    val passIndex: Int,
-    val source: NoteSource,
-    val startTick: Int,
-    val ticks: Int,
-    val midi: Int,
-)
-
-/** The feedback on each of [expected] that was sung, by its pass and source. */
+/** The feedback on each of [expected], raised [capo] semitones to sound, `null` where it was missed. */
 private fun noteFeedbackOf(
-    expected: List<ExpectedNote>,
+    expected: List<NoteEvent>,
+    capo: Int,
     analyzer: MusicAnalyzer,
     offsetSeconds: Double,
     secondsPerTick: Double,
-): Map<Pair<Int, NoteSource>, NoteFeedback> {
-    if (expected.isEmpty()) return emptyMap()
+): List<NoteFeedback?> {
+    val missed = List(expected.size) { null }
+    if (expected.isEmpty()) return missed
     val hop = analyzer.hopSeconds
-    val firstSeconds = expected.first().startTick * secondsPerTick - BAND_SECONDS
-    val lastSeconds = expected.maxOf { it.startTick + it.ticks } * secondsPerTick + BAND_SECONDS
+    val firstSeconds = expected.first().tick * secondsPerTick - BAND_SECONDS
+    val lastSeconds = expected.maxOf { it.tick + it.beats.ticks } * secondsPerTick + BAND_SECONDS
     val frames = analyzer.frames.filter { it.seconds + offsetSeconds in firstSeconds..lastSeconds }
-    if (frames.isEmpty()) return emptyMap()
+    if (frames.isEmpty()) return missed
     val times = frames.map { it.seconds + offsetSeconds }
 
     // the semitone sung in each frame, and the note expected at its time, NaN and -1 for none
@@ -86,23 +65,24 @@ private fun noteFeedbackOf(
     var cursor = 0
     val expectedIndices = times.map { seconds ->
         val tick = seconds / secondsPerTick
-        while (cursor < expected.size && expected[cursor].startTick + expected[cursor].ticks <= tick) cursor++
-        if (cursor < expected.size && expected[cursor].startTick <= tick) cursor else -1
+        while (cursor < expected.size && expected[cursor].tick + expected[cursor].beats.ticks <= tick) cursor++
+        if (cursor < expected.size && expected[cursor].tick <= tick) cursor else -1
     }
 
     val path = warpPathOf(frames.size, (BAND_SECONDS / hop).toInt()) { i, j ->
-        costOf(expectedIndices[i].takeIf { it >= 0 }?.let { expected[it].midi }, sungSemitones[j])
+        costOf(expectedIndices[i].takeIf { it >= 0 }?.let { expected[it].midi?.plus(capo) }, sungSemitones[j])
     }
     val sungFrames = expected.indices.associateWith { mutableListOf<Int>() }
     path.forEach { (i, j) -> expectedIndices[i].takeIf { it >= 0 }?.let { sungFrames.getValue(it).add(j) } }
     val noteFrameCounts = expectedIndices.filter { it >= 0 }.groupingBy { it }.eachCount()
     val onsets = analyzer.onsets.map { it + offsetSeconds }
 
-    return expected.indices.mapNotNull { index ->
+    return expected.indices.map { index ->
         val note = expected[index]
         val voiced = sungFrames.getValue(index).distinct().filter { !sungSemitones[it].isNaN() }.sorted()
         val frameCount = noteFrameCounts[index] ?: 0
-        if (voiced.isEmpty() || voiced.size < frameCount * MIN_VOICED_SHARE) return@mapNotNull null
+        if (voiced.isEmpty() || voiced.size < frameCount * MIN_VOICED_SHARE) return@map null
+        val midi = (note.midi ?: return@map null) + capo
 
         val voicedStart = times[voiced.first()]
         val start = onsets.minByOrNull { abs(it - voicedStart) }?.takeIf { abs(it - voicedStart) <= SNAP_SECONDS }
@@ -110,13 +90,13 @@ private fun noteFeedbackOf(
         val end = times[voiced.last()] + hop
         val trim = (voiced.size * TRIM_SHARE).toInt()
         val pitches = voiced.map { sungSemitones[it] }.sorted().let { it.subList(trim, it.size - trim) }
-        val cents = foldCents((pitches[pitches.size / 2] - note.midi) * 100)
-        (note.passIndex to note.source) to NoteFeedback(
-            time = ((start - note.startTick * secondsPerTick) / secondsPerTick).roundToInt(),
+        val cents = foldCents((pitches[pitches.size / 2] - midi) * 100)
+        NoteFeedback(
+            time = ((start - note.tick * secondsPerTick) / secondsPerTick).roundToInt(),
             pitch = cents,
             ticks = ((end - start) / secondsPerTick).roundToInt(),
         )
-    }.toMap()
+    }
 }
 
 /**

@@ -60,6 +60,6 @@ fun barsOf(music: Music, track: Track, notationId: NotationId?): Int? {
         return music.arrangement.sumOf { sectionId -> music.sections.firstOrNull { it.sectionId == sectionId }?.measures ?: 0 }
             .takeIf { it > 0 }
     }
-    val length = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
+    val length = track.lengthOf(notationId, music.time)?.ticks?.takeIf { it > 0 } ?: return null
     return ceil(length.toDouble() / music.time.measure.ticks).toInt()
 }

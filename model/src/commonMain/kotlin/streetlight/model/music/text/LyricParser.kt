@@ -1,5 +1,7 @@
 package streetlight.model.music.text
 
+import streetlight.model.music.Beats
+import streetlight.model.music.pickupCountOf
 import streetlight.model.music.LyricNote
 import streetlight.model.music.LyricTrack
 import streetlight.model.music.MelodyTrack
@@ -84,7 +86,8 @@ object LyricParser {
             measureProblemOf(ticks, index == segments.measures.lastIndex, time)?.let(::error)
             repeat(pickup.size + notes.size - noteLines.size) { noteLines.add(segment.line) }
         }
-        val stanza = Stanza(notation.notationId, notation.name, notes, pickup, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
+        val downbeat = Beats(pickup.sumOf { it.beats.ticks })
+        val stanza = Stanza(notation.notationId, notation.name, pickup + notes, downbeat, measuresPerLineOf(notation.lines, MEASURES_PER_LINE))
         if (phrase != null && noteLines.isNotEmpty()) errors.addAll(alignmentErrorsOf(stanza, noteLines, phrase))
         return stanza
     }
@@ -96,15 +99,18 @@ object LyricParser {
     /** Writes [stanza] as the text [readNotation] reads, with measures cut by [time]. */
     fun writeNotation(stanza: Stanza, time: TimeSignature) = linesOf(stanza, time).toLines().joinToString("\n")
 
-    private fun linesOf(stanza: Stanza, time: TimeSignature) = NotationLines(
-        notationId = stanza.notationId,
-        name = stanza.name,
-        pickup = stanza.pickup.takeIf { it.isNotEmpty() }?.let { pickup ->
-            pickup.flatMap { writeNote(it, it.beats.ticks, false) }.joinToString(" ")
-        },
-        measures = writeMeasures(stanza.notes, time.measure, { it.beats.ticks }, ::writeNote),
-        measuresPerLine = stanza.measuresPerLine,
-    )
+    private fun linesOf(stanza: Stanza, time: TimeSignature): NotationLines {
+        val pickupCount = pickupCountOf(stanza.notes.map { it.beats.ticks }, stanza.downbeat)
+        return NotationLines(
+            notationId = stanza.notationId,
+            name = stanza.name,
+            pickup = stanza.notes.take(pickupCount).takeIf { it.isNotEmpty() }?.let { pickup ->
+                pickup.flatMap { writeNote(it, it.beats.ticks, false) }.joinToString(" ")
+            },
+            measures = writeMeasures(stanza.notes.drop(pickupCount), time.measure, { it.beats.ticks }, ::writeNote),
+            measuresPerLine = stanza.measuresPerLine,
+        )
+    }
 
     /** Reads the tokens of [text] onto the end of [notes], returning the ticks they filled. */
     private fun readSegment(text: String, notes: MutableList<LyricNote>, error: (String) -> Unit): Int {
@@ -139,18 +145,18 @@ object LyricParser {
     }
 
     /**
-     * The problems of [stanza] against [phrase], their pickups meeting at the first bar line. [noteLines] holds the line
-     * of each note of the stanza, its pickup first.
+     * The problems of [stanza] against [phrase], their downbeats meeting at the first bar line. [noteLines] holds the
+     * line of each note of the stanza.
      */
     private fun alignmentErrorsOf(stanza: Stanza, noteLines: List<Int>, phrase: Phrase): List<NotationError> {
-        val melodyNotes = phrase.pickup + phrase.notes
-        val melodyStart = -phrase.pickup.sumOf { it.beats.ticks }
+        val melodyNotes = phrase.notes
+        val melodyStart = -phrase.downbeat.ticks
         val melodyOnsets = melodyNotes.runningFold(melodyStart) { onset, note -> onset + note.beats.ticks }
         val sungOnsets = melodyNotes.indices.filter { melodyNotes[it].interval != null }.map { melodyOnsets[it] }.toSet()
         val melodyEnd = melodyOnsets.last()
 
-        val lyricNotes = stanza.pickup + stanza.notes
-        val lyricStart = -stanza.pickup.sumOf { it.beats.ticks }
+        val lyricNotes = stanza.notes
+        val lyricStart = -stanza.downbeat.ticks
         val lyricOnsets = lyricNotes.runningFold(lyricStart) { onset, note -> onset + note.beats.ticks }
 
         val errors = lyricNotes.indices.filter { index ->

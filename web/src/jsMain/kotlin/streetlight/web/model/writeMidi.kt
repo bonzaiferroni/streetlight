@@ -4,6 +4,7 @@ import streetlight.model.music.Beats
 import streetlight.model.music.Drum
 import streetlight.model.music.Music
 import streetlight.model.music.MusicSheet
+import streetlight.model.music.ui.musicSourceOf
 import streetlight.web.utility.downloadFile
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -19,7 +20,7 @@ fun MusicSheet.exportMidi() {
  * channel 10, as General MIDI keeps it.
  */
 fun MusicSheet.writeMidi(): ByteArray {
-    val named = tracks.map { it.name }.zip(musicTonesOf(tracks.map { it.trackId }))
+    val named = tracks.map { it.name }.zip(musicSourceOf(null, null).musicTonesOf(tracks.map { it.trackId }))
         .filter { (_, layer) -> layer.isNotEmpty }
     // a pickup starts before tick 0, and a MIDI file cannot, so every event shifts by the earliest
     val firstTick = named.mapNotNull { (_, layer) -> layer.firstTick }.minOrNull() ?: 0

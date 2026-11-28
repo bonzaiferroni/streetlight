@@ -8,16 +8,14 @@ import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import streetlight.model.music.Beats
-import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
 import streetlight.model.music.TrackId
-import streetlight.model.music.lengthOf
-import streetlight.model.music.repeatsOf
+import streetlight.model.music.ui.MeasureLine
+import streetlight.model.music.ui.MusicSource
 import streetlight.model.music.ui.NoteValue
-import streetlight.model.music.ui.NotationLayout
-import streetlight.model.music.ui.notationLayoutOf
-import streetlight.model.music.ui.staffWindowOf
+import streetlight.model.music.ui.TrackSource
+import streetlight.model.music.ui.measureLineOf
+import streetlight.model.music.ui.musicSourceOf
 import web.animations.awaitAnimationFrame
 import kotlin.math.max
 import kotlin.math.min
@@ -37,15 +35,12 @@ class LaneEditor(
     val windowState = state.tapOf { it.window }
     val sheetState = host.sheetState
 
-    private val rateState = sheetState.tapOf { it.music.secondsPerTick }
+    /** The music of every track, which the lanes are drawn from. */
+    val sourceState = sheetState.tapOf { it.musicSourceOf(null, null) }
 
-    val lanesState = sheetState.combine(rateState) { sheet, rate ->
-        lanesOf(sheet, rate)
-    }
+    val lanesState = sourceState.tapOf { lanesOf(it) }
 
-    val endSecondsState: Tap<Double?> = sheetState.combine(rateState,) { sheet, perTick ->
-        endSecondsOf(sheet, perTick).takeIf { it > 0 }
-    }
+    val endSecondsState: Tap<Double?> = sourceState.tapOf { endSecondsOf(it).takeIf { it > 0 } }
 
     val totalSecondsState: Tap<Double> = windowState.combine(endSecondsState) { window, endSeconds ->
         maxOf(window.endSeconds, endSeconds ?: 0.0, DEFAULT_WINDOW_SECONDS)
@@ -59,16 +54,16 @@ class LaneEditor(
         playJob?.cancel()
         playJob = scope.launch {
             val sheet = sheetState.now
-            val rate = rateState.now
-            val endSeconds = endSecondsOf(sheet, rate).takeIf { it > 0 } ?: return@launch
+            val source = sourceState.now
+            val endSeconds = endSecondsOf(source).takeIf { it > 0 } ?: return@launch
             if (cursorStore.now >= endSeconds) moveCursorTo(0.0)
-            val leadSeconds = leadSecondsOf(sheet, rate)
+            val leadSeconds = leadSecondsOf(source)
             val lanes = state.now
             val playing = sheet.tracks.filter { track ->
                 lanes.soloId?.let { it == track.trackId } ?: (track.trackId !in lanes.mutedTracks)
             }
             val musicWaves = waveShelf.musicWavesOf(sheet).filterKeys { it.trackId !in lanes.tonedTracks }
-            val plan = sheet.musicPlanOf(playing.map { it.trackId }, musicWaves) ?: return@launch
+            val plan = source.musicPlanOf(playing.map { it.trackId }, musicWaves) ?: return@launch
             player.play(plan, fromSeconds = cursorStore.now - leadSeconds)
 
             while (true) {
@@ -118,7 +113,7 @@ data class LaneEditorState(
 )
 
 /**
- * The lane of a track, shown as [label] and [steps] of the staff tall, holding a [LaneSection] for each time it plays
+ * The lane of [track], shown as [label] and [steps] of the staff tall, holding a [LaneSection] for each time it plays
  * a notation after a lead-in [leadSeconds] long.
  */
 data class Lane(
@@ -126,15 +121,17 @@ data class Lane(
     val label: String,
     val steps: Int,
     val leadSeconds: Double,
+    val track: TrackSource,
     val sections: List<LaneSection>,
 )
 
 /**
- * A section of a lane: a time its track plays [notation], [durationSeconds] long from [startSeconds]. It [isRepeat]
- * when the lane has already played the notation.
+ * A section of a lane: a time its track plays a notation shown as [label] across [line], [durationSeconds] long from
+ * [startSeconds]. It [isRepeat] when the lane has already played the notation.
  */
 data class LaneSection(
-    val notation: NotationLayout,
+    val label: String,
+    val line: MeasureLine,
     val startSeconds: Double,
     val durationSeconds: Double,
     val isRepeat: Boolean,
@@ -143,42 +140,23 @@ data class LaneSection(
 private const val DEFAULT_WINDOW_SECONDS = 10.0
 private const val LEAD_ROOM_SECONDS = 0.5
 
-private fun endSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {
-    val ticks = sheet.music.arrangement.sumOf { sheet.music.lengthOf(it)?.ticks ?: 0 }
-    return leadSecondsOf(sheet, secondsPerTick) + ticks * secondsPerTick
-}
+private fun endSecondsOf(source: MusicSource) = leadSecondsOf(source) + source.duration * source.secondsPerTick
 
-private fun leadSecondsOf(sheet: MusicSheet, secondsPerTick: Double): Double {
-    val firstTick = sheet.musicTonesOf(sheet.tracks.map { it.trackId }).mapNotNull { it.firstTick }.minOrNull() ?: 0
-    return -minOf(firstTick, 0) * secondsPerTick + LEAD_ROOM_SECONDS
-}
+private fun leadSecondsOf(source: MusicSource) = source.pickup.ticks * source.secondsPerTick + LEAD_ROOM_SECONDS
 
-private fun lanesOf(sheet: MusicSheet, rate: Double): List<Lane> {
-    val tracks = sheet.tracks
-    val music = sheet.music
-    val leadSeconds = leadSecondsOf(sheet, rate)
-    return tracks.map { track ->
-        val window = sheet.staffWindowOf(track.trackId)
-        val passes = mutableMapOf<NotationId, Int>()
-        var onset = 0
-        val sections = music.arrangement.flatMap { sectionId ->
-            val span = music.lengthOf(sectionId) ?: Beats(0)
-            val notationId = track.sections[sectionId]
-            val ticks = notationId?.let { track.lengthOf(it) }?.ticks ?: 0
-            val laneSections = if (notationId == null) emptyList() else List(track.repeatsOf(notationId, span)) { repeat ->
-                val pass = passes[notationId] ?: 0
-                val notation = sheet.notationLayoutOf(notationId, pass) ?: return@List null
-                passes[notationId] = pass + 1
-                LaneSection(
-                    notation = notation,
-                    startSeconds = leadSeconds + (onset + repeat * ticks) * rate,
-                    durationSeconds = ticks * rate,
-                    isRepeat = pass > 0,
-                )
-            }.filterNotNull()
-            onset += span.ticks
-            laneSections
+private fun lanesOf(source: MusicSource): List<Lane> {
+    val leadSeconds = leadSecondsOf(source)
+    return source.tracks.map { track ->
+        val played = mutableSetOf<NotationId>()
+        val sections = track.passes.map { pass ->
+            LaneSection(
+                label = pass.notation.label,
+                line = source.measureLineOf(pass),
+                startSeconds = leadSeconds + pass.start * source.secondsPerTick,
+                durationSeconds = pass.notation.length.ticks * source.secondsPerTick,
+                isRepeat = !played.add(pass.notation.notationId),
+            )
         }
-        Lane(track.trackId, track.name, window.steps, leadSeconds, sections)
+        Lane(track.trackId, track.name, track.layout.window.steps, leadSeconds, track, sections)
     }
 }

@@ -44,7 +44,9 @@ fun ViewScope.notationEditor(focus: NotationFocus, setFocus: (MusicEditorFocus?)
                 switch("study", model.isActiveStudy)
             }
             notationPanes(track.notationLabel, model.notationTextEditor.textState, model.errorsState, config.notationViewState) {
-                flowBlock(model.notationLayoutState) { notationLayout -> notationLayout?.let { notationStrips(it) } }
+                flowBlock(model.musicSourceState) { source ->
+                    source?.tracks?.firstOrNull()?.let { notationStrips(source, it) }
+                }
             }
         }
     }

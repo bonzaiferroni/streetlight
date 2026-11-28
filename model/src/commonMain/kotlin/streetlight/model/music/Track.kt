@@ -135,15 +135,16 @@ private fun Track.notationsOf(notationId: NotationId, visited: Set<NotationId>):
     return arrangement.repeats?.let { (1..it).flatMap { list } } ?: list
 }
 
-/** The length of [notationId] in this track, or `null` when the track does not define it. */
-fun Track.lengthOf(notationId: NotationId) =
-    notationsOf(notationId)?.let { notations -> Beats(notations.sumOf { it.length.ticks }) }
-
 /**
- * The times this track plays [notationId] to fill [span], the length of the section it plays it for: as many whole
- * times as fit, and at least once.
+ * The length of [notationId] in this track, each wait counted in measures of [time], or `null` when the track does not
+ * define it or an arrangement holds itself.
  */
-fun Track.repeatsOf(notationId: NotationId, span: Beats): Int {
-    val length = lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return 1
-    return (span.ticks / length).coerceAtLeast(1)
+fun Track.lengthOf(notationId: NotationId, time: TimeSignature): Beats? = lengthOf(notationId, time, emptySet())
+
+private fun Track.lengthOf(notationId: NotationId, time: TimeSignature, visited: Set<NotationId>): Beats? {
+    if (notationId in visited) return null
+    notations.firstOrNull { it.notationId == notationId }?.let { return it.length }
+    val arrangement = arrangements.firstOrNull { it.notationId == notationId } ?: return null
+    val held = arrangement.notations.sumOf { lengthOf(it, time, visited + notationId)?.ticks ?: return null }
+    return Beats((arrangement.wait ?: 0) * time.measure.ticks + (arrangement.repeats ?: 1) * held)
 }

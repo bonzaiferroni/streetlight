@@ -3,6 +3,7 @@ package streetlight.model.music.ui
 import streetlight.model.music.Beats
 import streetlight.model.music.Chord
 import streetlight.model.music.Drum
+import streetlight.model.music.DrumHit
 import streetlight.model.music.Key
 import streetlight.model.music.NotationId
 import streetlight.model.music.TimeSignature
@@ -11,6 +12,7 @@ import streetlight.model.music.TrackType
 
 data class MusicSource(
     val name: String,
+    val targetId: NotationId?,
     val pickup: Beats,
     val measureCount: Int,
     val tracks: List<TrackSource>,
@@ -37,7 +39,8 @@ data class TrackSource(
     val events: List<NotationEvent>,
     val measures: List<MeasureSpan>,
     val passes: List<NotationPass>,
-    val layout: ProtoNotationLayout,
+    val spans: List<NotationSpan>,
+    val layout: NotationLayout,
     val trackType: TrackType,
     val capo: Int?,
 )
@@ -65,13 +68,13 @@ data class NoteEvent(
 ): NotationEvent
 
 data class DrumEvent(
-    val drum: Drum?,
+    val drum: Drum,
+    val hit: DrumHit?,
     override val tick: Int,
     override val beats: Beats,
     override val notationId: NotationId,
     override val index: Int,
-): NotationEvent {
-}
+): NotationEvent
 
 data class ChordEvent(
     val chord: Chord?,
@@ -89,12 +92,12 @@ data class VocalEvent(
     override val index: Int,
 ): NotationEvent
 
-data class ProtoNotationLayout(
-    val lines: List<NotationLayoutLine>,
+data class NotationLayout(
+    val lines: List<MeasureLine>,
     val window: StaffWindow,
 )
 
-data class NotationLayoutLine(
+data class MeasureLine(
     val measureStart: Int,
     val measureEnd: Int,
 )
@@ -102,4 +105,11 @@ data class NotationLayoutLine(
 data class MeasureSpan(
     val eventStart: Int,
     val eventEnd: Int,
+)
+
+/** A time a track plays [notationId], a notation or an arrangement, for [ticks] from its first downbeat at [start]. */
+data class NotationSpan(
+    val notationId: NotationId,
+    val start: Int,
+    val ticks: Int,
 )

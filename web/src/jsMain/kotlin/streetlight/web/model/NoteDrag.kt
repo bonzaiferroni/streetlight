@@ -15,52 +15,54 @@ import streetlight.model.music.Interval
 import streetlight.model.music.Key
 import streetlight.model.music.MelodyNote
 import streetlight.model.music.MelodyTrack
-import streetlight.model.music.Music
+import streetlight.model.music.NotationId
 import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Seventh
+import streetlight.model.music.TimeSignature
 import streetlight.model.music.Track
-import streetlight.model.music.ui.NoteLayout
-import streetlight.model.music.ui.NoteSource
+import streetlight.model.music.pickupCountOf
+import streetlight.model.music.ui.ChordEvent
+import streetlight.model.music.ui.NotationEvent
+import streetlight.model.music.ui.NoteEvent
 import streetlight.model.music.ui.NoteValue
 import streetlight.model.music.ui.StaffWindow
+import streetlight.model.music.ui.midiChordOf
 import streetlight.model.music.ui.midiOfStaffStep
 import streetlight.model.music.ui.staffStepOf
 
-/** A note of [section] in the lane at [laneIndex] being dragged from [source] to [moved], drawn as [cursor]. */
+/** A note of [section] in the lane at [laneIndex] being dragged from [source] to [moved], which draws as its cursor. */
 data class NoteDrag(
     val laneIndex: Int,
     val section: LaneSection,
-    val source: NoteSource,
-    val moved: NoteSource,
-    val cursor: NoteLayout,
+    val source: NotationEvent,
+    val moved: NotationEvent,
 )
 
 /**
- * This note with its onset at the grid line of [step] nearest [tick], within its measure and the notes either side in
- * [track]. Its end stays where it is. A pickup keeps its place.
+ * This note with its onset at the grid line of [step] nearest [tick], within its measure of [time] and the notes
+ * either side in [track]. Its end stays where it is. A pickup keeps its place.
  */
-fun NoteSource.snapTick(tick: Double, track: Track, music: Music, step: NoteValue): NoteSource {
-    if (isPickup) return this
-    val measure = music.time.measure.ticks
-    val measureStart = this.tick / measure * measure
-    val previous = previousTicks(track)
+fun NotationEvent.snapTick(tick: Double, track: Track, time: TimeSignature, step: NoteValue): NotationEvent {
+    val noteTicks = track.noteTicksOf(notationId) ?: return this
+    if (index < pickupCountOf(noteTicks, track.downbeatOf(notationId))) return this
+    val measure = time.measure.ticks
+    val measureStart = this.tick.floorDiv(measure) * measure
+    val previous = noteTicks.getOrNull(index - 1)
     val low = max(measureStart, previous?.let { this.tick - it + MIN_NOTE_TICKS } ?: this.tick)
-    val high = min(measureStart + measure - 1, this.tick + ticks - MIN_NOTE_TICKS)
+    val high = min(measureStart + measure - 1, this.tick + beats.ticks - MIN_NOTE_TICKS)
 
     val gridLow = measureStart + ceil((low - measureStart).toDouble() / step.ticks).toInt() * step.ticks
     val gridHigh = measureStart + floor((high - measureStart).toDouble() / step.ticks).toInt() * step.ticks
     if (gridLow > gridHigh) return this
     val nearest = measureStart + ((tick - measureStart) / step.ticks).roundToInt() * step.ticks
     val onset = nearest.coerceIn(gridLow, gridHigh)
-    return copy(tick = onset, ticks = ticks - (onset - this.tick))
-}
-
-/** The length of the note before this one in [track], or `null` for the first of its notation. */
-private fun NoteSource.previousTicks(track: Track) = when (track) {
-    is MelodyTrack -> track.notations.firstOrNull { it.notationId == notationId }?.notes?.getOrNull(index - 1)?.beats?.ticks
-    is ChordTrack -> track.notations.firstOrNull { it.notationId == notationId }?.notes?.getOrNull(index - 1)?.beats?.ticks
-    else -> null
+    val moved = Beats(beats.ticks - (onset - this.tick))
+    return when (this) {
+        is NoteEvent -> copy(tick = onset, beats = moved)
+        is ChordEvent -> copy(tick = onset, beats = moved)
+        else -> this
+    }
 }
 
 /**
@@ -68,23 +70,41 @@ private fun NoteSource.previousTicks(track: Track) = when (track) {
  * [isScaleSnap], and otherwise by semitones. A chord moves its root within one octave, so it never jumps, and follows
  * the key when [isScaleSnap].
  */
-fun NoteSource.snapPitch(from: NoteSource, stepsUp: Double, key: Key, window: StaffWindow, isScaleSnap: Boolean): NoteSource {
-    val chord = from.chord
-    val steps = stepsUp.roundToInt()
-    val low = if (chord == null) window.low else staffStepOf(CHORD_ROOT_LOW, key)
-    val high = if (chord == null) window.high else staffStepOf(CHORD_ROOT_LOW + 11, key)
-    val midi = when {
-        !isScaleSnap -> {
-            val semitones = from.midi + (stepsUp * SEMITONES_PER_STEP).roundToInt()
-            if (chord == null) semitones.coerceIn(midiOfStaffStep(low, key), midiOfStaffStep(high, key))
-            else semitones.coerceIn(CHORD_ROOT_LOW, CHORD_ROOT_LOW + 11)
+fun NotationEvent.snapPitch(from: NotationEvent, stepsUp: Double, key: Key, window: StaffWindow, isScaleSnap: Boolean): NotationEvent =
+    when {
+        this is NoteEvent && from is NoteEvent -> {
+            val midi = from.midi ?: return this
+            val midiRange = midiOfStaffStep(window.low, key)..midiOfStaffStep(window.high, key)
+            copy(midi = snappedMidiOf(midi, stepsUp, key, isScaleSnap, window.low..window.high, midiRange))
         }
-        steps == 0 -> from.midi
-        else -> midiOfStaffStep((staffStepOf(from.midi, key) + steps).coerceIn(low, high), key)
+        this is ChordEvent && from is ChordEvent -> {
+            val chord = from.chord ?: return this
+            val root = midiChordOf(chord, key).first()
+            val stepRange = staffStepOf(CHORD_ROOT_LOW, key)..staffStepOf(CHORD_ROOT_LOW + 11, key)
+            val midi = snappedMidiOf(root, stepsUp, key, isScaleSnap, stepRange, CHORD_ROOT_LOW..CHORD_ROOT_LOW + 11)
+            copy(chord = if (midi == root) chord else chord.withRoot(midi, key, isScaleSnap))
+        }
+        else -> this
     }
-    if (chord == null) return copy(midi = midi)
-    if (midi == from.midi) return copy(midi = midi, chord = chord)
-    return copy(midi = midi, chord = chord.withRoot(midi, key, isScaleSnap))
+
+/**
+ * [midi] moved [stepsUp] staff steps: by the lines of the scale of [key] within [stepRange] when [isScaleSnap], and
+ * otherwise by semitones within [midiRange].
+ */
+private fun snappedMidiOf(
+    midi: Int,
+    stepsUp: Double,
+    key: Key,
+    isScaleSnap: Boolean,
+    stepRange: IntRange,
+    midiRange: IntRange,
+): Int {
+    val steps = stepsUp.roundToInt()
+    return when {
+        !isScaleSnap -> (midi + (stepsUp * SEMITONES_PER_STEP).roundToInt()).coerceIn(midiRange)
+        steps == 0 -> midi
+        else -> midiOfStaffStep((staffStepOf(midi, key) + steps).coerceIn(stepRange), key)
+    }
 }
 
 /** This chord rooted on [midi] in [key], its bass moved with it, and its quality following the scale when [isScaleSnap]. */
@@ -97,24 +117,22 @@ private fun Chord.withRoot(midi: Int, key: Key, isScaleSnap: Boolean): Chord {
 }
 
 /** This track with the note of [source] moved to where [moved] places it, the note before it taking up the difference. */
-fun Track.withMovedNote(source: NoteSource, moved: NoteSource, key: Key): Track = when (this) {
+fun Track.withMovedNote(source: NotationEvent, moved: NotationEvent, key: Key): Track = when (this) {
     is MelodyTrack -> copy(notations = notations.map { phrase ->
-        if (phrase.notationId == source.notationId) phrase.withMovedNote(source, moved, key) else phrase
+        if (phrase.notationId == source.notationId && moved is NoteEvent) phrase.withMovedNote(source, moved, key) else phrase
     })
     is ChordTrack -> copy(notations = notations.map { progression ->
-        if (progression.notationId == source.notationId) progression.withMovedNote(source, moved) else progression
+        if (progression.notationId == source.notationId && moved is ChordEvent) progression.withMovedNote(source, moved) else progression
     })
     else -> this
 }
 
-private fun Phrase.withMovedNote(source: NoteSource, moved: NoteSource, key: Key): Phrase {
-    val interval = Interval.ofMidi(moved.midi, key)
-    if (source.isPickup) {
-        return copy(pickup = pickup.toMutableList().apply { this[source.index] = this[source.index].copy(interval = interval) })
-    }
+private fun Phrase.withMovedNote(source: NotationEvent, moved: NoteEvent, key: Key): Phrase {
+    val interval = moved.midi?.let { Interval.ofMidi(it, key) }
     val notes = notes.withMoved(
         source = source,
         moved = moved,
+        pickupCount = pickupCountOf(notes.map { it.beats.ticks }, downbeat),
         withTicks = { note, ticks -> note.copy(beats = Beats(ticks)) },
         ticksOf = { it.beats.ticks },
         restOf = { MelodyNote(null, Beats(it)) },
@@ -123,13 +141,11 @@ private fun Phrase.withMovedNote(source: NoteSource, moved: NoteSource, key: Key
     return copy(notes = notes)
 }
 
-private fun Progression.withMovedNote(source: NoteSource, moved: NoteSource): Progression {
-    if (source.isPickup) {
-        return copy(pickup = pickup.toMutableList().apply { this[source.index] = this[source.index].copy(chord = moved.chord) })
-    }
+private fun Progression.withMovedNote(source: NotationEvent, moved: ChordEvent): Progression {
     val notes = notes.withMoved(
         source = source,
         moved = moved,
+        pickupCount = pickupCountOf(notes.map { it.beats.ticks }, downbeat),
         withTicks = { note, ticks -> note.copy(beats = Beats(ticks)) },
         ticksOf = { it.beats.ticks },
         restOf = { ChordNote(null, Beats(it)) },
@@ -138,25 +154,43 @@ private fun Progression.withMovedNote(source: NoteSource, moved: NoteSource): Pr
     return copy(notes = notes)
 }
 
-/** These notes with the one at [source] moved, the note before it taking up the difference. */
+/**
+ * These notes with the one at [source] moved, the note before it taking up the difference. A note of the first
+ * [pickupCount], the pickup, changes its pitch alone, and the pickup never reaches past the downbeat.
+ */
 private fun <N> List<N>.withMoved(
-    source: NoteSource,
-    moved: NoteSource,
+    source: NotationEvent,
+    moved: NotationEvent,
+    pickupCount: Int,
     withTicks: (N, Int) -> N,
     ticksOf: (N) -> Int,
     restOf: (Int) -> N,
     withPitch: (N) -> N,
 ): List<N> {
-    val shift = moved.tick - source.tick
     val notes = toMutableList()
-    notes[source.index] = withTicks(withPitch(notes[source.index]), moved.ticks)
+    if (source.index < pickupCount) {
+        notes[source.index] = withPitch(notes[source.index])
+        return notes
+    }
+    val shift = moved.tick - source.tick
+    notes[source.index] = withTicks(withPitch(notes[source.index]), moved.beats.ticks)
     when {
-        source.index > 0 -> notes[source.index - 1] = notes[source.index - 1].let { withTicks(it, ticksOf(it) + shift) }
-        // the first note has none before it to lengthen, so a rest fills the room it leaves
-        shift > 0 -> notes.add(0, restOf(shift))
+        source.index > pickupCount -> notes[source.index - 1] = notes[source.index - 1].let { withTicks(it, ticksOf(it) + shift) }
+        // the first note after the downbeat has none of its own before it to lengthen, so a rest fills the room it leaves
+        shift > 0 -> notes.add(source.index, restOf(shift))
     }
     return notes
 }
+
+/** The ticks of each note of [notationId] in this track, or `null` for a track whose notes are not dragged. */
+private fun Track.noteTicksOf(notationId: NotationId) = when (this) {
+    is MelodyTrack -> notations.firstOrNull { it.notationId == notationId }?.notes?.map { it.beats.ticks }
+    is ChordTrack -> notations.firstOrNull { it.notationId == notationId }?.notes?.map { it.beats.ticks }
+    else -> null
+}
+
+/** The downbeat of [notationId] in this track. */
+private fun Track.downbeatOf(notationId: NotationId) = notations.firstOrNull { it.notationId == notationId }?.downbeat ?: Beats(0)
 
 private const val SEMITONES_PER_STEP = 12.0 / 7
 private val MIN_NOTE_TICKS = NoteValue.Sixteenth.ticks

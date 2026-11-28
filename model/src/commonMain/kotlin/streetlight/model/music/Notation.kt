@@ -28,12 +28,21 @@ value class NotationId(val value: Uuid) {
     companion object { fun random() = NotationId(Uuid.random()) }
 }
 
-/** The [notations] played in order as [notationId], shown as [name], each a notation or another arrangement. */
+/**
+ * The [notations] played in order as [notationId], shown as [name], each a notation or another arrangement, played
+ * [repeats] times after [wait] measures of rest, once and at once when they are `null`.
+ */
 @Serializable
 data class Arrangement(
     val notationId: NotationId,
     val name: String,
     val notations: List<NotationId>,
-    val repeats: Int?,
-    val wait: Int?,
+    val repeats: Int? = null,
+    val wait: Int? = null,
 )
+
+/** The number of notes of [noteTicks], each of its ticks, that start before [downbeat], which make up a pickup. */
+fun pickupCountOf(noteTicks: List<Int>, downbeat: Beats): Int {
+    var tick = 0
+    return noteTicks.takeWhile { ticks -> (tick < downbeat.ticks).also { tick += ticks } }.size
+}

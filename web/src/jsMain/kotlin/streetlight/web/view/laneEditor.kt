@@ -95,8 +95,8 @@ private fun ViewScope.lane(laneIndex: Int, lane: Lane) {
             leadElement = div(modify(VoidBg, LaneStyle.LeadIn))
             lane.sections.forEach { section ->
                 sections += section to div(modify(LaneStyle.Section, LaneStyle.RepeatSection.takeIf { section.isRepeat })) {
-                    textBlock(section.notation.name, modify(LaneStyle.SectionLabel, TextSmall))
-                    notationMeasures(section.notation, VoidBg) { note, noteElement ->
+                    textBlock(section.label, modify(LaneStyle.SectionLabel, TextSmall))
+                    notationMeasures(model.sourceState.now, lane.track, section.line, VoidBg) { note, noteElement ->
                         // wireNoteDrag(laneIndex, section, note, noteElement)
                     }
                 }

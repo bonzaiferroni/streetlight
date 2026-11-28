@@ -123,6 +123,12 @@ internal fun readTrackText(
                 val property = PropertyLine(label.removePrefix(PROPERTY_MARK).trim(), value, line.number)
                 when {
                     current != null && property.label.equals(SECTIONS, ignoreCase = true) -> current.sectionsLine = property
+                    current is ArrangementPart && property.label.equals(REPEATS, ignoreCase = true) ->
+                        value.toIntOrNull()?.takeIf { it >= 1 }?.let { current.repeats = it } ?: error("Unknown repeats $value")
+                    current is ArrangementPart && property.label.equals(WAIT, ignoreCase = true) ->
+                        value.toIntOrNull()?.takeIf { it >= 0 }?.let { current.wait = it } ?: error("Unknown wait $value")
+                    current is NotationPart && (property.label.equals(REPEATS, ignoreCase = true) ||
+                        property.label.equals(WAIT, ignoreCase = true)) -> error("${property.label} needs an arrangement")
                     current == null && property.label.equals(CAPO, ignoreCase = true) ->
                         readCapo(value)?.let { capo = it } ?: error("Unknown capo $value")
                     current == null && trackLabels.any { it.equals(property.label, ignoreCase = true) } ->
@@ -145,7 +151,7 @@ internal fun readTrackText(
         val held = namesOf(part.notations).mapNotNull { name ->
             idsByName[name] ?: null.also { errors.add(NotationError(part.line, "No notation named $name")) }
         }
-        part to Arrangement(ids.getValue(part), part.label, held)
+        part to Arrangement(ids.getValue(part), part.label, held, part.repeats, part.wait)
     }
     val arrangements = arranged.filter { (part, arrangement) ->
         val holdsItself = arrangement.notationId.isReachedFrom(arrangement.notations, arranged.map { it.second })
@@ -196,7 +202,10 @@ private class NotationPart(name: String?, line: Int) : PartText(name, line) {
 }
 
 /** An arrangement of a track's text, playing the [notations] it names in order, as it is read. */
-private class ArrangementPart(name: String, val notations: String, line: Int) : PartText(name, line)
+private class ArrangementPart(name: String, val notations: String, line: Int) : PartText(name, line) {
+    var repeats: Int? = null
+    var wait: Int? = null
+}
 
 /** Whether this notation is reached by following [notationIds] through [arrangements]. */
 private fun NotationId.isReachedFrom(notationIds: List<NotationId>, arrangements: List<Arrangement>): Boolean {
@@ -380,6 +389,8 @@ internal fun writeTrackBodies(
     for (arrangement in track.arrangements) {
         appendLine("${arrangement.name}: ${arrangement.notations.joinToString(NAME_SEPARATOR_TEXT) { nameOf(it) }}")
         appendSections(arrangement.notationId, arrangement.name)
+        arrangement.repeats?.let { appendLine("$PROPERTY_MARK$REPEATS: $it") }
+        arrangement.wait?.let { appendLine("$PROPERTY_MARK$WAIT: $it") }
         appendLine()
     }
 }.trimEnd()
@@ -458,6 +469,8 @@ private const val PROPERTY_MARK = "-"
 
 private const val CAPO = "capo"
 private const val SECTIONS = "sections"
+private const val REPEATS = "repeats"
+private const val WAIT = "wait"
 private const val NAME_SEPARATOR = ','
 private const val NAME_SEPARATOR_TEXT = ", "
 private const val MAX_CAPO = 12

@@ -14,7 +14,7 @@ import streetlight.model.music.text.NotationError
 import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.notationParseOf
 import streetlight.model.music.trackOf
-import streetlight.model.music.ui.notationLayoutOf
+import streetlight.model.music.ui.musicSourceOf
 import streetlight.model.music.withNotation
 
 class NotationEditor(
@@ -28,7 +28,7 @@ class NotationEditor(
     private val state = storeOf(NotationEditorState())
     val sheetState = host.sheetState
     val notationState = sheetState.tapOf { it.notationOf(notationId) }
-    val notationLayoutState = sheetState.tapOf { it.notationLayoutOf(notationId) }
+    val musicSourceState = sheetState.tapOf { it.musicSourceOf(notationId) }
     val trackState = sheetState.tapOf { it.trackOf(notationId) }
     val nameState = trackState.tapOf { it.nameOf(notationId) }
     val errorsState = state.tapOf { it.errors }

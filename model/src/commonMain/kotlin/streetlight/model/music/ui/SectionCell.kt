@@ -7,7 +7,6 @@ import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationsOf
-import streetlight.model.music.repeatsOf
 import streetlight.model.music.trackOrNullOf
 
 /** The cells of a song in an overview: its [sectionCells], then the [trackCells] of each track. */
@@ -55,11 +54,7 @@ fun MusicSheet.notationCellsOf(trackId: TrackId): List<SectionCell> {
     return getSectionCells().map { cell ->
         val notationId = track.sections[cell.sectionId] ?: return@map cell
         val notations = track.notationsOf(notationId) ?: return@map cell
-        val span = music.time.measure * cell.measures
         val passes = notations.map { NotationCell(it.notationId, track.nameOf(it.notationId), it.length.ticks / measureTicks) }
-        cell.copy(
-            passes = List(track.repeatsOf(notationId, span)) { passes }.flatten(),
-            notationId = notationId,
-        )
+        cell.copy(passes = passes, notationId = notationId)
     }
 }

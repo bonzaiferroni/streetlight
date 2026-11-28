@@ -10,12 +10,14 @@ The presentation model of notation: the domain model of `streetlight.model.music
 |---|---|
 | `streetlight.model.music` | The songs and tracks it lays out as notation |
 
-## Layout
+## Music Source
 
-A type here states what is drawn and where, as shares of a section and staff steps. It holds no toolkit type and no unit of a screen, such as a pixel or a color.
+A `MusicSource` unfolds a target, the song or one notation, into a measure grid and a `TrackSource` for each track it holds. Tick 0 is the target's first downbeat, measure 0 is the pickup before it, and every other measure is a full measure of the time signature, so a measure's tick and length follow from its index.
 
-A note's horizontal place is its onset, so it meets a playback cursor as it sounds.
+A track's events are sorted by tick, each carrying the `notationId` and index of the note it comes from, so an edit traces back to its notation. A melody track carries the syllables of its lyric track among its events.
 
-Measures are numbered from 1 across a notation, and a pickup is measure 0. A pickup's width is in addition to the section it leads. Each notation of an arrangement starts its measures at its own start and breaks them into lines by its own `measuresPerLine`, and the pickup joins the first line.
+A track's measures and lines are spans of indices: a measure over the track's events, and a line over the measures, broken by each notation's `measuresPerLine`.
 
-A `StaffWindow` keeps room below its staff for lines of lyrics, each as tall as the notation of a lyric track, and every step of a notation counts from the bottom of that room. A notation drawn once carries each different line sung to it, and one drawn for a single time through carries the line of that time.
+## Drawing
+
+A view draws a `MeasureLine` of a track and derives what it draws from the events: a note's onset across its measure, its heads and ledgers from the track's `StaffWindow`, and its value from its beats. A drum draws as its heads alone, and a rest draws nothing.

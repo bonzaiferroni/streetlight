@@ -15,8 +15,10 @@ import kotlinx.css.pct
 import kotlinx.css.px
 import streetlight.model.music.Beats
 import kotlinx.css.LinearDimension
-import streetlight.model.music.ui.NotationLayout
-import streetlight.model.music.ui.lines
+import streetlight.model.music.ui.MusicSource
+import streetlight.model.music.ui.musicSourceOf
+import streetlight.model.music.ui.NoteValue
+import streetlight.model.music.ui.TrackSource
 import streetlight.web.dom.layout.actionMenu
 import streetlight.web.dom.layout.actionRow
 import streetlight.web.dom.layout.actionSection
@@ -125,7 +127,7 @@ private fun ViewScope.trackRow(track: Track) {
             else model.readTrack(trackId)?.let { track ->
                 contentScope.launch {
                     val sheet = model.sheetState.now
-                    sheet.musicPlanOf(listOf(track.trackId), waveShelf.musicWavesOf(sheet))?.let {
+                    sheet.musicSourceOf(null, track.trackId).musicPlanOf(listOf(track.trackId), waveShelf.musicWavesOf(sheet))?.let {
                         player.play(it)
                     }
                 }
@@ -322,13 +324,13 @@ fun ViewScope.namePopover(id: Id, label: String, onSubmit: (String) -> Boolean) 
     }
 }
 
-/** The strips of [layout], a line of its text to each, with its lyrics under each while [config] shows them. */
+/** The strips of [track] in [source], a line of its text to each, with its lyrics under each while [config] shows them. */
 context(config: MusicConfig)
-fun ViewScope.notationStrips(layout: NotationLayout) {
-    val lines = layout.lines()
-    // the pickup and staff hang off the left of each strip, so a margin as wide as the widest keeps them in the pane
-    val leadTicks = lines.maxOfOrNull { maxOf(it.pickupShare, it.staffLeadShare) * it.ticks } ?: 0.0
-    val paneTicks = layout.lineTicks + leadTicks
+fun ViewScope.notationStrips(source: MusicSource, track: TrackSource) {
+    val lines = track.layout.lines
+    // the pickup and staff hang off the left of each strip, so a margin as wide as the wider keeps them in the pane
+    val leadTicks = maxOf(source.pickup.ticks, NoteValue.Sixteenth.ticks).toDouble()
+    val paneTicks = (lines.maxOfOrNull { source.downbeatTicksOf(it) } ?: 0) + leadTicks
     // a line of few measures would stretch across a wide pane, so a beat takes no more than its widest
     val maxWidth = LinearDimension("calc(var(--unit) * ${paneTicks / Beats.TICKS_PER_BEAT * MAX_BEAT_UNITS})")
     // the first head and its sharp reach left of their onset by a fixed width, which no margin of ticks covers
@@ -337,11 +339,11 @@ fun ViewScope.notationStrips(layout: NotationLayout) {
         lines.forEach { line ->
             val place = modify(
                 Css.MarginLeft.of((leadTicks / paneTicks * 100).pct),
-                Css.Width.of((line.ticks / paneTicks * 100).pct),
+                Css.Width.of((source.downbeatTicksOf(line) / paneTicks * 100).pct),
             )
             // each line on a band of its own, the band reaching the whole width however short the line
             div(modify(ZenBg, Css.PaddingLeft.of(headRoom))) {
-                notationMeasures(line, place)
+                notationMeasures(source, track, line, place)
             }
         }
     }

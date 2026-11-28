@@ -18,7 +18,6 @@ import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.nameOf
-import streetlight.model.music.repeatsOf
 import streetlight.model.music.sectionIdsOf
 import streetlight.model.music.trackOrNullOf
 import streetlight.model.music.ui.SectionCell
@@ -42,15 +41,10 @@ class TrackEditor(
 fun MusicSheet.warningsOf(trackId: TrackId): List<String> {
     val track = trackOrNullOf(trackId) ?: return emptyList()
     return track.sections.mapNotNull { (sectionId, notationId) ->
-        val length = track.lengthOf(notationId) ?: return@mapNotNull null
+        val length = track.lengthOf(notationId, music.time) ?: return@mapNotNull null
         val span = music.lengthOf(sectionId) ?: return@mapNotNull null
-        val notationName = track.nameOf(notationId)
-        val shortfall = span.ticks - length.ticks * track.repeatsOf(notationId, span)
-        when {
-            length > span -> "$notationName runs ${(length.ticks - span.ticks).toBeatsText()} beats past ${music.nameOf(sectionId)}"
-            shortfall > 0 -> "$notationName falls ${shortfall.toBeatsText()} beats short of ${music.nameOf(sectionId)} after its repeats"
-            else -> null
-        }
+        if (length <= span) return@mapNotNull null
+        "${track.nameOf(notationId)} runs ${(length.ticks - span.ticks).toBeatsText()} beats past ${music.nameOf(sectionId)}"
     }
 }
 
