@@ -27,6 +27,7 @@ data class Groove(
     val slotsPerMeasure: Int = 16,
     override val measuresPerLine: Int = 2,
 ) : Notation {
+    override val downbeat get() = Beats(0)
     override val length get() = Beats(lanes.maxOfOrNull { lane -> lane.beats.sumOf { it.beats.ticks } } ?: 0)
     override val trackType get() = TrackType.Drums
 }

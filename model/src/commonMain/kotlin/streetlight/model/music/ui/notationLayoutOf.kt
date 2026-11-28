@@ -13,20 +13,20 @@ import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
 import streetlight.model.music.Stanza
 import streetlight.model.music.TimeSignature
-import streetlight.model.music.Track
 import streetlight.model.music.TrackId
 import streetlight.model.music.lengthOf
 import streetlight.model.music.lyricLinesOf
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationsOf
 import streetlight.model.music.toMidi
+import streetlight.model.music.trackOrNullOf
 
 /**
  * The layout of [notationId], or `null` when it has no length, with each line sung to it, or only the line of the pass
  * at [passIndex] when one is given.
  */
 fun MusicSheet.notationLayoutOf(notationId: NotationId, passIndex: Int? = null): NotationLayout? {
-    val track = trackHolding(notationId) ?: return null
+    val track = trackOrNullOf(notationId) ?: return null
     val ticks = track.lengthOf(notationId)?.ticks?.takeIf { it > 0 } ?: return null
     val sections = track.notationsOf(notationId).orEmpty()
     val window = staffWindowOf(track.trackId)
@@ -81,14 +81,14 @@ private fun measureLayoutsOf(
     var number = 0
     var line = 0
     sections.forEachIndexed { index, section ->
-        val count = (section.length.ticks + measureTicks - 1) / measureTicks
-        val perLine = section.measuresPerLine.coerceAtLeast(1)
-        repeat(count) { measureIndex ->
+        val measureCount = (section.length.ticks + measureTicks - 1) / measureTicks
+        val measuresPerLine = section.measuresPerLine.coerceAtLeast(1)
+        repeat(measureCount) { measureIndex ->
             val start = starts[index] + measureIndex * measureTicks
             val length = minOf(measureTicks, starts[index + 1] - start)
-            measures += measureLayoutOf(++number, line + measureIndex / perLine, start, length, listOf(index, index + 1))
+            measures += measureLayoutOf(++number, line + measureIndex / measuresPerLine, start, length, listOf(index, index + 1))
         }
-        line += (count + perLine - 1) / perLine
+        line += (measureCount + measuresPerLine - 1) / measuresPerLine
     }
     return measures
 }
@@ -119,7 +119,7 @@ private fun notesLayoutOf(
 fun MusicSheet.staffWindowOf(trackId: TrackId, dragRoom: Int = DRAG_ROOM_STEPS): StaffWindow {
     val track = tracks.first { it.trackId == trackId }
     if (track is LyricTrack) return LYRIC_WINDOW
-    val steps = track.notations.flatMap { drawnMidisOf(it, music.key) }.map { staffStepOf(it, music.key) }
+    val steps = track.notations.flatMap { midiChordOf(it, music.key) }.map { staffStepOf(it, music.key) }
     val low = minOf(steps.minOrNull() ?: STAFF_LOW, STAFF_LOW)
     val high = maxOf(steps.maxOrNull() ?: STAFF_HIGH, STAFF_HIGH)
     return StaffWindow(low - dragRoom, high + dragRoom)
@@ -131,12 +131,8 @@ private fun MusicSheet.vocalLinesOf(notationId: NotationId, passIndex: Int?): Li
     return if (passIndex == null) lines.filter { it.isNotEmpty() }.distinct() else listOfNotNull(lines.getOrNull(passIndex))
 }
 
-private fun MusicSheet.trackHolding(notationId: NotationId): Track? = tracks.firstOrNull { track ->
-    track.notations.any { it.notationId == notationId } || track.arrangements.any { it.notationId == notationId }
-}
-
 /** The ticks of the pickup of [section]. */
-private fun pickupTicksOf(section: Notation) = when (section) {
+fun pickupTicksOf(section: Notation) = when (section) {
     is Phrase -> section.pickup.sumOf { it.beats.ticks }
     is Progression -> section.pickup.sumOf { it.beats.ticks }
     is Stanza -> section.pickup.sumOf { it.beats.ticks }
@@ -145,8 +141,8 @@ private fun pickupTicksOf(section: Notation) = when (section) {
 
 /** The layout of the note at [source], [onset] across its measure, within [window]. */
 private fun noteLayoutOf(source: NoteSource, onset: Double, window: StaffWindow, key: Key): NoteLayout {
-    val (value, isDotted) = noteValueOf(source.ticks)
-    val staffSteps = (source.chord?.let { drawnMidisOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
+    val (value, isDotted) = noteValuePairOf(source.ticks)
+    val staffSteps = (source.chord?.let { midiChordOf(it, key) } ?: listOf(source.midi)).map { staffStepOf(it, key) }
     val lowest = staffSteps.min()
     val isRaised = (source.midi - key.majorTonic.value).mod(12) in RAISED_SEMITONES
     return NoteLayout(
@@ -162,12 +158,12 @@ private fun noteLayoutOf(source: NoteSource, onset: Double, window: StaffWindow,
 }
 
 /** The MIDI numbers [chord] is drawn at in [key], an octave above where it sounds, so it sits on the treble staff. */
-private fun drawnMidisOf(chord: Chord, key: Key) = chord.toMidi(key).map { it + CHORD_DRAWN_SEMITONES }
+fun midiChordOf(chord: Chord, key: Key) = chord.toMidi(key).map { it + CHORD_DRAWN_SEMITONES }
 
 /** The MIDI numbers of every note [section] draws in [key]. */
-private fun drawnMidisOf(section: Notation, key: Key): List<Int> = when (section) {
+private fun midiChordOf(section: Notation, key: Key): List<Int> = when (section) {
     is Phrase -> (section.pickup + section.notes).mapNotNull { it.interval?.toMidi(key) }
-    is Progression -> (section.pickup + section.notes).flatMap { note -> note.chord?.let { drawnMidisOf(it, key) }.orEmpty() }
+    is Progression -> (section.pickup + section.notes).flatMap { note -> note.chord?.let { midiChordOf(it, key) }.orEmpty() }
     else -> emptyList()
 }
 
@@ -192,7 +188,7 @@ private fun noteSourcesOf(section: Notation, sectionStart: Int, key: Key): List<
                 var tick = start
                 notes.forEachIndexed { index, (chord, ticks) ->
                     if (chord != null) {
-                        val midi = drawnMidisOf(chord, key).first()
+                        val midi = midiChordOf(chord, key).first()
                         sources.add(NoteSource(section.notationId, index, isPickup, tick, ticks, midi, chord))
                     }
                     tick += ticks
@@ -272,7 +268,7 @@ private fun ledgersOf(lowest: Int, highest: Int) =
     (STAFF_HIGH + 2..highest step 2).toList() + (STAFF_LOW - 2 downTo lowest step 2).toList()
 
 /** The value written for [ticks], the longest that fits, and whether it wants a dot for the half more. */
-private fun noteValueOf(ticks: Int): Pair<NoteValue, Boolean> {
+private fun noteValuePairOf(ticks: Int): Pair<NoteValue, Boolean> {
     val value = NoteValue.entries.firstOrNull { it.ticks <= ticks } ?: NoteValue.Sixteenth
     return value to (ticks * 2 >= value.ticks * 3)
 }

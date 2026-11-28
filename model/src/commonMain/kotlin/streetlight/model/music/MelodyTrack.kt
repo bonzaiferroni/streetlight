@@ -18,16 +18,16 @@ data class MelodyTrack(
     override val trackType get() = TrackType.Melody
 }
 
-/** The [notes] of a melody notation, led by a [pickup] that sounds at the end of the measure before it. */
+/** The [notes] of a melody notation, those before its [downbeat] a pickup that sounds at the end of the measure before it. */
 @Serializable
 data class Phrase(
     override val notationId: NotationId,
     override val name: String?,
     val notes: List<MelodyNote>,
-    val pickup: List<MelodyNote> = emptyList(),
+    override val downbeat: Beats = Beats(0),
     override val measuresPerLine: Int = 4,
 ) : Notation {
-    override val length get() = Beats(notes.sumOf { it.beats.ticks })
+    override val length get() = Beats(notes.sumOf { it.beats.ticks } - downbeat.ticks)
     override val trackType get() = TrackType.Melody
 }
 

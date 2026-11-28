@@ -131,7 +131,8 @@ private fun Track.notationsOf(notationId: NotationId, visited: Set<NotationId>):
     if (notationId in visited) return null
     notations.firstOrNull { it.notationId == notationId }?.let { return listOf(it) }
     val arrangement = arrangements.firstOrNull { it.notationId == notationId } ?: return null
-    return arrangement.notations.flatMap { notationsOf(it, visited + notationId) ?: return null }
+    val list = arrangement.notations.flatMap { notationsOf(it, visited + notationId) ?: return null }
+    return arrangement.repeats?.let { (1..it).flatMap { list } } ?: list
 }
 
 /** The length of [notationId] in this track, or `null` when the track does not define it. */

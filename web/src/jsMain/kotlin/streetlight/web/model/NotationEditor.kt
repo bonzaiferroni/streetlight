@@ -6,15 +6,10 @@ import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.music.MelodyTrack
-import streetlight.model.music.MusicSheet
 import streetlight.model.music.NotationId
-import streetlight.model.music.Phrase
 import streetlight.model.music.Study
-import streetlight.model.music.lyricsOf
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationOf
-import streetlight.model.music.sectionIdsOf
 import streetlight.model.music.text.NotationError
 import streetlight.model.music.text.NotationStyle
 import streetlight.model.music.text.notationParseOf

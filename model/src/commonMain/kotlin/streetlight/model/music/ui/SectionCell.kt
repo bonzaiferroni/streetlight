@@ -8,7 +8,6 @@ import streetlight.model.music.TrackId
 import streetlight.model.music.nameOf
 import streetlight.model.music.notationsOf
 import streetlight.model.music.repeatsOf
-import streetlight.model.music.trackOf
 import streetlight.model.music.trackOrNullOf
 
 /** The cells of a song in an overview: its [sectionCells], then the [trackCells] of each track. */

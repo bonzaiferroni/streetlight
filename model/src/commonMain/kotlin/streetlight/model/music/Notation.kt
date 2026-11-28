@@ -5,11 +5,15 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
-/** The notes of a part of a track, [length] long, shown as [name] and written [measuresPerLine] measures to a line. */
+/**
+ * The notes of a part of a track, [length] long from its first [downbeat], shown as [name] and written
+ * [measuresPerLine] measures to a line.
+ */
 @Serializable
 sealed interface Notation: Labeled {
     val notationId: NotationId
     val name: String?
+    val downbeat: Beats
     val length: Beats
     val measuresPerLine: Int
     val trackType: TrackType
@@ -30,4 +34,6 @@ data class Arrangement(
     val notationId: NotationId,
     val name: String,
     val notations: List<NotationId>,
+    val repeats: Int?,
+    val wait: Int?,
 )

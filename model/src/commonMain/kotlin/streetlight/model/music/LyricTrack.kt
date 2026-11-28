@@ -15,16 +15,16 @@ data class LyricTrack(
     override val trackType get() = TrackType.Lyrics
 }
 
-/** The [notes] of a lyric notation, led by a [pickup] that sounds at the end of the measure before it. */
+/** The [notes] of a lyric notation, those before its [downbeat] a pickup that sounds at the end of the measure before it. */
 @Serializable
 data class Stanza(
     override val notationId: NotationId,
     override val name: String?,
     val notes: List<LyricNote>,
-    val pickup: List<LyricNote> = emptyList(),
+    override val downbeat: Beats = Beats(0),
     override val measuresPerLine: Int = 2,
 ) : Notation {
-    override val length get() = Beats(notes.sumOf { it.beats.ticks })
+    override val length get() = Beats(notes.sumOf { it.beats.ticks } - downbeat.ticks)
     override val trackType get() = TrackType.Lyrics
 }
 

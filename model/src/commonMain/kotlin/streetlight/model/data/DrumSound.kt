@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class DrumSound(
     val beat: Int,
     val duration: Int?,
-    val expression: DrumNote,
+    val expression: DrumNoteLegacy,
     val isPhraseEnd: Boolean,
     val pitch: Int?
 ) {
@@ -19,7 +19,7 @@ data class DrumSound(
 }
 
 /** The drums a [DrumSound] can play. */
-enum class DrumNote(val shortId: String) {
+enum class DrumNoteLegacy(val shortId: String) {
     Snare("Sn"),
     Kick("Ki"),
     Tom("To"),
@@ -78,7 +78,7 @@ fun parseDrumSound(text: String, isPhraseEnd: Boolean): DrumSound? {
     )
 }
 
-fun toDrumNote(text: String) = DrumNote.entries.firstOrNull { it.shortId.equals(text, true) }
+fun toDrumNote(text: String) = DrumNoteLegacy.entries.firstOrNull { it.shortId.equals(text, true) }
 
 fun toDrumDuration(split: List<String>) = split.firstOrNull { it.startsWith("d") }?.substring(1)?.toIntOrNull()
 

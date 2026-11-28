@@ -48,6 +48,7 @@ BD|o-----------|----o-o-o-o-|
 
 Song: Fill A, Fill B
 -sections: Verse A, Verse B, Verse C
+-repeats: 4
 
 ## Lyrics (Lyrics)
 

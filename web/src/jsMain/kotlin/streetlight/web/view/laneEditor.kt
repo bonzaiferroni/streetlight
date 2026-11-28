@@ -70,7 +70,7 @@ private fun ViewScope.timeStepControl() {
     flowBlock(model.timeStepState) { step ->
         button(mod = modify(Zen, Attribute.AriaLabel.to("Time step"))) {
             setPopoverTarget(menuId, true)
-            div(modify(MeasureStyle.Note, MeasureStyle.ControlNote, step.shape)) {
+            div(modify(MeasureStyle.Note, MeasureStyle.ControlNote, step.shapeMod)) {
                 div(MeasureStyle.Head)
             }
         }
