@@ -6,6 +6,7 @@ import streetlight.model.music.Drum
 import streetlight.model.music.DrumHit
 import streetlight.model.music.Key
 import streetlight.model.music.NotationId
+import streetlight.model.music.SectionId
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackId
 import streetlight.model.music.TrackType
@@ -61,6 +62,7 @@ sealed interface NotationEvent {
     val beats: Beats
     val notationId: NotationId
     val index: Int
+    val sectionId: SectionId?
 }
 
 data class NoteEvent(
@@ -69,6 +71,7 @@ data class NoteEvent(
     override val beats: Beats,
     override val notationId: NotationId,
     override val index: Int,
+    override val sectionId: SectionId?,
 ): NotationEvent
 
 data class DrumEvent(
@@ -78,6 +81,7 @@ data class DrumEvent(
     override val beats: Beats,
     override val notationId: NotationId,
     override val index: Int,
+    override val sectionId: SectionId?,
 ): NotationEvent
 
 data class ChordEvent(
@@ -86,6 +90,7 @@ data class ChordEvent(
     override val beats: Beats,
     override val notationId: NotationId,
     override val index: Int,
+    override val sectionId: SectionId?,
 ): NotationEvent
 
 data class VocalEvent(
@@ -94,6 +99,7 @@ data class VocalEvent(
     override val beats: Beats,
     override val notationId: NotationId,
     override val index: Int,
+    override val sectionId: SectionId?,
 ): NotationEvent
 
 /** The [lines] a track is drawn in, tiling the measures it plays by index, within [window]. */
@@ -114,7 +120,7 @@ data class MeasureSpan(
 
 /**
  * A time a track plays [notationId], shown as [label], for [ticks] from its first downbeat at [start], with [pickup]
- * before it, an arrangement when [isArrangement].
+ * before it, as section [sectionId] when it plays within one, an arrangement when [isArrangement].
  */
 data class NotationSpan(
     val notationId: NotationId,
@@ -123,6 +129,7 @@ data class NotationSpan(
     val ticks: Int,
     val pickup: Beats,
     val isArrangement: Boolean,
+    val sectionId: SectionId? = null,
 ) {
     /** Whether [event] is one this span plays, its pickup included. */
     fun holds(event: NotationEvent) = event.notationId == notationId && event.tick in start - pickup.ticks until start + ticks

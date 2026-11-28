@@ -12,9 +12,9 @@ import streetlight.model.music.Progression
 import streetlight.model.music.Stanza
 import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackType
-import streetlight.model.music.lyricsOf
 import streetlight.model.music.sectionIdsOf
 import streetlight.model.music.trackOf
+import streetlight.model.music.ui.lyricsOf
 
 /**
  * Reads [text], the measures of [notation] alone, in the notation of its track type against [music]. The notation read

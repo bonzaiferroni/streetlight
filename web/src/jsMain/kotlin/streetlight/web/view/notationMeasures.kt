@@ -36,10 +36,10 @@ fun ViewScope.notationMeasures(
     mod: Modifier? = null,
     onNote: ((NotationEvent, HTMLElement) -> Unit)? = null,
 ) {
-    if (track.trackType == TrackType.Lyrics) return vocalStrip(source, track, line, mod)
+    if (track.trackType == TrackType.Lyrics) return vocalStrips(source, track, line, mod)
     staffStrip(source, track, line, mod, onNote)
     if (track.events.none { it is VocalEvent }) return
-    div(null) { vocalStrip(source, track, line, mod) }
+    div(null) { vocalStrips(source, track, line, mod) }
         .flowModifier(config.isLyricsShownState.tapOf { !it }, DisplayNone, contentScope)
 }
 
@@ -73,13 +73,20 @@ private fun ViewScope.staffStrip(
     }
 }
 
-/** Renders the vocals of [line] as a strip with [mod]. */
-private fun ViewScope.vocalStrip(source: MusicSource, track: TrackSource, line: MeasureLine, mod: Modifier?) {
-    div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(VOCAL_LINE_STEPS)))) {
-        for (index in line.measureStart until line.measureEnd) {
-            div(source.measureMod(line, index)) {
-                track.eventsOf(index).filterIsInstance<VocalEvent>().forEach { vocal ->
-                    vocal.text?.let { syllable(it, source.onsetOf(vocal, index)) }
+/**
+ * Renders the vocals of [line] as strips with [mod]: one for the song, or one for each section sung to a target, as its
+ * verses would overlap.
+ */
+private fun ViewScope.vocalStrips(source: MusicSource, track: TrackSource, line: MeasureLine, mod: Modifier?) {
+    val vocals = track.events.filterIsInstance<VocalEvent>()
+    val sectionIds = if (source.targetId == null) listOf(null) else vocals.map { it.sectionId }.distinct()
+    sectionIds.forEach { sectionId ->
+        div(modify(mod, MeasureStyle.Strip, Css.Height.of(stepsHeight(VOCAL_LINE_STEPS)))) {
+            for (index in line.measureStart until line.measureEnd) {
+                div(source.measureMod(line, index)) {
+                    track.eventsOf(index).filterIsInstance<VocalEvent>()
+                        .filter { sectionId == null || it.sectionId == sectionId }
+                        .forEach { vocal -> vocal.text?.let { syllable(it, source.onsetOf(vocal, index)) } }
                 }
             }
         }

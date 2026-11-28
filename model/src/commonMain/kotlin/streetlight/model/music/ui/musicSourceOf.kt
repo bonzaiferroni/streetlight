@@ -38,7 +38,10 @@ fun MusicSheet.musicSourceOf(
             // the lyrics of each section the notation plays, each from its first downbeat
             val sectionIds = music.arrangement.filter { track.sections[it] == targetNotationId }.distinct()
             lyricSpans = lyrics?.let { lyricTrack ->
-                sectionIds.flatMap { sectionId -> lyricTrack.sections[sectionId]?.let { lyricTrack.notationSpansOf(it, measureTicks) }.orEmpty() }
+                sectionIds.flatMap { sectionId ->
+                    val lyricId = lyricTrack.sections[sectionId] ?: return@flatMap emptyList()
+                    lyricTrack.notationSpansOf(lyricId, measureTicks).orEmpty().map { it.copy(sectionId = sectionId) }
+                }
             }.orEmpty()
         }
         val lyricEvents = lyrics?.let { lyricTrack -> lyricSpans.flatMap { lyricTrack.eventsOf(it, music.key) } }.orEmpty()
@@ -81,7 +84,7 @@ private fun MusicSheet.songSpansOf(track: Track): List<NotationSpan> {
         val start = sectionStart
         sectionStart += music.lengthOf(sectionId)?.ticks ?: 0
         val notationId = track.sections[sectionId] ?: return@flatMap emptyList()
-        track.notationSpansOf(notationId, music.time.measure.ticks).orEmpty().map { it.copy(start = start + it.start) }
+        track.notationSpansOf(notationId, music.time.measure.ticks).orEmpty().map { it.copy(start = start + it.start, sectionId = sectionId) }
     }
 }
 
@@ -101,18 +104,18 @@ private fun Track.eventsOf(span: NotationSpan, key: Key): List<NotationEvent> {
     }
     when (notation) {
         is Phrase -> notation.notes.forEachIndexed { index, note ->
-            addEvent(NoteEvent(note.interval?.toMidi(key), tick, note.beats, notationId, index))
+            addEvent(NoteEvent(note.interval?.toMidi(key), tick, note.beats, notationId, index, span.sectionId))
         }
         is Progression -> notation.notes.forEachIndexed { index, note ->
-            addEvent(ChordEvent(note.chord, tick, note.beats, notationId, index))
+            addEvent(ChordEvent(note.chord, tick, note.beats, notationId, index, span.sectionId))
         }
         is Stanza -> notation.notes.forEachIndexed { index, note ->
-            addEvent(VocalEvent(note.text, tick, note.beats, notationId, index))
+            addEvent(VocalEvent(note.text, tick, note.beats, notationId, index, span.sectionId))
         }
         is Groove -> notation.lanes.forEach { lane ->
             tick = span.start
             lane.beats.forEachIndexed { index, beat ->
-                addEvent(DrumEvent(lane.drum, beat.hit, tick, beat.beats, notationId, index))
+                addEvent(DrumEvent(lane.drum, beat.hit, tick, beat.beats, notationId, index, span.sectionId))
             }
         }
     }
@@ -155,7 +158,7 @@ private fun Track.notationSpansOf(notationId: NotationId, measureTicks: Int, vis
 }
 
 /** The lyric track sung to [track] in a song of these tracks: the one it names, or the first when it names none. */
-private fun List<Track>.lyricsOf(track: Track): LyricTrack? {
+fun List<Track>.lyricsOf(track: Track): LyricTrack? {
     if (track !is MelodyTrack) return null
     val lyricTracks = filterIsInstance<LyricTrack>()
     return if (track.lyricsId == null) lyricTracks.firstOrNull() else lyricTracks.firstOrNull { it.trackId == track.lyricsId }
