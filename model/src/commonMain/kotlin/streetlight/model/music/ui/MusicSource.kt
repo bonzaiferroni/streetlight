@@ -6,6 +6,7 @@ import streetlight.model.music.Drum
 import streetlight.model.music.Key
 import streetlight.model.music.NotationId
 import streetlight.model.music.TimeSignature
+import streetlight.model.music.TrackId
 import streetlight.model.music.TrackType
 
 data class MusicSource(
@@ -20,14 +21,25 @@ data class MusicSource(
 ) {
     /** The ticks from the first downbeat to the end. */
     val duration get() = measureCount * time.measure.ticks
+
+    val secondsPerTick get() = 60.0 / bpm / time.pulse.ticks
+
+    /** The tick measure [index] starts at, measure 0 the pickup that ends at the first downbeat. */
+    fun measureTickOf(index: Int) = if (index == 0) -pickup.ticks else (index - 1) * time.measure.ticks
+
+    /** The beats of measure [index], measure 0 the pickup. */
+    fun measureBeatsOf(index: Int) = if (index == 0) pickup else time.measure
 }
 
 data class TrackSource(
+    val trackId: TrackId,
     val name: String,
     val events: List<NotationEvent>,
     val measures: List<MeasureSpan>,
+    val passes: List<NotationPass>,
     val layout: ProtoNotationLayout,
     val trackType: TrackType,
+    val capo: Int?,
 )
 
 /* representation invariants:
