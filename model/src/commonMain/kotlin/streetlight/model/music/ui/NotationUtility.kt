@@ -41,10 +41,10 @@ fun headShapeOf(drum: Drum) = when (drum) {
 fun ledgersOf(lowest: Int, highest: Int) =
     (STAFF_HIGH + 2..highest step 2).toList() + (STAFF_LOW - 2 downTo lowest step 2).toList()
 
-/** The measures [pass] fills, the first downbeat of the source leading with the pickup. */
-fun MusicSource.measureLineOf(pass: NotationPass): MeasureLine {
-    val measureTicks = time.measure.ticks
-    val first = pass.start / measureTicks + 1
-    val end = first + (pass.notation.length.ticks + measureTicks - 1) / measureTicks
+/** The measures this span fills, [measureTicks] long, the first downbeat of the source leading with the pickup. */
+fun NotationSpan.measureLineOf(measureTicks: Int): MeasureLine {
+    // measure 0 is the pickup, so the span's first measure follows the measures before it
+    val first = start / measureTicks + 1
+    val end = first + (ticks + measureTicks - 1) / measureTicks
     return MeasureLine(if (first == 1) 0 else first, end)
 }

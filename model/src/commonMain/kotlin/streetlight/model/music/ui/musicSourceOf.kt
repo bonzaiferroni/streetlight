@@ -4,7 +4,6 @@ import streetlight.model.music.Beats
 import streetlight.model.music.Groove
 import streetlight.model.music.Key
 import streetlight.model.music.MusicSheet
-import streetlight.model.music.Notation
 import streetlight.model.music.NotationId
 import streetlight.model.music.Phrase
 import streetlight.model.music.Progression
@@ -41,9 +40,8 @@ fun MusicSheet.musicSourceOf(
                 sectionIds.flatMap { sectionId -> lyricTrack.sections[sectionId]?.let { lyricTrack.spansOf(it, measureTicks) }.orEmpty() }
             }.orEmpty()
         }
-        val passes = track.passesOf(spans)
-        val lyricPasses = lyrics?.passesOf(lyricSpans).orEmpty()
-        val events = (passes + lyricPasses).flatMap { eventsOf(it, music.key) }.sortedBy { it.tick }
+        val lyricEvents = lyrics?.let { lyricTrack -> lyricSpans.flatMap { lyricTrack.eventsOf(it, music.key) } }.orEmpty()
+        val events = (spans.flatMap { track.eventsOf(it, music.key) } + lyricEvents).sortedBy { it.tick }
 
         // measure 0 is the pickup, ending at the first downbeat, and each after it ends a measure later
         var eventIndex = 0
@@ -52,8 +50,8 @@ fun MusicSheet.musicSourceOf(
             while (eventIndex < events.size && events[eventIndex].tick < measureIndex * measureTicks) eventIndex++
             MeasureSpan(eventStart, eventIndex)
         }
-        val layout = NotationLayout(passes.flatMap { linesOf(it, measureTicks) }, staffWindowOf(track.trackId))
-        TrackSource(track.trackId, track.name, events, measures, passes, spans, layout, track.trackType, track.capo)
+        val layout = NotationLayout(spans.flatMap { track.linesOf(it, measureTicks) }, staffWindowOf(track.trackId))
+        TrackSource(track.trackId, track.name, events, measures, spans, layout, track.trackType, track.capo)
     }
     val pickupTicks = trackSources.maxOfOrNull { -(it.events.firstOrNull()?.tick ?: 0) }?.coerceAtLeast(0) ?: 0
 
@@ -86,17 +84,16 @@ private fun MusicSheet.songSpansOf(track: Track): List<NotationSpan> {
     }
 }
 
-/** The plays of the notations among [spans], leaving out the arrangements that hold them. */
-private fun Track.passesOf(spans: List<NotationSpan>) = spans.mapNotNull { span ->
-    notations.firstOrNull { it.notationId == span.notationId }?.let { NotationPass(it, span.start) }
-}
+/** The notation [span] plays in this track, or `null` for an arrangement. */
+private fun Track.notationOf(span: NotationSpan) =
+    notations.firstOrNull { it.notationId == span.notationId }.takeIf { !span.isArrangement }
 
-/** The events of [pass], its pitches in [key]. */
-private fun eventsOf(pass: NotationPass, key: Key): List<NotationEvent> {
-    val notation = pass.notation
+/** The events [span] plays in this track, its pitches in [key], none for an arrangement. */
+private fun Track.eventsOf(span: NotationSpan, key: Key): List<NotationEvent> {
+    val notation = notationOf(span) ?: return emptyList()
     val notationId = notation.notationId
     val events = mutableListOf<NotationEvent>()
-    var tick = pass.start - notation.downbeat.ticks
+    var tick = span.start - span.pickup.ticks
     fun addEvent(event: NotationEvent) {
         events.add(event)
         tick += event.beats.ticks
@@ -112,7 +109,7 @@ private fun eventsOf(pass: NotationPass, key: Key): List<NotationEvent> {
             addEvent(VocalEvent(note.text, tick, note.beats, notationId, index))
         }
         is Groove -> notation.lanes.forEach { lane ->
-            tick = pass.start
+            tick = span.start
             lane.beats.forEachIndexed { index, beat ->
                 addEvent(DrumEvent(lane.drum, beat.hit, tick, beat.beats, notationId, index))
             }
@@ -121,15 +118,13 @@ private fun eventsOf(pass: NotationPass, key: Key): List<NotationEvent> {
     return events
 }
 
-/** The lines of [pass], as spans of measures [measureTicks] long, the first line of the song leading with the pickup. */
-private fun linesOf(pass: NotationPass, measureTicks: Int): List<MeasureLine> {
-    val notation = pass.notation
-    // measure 0 is the pickup, so the notation's first measure follows the measures before it
-    val firstMeasure = pass.start / measureTicks + 1
-    val endMeasure = firstMeasure + (notation.length.ticks + measureTicks - 1) / measureTicks
-    val perLine = notation.measuresPerLine.coerceAtLeast(1)
-    return (firstMeasure until endMeasure step perLine).map { lineStart ->
-        MeasureLine(if (lineStart == 1) 0 else lineStart, minOf(lineStart + perLine, endMeasure))
+/** The lines [span] fills in this track, as spans of measures [measureTicks] long, none for an arrangement. */
+private fun Track.linesOf(span: NotationSpan, measureTicks: Int): List<MeasureLine> {
+    val perLine = notationOf(span)?.measuresPerLine?.coerceAtLeast(1) ?: return emptyList()
+    val line = span.measureLineOf(measureTicks)
+    // the pickup measure leads the first line, so lines step from the first measure after it
+    return (maxOf(line.measureStart, 1) until line.measureEnd step perLine).map { lineStart ->
+        MeasureLine(if (lineStart == 1) line.measureStart else lineStart, minOf(lineStart + perLine, line.measureEnd))
     }
 }
 
@@ -143,18 +138,17 @@ fun Track.spansOf(notationId: NotationId, measureTicks: Int): List<NotationSpan>
 
 private fun Track.spansOf(notationId: NotationId, measureTicks: Int, visited: Set<NotationId>): List<NotationSpan>? {
     if (notationId in visited) return null
-    notations.firstOrNull { it.notationId == notationId }?.let { return listOf(NotationSpan(notationId, 0, it.length.ticks)) }
+    notations.firstOrNull { it.notationId == notationId }?.let { notation ->
+        return listOf(NotationSpan(notationId, notation.label, 0, notation.length.ticks, notation.downbeat, false))
+    }
     val arrangement = arrangements.firstOrNull { it.notationId == notationId } ?: return null
     val held = arrangement.notations.map { spansOf(it, measureTicks, visited + notationId) ?: return null }
-    var start = (arrangement.wait ?: 0) * measureTicks
+    val wait = (arrangement.wait ?: 0) * measureTicks
+    var start = wait
     val played = List(arrangement.repeats ?: 1) { held }.flatten().flatMap { heldSpans ->
         heldSpans.map { it.copy(start = start + it.start) }.also { start += heldSpans.first().ticks }
     }
-    return listOf(NotationSpan(notationId, 0, start)) + played
+    // the first pickup reaches back through the wait, and before the arrangement only past it
+    val pickup = Beats(((played.firstOrNull()?.pickup?.ticks ?: 0) - wait).coerceAtLeast(0))
+    return listOf(NotationSpan(notationId, arrangement.name, 0, start, pickup, true)) + played
 }
-
-/** A time a track plays [notation], its first downbeat at [start]. */
-data class NotationPass(
-    val notation: Notation,
-    val start: Int,
-)

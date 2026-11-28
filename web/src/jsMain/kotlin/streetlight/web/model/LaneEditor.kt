@@ -148,13 +148,13 @@ private fun lanesOf(source: MusicSource): List<Lane> {
     val leadSeconds = leadSecondsOf(source)
     return source.tracks.map { track ->
         val played = mutableSetOf<NotationId>()
-        val sections = track.passes.map { pass ->
+        val sections = track.notations.filter { !it.isArrangement }.map { span ->
             LaneSection(
-                label = pass.notation.label,
-                line = source.measureLineOf(pass),
-                startSeconds = leadSeconds + pass.start * source.secondsPerTick,
-                durationSeconds = pass.notation.length.ticks * source.secondsPerTick,
-                isRepeat = !played.add(pass.notation.notationId),
+                label = span.label,
+                line = span.measureLineOf(source.time.measure.ticks),
+                startSeconds = leadSeconds + span.start * source.secondsPerTick,
+                durationSeconds = span.ticks * source.secondsPerTick,
+                isRepeat = !played.add(span.notationId),
             )
         }
         Lane(track.trackId, track.name, track.layout.window.steps, leadSeconds, track, sections)

@@ -18,6 +18,8 @@ A track's events are sorted by tick, each carrying the `notationId` and index of
 
 A track's measures and lines are spans of indices: a measure over the track's events, and a line over the measures, broken by each notation's `measuresPerLine`.
 
+A track's spans list each time it plays a notation or an arrangement, each arrangement ahead of what it holds. The spans that are not arrangements are the notations that compose the track, back to back; an arrangement's span marks where a clip or target bound to it plays.
+
 ## Drawing
 
 A view draws a `MeasureLine` of a track and derives what it draws from the events: a note's onset across its measure, its heads and ledgers from the track's `StaffWindow`, and its value from its beats. A drum draws as its heads alone, and a rest draws nothing.

@@ -39,7 +39,7 @@ fun MusicSource.musicPlanOf(playing: Collection<TrackId>, musicWaves: Map<TrackC
     val layers = musicTonesOf(playing, playingWaves.keys).filter { it.isNotEmpty }
     val waveStarts = playingWaves.flatMap { (trackClip, musicWave) ->
         val track = tracks.firstOrNull { it.trackId == trackClip.trackId } ?: return@flatMap emptyList()
-        val starts = trackClip.notationId?.let { notationId -> track.spans.filter { it.notationId == notationId }.map { it.start } }
+        val starts = trackClip.notationId?.let { notationId -> track.notations.filter { it.notationId == notationId }.map { it.start } }
             ?: listOf(0).takeIf { targetId == null }.orEmpty()
         starts.map { it to musicWave }
     }

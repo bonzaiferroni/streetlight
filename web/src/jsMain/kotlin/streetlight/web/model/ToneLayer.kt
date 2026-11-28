@@ -12,7 +12,6 @@ import streetlight.model.music.ui.ChordEvent
 import streetlight.model.music.ui.DrumEvent
 import streetlight.model.music.ui.MusicSource
 import streetlight.model.music.ui.NotationEvent
-import streetlight.model.music.ui.NotationPass
 import streetlight.model.music.ui.NoteEvent
 import streetlight.model.music.ui.VocalEvent
 
@@ -92,7 +91,7 @@ fun drummerLayerOf(time: TimeSignature, ticks: Int, isClickOn: Boolean): ToneLay
 
 /**
  * The tones of the tracks [trackIds] of this source, with both capos applied. A track or notation bound in [clips]
- * sounds no tones, as its clip plays in its place: a notation or arrangement silences each pass that starts within it,
+ * sounds no tones, as its clip plays in its place: a notation or arrangement silences each notation that starts within it,
  * and a whole track's clip silences the track in a source of the song.
  */
 fun MusicSource.musicTonesOf(
@@ -101,8 +100,8 @@ fun MusicSource.musicTonesOf(
 ): List<ToneLayer> = tracks.filter { it.trackId in trackIds }.map { track ->
     val trackClips = clips.filter { it.trackId == track.trackId }
     if (targetId == null && trackClips.any { it.notationId == null }) return@map ToneLayer(emptyList())
-    val clipped = track.spans.filter { span -> trackClips.any { it.notationId == span.notationId } }
-    val silenced = track.passes.filter { pass -> clipped.any { pass.start in it.start until it.start + it.ticks } }
+    val clipped = track.notations.filter { span -> trackClips.any { it.notationId == span.notationId } }
+    val silenced = track.notations.filter { span -> !span.isArrangement && clipped.any { span.start in it.start until it.start + it.ticks } }
     val capo = (capo ?: 0) + (track.capo ?: 0)
     val heard = track.events.filter { event -> silenced.none { it.holds(event) } }
     ToneLayer(heard.mapNotNull { toneOf(it, key, capo) })
@@ -121,10 +120,6 @@ private fun toneOf(event: NotationEvent, key: Key, capo: Int): Tone? = when (eve
     is DrumEvent -> event.hit?.let { DrumTone(event.tick, event.drum, it.volume) }
     is VocalEvent -> null
 }
-
-/** Whether [event] is one of this pass, its pickup included. */
-private fun NotationPass.holds(event: NotationEvent) = event.notationId == notation.notationId &&
-    event.tick in start - notation.downbeat.ticks until start + notation.length.ticks
 
 // a melody sounds over the chords beneath it
 private const val MELODY_VOLUME = 1.0

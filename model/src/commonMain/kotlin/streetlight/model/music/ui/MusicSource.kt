@@ -10,6 +10,10 @@ import streetlight.model.music.TimeSignature
 import streetlight.model.music.TrackId
 import streetlight.model.music.TrackType
 
+/**
+ * The target [targetId] of a song, the whole song when `null`, unfolded into [tracks] over a grid of [measureCount]
+ * measures after a [pickup], tick 0 at the target's first downbeat.
+ */
 data class MusicSource(
     val name: String,
     val targetId: NotationId?,
@@ -33,24 +37,24 @@ data class MusicSource(
     fun measureBeatsOf(index: Int) = if (index == 0) pickup else time.measure
 }
 
+/**
+ * A track of a [MusicSource], as its parts:
+ * - [events], sorted by tick
+ * - [measures], parallel to the grid: index 0 the pickup, empty when there is none, then a span for each measure,
+ *   together tiling [events] by index, each event in the measure that holds its tick
+ * - [notations], in order of start, each arrangement ahead of the spans it holds, which fall within its ticks; those that
+ *   are not arrangements tile the ticks the track plays, back to back but for an arrangement's wait
+ */
 data class TrackSource(
     val trackId: TrackId,
     val name: String,
     val events: List<NotationEvent>,
     val measures: List<MeasureSpan>,
-    val passes: List<NotationPass>,
-    val spans: List<NotationSpan>,
+    val notations: List<NotationSpan>,
     val layout: NotationLayout,
     val trackType: TrackType,
     val capo: Int?,
 )
-
-/* representation invariants:
--events are sorted by tick
--a track's measures run parallel to the grid: index 0 the pickup (empty when there is none), then measureCount measures
--a track's measures tile its events by index, each event in the measure that holds its tick
--lines tile the measures the track plays, by index
- */
 
 sealed interface NotationEvent {
     val tick: Int
@@ -92,6 +96,7 @@ data class VocalEvent(
     override val index: Int,
 ): NotationEvent
 
+/** The [lines] a track is drawn in, tiling the measures it plays by index, within [window]. */
 data class NotationLayout(
     val lines: List<MeasureLine>,
     val window: StaffWindow,
@@ -107,9 +112,18 @@ data class MeasureSpan(
     val eventEnd: Int,
 )
 
-/** A time a track plays [notationId], a notation or an arrangement, for [ticks] from its first downbeat at [start]. */
+/**
+ * A time a track plays [notationId], shown as [label], for [ticks] from its first downbeat at [start], with [pickup]
+ * before it, an arrangement when [isArrangement].
+ */
 data class NotationSpan(
     val notationId: NotationId,
+    val label: String,
     val start: Int,
     val ticks: Int,
-)
+    val pickup: Beats,
+    val isArrangement: Boolean,
+) {
+    /** Whether [event] is one this span plays, its pickup included. */
+    fun holds(event: NotationEvent) = event.notationId == notationId && event.tick in start - pickup.ticks until start + ticks
+}
